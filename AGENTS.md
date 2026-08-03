@@ -15,11 +15,12 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
   4. `reference-book-reading`: Reading/calibrating against reference books in `refs/`.
   5. `official-audio-analysis`: Extracting pacing, silence, and loudness parameters from official audio in `refs/`.
   6. `choukai-script-writing`: Authoring pure official-style listening TTS scripts (`.txt`).
-  7. `exam-pdf-generation`: Rendering Markdown sources into print-ready A4 PDFs (`build_pdf.py`).
+  7. `exam-booklet-generation`: Rendering Markdown sources into booklet HTML with A4 print geometry; owns the shared CSS and furigana helpers. No PDF (`build_booklet.py`).
   8. `choukai-mp3-generation`: Synthesizing edge-tts speech audio into exam MP3s (`make_choukai_mp3.py`).
   9. `item-pool-sampling`: Sampling non-repeating items from pool & balancing answer positions (`sample_items.py`).
   10. `web-topic-research`: Sourcing fresh real-world topic seeds, factual texture, and collocation checks from the web, then blending them across ALL exam surfaces (reading, listening, cloze, 問14 flyer, 即時応答 settings, carrier sentences) under enforced balance caps (`merge_seeds.py`).
-  11. `exam-answer-grading`: Grading user test responses against answer keys, calculating scaled scores (0-180), evaluating Pass/Fail thresholds, analyzing sub-question weak points, and generating diagnostic Markdown reports (`grade_answers.py`).
+  11. `exam-answer-grading`: Grading user responses against answer keys, calculating scaled scores (0-180), evaluating Pass/Fail thresholds, analyzing sub-question weak points, and generating diagnostic Markdown reports (`grade_answers.py`).
+  12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the booklet with a radio bubble beside every choice, an in-page audio player with chapter navigation for 聴解, and **in-page grading** that emits `採点結果_<section>.md` on button press (`build_interactive.py`).
 
 ---
 
@@ -38,10 +39,14 @@ Inside `tests/<test_id>/`:
 
 | Deliverable                          | File Name                              | Description / Source                                              |
 | ------------------------------------ | -------------------------------------- | ----------------------------------------------------------------- |
-| Language Knowledge & Reading Booklet | `言語知識・読解.pdf`                   | Rendered from Markdown source `tests/<test_id>/言語知識・読解.md` |
-| Listening Booklet                    | `聴解.pdf`                             | Rendered from Markdown source `tests/<test_id>/聴解.md`           |
+| Language Knowledge & Reading Booklet | `言語知識・読解.html`                  | Rendered from Markdown source `tests/<test_id>/言語知識・読解.md` |
+| Listening Booklet                    | `聴解.html`                            | Rendered from Markdown source `tests/<test_id>/聴解.md`           |
 | Listening TTS Script                 | `聴解スクリプト.txt` (or `script.txt`) | Pure official-style narration text                                |
 | Listening Audio MP3                  | `聴解.mp3`                             | Synthesized audio generated from the TTS script                   |
+| Interactive Answer Sheets            | `言語知識・読解_解答.html`, `聴解_解答.html` | Booklet + inline radio bubbles (聴解 also embeds an audio player); answer key stripped |
+| Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py` |
+| Per-section Grading Report           | `採点結果_言語知識・読解.md`, `採点結果_聴解.md` | Downloaded from the answer sheet on 「採点する」                    |
+| Combined Grading Report              | `採点結果.md`                          | Written by `grade_answers.py` (both halves, 180-point 合否)        |
 
 ---
 
@@ -83,10 +88,10 @@ python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/t
 
 The script blends seeds into every surface of `logs/test_spec.json` (reading topics, listening scenarios, `cloze_topic` for 問9, `info_retrieval_texture` for 問14, `qr_situation_seeds` for 問4, `carrier_seeds` for 問1–8) and prints a **blend report**. Check the report before authoring: web share must sit within 30–60% per surface with the pool side ≥40%, and no source domain may dominate (≤2 topic-level seeds each). Re-harvest and re-run if it warns.
 
-### PDF Generation
+### Booklet Generation (HTML — no PDF)
 
 ```bash
-python3 .agents/exam-pdf-generation/scripts/build_pdf.py tests/<test_id>/言語知識・読解.md tests/<test_id>/聴解.md
+python3 .agents/exam-booklet-generation/scripts/build_booklet.py tests/<test_id>/言語知識・読解.md tests/<test_id>/聴解.md
 ```
 
 ### Listening MP3 Generation
@@ -100,18 +105,30 @@ _(The generator automatically cleans up temporary `segments/` audio files upon s
 ### Exam Answer Grading & Diagnostics
 
 ```bash
-# Option 1: Parse user answers directly from completed/annotated PDF file
-python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/<test_id> --user-pdf tests/<test_id>/マークシート.pdf
+# Step 1: build the interactive answer sheets (booklet + inline radio bubbles)
+python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id>
+#   -> tests/<test_id>/言語知識・読解_解答.html  (75 questions)
+#   -> tests/<test_id>/聴解_解答.html            (32 items)
 
-# Option 2: Generate interactive HTML/PDF mark sheets
-python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/<test_id> --create-template
+# Step 2: answer them in a browser and press 「📊 採点する」.
+#   The report is shown in the page and downloaded as 採点結果_<section>.md.
+#   Nothing else is needed for per-section grading.
+
+# Step 3 (optional): combined 180-point 合否 across BOTH halves.
+#   Press 「解答JSONも保存」 on each sheet, drop the files in tests/<test_id>/, then:
+python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/<test_id>
+#   auto-discovers user_answers*.json in the test dir and cwd
 ```
+
+The legacy `マークシート.pdf` / `マークシート.html` mark sheets are gone; the
+answer sheet is merged into the problem sheet.
 
 ---
 
 ## 5. Quality Invariants
 
-- **Markdown is single source of truth**: Regenerate PDFs after any content edit.
+- **Markdown is single source of truth**: never deleted; the grader and the answer sheet both parse it. Regenerate the booklet HTML **and** the interactive sheets after any content edit.
+- **No PDFs**: the booklet is HTML. `@page` CSS is preserved so the browser prints A4. Do not reintroduce weasyprint/wkhtmltopdf.
 - **Answer Keys at End**: Placed at the end of `言語知識・読解.md` and `聴解.md`.
 - **Booklet ↔ Script Sync**: Options in `聴解.md` must match choices spoken in `聴解スクリプト.txt`.
 - **Automatic Segments Cleanup**: Temporary `segments/` files produced during audio generation are automatically removed once `聴解.mp3` is generated.

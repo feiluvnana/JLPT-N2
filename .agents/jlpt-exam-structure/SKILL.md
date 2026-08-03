@@ -7,8 +7,8 @@ description: Single owner of official JLPT exam format facts — section layout,
 
 ## Deliverable File Mapping (`tests/<test_id>/`)
 
-- **言語知識・読解**: Source `tests/<test_id>/言語知識・読解.md` → Output PDF `tests/<test_id>/言語知識・読解.pdf`
-- **聴解 (Booklet)**: Source `tests/<test_id>/聴解.md` → Output PDF `tests/<test_id>/聴解.pdf`
+- **言語知識・読解**: Source `tests/<test_id>/言語知識・読解.md` → Booklet `tests/<test_id>/言語知識・読解.html` + answer sheet `言語知識・読解_解答.html`
+- **聴解 (Booklet)**: Source `tests/<test_id>/聴解.md` → Booklet `tests/<test_id>/聴解.html` + answer sheet `聴解_解答.html`
 - **聴解 (TTS Script)**: `tests/<test_id>/聴解スクリプト.txt` (or `script.txt`) → Output MP3 `tests/<test_id>/聴解.mp3`
 
 ## 言語知識(文字・語彙・文法)・読解 — 105 min, 75 questions

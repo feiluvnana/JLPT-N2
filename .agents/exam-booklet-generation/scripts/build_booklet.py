@@ -1,19 +1,31 @@
 #!/usr/bin/env python3
 """
-Render JLPT exam Markdown sources to print-ready A4 PDFs.
+Render JLPT exam Markdown sources to booklet HTML (A4-styled, print-ready).
 
 Usage:
-    python build_pdf.py 1_n2_gengo_chishiki_dokkai.md 2_n2_choukai_answer_sheet.md
+    python build_booklet.py tests/1/言語知識・読解.md tests/1/聴解.md
 
-Requires: wkhtmltopdf on PATH, `pip install markdown`, Noto CJK JP fonts.
+Requires: `pip install markdown pykakasi`, Noto CJK JP fonts installed.
+No PDF toolchain needed — the browser is the renderer.
 """
 
 import re
-import subprocess
 import sys
+
 from pathlib import Path
 
 import markdown
+
+# Screen-only shell. `CSS` keeps the A4 print geometry (@page etc.) untouched
+# so Cmd-P still yields the booklet; this just makes the page readable on a
+# monitor, where an unbounded full-width line length is unusable.
+SCREEN_CSS = """
+@media screen {
+  body { max-width: 46em; margin: 0 auto; padding: 2.5em 1.6em 6em;
+         background: #fff; }
+}
+@media screen and (max-width: 48em) { body { padding: 1.2em 1em 4em; } }
+"""
 
 CSS = """
 @page { size: A4; margin: 18mm 16mm; }
@@ -184,6 +196,10 @@ def widen(line: str) -> str:
 
 
 def build(src: Path) -> Path:
+    """Markdown -> styled booklet HTML. The Markdown stays the source of truth;
+    the HTML is the deliverable. No PDF is produced — dropping that step also
+    drops the WeasyPrint/wkhtmltopdf divergence that used to misalign furigana,
+    and the same CSS prints correctly straight from the browser."""
     md = src.read_text(encoding="utf-8")
     if "聴解" in src.name or "choukai" in src.name.lower():
         md = add_choukai_furigana(md)
@@ -193,45 +209,48 @@ def build(src: Path) -> Path:
     body = mark_furigana_blocks(fit_ruby(body))
     html_path = src.with_suffix(".html")
     html_path.write_text(
-        f'<!DOCTYPE html><html><head><meta charset="utf-8">'
-        f"<style>{CSS}</style></head><body>{body}</body></html>",
+        f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
+        f'<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f"<title>{src.stem}</title>"
+        f"<style>{CSS}{SCREEN_CSS}</style></head><body>{body}</body></html>",
         encoding="utf-8",
     )
-    pdf_path = src.with_suffix(".pdf")
-    import shutil
-    if shutil.which("wkhtmltopdf"):
-        subprocess.run(
-            ["wkhtmltopdf", "--encoding", "utf-8", "-q", str(html_path), str(pdf_path)],
-            check=True,
-        )
-    elif shutil.which("weasyprint"):
-        subprocess.run(
-            ["weasyprint", str(html_path), str(pdf_path)],
-            check=True,
-        )
-    else:
-        from weasyprint import HTML
-        HTML(filename=str(html_path)).write_pdf(str(pdf_path))
-    return pdf_path
+    return html_path
 
 
-def verify(pdf: Path):
-    import shutil
-    if shutil.which("pdftotext"):
-        out = subprocess.run(["pdftotext", "-layout", str(pdf), "-"],
-                             capture_output=True, text=True, check=True).stdout
-        assert "\ufffd" not in out, f"mojibake detected in {pdf}"
-        print(f"  ok: {pdf} ({out.count(chr(12)) + 1} pages approx)")
-    else:
-        from pypdf import PdfReader
-        reader = PdfReader(str(pdf))
-        out = "\n".join(page.extract_text() for page in reader.pages)
-        assert "\ufffd" not in out, f"mojibake detected in {pdf}"
-        print(f"  ok: {pdf} ({len(reader.pages)} pages approx)")
+def verify(html_path: Path, src: Path):
+    """The checks that used to run against the PDF, now against the HTML."""
+    html = html_path.read_text(encoding="utf-8")
+    problems = []
+    if "\ufffd" in html:
+        problems.append("mojibake (U+FFFD) in output")
+    # Question numbering must stay continuous across section boundaries. `N.`
+    # list syntax makes python-markdown emit <ol> and restart at 1 in every
+    # section, so question-authoring mandates bold `**N**` stems.
+    if "<ol>" in html:
+        problems.append("<ol> present — a stem used `N.` list syntax and will "
+                        "renumber from 1; use `**N**` instead")
+    if "言語知識" in src.name:
+        nums = {int(m.group(1)) for m in
+                re.finditer(r"<strong>(\d{1,2})(?:</strong>|\s)", html)}
+        missing = [n for n in range(1, 76) if n not in nums]
+        if missing:
+            problems.append(f"no bold stem found for question(s) {missing}")
+    if problems:
+        raise SystemExit(f"{html_path}:\n  " + "\n  ".join(problems))
+    print(f"  ok: {html_path} "
+          f"({len(re.sub(r'<[^>]+>', '', html)):,} chars of text)")
 
 
 if __name__ == "__main__":
-    for arg in sys.argv[1:]:
-        pdf = build(Path(arg))
-        verify(pdf)
-        print(f"built {pdf}")
+    argv = [a for a in sys.argv[1:] if not a.startswith("--")]
+    if not argv:
+        sys.exit("usage: build_booklet.py tests/<id>/言語知識・読解.md "
+                 "[tests/<id>/聴解.md]")
+    for arg in argv:
+        src = Path(arg)
+        if not src.is_file():
+            sys.exit(f"not found: {src}")
+        out = build(src)
+        verify(out, src)
+        print(f"built {out}")

@@ -16,8 +16,9 @@ All exam files follow a strict directory structure:
 - **Operational tracking**: `logs/` directory (`logs/ledger.json` for item history, `logs/test_spec.json` for current blueprint).
 - **Internal execution scripts**:
   - Item pool sampler: `.agents/item-pool-sampling/scripts/sample_items.py`
-  - PDF builder: `.agents/exam-pdf-generation/scripts/build_pdf.py`
+  - PDF builder: `.agents/exam-booklet-generation/scripts/build_booklet.py`
   - Audio generator: `.agents/choukai-mp3-generation/scripts/make_choukai_mp3.py`
+  - Answer-sheet builder: `.agents/interactive-answer-sheet/scripts/build_interactive.py`
 
 ### Standard Deliverables in `tests/<test_id>/` (Japanese File Names Mandatory)
 
@@ -27,6 +28,8 @@ All exam files follow a strict directory structure:
 | 2 | `聴解.pdf` | Rendered from Markdown source `tests/<test_id>/聴解.md` |
 | 3 | `聴解スクリプト.txt` (or `script.txt`) | Pure official-style narration text |
 | 4 | `聴解.mp3` | Listening audio generated from file 3 |
+| 5 | `聴解_チャプター.json` | Per-問題/item offsets in the MP3 (written with it) |
+| 6 | `言語知識・読解_解答.html`, `聴解_解答.html` | Interactive answer sheets (`build_interactive.py`) |
 
 ## Workflow (follow in order)
 
@@ -51,10 +54,16 @@ All exam files follow a strict directory structure:
    Write Markdown sources (`言語知識・読解.md`, `聴解.md`) in `tests/<test_id>/`. Author ONLY items specified in `logs/test_spec.json` and set answer keys according to `answer_positions`.
 5. **Write the listening script** → read `choukai-script-writing/SKILL.md`.
    Create `tests/<test_id>/聴解スクリプト.txt` (or `script.txt`). It must contain ONLY spoken exam text.
-6. **Render PDFs** → read `exam-pdf-generation/SKILL.md`.
-   Run: `python3 .agents/exam-pdf-generation/scripts/build_pdf.py tests/<test_id>/言語知識・読解.md tests/<test_id>/聴解.md`
+6. **Render PDFs** → read `exam-booklet-generation/SKILL.md`.
+   Run: `python3 .agents/exam-booklet-generation/scripts/build_booklet.py tests/<test_id>/言語知識・読解.md tests/<test_id>/聴解.md`
 7. **Generate MP3 Audio** → read `choukai-mp3-generation/SKILL.md`.
    Run: `python3 .agents/choukai-mp3-generation/scripts/make_choukai_mp3.py tests/<test_id>/聴解スクリプト.txt` (or `script.txt`)
+   Also writes `聴解_チャプター.json` (per-item offsets) for the answer sheet.
+8. **Build the interactive answer sheets** → read `interactive-answer-sheet/SKILL.md`.
+   Run: `python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id>`
+   Produces `言語知識・読解_解答.html` and `聴解_解答.html` — the booklet with a
+   radio bubble per choice, an audio player for 聴解, and in-page grading that
+   emits `採点結果_<section>.md`. Re-run after ANY Markdown edit, like the PDFs.
 
 ## Invariants (apply to every run)
 

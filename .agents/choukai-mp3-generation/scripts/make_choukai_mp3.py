@@ -25,6 +25,8 @@ segments/ folder to force a full rebuild).
 """
 
 import asyncio
+import hashlib
+import json
 import inspect
 import re
 import subprocess
@@ -58,6 +60,17 @@ SPEAKER_MAP = {
     "専門家": {"voice": FEMALE, "rate": "+0%"},
     "レポーター": {"voice": FEMALE, "rate": "+6%"},
     "教室の人":   {"voice": FEMALE, "rate": "+0%"},
+    # Added after validate_script() caught these being silently narrated.
+    # Gender is chosen to contrast with the OTHER speaker named in the item's
+    # narration (学生 and 男の人 are male), so the two voices stay distinguishable.
+    "職員":   {"voice": FEMALE, "rate": "+0%"},   # vs 学生 (male)
+    "係員":   {"voice": FEMALE, "rate": "+6%"},   # vs 男の人
+    "担当者": {"voice": FEMALE, "rate": "+0%"},
+    "講師":   {"voice": FEMALE, "rate": "+0%"},
+    "アナウンス":   {"voice": FEMALE, "rate": "+0%"},
+    "アナウンサー": {"voice": FEMALE, "rate": "+4%"},
+    "教授":   {"voice": MALE,   "rate": "-6%"},   # vs 学生 (male, +6%) — split by rate
+    "FP":     {"voice": MALE,   "rate": "+0%"},
 }
 
 # Pacing (seconds) — measured from the official Dec 2025 N2 exam audio.
@@ -108,6 +121,14 @@ def concat_wavs(files, dst: Path):
     run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(lst),
          "-c:a", "pcm_s16le", str(dst)])
     lst.unlink()
+
+
+def wav_duration(path: Path) -> float:
+    out = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+         "-of", "default=noprint_wrappers=1:nokey=1", str(path)],
+        capture_output=True, text=True, check=True).stdout.strip()
+    return float(out)
 
 
 def wav_to_mp3(src: Path, dst: Path, normalize=False):
@@ -171,6 +192,138 @@ def gap_before_line(section: str, line_index: int, line: str,
     return GAP_BETWEEN_LINES
 
 
+# --- Script sanity gate (runs before any synthesis) ---------------------
+# 「最もよいものは◯番です。」 is an 例-ONLY line: it belongs to the 問題1〜4
+# practice confirmation, which always continues with 「解答用紙の…」. A bare
+# reveal after a scored item speaks the answer aloud and ruins the exam.
+REVEAL_RE = re.compile(r"^(?:質問[12]の)?最もよいものは\d番です。")
+EXAMPLE_CONFIRM_RE = re.compile(
+    r"^最もよいものは\d番です。解答用紙の問題\dの例のところを見てください。")
+ANNOTATION_RE = re.compile(r"[（(]※")
+
+
+# Required structure of a full N2 script. Counts INCLUDE the 例 where one exists.
+# 問題5 has no 例 (「この問題には練習はありません。」) and its 3rd item carries two
+# questions, giving 4 answers from 3 item blocks.
+EXPECTED_ITEMS = {"問題1": 6, "問題2": 7, "問題3": 6, "問題4": 13, "問題5": 3}
+NEEDS_EXAMPLE = ("問題1", "問題2", "問題3", "問題4")
+OPENING = "これから、N2の聴解試験を始めます"
+CLOSING = "これで、聴解試験を終わります。"
+NO_PRACTICE = "この問題には練習はありません。"
+TYPO_RE = re.compile(r"問題用紙になに印刷")   # 「何も印刷」 mistyped; TTS reads it wrong
+
+
+def validate_script(blocks):
+    """Fail fast on anything that would corrupt the exam. Two classes of check:
+
+    (1) lines that must never be SPOKEN (answer reveals, authoring notes), and
+    (2) STRUCTURE — the 例/practice machinery and item counts. A missing 例 or a
+        missing announcer line is silent: the MP3 still builds and just quietly
+        deviates from the official exam. Both classes shipped as real bugs, so
+        both are enforced here rather than left to a reviewer's eye.
+    """
+    errors = []
+    section = None
+    items = {k: 0 for k in EXPECTED_ITEMS}
+    examples = {k: 0 for k in EXPECTED_ITEMS}
+    confirms = {k: 0 for k in EXPECTED_ITEMS}
+    practice_cue = {k: 0 for k in EXPECTED_ITEMS}
+    no_practice = {k: 0 for k in EXPECTED_ITEMS}
+    text = "\n".join(blocks)
+
+    for bi, block in enumerate(blocks):
+        lines = [l.strip() for l in block.split("\n") if l.strip()]
+        if not lines:
+            continue
+        first = lines[0]
+        m = re.match(r"^(問題[1-5])。$", first)
+        if m:
+            section = m.group(1)
+        is_example = first.startswith("例。")
+        if ITEM_RE.match(first) and section:
+            items[section] += 1
+            if is_example:
+                examples[section] += 1
+
+        for line in lines:
+            # --- class 1: must never be spoken ---
+            if ANNOTATION_RE.search(line):
+                errors.append(f"block {bi} — authoring annotation would be read "
+                              f"aloud: {line}")
+            if TYPO_RE.search(line):
+                errors.append(f"block {bi} — typo 「なに印刷」 (should be "
+                              f"「何も印刷」): {line}")
+            if REVEAL_RE.match(line):
+                if EXAMPLE_CONFIRM_RE.match(line):
+                    if section:
+                        confirms[section] += 1
+                    continue
+                errors.append(
+                    f"block {bi} — answer revealed for a scored item"
+                    + (" (例 block, but not the full 解答用紙 confirmation)"
+                       if is_example else "") + f": {line}")
+            # --- class 2: structural cues ---
+            if section:
+                if "では、練習しましょう。" in line:
+                    practice_cue[section] += 1
+                if NO_PRACTICE in line:
+                    no_practice[section] += 1
+
+        # 問題5's two-question item must be ONE block, or the answer pause lands
+        # between 質問1 and 質問2 instead of after the item.
+        if "質問1。" in block and "質問2。" not in block:
+            errors.append(f"block {bi} — 質問1 without 質問2 in the same block; "
+                          f"the 問題5 two-question item must not be split")
+
+    # --- whole-file structure ---
+    if OPENING not in text:
+        errors.append(f"missing opening announcement 「{OPENING}…」")
+    if not text.rstrip().endswith(CLOSING):
+        errors.append(f"script must end with 「{CLOSING}」")
+
+    for sec, want in EXPECTED_ITEMS.items():
+        if f"{sec}。" not in text:
+            errors.append(f"{sec} section header 「{sec}。」 missing")
+            continue
+        if items[sec] != want:
+            errors.append(f"{sec}: {items[sec]} item block(s), expected {want}"
+                          + (" (例 + scored items)" if sec in NEEDS_EXAMPLE else ""))
+        if sec in NEEDS_EXAMPLE:
+            if examples[sec] != 1:
+                errors.append(f"{sec}: {examples[sec]} 例 block(s), expected exactly 1")
+            if practice_cue[sec] != 1:
+                errors.append(f"{sec}: 「では、練習しましょう。」 appears "
+                              f"{practice_cue[sec]} time(s), expected exactly 1")
+            if confirms[sec] != 1:
+                errors.append(f"{sec}: {confirms[sec]} 例 confirmation line(s) "
+                              f"(「最もよいものは◯番です。解答用紙の…」), expected exactly 1")
+        else:
+            if examples[sec]:
+                errors.append(f"{sec} must have NO 例 ({NO_PRACTICE})")
+            if no_practice[sec] != 1:
+                errors.append(f"{sec}: 「{NO_PRACTICE}」 appears "
+                              f"{no_practice[sec]} time(s), expected exactly 1")
+
+    # --- speaker labels must all be in the voice map ---
+    unmapped = set()
+    for block in blocks:
+        for line in block.split("\n"):
+            m = SPEAKER_RE.match(line.strip())
+            if m and m.group(1) not in SPEAKER_MAP:
+                unmapped.add(m.group(1))
+    if unmapped:
+        errors.append(f"speaker label(s) not in SPEAKER_MAP (they would be read "
+                      f"by the narrator voice): {sorted(unmapped)}")
+
+    if errors:
+        raise SystemExit(
+            "Refusing to synthesize — the script violates the choukai contract.\n"
+            "See .agents/choukai-script-writing/SKILL.md.\n\n  "
+            + "\n  ".join(errors))
+    print(f"  script OK: {len(blocks)} blocks, items "
+          + ", ".join(f"{k}={items[k]}" for k in EXPECTED_ITEMS))
+
+
 async def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     keep_segments = "--keep-segments" in sys.argv
@@ -183,6 +336,7 @@ async def main():
     out_dir = src.parent if src.parent != Path("") else Path(".")
     blocks = [b.strip() for b in re.split(r"\n\s*\n", src.read_text(encoding="utf-8"))
               if b.strip()]
+    validate_script(blocks)
 
     seg = out_dir / "segments"
     seg.mkdir(exist_ok=True)
@@ -198,6 +352,8 @@ async def main():
         return silence_cache[seconds]
 
     playlist = []
+    chapters = []
+    clock = 0.0        # exact position in the assembled file, seconds
     section = ""
     for bi, block in enumerate(blocks):
         lines = [l for l in block.splitlines() if l.strip()]
@@ -213,7 +369,13 @@ async def main():
             spec, spoken = voice_for(line)
             if not spoken:
                 continue
-            mp3 = seg / f"b{bi:03d}_l{li:02d}.mp3"
+            # Cache key includes the text AND the voice/rate, not just the
+            # position: keying on position alone silently reuses stale audio
+            # when a line is reworded or a speaker is remapped to a new voice.
+            tag = hashlib.sha1(
+                f"{spoken}|{spec['voice']}|{spec['rate']}".encode("utf-8")
+            ).hexdigest()[:10]
+            mp3 = seg / f"b{bi:03d}_l{li:02d}_{tag}.mp3"
             wav = mp3.with_suffix(".wav")
             if not wav.exists():
                 await synth(spoken, spec["voice"], spec["rate"], mp3)
@@ -228,8 +390,23 @@ async def main():
         concat_wavs(wavs, block_wav)
         wav_to_mp3(block_wav, seg / f"block_{bi:03d}.mp3")  # per-question drill file
 
+        # Chapter mark for this block, at its exact start in the final file.
+        # Computed here rather than recovered later with silence detection:
+        # the assembler knows the true offsets, a detector only guesses them.
+        label = first.split("。")[0] + "。" if ITEM_RE.match(first) else None
+        if re.match(r"^問題\d+。", first):
+            chapters.append({"type": "section", "section": section,
+                             "label": section, "start": round(clock, 2)})
+        elif label:
+            chapters.append({"type": "item", "section": section,
+                             "label": label.rstrip("。"),
+                             "start": round(clock, 2)})
+
         playlist.append(block_wav)
-        playlist.append(silence(pause_after(first, section)))
+        clock += wav_duration(block_wav)
+        pause = pause_after(first, section)
+        playlist.append(silence(pause))
+        clock += pause
 
     full_wav = out_dir / "_n2_full.wav"
     out_mp3 = out_dir / "聴解.mp3"
@@ -237,6 +414,12 @@ async def main():
     wav_to_mp3(full_wav, out_mp3, normalize=True)
     if full_wav.exists():
         full_wav.unlink()
+
+    chapters_path = out_dir / "聴解_チャプター.json"
+    chapters_path.write_text(
+        json.dumps({"duration": round(clock, 2), "chapters": chapters},
+                   ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"Chapters -> {chapters_path} ({len(chapters)} marks)")
 
     # Cleanup temporary segments directory
     if not keep_segments and seg.exists():

@@ -15,17 +15,38 @@ determinism wearing a randomness costume. True variety requires:
 1. **Explicit pools** (`references/pools.json`) — the full N2 inventory as
    data, sourced from the reference-book calibration.
 2. **Seeded RNG sampling** (`scripts/sample_items.py`) — code, not vibes.
-3. **A coverage ledger** (`logs/ledger.json`, auto-managed) — items used by past
-   tests are excluded until the pool is exhausted, then it resets. Across
-   runs this guarantees rotation, not repetition.
+3. **An LRU coverage ledger** (`logs/ledger.json`, auto-managed) — see below.
 4. **Answer-position balancing** — the script emits a pre-shuffled answer
    key per section (uniform 1-4, never 3+ identical in a row).
+
+## Rotation model (ledger v2 — LRU, not reset)
+
+`logs/ledger.json` is `{"version": 2, "history": [ {test_id, seed, generated_at,
+items{...}}, … ]}` — one entry per draw, newest last. A v1 flat ledger is
+migrated automatically on first run (all legacy items collapse into one
+synthetic oldest draw).
+
+- **Cooldown, not exhaustion.** An item used within the last `COOLDOWN` (=2)
+  draws is ineligible. If a pool can't fill a draw under that rule, the
+  cooldown relaxes one step at a time and says so. The old behaviour cleared
+  the *entire* history when a pool ran out, which let an item from the
+  immediately-previous test reappear in the next one.
+- **One item, one 問題 per test.** Categories are drawn in order against a
+  shared `taken` set, so a word in both `context_words` and `usage` (there are
+  41 such) can never be tested twice in the same paper. A post-draw assertion
+  re-checks this and aborts on any collision. This bug shipped once: test 3
+  tested 〜に限らず in both 問題7 and 問題8.
+- **Attribution.** Pass `--test-id <id>` so each draw records which test
+  consumed it.
+
+Keep every pool ≥ 2.5× the per-test draw; the script warns below that. Current
+headroom is ≥7.9× everywhere (`listening_scenarios` is the tightest at 158/20).
 
 ## Workflow
 
 ```bash
-python .agents/item-pool-sampling/scripts/sample_items.py --seed 20260803        # omit --seed for random
-# -> writes logs/test_spec.json, updates logs/ledger.json
+python .agents/item-pool-sampling/scripts/sample_items.py --seed 20260803 --test-id 4
+# omit --seed for a random one; -> writes logs/test_spec.json, updates logs/ledger.json
 ```
 
 `logs/test_spec.json` is the authoring contract. It contains, per section, the
@@ -49,6 +70,9 @@ sequence per 問題.
 
 `pools.json` categories: kanji_reading, orthography, word_formation,
 context_words, paraphrase, usage, grammar_p7, grammar_p8, quick_response,
-listening_scenarios, reading_topics. Keep every pool ≥ 2.5× the per-test
-draw so the ledger has room to rotate (the script warns when a pool runs
-thin).
+listening_scenarios, reading_topics.
+
+Pools may legitimately overlap (a word can be both a `context_words` and a
+`usage` item) — the sampler keeps them apart *within a test*, so there is no
+need to make the pools disjoint. What matters is depth: raise a pool as soon
+as the script starts printing cooldown-relaxed notes for it.

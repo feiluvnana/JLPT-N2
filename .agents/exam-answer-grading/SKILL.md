@@ -16,13 +16,13 @@ When a user submits their answers or asks to grade a completed JLPT test:
 1. **Answer Key Extraction**: Automatically parses correct answer tables from the exam Markdown sources:
    - `tests/<test_id>/言語知識・読解.md` (Questions 1 to 75)
    - `tests/<test_id>/聴解.md` (Listening questions: 問1〜問5)
-2. **User Input Ingestion**: Reads examinee responses directly from:
-   - Interactive PDF Mark Sheet: `tests/<test_id>/マークシート.pdf` (radio buttons selected in Preview / Acrobat / Chrome).
-   - Inline CLI arguments (`--answers-gengo` / `--answers-choukai`).
+2. **User Input Ingestion**: Reads examinee responses from:
+   - `user_answers*.json` saved by the **interactive answer sheets** (below) — the default source, auto-discovered in the test dir and cwd. Several files merge, so the 言語知識 and 聴解 halves can be saved separately.
+   - Inline CLI arguments (`--answers-gengo` / `--answers-choukai`), which override.
 3. **Scaled Score Calculation**: Converts raw section counts into JLPT standardized 0–60 scores:
    - **Language Knowledge (言語知識: 文字・語彙・文法)**: 54 questions max -> scaled to 60.
    - **Reading (読解)**: 21 questions max -> scaled to 60.
-   - **Listening (聴解)**: 31–32 questions max -> scaled to 60.
+   - **Listening (聴解)**: 32 answers max (問題5 3番 yields two) -> scaled to 60.
    - **Total Score**: 180 points max.
 4. **Pass / Fail Criteria Evaluation (JLPT N2 Standard)**:
    - **Overall Total**: $\ge 90 / 180$ points.
@@ -37,25 +37,57 @@ When a user submits their answers or asks to grade a completed JLPT test:
 6. **Artifact Output**:
    - Saves `tests/<test_id>/採点結果.md` (Detailed Markdown Report)
 
+The interactive answer sheets are owned by the **`interactive-answer-sheet`**
+skill. Those sheets grade their OWN half in-page on button press and emit
+`採点結果_言語知識・読解.md` / `採点結果_聴解.md` with no file handling at all —
+that is the normal path. **This skill is for the combined 180-point 合否**,
+which needs both halves at once and therefore needs their exported JSON.
+
+Their in-page grader is generated FROM this module's `GENGO_QUESTION_TAXONOMY`,
+`CHOUKAI_QUESTION_TAXONOMY` and `ADVICE_FOR` at build time, so the two can
+never disagree. Keep those structures serializable, and re-run
+`build_interactive.py` after changing any of them.
+
 ---
 
 ## 2. Command Execution
 
 Run the execution script from the workspace root:
 
-### Option A: Interactive PDF & HTML Mark Sheet
+### Option A: Interactive answer sheet (the normal path)
 
-1. Generate the clean, multi-column interactive mark sheets (`マークシート.pdf` & `マークシート.html`):
+The answer sheet is **merged into the problem sheet** — you answer inside the
+booklet itself, not on a separate mark sheet. The old `マークシート.pdf` /
+`マークシート.html` layer and its `--create-template` / `--user-pdf` flags were
+removed; the `interactive-answer-sheet` skill replaces them.
+
+1. Build the sheets (once per test, re-run after any edit to the Markdown):
    ```bash
-   make template 1
-   # or: python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 --create-template
+   make sheet 1
+   # or: python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
    ```
-2. Open `tests/<test_id>/マークシート.pdf` or `tests/<test_id>/マークシート.html` in **Chrome, Apple Preview, or Adobe Acrobat**. Click the interactive radio choice bubbles to select your answers, then save/download the file.
-3. Grade directly from the completed mark sheet file:
+   See `interactive-answer-sheet/SKILL.md` for the sheet itself (audio player,
+   chapter marks, answer-key truncation).
+   → `tests/1/言語知識・読解_解答.html` (75 questions) and
+     `tests/1/聴解_解答.html` (32 items).
+2. Open either file in a browser. Every choice has a radio bubble beside it;
+   a sticky header shows the answered count. Progress autosaves to
+   `localStorage`, so a refresh does not lose work.
+3. Press **「📊 採点する」** → that half is graded on the spot: the report is
+   shown in the page and saved as `採点結果_<section>.md`. For most sessions
+   you are done here.
+4. Only for the combined 180-point 合否: press 「解答JSONも保存」 on both
+   sheets, put the files in `tests/<test_id>/`, then:
    ```bash
    make grade 1
-   # or: python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 --user-pdf tests/1/マークシート.pdf
+   # or: python3 .../grade_answers.py --test-dir tests/1 --user-answers a.json,b.json
    ```
+
+**The answer key is truncated out of these files.** `build_interactive.py`
+aborts if it cannot locate the key heading, rather than risk rendering a sheet
+that shows the answers while you solve. Note `言語知識・読解_解答.html` is a
+*deliverable* and distinct from `言語知識・読解.html`, which is a throwaway
+intermediate that `build_booklet.py` overwrites.
 
 ### Option B: Quick Inline CLI Grading
 
@@ -67,28 +99,32 @@ python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 
 
 ## 3. Taxonomy Mapping & Scoring Table
 
+These ranges are owned by `jlpt-exam-structure`; this table and
+`GENGO_QUESTION_TAXONOMY` in `grade_answers.py` must mirror it exactly. The
+script asserts that its ranges tile 1–75 with no gap or overlap at import.
+
 | Section | Problem | Sub-Category Name | Questions | Raw Items | Scaled Max |
 |---|---|---|---|---|---|
-| **言語知識** | 問1 | 漢字読み (Kanji Reading) | 1–8 | 8 | - |
-| | 問2 | 表記 (Kanji Writing) | 9–13 | 5 | - |
-| | 問3 | 語形成 (Word Formation) | 14–18 | 5 | - |
-| | 問4 | 文脈指示 (Contextual Use) | 19–25 | 7 | - |
-| | 問5 | 言い換え類義 (Paraphrases) | 26–30 | 5 | - |
-| | 問6 | 用法 (Correct Usage) | 31–32 | 2 | - |
-| | 問7 | 文の文法1 (Grammar Form) | 33–44 | 12 | - |
-| | 問8 | 文の文法2 (Sentence Composition ★) | 45–49 | 5 | - |
-| | 問9 | 文章の文法 (Text Grammar / Cloze) | 50–54 | 5 | **60 (Combined)** |
-| **読解** | 問10 | 短文読解 (Short Passages) | 55–59 | 5 | - |
-| | 問11 | 中文読解 (Medium Passages) | 60–64 | 5 | - |
-| | 問12 | 長文読解 (Long Passage) | 65–67 | 3 | - |
-| | 問13 | 統合理解 (Comparative Passages) | 68–70 | 3 | - |
-| | 問14 | 主張理解/情報検索 (Info Retrieval) | 71–75 | 5 | **60** |
-| **聴解** | 問題1 | 課題理解 (Task Comprehension) | 1–5 | 5 | - |
-| | 問題2 | ポイント理解 (Point Comprehension) | 1–6 | 6 | - |
-| | 問題3 | 概要理解 (Summary Comprehension) | 1–5 | 5 | - |
-| | 問題4 | 即時応答 (Quick Response) | 1–12 | 12 | - |
-| | 問題5 | 統合理解 (Integrated Comprehension) | 1–4 | 4 | **60** |
-| **合計** | | | | **127** | **180** |
+| **言語知識** | 問1 | 漢字読み (Kanji Reading) | 1–5 | 5 | - |
+| | 問2 | 表記 (Orthography) | 6–10 | 5 | - |
+| | 問3 | 語形成 (Word Formation) | 11–15 | 5 | - |
+| | 問4 | 文脈規定 (Word in Context) | 16–22 | 7 | - |
+| | 問5 | 言い換え類義 (Paraphrases) | 23–27 | 5 | - |
+| | 問6 | 用法 (Correct Usage) | 28–32 | 5 | - |
+| | 問7 | 文法形式の判断 (Grammar Form) | 33–44 | 12 | - |
+| | 問8 | 文の組み立て (Sentence Composition ★) | 45–49 | 5 | - |
+| | 問9 | 文章の文法 (Text Grammar / Cloze) | 50–54 | 5 | **60 (Combined, 54 items)** |
+| **読解** | 問10 | 内容理解・短文 (Short Passages) | 55–59 | 5 | - |
+| | 問11 | 内容理解・中文 (Medium Passages) | 60–68 | 9 | - |
+| | 問12 | 統合理解 (A/B Comparative Texts) | 69–70 | 2 | - |
+| | 問13 | 主張理解・長文 (Long Essay) | 71–73 | 3 | - |
+| | 問14 | 情報検索 (Information Retrieval) | 74–75 | 2 | **60 (21 items)** |
+| **聴解** | 問題1 | 課題理解 (Task Comprehension) | 1番–5番 | 5 | - |
+| | 問題2 | ポイント理解 (Point Comprehension) | 1番–6番 | 6 | - |
+| | 問題3 | 概要理解 (Summary Comprehension) | 1番–5番 | 5 | - |
+| | 問題4 | 即時応答 (Quick Response) | 1番–12番 | 12 | - |
+| | 問題5 | 統合理解 (Integrated Comprehension) | 1番–3番 (4 answers) | 4 | **60 (32 items)** |
+| **合計** | | | | **107** | **180** |
 
 ---
 

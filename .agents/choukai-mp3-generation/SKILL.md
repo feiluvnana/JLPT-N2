@@ -10,6 +10,12 @@ description: Single owner of synthesizing the choukai exam MP3 from the TTS scri
 - **Script location**: `.agents/choukai-mp3-generation/scripts/make_choukai_mp3.py`
 - **Input text script**: `tests/<test_id>/聴解スクリプト.txt` (or `tests/<test_id>/script.txt`)
 - **Output audio**: `tests/<test_id>/聴解.mp3` + per-question files in `tests/<test_id>/segments/`
+- **Output chapters**: `tests/<test_id>/聴解_チャプター.json` — the start offset
+  of every 問題 and every 例/N番 item, accumulated by the assembler as it
+  concatenates (exact by construction; never recover these with
+  `silencedetect` after the fact). Consumed by `interactive-answer-sheet` to
+  drive the chapter dropdown in `聴解_解答.html`. Regenerate the MP3 to
+  refresh it.
 
 ## Execution
 
@@ -58,8 +64,17 @@ and update ONLY these constants.
 
 - Synthesize per line → convert to 24 kHz mono WAV → concat WAVs → encode MP3
   ONCE with `loudnorm=I=-17:TP=-1.0:LRA=11`. Never concat MP3 segments directly.
-- Retry synthesis (3×, backoff); cache segments in `tests/<test_id>/segments/` so re-runs skip finished lines
-  (delete `segments/` to force rebuild).
+- Retry synthesis (3×, backoff); cache segments in `tests/<test_id>/segments/`
+  so re-runs skip finished lines. The cache key is a hash of
+  **text + voice + rate**, not the line's position — keying on position alone
+  meant a reworded line or a remapped speaker silently reused the old audio.
+- **Script validation is a hard gate.** `validate_script()` runs before any
+  synthesis and refuses to build on a missing 例, a wrong item count, an
+  answer spoken aloud, an authoring annotation, or an unmapped speaker label.
+  See `choukai-script-writing/SKILL.md` for the full table.
+- **Every speaker label must be in `SPEAKER_MAP`.** An unmapped label does not
+  raise — `voice_for()` falls back to the narrator, so the line is read by the
+  announcer instead of the character. The validator now catches this.
 - Item detection regex is `^(例。|\d+番。)` — WITH the 。 so the 問題5 header
   line 「1番、2番。…」 is not mistaken for a question item.
 
