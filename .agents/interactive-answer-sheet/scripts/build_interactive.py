@@ -6,7 +6,7 @@ bubble beside every choice, solved in a browser.
     python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
 
 Writes tests/<id>/言語知識・読解_解答.html and tests/<id>/聴解_解答.html.
-Click through the exam, press 「📊 採点する」, and that half is graded in the
+Click through the exam, press 「採点する」, and that half is graded in the
 page: the report is shown inline and saved as 採点結果_<section>.md. No JSON
 round-trip. 「解答JSONも保存」 is available for grade_answers.py, which combines
 both halves into the 180-point 合否.
@@ -189,7 +189,7 @@ function buildReport(ans){
     const scaled = Math.round(c / sd.keys.length * 60);
     sectionTotal += scaled;
     L.push("| **"+sd.name+"** | "+c+" / "+sd.keys.length+" | **"+scaled
-         +" / 60** | 19点 | "+(scaled>=19 ? "基準点クリア" : "⚠️ 基準点未達")+" |");
+         +" / 60** | 19点 | "+(scaled>=19 ? "基準点クリア" : "基準点未達")+" |");
   }
   L.push("| **このセクション計** | **-** | **"+sectionTotal+" / "
        + (SECTION_DEFS.length*60)+"** | - | - |");
@@ -217,7 +217,7 @@ function buildReport(ans){
     L.push("以下の分野は正解率が60%%未満となっています。重点的な復習を推奨します：");
     L.push("");
     for (const w of weak){
-      L.push("### 📌 "+w.section+" "+w.code+": "+w.name+" (正解率: "+w.p+"%%)");
+      L.push("### "+w.section+" "+w.code+": "+w.name+" (正解率: "+w.p+"%%)");
       if (ADVICE[w.code]) L.push("- **対策**: "+ADVICE[w.code]);
       L.push("");
     }
@@ -232,7 +232,7 @@ function buildReport(ans){
   L.push("|---|---|---|---|");
   for (const k of KEYS){
     const u = ans[k], correct = ANSWER_KEY[k];
-    const mark = u === undefined ? "— 未解答" : (u === correct ? "⭕️" : "❌");
+    const mark = u === undefined ? "— 未解答" : (u === correct ? "○" : "×");
     L.push("| "+k+" | "+(u === undefined ? "-" : u)+" | "+correct+" | "+mark+" |");
   }
   L.push("");
@@ -475,7 +475,7 @@ def render(md: str, src: Path, section: str, testid: str, keys: list,
            f'<span class="grow"></span>'
            f'<span>解答済み <b id="done">0 / 0</b></span>'
            f'<button onclick="clearAll()">消去</button>'
-           f'<button onclick="save()">📊 採点する</button></div>')
+           f'<button onclick="save()">採点する</button></div>')
     js = SCRIPT % {"keys": json.dumps(keys, ensure_ascii=False),
                    "section": section, "testid": testid, **gdata}
     out_path.write_text(

@@ -89,7 +89,7 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   padding:.9em;max-height:60vh;overflow:auto}
 #result .hint{font-size:10pt;color:#475569}
 @media print{#bar,#player{display:none}.qa label{border-color:#666}}
-</style></head><body><div id="bar"><b>N2 聴解 (3)</b><span class="grow"></span><span>解答済み <b id="done">0 / 0</b></span><button onclick="clearAll()">消去</button><button onclick="save()">📊 採点する</button></div><div id="player"><audio id="au" controls preload="metadata" src="聴解.mp3"></audio><div class="pctl"><button type="button" onclick="nudge(-10)">◀ 10秒</button><button type="button" onclick="nudge(10)">10秒 ▶</button><label>速度 <select id="rate" onchange="au.playbackRate=+this.value"><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option></select></label><span id="chapwrap">章 <select id="chap" onchange="jump(this.value)"></select></span><label class="pick">MP3を選ぶ<input type="file" accept="audio/*" onchange="pick(this)"></label></div><script>window.CHAPTERS = {
+</style></head><body><div id="bar"><b>N2 聴解 (3)</b><span class="grow"></span><span>解答済み <b id="done">0 / 0</b></span><button onclick="clearAll()">消去</button><button onclick="save()">採点する</button></div><div id="player"><audio id="au" controls preload="metadata" src="聴解.mp3"></audio><div class="pctl"><button type="button" onclick="nudge(-10)">◀ 10秒</button><button type="button" onclick="nudge(10)">10秒 ▶</button><label>速度 <select id="rate" onchange="au.playbackRate=+this.value"><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option></select></label><span id="chapwrap">章 <select id="chap" onchange="jump(this.value)"></select></span><label class="pick">MP3を選ぶ<input type="file" accept="audio/*" onchange="pick(this)"></label></div><script>window.CHAPTERS = {
  "duration": 2616.83,
  "chapters": [
   {
@@ -532,7 +532,7 @@ function buildReport(ans){
     const scaled = Math.round(c / sd.keys.length * 60);
     sectionTotal += scaled;
     L.push("| **"+sd.name+"** | "+c+" / "+sd.keys.length+" | **"+scaled
-         +" / 60** | 19点 | "+(scaled>=19 ? "基準点クリア" : "⚠️ 基準点未達")+" |");
+         +" / 60** | 19点 | "+(scaled>=19 ? "基準点クリア" : "基準点未達")+" |");
   }
   L.push("| **このセクション計** | **-** | **"+sectionTotal+" / "
        + (SECTION_DEFS.length*60)+"** | - | - |");
@@ -560,7 +560,7 @@ function buildReport(ans){
     L.push("以下の分野は正解率が60%未満となっています。重点的な復習を推奨します：");
     L.push("");
     for (const w of weak){
-      L.push("### 📌 "+w.section+" "+w.code+": "+w.name+" (正解率: "+w.p+"%)");
+      L.push("### "+w.section+" "+w.code+": "+w.name+" (正解率: "+w.p+"%)");
       if (ADVICE[w.code]) L.push("- **対策**: "+ADVICE[w.code]);
       L.push("");
     }
@@ -575,7 +575,7 @@ function buildReport(ans){
   L.push("|---|---|---|---|");
   for (const k of KEYS){
     const u = ans[k], correct = ANSWER_KEY[k];
-    const mark = u === undefined ? "— 未解答" : (u === correct ? "⭕️" : "❌");
+    const mark = u === undefined ? "— 未解答" : (u === correct ? "○" : "×");
     L.push("| "+k+" | "+(u === undefined ? "-" : u)+" | "+correct+" | "+mark+" |");
   }
   L.push("");

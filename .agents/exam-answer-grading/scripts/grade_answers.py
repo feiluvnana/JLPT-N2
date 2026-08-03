@@ -317,7 +317,7 @@ def grade(gengo_keys: dict, choukai_keys: dict, user_answers: dict) -> dict:
 def render_report(results: dict, test_id: str) -> str:
     """Generate Markdown grading report with detailed diagnosis."""
     summary = results["summary"]
-    pass_str = "🎉 **合格 (PASS)**" if summary["passed"] else "❌ **不合格 (FAIL)**"
+    pass_str = "**合格 (PASS)**" if summary["passed"] else "**不合格 (FAIL)**"
 
     lines = []
     lines.append(f"# JLPT N2 模擬試験 採点結果・弱点分析レポート ({test_id})")
@@ -332,7 +332,7 @@ def render_report(results: dict, test_id: str) -> str:
         if not summary["cutoff_passed"]:
             failed_secs = [k for k, v in summary["sections"].items() if not v["passed_cutoff"]]
             reasons.append(f"基準点未達のセクションがあります: {', '.join(failed_secs)} (各セクション19点以上が必要)。")
-        lines.append(f"> ⚠️ **判定理由**: {' '.join(reasons)}")
+        lines.append(f"> **判定理由**: {' '.join(reasons)}")
         lines.append("")
 
     lines.append("## 1. 得点サマリー (得点等化スケールスコア 換算)")
@@ -341,7 +341,7 @@ def render_report(results: dict, test_id: str) -> str:
     lines.append("|---|---|---|---|---|")
 
     for sec_name, sec_data in summary["sections"].items():
-        status = "基準点クリア" if sec_data["passed_cutoff"] else "⚠️ 基準点未達"
+        status = "基準点クリア" if sec_data["passed_cutoff"] else "基準点未達"
         lines.append(
             f"| **{sec_name}** | {sec_data['raw_correct']} / {sec_data['raw_total']} | **{sec_data['scaled_score']} / 60** | {sec_data['cutoff']}点 | {status} |"
         )
@@ -379,7 +379,7 @@ def render_report(results: dict, test_id: str) -> str:
         lines.append("以下の分野は正解率が60%未満となっています。重点的な復習を推奨します：")
         lines.append("")
         for code, stats in weak_areas:
-            lines.append(f"### 📌 {stats['section']} {code}: {stats['name']} (正解率: {stats['percentage']}%)")
+            lines.append(f"### {stats['section']} {code}: {stats['name']} (正解率: {stats['percentage']}%)")
             if code in ADVICE_FOR:
                 lines.append(f"- **対策**: {ADVICE_FOR[code]}")
             lines.append("")
@@ -402,12 +402,12 @@ def render_report(results: dict, test_id: str) -> str:
 
         u1 = item1.get("user", "-")
         c1 = item1.get("correct", "-")
-        r1 = "✅" if item1.get("is_correct") else "❌"
+        r1 = "○" if item1.get("is_correct") else "×"
 
         if q2 <= 75:
             u2 = item2.get("user", "-")
             c2 = item2.get("correct", "-")
-            r2 = "✅" if item2.get("is_correct") else "❌"
+            r2 = "○" if item2.get("is_correct") else "×"
             lines.append(f"| {q1} | {u1} | {c1} | {r1} | {q2} | {u2} | {c2} | {r2} |")
         else:
             lines.append(f"| {q1} | {u1} | {c1} | {r1} | - | - | - | - |")
@@ -420,7 +420,7 @@ def render_report(results: dict, test_id: str) -> str:
     for k, item in results["detail_choukai"].items():
         u = item.get("user", "-")
         c = item.get("correct", "-")
-        r = "✅" if item.get("is_correct") else "❌"
+        r = "○" if item.get("is_correct") else "×"
         lines.append(f"| {k} | {u} | {c} | {r} |")
 
     return "\n".join(lines)

@@ -30,10 +30,10 @@ When a user submits their answers or asks to grade a completed JLPT test:
      - Language Knowledge $\ge 19$
      - Reading $\ge 19$
      - Listening $\ge 19$
-   - *Note*: Failing any single sectional cutoff results in **不合格 (FAIL)** regardless of overall total score.
+   - _Note_: Failing any single sectional cutoff results in **不合格 (FAIL)** regardless of overall total score.
 5. **Sub-Question Taxonomy Analysis & Diagnostics**:
    - Evaluates performance per大問 (問1〜問14 for Language/Reading, 問題1〜問題5 for Listening).
-   - Flags weak areas (accuracy < 60%) and provides targeted recommendations referencing *Shin Kanzen Masuta N2* textbooks (`refs/Shin_Kanzen_Masuta_N2-*.pdf`).
+   - Flags weak areas (accuracy < 60%) and provides targeted recommendations referencing _Shin Kanzen Masuta N2_ textbooks (`refs/Shin_Kanzen_Masuta_N2-*.pdf`).
 6. **Artifact Output**:
    - Saves `tests/<test_id>/採点結果.md` (Detailed Markdown Report)
 
@@ -69,11 +69,11 @@ removed; the `interactive-answer-sheet` skill replaces them.
    See `interactive-answer-sheet/SKILL.md` for the sheet itself (audio player,
    chapter marks, answer-key truncation).
    → `tests/1/言語知識・読解_解答.html` (75 questions) and
-     `tests/1/聴解_解答.html` (32 items).
+   `tests/1/聴解_解答.html` (32 items).
 2. Open either file in a browser. Every choice has a radio bubble beside it;
    a sticky header shows the answered count. Progress autosaves to
    `localStorage`, so a refresh does not lose work.
-3. Press **「📊 採点する」** → that half is graded on the spot: the report is
+3. Press **「採点する」** → that half is graded on the spot: the report is
    shown in the page and saved as `採点結果_<section>.md`. For most sessions
    you are done here.
 4. Only for the combined 180-point 合否: press 「解答JSONも保存」 on both
@@ -86,7 +86,7 @@ removed; the `interactive-answer-sheet` skill replaces them.
 **The answer key is truncated out of these files.** `build_interactive.py`
 aborts if it cannot locate the key heading, rather than risk rendering a sheet
 that shows the answers while you solve. Note `言語知識・読解_解答.html` is a
-*deliverable* and distinct from `言語知識・読解.html`, which is a throwaway
+_deliverable_ and distinct from `言語知識・読解.html`, which is a throwaway
 intermediate that `build_booklet.py` overwrites.
 
 ### Option B: Quick Inline CLI Grading
@@ -103,34 +103,35 @@ These ranges are owned by `jlpt-exam-structure`; this table and
 `GENGO_QUESTION_TAXONOMY` in `grade_answers.py` must mirror it exactly. The
 script asserts that its ranges tile 1–75 with no gap or overlap at import.
 
-| Section | Problem | Sub-Category Name | Questions | Raw Items | Scaled Max |
-|---|---|---|---|---|---|
-| **言語知識** | 問1 | 漢字読み (Kanji Reading) | 1–5 | 5 | - |
-| | 問2 | 表記 (Orthography) | 6–10 | 5 | - |
-| | 問3 | 語形成 (Word Formation) | 11–15 | 5 | - |
-| | 問4 | 文脈規定 (Word in Context) | 16–22 | 7 | - |
-| | 問5 | 言い換え類義 (Paraphrases) | 23–27 | 5 | - |
-| | 問6 | 用法 (Correct Usage) | 28–32 | 5 | - |
-| | 問7 | 文法形式の判断 (Grammar Form) | 33–44 | 12 | - |
-| | 問8 | 文の組み立て (Sentence Composition ★) | 45–49 | 5 | - |
-| | 問9 | 文章の文法 (Text Grammar / Cloze) | 50–54 | 5 | **60 (Combined, 54 items)** |
-| **読解** | 問10 | 内容理解・短文 (Short Passages) | 55–59 | 5 | - |
-| | 問11 | 内容理解・中文 (Medium Passages) | 60–68 | 9 | - |
-| | 問12 | 統合理解 (A/B Comparative Texts) | 69–70 | 2 | - |
-| | 問13 | 主張理解・長文 (Long Essay) | 71–73 | 3 | - |
-| | 問14 | 情報検索 (Information Retrieval) | 74–75 | 2 | **60 (21 items)** |
-| **聴解** | 問題1 | 課題理解 (Task Comprehension) | 1番–5番 | 5 | - |
-| | 問題2 | ポイント理解 (Point Comprehension) | 1番–6番 | 6 | - |
-| | 問題3 | 概要理解 (Summary Comprehension) | 1番–5番 | 5 | - |
-| | 問題4 | 即時応答 (Quick Response) | 1番–12番 | 12 | - |
-| | 問題5 | 統合理解 (Integrated Comprehension) | 1番–3番 (4 answers) | 4 | **60 (32 items)** |
-| **合計** | | | | **107** | **180** |
+| Section      | Problem | Sub-Category Name                     | Questions           | Raw Items | Scaled Max                  |
+| ------------ | ------- | ------------------------------------- | ------------------- | --------- | --------------------------- |
+| **言語知識** | 問1     | 漢字読み (Kanji Reading)              | 1–5                 | 5         | -                           |
+|              | 問2     | 表記 (Orthography)                    | 6–10                | 5         | -                           |
+|              | 問3     | 語形成 (Word Formation)               | 11–15               | 5         | -                           |
+|              | 問4     | 文脈規定 (Word in Context)            | 16–22               | 7         | -                           |
+|              | 問5     | 言い換え類義 (Paraphrases)            | 23–27               | 5         | -                           |
+|              | 問6     | 用法 (Correct Usage)                  | 28–32               | 5         | -                           |
+|              | 問7     | 文法形式の判断 (Grammar Form)         | 33–44               | 12        | -                           |
+|              | 問8     | 文の組み立て (Sentence Composition ★) | 45–49               | 5         | -                           |
+|              | 問9     | 文章の文法 (Text Grammar / Cloze)     | 50–54               | 5         | **60 (Combined, 54 items)** |
+| **読解**     | 問10    | 内容理解・短文 (Short Passages)       | 55–59               | 5         | -                           |
+|              | 問11    | 内容理解・中文 (Medium Passages)      | 60–68               | 9         | -                           |
+|              | 問12    | 統合理解 (A/B Comparative Texts)      | 69–70               | 2         | -                           |
+|              | 問13    | 主張理解・長文 (Long Essay)           | 71–73               | 3         | -                           |
+|              | 問14    | 情報検索 (Information Retrieval)      | 74–75               | 2         | **60 (21 items)**           |
+| **聴解**     | 問題1   | 課題理解 (Task Comprehension)         | 1番–5番             | 5         | -                           |
+|              | 問題2   | ポイント理解 (Point Comprehension)    | 1番–6番             | 6         | -                           |
+|              | 問題3   | 概要理解 (Summary Comprehension)      | 1番–5番             | 5         | -                           |
+|              | 問題4   | 即時応答 (Quick Response)             | 1番–12番            | 12        | -                           |
+|              | 問題5   | 統合理解 (Integrated Comprehension)   | 1番–3番 (4 answers) | 4         | **60 (32 items)**           |
+| **合計**     |         |                                       |                     | **107**   | **180**                     |
 
 ---
 
 ## 4. Report Structure (`採点結果.md`)
 
 The generated report contains 4 major sections:
+
 1. **総合判定**: Pass/Fail status, reason for failure if any (overall score < 90 or sectional cutoff < 19).
 2. **得点サマリー**: Table showing raw score, scaled score, sectional cutoffs, and overall total.
 3. **大問別詳細分析**: Accuracy percentage and evaluation per大問 (`🟢 強 (>=80%)`, `🟡 普通 (60-79%)`, `🔴 要強化 (<60%)`).
@@ -143,4 +144,4 @@ The generated report contains 4 major sections:
 
 - **Strict Scale Calculation**: Raw scores must be converted proportionally to the 60-point scale per section to reflect real JLPT results accurately.
 - **Sectional Cutoff Rules**: Always enforce the 19-point sectional cutoff rule. Even if the total is 120/180, if Reading is 18/60, the result is `不合格`.
-- **Reference Integrity**: Advice for weak areas must map directly to the corresponding *Shin Kanzen Masuta N2* study area (Vocab/Kanji/Grammar/Reading/Listening).
+- **Reference Integrity**: Advice for weak areas must map directly to the corresponding _Shin Kanzen Masuta N2_ study area (Vocab/Kanji/Grammar/Reading/Listening).

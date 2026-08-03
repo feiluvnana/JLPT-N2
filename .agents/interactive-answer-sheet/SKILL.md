@@ -23,15 +23,15 @@ python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<tes
 
 Outputs into `tests/<test_id>/`:
 
-| File | Contents |
-|---|---|
-| `言語知識・読解_解答.html` | 75 questions, radio bubble per choice, in-page grading |
-| `聴解_解答.html` | 32 items + **audio player** for `聴解.mp3`, in-page grading |
+| File                       | Contents                                                    |
+| -------------------------- | ----------------------------------------------------------- |
+| `言語知識・読解_解答.html` | 75 questions, radio bubble per choice, in-page grading      |
+| `聴解_解答.html`           | 32 items + **audio player** for `聴解.mp3`, in-page grading |
 
 Re-run after ANY edit to `言語知識・読解.md` / `聴解.md` — the Markdown stays
 the single source of truth, exactly as for the booklet HTML.
 
-## Grading happens in the page — press 「📊 採点する」
+## Grading happens in the page — press 「採点する」
 
 There is no JSON step. Pressing the button:
 
@@ -59,7 +59,7 @@ the JS — a second copy is exactly how the grader's 大問 ranges drifted from
 ## The answer key must never be VISIBLE
 
 The key is embedded as JS data so grading can happen offline with no server —
-but it must never be *rendered*. The builder truncates everything from the key
+but it must never be _rendered_. The builder truncates everything from the key
 heading (`# 解答…` / `# 【正解…`) onward out of the document body, and **exits
 with an error if it cannot find that heading**. Never "fix" that by loosening
 the check. The trade-off is deliberate: the key is reachable via devtools by

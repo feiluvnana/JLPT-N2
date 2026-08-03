@@ -37,16 +37,16 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
 
 Inside `tests/<test_id>/`:
 
-| Deliverable                          | File Name                              | Description / Source                                              |
-| ------------------------------------ | -------------------------------------- | ----------------------------------------------------------------- |
-| Language Knowledge & Reading Booklet | `言語知識・読解.html`                  | Rendered from Markdown source `tests/<test_id>/言語知識・読解.md` |
-| Listening Booklet                    | `聴解.html`                            | Rendered from Markdown source `tests/<test_id>/聴解.md`           |
-| Listening TTS Script                 | `聴解スクリプト.txt` (or `script.txt`) | Pure official-style narration text                                |
-| Listening Audio MP3                  | `聴解.mp3`                             | Synthesized audio generated from the TTS script                   |
-| Interactive Answer Sheets            | `言語知識・読解_解答.html`, `聴解_解答.html` | Booklet + inline radio bubbles (聴解 also embeds an audio player); answer key stripped |
-| Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py` |
-| Per-section Grading Report           | `採点結果_言語知識・読解.md`, `採点結果_聴解.md` | Downloaded from the answer sheet on 「採点する」                    |
-| Combined Grading Report              | `採点結果.md`                          | Written by `grade_answers.py` (both halves, 180-point 合否)        |
+| Deliverable                          | File Name                                        | Description / Source                                                                   |
+| ------------------------------------ | ------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| Language Knowledge & Reading Booklet | `言語知識・読解.html`                            | Rendered from Markdown source `tests/<test_id>/言語知識・読解.md`                      |
+| Listening Booklet                    | `聴解.html`                                      | Rendered from Markdown source `tests/<test_id>/聴解.md`                                |
+| Listening TTS Script                 | `聴解スクリプト.txt` (or `script.txt`)           | Pure official-style narration text                                                     |
+| Listening Audio MP3                  | `聴解.mp3`                                       | Synthesized audio generated from the TTS script                                        |
+| Interactive Answer Sheets            | `言語知識・読解_解答.html`, `聴解_解答.html`     | Booklet + inline radio bubbles (聴解 also embeds an audio player); answer key stripped |
+| Listening Chapter Marks              | `聴解_チャプター.json`                           | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
+| Per-section Grading Report           | `採点結果_言語知識・読解.md`, `採点結果_聴解.md` | Downloaded from the answer sheet on 「採点する」                                       |
+| Combined Grading Report              | `採点結果.md`                                    | Written by `grade_answers.py` (both halves, 180-point 合否)                            |
 
 ---
 
@@ -110,7 +110,7 @@ python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<tes
 #   -> tests/<test_id>/言語知識・読解_解答.html  (75 questions)
 #   -> tests/<test_id>/聴解_解答.html            (32 items)
 
-# Step 2: answer them in a browser and press 「📊 採点する」.
+# Step 2: answer them in a browser and press 「採点する」.
 #   The report is shown in the page and downloaded as 採点結果_<section>.md.
 #   Nothing else is needed for per-section grading.
 
