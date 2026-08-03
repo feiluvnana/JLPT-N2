@@ -22,6 +22,8 @@ opening line → per-section instruction → 「では、練習しましょう�
 
 問題5 instead says 「この問題には練習はありません。」
 
+- **NO FURIGANA in TTS Script**: The script file (`聴解スクリプト.txt`) MUST remain clean plain text WITHOUT any `<ruby>` tags or furigana annotations, ensuring natural Edge-TTS speech synthesis. Furigana is generated exclusively for the printed booklet PDF (`聴解.pdf`).
+
 ## Block conventions (parser contract)
 
 - Blocks are separated by ONE blank line. **One block = one audio unit.**

@@ -11,6 +11,39 @@ h2 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 12pt;
 h3 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 11pt;
      margin: 20px 0 8px; page-break-after: avoid; }
 p { margin: 12px 0; }
+/* Furigana: WeasyPrint has NO ruby layout (and ignores ruby-position), so the
+   reading is stacked manually. rt is taken out of flow and pinned above the
+   base, which keeps the base glyphs on the text baseline and leaves line
+   spacing untouched. Do NOT go back to display:inline-table -- WeasyPrint
+   drops the base onto its own line under the reading. */
+ruby {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: baseline;
+  /* line-height 1 keeps the ruby box hugging its glyphs; with a taller
+     inherited line-height the box grows and `bottom: 100%` would push the
+     reading far above the text. */
+  line-height: 1;
+}
+rb { display: inline; }
+rt {
+  position: absolute;
+  bottom: calc(100% + 0.1em);
+  left: -0.6em;
+  right: -0.6em;
+  font-size: 0.5em;
+  line-height: 1;
+  font-weight: normal;
+  color: #333;
+  white-space: nowrap;
+  text-align: center;
+}
+rp { display: none; }
+/* Only blocks that actually carry furigana get extra leading, so the reading
+   clears the descenders of the line above without loosening plain text. */
+p.furi, li.furi { line-height: 2.1; }
+.vocab-notes { margin-top: 8px; font-size: 9pt; color: #333; line-height: 1.6; border-top: 1px dashed #aaa; padding-top: 6px; }
 table { border-collapse: collapse; margin: 10px 0; width: 100%; page-break-inside: avoid; }
 th, td { border: 1px solid #888; padding: 4px 9px; font-size: 9.5pt;
          line-height: 1.6; }
@@ -21,125 +54,125 @@ hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
 strong { font-family: "Noto Sans CJK JP", sans-serif; }
 </style></head><body><h1>日本語能力試験 N2 模擬試験 — 聴解</h1>
 <h1>問題用紙・解答用紙</h1>
-<p><strong>時間: 約50分 問題数: 32問</strong><br />
-このファイルには<strong>スクリプトは入っていません</strong>。音声を聞きながら、この用紙だけを見て解答してください。<br />
-<strong>正解と解説は、このファイルの一番最後にあります。</strong></p>
+<p class="furi"><strong><ruby>時間<rt>じかん</rt></ruby>: <ruby>約<rt>やく</rt></ruby>50<ruby>分<rt>ふん</rt></ruby> <ruby>問題数<rt>もんだいすう</rt></ruby>: 32<ruby>問<rt>もん</rt></ruby></strong><br />
+このファイルには<strong>スクリプトは<ruby>入<rt>はい</rt></ruby>っていません</strong>。<ruby>音声<rt>おんせい</rt></ruby>を<ruby>聞<rt>き</rt></ruby>きながら、この<ruby>用紙<rt>ようし</rt></ruby>だけを<ruby>見<rt>み</rt></ruby>て<ruby>解答<rt>かいとう</rt></ruby>してください。<br />
+<strong><ruby>正解<rt>せいかい</rt></ruby>と<ruby>解説<rt>かいせつ</rt></ruby>は、このファイルの<ruby>一番最後<rt>いちばんさいご</rt></ruby>にあります。</strong></p>
 <hr />
 <h1>問題1 課題理解</h1>
-<p>問題1では、まず質問を聞いてください。それから話を聞いて、問題用紙の1から4の中から、最もよいものを一つ選んでください。</p>
-<p><strong>例</strong><br />
- 1. 作文を書く<br />
- 2. 教科書の問題をやる<br />
- 3. ノートを買う<br />
- 4. プリントを作る</p>
-<p><strong>1番</strong><br />
- 1. サブスクの月額費用をカードで支払う<br />
- 2. 解約時のキャンセル手数料を計算する<br />
- 3. マイページで利用期間と補償規定を確認する<br />
- 4. 家具の配送日時を電話で変更する</p>
-<p><strong>2番</strong><br />
- 1. 食品の賞味期限を1つずつ手書きでメモする<br />
- 2. 寄付する食品をすべてダンボール箱に詰める<br />
- 3. 市役所の担当窓口へ直接持ち込む<br />
- 4. 常温保存可能で未開封の食品を選び分ける</p>
-<p><strong>3番</strong><br />
- 1. 社内Webポータルで新制度の概要を周知する<br />
- 2. 部署ごとの出社希望人数を集計する<br />
- 3. 人事部長へ変更案の承認を求める<br />
- 4. 全社員向けのオンライン説明会をセットする</p>
-<p><strong>4番</strong><br />
- 1. キャンセル料の発生有無を確認する<br />
- 2. アレルギー対応の特別メニューに変更する<br />
- 3. 来店人数を大人4名に増やす<br />
- 4. 予約の日時を翌週の同じ時間に変更する</p>
-<p><strong>5番</strong><br />
- 1. 職場の給水エリアの清掃状況を点検する<br />
- 2. マイボトルの利用アンケートを集計する<br />
- 3. 総務部へ新しい自動販売機の設置を申請する<br />
- 4. 社員へペットボトル持込禁止のメールを送信する</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>1では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby>作文<rt>さくぶん</rt></ruby>を<ruby>書<rt>か</rt></ruby>く<br />
+ 2. <ruby>教科書<rt>きょうかしょ</rt></ruby>の<ruby>問題<rt>もんだい</rt></ruby>をやる<br />
+ 3. ノートを<ruby>買<rt>か</rt></ruby>う<br />
+ 4. プリントを<ruby>作<rt>つく</rt></ruby>る</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. サブスクの<ruby>月額<rt>げつがく</rt></ruby><ruby>費用<rt>ひよう</rt></ruby>をカードで<ruby>支払<rt>しはら</rt></ruby>う<br />
+ 2. <ruby>解約<rt>かいやく</rt></ruby><ruby>時<rt>とき</rt></ruby>のキャンセル<ruby>手数料<rt>てすうりょう</rt></ruby>を<ruby>計算<rt>けいさん</rt></ruby>する<br />
+ 3. マイページで<ruby>利用期間<rt>りようきかん</rt></ruby>と<ruby>補償<rt>ほしょう</rt></ruby><ruby>規定<rt>きてい</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>する<br />
+ 4. <ruby>家具<rt>かぐ</rt></ruby>の<ruby>配送<rt>はいそう</rt></ruby><ruby>日時<rt>にちじ</rt></ruby>を<ruby>電話<rt>でんわ</rt></ruby>で<ruby>変更<rt>へんこう</rt></ruby>する</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby style="min-width:2.50em">食品<rt>しょくひん</rt></ruby>の<ruby>賞味期限<rt>しょうみきげん</rt></ruby>を1つずつ<ruby>手書<rt>てが</rt></ruby>きでメモする<br />
+ 2. <ruby>寄付<rt>きふ</rt></ruby>する<ruby style="min-width:2.50em">食品<rt>しょくひん</rt></ruby>をすべてダンボール<ruby>箱<rt>はこ</rt></ruby>に<ruby>詰<rt>つ</rt></ruby>める<br />
+ 3. <ruby>市役所<rt>しやくしょ</rt></ruby>の<ruby>担当窓口<rt>たんとうまどぐち</rt></ruby>へ<ruby style="min-width:2.50em">直接<rt>ちょくせつ</rt></ruby><ruby>持ち込<rt>もちこ</rt></ruby>む<br />
+ 4. <ruby style="min-width:2.50em">常温<rt>じょうおん</rt></ruby><ruby>保存可能<rt>ほぞんかのう</rt></ruby>で<ruby>未開封<rt>みかいふう</rt></ruby>の<ruby style="min-width:2.50em">食品<rt>しょくひん</rt></ruby>を<ruby>選<rt>えら</rt></ruby>び<ruby>分<rt>わ</rt></ruby>ける</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>社内<rt>しゃない</rt></ruby>Webポータルで<ruby>新制度<rt>しんせいど</rt></ruby>の<ruby>概要<rt>がいよう</rt></ruby>を<ruby>周知<rt>しゅうち</rt></ruby>する<br />
+ 2. <ruby>部署<rt>ぶしょ</rt></ruby>ごとの<ruby style="min-width:2.50em">出社<rt>しゅっしゃ</rt></ruby><ruby>希望<rt>きぼう</rt></ruby><ruby>人数<rt>にんずう</rt></ruby>を<ruby style="min-width:2.50em">集計<rt>しゅうけい</rt></ruby>する<br />
+ 3. <ruby>人事部長<rt>じんじぶちょう</rt></ruby>へ<ruby>変更案<rt>へんこうあん</rt></ruby>の<ruby style="min-width:2.50em">承認<rt>しょうにん</rt></ruby>を<ruby>求<rt>もと</rt></ruby>める<br />
+ 4. <ruby>全社<rt>ぜんしゃ</rt></ruby><ruby>員<rt>いん</rt></ruby><ruby>向<rt>む</rt></ruby>けのオンライン<ruby>説明会<rt>せつめいかい</rt></ruby>をセットする</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. キャンセル<ruby style="min-width:1.50em">料<rt>りょう</rt></ruby>の<ruby>発生<rt>はっせい</rt></ruby><ruby>有無<rt>うむ</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>する<br />
+ 2. アレルギー<ruby>対応<rt>たいおう</rt></ruby>の<ruby>特別<rt>とくべつ</rt></ruby>メニューに<ruby>変更<rt>へんこう</rt></ruby>する<br />
+ 3. <ruby>来店<rt>らいてん</rt></ruby><ruby>人数<rt>にんずう</rt></ruby>を<ruby>大人<rt>おとな</rt></ruby>4<ruby>名<rt>めい</rt></ruby>に<ruby>増<rt>ふ</rt></ruby>やす<br />
+ 4. <ruby>予約<rt>よやく</rt></ruby>の<ruby>日時<rt>にちじ</rt></ruby>を<ruby style="min-width:2.50em">翌週<rt>よくしゅう</rt></ruby>の<ruby>同<rt>おな</rt></ruby>じ<ruby>時間<rt>じかん</rt></ruby>に<ruby>変更<rt>へんこう</rt></ruby>する</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>職場<rt>しょくば</rt></ruby>の<ruby style="min-width:2.50em">給水<rt>きゅうすい</rt></ruby>エリアの<ruby>清掃<rt>せいそう</rt></ruby><ruby style="min-width:3.00em">状況<rt>じょうきょう</rt></ruby>を<ruby>点検<rt>てんけん</rt></ruby>する<br />
+ 2. マイボトルの<ruby>利用<rt>りよう</rt></ruby>アンケートを<ruby style="min-width:2.50em">集計<rt>しゅうけい</rt></ruby>する<br />
+ 3. <ruby>総務部<rt>そうむぶ</rt></ruby>へ<ruby style="min-width:1.50em">新<rt>あたら</rt></ruby>しい<ruby>自動販売機<rt>じどうはんばいき</rt></ruby>の<ruby>設置<rt>せっち</rt></ruby>を<ruby>申請<rt>しんせい</rt></ruby>する<br />
+ 4. <ruby>社員<rt>しゃいん</rt></ruby>へペットボトル<ruby>持<rt>じ</rt></ruby><ruby>込<rt>こみ</rt></ruby><ruby>禁止<rt>きんし</rt></ruby>のメールを<ruby>送信<rt>そうしん</rt></ruby>する</p>
 <hr />
 <h1>問題2 ポイント理解</h1>
-<p>問題2では、まず質問を聞いてください。そのあと、問題用紙のせんたくしを読んでください。読む時間があります。それから話を聞いて、問題用紙の1から4の中から、最もよいものを一つ選んでください。</p>
-<p><strong>例</strong><br />
- 1. 仕事が忙しかったから<br />
- 2. 夜遅くまで映画を見ていたから<br />
- 3. 朝早く起きたから<br />
- 4. なかなか眠れなかったから</p>
-<p><strong>1番</strong><br />
- 1. 自宅のインターネット回線が不安定だったから<br />
- 2. 在宅勤務用のパソコンが故障したから<br />
- 3. 家では集中して作業ができなかったから<br />
- 4. チームでの対面ミーティングが予定されていたから</p>
-<p><strong>2番</strong><br />
- 1. 「てまえどり」という言葉が全く知られていないこと<br />
- 2. 割引シールなどの経済的インセンティブがないと購入されにくいこと<br />
- 3. 店の棚の手前にある商品の品質が非常に悪いこと<br />
- 4. 店舗側の値引き手続きが非常に複雑であること</p>
-<p><strong>3番</strong><br />
- 1. 玄関の見た目を綺麗でおしゃれにするため<br />
- 2. 宅配業者との対面でのやり取りを増やすため<br />
- 3. 再配達を減らして不在時でも荷物を受け取れるようにするため<br />
- 4. 大型家具の配送費用を無料にするため</p>
-<p><strong>4番</strong><br />
- 1. 食堂の混雑が緩和され、メニューの選択肢が増えたこと<br />
- 2. 学生の学食利用料金が完全に半額になったこと<br />
- 3. 講義の出席率が大幅に向上したこと<br />
- 4. キャンパス内の駐車場スペースが広がったこと</p>
-<p><strong>5番</strong><br />
- 1. 見学だけでなく職人と一緒に手作り体験ができること<br />
- 2. ツアーの参加費用が他の観光地より格段に安いこと<br />
- 3. 豪華なホテルでの宿泊と食事がセットになっていること<br />
- 4. 外国語通訳ボランティアが常時同行すること</p>
-<p><strong>6番</strong><br />
- 1. 商業施設の防犯カメラ映像を確認すること<br />
- 2. インフォメーションカウンターで遺失物届を記入すること<br />
- 3. 最寄りの警察署へ電話で連絡すること<br />
- 4. 落としたと思われる店舗へ直接行って探すこと</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>2では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。そのあと、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>のせんたくしを<ruby>読<rt>よ</rt></ruby>んでください。<ruby>読<rt>よ</rt></ruby>む<ruby>時間<rt>じかん</rt></ruby>があります。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby>仕事<rt>しごと</rt></ruby>が<ruby style="min-width:1.50em">忙<rt>いそが</rt></ruby>しかったから<br />
+ 2. <ruby>夜遅<rt>よるおそ</rt></ruby>くまで<ruby>映画<rt>えいが</rt></ruby>を<ruby>見<rt>み</rt></ruby>ていたから<br />
+ 3. <ruby>朝早<rt>あさはや</rt></ruby>く<ruby>起<rt>お</rt></ruby>きたから<br />
+ 4. なかなか<ruby>眠<rt>ねむ</rt></ruby>れなかったから</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>自宅<rt>じたく</rt></ruby>のインターネット<ruby>回線<rt>かいせん</rt></ruby>が<ruby>不安定<rt>ふあんてい</rt></ruby>だったから<br />
+ 2. <ruby>在宅勤務<rt>ざいたくきんむ</rt></ruby><ruby>用<rt>よう</rt></ruby>のパソコンが<ruby>故障<rt>こしょう</rt></ruby>したから<br />
+ 3. <ruby>家<rt>いえ</rt></ruby>では<ruby style="min-width:3.00em">集中<rt>しゅうちゅう</rt></ruby>して<ruby>作業<rt>さぎょう</rt></ruby>ができなかったから<br />
+ 4. チームでの<ruby>対面<rt>たいめん</rt></ruby>ミーティングが<ruby>予定<rt>よてい</rt></ruby>されていたから</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. 「てまえどり」という<ruby>言葉<rt>ことば</rt></ruby>が<ruby style="min-width:1.50em">全<rt>まった</rt></ruby>く<ruby>知<rt>し</rt></ruby>られていないこと<br />
+ 2. <ruby>割引<rt>わりびき</rt></ruby>シールなどの<ruby>経済的<rt>けいざいてき</rt></ruby>インセンティブがないと<ruby style="min-width:2.50em">購入<rt>こうにゅう</rt></ruby>されにくいこと<br />
+ 3. <ruby>店<rt>みせ</rt></ruby>の<ruby>棚<rt>たな</rt></ruby>の<ruby>手前<rt>てまえ</rt></ruby>にある<ruby style="min-width:2.50em">商品<rt>しょうひん</rt></ruby>の<ruby>品質<rt>ひんしつ</rt></ruby>が<ruby>非常<rt>ひじょう</rt></ruby>に<ruby>悪<rt>わる</rt></ruby>いこと<br />
+ 4. <ruby>店舗<rt>てんぽ</rt></ruby><ruby>側<rt>がわ</rt></ruby>の<ruby>値引<rt>ねび</rt></ruby>き<ruby>手続<rt>てつづ</rt></ruby>きが<ruby>非常<rt>ひじょう</rt></ruby>に<ruby>複雑<rt>ふくざつ</rt></ruby>であること</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>玄関<rt>げんかん</rt></ruby>の<ruby>見た目<rt>みため</rt></ruby>を<ruby>綺麗<rt>きれい</rt></ruby>でおしゃれにするため<br />
+ 2. <ruby>宅配<rt>たくはい</rt></ruby><ruby style="min-width:2.50em">業者<rt>ぎょうしゃ</rt></ruby>との<ruby>対面<rt>たいめん</rt></ruby>でのやり<ruby>取<rt>と</rt></ruby>りを<ruby>増<rt>ふ</rt></ruby>やすため<br />
+ 3. <ruby>再<rt>さい</rt></ruby><ruby>配達<rt>はいたつ</rt></ruby>を<ruby>減<rt>へ</rt></ruby>らして<ruby>不在時<rt>ふざいじ</rt></ruby>でも<ruby>荷物<rt>にもつ</rt></ruby>を<ruby>受け取<rt>うけと</rt></ruby>れるようにするため<br />
+ 4. <ruby>大型<rt>おおがた</rt></ruby><ruby>家具<rt>かぐ</rt></ruby>の<ruby>配送<rt>はいそう</rt></ruby><ruby>費用<rt>ひよう</rt></ruby>を<ruby>無料<rt>むりょう</rt></ruby>にするため</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby style="min-width:2.50em">食堂<rt>しょくどう</rt></ruby>の<ruby>混雑<rt>こんざつ</rt></ruby>が<ruby>緩和<rt>かんわ</rt></ruby>され、メニューの<ruby>選択肢<rt>せんたくし</rt></ruby>が<ruby>増<rt>ふ</rt></ruby>えたこと<br />
+ 2. <ruby>学生<rt>がくせい</rt></ruby>の<ruby style="min-width:2.50em">学食<rt>がくしょく</rt></ruby><ruby>利用料金<rt>りようりょうきん</rt></ruby>が<ruby>完全<rt>かんぜん</rt></ruby>に<ruby>半額<rt>はんがく</rt></ruby>になったこと<br />
+ 3. <ruby>講義<rt>こうぎ</rt></ruby>の<ruby style="min-width:3.50em">出席率<rt>しゅっせきりつ</rt></ruby>が<ruby>大幅<rt>おおはば</rt></ruby>に<ruby style="min-width:2.50em">向上<rt>こうじょう</rt></ruby>したこと<br />
+ 4. キャンパス<ruby>内<rt>ない</rt></ruby>の<ruby style="min-width:4.00em">駐車場<rt>ちゅうしゃじょう</rt></ruby>スペースが<ruby>広<rt>ひろ</rt></ruby>がったこと</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>見学<rt>けんがく</rt></ruby>だけでなく<ruby style="min-width:2.50em">職人<rt>しょくにん</rt></ruby>と<ruby>一緒<rt>いっしょ</rt></ruby>に<ruby>手作<rt>てづく</rt></ruby>り<ruby>体験<rt>たいけん</rt></ruby>ができること<br />
+ 2. ツアーの<ruby>参加費用<rt>さんかひよう</rt></ruby>が<ruby>他<rt>ほか</rt></ruby>の<ruby>観光地<rt>かんこうち</rt></ruby>より<ruby>格段<rt>かくだん</rt></ruby>に<ruby>安<rt>やす</rt></ruby>いこと<br />
+ 3. <ruby>豪華<rt>ごうか</rt></ruby>なホテルでの<ruby style="min-width:2.50em">宿泊<rt>しゅくはく</rt></ruby>と<ruby>食事<rt>しょくじ</rt></ruby>がセットになっていること<br />
+ 4. <ruby>外国語<rt>がいこくご</rt></ruby><ruby>通訳<rt>つうやく</rt></ruby>ボランティアが<ruby>常時<rt>じょうじ</rt></ruby><ruby>同行<rt>どうこう</rt></ruby>すること</p>
+<p class="furi"><strong>6<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby style="min-width:3.00em">商業<rt>しょうぎょう</rt></ruby><ruby>施設<rt>しせつ</rt></ruby>の<ruby>防犯<rt>ぼうはん</rt></ruby>カメラ<ruby>映像<rt>えいぞう</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>すること<br />
+ 2. インフォメーションカウンターで<ruby>遺失物<rt>いしつぶつ</rt></ruby><ruby style="min-width:1.50em">届<rt>とどけ</rt></ruby>を<ruby>記入<rt>きにゅう</rt></ruby>すること<br />
+ 3. <ruby>最寄<rt>もよ</rt></ruby>りの<ruby>警察署<rt>けいさつしょ</rt></ruby>へ<ruby>電話<rt>でんわ</rt></ruby>で<ruby>連絡<rt>れんらく</rt></ruby>すること<br />
+ 4. <ruby>落<rt>お</rt></ruby>としたと<ruby>思<rt>おも</rt></ruby>われる<ruby>店舗<rt>てんぽ</rt></ruby>へ<ruby>直接行<rt>ちょくせつい</rt></ruby>って<ruby>探<rt>さが</rt></ruby>すこと</p>
 <hr />
 <h1>問題3 概要理解</h1>
-<p>問題3では、問題用紙になに印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>3では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>になに<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>質問<rt>しつもん</rt></ruby>とせんたくしを<ruby>聞<rt>き</rt></ruby>いて、1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
 <p>（メモをとってもかまいません）</p>
-<p><strong>1番</strong> メモ欄<br />
-<strong>2番</strong> メモ欄<br />
-<strong>3番</strong> メモ欄<br />
-<strong>4番</strong> メモ欄<br />
-<strong>5番</strong> メモ欄</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>2<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>3<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>4<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>5<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby></p>
 <hr />
 <h1>問題4 即時応答</h1>
-<p>問題4では、問題用紙になに印刷されていません。まず文を聞いてください。それから、それに対する返事を聞いて、1から3の中から、最もよいものを一つ選んでください。</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>4では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>になに<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby>文<rt>ぶん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、それに<ruby>対<rt>たい</rt></ruby>する<ruby>返事<rt>へんじ</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、1から3の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
 <p>（メモをとってもかまいません）</p>
-<p><strong>1番</strong> メモ欄<br />
-<strong>2番</strong> メモ欄<br />
-<strong>3番</strong> メモ欄<br />
-<strong>4番</strong> メモ欄<br />
-<strong>5番</strong> メモ欄<br />
-<strong>6番</strong> メモ欄<br />
-<strong>7番</strong> メモ欄<br />
-<strong>8番</strong> メモ欄<br />
-<strong>9番</strong> メモ欄<br />
-<strong>10番</strong> メモ欄<br />
-<strong>11番</strong> メモ欄<br />
-<strong>12番</strong> メモ欄</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>2<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>3<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>4<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>5<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>6<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>7<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>8<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>9<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>10<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>11<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>12<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby></p>
 <hr />
 <h1>問題5 統合理解</h1>
-<p>問題5では、全体のなかの複数の質問や会話を聞いて答えます。</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>5では、<ruby>全体<rt>ぜんたい</rt></ruby>のなかの<ruby>複数<rt>ふくすう</rt></ruby>の<ruby>質問<rt>しつもん</rt></ruby>や<ruby>会話<rt>かいわ</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて<ruby>答<rt>こた</rt></ruby>えます。</p>
 <h3>1番・2番</h3>
-<p>問題用紙に何も印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。</p>
-<p><strong>1番</strong> メモ欄<br />
-<strong>2番</strong> メモ欄</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>質問<rt>しつもん</rt></ruby>とせんたくしを<ruby>聞<rt>き</rt></ruby>いて、1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby><br />
+<strong>2<ruby>番<rt>ばん</rt></ruby></strong> メモ<ruby>欄<rt>らん</rt></ruby></p>
 <hr />
 <h3>3番</h3>
-<p>まず話を聞いてください。それから、二つの質問を聞いて、それぞれ問題用紙の1から4の中から、最もよいものを一つ選んでください。</p>
-<p><strong>質問1</strong><br />
- 1. プランA: 水耕栽培の採れたて野菜収穫体験<br />
- 2. プランB: 地元米を使った酒蔵見学と試飲<br />
- 3. プランC: 伝統工芸の和紙作りと手漉き体験<br />
- 4. プランD: 森林セラピーとハイキングガイド</p>
-<p><strong>質問2</strong><br />
- 1. プランA: 水耕栽培の採れたて野菜収穫体験<br />
- 2. プランB: 地元米を使った酒蔵見学と試飲<br />
- 3. プランC: 伝統工芸の和紙作りと手漉き体験<br />
- 4. プランD: 森林セラピーとハイキングガイド</p>
+<p class="furi">まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>二<rt>ふた</rt></ruby>つの<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、それぞれ<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>質問<rt>しつもん</rt></ruby>1</strong><br />
+ 1. プランA: <ruby>水耕<rt>すいこう</rt></ruby><ruby>栽培<rt>さいばい</rt></ruby>の<ruby>採<rt>と</rt></ruby>れたて<ruby>野菜<rt>やさい</rt></ruby><ruby style="min-width:2.50em">収穫<rt>しゅうかく</rt></ruby><ruby>体験<rt>たいけん</rt></ruby><br />
+ 2. プランB: <ruby>地元<rt>じもと</rt></ruby><ruby>米<rt>こめ</rt></ruby>を<ruby>使<rt>つか</rt></ruby>った<ruby>酒蔵見学<rt>しゅぞうけんがく</rt></ruby>と<ruby>試飲<rt>しいん</rt></ruby><br />
+ 3. プランC: <ruby>伝統工芸<rt>でんとうこうげい</rt></ruby>の<ruby>和紙<rt>わし</rt></ruby><ruby>作<rt>つく</rt></ruby>りと<ruby>手漉<rt>てすき</rt></ruby>き<ruby>体験<rt>たいけん</rt></ruby><br />
+ 4. プランD: <ruby>森林<rt>しんりん</rt></ruby>セラピーとハイキングガイド</p>
+<p class="furi"><strong><ruby>質問<rt>しつもん</rt></ruby>2</strong><br />
+ 1. プランA: <ruby>水耕<rt>すいこう</rt></ruby><ruby>栽培<rt>さいばい</rt></ruby>の<ruby>採<rt>と</rt></ruby>れたて<ruby>野菜<rt>やさい</rt></ruby><ruby style="min-width:2.50em">収穫<rt>しゅうかく</rt></ruby><ruby>体験<rt>たいけん</rt></ruby><br />
+ 2. プランB: <ruby>地元<rt>じもと</rt></ruby><ruby>米<rt>こめ</rt></ruby>を<ruby>使<rt>つか</rt></ruby>った<ruby>酒蔵見学<rt>しゅぞうけんがく</rt></ruby>と<ruby>試飲<rt>しいん</rt></ruby><br />
+ 3. プランC: <ruby>伝統工芸<rt>でんとうこうげい</rt></ruby>の<ruby>和紙<rt>わし</rt></ruby><ruby>作<rt>つく</rt></ruby>りと<ruby>手漉<rt>てすき</rt></ruby>き<ruby>体験<rt>たいけん</rt></ruby><br />
+ 4. プランD: <ruby>森林<rt>しんりん</rt></ruby>セラピーとハイキングガイド</p>
 <h2>---</h2>
 <h1>解答用紙(マークシート)</h1>
 <h3>問題1 課題理解</h3>

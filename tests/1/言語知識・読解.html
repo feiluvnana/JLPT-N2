@@ -11,6 +11,39 @@ h2 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 12pt;
 h3 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 11pt;
      margin: 20px 0 8px; page-break-after: avoid; }
 p { margin: 12px 0; }
+/* Furigana: WeasyPrint has NO ruby layout (and ignores ruby-position), so the
+   reading is stacked manually. rt is taken out of flow and pinned above the
+   base, which keeps the base glyphs on the text baseline and leaves line
+   spacing untouched. Do NOT go back to display:inline-table -- WeasyPrint
+   drops the base onto its own line under the reading. */
+ruby {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: baseline;
+  /* line-height 1 keeps the ruby box hugging its glyphs; with a taller
+     inherited line-height the box grows and `bottom: 100%` would push the
+     reading far above the text. */
+  line-height: 1;
+}
+rb { display: inline; }
+rt {
+  position: absolute;
+  bottom: calc(100% + 0.1em);
+  left: -0.6em;
+  right: -0.6em;
+  font-size: 0.5em;
+  line-height: 1;
+  font-weight: normal;
+  color: #333;
+  white-space: nowrap;
+  text-align: center;
+}
+rp { display: none; }
+/* Only blocks that actually carry furigana get extra leading, so the reading
+   clears the descenders of the line above without loosening plain text. */
+p.furi, li.furi { line-height: 2.1; }
+.vocab-notes { margin-top: 8px; font-size: 9pt; color: #333; line-height: 1.6; border-top: 1px dashed #aaa; padding-top: 6px; }
 table { border-collapse: collapse; margin: 10px 0; width: 100%; page-break-inside: avoid; }
 th, td { border: 1px solid #888; padding: 4px 9px; font-size: 9.5pt;
          line-height: 1.6; }
@@ -255,9 +288,13 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  3. 嫌なことを我慢する経験が子どもを成長させる。<br />
  4. 自分で考えて選ぶ経験が子どもの成長につながる。</p>
 <h3>(3)</h3>
-<p>私の故郷の商店街は、十年前には「シャッター通り」と呼ばれていた。閉店した店のシャッターが並び、人通りもまばらだった。それが今、若い人でにぎわう場所に生まれ変わっている。<br />
+<p>私の故郷の商店街は、十年前には「シャッター通り（注1）」と呼ばれていた。閉店した店のシャッターが並び、人通りもまばらだった。それが今、若い人でにぎわう場所に生まれ変わっている。<br />
  きっかけは、市の補助金でも大型開発でもなかった。一人のパン屋の開業だった。東京から戻ってきた30代の夫婦が、空き店舗を安く借りてパン屋を始めた。店は評判になり、パンを買いに来た客が「他に店がないね」とつぶやく。それを聞いた大家たちが、空き店舗を若い起業家に安く貸し始めたのだ。コーヒー店、古本屋、雑貨店。五年で十二の店が生まれた。<br />
  興味深いのは、新しい店主たちが「商店街を再生しよう」とは考えていなかったことだ。彼らはただ、自分の店をやりたかっただけだった。誰も再生を目指さなかったのに、結果として町は再生した。大きな計画より、小さな挑戦を受け入れる環境。地方に必要なのは、案外そういうものなのかもしれない。</p>
+<div class="vocab-notes">
+（注1）シャッター通り：閉店した店舗が多く、シャッターが閉まったままの店が並ぶ寂しい商店街のこと。
+</div>
+
 <p><strong>66</strong> 商店街が変わるきっかけになったのは何か。<br />
  1. 市が補助金を出したこと<br />
  2. 大型の開発が行われたこと<br />
@@ -291,11 +328,15 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  4. AもBも、どちらでもいいと考えている。</p>
 <hr />
 <h2>問題13 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
-<p>「失敗は成功のもと」ということわざがある。誰もが知っている言葉だが、私はこの言葉が長い間、好きになれなかった。失敗した直後の人間に必要なのは、そんな正論ではなく、まず落ち込む時間だと思っていたからだ。<br />
- 考えが変わったのは、ある陶芸家の工房を取材したときだ。彼の工房の棚には、ひび割れた茶碗や、形のゆがんだ皿が大量に並んでいた。失敗作を捨てずに取ってあるのだという。「恥ずかしくないですか」と尋ねると、彼は笑って言った。「これは失敗の記録じゃなくて、実験の記録なんです」。<br />
- 彼によれば、うまくいった作品からは、実は学べることが少ない。なぜうまくいったのか、要因が多すぎて特定できないからだ。一方、失敗作は雄弁だ。この温度で焼くとこうひびが入る、この厚さだとこうゆがむ。①<strong>失敗だけが、確かな知識をくれる</strong>。だから彼は、新しい技法を試すとき、まず「どう失敗するか」を確かめるために焼くのだという。<br />
+<p class="furi">「失敗は成功のもと」ということわざがある。誰もが知っている言葉だが、私はこの言葉が長い間、好きになれなかった。失敗した直後の人間に必要なのは、そんな正論ではなく、まず落ち込む時間だと思っていたからだ。<br />
+ 考えが変わったのは、ある<ruby>陶芸家<rt>とうげいか</rt></ruby>の工房を取材したときだ。彼の工房の棚には、ひび割れた茶碗や、形のゆがんだ皿が大量に並んでいた。失敗作を捨てずに取ってあるのだという。「恥ずかしくないですか」と尋ねると、彼は笑って言った。「これは失敗の記録じゃなくて、実験の記録なんです」。<br />
+ 彼によれば、うまくいった作品からは、実は学べることが少ない。なぜうまくいったのか、要因が多すぎて特定できないからだ。一方、失敗作は<ruby>雄弁<rt>ゆうべん</rt></ruby>（注1）だ。この温度で焼くとこうひびが入る、この厚さだとこうゆがむ。①<strong>失敗だけが、確かな知識をくれる</strong>。だから彼は、新しい技法を試すとき、まず「どう失敗するか」を確かめるために焼くのだという。<br />
  話を聞きながら、私は自分の勘違いに気づいた。「失敗は成功のもと」という言葉を、私は「失敗しても、いつか報われるから元気を出せ」という慰めだと思っていた。だが本当は、もっと実践的な技術の話だったのだ。失敗を情報として扱い、そこから具体的に学ぶ。落ち込むかどうかとは別の話として、失敗には使い道がある。<br />
  ②<strong>失敗を「感情の問題」から「情報の問題」へ</strong>。この切り替えができたとき、人は失敗を怖がりすぎずに、新しいことに挑戦できるようになるのではないだろうか。</p>
+<div class="vocab-notes">
+（注1）雄弁：言葉でハッキリと多くの情報を伝える様子。本文では「失敗作が多くの情報を与えてくれる」という意味。
+</div>
+
 <p><strong>71</strong> ①<strong>失敗だけが、確かな知識をくれる</strong>とあるが、なぜか。<br />
  1. 成功した作品は要因が多すぎて、理由を特定しにくいから<br />
  2. 失敗作のほうが数が多く、データがたくさんあるから<br />

@@ -62,6 +62,7 @@ Question numbering is continuous 1-75 across the whole paper.
 - 聴解 booklet: options stacked VERTICALLY, one per line with a leading space.
 - Question stems bold the tested word: **地域**, or show blanks as (　) / ＿＿.
 - 問題8 uses ＿＿ ＿＿ ★ ＿＿ with the answer = whichever option lands on ★.
+- **Dokkai Vocabulary Notes & Furigana**: Reading passages (問題9-14) containing uncommon vocabulary, domain-specific terminology, or rare kanji annotate inline terms using `（注1）`, `（注2）`... or `<ruby>漢字<rt>かんじ</rt></ruby>`. Structured note blocks `（注1） 語彙：説明` sit below the passage before questions.
 
 ## Answer Key & Explanation Table Structure
 

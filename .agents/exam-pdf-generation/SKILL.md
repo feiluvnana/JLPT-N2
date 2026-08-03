@@ -35,6 +35,21 @@ python3 .agents/exam-pdf-generation/scripts/build_pdf.py tests/<test_id>/言語�
    `page-break-after: avoid` on headings. line-height ≥ 1.9 for Japanese.
 6. Layout follows jlpt-exam-structure: horizontal options for 文字・語彙・文法,
    vertical for 聴解 and 問題6.
+7. **Ruby Furigana**: HTML `<ruby>漢字<rt>かんじ</rt></ruby>` passes through Python-Markdown
+   into styled HTML. **The renderer has no ruby layout at all** (WeasyPrint ignores
+   `ruby-position`; `display: inline-table` drops the base onto its own line *below*
+   the reading — that was the real misalignment bug). So the stack is done by hand:
+   `ruby` is an `inline-block` (`position: relative; line-height: 1`) and `rt` is
+   `position: absolute; bottom: calc(100% + 0.1em)` with `left/right: -0.6em`.
+   Keep `line-height: 1` on `ruby` — anything taller grows its box and floats the
+   reading away from the kanji. Two Python passes support this: `fit_ruby()` gives a
+   ruby `min-width` when the reading is wider than its base (readings then can't
+   collide with the next word's), and `mark_furigana_blocks()` adds `class="furi"`
+   (line-height 2.1) only to blocks that contain ruby, so the reading clears the
+   line above without loosening plain text.
+8. **Vocabulary Notes**: notes (`（注1）...`) use `.vocab-notes` CSS styling
+   (font-size: 9pt; line-height: 1.6; top dashed border) to replicate official
+   JLPT Dokkai test layout.
 
 ## Verification (always, before shipping)
 
@@ -51,5 +66,10 @@ pdftotext -layout -f 1 -l 2 tests/<test_id>/言語知識・読解.pdf - | head -
 
 ## Environment
 
-Requires: `wkhtmltopdf`, `python3 -m pip install markdown`, Noto CJK fonts.
+Requires: `wkhtmltopdf` **or** `weasyprint` (the script prefers wkhtmltopdf, falls
+back to weasyprint — on this machine only weasyprint is installed, so that is what
+the furigana CSS is tuned against), `python3 -m pip install markdown pykakasi`,
+Noto CJK fonts. `pdftotext` is optional; verification falls back to `pypdf`.
+No `pdftoppm` here — proof a page visually with
+`gs -dNOPAUSE -dBATCH -sDEVICE=png16m -r140 -dFirstPage=N -dLastPage=N -sOutputFile=p.png file.pdf`.
 

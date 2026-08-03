@@ -11,6 +11,39 @@ h2 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 12pt;
 h3 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 11pt;
      margin: 20px 0 8px; page-break-after: avoid; }
 p { margin: 12px 0; }
+/* Furigana: WeasyPrint has NO ruby layout (and ignores ruby-position), so the
+   reading is stacked manually. rt is taken out of flow and pinned above the
+   base, which keeps the base glyphs on the text baseline and leaves line
+   spacing untouched. Do NOT go back to display:inline-table -- WeasyPrint
+   drops the base onto its own line under the reading. */
+ruby {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: baseline;
+  /* line-height 1 keeps the ruby box hugging its glyphs; with a taller
+     inherited line-height the box grows and `bottom: 100%` would push the
+     reading far above the text. */
+  line-height: 1;
+}
+rb { display: inline; }
+rt {
+  position: absolute;
+  bottom: calc(100% + 0.1em);
+  left: -0.6em;
+  right: -0.6em;
+  font-size: 0.5em;
+  line-height: 1;
+  font-weight: normal;
+  color: #333;
+  white-space: nowrap;
+  text-align: center;
+}
+rp { display: none; }
+/* Only blocks that actually carry furigana get extra leading, so the reading
+   clears the descenders of the line above without loosening plain text. */
+p.furi, li.furi { line-height: 2.1; }
+.vocab-notes { margin-top: 8px; font-size: 9pt; color: #333; line-height: 1.6; border-top: 1px dashed #aaa; padding-top: 6px; }
 table { border-collapse: collapse; margin: 10px 0; width: 100%; page-break-inside: avoid; }
 th, td { border: 1px solid #888; padding: 4px 9px; font-size: 9.5pt;
          line-height: 1.6; }
@@ -232,9 +265,14 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <hr />
 <h2>問題11 次の(1)から(3)の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
 <p><strong>(1)</strong><br />
-生活様式の変化に伴い、毎日の買い物における環境意識の高まりが見られる。スーパーやコンビニでは、消費期限や賞味期限の迫った商品を棚の手前から優先的に購入する「てまえどり」運動が推進されている。従来、消費者は少しでも期限の長い奧の商品を選びがちであったが、これが店舗での販売期限切れによる食品ロスの発生要因となっていた。</p>
+生活様式の変化に伴い、毎日の買い物における環境意識の高まりが見られる。スーパーやコンビニでは、消費期限や賞味期限の迫った商品を棚の手前から優先的に購入する「てまえどり（注1）」運動が推進されている。従来、消費者は少しでも期限の長い奧の商品を選びがちであったが、これが店舗での販売期限切れによる食品ロスの発生要因となっていた。</p>
 <p>意識調査によれば、「食品ロス」という言葉の認知度は8割を超えており、環境保護や持続可能な社会への関心は確実に定着している。しかし、「てまえどり」を実行するかどうかについては、割引シールが貼られているかといった経済的インセンティブの有無が影響しているケースも少なくない。</p>
-<p>単なる「環境への善意」だけに期待するのではなく、消費者が損をせずに環境貢献を実感できる仕組みづくりが求められている。例えば、売れ残った食品を地域で寄付する「フードドライブ」活動との連携や、アプリを通じた即時値引き情報の配信など、テクノロジーを活用した新しい食品ロス削減のアプローチが成果を上げつつある。</p>
+<p>単なる「環境への善意」だけに期待するのではなく、消費者が損をせずに環境貢献を実感できる仕組みづくりが求められている。例えば、売れ残った食品を地域で寄付する「フードドライブ（注2）」活動との連携や、アプリを通じた即時値引き情報の配信など、テクノロジーを活用した新しい食品ロス削減のアプローチが成果を上げつつある。</p>
+<div class="vocab-notes">
+（注1）てまえどり：買い物をする際、賞味期限の近い商品から優先して手前のものを購入する行動。<br>
+（注2）フードドライブ：家庭で余っている未開封の食品を持ち寄り、福祉施設等に寄付する活動。
+</div>
+
 <p><strong>60</strong> 文章で説明されている「てまえどり」とはどのような行動か。<br />
  1. 店舗の奥にある賞味期限の長い商品を優先して買い物かごに入れること。<br />
  2. 自宅の冷蔵庫の手前にある古い食材から順番に調理して食べ切ること。<br />

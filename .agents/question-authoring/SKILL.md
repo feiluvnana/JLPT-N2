@@ -71,6 +71,10 @@ Passages: opinions with a turn (しかし/ところが), one business email, one
 notice with 3 false options contradicted by ※ fine print, one A/B pair
 (agree on one point, differ on conclusion), one flyer with two-condition
 matching where one tempting option fails exactly one condition.
+- **Vocabulary Explanations & Furigana Rules for Dokkai (MANDATORY)**:
+  - When authoring reading passages containing uncommon vocabulary, N1/specialized terms, or rare idioms, annotate them in text as `（注1）`, `（注2）`... or HTML ruby syntax `<ruby>難解漢字<rt>なんかいかんじ</rt></ruby>`.
+  - Immediately following the passage (before question items), provide a structured vocabulary note block `（注1） 語彙：簡潔な意味の説明` wrapped in a `<div class="vocab-notes">` block or clean paragraph.
+  - Furigana should be attached to non-standard readings, proper nouns, or rare kanji above N2 target level using `<ruby>漢字<rt>ルビ</rt></ruby>`.
 
 **聴解 dialogues** — every wrong option must be MENTIONED then eliminated
 (already done / rejected / explicitly denied: 「それが理由ではありません」).
