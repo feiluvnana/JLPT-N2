@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>JLPT N2 解答マークシート</title>
+<style>
+    body { font-family: "Hiragino Sans", "Meiryo", sans-serif; background: #f4f6f8; color: #222; margin: 0; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    h1 { text-align: center; border-bottom: 3px solid #333; padding-bottom: 10px; margin-top: 0; }
+    .section-title { background: #2c3e50; color: #fff; padding: 8px 15px; border-radius: 5px; margin-top: 25px; font-size: 1.1rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: center; }
+    th { background: #f0f3f5; font-size: 0.9rem; }
+    .q-num { font-weight: bold; width: 120px; text-align: left; background: #fafafa; }
+    .b-cell input[type="radio"] { display: none; }
+    .b-cell label { display: inline-block; width: 28px; height: 28px; line-height: 28px; border-radius: 50%; border: 1.5px solid #666; cursor: pointer; user-select: none; font-weight: bold; transition: 0.15s; }
+    .b-cell input[type="radio"]:checked + label { background: #222; color: #fff; border-color: #222; transform: scale(1.1); }
+    .actions { text-align: center; margin-top: 30px; }
+    .btn { background: #27ae60; color: white; border: none; padding: 12px 30px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .btn:hover { background: #219150; }
+    .instructions { background: #eef7ed; border-left: 4px solid #27ae60; padding: 12px; margin-bottom: 20px; font-size: 0.95rem; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>JLPT N2 模擬試験 解答マークシート</h1>
+    <div class="instructions">
+        💡 <strong>使い方:</strong> 各設問の番号（1, 2, 3, 4）をタップ・クリックして選択してください。選択後、下部の「解答をJSONとして保存」ボタンを押すと、採点用ファイル <code>user_answers.json</code> がダウンロードされます。
+    </div>
+    <form id="sheetForm">
+        <div class="section-title">言語知識・読解 (問1 〜 問75)</div>
+        <table>
+            <thead><tr><th>設問</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+            <tbody>
+        <tr class="q-row">
+            <td class="q-num">問 1</td>
+            <td class="b-cell"><input type="radio" id="g_1_1" name="g_1" value="1"><label for="g_1_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_1_2" name="g_1" value="2"><label for="g_1_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_1_3" name="g_1" value="3"><label for="g_1_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_1_4" name="g_1" value="4"><label for="g_1_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 2</td>
+            <td class="b-cell"><input type="radio" id="g_2_1" name="g_2" value="1"><label for="g_2_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_2_2" name="g_2" value="2"><label for="g_2_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_2_3" name="g_2" value="3"><label for="g_2_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_2_4" name="g_2" value="4"><label for="g_2_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 3</td>
+            <td class="b-cell"><input type="radio" id="g_3_1" name="g_3" value="1"><label for="g_3_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_3_2" name="g_3" value="2"><label for="g_3_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_3_3" name="g_3" value="3"><label for="g_3_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_3_4" name="g_3" value="4"><label for="g_3_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 4</td>
+            <td class="b-cell"><input type="radio" id="g_4_1" name="g_4" value="1"><label for="g_4_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_4_2" name="g_4" value="2"><label for="g_4_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_4_3" name="g_4" value="3"><label for="g_4_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_4_4" name="g_4" value="4"><label for="g_4_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 5</td>
+            <td class="b-cell"><input type="radio" id="g_5_1" name="g_5" value="1"><label for="g_5_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_5_2" name="g_5" value="2"><label for="g_5_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_5_3" name="g_5" value="3"><label for="g_5_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_5_4" name="g_5" value="4"><label for="g_5_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 6</td>
+            <td class="b-cell"><input type="radio" id="g_6_1" name="g_6" value="1"><label for="g_6_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_6_2" name="g_6" value="2"><label for="g_6_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_6_3" name="g_6" value="3"><label for="g_6_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_6_4" name="g_6" value="4"><label for="g_6_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 7</td>
+            <td class="b-cell"><input type="radio" id="g_7_1" name="g_7" value="1"><label for="g_7_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_7_2" name="g_7" value="2"><label for="g_7_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_7_3" name="g_7" value="3"><label for="g_7_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_7_4" name="g_7" value="4"><label for="g_7_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 8</td>
+            <td class="b-cell"><input type="radio" id="g_8_1" name="g_8" value="1"><label for="g_8_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_8_2" name="g_8" value="2"><label for="g_8_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_8_3" name="g_8" value="3"><label for="g_8_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_8_4" name="g_8" value="4"><label for="g_8_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 9</td>
+            <td class="b-cell"><input type="radio" id="g_9_1" name="g_9" value="1"><label for="g_9_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_9_2" name="g_9" value="2"><label for="g_9_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_9_3" name="g_9" value="3"><label for="g_9_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_9_4" name="g_9" value="4"><label for="g_9_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 10</td>
+            <td class="b-cell"><input type="radio" id="g_10_1" name="g_10" value="1"><label for="g_10_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_10_2" name="g_10" value="2"><label for="g_10_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_10_3" name="g_10" value="3"><label for="g_10_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_10_4" name="g_10" value="4"><label for="g_10_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 11</td>
+            <td class="b-cell"><input type="radio" id="g_11_1" name="g_11" value="1"><label for="g_11_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_11_2" name="g_11" value="2"><label for="g_11_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_11_3" name="g_11" value="3"><label for="g_11_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_11_4" name="g_11" value="4"><label for="g_11_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 12</td>
+            <td class="b-cell"><input type="radio" id="g_12_1" name="g_12" value="1"><label for="g_12_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_12_2" name="g_12" value="2"><label for="g_12_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_12_3" name="g_12" value="3"><label for="g_12_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_12_4" name="g_12" value="4"><label for="g_12_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 13</td>
+            <td class="b-cell"><input type="radio" id="g_13_1" name="g_13" value="1"><label for="g_13_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_13_2" name="g_13" value="2"><label for="g_13_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_13_3" name="g_13" value="3"><label for="g_13_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_13_4" name="g_13" value="4"><label for="g_13_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 14</td>
+            <td class="b-cell"><input type="radio" id="g_14_1" name="g_14" value="1"><label for="g_14_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_14_2" name="g_14" value="2"><label for="g_14_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_14_3" name="g_14" value="3"><label for="g_14_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_14_4" name="g_14" value="4"><label for="g_14_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 15</td>
+            <td class="b-cell"><input type="radio" id="g_15_1" name="g_15" value="1"><label for="g_15_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_15_2" name="g_15" value="2"><label for="g_15_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_15_3" name="g_15" value="3"><label for="g_15_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_15_4" name="g_15" value="4"><label for="g_15_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 16</td>
+            <td class="b-cell"><input type="radio" id="g_16_1" name="g_16" value="1"><label for="g_16_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_16_2" name="g_16" value="2"><label for="g_16_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_16_3" name="g_16" value="3"><label for="g_16_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_16_4" name="g_16" value="4"><label for="g_16_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 17</td>
+            <td class="b-cell"><input type="radio" id="g_17_1" name="g_17" value="1"><label for="g_17_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_17_2" name="g_17" value="2"><label for="g_17_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_17_3" name="g_17" value="3"><label for="g_17_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_17_4" name="g_17" value="4"><label for="g_17_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 18</td>
+            <td class="b-cell"><input type="radio" id="g_18_1" name="g_18" value="1"><label for="g_18_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_18_2" name="g_18" value="2"><label for="g_18_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_18_3" name="g_18" value="3"><label for="g_18_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_18_4" name="g_18" value="4"><label for="g_18_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 19</td>
+            <td class="b-cell"><input type="radio" id="g_19_1" name="g_19" value="1"><label for="g_19_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_19_2" name="g_19" value="2"><label for="g_19_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_19_3" name="g_19" value="3"><label for="g_19_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_19_4" name="g_19" value="4"><label for="g_19_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 20</td>
+            <td class="b-cell"><input type="radio" id="g_20_1" name="g_20" value="1"><label for="g_20_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_20_2" name="g_20" value="2"><label for="g_20_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_20_3" name="g_20" value="3"><label for="g_20_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_20_4" name="g_20" value="4"><label for="g_20_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 21</td>
+            <td class="b-cell"><input type="radio" id="g_21_1" name="g_21" value="1"><label for="g_21_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_21_2" name="g_21" value="2"><label for="g_21_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_21_3" name="g_21" value="3"><label for="g_21_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_21_4" name="g_21" value="4"><label for="g_21_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 22</td>
+            <td class="b-cell"><input type="radio" id="g_22_1" name="g_22" value="1"><label for="g_22_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_22_2" name="g_22" value="2"><label for="g_22_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_22_3" name="g_22" value="3"><label for="g_22_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_22_4" name="g_22" value="4"><label for="g_22_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 23</td>
+            <td class="b-cell"><input type="radio" id="g_23_1" name="g_23" value="1"><label for="g_23_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_23_2" name="g_23" value="2"><label for="g_23_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_23_3" name="g_23" value="3"><label for="g_23_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_23_4" name="g_23" value="4"><label for="g_23_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 24</td>
+            <td class="b-cell"><input type="radio" id="g_24_1" name="g_24" value="1"><label for="g_24_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_24_2" name="g_24" value="2"><label for="g_24_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_24_3" name="g_24" value="3"><label for="g_24_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_24_4" name="g_24" value="4"><label for="g_24_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 25</td>
+            <td class="b-cell"><input type="radio" id="g_25_1" name="g_25" value="1"><label for="g_25_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_25_2" name="g_25" value="2"><label for="g_25_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_25_3" name="g_25" value="3"><label for="g_25_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_25_4" name="g_25" value="4"><label for="g_25_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 26</td>
+            <td class="b-cell"><input type="radio" id="g_26_1" name="g_26" value="1"><label for="g_26_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_26_2" name="g_26" value="2"><label for="g_26_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_26_3" name="g_26" value="3"><label for="g_26_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_26_4" name="g_26" value="4"><label for="g_26_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 27</td>
+            <td class="b-cell"><input type="radio" id="g_27_1" name="g_27" value="1"><label for="g_27_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_27_2" name="g_27" value="2"><label for="g_27_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_27_3" name="g_27" value="3"><label for="g_27_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_27_4" name="g_27" value="4"><label for="g_27_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 28</td>
+            <td class="b-cell"><input type="radio" id="g_28_1" name="g_28" value="1"><label for="g_28_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_28_2" name="g_28" value="2"><label for="g_28_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_28_3" name="g_28" value="3"><label for="g_28_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_28_4" name="g_28" value="4"><label for="g_28_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 29</td>
+            <td class="b-cell"><input type="radio" id="g_29_1" name="g_29" value="1"><label for="g_29_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_29_2" name="g_29" value="2"><label for="g_29_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_29_3" name="g_29" value="3"><label for="g_29_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_29_4" name="g_29" value="4"><label for="g_29_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 30</td>
+            <td class="b-cell"><input type="radio" id="g_30_1" name="g_30" value="1"><label for="g_30_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_30_2" name="g_30" value="2"><label for="g_30_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_30_3" name="g_30" value="3"><label for="g_30_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_30_4" name="g_30" value="4"><label for="g_30_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 31</td>
+            <td class="b-cell"><input type="radio" id="g_31_1" name="g_31" value="1"><label for="g_31_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_31_2" name="g_31" value="2"><label for="g_31_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_31_3" name="g_31" value="3"><label for="g_31_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_31_4" name="g_31" value="4"><label for="g_31_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 32</td>
+            <td class="b-cell"><input type="radio" id="g_32_1" name="g_32" value="1"><label for="g_32_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_32_2" name="g_32" value="2"><label for="g_32_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_32_3" name="g_32" value="3"><label for="g_32_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_32_4" name="g_32" value="4"><label for="g_32_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 33</td>
+            <td class="b-cell"><input type="radio" id="g_33_1" name="g_33" value="1"><label for="g_33_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_33_2" name="g_33" value="2"><label for="g_33_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_33_3" name="g_33" value="3"><label for="g_33_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_33_4" name="g_33" value="4"><label for="g_33_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 34</td>
+            <td class="b-cell"><input type="radio" id="g_34_1" name="g_34" value="1"><label for="g_34_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_34_2" name="g_34" value="2"><label for="g_34_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_34_3" name="g_34" value="3"><label for="g_34_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_34_4" name="g_34" value="4"><label for="g_34_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 35</td>
+            <td class="b-cell"><input type="radio" id="g_35_1" name="g_35" value="1"><label for="g_35_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_35_2" name="g_35" value="2"><label for="g_35_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_35_3" name="g_35" value="3"><label for="g_35_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_35_4" name="g_35" value="4"><label for="g_35_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 36</td>
+            <td class="b-cell"><input type="radio" id="g_36_1" name="g_36" value="1"><label for="g_36_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_36_2" name="g_36" value="2"><label for="g_36_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_36_3" name="g_36" value="3"><label for="g_36_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_36_4" name="g_36" value="4"><label for="g_36_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 37</td>
+            <td class="b-cell"><input type="radio" id="g_37_1" name="g_37" value="1"><label for="g_37_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_37_2" name="g_37" value="2"><label for="g_37_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_37_3" name="g_37" value="3"><label for="g_37_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_37_4" name="g_37" value="4"><label for="g_37_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 38</td>
+            <td class="b-cell"><input type="radio" id="g_38_1" name="g_38" value="1"><label for="g_38_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_38_2" name="g_38" value="2"><label for="g_38_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_38_3" name="g_38" value="3"><label for="g_38_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_38_4" name="g_38" value="4"><label for="g_38_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 39</td>
+            <td class="b-cell"><input type="radio" id="g_39_1" name="g_39" value="1"><label for="g_39_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_39_2" name="g_39" value="2"><label for="g_39_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_39_3" name="g_39" value="3"><label for="g_39_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_39_4" name="g_39" value="4"><label for="g_39_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 40</td>
+            <td class="b-cell"><input type="radio" id="g_40_1" name="g_40" value="1"><label for="g_40_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_40_2" name="g_40" value="2"><label for="g_40_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_40_3" name="g_40" value="3"><label for="g_40_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_40_4" name="g_40" value="4"><label for="g_40_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 41</td>
+            <td class="b-cell"><input type="radio" id="g_41_1" name="g_41" value="1"><label for="g_41_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_41_2" name="g_41" value="2"><label for="g_41_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_41_3" name="g_41" value="3"><label for="g_41_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_41_4" name="g_41" value="4"><label for="g_41_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 42</td>
+            <td class="b-cell"><input type="radio" id="g_42_1" name="g_42" value="1"><label for="g_42_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_42_2" name="g_42" value="2"><label for="g_42_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_42_3" name="g_42" value="3"><label for="g_42_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_42_4" name="g_42" value="4"><label for="g_42_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 43</td>
+            <td class="b-cell"><input type="radio" id="g_43_1" name="g_43" value="1"><label for="g_43_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_43_2" name="g_43" value="2"><label for="g_43_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_43_3" name="g_43" value="3"><label for="g_43_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_43_4" name="g_43" value="4"><label for="g_43_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 44</td>
+            <td class="b-cell"><input type="radio" id="g_44_1" name="g_44" value="1"><label for="g_44_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_44_2" name="g_44" value="2"><label for="g_44_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_44_3" name="g_44" value="3"><label for="g_44_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_44_4" name="g_44" value="4"><label for="g_44_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 45</td>
+            <td class="b-cell"><input type="radio" id="g_45_1" name="g_45" value="1"><label for="g_45_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_45_2" name="g_45" value="2"><label for="g_45_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_45_3" name="g_45" value="3"><label for="g_45_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_45_4" name="g_45" value="4"><label for="g_45_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 46</td>
+            <td class="b-cell"><input type="radio" id="g_46_1" name="g_46" value="1"><label for="g_46_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_46_2" name="g_46" value="2"><label for="g_46_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_46_3" name="g_46" value="3"><label for="g_46_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_46_4" name="g_46" value="4"><label for="g_46_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 47</td>
+            <td class="b-cell"><input type="radio" id="g_47_1" name="g_47" value="1"><label for="g_47_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_47_2" name="g_47" value="2"><label for="g_47_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_47_3" name="g_47" value="3"><label for="g_47_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_47_4" name="g_47" value="4"><label for="g_47_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 48</td>
+            <td class="b-cell"><input type="radio" id="g_48_1" name="g_48" value="1"><label for="g_48_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_48_2" name="g_48" value="2"><label for="g_48_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_48_3" name="g_48" value="3"><label for="g_48_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_48_4" name="g_48" value="4"><label for="g_48_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 49</td>
+            <td class="b-cell"><input type="radio" id="g_49_1" name="g_49" value="1"><label for="g_49_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_49_2" name="g_49" value="2"><label for="g_49_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_49_3" name="g_49" value="3"><label for="g_49_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_49_4" name="g_49" value="4"><label for="g_49_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 50</td>
+            <td class="b-cell"><input type="radio" id="g_50_1" name="g_50" value="1"><label for="g_50_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_50_2" name="g_50" value="2"><label for="g_50_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_50_3" name="g_50" value="3"><label for="g_50_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_50_4" name="g_50" value="4"><label for="g_50_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 51</td>
+            <td class="b-cell"><input type="radio" id="g_51_1" name="g_51" value="1"><label for="g_51_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_51_2" name="g_51" value="2"><label for="g_51_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_51_3" name="g_51" value="3"><label for="g_51_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_51_4" name="g_51" value="4"><label for="g_51_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 52</td>
+            <td class="b-cell"><input type="radio" id="g_52_1" name="g_52" value="1"><label for="g_52_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_52_2" name="g_52" value="2"><label for="g_52_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_52_3" name="g_52" value="3"><label for="g_52_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_52_4" name="g_52" value="4"><label for="g_52_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 53</td>
+            <td class="b-cell"><input type="radio" id="g_53_1" name="g_53" value="1"><label for="g_53_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_53_2" name="g_53" value="2"><label for="g_53_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_53_3" name="g_53" value="3"><label for="g_53_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_53_4" name="g_53" value="4"><label for="g_53_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 54</td>
+            <td class="b-cell"><input type="radio" id="g_54_1" name="g_54" value="1"><label for="g_54_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_54_2" name="g_54" value="2"><label for="g_54_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_54_3" name="g_54" value="3"><label for="g_54_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_54_4" name="g_54" value="4"><label for="g_54_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 55</td>
+            <td class="b-cell"><input type="radio" id="g_55_1" name="g_55" value="1"><label for="g_55_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_55_2" name="g_55" value="2"><label for="g_55_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_55_3" name="g_55" value="3"><label for="g_55_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_55_4" name="g_55" value="4"><label for="g_55_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 56</td>
+            <td class="b-cell"><input type="radio" id="g_56_1" name="g_56" value="1"><label for="g_56_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_56_2" name="g_56" value="2"><label for="g_56_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_56_3" name="g_56" value="3"><label for="g_56_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_56_4" name="g_56" value="4"><label for="g_56_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 57</td>
+            <td class="b-cell"><input type="radio" id="g_57_1" name="g_57" value="1"><label for="g_57_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_57_2" name="g_57" value="2"><label for="g_57_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_57_3" name="g_57" value="3"><label for="g_57_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_57_4" name="g_57" value="4"><label for="g_57_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 58</td>
+            <td class="b-cell"><input type="radio" id="g_58_1" name="g_58" value="1"><label for="g_58_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_58_2" name="g_58" value="2"><label for="g_58_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_58_3" name="g_58" value="3"><label for="g_58_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_58_4" name="g_58" value="4"><label for="g_58_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 59</td>
+            <td class="b-cell"><input type="radio" id="g_59_1" name="g_59" value="1"><label for="g_59_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_59_2" name="g_59" value="2"><label for="g_59_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_59_3" name="g_59" value="3"><label for="g_59_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_59_4" name="g_59" value="4"><label for="g_59_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 60</td>
+            <td class="b-cell"><input type="radio" id="g_60_1" name="g_60" value="1"><label for="g_60_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_60_2" name="g_60" value="2"><label for="g_60_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_60_3" name="g_60" value="3"><label for="g_60_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_60_4" name="g_60" value="4"><label for="g_60_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 61</td>
+            <td class="b-cell"><input type="radio" id="g_61_1" name="g_61" value="1"><label for="g_61_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_61_2" name="g_61" value="2"><label for="g_61_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_61_3" name="g_61" value="3"><label for="g_61_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_61_4" name="g_61" value="4"><label for="g_61_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 62</td>
+            <td class="b-cell"><input type="radio" id="g_62_1" name="g_62" value="1"><label for="g_62_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_62_2" name="g_62" value="2"><label for="g_62_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_62_3" name="g_62" value="3"><label for="g_62_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_62_4" name="g_62" value="4"><label for="g_62_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 63</td>
+            <td class="b-cell"><input type="radio" id="g_63_1" name="g_63" value="1"><label for="g_63_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_63_2" name="g_63" value="2"><label for="g_63_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_63_3" name="g_63" value="3"><label for="g_63_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_63_4" name="g_63" value="4"><label for="g_63_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 64</td>
+            <td class="b-cell"><input type="radio" id="g_64_1" name="g_64" value="1"><label for="g_64_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_64_2" name="g_64" value="2"><label for="g_64_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_64_3" name="g_64" value="3"><label for="g_64_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_64_4" name="g_64" value="4"><label for="g_64_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 65</td>
+            <td class="b-cell"><input type="radio" id="g_65_1" name="g_65" value="1"><label for="g_65_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_65_2" name="g_65" value="2"><label for="g_65_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_65_3" name="g_65" value="3"><label for="g_65_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_65_4" name="g_65" value="4"><label for="g_65_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 66</td>
+            <td class="b-cell"><input type="radio" id="g_66_1" name="g_66" value="1"><label for="g_66_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_66_2" name="g_66" value="2"><label for="g_66_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_66_3" name="g_66" value="3"><label for="g_66_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_66_4" name="g_66" value="4"><label for="g_66_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 67</td>
+            <td class="b-cell"><input type="radio" id="g_67_1" name="g_67" value="1"><label for="g_67_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_67_2" name="g_67" value="2"><label for="g_67_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_67_3" name="g_67" value="3"><label for="g_67_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_67_4" name="g_67" value="4"><label for="g_67_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 68</td>
+            <td class="b-cell"><input type="radio" id="g_68_1" name="g_68" value="1"><label for="g_68_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_68_2" name="g_68" value="2"><label for="g_68_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_68_3" name="g_68" value="3"><label for="g_68_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_68_4" name="g_68" value="4"><label for="g_68_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 69</td>
+            <td class="b-cell"><input type="radio" id="g_69_1" name="g_69" value="1"><label for="g_69_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_69_2" name="g_69" value="2"><label for="g_69_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_69_3" name="g_69" value="3"><label for="g_69_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_69_4" name="g_69" value="4"><label for="g_69_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 70</td>
+            <td class="b-cell"><input type="radio" id="g_70_1" name="g_70" value="1"><label for="g_70_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_70_2" name="g_70" value="2"><label for="g_70_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_70_3" name="g_70" value="3"><label for="g_70_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_70_4" name="g_70" value="4"><label for="g_70_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 71</td>
+            <td class="b-cell"><input type="radio" id="g_71_1" name="g_71" value="1"><label for="g_71_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_71_2" name="g_71" value="2"><label for="g_71_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_71_3" name="g_71" value="3"><label for="g_71_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_71_4" name="g_71" value="4"><label for="g_71_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 72</td>
+            <td class="b-cell"><input type="radio" id="g_72_1" name="g_72" value="1"><label for="g_72_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_72_2" name="g_72" value="2"><label for="g_72_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_72_3" name="g_72" value="3"><label for="g_72_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_72_4" name="g_72" value="4"><label for="g_72_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 73</td>
+            <td class="b-cell"><input type="radio" id="g_73_1" name="g_73" value="1"><label for="g_73_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_73_2" name="g_73" value="2"><label for="g_73_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_73_3" name="g_73" value="3"><label for="g_73_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_73_4" name="g_73" value="4"><label for="g_73_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 74</td>
+            <td class="b-cell"><input type="radio" id="g_74_1" name="g_74" value="1"><label for="g_74_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_74_2" name="g_74" value="2"><label for="g_74_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_74_3" name="g_74" value="3"><label for="g_74_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_74_4" name="g_74" value="4"><label for="g_74_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問 75</td>
+            <td class="b-cell"><input type="radio" id="g_75_1" name="g_75" value="1"><label for="g_75_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="g_75_2" name="g_75" value="2"><label for="g_75_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="g_75_3" name="g_75" value="3"><label for="g_75_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="g_75_4" name="g_75" value="4"><label for="g_75_4">4</label></td>
+        </tr></tbody>
+        </table>
+
+        <div class="section-title">聴解 (問題1 〜 問題5)</div>
+        <table>
+            <thead><tr><th>設問</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+            <tbody>
+        <tr class="q-row">
+            <td class="q-num">問1-1</td>
+            <td class="b-cell"><input type="radio" id="c_問1-1_1" name="c_問1-1" value="1"><label for="c_問1-1_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-1_2" name="c_問1-1" value="2"><label for="c_問1-1_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-1_3" name="c_問1-1" value="3"><label for="c_問1-1_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-1_4" name="c_問1-1" value="4"><label for="c_問1-1_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問1-2</td>
+            <td class="b-cell"><input type="radio" id="c_問1-2_1" name="c_問1-2" value="1"><label for="c_問1-2_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-2_2" name="c_問1-2" value="2"><label for="c_問1-2_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-2_3" name="c_問1-2" value="3"><label for="c_問1-2_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-2_4" name="c_問1-2" value="4"><label for="c_問1-2_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問1-3</td>
+            <td class="b-cell"><input type="radio" id="c_問1-3_1" name="c_問1-3" value="1"><label for="c_問1-3_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-3_2" name="c_問1-3" value="2"><label for="c_問1-3_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-3_3" name="c_問1-3" value="3"><label for="c_問1-3_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-3_4" name="c_問1-3" value="4"><label for="c_問1-3_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問1-4</td>
+            <td class="b-cell"><input type="radio" id="c_問1-4_1" name="c_問1-4" value="1"><label for="c_問1-4_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-4_2" name="c_問1-4" value="2"><label for="c_問1-4_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-4_3" name="c_問1-4" value="3"><label for="c_問1-4_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-4_4" name="c_問1-4" value="4"><label for="c_問1-4_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問1-5</td>
+            <td class="b-cell"><input type="radio" id="c_問1-5_1" name="c_問1-5" value="1"><label for="c_問1-5_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-5_2" name="c_問1-5" value="2"><label for="c_問1-5_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-5_3" name="c_問1-5" value="3"><label for="c_問1-5_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問1-5_4" name="c_問1-5" value="4"><label for="c_問1-5_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問2-1</td>
+            <td class="b-cell"><input type="radio" id="c_問2-1_1" name="c_問2-1" value="1"><label for="c_問2-1_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-1_2" name="c_問2-1" value="2"><label for="c_問2-1_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-1_3" name="c_問2-1" value="3"><label for="c_問2-1_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-1_4" name="c_問2-1" value="4"><label for="c_問2-1_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問2-2</td>
+            <td class="b-cell"><input type="radio" id="c_問2-2_1" name="c_問2-2" value="1"><label for="c_問2-2_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-2_2" name="c_問2-2" value="2"><label for="c_問2-2_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-2_3" name="c_問2-2" value="3"><label for="c_問2-2_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-2_4" name="c_問2-2" value="4"><label for="c_問2-2_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問2-3</td>
+            <td class="b-cell"><input type="radio" id="c_問2-3_1" name="c_問2-3" value="1"><label for="c_問2-3_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-3_2" name="c_問2-3" value="2"><label for="c_問2-3_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-3_3" name="c_問2-3" value="3"><label for="c_問2-3_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-3_4" name="c_問2-3" value="4"><label for="c_問2-3_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問2-4</td>
+            <td class="b-cell"><input type="radio" id="c_問2-4_1" name="c_問2-4" value="1"><label for="c_問2-4_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-4_2" name="c_問2-4" value="2"><label for="c_問2-4_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-4_3" name="c_問2-4" value="3"><label for="c_問2-4_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-4_4" name="c_問2-4" value="4"><label for="c_問2-4_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問2-5</td>
+            <td class="b-cell"><input type="radio" id="c_問2-5_1" name="c_問2-5" value="1"><label for="c_問2-5_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-5_2" name="c_問2-5" value="2"><label for="c_問2-5_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-5_3" name="c_問2-5" value="3"><label for="c_問2-5_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-5_4" name="c_問2-5" value="4"><label for="c_問2-5_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問2-6</td>
+            <td class="b-cell"><input type="radio" id="c_問2-6_1" name="c_問2-6" value="1"><label for="c_問2-6_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-6_2" name="c_問2-6" value="2"><label for="c_問2-6_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-6_3" name="c_問2-6" value="3"><label for="c_問2-6_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問2-6_4" name="c_問2-6" value="4"><label for="c_問2-6_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問3-1</td>
+            <td class="b-cell"><input type="radio" id="c_問3-1_1" name="c_問3-1" value="1"><label for="c_問3-1_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-1_2" name="c_問3-1" value="2"><label for="c_問3-1_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-1_3" name="c_問3-1" value="3"><label for="c_問3-1_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-1_4" name="c_問3-1" value="4"><label for="c_問3-1_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問3-2</td>
+            <td class="b-cell"><input type="radio" id="c_問3-2_1" name="c_問3-2" value="1"><label for="c_問3-2_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-2_2" name="c_問3-2" value="2"><label for="c_問3-2_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-2_3" name="c_問3-2" value="3"><label for="c_問3-2_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-2_4" name="c_問3-2" value="4"><label for="c_問3-2_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問3-3</td>
+            <td class="b-cell"><input type="radio" id="c_問3-3_1" name="c_問3-3" value="1"><label for="c_問3-3_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-3_2" name="c_問3-3" value="2"><label for="c_問3-3_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-3_3" name="c_問3-3" value="3"><label for="c_問3-3_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-3_4" name="c_問3-3" value="4"><label for="c_問3-3_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問3-4</td>
+            <td class="b-cell"><input type="radio" id="c_問3-4_1" name="c_問3-4" value="1"><label for="c_問3-4_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-4_2" name="c_問3-4" value="2"><label for="c_問3-4_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-4_3" name="c_問3-4" value="3"><label for="c_問3-4_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-4_4" name="c_問3-4" value="4"><label for="c_問3-4_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問3-5</td>
+            <td class="b-cell"><input type="radio" id="c_問3-5_1" name="c_問3-5" value="1"><label for="c_問3-5_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-5_2" name="c_問3-5" value="2"><label for="c_問3-5_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-5_3" name="c_問3-5" value="3"><label for="c_問3-5_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問3-5_4" name="c_問3-5" value="4"><label for="c_問3-5_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-1</td>
+            <td class="b-cell"><input type="radio" id="c_問4-1_1" name="c_問4-1" value="1"><label for="c_問4-1_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-1_2" name="c_問4-1" value="2"><label for="c_問4-1_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-1_3" name="c_問4-1" value="3"><label for="c_問4-1_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-1_4" name="c_問4-1" value="4"><label for="c_問4-1_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-10</td>
+            <td class="b-cell"><input type="radio" id="c_問4-10_1" name="c_問4-10" value="1"><label for="c_問4-10_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-10_2" name="c_問4-10" value="2"><label for="c_問4-10_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-10_3" name="c_問4-10" value="3"><label for="c_問4-10_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-10_4" name="c_問4-10" value="4"><label for="c_問4-10_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-11</td>
+            <td class="b-cell"><input type="radio" id="c_問4-11_1" name="c_問4-11" value="1"><label for="c_問4-11_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-11_2" name="c_問4-11" value="2"><label for="c_問4-11_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-11_3" name="c_問4-11" value="3"><label for="c_問4-11_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-11_4" name="c_問4-11" value="4"><label for="c_問4-11_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-12</td>
+            <td class="b-cell"><input type="radio" id="c_問4-12_1" name="c_問4-12" value="1"><label for="c_問4-12_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-12_2" name="c_問4-12" value="2"><label for="c_問4-12_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-12_3" name="c_問4-12" value="3"><label for="c_問4-12_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-12_4" name="c_問4-12" value="4"><label for="c_問4-12_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-2</td>
+            <td class="b-cell"><input type="radio" id="c_問4-2_1" name="c_問4-2" value="1"><label for="c_問4-2_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-2_2" name="c_問4-2" value="2"><label for="c_問4-2_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-2_3" name="c_問4-2" value="3"><label for="c_問4-2_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-2_4" name="c_問4-2" value="4"><label for="c_問4-2_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-3</td>
+            <td class="b-cell"><input type="radio" id="c_問4-3_1" name="c_問4-3" value="1"><label for="c_問4-3_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-3_2" name="c_問4-3" value="2"><label for="c_問4-3_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-3_3" name="c_問4-3" value="3"><label for="c_問4-3_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-3_4" name="c_問4-3" value="4"><label for="c_問4-3_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-4</td>
+            <td class="b-cell"><input type="radio" id="c_問4-4_1" name="c_問4-4" value="1"><label for="c_問4-4_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-4_2" name="c_問4-4" value="2"><label for="c_問4-4_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-4_3" name="c_問4-4" value="3"><label for="c_問4-4_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-4_4" name="c_問4-4" value="4"><label for="c_問4-4_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-5</td>
+            <td class="b-cell"><input type="radio" id="c_問4-5_1" name="c_問4-5" value="1"><label for="c_問4-5_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-5_2" name="c_問4-5" value="2"><label for="c_問4-5_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-5_3" name="c_問4-5" value="3"><label for="c_問4-5_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-5_4" name="c_問4-5" value="4"><label for="c_問4-5_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-6</td>
+            <td class="b-cell"><input type="radio" id="c_問4-6_1" name="c_問4-6" value="1"><label for="c_問4-6_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-6_2" name="c_問4-6" value="2"><label for="c_問4-6_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-6_3" name="c_問4-6" value="3"><label for="c_問4-6_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-6_4" name="c_問4-6" value="4"><label for="c_問4-6_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-7</td>
+            <td class="b-cell"><input type="radio" id="c_問4-7_1" name="c_問4-7" value="1"><label for="c_問4-7_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-7_2" name="c_問4-7" value="2"><label for="c_問4-7_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-7_3" name="c_問4-7" value="3"><label for="c_問4-7_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-7_4" name="c_問4-7" value="4"><label for="c_問4-7_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-8</td>
+            <td class="b-cell"><input type="radio" id="c_問4-8_1" name="c_問4-8" value="1"><label for="c_問4-8_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-8_2" name="c_問4-8" value="2"><label for="c_問4-8_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-8_3" name="c_問4-8" value="3"><label for="c_問4-8_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-8_4" name="c_問4-8" value="4"><label for="c_問4-8_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問4-9</td>
+            <td class="b-cell"><input type="radio" id="c_問4-9_1" name="c_問4-9" value="1"><label for="c_問4-9_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-9_2" name="c_問4-9" value="2"><label for="c_問4-9_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-9_3" name="c_問4-9" value="3"><label for="c_問4-9_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問4-9_4" name="c_問4-9" value="4"><label for="c_問4-9_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問5-1</td>
+            <td class="b-cell"><input type="radio" id="c_問5-1_1" name="c_問5-1" value="1"><label for="c_問5-1_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-1_2" name="c_問5-1" value="2"><label for="c_問5-1_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-1_3" name="c_問5-1" value="3"><label for="c_問5-1_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-1_4" name="c_問5-1" value="4"><label for="c_問5-1_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問5-2</td>
+            <td class="b-cell"><input type="radio" id="c_問5-2_1" name="c_問5-2" value="1"><label for="c_問5-2_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-2_2" name="c_問5-2" value="2"><label for="c_問5-2_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-2_3" name="c_問5-2" value="3"><label for="c_問5-2_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-2_4" name="c_問5-2" value="4"><label for="c_問5-2_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問5-3-1</td>
+            <td class="b-cell"><input type="radio" id="c_問5-3-1_1" name="c_問5-3-1" value="1"><label for="c_問5-3-1_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-3-1_2" name="c_問5-3-1" value="2"><label for="c_問5-3-1_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-3-1_3" name="c_問5-3-1" value="3"><label for="c_問5-3-1_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-3-1_4" name="c_問5-3-1" value="4"><label for="c_問5-3-1_4">4</label></td>
+        </tr>
+        <tr class="q-row">
+            <td class="q-num">問5-3-2</td>
+            <td class="b-cell"><input type="radio" id="c_問5-3-2_1" name="c_問5-3-2" value="1"><label for="c_問5-3-2_1">1</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-3-2_2" name="c_問5-3-2" value="2"><label for="c_問5-3-2_2">2</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-3-2_3" name="c_問5-3-2" value="3"><label for="c_問5-3-2_3">3</label></td>
+            <td class="b-cell"><input type="radio" id="c_問5-3-2_4" name="c_問5-3-2" value="4"><label for="c_問5-3-2_4">4</label></td>
+        </tr></tbody>
+        </table>
+
+        <div class="actions">
+            <button type="button" class="btn" onclick="saveAnswers()">💾 解答をJSONとして保存 (user_answers.json)</button>
+        </div>
+    </form>
+</div>
+<script>
+function saveAnswers() {
+    const formData = new FormData(document.getElementById('sheetForm'));
+    const result = { "言語知識_読解": {}, "聴解": {} };
+
+    for (let q = 1; q <= 75; q++) {
+        const val = formData.get('g_' + q);
+        if (val) result["言語知識_読解"][q.toString()] = parseInt(val);
+    }
+
+    const choukaiKeys = ["\u554f1-1", "\u554f1-2", "\u554f1-3", "\u554f1-4", "\u554f1-5", "\u554f2-1", "\u554f2-2", "\u554f2-3", "\u554f2-4", "\u554f2-5", "\u554f2-6", "\u554f3-1", "\u554f3-2", "\u554f3-3", "\u554f3-4", "\u554f3-5", "\u554f4-1", "\u554f4-2", "\u554f4-3", "\u554f4-4", "\u554f4-5", "\u554f4-6", "\u554f4-7", "\u554f4-8", "\u554f4-9", "\u554f4-10", "\u554f4-11", "\u554f4-12", "\u554f5-1", "\u554f5-2", "\u554f5-3-1", "\u554f5-3-2"];
+    choukaiKeys.forEach(k => {
+        const val = formData.get('c_' + k);
+        if (val) result["聴解"][k] = parseInt(val);
+    });
+
+    const blob = new Blob([JSON.stringify(result, null, 2)], { type: "application/json" });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "user_answers.json";
+    a.click();
+}
+</script>
+</body>
+</html>
