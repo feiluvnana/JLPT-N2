@@ -272,3 +272,38 @@ inconsistency shipped at least once.
 - **Web Decorates, Pools Test**: Tested linguistic items (grammar points, vocabulary, kanji, idioms/keigo) are ALWAYS the pool-sampled, Shin-Kanzen-calibrated ones. Web seeds supply only topics, settings, and simplified facts around them — this preserves N2 level regardless of topic freshness.
 - **Balanced Source Blend**: When web research runs, every touched surface stays a mix (30–60% web, ≥40% pool; ≤2 seeds per source domain). Provenance (`"origin": "web"|"pool"` + source URL) is recorded in `logs/test_spec.json` for every blended entry and must not be swapped during authoring. Carrier-sentence cap: at most 1 in 3 stems per 問題 may use web texture. Offline runs skip the blend entirely — the pure-pool pipeline remains valid.
 - **No Copyright Infringement**: Reference books in `refs/` are for calibration only; questions must be original. Web sources give WHAT to write about, never the words — max one simplified fact per passage/dialogue, no reproduction of source sentences or article structure.
+
+---
+
+## 6. Pass structure — one test is at least SEVEN passes, not one
+
+A "pass" is a fresh context (a subagent, or a new session) that reads its
+inputs from disk at the start, does one bounded job, and hands off. The pass
+count is a rule, not a style preference, because both shipped failure modes
+are context problems:
+
+- **Long single-run authoring degrades toward the end.** Test 4 was written in
+  one run; its defects clustered in the listening half, written last — swapped
+  問題 types, an unanswerable 例, five 解説 quotes the script never says.
+- **An author cannot audit its own intent.** Tests 2–4 were all "reviewed" by
+  the context that wrote them, against its memory of what it meant, and passed.
+  Every mis-key survived exactly that review.
+
+| # | Pass | Scope | Fresh context? |
+|---|------|-------|----------------|
+| 1 | Setup | Workflow steps 1–3.5: read the skills, sample the pool, harvest seeds, merge, verify the blend report | yes |
+| 2–5 | Authoring ×4 | One per section — 文字・語彙 (問1–6), 文法 (問7–9), 読解 (問10–14), 聴解 (booklet + script). Each re-reads `logs/test_spec.json` and the relevant SKILL.md at its start instead of trusting a long context's memory | one each (ideal); at minimum re-read spec + skill between sections |
+| 6 | Build + gate | Steps 6–9: booklet HTML, MP3, `解答.html`, `make check` (read every line incl. WARN), whole-paper topic table | may share a context with pass 5 |
+| 7 | QA | `exam-qa-review` in full — blind-solve first, all 107 items, report with verdict | **yes — must NOT be any authoring context** |
+| 8+ | Fix → re-review | Repair findings in the sources, regenerate, re-gate; then the changed items and their whole 問題 re-reviewed | fix may reuse an authoring context; the re-review must again be fresh eyes |
+
+**Floor: 7 passes** when QA finds nothing. Every QA finding adds a fix + re-
+review round (passes 8 and 9, then 10 and 11, …); the loop ends only at a
+`QA: PASS` report. Partial work scales the same way: "just fix the MP3" is
+still fix (one pass) + fresh-eyes re-review of the touched items (another).
+
+If the harness cannot spawn subagents, approximate the table with new sessions;
+if even that is impossible, the one non-negotiable split is **authoring vs QA —
+two contexts minimum**. A single context that samples, writes, builds, and
+approves its own paper is how every defective test in this repo's history
+shipped.
