@@ -9,14 +9,17 @@ Usage:
 """
 import argparse
 import json
+import re
 import socket
 import sys
 import urllib.parse
 import webbrowser
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
+
+RANGE_RE = re.compile(r"^bytes=(\d*)-(\d*)$")
 
 
 class AnswerSheetHandler(SimpleHTTPRequestHandler):
@@ -25,11 +28,82 @@ class AnswerSheetHandler(SimpleHTTPRequestHandler):
         self.test_dir = test_dir
         super().__init__(*args, directory=str(test_dir), **kwargs)
 
+    # -- client disconnects are normal, not server errors -------------------
+    # The audio element aborts its 聴解.mp3 request every time you seek, change
+    # speed, or leave the page, which kills the socket mid-copyfile. Without
+    # these two guards Python dumps a BrokenPipeError traceback per abort.
+    def handle(self):
+        try:
+            super().handle()
+        except (BrokenPipeError, ConnectionResetError):
+            self.close_connection = True
+
+    def finish(self):
+        try:
+            super().finish()
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+
     def do_GET(self):
         unquoted = urllib.parse.unquote(self.path)
         if unquoted in ("/", "", "/index.html", "/index.htm"):
             self.path = "/" + urllib.parse.quote("解答.html")
+        if self.serve_range():
+            return
         super().do_GET()
+
+    def serve_range(self) -> bool:
+        """Answer a `Range:` request with 206 Partial Content.
+
+        SimpleHTTPRequestHandler ignores Range and restreams the whole ~30 MB
+        MP3, so every seek in the 聴解 player downloaded the file again and the
+        browser cancelled the previous transfer. Returns False (fall through to
+        the normal 200 path) for anything it cannot serve as a range.
+        """
+        header = self.headers.get("Range")
+        if not header:
+            return False
+        m = RANGE_RE.match(header.strip())
+        if not m:
+            return False
+        path = Path(self.translate_path(self.path))
+        if not path.is_file():
+            return False
+
+        size = path.stat().st_size
+        first, last = m.group(1), m.group(2)
+        if first:
+            start = int(first)
+            end = int(last) if last else size - 1
+        elif last:                      # suffix form: bytes=-500
+            start, end = max(0, size - int(last)), size - 1
+        else:
+            return False
+        end = min(end, size - 1)
+        if start > end or start >= size:
+            self.send_response(416)
+            self.send_header("Content-Range", f"bytes */{size}")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return True
+
+        length = end - start + 1
+        self.send_response(206)
+        self.send_header("Content-Type", self.guess_type(str(path)))
+        self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
+        self.send_header("Content-Length", str(length))
+        self.send_header("Last-Modified", self.date_time_string(int(path.stat().st_mtime)))
+        self.end_headers()
+        with path.open("rb") as f:
+            f.seek(start)
+            remaining = length
+            while remaining > 0:
+                chunk = f.read(min(64 * 1024, remaining))
+                if not chunk:
+                    break
+                self.wfile.write(chunk)
+                remaining -= len(chunk)
+        return True
 
     def guess_type(self, path):
         ctype = super().guess_type(path)
@@ -39,6 +113,8 @@ class AnswerSheetHandler(SimpleHTTPRequestHandler):
         return ctype
 
     def end_headers(self):
+        if self.command == "GET":
+            self.send_header("Accept-Ranges", "bytes")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
@@ -114,8 +190,10 @@ def run_server(test_dir: Path, port: int = 8765, open_browser: bool = True):
     def handler(*args, **kwargs):
         return AnswerSheetHandler(*args, test_dir=test_dir, **kwargs)
 
-    HTTPServer.allow_reuse_address = True
-    httpd = HTTPServer(("127.0.0.1", actual_port), handler)
+    # Threaded: a single-threaded server blocks the 採点する POST behind an
+    # in-flight 聴解.mp3 stream, so submitting while the audio buffers hung.
+    ThreadingHTTPServer.allow_reuse_address = True
+    httpd = ThreadingHTTPServer(("127.0.0.1", actual_port), handler)
     encoded_name = urllib.parse.quote("解答.html")
     print("==========================================================================")
     print(f" Answer Sheet Server running for: {test_dir.name} ({test_dir})")
@@ -134,6 +212,8 @@ def run_server(test_dir: Path, port: int = 8765, open_browser: bool = True):
         httpd.serve_forever()
     except KeyboardInterrupt:
         print("\nServer stopped.")
+    finally:
+        httpd.server_close()
 
 
 def main():

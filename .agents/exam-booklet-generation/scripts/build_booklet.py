@@ -21,10 +21,14 @@ import markdown
 # monitor, where an unbounded full-width line length is unusable.
 SCREEN_CSS = """
 @media screen {
-  body { max-width: 46em; margin: 0 auto; padding: 2.5em 1.6em 6em;
+  :root { --gutter: 1.6em; }
+  body { max-width: 60em; margin: 0 auto; padding: 2.5em var(--gutter) 6em;
          background: #fff; }
 }
-@media screen and (max-width: 48em) { body { padding: 1.2em 1em 4em; } }
+@media screen and (max-width: 48em) {
+  :root { --gutter: 1em; }
+  body { padding: 1.2em var(--gutter) 4em; }
+}
 """
 
 CSS = """

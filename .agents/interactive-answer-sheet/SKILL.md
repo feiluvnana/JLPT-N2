@@ -83,6 +83,33 @@ merged sheet covers the whole exam.
   picker is always present as a fallback, and the player turns red with an
   instruction if the `<audio>` element errors. Never require a web server.
 
+## Serving (`serve_sheet.py`) — three things it must keep doing
+
+1. **Range requests.** `聴解.mp3` is ~30 MB and the `<audio>` element re-requests
+   it with `Range:` on every seek. `SimpleHTTPRequestHandler` ignores Range and
+   restreams the whole file, so the browser cancelled each previous transfer:
+   seeking was slow and the console filled with aborted downloads. The handler
+   answers `Range:` itself with `206 Partial Content` (`416` for an
+   unsatisfiable range) and advertises `Accept-Ranges: bytes` on GETs.
+2. **Client disconnects are not errors.** Every abort — a seek, closing the tab,
+   a paused buffer — kills the socket mid-`copyfile` and used to print a
+   `BrokenPipeError` traceback per abort. `handle()` and `finish()` swallow
+   `BrokenPipeError`/`ConnectionResetError`. Do not "fix" a broken pipe by
+   re-raising it; the request is simply over.
+3. **Threaded.** `ThreadingHTTPServer`, because a single-threaded server queues
+   the 採点する `POST /api/submit` behind whatever MP3 stream is in flight — the
+   submit appeared to hang while the audio buffered.
+
+## On-screen layout
+
+The sheet imports `SCREEN_CSS` from `build_booklet.py`, so it uses the same
+centered 46 em measure as the booklets instead of stretching to the window
+width (unreadable line lengths on a wide monitor). `SCREEN_CSS` exposes
+`--gutter`; the sticky `#bar` and `#player` pull out to it with negative
+margins so they still read as full-width chrome over the text column. It is all
+inside `@media screen` — the A4 `@page` geometry is untouched, so Cmd-P still
+prints the booklet.
+
 ## Answer capture
 
 - Progress autosaves to `localStorage`, keyed `jlpt:<test_id>:<section>`, so a

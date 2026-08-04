@@ -53,6 +53,16 @@ blockquote { border: 1px solid #999; background: #fafafa; margin: 10px 0;
 hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
 strong { font-family: "Noto Sans CJK JP", sans-serif; }
 
+@media screen {
+  :root { --gutter: 1.6em; }
+  body { max-width: 60em; margin: 0 auto; padding: 2.5em var(--gutter) 6em;
+         background: #fff; }
+}
+@media screen and (max-width: 48em) {
+  :root { --gutter: 1em; }
+  body { padding: 1.2em var(--gutter) 4em; }
+}
+
 .qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
 .qa label{display:inline-flex;align-items:center;gap:.28em;cursor:pointer;
   padding:.08em .45em;border:1px solid #bbb;border-radius:999px;font-size:10pt;
@@ -93,6 +103,15 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   padding:.9em;max-height:60vh;overflow:auto}
 #result .hint{font-size:10pt;color:#475569}
 @media print{#bar,#player{display:none}.qa label{border-color:#666}}
+/* On screen the sheet uses the booklet's centered 60em measure (SCREEN_CSS) so
+   the two render identically; the sticky bar and player are pulled out to the
+   column's gutters so they still look like full-width chrome. */
+@media screen{
+  body{padding-top:0}
+  #bar,#player{margin-left:calc(-1 * var(--gutter));
+    margin-right:calc(-1 * var(--gutter));
+    padding-left:var(--gutter);padding-right:var(--gutter)}
+}
 </style></head><body><div id="bar"><b>N2 模擬試験 解答用紙 (4)</b><span class="grow"></span><span><b id="done">解答済み 0 / 107</b></span><button onclick="clearAll()">消去</button><button onclick="save()" class="primary">採点する</button></div><div id="section-gengo"><h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1><!-- seed: 20260805, test_id: 4 -->
 
 <h1>【文字・語彙】</h1>

@@ -100,6 +100,15 @@ EXTRA_CSS = """
   padding:.9em;max-height:60vh;overflow:auto}
 #result .hint{font-size:10pt;color:#475569}
 @media print{#bar,#player{display:none}.qa label{border-color:#666}}
+/* On screen the sheet uses the booklet's centered 60em measure (SCREEN_CSS) so
+   the two render identically; the sticky bar and player are pulled out to the
+   column's gutters so they still look like full-width chrome. */
+@media screen{
+  body{padding-top:0}
+  #bar,#player{margin-left:calc(-1 * var(--gutter));
+    margin-right:calc(-1 * var(--gutter));
+    padding-left:var(--gutter);padding-right:var(--gutter)}
+}
 """
 
 PLAYER_JS = """
@@ -566,7 +575,8 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
     out_path.write_text(
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
-        f'<title>{title}</title><style>{booklet.CSS}{EXTRA_CSS}</style></head>'
+        f'<title>{title}</title>'
+        f'<style>{booklet.CSS}{booklet.SCREEN_CSS}{EXTRA_CSS}</style></head>'
         f'<body>{bar}{body}<div id="result"></div>'
         f'<script>{js}{PLAYER_JS if player else ""}</script>'
         f'</body></html>',

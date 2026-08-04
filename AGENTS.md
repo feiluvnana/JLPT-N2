@@ -275,12 +275,25 @@ inconsistency shipped at least once.
 
 ---
 
-## 6. Pass structure — one test is at least SEVEN passes, not one
+## 6. Pass structure — orchestrate the pipeline; one test is at least SEVEN passes, not one
 
-A "pass" is a fresh context (a subagent, or a new session) that reads its
-inputs from disk at the start, does one bounded job, and hands off. The pass
-count is a rule, not a style preference, because both shipped failure modes
-are context problems:
+**Run the pipeline as an orchestrator, not as a worker.** The context that
+receives the request is the orchestrator: it spawns **one subagent per pass**
+from the table below and does none of the passes' content work itself — no
+sampling, no authoring, no QA. Its whole job is to sequence the passes, give
+each subagent a bounded prompt (which SKILL.md files to read, which files on
+disk are its inputs and outputs), read each subagent's report, decide the next
+pass, and assemble the final report §0.7 requires from those reports.
+
+A "pass" is one such subagent: a fresh context that reads its inputs **from
+disk** at the start (`logs/test_spec.json`, `tests/<test_id>/…`, the relevant
+`SKILL.md`), does one bounded job, reports what it read, ran, and skipped, and
+hands off. State flows between passes only through files on disk — never
+through the orchestrator paraphrasing content into the next prompt, because a
+paraphrase is exactly the "memory of what I meant" that shipped every mis-key.
+
+The pass count is a rule, not a style preference, because both shipped failure
+modes are context problems:
 
 - **Long single-run authoring degrades toward the end.** Test 4 was written in
   one run; its defects clustered in the listening half, written last — swapped
@@ -289,21 +302,22 @@ are context problems:
   the context that wrote them, against its memory of what it meant, and passed.
   Every mis-key survived exactly that review.
 
-| # | Pass | Scope | Fresh context? |
-|---|------|-------|----------------|
-| 1 | Setup | Workflow steps 1–3.5: read the skills, sample the pool, harvest seeds, merge, verify the blend report | yes |
-| 2–5 | Authoring ×4 | One per section — 文字・語彙 (問1–6), 文法 (問7–9), 読解 (問10–14), 聴解 (booklet + script). Each re-reads `logs/test_spec.json` and the relevant SKILL.md at its start instead of trusting a long context's memory | one each (ideal); at minimum re-read spec + skill between sections |
-| 6 | Build + gate | Steps 6–9: booklet HTML, MP3, `解答.html`, `make check` (read every line incl. WARN), whole-paper topic table | may share a context with pass 5 |
-| 7 | QA | `exam-qa-review` in full — blind-solve first, all 107 items, report with verdict | **yes — must NOT be any authoring context** |
-| 8+ | Fix → re-review | Repair findings in the sources, regenerate, re-gate; then the changed items and their whole 問題 re-reviewed | fix may reuse an authoring context; the re-review must again be fresh eyes |
+| # | Pass | Scope | Subagent rule |
+|---|------|-------|---------------|
+| 1 | Setup | Workflow steps 1–3.5: read the skills, sample the pool, harvest seeds, merge, verify the blend report | own subagent |
+| 2–5 | Authoring ×4 | One per section — 文字・語彙 (問1–6), 文法 (問7–9), 読解 (問10–14), 聴解 (booklet + script). Each re-reads `logs/test_spec.json` and the relevant SKILL.md at its start instead of trusting a long context's memory | one subagent each (ideal); at minimum re-read spec + skill between sections |
+| 6 | Build + gate | Steps 6–9: booklet HTML, MP3, `解答.html`, `make check` (read every line incl. WARN), whole-paper topic table | may share a subagent with pass 5 |
+| 7 | QA | `exam-qa-review` in full — blind-solve first, all 107 items, report with verdict | **own subagent — must NOT be any authoring context, and the orchestrator must not leak authoring detail into its prompt** |
+| 8+ | Fix → re-review | Repair findings in the sources, regenerate, re-gate; then the changed items and their whole 問題 re-reviewed | fix may reuse an authoring subagent; the re-review must again be fresh eyes |
 
 **Floor: 7 passes** when QA finds nothing. Every QA finding adds a fix + re-
 review round (passes 8 and 9, then 10 and 11, …); the loop ends only at a
 `QA: PASS` report. Partial work scales the same way: "just fix the MP3" is
 still fix (one pass) + fresh-eyes re-review of the touched items (another).
 
-If the harness cannot spawn subagents, approximate the table with new sessions;
-if even that is impossible, the one non-negotiable split is **authoring vs QA —
-two contexts minimum**. A single context that samples, writes, builds, and
-approves its own paper is how every defective test in this repo's history
-shipped.
+**Fallbacks, in order.** If the harness cannot spawn subagents, the user acts
+as the orchestrator's scheduler: approximate the table with new sessions, one
+pass per session, handing off through disk exactly as a subagent would. If even
+that is impossible, the one non-negotiable split is **authoring vs QA — two
+contexts minimum**. A single context that samples, writes, builds, and approves
+its own paper is how every defective test in this repo's history shipped.

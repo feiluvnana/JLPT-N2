@@ -54,9 +54,12 @@ All exam files follow a strict directory structure:
 ## Workflow (follow in order)
 
 The steps below are distributed over **at least seven passes** — fresh contexts
-with one bounded job each; see `AGENTS.md` §6 for the pass table. The split
-that is never optional: the QA pass (step 9.5) must not be a context that
-authored anything.
+with one bounded job each. **Run them as an orchestrator**: the context that
+owns the request spawns one subagent per pass and does none of the passes'
+content work itself; state flows between passes only through files on disk. See
+`AGENTS.md` §6 for the pass table and orchestrator rules. The split that is
+never optional: the QA pass (step 9.5) must not be a context that authored
+anything.
 
 1. **Load the format spec** → read `jlpt-exam-structure/SKILL.md`.
    Never write a single question before knowing section counts and booklet conventions.

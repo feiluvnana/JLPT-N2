@@ -54,10 +54,14 @@ hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
 strong { font-family: "Noto Sans CJK JP", sans-serif; }
 
 @media screen {
-  body { max-width: 46em; margin: 0 auto; padding: 2.5em 1.6em 6em;
+  :root { --gutter: 1.6em; }
+  body { max-width: 60em; margin: 0 auto; padding: 2.5em var(--gutter) 6em;
          background: #fff; }
 }
-@media screen and (max-width: 48em) { body { padding: 1.2em 1em 4em; } }
+@media screen and (max-width: 48em) {
+  :root { --gutter: 1em; }
+  body { padding: 1.2em var(--gutter) 4em; }
+}
 </style></head><body><h1>日本語能力試験 N2 模擬試験</h1>
 <h1>言語知識(文字・語彙・文法)・読解</h1>
 <p><strong>時間: 105分 問題数: 75問(問題1〜問題14)</strong><br />

@@ -39,10 +39,16 @@ out of it. Editing HTML by hand is always wrong; edit the Markdown and rebuild.
 
 ### Shared with interactive-answer-sheet
 
-`CSS`, `widen()`, `fit_ruby()`, `mark_furigana_blocks()` and
+`CSS`, `SCREEN_CSS`, `widen()`, `fit_ruby()`, `mark_furigana_blocks()` and
 `add_choukai_furigana()` are imported by `build_interactive.py` so the answer
 sheet and the booklet render identically. Changing any of them changes both —
 rebuild both after touching this file.
+
+`SCREEN_CSS` is the screen-only shell: a centered 46 em column (an unbounded
+full-width line is unreadable on a monitor) plus a `--gutter` variable the
+answer sheet's sticky bar and audio player pull out to. It lives entirely
+inside `@media screen`, so the `@page` A4 geometry below is untouched and
+Cmd-P still yields the booklet.
 
 ## Non-negotiables baked into the script (know WHY they exist)
 
