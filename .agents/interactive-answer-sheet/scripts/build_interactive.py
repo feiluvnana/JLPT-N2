@@ -39,6 +39,25 @@ CHOUKAI_ITEM = re.compile(r"^\*\*(例|\d{1,2}番|質問[12])\*\*\s*$")
 # 聴解 inline bubble rows: `**1番** 1 ・ 2 ・ 3 ・ 4` (可 two per line)
 CHOUKAI_INLINE = re.compile(r"\*\*(例|\d{1,2}番)\*\*\s*((?:[1-4]\s*・\s*)+[1-4])")
 OPTION = re.compile(r"^\s+([1-4])\.\s*(.+)$")
+# Options numbered inside a line: ` 1. あ　2. い　3. う　4. え`. The lookbehind
+# keeps 「（1）」-style references in prose from counting as options.
+INLINE_OPT = re.compile(r"(?<![^\s（(])([1-4])\.\s*\S")
+
+
+def option_run(text: str) -> int | None:
+    """How many options this ONE line lists, when it lists several.
+
+    問題1-8 print all four choices on a single line (question-authoring's
+    horizontal layout). `OPTION` only reports the FIRST number on such a line,
+    so keying the radio count off it emitted a single bubble and made every
+    horizontally-laid-out question unanswerable except by choosing 1 — a real
+    bug that shipped in every version of the sheet. Only accept a consecutive
+    run 1..k so a decimal in option text (`1. 価格が3.5倍…`) is not miscounted.
+    """
+    nums = [int(n) for n in INLINE_OPT.findall(text)]
+    if len(nums) >= 2 and nums == list(range(1, len(nums) + 1)):
+        return len(nums)
+    return None
 
 EXTRA_CSS = """
 .qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
@@ -227,7 +246,7 @@ function buildReport(ans){
     let c = 0;
     for (const k of t.keys){ if (ans[k] !== undefined && ans[k] === ANSWER_KEY[k]) c++; }
     const p = pct(c, t.keys.length);
-    let icon = p >= 80 ? "🟢 優 (Strong)" : p >= 60 ? "🟡 良 (Fair)" : "🔴 要強化 (Weak)";
+    let icon = p >= 80 ? "優 (Strong)" : p >= 60 ? "良 (Fair)" : "要強化 (Weak)";
     if (p < 60) weak.push({code:t.code, name:t.name, section:t.section, p:p});
     L.push("| " + t.section + " | **" + t.code + "** | " + t.name + " | **" + p + "%%** | " + c + " / " + t.keys.length + " | " + icon + " |");
   }
@@ -381,7 +400,8 @@ def inject_gengo(md: str):
     for line in md.split("\n"):
         m_opt = OPTION.match(line)
         if cur and m_opt:
-            width = max(width, int(m_opt.group(1)))
+            # a single line may hold the whole 1-4 run (horizontal layout)
+            width = max(width, option_run(line) or int(m_opt.group(1)))
             out.append(line)
             continue
         if line.strip():
@@ -389,10 +409,10 @@ def inject_gengo(md: str):
         m_q = GENGO_Q.match(line)
         if m_q:
             qid = m_q.group(1)
-            inline = re.findall(r"(?<![^\s（(])([1-4])\.\s*\S", line[m_q.end():])
-            if len(inline) >= 2:
+            inline = option_run(line[m_q.end():])   # 問題9's all-on-one-line stem
+            if inline:
                 out.append(line)
-                out.append(radios(qid, max(int(i) for i in inline)))
+                out.append(radios(qid, inline))
                 ids.append(qid)
                 continue
             cur, width = qid, 0
@@ -422,17 +442,13 @@ def inject_choukai(md: str, keys: list):
             used.append(cur)
         cur, width = None, 0
 
-    pending_three = None
     for line in md.split("\n"):
         m_sec = re.match(r"^#+\s*問題([1-5])", line)
         if m_sec:
             flush()
             section = m_sec.group(1)
-            pending_three = None
             out.append(line)
             continue
-        if re.match(r"^#+\s*3番", line) and section == "5":
-            pending_three = True
 
         if CHOUKAI_INLINE.search(line):
             flush()
@@ -454,7 +470,7 @@ def inject_choukai(md: str, keys: list):
 
         m_opt = OPTION.match(line)
         if cur and m_opt:
-            width = max(width, int(m_opt.group(1)))
+            width = max(width, option_run(line) or int(m_opt.group(1)))
             out.append(line)
             continue
         if line.strip():
@@ -462,7 +478,12 @@ def inject_choukai(md: str, keys: list):
         m_item = CHOUKAI_ITEM.match(line.strip())
         if m_item:
             lbl = m_item.group(1)
-            if lbl.startswith("質問") and pending_three:
+            if lbl.startswith("質問") and section == "5":
+                # Only 問題5's final item carries 質問1/質問2 (jlpt-exam-structure),
+                # so they always belong to 3番. This used to require 3番 to be a
+                # HEADING (`## 3番`); test 4 writes it in bold (`**3番**`), so
+                # 質問1/質問2 fell through to key_for("質問1") -> 問5-1, colliding
+                # with 1番's group: two items unanswerable, two answers clobbered.
                 cur, width = key_for("3番", lbl[-1]), 0
             else:
                 cur, width = key_for(lbl), 0

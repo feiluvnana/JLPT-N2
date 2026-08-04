@@ -1,6 +1,6 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help grade sheet serve booklet mp3 sample merge-seeds
+.PHONY: help check grade sheet serve booklet mp3 sample merge-seeds
 
 # Handle positional arguments for targets (e.g., "make grade 1", "make sheet 1", "make serve 1", "make booklet 1", "make mp3 1")
 TARGET_CMDS := grade sheet serve booklet mp3
@@ -27,9 +27,16 @@ help:
 	@echo "  make serve 1          Serve answer sheet for test 1 & auto-save to tests/1/"
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
 	@echo "  make mp3 1            Synthesize listening audio for test 1 (聴解.mp3)"
+	@echo "  make check            Verify docs/code/tests consistency (read-only)"
 	@echo "  make sample           Sample question pool (item-pool-sampling)"
 	@echo "  make merge-seeds      Merge logs/seeds.json into logs/test_spec.json"
 	@echo "=========================================================================="
+
+check:
+	python3 tools/check_consistency.py
+
+check-tests:
+	python3 tools/check_consistency.py --tests
 
 grade:
 	python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/$(TEST)

@@ -9,12 +9,11 @@ description: Single owner of how to analyze official JLPT listening audio (MP3/C
 
 Audio reference files live under `refs/` at the workspace root:
 
-- **Official Exam Audio (`refs/JLPT/`) — 5 Recent Exams**:
-  - July 2023: `"refs/JLPT/File nghe N2 7-2023.mp3"`
-  - Dec 2023: `"refs/JLPT/14. Nghe N2 T12-2023.mp3"`
-  - Dec 2024: `"refs/JLPT/Nghe N2 T12-2024.mp3"`
-  - July 2025: `"refs/JLPT/Nghe N2 T7-2025.mp3"`
-  - Dec 2025: `"refs/JLPT/JLPT N2 12.2025 Choukai.mp3"`
+- **Official Exam Audio**: the 5 recent exams' MP3s in `refs/JLPT/`. Exact
+  filenames are owned by **`AGENTS.md` section 3** — quote the path from there
+  (they contain spaces, so always quote). The Dec 2025 file
+  `"refs/JLPT/JLPT N2 12.2025 Choukai.mp3"` is the calibration baseline and is
+  the one used in the commands below.
 - **Textbook CD tracks**: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/`
 
 ## Step 1 — Basics & Multi-Exam Comparison

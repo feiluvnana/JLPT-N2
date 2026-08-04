@@ -29,12 +29,10 @@ opening line → per-section instruction → 「では、練習しましょう�
 
 ## Calibrating against Official Past Exam Scripts (`refs/JLPT/`)
 
-Always cross-check dialogue tone, speaker turn length, announcer wording, and distractor flow against the 5 official listening script PDFs in `refs/JLPT/`:
-- **07/2023**: `refs/JLPT/14. N2 7-2023 (script).pdf`
-- **12/2023**: `refs/JLPT/14. script N2 12-2023.pdf`
-- **12/2024**: `refs/JLPT/15. script N2 12.2024.pdf`
-- **07/2025**: `refs/JLPT/16. N2-7.2025 (script).pdf`
-- **12/2025**: `refs/JLPT/17 (script) N2 12-2025 _260410.pdf`
+Always cross-check dialogue tone, speaker turn length, announcer wording, and
+distractor flow against the 5 official listening script PDFs in `refs/JLPT/`.
+Their exact filenames live in **`AGENTS.md` section 3** (the single owner);
+`reference-book-reading` explains how to read the scans.
 
 These real scripts define the standard dialogue rhythm (3-5 exchanges for 問題1/2, monologues for 問題3, rapid single turn for 問題4) and precise announcer phrasing.
 
@@ -88,13 +86,18 @@ violating script cannot produce an MP3.
 
 ## Required structure — every element is mandatory
 
-A full N2 script is **48 blocks** (35 item blocks + headers, instructions and
-例 confirmations). Missing pieces are SILENT: the MP3 still builds and just
-quietly stops being an official-format exam. Tests 2 and 3 shipped with no 例
-at all for 問題3/問題4 and no 問題5 announcer line, and nothing caught it. All
-of the following are now enforced by `validate_script()` in
-`make_choukai_mp3.py` — note the 48 total is only *printed* by the validator
-(`script OK: N blocks, …`), so check that number by eye:
+A full N2 script is **exactly 35 item blocks** (`例。`/`N番。`) in the per-問題
+counts below, plus the 問題 headers, instructions, announcer lines and 例
+confirmations. **The TOTAL block count is not fixed** — test 1 is 48 blocks and
+test 4 is 56, both valid; the difference is only how instruction and announcer
+text is split. So do not treat any total as a target: `validate_script()`
+enforces the 35 item blocks and their distribution and merely *prints* the
+total (`script OK: N blocks, …`).
+
+Missing pieces are otherwise SILENT: the MP3 still builds and just quietly
+stops being an official-format exam. Tests 2 and 3 shipped with no 例 at all
+for 問題3/問題4 and no 問題5 announcer line, and nothing caught it. All of the
+following are now enforced:
 
 | Element | Rule |
 |---|---|

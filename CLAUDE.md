@@ -15,6 +15,9 @@ every agent harness. It is imported below, so its rules apply in full here.
   exam work, even a partial request like "make a listening section".
 - Scripts always run from the workspace root; prefer the `make` targets
   documented in `AGENTS.md` §4 (`make sheet 1`, `make serve 1`, `make grade 1`).
+- **Run `make check` before you report any pipeline change as done.** It is the
+  read-only gate that catches docs drifting from the scripts and malformed
+  answer sheets; see `AGENTS.md` §4.
 - `tests/` and `logs/` are tracked working folders. A new exam means new files
   under `tests/<test_id>/` plus an updated `logs/ledger.json`; commit them
   together.

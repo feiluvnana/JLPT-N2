@@ -7,10 +7,11 @@ calculates standardized scaled scores (0-180), evaluates Pass/Fail criteria,
 identifies weak sub-sections, and generates detailed Markdown diagnostic reports.
 
 Usage:
-    # 1. Build the interactive sheets (once per test):
-    python3 .agents/exam-answer-grading/scripts/build_interactive.py tests/1
+    # 1. Build the merged answer sheet (once per test, or `make sheet 1`):
+    python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
 
-    # 2. Answer them in a browser, press 「解答を保存」, then grade:
+    # 2. Answer it in a browser (`make serve 1`), press 「採点する」 — that already
+    #    writes 採点結果.md and user_answers.json. To re-grade from the CLI:
     python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 --user-answers tests/1/user_answers.json
 
     # 3. Quick grade via CLI strings:
@@ -360,11 +361,11 @@ def render_report(results: dict, test_id: str) -> str:
     for code, stats in results["taxonomy_stats"].items():
         pct = stats["percentage"]
         if pct >= 80:
-            eval_icon = "🟢 優 (Strong)"
+            eval_icon = "優 (Strong)"
         elif pct >= 60:
-            eval_icon = "🟡 良 (Fair)"
+            eval_icon = "良 (Fair)"
         else:
-            eval_icon = "🔴 要強化 (Weak)"
+            eval_icon = "要強化 (Weak)"
             weak_areas.append((code, stats))
 
         lines.append(

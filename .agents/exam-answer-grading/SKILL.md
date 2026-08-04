@@ -129,7 +129,7 @@ The generated report contains 5 major sections:
 
 1. **総合判定**: Pass/Fail status, reason for failure if any (overall score < 90 or sectional cutoff < 19).
 2. **得点サマリー**: Table showing raw score, scaled score, sectional cutoffs, and overall total.
-3. **大問別詳細分析**: Accuracy percentage and evaluation per大問 — exactly the labels emitted by `grade_answers.py` and the in-page grader: `🟢 優 (Strong)` (>=80%), `🟡 良 (Fair)` (60-79%), `🔴 要強化 (Weak)` (<60%).
+3. **大問別詳細分析**: Accuracy percentage and evaluation per大問 — exactly the labels emitted by `grade_answers.py` and the in-page grader: `優 (Strong)` (>=80%), `良 (Fair)` (60-79%), `要強化 (Weak)` (<60%). Plain text, no emoji — 4cad944 removed emoji from the report symbols and both graders must stay in lockstep.
 4. **弱点診断 & 今後の学習アドバイス**: Targeted textbook practice recommendations for flagged weak areas referencing `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-*.pdf`.
 5. **全設問解答チェック表**: Complete comparison matrix comparing user selection vs correct answer key for every question.
 

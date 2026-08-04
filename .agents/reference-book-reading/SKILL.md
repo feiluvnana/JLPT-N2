@@ -18,12 +18,10 @@ Standard naming patterns for Shin Kanzen Master PDFs:
 - **Kanji**: `refs/Shinkanzen/Shin_Kanzen_Masuta_<level>-Kanji.pdf`
 
 ### 2. Official Past Exam Booklets & Scripts (`refs/JLPT/`)
-The 5 most recent official JLPT exam sets (Question Booklets & Listening Scripts):
-- **July 2023**: `refs/JLPT/14. N2 7-2023.pdf` & `refs/JLPT/14. N2 7-2023 (script).pdf`
-- **Dec 2023**: `refs/JLPT/14.N2 12-2023.pdf` & `refs/JLPT/14. script N2 12-2023.pdf`
-- **Dec 2024**: `refs/JLPT/15. N2 12.2024 (update 260625).pdf` & `refs/JLPT/15. script N2 12.2024.pdf`
-- **July 2025**: `refs/JLPT/16. N2 07-2025.pdf` & `refs/JLPT/16. N2-7.2025 (script).pdf`
-- **Dec 2025**: `refs/JLPT/17.N2 12-2025 _260603.pdf` & `refs/JLPT/17 (script) N2 12-2025 _260410.pdf`
+The 5 most recent official JLPT exam sets (booklet + listening script + audio).
+**`AGENTS.md` section 3 is the single owner of these filenames** — read the paths
+from there rather than copying them here, so a renamed scan only has to be fixed
+in one place. (`make check` verifies every path in that table exists.)
 
 ## Step 1 — Diagnose before reading
 

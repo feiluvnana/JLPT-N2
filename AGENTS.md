@@ -37,6 +37,7 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
 - `tests/<test_id>/`: Output folder for each generated exam (e.g. `tests/1/`, `tests/n2_mock_01/`).
 - `logs/`: Operational logs, item coverage ledger (`logs/ledger.json`), test blueprints (`logs/test_spec.json`), and web seed harvests (`logs/seeds.json`).
 - `.agents/`: Internal skill definitions, guidelines, and execution scripts.
+- `tools/`: Repo-level tooling that is not a skill (`check_consistency.py`, run via `make check`).
 
 `tests/` and `logs/` are committed to git (see §4) — the ledger in particular
 must persist, since item rotation depends on the history of past draws.
@@ -89,6 +90,7 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 
 | Command | Runs |
 | ------------------------- | -------------------------------------------------- |
+| `make check`              | `tools/check_consistency.py` — read-only consistency gate |
 | `make sample`             | `sample_items.py --seed $(SEED)` (default `SEED=20260803`) |
 | `make merge-seeds`        | `merge_seeds.py logs/seeds.json logs/test_spec.json` |
 | `make booklet <test_id>`  | `build_booklet.py` on both Markdown sources        |
@@ -161,6 +163,23 @@ python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/<t
 
 The legacy `マークシート.pdf` / `マークシート.html` mark sheets are gone; the
 answer sheet is merged into the problem sheet.
+
+---
+
+### Consistency Gate (`make check`)
+
+`tools/check_consistency.py` asserts the facts the docs duplicate from the code,
+because prose cannot be executed: every `refs/` path named in a doc exists; all
+12 skills are listed here and symlinked under `.claude/skills/`; documented
+deliverable names appear in the script that writes them and retired ones stay
+retired; the choukai pacing table matches `ANSWER_PAUSE`/`GAP_*`; the 大問 table
+matches `GENGO_QUESTION_TAXONOMY`; and for every test on disk the script
+validates, 75+32 keys parse, the sheet has 107 correctly-sized radio groups, and
+the in-page grader agrees with `grade_answers.py` on identical answers.
+
+**Run it after touching any script, skill doc, or test.** It is read-only and
+takes a couple of seconds. Every check in it exists because that exact
+inconsistency shipped at least once.
 
 ---
 

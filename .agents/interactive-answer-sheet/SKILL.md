@@ -47,8 +47,10 @@ unanswered items appear as 「— 未解答」 in the check table rather than as
 out of `grade_answers.py` at build time** (`GENGO_QUESTION_TAXONOMY`,
 `CHOUKAI_QUESTION_TAXONOMY`, `ADVICE_FOR`). Never hand-write those tables into
 the JS — a second copy is exactly how the grader's 大問 ranges drifted from
-`jlpt-exam-structure` in the first place. Verified equal: both graders return
-46/54 + 18/21 + 27/32 on the same simulated answers.
+`jlpt-exam-structure` in the first place. `make check` proves the two agree by
+running the sheet's own JS under node and comparing raw scores with
+`grade_answers.py` on identical simulated answers (36/54 + 14/21 + 21/32 for
+both tests at the time of writing).
 
 ## The answer key must never be VISIBLE
 
@@ -112,9 +114,34 @@ missing group means that question can never be answered or scored.
 ## Verification
 
 ```bash
+make check            # asserts everything below, for every test on disk
+```
+
+`make check` (`tools/check_consistency.py`) is the real gate. On the answer
+sheet it asserts: **107 radio groups**, one per scored question; every expected
+key present; no group name shared by two questions; 4 options for each of the
+75 gengo questions; 3 for 問題4's 即時応答 items (416 inputs total); no emoji in
+the report labels; and that the in-page grader and `grade_answers.py` return
+identical raw scores on the same simulated answers.
+
+Two option-counting bugs it was written to prevent, both of which shipped in
+every earlier version of the sheet and made the exam partly unanswerable:
+
+- **one bubble per horizontal question.** 問題1-8 print all four choices on a
+  single line; the option regex reports only the FIRST number on a line, so the
+  group got `width=1` and you could only ever answer 1. 46 of 107 questions in
+  test 1 were affected. `option_run()` now counts a consecutive `1..k` run on
+  the line (a consecutive run only, so `1. 価格が3.5倍…` is not miscounted).
+- **問題5's 質問1/質問2 colliding with 1番/2番.** Routing them to `問5-3-N`
+  required 3番 to be a *heading*; test 4 writes `**3番**` in bold, so they fell
+  through to `問5-1`/`問5-2` — two items unanswerable, two answers clobbered.
+  質問N now always belongs to 3番 whenever the section is 問題5.
+
+Manual spot-check if you change the parser:
+
+```bash
 python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
-# expect exactly: 75 questions, 32 items, zero warnings
-grep -c 'type="radio"' tests/1/解答.html   # >= 300 for the 75 gengo questions (75 x 4) plus the 聴解 groups
+# expect exactly: 107 items (75 Gengo/Dokkai, 32 Choukai), zero warnings
 ```
 
 To check the in-page grader against the Python one, extract the last `<script>`

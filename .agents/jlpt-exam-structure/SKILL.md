@@ -64,6 +64,12 @@ Question numbering is continuous 1-75 across the whole paper.
 
 ## Booklet layout conventions
 
+- **Heading structure (both booklets)**: a `#` banner section (`# 【文字・語彙】`,
+  `# 【文法】`, `# 【読解】`, `# 【問題】`) wrapping `## 問題N` section headers.
+  Never make `問題N` an `h1`. Parsers are level-agnostic where it counts
+  (`build_interactive.py` matches `^#+\s*問題([1-5])`) but the answer-key parser
+  is NOT — `parse_choukai_keys()` only recognizes `## 問題N` — so `##` is the
+  safe, uniform choice everywhere.
 - **Markdown Question Numbering**: Always use bold numbers (`**1**` ... `**75**` for file 1; `**例**`, `**1番**` for file 2). Never use `1.` or `6.` list syntax to prevent HTML `<ol>` list resets.
 - 文字・語彙・文法: short options run HORIZONTALLY on one line
   (` 1. ◯◯  2. ◯◯  3. ◯◯  4. ◯◯`). Reading questions and 問題6 usage sentences are vertical.
