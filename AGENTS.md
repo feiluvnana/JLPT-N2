@@ -1,4 +1,7 @@
-# AGENTS.md — Workspace Guidelines for Antigravity
+# AGENTS.md — Workspace Guidelines
+
+Shared by every agent harness used on this repo (Antigravity, Claude Code, …).
+Claude Code reads it via `CLAUDE.md`, which imports this file.
 
 This repository is dedicated to generating, calibrating, rendering, and synthesizing official-quality JLPT mock exams (primarily N2). All agents must strictly follow the skills and rules documented below.
 
@@ -8,6 +11,7 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
 
 - Skills are located in `.agents/<skill_name>/SKILL.md`.
 - Before performing any specialized task, **read the corresponding `SKILL.md` file** (they are plain Markdown — open them with whatever file-reading tool your harness provides).
+- **Claude Code**: the same 12 skills are exposed natively via symlinks in `.claude/skills/<skill_name>` → `.agents/<skill_name>`, so they are auto-discovered and invocable as `/<skill-name>`. `.agents/` remains the single copy — edit files there.
 - **`jlpt-test-generation` is the entry point.** Read it FIRST for any exam work, even a partial request like "make a listening section"; it routes to the other skills in order.
 - Available Skills:
   1. `jlpt-test-generation`: End-to-end mock exam generation orchestrator — **read this one first**.
@@ -33,6 +37,9 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
 - `tests/<test_id>/`: Output folder for each generated exam (e.g. `tests/1/`, `tests/n2_mock_01/`).
 - `logs/`: Operational logs, item coverage ledger (`logs/ledger.json`), test blueprints (`logs/test_spec.json`), and web seed harvests (`logs/seeds.json`).
 - `.agents/`: Internal skill definitions, guidelines, and execution scripts.
+
+`tests/` and `logs/` are committed to git (see §4) — the ledger in particular
+must persist, since item rotation depends on the history of past draws.
 
 ### Deliverables Naming Convention (Japanese File Names Mandatory)
 
@@ -96,8 +103,12 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 `--seed <n> --test-id <id>` so the ledger records attribution — see
 `item-pool-sampling/SKILL.md`.
 
-A fresh clone has **no `tests/` directory and an empty `logs/`** — generate a
-test before any `make grade` / `make sheet` invocation.
+**`tests/` and `logs/` are tracked, on purpose** — they are the working folders
+where exams get built and taken, so committing them keeps every generated exam
+and the item-rotation state (`logs/ledger.json`) with the repo. Only
+`tests/*/segments/` (the temporary per-line audio cache) is gitignored. Commit
+new tests and the updated ledger along with the pipeline changes that produced
+them.
 
 ### Item Pool Sampling (Blueprint Generation & Item Rotation)
 

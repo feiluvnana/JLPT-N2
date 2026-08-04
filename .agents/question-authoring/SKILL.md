@@ -107,12 +107,18 @@ matching where one tempting option fails exactly one condition.
 
 Answer keys and explanations MUST be formatted as Markdown tables at the end of `言語知識・読解.md` and `聴解.md`. Single grid summary tables without explanations are STRICTLY FORBIDDEN.
 
-**Both files MUST open their key section with a top-level heading matching
-`# 解答…` or `# 【正解…`** — `言語知識・読解.md` uses `# 解答と解説`, `聴解.md` uses
-`# 解答用紙(マークシート)`. This is not cosmetic: `build_interactive.py` truncates
-the document from that heading onward so the key never renders on the answer
-sheet, and it **exits with an error** if the heading is missing. A key section
-introduced only by `##` sub-headers will fail the build.
+**Both files MUST open their key section with a heading whose text starts with
+`解答` or `正解`/`【正解`** (regex `^#+\s*(解答|【?正解)`). Any wording qualifies —
+existing tests use `# 解答(言語知識・読解)` and `# 解答と解説` for
+`言語知識・読解.md`, and `# 解答用紙(マークシート)` for `聴解.md`. This is not
+cosmetic: `build_interactive.py` truncates the document from the FIRST such
+heading onward so the key never renders on the answer sheet, and it **exits
+with an error** if there is none. Two consequences:
+
+- a key section introduced only by `##` sub-headers fails the build;
+- never put `解答`/`正解` at the START of a heading in the question body — the
+  whole document from there down would be truncated out of the answer sheet.
+  (`# 問題用紙・解答用紙` is safe: it starts with 問.)
 
 ### 1. `言語知識・読解.md` Answer Key Format
 Under `# 解答と解説`, must contain three distinct section headers:
@@ -128,7 +134,7 @@ Must contain two main parts:
   - `## 問題2 ポイント理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–6番.
   - `## 問題3 概要理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番.
   - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–12番 detailing honorifics/idiom points.
-  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **4 rows, not 3** — 問題5 has 3 items but 4 answers. Label them exactly `**1番**`, `**2番**`, `**3番 質問1**`, `**3番 質問2**`: `parse_choukai_keys()` maps those to the keys `問5-1`, `問5-2`, `問5-3-1`, `問5-3-2`, and a 3-row table silently loses one scored answer.
+  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **4 rows, not 3** — 問題5 has 3 items but 4 answers, so a 3-row table silently loses one scored answer. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2`, `問5-3-1`, `問5-3-2`; it accepts either label style used so far — `**1番**` / `**2番**` / `**3番 質問1**` / `**3番 質問2**` (test 4, preferred for new tests) or `1` / `2` / `3-質問1` / `3-質問2` (test 1). The 3番 rows MUST carry `質問1`/`質問2`; the 1番/2番 rows must NOT.
   - `## 得点の目安`: Score range guidelines.
 
 

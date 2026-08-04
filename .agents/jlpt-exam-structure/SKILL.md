@@ -75,15 +75,18 @@ Question numbering is continuous 1-75 across the whole paper.
 ## Answer Key & Explanation Table Structure
 
 Both booklets must conclude with structured table-formatted answer keys and
-explanations, opened by a **top-level `# 解答…` / `# 【正解…` heading** — the
-marker `build_interactive.py` truncates from (it aborts if absent):
+explanations, opened by a **heading whose text starts with `解答` or `正解`**
+(`^#+\s*(解答|【?正解)`) — the marker `build_interactive.py` truncates from, and
+it aborts if absent. Any wording qualifies; keep 解答/正解 out of the start of
+any heading in the question body, or the body gets truncated too:
 - `言語知識・読解.md`:
-  - `# 解答と解説` (required heading), containing:
+  - the key heading (e.g. `# 解答(言語知識・読解)` or `# 解答と解説`), containing:
   - `## 文字・語彙`: Multi-column key table (`| 問 | 答 | ...`)
   - `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q33–54
   - `## 読解`: 3-column table (`| 問 | 答 | 解説 |`) for Q55–75
 - `聴解.md`:
   - `# 解答用紙(マークシート)`: Bubble sheets for 問題1〜問題5
   - `# 【正解・解説】※解き終わってから見てください`: Section-by-section tables (`| 番号 | 正解 | 解説 |`) for 問題1〜問題5 + `## 得点の目安`
-  - 問題5's table carries **4 rows for 3 items** — `**1番**`, `**2番**`, `**3番 質問1**`, `**3番 質問2**` (see question-authoring)
+  - key sub-headers must be `## 問題N` — `parse_choukai_keys()` keys section state off `##`, so `# 問題N` in the key section parses as nothing
+  - 問題5's table carries **4 rows for 3 items**, the 3番 rows labelled with 質問1/質問2 (see question-authoring for the accepted label styles)
 
