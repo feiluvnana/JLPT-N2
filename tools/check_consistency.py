@@ -283,7 +283,7 @@ def gengo_option_sets(md: str, bi) -> dict[int, list[str]]:
 BLANK_RUN = re.compile(r"(?:[＿_]+★?[＿_]*|★)(?:\s*(?:[＿_]+★?[＿_]*|★))+")
 
 
-def check_scramble_stars(gt: str, keys: dict[int, int]):
+def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str]]):
     """問題8: the key must name the option that lands on ★ (the 3rd blank).
 
     Both facts are checkable from the Markdown alone: the stem must offer four
@@ -314,6 +314,115 @@ def check_scramble_stars(gt: str, keys: dict[int, int]):
     check("問題8 解説 spells the word order as a 1-4 permutation", not unparsed,
           f"{', '.join(unparsed)} — write `語(1)→語(4)→語(2)→語(3)`")
     check("問題8 keys name the option on ★", not mismatch, "; ".join(mismatch))
+
+    # The option strips ARE the missing span, so the stem must not already
+    # contain them. Test 3 shipped all five items with the whole sentence
+    # written out in the stem AND chopped into the options, so every permutation
+    # read `…本番でパニックになってパニックになってうろたえる…`. The star and
+    # permutation checks above pass happily on that — neither reads the stem's
+    # own words. Two signals, both chosen to leave honest repetition alone
+    # (test 2's 46 legitimately says 新しい町 in the stem and 新しい in an option):
+    # an option butting straight up against the blanks, and a long option
+    # already spelled out somewhere in the stem.
+    echoes = []
+    for q in range(45, 50):
+        run = BLANK_RUN.search(stems.get(q, ""))
+        if not run:
+            continue
+        head, tail = stems[q][: run.start()].strip(), stems[q][run.end():].strip()
+        for opt in opts.get(q, []):
+            if not opt:
+                continue
+            if head.endswith(opt):
+                echoes.append(f"{q}: stem already ends with 「{opt}」 before the blanks")
+            elif tail.startswith(opt):
+                echoes.append(f"{q}: stem resumes with 「{opt}」 after the blanks")
+            elif len(opt) >= 4 and (opt in head or opt in tail):
+                echoes.append(f"{q}: 「{opt}」 is already written in the stem")
+    check("問題8 options do not repeat text already in the stem", not echoes,
+          "; ".join(echoes))
+
+
+# Latin script is a drafting artefact, never exam content: a passage that still
+# says 「単なる無音の contrast ではない」 (test 3, 問題9) got half-written in
+# English and never finished. Loan words belong in katakana. The allowlist is
+# the handful of initialisms official papers really do print.
+LATIN_OK = {"SNS", "AI", "IT", "CO", "PC", "DVD", "CD", "BOX", "QR", "URL",
+            "FAX", "TV", "WEB", "ATM", "IC", "LED", "USB", "AM", "PM",
+            "TTS", "MP"}          # the last two name the pipeline, not content
+LATIN_RUN = re.compile(r"[A-Za-z]{2,}")
+RUBY_MARKUP = re.compile(r"<[^>]+>")
+
+
+def check_no_latin_prose(name: str, text: str):
+    bad = sorted({w for w in LATIN_RUN.findall(RUBY_MARKUP.sub(" ", text))
+                  if w.upper() not in LATIN_OK})
+    check(f"{name}: no un-transliterated Latin words", not bad,
+          f"{bad} — write it in katakana or Japanese")
+
+
+def check_rotation_inputs():
+    """The two knobs that decide whether a new test is actually new.
+
+    Pool items rotate because the ledger excludes what previous tests drew.
+    Web topics have no such memory: `merge_seeds.py` seeds its RNG from the
+    spec's own seed, so the SAME `--seed` plus an unchanged `logs/seeds.json`
+    reproduces the previous test's blend slot for slot. Test 3 was generated
+    with test 2's seed (20260804) against test 2's untouched harvest and came
+    out a re-skin of it — same デジタルデトックス, same クラフトツーリズム,
+    same ハイブリッドワーク down to the 「約7割」 figure, and the same web
+    scenario in the same 聴解 slot. Every other gate passed.
+    """
+    led = ROOT / "logs" / "ledger.json"
+    if led.is_file():
+        hist = json.loads(led.read_text(encoding="utf-8")).get("history", [])
+        by_seed: dict[int, list[dict]] = {}
+        for h in hist:
+            if h.get("seed") is not None:
+                by_seed.setdefault(h["seed"], []).append(h)
+        # Sharing a seed is only safe when the harvest differs: the blend is a
+        # pure function of (seed, seeds.json). merge_seeds stamps harvest_sha,
+        # so two entries that agree on the seed must disagree on the harvest.
+        clash = []
+        for s, entries in by_seed.items():
+            if len(entries) < 2:
+                continue
+            shas = [e.get("harvest_sha") for e in entries]
+            if len(set(shas)) < len(shas):
+                ids = [str(e.get("test_id")) for e in entries]
+                clash.append(f"seed {s} shared by tests {ids} with the same "
+                             f"harvest ({shas[0] or 'unrecorded'})")
+        check("no two tests share both a --seed and a web harvest", not clash,
+              "; ".join(clash) + " — merge_seeds replays the previous blend "
+              "slot for slot; re-harvest logs/seeds.json or pick a new seed")
+
+        shas = [h["harvest_sha"] for h in hist if h.get("harvest_sha")]
+        dup = sorted({x for x in shas if shas.count(x) > 1})
+        check(f"each test blended its own web harvest ({len(shas)} recorded)",
+              not dup, f"harvest_sha reused: {dup} — step 3.5 was skipped")
+
+    spec_path, seeds_path = ROOT / "logs" / "test_spec.json", ROOT / "logs" / "seeds.json"
+    if not (spec_path.is_file() and seeds_path.is_file()):
+        return skip("every web entry in test_spec traces to logs/seeds.json",
+                    "no test_spec.json or seeds.json")
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    harvest = {s["seed"] for s in json.loads(seeds_path.read_text(encoding="utf-8"))}
+
+    blended: list[tuple[str, str]] = []
+    for key, field in (("topic", "reading_topics"), ("scenario", "listening_scenarios")):
+        for e in spec.get("items", {}).get(field, []):
+            if isinstance(e, dict) and e.get("origin") == "web":
+                blended.append((field, e.get(key, "")))
+    for field in ("info_retrieval_texture", "cloze_topic"):
+        e = spec.get(field)
+        if isinstance(e, dict) and e.get("origin") == "web":
+            blended.append((field, e.get("detail") or e.get("topic", "")))
+
+    orphans = [f"{f}:「{t}」" for f, t in blended if t not in harvest]
+    check(f"every web entry in test_spec traces to logs/seeds.json "
+          f"({len(blended)} blended)", not orphans,
+          "; ".join(orphans) + " — the spec was blended from a harvest that has "
+          "since been replaced; re-run merge_seeds")
 
 
 def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
@@ -434,8 +543,12 @@ def check_tests():
               "; ".join(f"{q}: {v}" for q, v in sorted(dupes.items())))
         wrong_n = {q: len(v) for q, v in opts.items() if len(v) != 4}
         check("every gengo question parses to exactly 4 options", not wrong_n, f"{wrong_n}")
-        check_scramble_stars(gt, keys)
+        check_scramble_stars(gt, keys, opts)
         check_answer_positions(d, keys, ck, g)
+        for f in (gengo, choukai):
+            body = f.read_text(encoding="utf-8")
+            cut = bi.KEY_HEADING.search(body)
+            check_no_latin_prose(f.name, body[: cut.start()] if cut else body)
 
         script = d / "聴解スクリプト.txt"
         if script.is_file():
@@ -574,6 +687,8 @@ def main():
         check_pacing()
         check_item_counts()
         check_taxonomy()
+        print("\nrotation inputs (why a new test is actually new)")
+        check_rotation_inputs()
     check_tests()
     check_grader_parity()
 

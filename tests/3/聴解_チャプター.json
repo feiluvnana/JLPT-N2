@@ -1,5 +1,5 @@
 {
- "duration": 2480.1,
+ "duration": 2496.5,
  "chapters": [
   {
    "type": "section",
@@ -35,211 +35,211 @@
    "type": "item",
    "section": "問題1",
    "label": "4番",
-   "start": 376.85
+   "start": 371.16
   },
   {
    "type": "item",
    "section": "問題1",
    "label": "5番",
-   "start": 460.36
+   "start": 454.68
   },
   {
    "type": "section",
    "section": "問題2",
    "label": "問題2",
-   "start": 549.81
+   "start": 534.59
   },
   {
    "type": "item",
    "section": "問題2",
    "label": "例",
-   "start": 581.63
+   "start": 566.41
   },
   {
    "type": "item",
    "section": "問題2",
    "label": "1番",
-   "start": 659.76
+   "start": 644.54
   },
   {
    "type": "item",
    "section": "問題2",
    "label": "2番",
-   "start": 736.24
+   "start": 726.04
   },
   {
    "type": "item",
    "section": "問題2",
    "label": "3番",
-   "start": 803.53
+   "start": 793.32
   },
   {
    "type": "item",
    "section": "問題2",
    "label": "4番",
-   "start": 879.41
+   "start": 870.04
   },
   {
    "type": "item",
    "section": "問題2",
    "label": "5番",
-   "start": 962.01
+   "start": 952.64
   },
   {
    "type": "item",
    "section": "問題2",
    "label": "6番",
-   "start": 1033.08
+   "start": 1023.07
   },
   {
    "type": "section",
    "section": "問題3",
    "label": "問題3",
-   "start": 1108.88
+   "start": 1109.2
   },
   {
    "type": "item",
    "section": "問題3",
    "label": "例",
-   "start": 1146.59
+   "start": 1146.9
   },
   {
    "type": "item",
    "section": "問題3",
    "label": "1番",
-   "start": 1231.95
+   "start": 1232.26
   },
   {
    "type": "item",
    "section": "問題3",
    "label": "2番",
-   "start": 1314.88
+   "start": 1315.46
   },
   {
    "type": "item",
    "section": "問題3",
    "label": "3番",
-   "start": 1394.74
+   "start": 1395.31
   },
   {
    "type": "item",
    "section": "問題3",
    "label": "4番",
-   "start": 1476.66
+   "start": 1480.57
   },
   {
    "type": "item",
    "section": "問題3",
    "label": "5番",
-   "start": 1555.67
+   "start": 1559.58
   },
   {
    "type": "section",
    "section": "問題4",
    "label": "問題4",
-   "start": 1630.54
+   "start": 1650.62
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "例",
-   "start": 1659.07
+   "start": 1679.16
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "1番",
-   "start": 1704.88
+   "start": 1724.97
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "2番",
-   "start": 1736.72
+   "start": 1756.81
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "3番",
-   "start": 1765.64
+   "start": 1785.73
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "4番",
-   "start": 1797.44
+   "start": 1817.52
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "5番",
-   "start": 1828.82
+   "start": 1848.91
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "6番",
-   "start": 1860.67
+   "start": 1880.76
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "7番",
-   "start": 1893.52
+   "start": 1913.61
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "8番",
-   "start": 1924.88
+   "start": 1944.97
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "9番",
-   "start": 1955.53
+   "start": 1975.62
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "10番",
-   "start": 1988.98
+   "start": 2009.07
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "11番",
-   "start": 2019.62
+   "start": 2039.71
   },
   {
    "type": "item",
    "section": "問題4",
    "label": "12番",
-   "start": 2053.51
+   "start": 2073.6
   },
   {
    "type": "section",
    "section": "問題5",
    "label": "問題5",
-   "start": 2084.32
+   "start": 2104.41
   },
   {
    "type": "item",
    "section": "問題5",
    "label": "1番",
-   "start": 2125.56
+   "start": 2145.65
   },
   {
    "type": "item",
    "section": "問題5",
    "label": "2番",
-   "start": 2232.05
+   "start": 2252.14
   },
   {
    "type": "item",
    "section": "問題5",
    "label": "3番",
-   "start": 2337.51
+   "start": 2357.6
   }
  ]
 }

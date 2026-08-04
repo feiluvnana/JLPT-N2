@@ -110,6 +110,16 @@ you. Run it before calling any authoring work done.
   `状況に(2)→おいて(4)→**価格競争が(1)**→続く限り(3)`. `make check` parses that
   sequence and asserts its 3rd entry equals the key, so it must be a real
   permutation of 1-4 that matches the stem's options.
+- **問題8: the stem must be MISSING exactly what the options supply.** Write the
+  finished sentence, cut the four-part span out of it, and let the blanks stand
+  where the span was — do not leave the words in the stem as well. Test 3
+  shipped all five items with the sentence written out in full *and* chopped
+  into options, so 45 assembled to
+  「兄が外で活発に遊ぶのを外で遊ぶのを好むのに対して…」 and 49 said
+  パニックになって twice. Every other 問題8 gate passed, because none of them
+  read the stem's own words. The test: splice stem + options in 解説 order and
+  read the result end to end. If any word occurs twice, the stem is wrong, not
+  the key.
 - **Every scramble must form ONE grammatical sentence.** Two options that cannot
   coexist make the item unanswerable no matter the key: test 2 offered both
   「まったく」 and 「ほとんど持てていない」 in one set, and both 「わりに」 and
@@ -117,6 +127,19 @@ you. Run it before calling any authoring work done.
 - **A cloze blank must not repeat what the stem already says.** `…からでも
   ( 54 )はいかがだろうか` with option `試してみてはいかがだろうか` ends the
   sentence twice. Read stem-plus-option aloud as one sentence for all four.
+- **Exactly ONE option may be defensible.** Three wrong answers, not three
+  weaker answers. The failure looks like a well-written item, so it survives
+  every gate: test 3's 問題9 (52) offered 無理もないだろう / 自然なことだ /
+  珍しいことではない / 仕方がない for 「増えているのも( )」 — four ways of saying
+  the same thing, with the key arguably the third-best of them. 問題4 (19) keyed
+  切実 while 深刻 sat in the option list and fits 「〜な問題だ」 just as well.
+  For every distractor, name the reason it is *wrong* — not merely less apt. If
+  the reason is "the key is slightly more natural", rewrite the stem until the
+  distractor is impossible (切実 → put it on 願い, where 深刻 cannot go).
+- **Japanese only — no Latin script in the prose.** A stray English word means
+  the sentence was drafted and never finished: test 3's 問題9 read 「単なる無音の
+  contrast ではない」. Loan words go in katakana. `make check` allows only the
+  initialisms real papers print (SNS, AI, CD…).
 - **Distractors must be grammatical Japanese that is merely WRONG.** 用法
   (問題6) distractors are sentences a learner could believe — a wrong
   collocation or domain, never word salad. 「整備がおろそかに完璧だった」 is not

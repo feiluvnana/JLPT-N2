@@ -5,6 +5,20 @@ description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5
 
 # JLPT Test Generation (Orchestrator)
 
+## Read this file to the end before your first tool call
+
+This is the entry point for **all** exam work, including partial requests. Read
+it through, then read each specialist `SKILL.md` in full before acting in its
+area — re-read it, rather than working from memory of a previous session.
+
+Then run **every** numbered step below, in order. No step is optional because
+its output file already exists: `logs/seeds.json` and `logs/test_spec.json` are
+always on disk, which is precisely why skipping steps 3 and 3.5 leaves no
+trace. Test 3 skipped 3.5, inherited test 2's harvest and seed, and shipped as
+a re-skin of test 2 with every automated gate green.
+
+`AGENTS.md` §0 states the full compliance rule and what to report at the end.
+
 ## Directory Structure & File Naming
 
 All exam files follow a strict directory structure:
@@ -45,9 +59,16 @@ All exam files follow a strict directory structure:
    Locate reference PDFs in `refs/Shinkanzen/` for vocabulary/grammar inventory, and benchmark passage length, distractor structure, and formatting against the 5 official past exams in `refs/JLPT/`.
    Run `official-audio-analysis/SKILL.md` across `refs/JLPT/*.mp3` to ensure pacing parameters match official standards.
 3. **Sample item pool & answer key blueprint** → read `item-pool-sampling/SKILL.md`.
-   Run: `python3 .agents/item-pool-sampling/scripts/sample_items.py --seed <seed>`
+   Run: `python3 .agents/item-pool-sampling/scripts/sample_items.py --seed <seed> --test-id <id>`
    This outputs `logs/test_spec.json` and updates `logs/ledger.json`.
+   **Use a seed no previous test used** (`logs/ledger.json` records them). The
+   ledger keeps pool items from repeating whatever seed you pass, but step 3.5's
+   blend is a pure function of the seed, so reusing one replays the previous
+   test's web topics into the same slots. `make check` fails on a repeat.
 3.5. **Research fresh topics (Optional / Web available)** → read `web-topic-research/SKILL.md`.
+   **Re-harvest `logs/seeds.json` for every test** — it is a per-test input, not
+   a repo fixture. Leaving test N-1's harvest in place is what turned test 3
+   into a re-skin of test 2.
    Harvest 18-25 real-world topic seeds (≥4 source domains) into `logs/seeds.json` and run:
    `python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json`
    (or `make merge-seeds`, which uses exactly those two paths)
@@ -99,6 +120,11 @@ Before running the gate, list every surface's topic in one place — 問題9, ea
 
 - **No topic appears twice**, even in a different register (an essay and a
   monologue on the same subject are still a repeat).
+- **No topic repeats the PREVIOUS test either.** Same table, one column per
+  test. Test 3 duplicated ten of test 2's eleven web topics — including the
+  同一 slot for four 聴解 items — because the harvest was never refreshed
+  (see `web-topic-research` step 0). Cross-test repeats are invisible to every
+  automated check; this table is the only place they surface.
 - **No condition, number, or rule is shared** between the flyer and a listening
   item. Shared *setting* is tolerable; shared *decisive detail* is not.
 - Each `logs/test_spec.json` topic/scenario seed feeds **exactly one** surface.

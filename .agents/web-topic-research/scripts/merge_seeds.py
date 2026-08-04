@@ -45,6 +45,7 @@ test can be audited. The RNG derives from the spec's own seed: reproducible.
 """
 
 import argparse
+import hashlib
 import json
 import random
 from collections import Counter
@@ -219,8 +220,25 @@ def main():
          "facts": s.get("facts", []), "source": s.get("source", "")}
         for s in carr_all[:CARRIER_SEEDS]]
 
+    # ---- stamp WHICH harvest this blend came from -----------------------
+    # The RNG is seeded from the spec's own seed, so the same --seed against an
+    # unchanged seeds.json reproduces the previous test's blend slot for slot.
+    # Recording the harvest identity in both the spec and the ledger lets
+    # `make check` tell "a genuinely new harvest" from "step 3.5 was skipped".
+    harvest_sha = hashlib.sha1(
+        Path(args.seeds).read_bytes()).hexdigest()[:12]
+    spec["harvest_sha"] = harvest_sha
     spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
                          encoding="utf-8")
+
+    ledger_path = spec_path.parent / "ledger.json"
+    if ledger_path.is_file() and spec.get("test_id") is not None:
+        ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+        for entry in ledger.get("history", []):
+            if str(entry.get("test_id")) == str(spec["test_id"]):
+                entry["harvest_sha"] = harvest_sha
+        ledger_path.write_text(json.dumps(ledger, ensure_ascii=False, indent=1),
+                               encoding="utf-8")
 
     # ---- balance report --------------------------------------------------
     def share(recs):

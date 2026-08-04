@@ -7,6 +7,51 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
 
 ---
 
+## 0. Read the rules in full before you touch anything — NON-NEGOTIABLE
+
+Every defect this repo has shipped came from an agent that had the rule
+available and did not read it. Not from a hard problem. From skipping.
+
+- Test 2 shipped duplicated options and mis-keyed 問題8 items; the rules
+  forbidding both were already written.
+- Test 3 skipped pipeline step 3.5, left the previous test's
+  `logs/seeds.json` in place, and reused the previous test's `--seed`. The
+  result was a re-skin of test 2 — same web topics, several in the same
+  slots. It also shipped all five 問題8 items unsolvable and an unfinished
+  English word inside a Japanese passage.
+
+So this is the first rule, and it binds every harness (Antigravity, Claude
+Code, and any other):
+
+1. **Read `AGENTS.md` end to end before your first tool call.** Not the
+   section you think applies. All of it. It is short on purpose.
+2. **Read `jlpt-test-generation/SKILL.md` end to end before ANY exam work** —
+   including a partial request ("just the listening section", "just fix the
+   MP3"). It routes to the other skills in order.
+3. **Read each specialist `SKILL.md` in full before you act in its area**, and
+   read it *again* rather than working from memory of a previous session.
+   Partial reads are the failure mode: skimming to the code block and running
+   the command skips the rules around it.
+4. **Execute every numbered step of the workflow, in order.** A step is not
+   optional because its output looks like it is already there.
+   `logs/seeds.json` and `logs/test_spec.json` are always present — that is
+   what makes skipping steps 3 and 3.5 invisible. If a step genuinely does not
+   apply (no web access for 3.5), say so explicitly in your final report.
+5. **Run `make check` and read every line of its output** before reporting any
+   work as done. Green is the floor, not the goal: it cannot see topic reuse,
+   two-defensible-answer items, or a passage that repeats last test's subject.
+6. **Do the whole-paper pass in `jlpt-test-generation` §"One topic, one
+   surface"** — the cross-surface AND cross-test topic table. No script does
+   this for you.
+7. **State what you did in your final message**: which skills you read, which
+   workflow steps you ran, the seed and harvest you used, and anything you
+   skipped and why. An unstated skip is the thing that keeps shipping.
+
+If a rule here is wrong or blocks the work, say so and propose a change. Do
+not route around it silently.
+
+---
+
 ## 1. Skill Discovery & Execution Rules
 
 - Skills are located in `.agents/<skill_name>/SKILL.md`.
@@ -179,11 +224,22 @@ the in-page grader agrees with `grade_answers.py` on identical answers.
 
 It also checks item integrity, which no other gate can see: no question offers
 the same option twice; all 107 keys sit on the position `logs/test_spec.json`
-prescribed; 問題8 stems have four blanks with ★ third and their keys name the
-option that lands there; the 聴解 script's 問題N instructions match the
-booklet's verbatim; choices are spoken only for the 問題 whose booklet prints
-none (so 問題5-3番's printed options can't drift from the audio); and the script
-carries no ASCII `,`/`.` for edge-tts to mis-time.
+prescribed; 問題8 stems have four blanks with ★ third, their keys name the
+option that lands there, **and the stem does not already contain the words the
+options supply**; the passages carry **no un-transliterated Latin words**; the
+聴解 script's 問題N instructions match the booklet's verbatim; choices are
+spoken only for the 問題 whose booklet prints none (so 問題5-3番's printed
+options can't drift from the audio); and the script carries no ASCII `,`/`.`
+for edge-tts to mis-time.
+
+Finally it checks the **rotation inputs** — the two knobs that decide whether a
+new test is actually new. Pool items rotate through the ledger, but the web
+blend is a pure function of `(--seed, logs/seeds.json)`: no two tests may share
+both, no harvest may be reused (`merge_seeds.py` stamps a `harvest_sha`), and
+every `"origin": "web"` entry in the spec must trace back to a seed still
+present in `logs/seeds.json`. Test 3 shipped as a re-skin of test 2 — same web
+topics, several in the same slots — because it reused test 2's seed against
+test 2's untouched harvest, and no other gate could see it.
 
 **Run it after touching any script, skill doc, or test.** It is read-only and
 takes a couple of seconds. Every check in it exists because that exact

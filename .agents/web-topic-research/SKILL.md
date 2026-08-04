@@ -27,6 +27,38 @@ writes 100% original prose around them.
    test that is all-textbook — the caps are enforced by `merge_seeds.py`,
    not left to judgment.
 
+## Step 0 — `logs/seeds.json` is per-test. Re-harvest it, every time.
+
+**A harvest is an input to one test, not a file that lives in the repo.** The
+blend is a pure function of `(spec seed, seeds.json)`: `merge_seeds.py` seeds
+its RNG from the spec's own seed, so running the same `--seed` against an
+unchanged harvest reproduces the previous test's blend **slot for slot** — the
+same seed lands on the same 問題, in the same 聴解 item number.
+
+That is exactly how test 3 shipped. Step 3.5 was skipped, `logs/seeds.json` was
+left as test 2 had it, and `--seed 20260804` was reused. Test 3 came out a
+re-skin of test 2: デジタルデトックス in 問題10(1) again, クラフトツーリズム in
+問題11 again, ハイブリッドワーク in the 対比 slot again down to the same
+「約7割」 figure, 古着アップサイクル in 聴解問題2-6番 again. Pool items rotated
+correctly the whole time — the ledger only remembers what the *sampler* drew, so
+it cannot see any of this, and neither could any other gate.
+
+Before harvesting, list what is already spent:
+
+```bash
+python3 -c "import json;h=json.load(open('logs/ledger.json'))['history'];\
+[print(x['test_id'],x['items'].get('reading_topics'),x['items'].get('listening_scenarios')) for x in h]"
+grep -h '^\*\*\|^以下は\|^件名' tests/*/言語知識・読解.md   # topics already on paper
+```
+
+Then reject any seed whose subject already appears there, **in any register** —
+an essay and a monologue on the same subject are the same topic. Aim to reuse
+nothing from the previous two tests.
+
+`merge_seeds.py` stamps a `harvest_sha` into the spec and the ledger entry, and
+`make check` fails when two tests share both a seed and a harvest, or reuse a
+harvest at all. Do not hand-edit those fields to silence it.
+
 ## Step 1 — Harvest topic seeds (18-25 per test; ~22 funds every surface at full ratios)
 
 More surfaces need more seeds than before. Spread the harvest across **at
@@ -47,6 +79,13 @@ Japanese-language results):
 - **Trend checks for scenario texture** — new shop formats, services, or
   habits (無人店舗, 置き配, キャッシュレス食券…) that make dialogues feel 2020s
   rather than 1990s.
+
+Each seed feeds **exactly one** exam surface. Harvest more than you need so
+that stays possible: two seeds from the same source on adjacent subjects
+(てまえどり and フードドライブ, both from caa.go.jp) will be blended onto two
+different surfaces and read as one topic tested twice — that is how test 2 and
+then test 3 both put フードドライブ in 聴解問題1 *and* in the 問題14 flyer's
+fine print. Treat near-duplicate subjects as one seed and drop the weaker.
 
 Record each seed as:
 `{"seed": "...", "facts": ["..."], "source": "url", "surfaces": ["reading"|"listening"|"carrier"|"info", ...]}`
