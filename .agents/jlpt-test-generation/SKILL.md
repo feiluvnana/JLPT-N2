@@ -10,8 +10,9 @@ description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5
 All exam files follow a strict directory structure:
 
 - **Reference inputs**: `refs/` directory at workspace root.
-  - Textbooks: `refs/Shin_Kanzen_Masuta_<level>-<section>.pdf` (e.g. `refs/Shin_Kanzen_Masuta_N2-Bunpou.pdf`).
-  - Audio: `refs/JLPT <level> <date> Choukai.mp3` (e.g. `refs/JLPT N2 12.2025 Choukai.mp3`) or `refs/Shin_Kanzen_Masuta_<level>-Choukai-CD/`.
+  - Textbooks (`refs/Shinkanzen/`): `refs/Shinkanzen/Shin_Kanzen_Masuta_<level>-<section>.pdf` (e.g. `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Bunpou.pdf`).
+  - Official Past Exam Sets (`refs/JLPT/`): Booklets, listening scripts, and audio MP3s from the 5 nearest exams (e.g., `refs/JLPT/17.N2 12-2025 _260603.pdf`, `refs/JLPT/JLPT N2 12.2025 Choukai.mp3`).
+  - Textbook Audio: `refs/Shinkanzen/Shin_Kanzen_Masuta_<level>-Choukai-CD/`.
 - **Test outputs**: `tests/<test_id>/` directory (e.g., `tests/1/` or `tests/n2_mock_01/`).
 - **Operational tracking**: `logs/` directory (`logs/ledger.json` for item history, `logs/test_spec.json` for current blueprint).
 - **Internal execution scripts**:
@@ -35,9 +36,9 @@ All exam files follow a strict directory structure:
 
 1. **Load the format spec** → read `jlpt-exam-structure/SKILL.md`.
    Never write a single question before knowing section counts and booklet conventions.
-2. **Calibrate difficulty & find refs** → read `reference-book-reading/SKILL.md`.
-   Locate reference PDFs in `refs/` (e.g., `refs/Shin_Kanzen_Masuta_N2-*.pdf`).
-   If audio samples are available in `refs/`, also run `official-audio-analysis/SKILL.md` to extract the pacing table.
+2. **Calibrate difficulty & benchmark consistency** → read `reference-book-reading/SKILL.md`.
+   Locate reference PDFs in `refs/Shinkanzen/` for vocabulary/grammar inventory, and benchmark passage length, distractor structure, and formatting against the 5 official past exams in `refs/JLPT/`.
+   Run `official-audio-analysis/SKILL.md` across `refs/JLPT/*.mp3` to ensure pacing parameters match official standards.
 3. **Sample item pool & answer key blueprint** → read `item-pool-sampling/SKILL.md`.
    Run: `python3 .agents/item-pool-sampling/scripts/sample_items.py --seed <seed>`
    This outputs `logs/test_spec.json` and updates `logs/ledger.json`.

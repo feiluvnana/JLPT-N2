@@ -22,6 +22,17 @@ opening line → per-section instruction → 「では、練習しましょう�
 
 問題5 instead says 「この問題には練習はありません。」
 
+## Calibrating against Official Past Exam Scripts (`refs/JLPT/`)
+
+Always cross-check dialogue tone, speaker turn length, announcer wording, and distractor flow against the 5 official listening script PDFs in `refs/JLPT/`:
+- **07/2023**: `refs/JLPT/14. N2 7-2023 (script).pdf`
+- **12/2023**: `refs/JLPT/14. script N2 12-2023.pdf`
+- **12/2024**: `refs/JLPT/15. script N2 12.2024.pdf`
+- **07/2025**: `refs/JLPT/16. N2-7.2025 (script).pdf`
+- **12/2025**: `refs/JLPT/17 (script) N2 12-2025 _260410.pdf`
+
+These real scripts define the standard dialogue rhythm (3-5 exchanges for 問題1/2, monologues for 問題3, rapid single turn for 問題4) and precise announcer phrasing.
+
 - **NO FURIGANA in TTS Script**: The script file (`聴解スクリプト.txt`) MUST remain clean plain text WITHOUT any `<ruby>` tags or furigana annotations, ensuring natural Edge-TTS speech synthesis. Furigana is generated exclusively for the booklet HTML (`聴解.html`).
 
 ### NEVER reveal an answer for a scored item (exam-breaking)

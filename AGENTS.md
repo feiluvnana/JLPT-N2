@@ -54,15 +54,19 @@ Inside `tests/<test_id>/`:
 
 All calibration inputs must be looked up in `refs/`:
 
-- **Textbooks**:
-  - Grammar: `refs/Shin_Kanzen_Masuta_N2-Bunpou.pdf`
-  - Reading: `refs/Shin_Kanzen_Masuta_N2-Dokkai.pdf`
-  - Listening: `refs/Shin_Kanzen_Masuta_N2-Choukai.pdf`
-  - Vocabulary: `refs/Shin_Kanzen_Masuta_N2-Goi.pdf`
-  - Kanji: `refs/Shin_Kanzen_Masuta_N2-Kanji.pdf`
-- **Audio Recordings**:
-  - Official audio: `refs/JLPT N2 12.2025 Choukai.mp3`
-  - Textbook CDs: `refs/Shin_Kanzen_Masuta_N2-Choukai-CD/`
+- **Textbooks (`refs/Shinkanzen/`)**:
+  - Grammar: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Bunpou.pdf`
+  - Reading: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Dokkai.pdf`
+  - Listening: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai.pdf`
+  - Vocabulary: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Goi.pdf`
+  - Kanji: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Kanji.pdf`
+  - Textbook CDs: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/`
+- **Official Past Exam Sets (`refs/JLPT/`) — 5 Nearest Exams (Booklet PDF, Script PDF, Audio MP3)**:
+  - **July 2023**: Booklet `refs/JLPT/14. N2 7-2023.pdf`, Script `refs/JLPT/14. N2 7-2023 (script).pdf`, Audio `refs/JLPT/File nghe N2 7-2023.mp3`
+  - **Dec 2023**: Booklet `refs/JLPT/14.N2 12-2023.pdf`, Script `refs/JLPT/14. script N2 12-2023.pdf`, Audio `refs/JLPT/14. Nghe N2 T12-2023.mp3`
+  - **Dec 2024**: Booklet `refs/JLPT/15. N2 12.2024 (update 260625).pdf`, Script `refs/JLPT/15. script N2 12.2024.pdf`, Audio `refs/JLPT/Nghe N2 T12-2024.mp3`
+  - **July 2025**: Booklet `refs/JLPT/16. N2 07-2025.pdf`, Script `refs/JLPT/16. N2-7.2025 (script).pdf`, Audio `refs/JLPT/Nghe N2 T7-2025.mp3`
+  - **Dec 2025**: Booklet `refs/JLPT/17.N2 12-2025 _260603.pdf`, Script `refs/JLPT/17 (script) N2 12-2025 _260410.pdf`, Audio `refs/JLPT/JLPT N2 12.2025 Choukai.mp3`
 
 ---
 

@@ -33,7 +33,7 @@ When a user submits their answers or asks to grade a completed JLPT test:
    - _Note_: Failing any single sectional cutoff results in **不合格 (FAIL)** regardless of overall total score.
 5. **Sub-Question Taxonomy Analysis & Diagnostics**:
    - Evaluates performance per大問 (問1〜問14 for Language/Reading, 問題1〜問題5 for Listening).
-   - Flags weak areas (accuracy < 60%) and provides targeted recommendations referencing _Shin Kanzen Masuta N2_ textbooks (`refs/Shin_Kanzen_Masuta_N2-*.pdf`).
+   - Flags weak areas (accuracy < 60%) and provides targeted recommendations referencing _Shin Kanzen Masuta N2_ textbooks (`refs/Shinkanzen/Shin_Kanzen_Masuta_N2-*.pdf`).
 6. **Artifact Output**:
    - Saves `tests/<test_id>/採点結果.md` (Detailed Markdown Report)
 
@@ -130,7 +130,7 @@ The generated report contains 4 major sections:
 1. **総合判定**: Pass/Fail status, reason for failure if any (overall score < 90 or sectional cutoff < 19).
 2. **得点サマリー**: Table showing raw score, scaled score, sectional cutoffs, and overall total.
 3. **大問別詳細分析**: Accuracy percentage and evaluation per大問 (`🟢 強 (>=80%)`, `🟡 普通 (60-79%)`, `🔴 要強化 (<60%)`).
-4. **弱点診断 & 今後の学習アドバイス**: Targeted textbook practice recommendations for flagged weak areas referencing `refs/Shin_Kanzen_Masuta_N2-*.pdf`.
+4. **弱点診断 & 今後の学習アドバイス**: Targeted textbook practice recommendations for flagged weak areas referencing `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-*.pdf`.
 5. **全設問解答チェック表**: Complete comparison matrix comparing user selection vs correct answer key for every question.
 
 ---

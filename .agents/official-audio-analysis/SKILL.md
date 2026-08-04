@@ -7,25 +7,30 @@ description: Single owner of how to analyze official JLPT listening audio (MP3/C
 
 ## Locating Audio References (`refs/`)
 
-Audio reference files live in the `refs/` directory at the workspace root:
+Audio reference files live under `refs/` at the workspace root:
 
-- Official exam audio: `refs/JLPT <level> <date> Choukai.mp3` (e.g. `"refs/JLPT N2 12.2025 Choukai.mp3"`)
-- CD tracks: `refs/Shin_Kanzen_Masuta_<level>-Choukai-CD/`
+- **Official Exam Audio (`refs/JLPT/`) — 5 Recent Exams**:
+  - July 2023: `"refs/JLPT/File nghe N2 7-2023.mp3"`
+  - Dec 2023: `"refs/JLPT/14. Nghe N2 T12-2023.mp3"`
+  - Dec 2024: `"refs/JLPT/Nghe N2 T12-2024.mp3"`
+  - July 2025: `"refs/JLPT/Nghe N2 T7-2025.mp3"`
+  - Dec 2025: `"refs/JLPT/JLPT N2 12.2025 Choukai.mp3"`
+- **Textbook CD tracks**: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/`
 
-## Step 1 — Basics
+## Step 1 — Basics & Multi-Exam Comparison
 
 ```bash
-ffprobe -v error -show_entries format=duration,bit_rate -of default=noprint_wrappers=1 "refs/JLPT N2 12.2025 Choukai.mp3"
-ffmpeg -i "refs/JLPT N2 12.2025 Choukai.mp3" -af volumedetect -f null - 2>&1 | grep -E "mean_volume|max_volume"
+# Check basic audio parameters across official exam MP3s:
+ffprobe -v error -show_entries format=duration,bit_rate -of default=noprint_wrappers=1 "refs/JLPT/JLPT N2 12.2025 Choukai.mp3"
+ffmpeg -i "refs/JLPT/JLPT N2 12.2025 Choukai.mp3" -af volumedetect -f null - 2>&1 | grep -E "mean_volume|max_volume"
 ```
 
-Official N2 full exam ≈ 51 min. Mean volume ≈ -17 to -18 dB (normalize output
-to match).
+Official N2 full exam audio is consistently ~50-52 min across all 5 recent exams. Mean volume averages -17 to -18 dB (target -17 LUFS for synthesis output).
 
 ## Step 2 — Long-pause histogram
 
 ```bash
-ffmpeg -i "refs/JLPT N2 12.2025 Choukai.mp3" -af silencedetect=noise=-35dB:d=2.5 -f null - 2>&1 \
+ffmpeg -i "refs/JLPT/JLPT N2 12.2025 Choukai.mp3" -af silencedetect=noise=-35dB:d=2.5 -f null - 2>&1 \
   | grep -oP "silence_duration: \K[0-9.]+"
 ```
 

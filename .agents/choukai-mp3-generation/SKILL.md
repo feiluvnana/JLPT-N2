@@ -57,7 +57,7 @@ python .agents/choukai-mp3-generation/scripts/make_choukai_mp3.py tests/<test_id
 | GAP_AFTER_SHITSUMON1 | 10 s | 問5: between 質問1 and 質問2 |
 | ANSWER_PAUSE | 問1/2: 12 s, 問3/4: 8 s, 問5: 10 s | after each item block |
 
-To recalibrate against a new official recording in `refs/`, use `official-audio-analysis`
+To recalibrate against official recordings in `refs/JLPT/`, use `official-audio-analysis`
 and update ONLY these constants.
 
 ## Engineering rules (each fixed a real bug)
