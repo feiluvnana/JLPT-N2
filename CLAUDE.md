@@ -12,7 +12,7 @@ this repo has shipped came from skipping a rule that was already written.
 
 ## Claude-Code-specific notes
 
-- The 12 skills in `.agents/<skill_name>/SKILL.md` are also exposed as native
+- The 13 skills in `.agents/<skill_name>/SKILL.md` are also exposed as native
   Claude Code skills through symlinks in `.claude/skills/`, so they appear in
   the skills list and can be invoked as `/<skill-name>`. Both paths are the same
   files — edit `.agents/<skill_name>/SKILL.md`, never the symlink target's copy.

@@ -56,7 +56,7 @@ not route around it silently.
 
 - Skills are located in `.agents/<skill_name>/SKILL.md`.
 - Before performing any specialized task, **read the corresponding `SKILL.md` file** (they are plain Markdown — open them with whatever file-reading tool your harness provides).
-- **Claude Code**: the same 12 skills are exposed natively via symlinks in `.claude/skills/<skill_name>` → `.agents/<skill_name>`, so they are auto-discovered and invocable as `/<skill-name>`. `.agents/` remains the single copy — edit files there.
+- **Claude Code**: the same 13 skills are exposed natively via symlinks in `.claude/skills/<skill_name>` → `.agents/<skill_name>`, so they are auto-discovered and invocable as `/<skill-name>`. `.agents/` remains the single copy — edit files there.
 - **`jlpt-test-generation` is the entry point.** Read it FIRST for any exam work, even a partial request like "make a listening section"; it routes to the other skills in order.
 - Available Skills:
   1. `jlpt-test-generation`: End-to-end mock exam generation orchestrator — **read this one first**.
@@ -71,6 +71,7 @@ not route around it silently.
   10. `web-topic-research`: Sourcing fresh real-world topic seeds, factual texture, and collocation checks from the web, then blending them across ALL exam surfaces (reading, listening, cloze, 問14 flyer, 即時応答 settings, carrier sentences) under enforced balance caps (`merge_seeds.py`).
   11. `exam-answer-grading`: Grading user responses against answer keys, calculating scaled scores (0-180), evaluating Pass/Fail thresholds, analyzing sub-question weak points, and generating diagnostic Markdown reports (`grade_answers.py`).
   12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the complete booklet with radio bubbles beside every choice, an in-page audio player for 聴解, and **in-page 180-point grading** that saves `採点結果.md` directly (`build_interactive.py`).
+  13. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test).
 
 ---
 
@@ -215,7 +216,7 @@ answer sheet is merged into the problem sheet.
 
 `tools/check_consistency.py` asserts the facts the docs duplicate from the code,
 because prose cannot be executed: every `refs/` path named in a doc exists; all
-12 skills are listed here and symlinked under `.claude/skills/`; documented
+13 skills are listed here and symlinked under `.claude/skills/`; documented
 deliverable names appear in the script that writes them and retired ones stay
 retired; the choukai pacing table matches `ANSWER_PAUSE`/`GAP_*`; the 大問 table
 matches `GENGO_QUESTION_TAXONOMY`; and for every test on disk the script

@@ -80,6 +80,12 @@ All exam files follow a strict directory structure:
    Check the printed blend report before authoring.
 4. **Author the content** → read `question-authoring/SKILL.md`.
    Write Markdown sources (`言語知識・読解.md`, `聴解.md`) in `tests/<test_id>/`. Author ONLY items specified in `logs/test_spec.json` and set answer keys according to `answer_positions`.
+   **Author in section-sized passes, not one long run.** Defects cluster in
+   whatever is generated last (test 4: the entire listening half — swapped
+   問題 types, an unanswerable 例, five phantom 解説 quotes). Finish 文字・語彙,
+   then 文法, then 読解, then 聴解, re-reading the spec and the relevant skill
+   section at the start of each pass instead of trusting a long context's
+   memory of them. If the harness supports subagents, one per pass is ideal.
 5. **Write the listening script** → read `choukai-script-writing/SKILL.md`.
    Create `tests/<test_id>/聴解スクリプト.txt`. It must contain ONLY spoken exam text.
 6. **Render the booklet HTML (no PDF)** → read `exam-booklet-generation/SKILL.md`.
@@ -99,7 +105,14 @@ All exam files follow a strict directory structure:
    `answer_positions` put them, no question repeats an option, 問題8 keys name
    the option on ★, the script's instructions match the booklet's, options are
    spoken only where the booklet prints none, and both graders agree. Fix
-   failures before step 10 — a mis-keyed item is invisible once the MP3 is built.
+   failures before step 9.5 — a mis-keyed item is invisible once the MP3 is
+   built. WARN lines are part of the output: resolve each or justify it.
+9.5. **Adversarial content QA** → read `exam-qa-review/SKILL.md`. NOT optional:
+   tests 2, 3, and 4 all shipped content defects through a green gate. Run it
+   with fresh eyes — a subagent or new session that did not author the test and
+   reads the files from disk. Fix findings in the sources, regenerate (steps
+   6-8), re-run `make check`, and only then move on. A test that has not
+   survived this pass is not done, whatever the gate says.
 10. **Take the exam & grade** → read `exam-answer-grading/SKILL.md`.
    Serve the sheet (`make serve <test_id>`), answer, and press 「採点する」: the
    report renders in-page and saves `採点結果.md` + `user_answers.json` into
