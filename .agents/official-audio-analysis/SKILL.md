@@ -65,6 +65,6 @@ A pacing table in this exact shape (feed to choukai-mp3-generation):
 | between spoken choices (問3/5) | 3 s |
 | answer pause 問1/問2 | 12 s |
 | answer pause 問3/問4 | 8 s |
-| answer pause 問5 (質問1 → 10s → 質問2 → 12s) | 10-12 s |
+| answer pause 問5 (each item; the 質問1 → 質問2 gap is also 10 s) | 10 s |
 | loudness target | −17 LUFS |
 

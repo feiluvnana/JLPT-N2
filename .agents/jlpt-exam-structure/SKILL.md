@@ -9,9 +9,10 @@ description: Single owner of official JLPT exam format facts — section layout,
 
 All section layouts, question counts, and item specifications in this document are benchmarked against and aligned with the 5 official JLPT past exams in `refs/JLPT/` (07/2023, 12/2023, 12/2024, 07/2025, 12/2025).
 
-- **言語知識・読解**: Source `tests/<test_id>/言語知識・読解.md` → Booklet `tests/<test_id>/言語知識・読解.html` + answer sheet `言語知識・読解_解答.html`
-- **聴解 (Booklet)**: Source `tests/<test_id>/聴解.md` → Booklet `tests/<test_id>/聴解.html` + answer sheet `聴解_解答.html`
+- **言語知識・読解**: Source `tests/<test_id>/言語知識・読解.md` → Booklet `tests/<test_id>/言語知識・読解.html`
+- **聴解 (Booklet)**: Source `tests/<test_id>/聴解.md` → Booklet `tests/<test_id>/聴解.html`
 - **聴解 (TTS Script)**: `tests/<test_id>/聴解スクリプト.txt` (or `script.txt`) → Output MP3 `tests/<test_id>/聴解.mp3`
+- **Answer sheet**: both Markdown sources → the ONE merged `tests/<test_id>/解答.html` (there are no per-section `*_解答.html` files)
 
 ## 言語知識(文字・語彙・文法)・読解 — 105 min, 75 questions
 

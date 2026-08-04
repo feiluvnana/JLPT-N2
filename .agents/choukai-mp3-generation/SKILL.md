@@ -14,7 +14,7 @@ description: Single owner of synthesizing the choukai exam MP3 from the TTS scri
   of every 問題 and every 例/N番 item, accumulated by the assembler as it
   concatenates (exact by construction; never recover these with
   `silencedetect` after the fact). Consumed by `interactive-answer-sheet` to
-  drive the chapter dropdown in `聴解_解答.html`. Regenerate the MP3 to
+  drive the chapter dropdown in `解答.html`. Regenerate the MP3 to
   refresh it.
 
 ## Execution
@@ -80,9 +80,19 @@ and update ONLY these constants.
 
 ## Dry-run before synthesis (no network needed)
 
-Simulate block parsing + pause assignment; expected for a full N2:
-48 blocks, 22 items × 12s-class pauses, 13 × 8s, exactly 7 × 20-second
-reading pauses (問題2: 例+6). Estimated length ≈ 33 min with TTS at these
-rates (official ≈ 51 min — human actors speak slower; lower all rates ~15%
+Simulate block parsing + pause assignment. Expected for a full N2 — these
+follow directly from `ANSWER_PAUSE` above and the 35 item blocks
+(問題1=6, 問題2=7, 問題3=6, 問題4=13, 問題5=3, 例 included):
+
+| Pause | Count | Source |
+|---|---|---|
+| 12 s answer | 13 | 問題1 (6) + 問題2 (7) |
+| 8 s answer | 19 | 問題3 (6) + 問題4 (13) |
+| 10 s answer | 3 | 問題5 |
+| 20 s option-reading | 7 | 問題2 only (例+6) |
+
+Plus 48 blocks total (the 35 item blocks + headers, instructions and 例
+confirmations). Estimated length ≈ 33 min with TTS at these rates
+(official ≈ 51 min — human actors speak slower; lower all rates ~15%
 if the user wants closer parity).
 

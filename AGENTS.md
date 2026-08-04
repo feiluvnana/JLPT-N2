@@ -7,9 +7,10 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
 ## 1. Skill Discovery & Execution Rules
 
 - Skills are located in `.agents/<skill_name>/SKILL.md`.
-- Before performing any specialized task, **read the corresponding `SKILL.md` file using `view_file`**.
+- Before performing any specialized task, **read the corresponding `SKILL.md` file** (they are plain Markdown — open them with whatever file-reading tool your harness provides).
+- **`jlpt-test-generation` is the entry point.** Read it FIRST for any exam work, even a partial request like "make a listening section"; it routes to the other skills in order.
 - Available Skills:
-  1. `jlpt-test-generation`: End-to-end mock exam generation orchestrator.
+  1. `jlpt-test-generation`: End-to-end mock exam generation orchestrator — **read this one first**.
   2. `jlpt-exam-structure`: Official JLPT exam format spec, section layouts, question counts, booklet rules.
   3. `question-authoring`: Writing N2-calibrated exam questions, distractors, and answer keys.
   4. `reference-book-reading`: Reading/calibrating against reference books in `refs/`.
@@ -72,7 +73,31 @@ All calibration inputs must be looked up in `refs/`:
 
 ## 4. Pipeline Execution Commands
 
-Always run build/generation scripts from the workspace root:
+Always run build/generation scripts from the workspace root.
+
+### Makefile Shortcuts (equivalent to the raw commands below — see `make help`)
+
+Every per-test target takes the test id positionally (`make sheet 1`) or as a
+variable (`make sheet TEST=1`); it defaults to `1`.
+
+| Command | Runs |
+| ------------------------- | -------------------------------------------------- |
+| `make sample`             | `sample_items.py --seed $(SEED)` (default `SEED=20260803`) |
+| `make merge-seeds`        | `merge_seeds.py logs/seeds.json logs/test_spec.json` |
+| `make booklet <test_id>`  | `build_booklet.py` on both Markdown sources        |
+| `make mp3 <test_id>`      | `make_choukai_mp3.py` on `聴解スクリプト.txt`       |
+| `make sheet <test_id>`    | `build_interactive.py` → `解答.html`               |
+| `make serve <test_id>`    | `serve_sheet.py` (browser + direct saving)         |
+| `make grade <test_id>`    | `grade_answers.py --test-dir tests/<test_id>`      |
+
+`make sample` reuses the same default seed on every run and has no way to pass
+`--test-id`. When generating a new test, either override the seed
+(`make sample SEED=<n>`) or call the sampler directly with
+`--seed <n> --test-id <id>` so the ledger records attribution — see
+`item-pool-sampling/SKILL.md`.
+
+A fresh clone has **no `tests/` directory and an empty `logs/`** — generate a
+test before any `make grade` / `make sheet` invocation.
 
 ### Item Pool Sampling (Blueprint Generation & Item Rotation)
 
@@ -130,7 +155,7 @@ answer sheet is merged into the problem sheet.
 
 ## 5. Quality Invariants
 
-- **Markdown is single source of truth**: never deleted; the grader and the answer sheet both parse it. Regenerate the booklet HTML **and** the interactive sheets after any content edit.
+- **Markdown is single source of truth**: never deleted; the grader and the answer sheet both parse it. Regenerate the booklet HTML **and** the merged answer sheet (`解答.html`) after any content edit.
 - **No PDFs**: the booklet is HTML. `@page` CSS is preserved so the browser prints A4. Do not reintroduce weasyprint/wkhtmltopdf.
 - **Answer Keys at End**: Placed at the end of `言語知識・読解.md` and `聴解.md`.
 - **Booklet ↔ Script Sync**: Options in `聴解.md` must match choices spoken in `聴解スクリプト.txt`.

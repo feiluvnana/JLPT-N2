@@ -453,9 +453,9 @@ def main():
     print(f"  - 言語知識・読解: {len(gengo_keys)} questions parsed")
     print(f"  - 聴解: {len(choukai_keys)} questions parsed")
 
-    # 2. Load user answers. Source of truth is the JSON saved by the interactive
-    #    sheets (言語知識・読解_解答.html / 聴解_解答.html). Each sheet saves its own
-    #    half, so several files merge cleanly; CLI strings override.
+    # 2. Load user answers. Source of truth is the JSON saved by the merged
+    #    answer sheet (解答.html), which covers both halves in one file. Several
+    #    matching files still merge cleanly; CLI strings override.
     user_answers = {"言語知識_読解": {}, "聴解": {}}
 
     if args.user_answers:
@@ -473,9 +473,9 @@ def main():
         user_answers["聴解"].update(loaded.get("聴解", {}))
         print(f"Loaded user answers from {ua_path}")
     if not sources:
-        print("  no user_answers*.json found — open "
-              "<test>/言語知識・読解_解答.html and <test>/聴解_解答.html, "
-              "answer, then press 「解答を保存」.", file=sys.stderr)
+        print("  no user_answers*.json found — run "
+              "`make serve <test_id>` to open <test>/解答.html, "
+              "answer, then press 「採点する」.", file=sys.stderr)
 
     if args.answers_gengo:
         pairs = args.answers_gengo.split(",")

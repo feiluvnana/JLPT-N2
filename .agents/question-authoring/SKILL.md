@@ -88,7 +88,7 @@ matching where one tempting option fails exactly one condition.
 即時応答 tests idioms and keigo: 目を通す, お言葉に甘えて, 〜かと思いきや,
 〜ようがない, 席を外しております, 在庫を切らしております.
 
-## Markdown formatting contract (CRITICAL to prevent PDF numbering bugs)
+## Markdown formatting contract (CRITICAL to prevent HTML numbering bugs)
 
 - **Question stems MUST use bold numbers, NOT Markdown list syntax**:
   - Write `**1** 労働組合は...`, `**6** 最近...`, `**75** ...` (for `言語知識・読解.md`).
@@ -97,7 +97,7 @@ matching where one tempting option fails exactly one condition.
 - **Horizontal Options Layout (問題1–5, 問題7, 問題8)**:
   - Options must run on a SINGLE line with leading space and double spaces between choices:
     ` 1. こうしょう  2. こうちょう  3. きょうしょう  4. こうしゅう`
-  - The PDF builder detects 3+ options on a line and converts spaces into wide ideographic spaces (`\u3000\u3000\u3000`).
+  - The booklet builder detects 3+ options on a line and converts spaces into wide ideographic spaces (`\u3000\u3000\u3000`).
 - **Vertical Options Layout (問題6, 問題10–14, 聴解)**:
   - Options must be on separate lines with a leading space:
     ` 1. 資料をコピーする`

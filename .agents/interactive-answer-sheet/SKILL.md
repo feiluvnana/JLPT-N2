@@ -61,9 +61,10 @@ someone who goes looking, which is acceptable for a self-study mock (the key
 is in `聴解.md` next door anyway); what matters is that it is not on screen
 while you solve.
 
-`言語知識・読解_解答.html` is a deliverable and is NOT the same file as
-`言語知識・読解.html`, which is a throwaway intermediate that `build_booklet.py`
-overwrites on every booklet build.
+`解答.html` is the deliverable you solve on, and it is NOT the same file as the
+booklets `言語知識・読解.html` / `聴解.html`, which `build_booklet.py` overwrites
+on every booklet build. There are no per-section `*_解答.html` files — one
+merged sheet covers the whole exam.
 
 ## Audio player (聴解 only)
 
@@ -84,10 +85,11 @@ overwrites on every booklet build.
 
 - Progress autosaves to `localStorage`, keyed `jlpt:<test_id>:<section>`, so a
   refresh or accidental close does not lose work.
-- 「解答JSONも保存」 (in the result box) downloads `user_answers_gengo.json` /
-  `user_answers_choukai.json` in exactly the shape `grade_answers.py` reads:
-  `{"言語知識_読解": {"33": 2, …}, "聴解": {"問1-1": 2, …}}`. Only needed for the
-  combined 180-point judgement — the per-section report needs no files.
+- 「採点する」 also emits `user_answers.json` in exactly the shape
+  `grade_answers.py` reads:
+  `{"言語知識_読解": {"33": 2, …}, "聴解": {"問1-1": 2, …}}` — one file covering
+  both halves. It goes straight into `tests/<test_id>/` when served, and falls
+  back to a browser download when the page is opened over `file://`.
 
 ## Parser contract (why the Markdown conventions are load-bearing)
 
@@ -112,7 +114,7 @@ missing group means that question can never be answered or scored.
 ```bash
 python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
 # expect exactly: 75 questions, 32 items, zero warnings
-grep -c 'type="radio"' tests/1/言語知識・読解_解答.html   # 300 (75 x 4)
+grep -c 'type="radio"' tests/1/解答.html   # >= 300 for the 75 gengo questions (75 x 4) plus the 聴解 groups
 ```
 
 To check the in-page grader against the Python one, extract the last `<script>`

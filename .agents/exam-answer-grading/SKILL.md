@@ -17,7 +17,7 @@ When a user submits their answers or asks to grade a completed JLPT test:
    - `tests/<test_id>/言語知識・読解.md` (Questions 1 to 75)
    - `tests/<test_id>/聴解.md` (Listening questions: 問1〜問5)
 2. **User Input Ingestion**: Reads examinee responses from:
-   - `user_answers*.json` saved by the **interactive answer sheets** (below) — the default source, auto-discovered in the test dir and cwd. Several files merge, so the 言語知識 and 聴解 halves can be saved separately.
+   - `user_answers*.json` saved by the **merged answer sheet** `解答.html` (below) — the default source, auto-discovered in the test dir and cwd. Several matching files merge, so hand-split halves also work.
    - Inline CLI arguments (`--answers-gengo` / `--answers-choukai`), which override.
 3. **Scaled Score Calculation**: Converts raw section counts into JLPT standardized 0–60 scores:
    - **Language Knowledge (言語知識: 文字・語彙・文法)**: 54 questions max -> scaled to 60.
@@ -37,13 +37,13 @@ When a user submits their answers or asks to grade a completed JLPT test:
 6. **Artifact Output**:
    - Saves `tests/<test_id>/採点結果.md` (Detailed Markdown Report)
 
-The interactive answer sheets are owned by the **`interactive-answer-sheet`**
-skill. Those sheets grade their OWN half in-page on button press and emit
-`採点結果_言語知識・読解.md` / `採点結果_聴解.md` with no file handling at all —
-that is the normal path. **This skill is for the combined 180-point 合否**,
-which needs both halves at once and therefore needs their exported JSON.
+The merged answer sheet (`解答.html`) is owned by the
+**`interactive-answer-sheet`** skill. It grades the whole 180-point exam in-page
+on button press and writes `採点結果.md` + `user_answers.json` itself — that is
+the normal path. **This skill is the CLI equivalent**, for offline/batch runs
+and for re-grading from a saved `user_answers.json`.
 
-Their in-page grader is generated FROM this module's `GENGO_QUESTION_TAXONOMY`,
+Its in-page grader is generated FROM this module's `GENGO_QUESTION_TAXONOMY`,
 `CHOUKAI_QUESTION_TAXONOMY` and `ADVICE_FOR` at build time, so the two can
 never disagree. Keep those structures serializable, and re-run
 `build_interactive.py` after changing any of them.
@@ -78,11 +78,11 @@ removed; the `interactive-answer-sheet` skill replaces them.
    # or: python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1
    ```
 
-**The answer key is truncated out of these files.** `build_interactive.py`
-aborts if it cannot locate the key heading, rather than risk rendering a sheet
-that shows the answers while you solve. Note `言語知識・読解_解答.html` is a
-_deliverable_ and distinct from `言語知識・読解.html`, which is a throwaway
-intermediate that `build_booklet.py` overwrites.
+**The answer key is truncated out of `解答.html`.** `build_interactive.py`
+aborts if it cannot locate the key heading in either Markdown source, rather
+than risk rendering a sheet that shows the answers while you solve. Note
+`解答.html` is the _deliverable_ you solve on, distinct from the booklets
+`言語知識・読解.html` / `聴解.html`, which `build_booklet.py` overwrites.
 
 ### Option B: Quick Inline CLI Grading
 
@@ -125,11 +125,11 @@ script asserts that its ranges tile 1–75 with no gap or overlap at import.
 
 ## 4. Report Structure (`採点結果.md`)
 
-The generated report contains 4 major sections:
+The generated report contains 5 major sections:
 
 1. **総合判定**: Pass/Fail status, reason for failure if any (overall score < 90 or sectional cutoff < 19).
 2. **得点サマリー**: Table showing raw score, scaled score, sectional cutoffs, and overall total.
-3. **大問別詳細分析**: Accuracy percentage and evaluation per大問 (`🟢 強 (>=80%)`, `🟡 普通 (60-79%)`, `🔴 要強化 (<60%)`).
+3. **大問別詳細分析**: Accuracy percentage and evaluation per大問 — exactly the labels emitted by `grade_answers.py` and the in-page grader: `🟢 優 (Strong)` (>=80%), `🟡 良 (Fair)` (60-79%), `🔴 要強化 (Weak)` (<60%).
 4. **弱点診断 & 今後の学習アドバイス**: Targeted textbook practice recommendations for flagged weak areas referencing `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-*.pdf`.
 5. **全設問解答チェック表**: Complete comparison matrix comparing user selection vs correct answer key for every question.
 

@@ -29,8 +29,10 @@ writes 100% original prose around them.
 
 ## Step 1 — Harvest topic seeds (18-25 per test; ~22 funds every surface at full ratios)
 
-More surfaces need more seeds than before. Spread the harvest across at
-least 3-4 distinct source domains. Good sources and query recipes (prefer
+More surfaces need more seeds than before. Spread the harvest across **at
+least 4 distinct source domains** — `merge_seeds.py` shrinks the whole web
+share proportionally below `MIN_DOMAINS` (3), so 4 leaves one domain of
+margin. Good sources and query recipes (prefer
 Japanese-language results):
 
 - **NHK NEWS WEB EASY** — pre-simplified news; ideal difficulty reference and
@@ -48,7 +50,7 @@ Japanese-language results):
 
 Record each seed as:
 `{"seed": "...", "facts": ["..."], "source": "url", "surfaces": ["reading"|"listening"|"carrier"|"info", ...]}`
-in `seeds.json` (or `logs/seeds.json`). `surfaces` is an optional hint about
+in `logs/seeds.json` (the path `make merge-seeds` uses). `surfaces` is an optional hint about
 where the seed fits best (a survey with percentages → `["reading","info"]`;
 a new service format → `["listening","carrier"]`); omit it for
 anything-goes seeds. Facts are short paraphrased data points (a percentage,
@@ -77,7 +79,8 @@ N2 gate — apply to every seed before it enters `seeds.json`:
 ## Step 3 — Blend into the authoring contract
 
 ```bash
-python3 .agents/web-topic-research/scripts/merge_seeds.py seeds.json logs/test_spec.json
+python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json
+# or: make merge-seeds
 # optional tuning (both clamped to 0.30-0.60):
 #   --reading-ratio 0.5 --listening-ratio 0.4
 ```

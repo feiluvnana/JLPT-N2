@@ -83,11 +83,13 @@ violating script cannot produce an MP3.
 
 ## Required structure — every element is mandatory
 
-A full N2 script is **48 blocks**. Missing pieces are SILENT: the MP3 still
-builds and just quietly stops being an official-format exam. Tests 2 and 3
-shipped with no 例 at all for 問題3/問題4 and no 問題5 announcer line, and
-nothing caught it. All of the following are now enforced by
-`validate_script()` in `make_choukai_mp3.py`:
+A full N2 script is **48 blocks** (35 item blocks + headers, instructions and
+例 confirmations). Missing pieces are SILENT: the MP3 still builds and just
+quietly stops being an official-format exam. Tests 2 and 3 shipped with no 例
+at all for 問題3/問題4 and no 問題5 announcer line, and nothing caught it. All
+of the following are now enforced by `validate_script()` in
+`make_choukai_mp3.py` — note the 48 total is only *printed* by the validator
+(`script OK: N blocks, …`), so check that number by eye:
 
 | Element | Rule |
 |---|---|
