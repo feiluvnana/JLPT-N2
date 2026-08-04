@@ -61,26 +61,21 @@ booklet itself, not on a separate mark sheet. The old `マークシート.pdf` /
 `マークシート.html` layer and its `--create-template` / `--user-pdf` flags were
 removed; the `interactive-answer-sheet` skill replaces them.
 
-1. Build the sheets (once per test, re-run after any edit to the Markdown):
+1. Build the sheet (once per test, re-run after any edit to the Markdown):
    ```bash
    make sheet 1
    # or: python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
    ```
-   See `interactive-answer-sheet/SKILL.md` for the sheet itself (audio player,
-   chapter marks, answer-key truncation).
-   → `tests/1/言語知識・読解_解答.html` (75 questions) and
-   `tests/1/聴解_解答.html` (32 items).
-2. Open either file in a browser. Every choice has a radio bubble beside it;
-   a sticky header shows the answered count. Progress autosaves to
-   `localStorage`, so a refresh does not lose work.
-3. Press **「採点する」** → that half is graded on the spot: the report is
-   shown in the page and saved as `採点結果_<section>.md`. For most sessions
-   you are done here.
-4. Only for the combined 180-point 合否: press 「解答JSONも保存」 on both
-   sheets, put the files in `tests/<test_id>/`, then:
+   → `tests/1/解答.html` (107 questions total: 75 Gengo/Dokkai + 32 Choukai with audio player).
+2. Serve & answer in browser:
+   ```bash
+   make serve 1
+   ```
+3. Press **「採点する」** → the full 180-point exam is graded on the spot: the report is shown in the page and saved directly as `tests/1/採点結果.md` and `tests/1/user_answers.json`.
+4. Command line grading remains available for batch/offline CLI workflows:
    ```bash
    make grade 1
-   # or: python3 .../grade_answers.py --test-dir tests/1 --user-answers a.json,b.json
+   # or: python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1
    ```
 
 **The answer key is truncated out of these files.** `build_interactive.py`

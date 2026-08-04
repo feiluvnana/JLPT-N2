@@ -1,48 +1,42 @@
 ---
 name: interactive-answer-sheet
-description: Single owner of the MERGED problem+answer sheet — the exam booklet rendered to HTML with a radio bubble beside every choice, plus an in-page audio player for 聴解 so the listening exam can be taken entirely in the browser. Use whenever the user wants to take/answer/solve a test on screen, mentions the answer sheet, マークシート, 解答用紙, selecting answers, or playing the listening audio while answering. Grades each half in-page on button press and emits 採点結果_*.md directly — no JSON handling. Runs AFTER the exam Markdown exists; exam-answer-grading is only needed for the combined 180-point judgement.
+description: Single owner of the MERGED problem+answer sheet — the complete exam booklet (言語知識・読解 and 聴解) rendered into a single HTML file (解答.html) with radio bubbles beside every choice and an embedded audio player for 聴解. Use whenever the user wants to take/answer/solve a test on screen, mentions the answer sheet, マークシート, 解答用紙, selecting answers, or playing the listening audio while answering. Grades the full 180-point exam in-page on button press and saves 採点結果.md and user_answers.json directly.
 ---
 
 # Interactive Answer Sheet (問題用紙＝解答用紙)
 
 ## Why this skill exists
 
-The exam used to ship as a booklet plus a separate `マークシート.pdf`, so
-answering meant looking at two documents and
-transcribing between them. This skill merges them: you answer **inside the
-booklet**, press 採点する, and the report appears immediately. The old mark-sheet
-layer (`マークシート.pdf` / `.html`, `--create-template`, `--user-pdf`) has
-been removed — do not reintroduce it.
+The exam merges the problem booklet and interactive radio bubbles into a single unified deliverable (`解答.html`). You answer **inside the booklet**, press 「採点する」, and the complete 180-point JLPT grading report (`採点結果.md`) appears immediately.
 
 ## Execution
 
 ```bash
 python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id>
 # or: make sheet <test_id>
+
+# To serve in browser with automatic direct file saving into tests/<test_id>/:
+python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py tests/<test_id>
+# or: make serve <test_id>
 ```
 
 Outputs into `tests/<test_id>/`:
 
-| File                       | Contents                                                    |
-| -------------------------- | ----------------------------------------------------------- |
-| `言語知識・読解_解答.html` | 75 questions, radio bubble per choice, in-page grading      |
-| `聴解_解答.html`           | 32 items + **audio player** for `聴解.mp3`, in-page grading |
+| File        | Contents                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------- |
+| `解答.html` | Full exam (75 Gengo/Dokkai questions + 32 Choukai items + Audio player, in-page 180pt grading) |
 
 Re-run after ANY edit to `言語知識・読解.md` / `聴解.md` — the Markdown stays
 the single source of truth, exactly as for the booklet HTML.
 
-## Grading happens in the page — press 「採点する」
+## Grading & Direct Saving — press 「採点する」
 
-There is no JSON step. Pressing the button:
+Pressing the button:
 
-1. grades this half immediately against the embedded key,
-2. **renders the report on screen** and scrolls to it, and
-3. downloads `採点結果_言語知識・読解.md` / `採点結果_聴解.md`.
-
-Each sheet grades **only its own half** (言語知識+読解, or 聴解), because that
-is all it can see. The report says so explicitly: a 180-point 合否 needs both.
-For the combined judgement, press 「解答JSONも保存」 in the result box and run
-`exam-answer-grading` over both files.
+1. grades the full 107 questions immediately against embedded keys (Language Knowledge, Reading, Listening),
+2. evaluates section cutoffs ($\ge 19/60$) and total threshold ($\ge 90/180$),
+3. **renders the full 180-point report on screen** and scrolls to it, and
+4. **saves directly to `tests/<test_id>/`** (`採点結果.md` and `user_answers.json`) if served via `make serve` or local HTTP server, or downloads them if opened standalone.
 
 If anything is unanswered the button asks for confirmation first, and
 unanswered items appear as 「— 未解答」 in the check table rather than as wrong.

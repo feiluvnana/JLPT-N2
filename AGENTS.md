@@ -20,7 +20,7 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
   9. `item-pool-sampling`: Sampling non-repeating items from pool & balancing answer positions (`sample_items.py`).
   10. `web-topic-research`: Sourcing fresh real-world topic seeds, factual texture, and collocation checks from the web, then blending them across ALL exam surfaces (reading, listening, cloze, 問14 flyer, 即時応答 settings, carrier sentences) under enforced balance caps (`merge_seeds.py`).
   11. `exam-answer-grading`: Grading user responses against answer keys, calculating scaled scores (0-180), evaluating Pass/Fail thresholds, analyzing sub-question weak points, and generating diagnostic Markdown reports (`grade_answers.py`).
-  12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the booklet with a radio bubble beside every choice, an in-page audio player with chapter navigation for 聴解, and **in-page grading** that emits `採点結果_<section>.md` on button press (`build_interactive.py`).
+  12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the complete booklet with radio bubbles beside every choice, an in-page audio player for 聴解, and **in-page 180-point grading** that saves `採点結果.md` directly (`build_interactive.py`).
 
 ---
 
@@ -37,16 +37,16 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
 
 Inside `tests/<test_id>/`:
 
-| Deliverable                          | File Name                                        | Description / Source                                                                   |
-| ------------------------------------ | ------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| Language Knowledge & Reading Booklet | `言語知識・読解.html`                            | Rendered from Markdown source `tests/<test_id>/言語知識・読解.md`                      |
-| Listening Booklet                    | `聴解.html`                                      | Rendered from Markdown source `tests/<test_id>/聴解.md`                                |
-| Listening TTS Script                 | `聴解スクリプト.txt` (or `script.txt`)           | Pure official-style narration text                                                     |
-| Listening Audio MP3                  | `聴解.mp3`                                       | Synthesized audio generated from the TTS script                                        |
-| Interactive Answer Sheets            | `言語知識・読解_解答.html`, `聴解_解答.html`     | Booklet + inline radio bubbles (聴解 also embeds an audio player); answer key stripped |
-| Listening Chapter Marks              | `聴解_チャプター.json`                           | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
-| Per-section Grading Report           | `採点結果_言語知識・読解.md`, `採点結果_聴解.md` | Downloaded from the answer sheet on 「採点する」                                       |
-| Combined Grading Report              | `採点結果.md`                                    | Written by `grade_answers.py` (both halves, 180-point 合否)                            |
+| Deliverable                          | File Name                              | Description / Source                                                                   |
+| ------------------------------------ | -------------------------------------- | -------------------------------------------------------------------------------------- |
+| Language Knowledge & Reading Booklet | `言語知識・読解.html`                  | Rendered from Markdown source `tests/<test_id>/言語知識・読解.md`                      |
+| Listening Booklet                    | `聴解.html`                            | Rendered from Markdown source `tests/<test_id>/聴解.md`                                |
+| Listening TTS Script                 | `聴解スクリプト.txt` (or `script.txt`) | Pure official-style narration text                                                     |
+| Listening Audio MP3                  | `聴解.mp3`                             | Synthesized audio generated from the TTS script                                        |
+| Interactive Answer Sheet             | `解答.html`                            | Combined booklet (75 Gengo/Dokkai + 32 Choukai + Audio player); in-page 180pt grading |
+| Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
+| User Answers Record                  | `user_answers.json`                    | Saved automatically on submit from `解答.html`                                         |
+| Combined Grading Report              | `採点結果.md`                          | Generated on submit from `解答.html` or written by `grade_answers.py`                  |
 
 ---
 
@@ -105,17 +105,16 @@ _(The generator automatically cleans up temporary `segments/` audio files upon s
 ### Exam Answer Grading & Diagnostics
 
 ```bash
-# Step 1: build the interactive answer sheets (booklet + inline radio bubbles)
+# Step 1: build the interactive answer sheet (combined booklet + inline radio bubbles)
 python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id>
-#   -> tests/<test_id>/言語知識・読解_解答.html  (75 questions)
-#   -> tests/<test_id>/聴解_解答.html            (32 items)
+#   -> tests/<test_id>/解答.html  (107 questions total)
 
-# Step 2: answer them in a browser and press 「採点する」.
-#   The report is shown in the page and downloaded as 採点結果_<section>.md.
-#   Nothing else is needed for per-section grading.
+# Step 2: serve & answer in a browser (with direct saving to tests/<test_id>/)
+make serve <test_id>
+#   or: python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py tests/<test_id>
+#   Pressing 「採点する」 automatically saves 採点結果.md & user_answers.json directly into tests/<test_id>/.
 
-# Step 3 (optional): combined 180-point 合否 across BOTH halves.
-#   Press 「解答JSONも保存」 on each sheet, drop the files in tests/<test_id>/, then:
+# Step 3: command line grading (optional)
 python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/<test_id>
 #   auto-discovers user_answers*.json in the test dir and cwd
 ```

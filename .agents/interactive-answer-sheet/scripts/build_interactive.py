@@ -1,27 +1,18 @@
 #!/usr/bin/env python3
 """
-Build the MERGED problem+answer sheet: the exam booklet itself, with a radio
-bubble beside every choice, solved in a browser.
+Build the COMBINED problem+answer sheet: the full exam booklet (言語知識・読解 and 聴解)
+merged into a single interactive file solved in a browser.
 
     python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
 
-Writes tests/<id>/言語知識・読解_解答.html and tests/<id>/聴解_解答.html.
-Click through the exam, press 「採点する」, and that half is graded in the
-page: the report is shown inline and saved as 採点結果_<section>.md. No JSON
-round-trip. 「解答JSONも保存」 is available for grade_answers.py, which combines
-both halves into the 180-point 合否.
+Writes tests/<id>/解答.html.
+Click through the full exam, press 「採点する」, and the entire 180-point exam is graded
+in the page: the combined report is shown inline and saved as 採点結果.md along with
+user_answers.json directly into tests/<id>/.
 
-WHY A SEPARATE FILE from 言語知識・読解.html: that is the read-only booklet
-page, rebuilt by build_booklet.py. This one adds the radio bubbles, the 聴解
-audio player, and the grader.
-
-SAFETY: the answer key lives at the end of the same Markdown. Everything from
-the key heading onward is TRUNCATED out of the visible document — a sheet that
-shows the answers while you solve is worse than no sheet. The key IS embedded
-as JS data so grading can run offline; see the skill for that trade-off.
-
-Typography/rendering is reused verbatim from exam-booklet-generation so the
-sheet looks like the booklet, not like a form.
+SAFETY: answer keys live at the end of the source Markdowns. Everything from the
+key heading onward is TRUNCATED out of the rendered document — keys are embedded
+only as JS data for offline in-page grading.
 """
 import importlib.util
 import json
@@ -66,6 +57,7 @@ EXTRA_CSS = """
   font-family:sans-serif;font-size:11pt}
 #bar button{font-size:11pt;padding:.35em .9em;cursor:pointer;border-radius:6px;
   border:1px solid #555;background:#fff;color:#111}
+#bar button.primary{background:#1d4ed8;color:#fff;border-color:#1d4ed8;font-weight:bold}
 #bar .grow{flex:1}
 #done{font-variant-numeric:tabular-nums}
 #player{position:sticky;top:2.6em;z-index:98;background:#f3f4f6;
@@ -79,6 +71,9 @@ EXTRA_CSS = """
 #player.noaudio{background:#fee2e2}
 #player.noaudio::after{content:"聴解.mp3 を読み込めません。「MP3を選ぶ」から指定してください。";
   display:block;font-size:10pt;color:#991b1b;margin-top:.3em}
+.section-divider{margin:3em 0;border:0;border-top:3px double #333}
+.section-title{font-size:16pt;background:#1e293b;color:#fff;padding:.4em .8em;
+  margin:2em 0 1em;border-radius:4px}
 #result:not(:empty){margin:2em 0 4em;padding:1em 1.2em;border:2px solid #1d4ed8;
   border-radius:8px;background:#f8fafc;font-family:sans-serif}
 #result pre{white-space:pre-wrap;word-break:break-word;font-size:9.5pt;
@@ -112,7 +107,6 @@ function pick(inp){
     sel.insertAdjacentHTML('beforeend',
       '<option value="'+c.start+'">'+name+'  ('+mm+':'+ss+')</option>');
   }
-  // Keep the dropdown following playback without fighting a manual choice.
   au.addEventListener('timeupdate', ()=>{
     if (document.activeElement === sel) return;
     let cur = "";
@@ -126,13 +120,10 @@ au.addEventListener('error', ()=>{
 """
 
 SCRIPT = """
-const KEYS = %(keys)s, SECTION = "%(section)s", TESTID = "%(testid)s";
-// ANSWER_KEY / TAXONOMY / ADVICE are serialized from grade_answers.py at build
-// time — the Python module is the single source of truth, so the in-page
-// grader can never disagree with `make grade`.
+const KEYS = %(keys)s, TESTID = "%(testid)s";
+const GENGO_KEYS = %(gengo_keys)s, CHOUKAI_KEYS = %(choukai_keys)s;
 const ANSWER_KEY = %(answer_key)s, TAXONOMY = %(taxonomy)s, ADVICE = %(advice)s;
-const SECTION_DEFS = %(section_defs)s;
-const LS = "jlpt:"+TESTID+":"+SECTION;
+const LS = "jlpt:"+TESTID+":combined_answers";
 
 function state(){
   const o = {};
@@ -142,9 +133,14 @@ function state(){
   return o;
 }
 function refresh(){
-  const n = Object.keys(state()).length;
-  document.getElementById('done').textContent = n + " / " + KEYS.length;
-  localStorage.setItem(LS, JSON.stringify(state()));
+  const ans = state();
+  let gCount = 0, cCount = 0;
+  for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gCount++; }
+  for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) cCount++; }
+  const total = gCount + cCount;
+  document.getElementById('done').textContent =
+    "言語: " + gCount + "/75 | 聴解: " + cCount + "/32 | 計: " + total + " / " + KEYS.length;
+  localStorage.setItem(LS, JSON.stringify(ans));
 }
 function restore(){
   let o = {};
@@ -162,43 +158,70 @@ function clearAll(){
   refresh();
 }
 
-// One decimal place, matching Python's round(x, 1) so the two graders'
-// reports are byte-comparable.
 function pct(c, t){ return (t ? Math.round(c / t * 1000) / 10 : 0).toFixed(1); }
 
 function buildReport(ans){
-  // Per-section scoring, mirroring grade(): raw -> 0-60 proportional scale,
-  // 19-point cutoff. Only THIS half is graded; 合否 needs both.
+  // Calculate scaled scores for 3 JLPT N2 sections
+  // 1. Language Knowledge (Q1-54): 54 questions -> 60 scaled
+  // 2. Reading (Q55-75): 21 questions -> 60 scaled
+  // 3. Listening (問1-問5): 32 items -> 60 scaled
+  let gengoCorrect = 0, dokkaiCorrect = 0, choukaiCorrect = 0;
+  for (let q = 1; q <= 54; q++){
+    if (ans[String(q)] !== undefined && ans[String(q)] === ANSWER_KEY[String(q)]) gengoCorrect++;
+  }
+  for (let q = 55; q <= 75; q++){
+    if (ans[String(q)] !== undefined && ans[String(q)] === ANSWER_KEY[String(q)]) dokkaiCorrect++;
+  }
+  for (const k of CHOUKAI_KEYS){
+    if (ans[k] !== undefined && ans[k] === ANSWER_KEY[k]) choukaiCorrect++;
+  }
+
+  const scaledGengo = Math.round(gengoCorrect / 54 * 60);
+  const scaledDokkai = Math.round(dokkaiCorrect / 21 * 60);
+  const scaledChoukai = Math.round(choukaiCorrect / 32 * 60);
+  const totalScaled = scaledGengo + scaledDokkai + scaledChoukai;
+
+  const passedGengo = scaledGengo >= 19;
+  const passedDokkai = scaledDokkai >= 19;
+  const passedChoukai = scaledChoukai >= 19;
+  const passedOverall = totalScaled >= 90;
+  const passedTotal = passedOverall && passedGengo && passedDokkai && passedChoukai;
+
+  const passStr = passedTotal ? "**合格 (PASS)**" : "**不合格 (FAIL)**";
+
   const L = [];
-  L.push("# JLPT N2 模擬試験 採点結果・弱点分析レポート ("+TESTID+")");
+  L.push("# JLPT N2 模擬試験 採点結果・弱点分析レポート (" + TESTID + ")");
   L.push("");
-  L.push("**対象セクション: " + (SECTION==="gengo" ? "言語知識（文字・語彙・文法）・読解" : "聴解") + "**");
+  L.push("## 総合判定: " + passStr);
   L.push("");
-  L.push("> このレポートはこの解答用紙の担当分のみを採点したものです。"
-       + "180点満点の総合判定には両方のセクションが必要です。");
-  L.push("");
+
+  if (!passedTotal){
+    const reasons = [];
+    if (!passedOverall) reasons.push("総合点 (" + totalScaled + "点) が合格ライン (90点) に届いていません。");
+    const failedSecs = [];
+    if (!passedGengo) failedSecs.push("言語知識");
+    if (!passedDokkai) failedSecs.push("読解");
+    if (!passedChoukai) failedSecs.push("聴解");
+    if (failedSecs.length) reasons.push("基準点未達のセクションがあります: " + failedSecs.join("、") + " (各セクション19点以上が必要)。");
+    L.push("> **判定理由**: " + reasons.join(" "));
+    L.push("");
+  }
+
   L.push("## 1. 得点サマリー (得点等化スケールスコア 換算)");
   L.push("");
   L.push("| セクション | 素点 (正解数/全問) | 換算得点 | 基準点 (足切り) | 判定 |");
   L.push("|---|---|---|---|---|");
-
-  let sectionTotal = 0;
-  for (const sd of SECTION_DEFS){
-    let c = 0;
-    for (const k of sd.keys){ if (ans[k] !== undefined && ans[k] === ANSWER_KEY[k]) c++; }
-    const scaled = Math.round(c / sd.keys.length * 60);
-    sectionTotal += scaled;
-    L.push("| **"+sd.name+"** | "+c+" / "+sd.keys.length+" | **"+scaled
-         +" / 60** | 19点 | "+(scaled>=19 ? "基準点クリア" : "基準点未達")+" |");
-  }
-  L.push("| **このセクション計** | **-** | **"+sectionTotal+" / "
-       + (SECTION_DEFS.length*60)+"** | - | - |");
+  L.push("| **言語知識 (文字・語彙・文法)** | " + gengoCorrect + " / 54 | **" + scaledGengo + " / 60** | 19点 | " + (passedGengo ? "基準点クリア" : "基準点未達") + " |");
+  L.push("| **読解** | " + dokkaiCorrect + " / 21 | **" + scaledDokkai + " / 60** | 19点 | " + (passedDokkai ? "基準点クリア" : "基準点未達") + " |");
+  L.push("| **聴解** | " + choukaiCorrect + " / 32 | **" + scaledChoukai + " / 60** | 19点 | " + (passedChoukai ? "基準点クリア" : "基準点未達") + " |");
+  L.push("| **総合計** | **-** | **" + totalScaled + " / 180** | **90点** | **" + passStr + "** |");
   L.push("");
 
   L.push("## 2. 大問別（問題形式別）詳細分析");
   L.push("");
   L.push("| 分野 | 問題 | 大問名 | 正解率 | 正解数 / 問題数 | 評価 |");
   L.push("|---|---|---|---|---|---|");
+
   const weak = [];
   for (const t of TAXONOMY){
     let c = 0;
@@ -206,8 +229,7 @@ function buildReport(ans){
     const p = pct(c, t.keys.length);
     let icon = p >= 80 ? "🟢 優 (Strong)" : p >= 60 ? "🟡 良 (Fair)" : "🔴 要強化 (Weak)";
     if (p < 60) weak.push({code:t.code, name:t.name, section:t.section, p:p});
-    L.push("| "+t.section+" | **"+t.code+"** | "+t.name+" | **"+p+"%%** | "
-         + c+" / "+t.keys.length+" | "+icon+" |");
+    L.push("| " + t.section + " | **" + t.code + "** | " + t.name + " | **" + p + "%%** | " + c + " / " + t.keys.length + " | " + icon + " |");
   }
   L.push("");
 
@@ -217,62 +239,109 @@ function buildReport(ans){
     L.push("以下の分野は正解率が60%%未満となっています。重点的な復習を推奨します：");
     L.push("");
     for (const w of weak){
-      L.push("### "+w.section+" "+w.code+": "+w.name+" (正解率: "+w.p+"%%)");
-      if (ADVICE[w.code]) L.push("- **対策**: "+ADVICE[w.code]);
+      L.push("### " + w.section + " " + w.code + ": " + w.name + " (正解率: " + w.p + "%%)");
+      if (ADVICE[w.code]) L.push("- **対策**: " + ADVICE[w.code]);
       L.push("");
     }
   } else {
-    L.push("このセクションでは正解率60%%未満の大問はありません。この調子で演習を継続しましょう。");
+    L.push("全セクションで高い正解率を維持できています！この調子で本試験に向けて実戦問題演習を継続しましょう。");
     L.push("");
   }
 
   L.push("## 4. 全設問解答チェック表");
   L.push("");
-  L.push("| 設問 | あなたの解答 | 正解 | 判定 |");
-  L.push("|---|---|---|---|");
-  for (const k of KEYS){
-    const u = ans[k], correct = ANSWER_KEY[k];
-    const mark = u === undefined ? "— 未解答" : (u === correct ? "○" : "×");
-    L.push("| "+k+" | "+(u === undefined ? "-" : u)+" | "+correct+" | "+mark+" |");
-  }
+  L.push("### 言語知識・読解 (問1 〜 問75)");
   L.push("");
+  L.push("| 問 | あなたの解答 | 正解 | 結果 | 問 | あなたの解答 | 正解 | 結果 |");
+  L.push("|---|---|---|---|---|---|---|---|");
+
+  for (let q1 = 1; q1 <= 38; q1++){
+    const q2 = q1 + 38;
+    const u1 = ans[String(q1)], c1 = ANSWER_KEY[String(q1)];
+    const r1 = u1 === undefined ? "-" : (u1 === c1 ? "○" : "×");
+    const u1Str = u1 === undefined ? "-" : String(u1);
+
+    if (q2 <= 75){
+      const u2 = ans[String(q2)], c2 = ANSWER_KEY[String(q2)];
+      const r2 = u2 === undefined ? "-" : (u2 === c2 ? "○" : "×");
+      const u2Str = u2 === undefined ? "-" : String(u2);
+      L.push("| " + q1 + " | " + u1Str + " | " + c1 + " | " + r1 + " | " + q2 + " | " + u2Str + " | " + c2 + " | " + r2 + " |");
+    } else {
+      L.push("| " + q1 + " | " + u1Str + " | " + c1 + " | " + r1 + " | - | - | - | - |");
+    }
+  }
+
+  L.push("");
+  L.push("### 聴解");
+  L.push("");
+  L.push("| 問題 | あなたの解答 | 正解 | 結果 |");
+  L.push("|---|---|---|---|");
+  for (const k of CHOUKAI_KEYS){
+    const u = ans[k], c = ANSWER_KEY[k];
+    const r = u === undefined ? "-" : (u === c ? "○" : "×");
+    L.push("| " + k + " | " + (u === undefined ? "-" : u) + " | " + c + " | " + r + " |");
+  }
+
   return L.join("\\n");
 }
 
-function save(){
-  const ans = state();
-  const unanswered = KEYS.filter(k => ans[k] === undefined).length;
-  if (unanswered && !confirm(unanswered+"問が未解答です。このまま採点しますか？")) return;
-
-  const md = buildReport(ans);
-  const name = "採点結果_" + (SECTION==="gengo" ? "言語知識・読解" : "聴解") + ".md";
-  const blob = new Blob([md], {type:"text/markdown;charset=utf-8"});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = name; a.click();
-
-  // Also show it immediately — downloading a file you then have to go open is
-  // not "grading happened".
+function renderResult(md, msg, directSaved){
   const box = document.getElementById('result');
-  box.innerHTML = '<h2 style="margin-top:0">採点結果</h2>'
-    + '<p class="hint">↓ ' + name + ' としてダウンロードしました。'
-    + ' <button type="button" onclick="saveJson()">解答JSONも保存</button></p>'
+  let statusHtml = directSaved
+    ? '<span style="color:#15803d;font-weight:bold;">✓ ' + msg + '</span>'
+    : '<span class="hint">↓ ' + msg + '</span>';
+  box.innerHTML = '<h2 style="margin-top:0">総合採点結果</h2>'
+    + '<p class="hint">' + statusHtml + '</p>'
     + '<pre></pre>';
   box.querySelector('pre').textContent = md;
   box.scrollIntoView({behavior:'smooth'});
 }
 
-function saveJson(){
-  // Still available for `grade_answers.py`, which combines BOTH halves into a
-  // single 180-point 合否 judgement.
-  const payload = SECTION === "gengo"
-    ? {"言語知識_読解": state(), "聴解": {}}
-    : {"言語知識_読解": {}, "聴解": state()};
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = "user_answers_" + SECTION + ".json";
-  a.click();
+function save(){
+  const ans = state();
+  const unanswered = KEYS.filter(k => ans[k] === undefined).length;
+  if (unanswered && !confirm(unanswered + "問が未解答です。このまま採点しますか？")) return;
+
+  const md = buildReport(ans);
+  const name = "採点結果.md";
+  const jsonName = "user_answers.json";
+  const gengoAns = {}, choukaiAns = {};
+  for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gengoAns[k] = ans[k]; }
+  for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) choukaiAns[k] = ans[k]; }
+  const payloadJson = {"言語知識_読解": gengoAns, "聴解": choukaiAns};
+
+  fetch('/api/submit', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      filename: name,
+      content: md,
+      json_filename: jsonName,
+      json_data: payloadJson
+    })
+  }).then(r => r.ok ? r.json() : null).then(data => {
+    if (data && data.success) {
+      renderResult(md, data.message, true);
+    } else {
+      fallbackDownload(md, name, payloadJson, jsonName);
+    }
+  }).catch(() => {
+    fallbackDownload(md, name, payloadJson, jsonName);
+  });
 }
+
+function fallbackDownload(md, name, payloadJson, jsonName){
+  const blobMd = new Blob([md], {type:"text/markdown;charset=utf-8"});
+  const a1 = document.createElement('a');
+  a1.href = URL.createObjectURL(blobMd); a1.download = name; a1.click();
+
+  const blobJson = new Blob([JSON.stringify(payloadJson, null, 2)], {type:"application/json"});
+  const a2 = document.createElement('a');
+  a2.href = URL.createObjectURL(blobJson); a2.download = jsonName; a2.click();
+
+  renderResult(md, name + " および " + jsonName + " としてダウンロードしました。", false);
+}
+
 document.addEventListener('change', e=>{ if(e.target.type==='radio') refresh(); });
 window.addEventListener('DOMContentLoaded', restore);
 """
@@ -293,8 +362,6 @@ def strip_key(md: str, src: Path) -> str:
         sys.exit(f"{src}: could not find the answer-key heading — refusing to "
                  f"build an interactive sheet that might leak answers")
     md = md[:m.start()].rstrip() + "\n"
-    # The booklet header promises the key is at the end of the file. It is not,
-    # in this build — drop the line rather than tell the examinee to go find it.
     md = re.sub(r"^\*\*正解と解説は、.*$\n?", "", md, flags=re.M)
     return md
 
@@ -322,8 +389,6 @@ def inject_gengo(md: str):
         m_q = GENGO_Q.match(line)
         if m_q:
             qid = m_q.group(1)
-            # 問題9 puts all four options on the stem line itself:
-            #   **50** 1. こと  2. だけ  3. ばかり  4. まで
             inline = re.findall(r"(?<![^\s（(])([1-4])\.\s*\S", line[m_q.end():])
             if len(inline) >= 2:
                 out.append(line)
@@ -337,9 +402,7 @@ def inject_gengo(md: str):
 
 
 def inject_choukai(md: str, keys: list):
-    """聴解 has two shapes: printed options (問題1/2, 問題5 3番) and bare bubble
-    rows `**1番** 1 ・ 2 ・ 3 ・ 4` (問題3/4, 問題5 1番・2番). Handle both, and
-    map each to the key format grade_answers.py expects."""
+    """聴解 has printed options and bare bubble rows. Inject radios."""
     out, used = [], []
     section = None
     cur, width = None, 0
@@ -347,7 +410,7 @@ def inject_choukai(md: str, keys: list):
     def key_for(item: str, sub: str = "") -> str | None:
         if item == "例" or section is None:
             return None
-        if sub:                                   # 問題5 3番 質問1/質問2
+        if sub:
             return f"問5-3-{sub}"
         n = re.sub(r"\D", "", item)
         return f"問{section}-{n}" if n else None
@@ -359,7 +422,7 @@ def inject_choukai(md: str, keys: list):
             used.append(cur)
         cur, width = None, 0
 
-    pending_three = None   # 問題5 3番: 質問1/質問2 live under `## 3番`
+    pending_three = None
     for line in md.split("\n"):
         m_sec = re.match(r"^#+\s*問題([1-5])", line)
         if m_sec:
@@ -371,7 +434,6 @@ def inject_choukai(md: str, keys: list):
         if re.match(r"^#+\s*3番", line) and section == "5":
             pending_three = True
 
-        # bare bubble rows, possibly two per line
         if CHOUKAI_INLINE.search(line):
             flush()
             parts, last = [], 0
@@ -384,7 +446,7 @@ def inject_choukai(md: str, keys: list):
                     parts.append(f"**{item}** " + radios(k, w))
                     used.append(k)
                 else:
-                    parts.append(m.group(0))     # 例: leave as printed text
+                    parts.append(m.group(0))
                 last = m.end()
             parts.append(line[last:])
             out.append("".join(parts))
@@ -410,13 +472,7 @@ def inject_choukai(md: str, keys: list):
 
 
 def player_html(d: Path) -> str:
-    """Audio player for the 聴解 sheet: play the exam while answering it.
-
-    The MP3 is referenced RELATIVELY (聴解.mp3, same folder) rather than
-    embedded — a ~30 MB file base64-inlined would be ~40 MB of HTML. Some
-    browsers refuse file:// media subresources, so a manual file picker is
-    offered as a fallback; it never depends on a server.
-    """
+    """Audio player for the 聴解 section."""
     chapters = d / "聴解_チャプター.json"
     data = "null"
     if chapters.is_file():
@@ -439,50 +495,58 @@ def player_html(d: Path) -> str:
         '</div>')
 
 
-def grading_data(gam, section: str, keys: list, answer_key: dict):
-    """Serialize grade_answers.py's own taxonomy/advice/cutoffs for the page."""
-    if section == "gengo":
-        tax = [{"code": c, "name": s["name"], "section": s["section"],
-                "keys": [str(q) for q in range(s["range"][0], s["range"][1] + 1)]}
-               for c, s in gam.GENGO_QUESTION_TAXONOMY.items()]
-        section_defs = [
-            {"name": "言語知識（文字・語彙・文法）",
-             "keys": [str(q) for q in range(1, 55)]},
-            {"name": "読解", "keys": [str(q) for q in range(55, 76)]},
-        ]
-    else:
-        tax = [{"code": c, "name": s["name"], "section": s["section"],
-                "keys": [k for k in keys
-                         if k.startswith("問" + c.replace("問題", "") + "-")]}
-               for c, s in gam.CHOUKAI_QUESTION_TAXONOMY.items()]
-        section_defs = [{"name": "聴解", "keys": list(keys)}]
-    tax = [t for t in tax if t["keys"]]
+def grading_data(gam, gids: list, ckeys: dict, combined_keys: dict):
+    """Serialize grade_answers.py taxonomy/advice for in-page grading."""
+    tax_gengo = [{"code": c, "name": s["name"], "section": s["section"],
+                  "keys": [str(q) for q in range(s["range"][0], s["range"][1] + 1)]}
+                 for c, s in gam.GENGO_QUESTION_TAXONOMY.items()]
+    tax_choukai = [{"code": c, "name": s["name"], "section": s["section"],
+                    "keys": [k for k in ckeys
+                             if k.startswith("問" + c.replace("問題", "") + "-")]}
+                   for c, s in gam.CHOUKAI_QUESTION_TAXONOMY.items()]
+
+    combined_tax = [t for t in (tax_gengo + tax_choukai) if t["keys"]]
+
     return {
-        "answer_key": json.dumps({str(k): v for k, v in answer_key.items()},
-                                 ensure_ascii=False),
-        "taxonomy": json.dumps(tax, ensure_ascii=False),
+        "gengo_keys": json.dumps(gids, ensure_ascii=False),
+        "choukai_keys": json.dumps(list(ckeys.keys()), ensure_ascii=False),
+        "answer_key": json.dumps({str(k): v for k, v in combined_keys.items()}, ensure_ascii=False),
+        "taxonomy": json.dumps(combined_tax, ensure_ascii=False),
         "advice": json.dumps(gam.ADVICE_FOR, ensure_ascii=False),
-        "section_defs": json.dumps(section_defs, ensure_ascii=False),
     }
 
 
-def render(md: str, src: Path, section: str, testid: str, keys: list,
-           title: str, out_path: Path, gdata: dict, player: str = ""):
-    md = "\n".join(booklet.widen(l) for l in md.splitlines())
-    body = markdown.markdown(md, extensions=["tables", "nl2br"])
-    body = booklet.mark_furigana_blocks(booklet.fit_ruby(body))
+def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
+                    out_path: Path, gdata: dict, player: str = ""):
+    gengo_md = "\n".join(booklet.widen(l) for l in gengo_md.splitlines())
+    choukai_md = "\n".join(booklet.widen(l) for l in choukai_md.splitlines())
+
+    gengo_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(gengo_md, extensions=["tables", "nl2br"])))
+    choukai_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(choukai_md, extensions=["tables", "nl2br"])))
+
+    title = f"N2 模擬試験 解答用紙 ({testid})"
     bar = (f'<div id="bar"><b>{title}</b>'
            f'<span class="grow"></span>'
-           f'<span>解答済み <b id="done">0 / 0</b></span>'
+           f'<span><b id="done">解答済み 0 / 107</b></span>'
            f'<button onclick="clearAll()">消去</button>'
-           f'<button onclick="save()">採点する</button></div>')
-    js = SCRIPT % {"keys": json.dumps(keys, ensure_ascii=False),
-                   "section": section, "testid": testid, **gdata}
+           f'<button onclick="save()" class="primary">採点する</button></div>')
+
+    body = (
+        f'<div id="section-gengo">'
+        f'<h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1>'
+        f'{gengo_body}</div>'
+        f'<hr class="section-divider">'
+        f'<div id="section-choukai">'
+        f'<h1 class="section-title">JLPT N2 聴解</h1>'
+        f'{player}{choukai_body}</div>'
+    )
+
+    js = SCRIPT % {"keys": json.dumps(keys, ensure_ascii=False), "testid": testid, **gdata}
     out_path.write_text(
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
         f'<title>{title}</title><style>{booklet.CSS}{EXTRA_CSS}</style></head>'
-        f'<body>{bar}{player}{body}<div id="result"></div>'
+        f'<body>{bar}{body}<div id="result"></div>'
         f'<script>{js}{PLAYER_JS if player else ""}</script>'
         f'</body></html>',
         encoding="utf-8")
@@ -497,55 +561,32 @@ def main():
     testid = d.name
 
     gengo_src, choukai_src = d / "言語知識・読解.md", d / "聴解.md"
+    if not gengo_src.is_file() or not choukai_src.is_file():
+        sys.exit(f"Missing source markdowns in {d}")
 
-    # The grader module is the single source of truth for keys, taxonomy and
-    # advice; the sheet serializes ITS data so in-page grading and `make grade`
-    # can never disagree.
     ga = importlib.util.spec_from_file_location(
         "ga", ROOT / ".agents/exam-answer-grading/scripts/grade_answers.py")
     gam = importlib.util.module_from_spec(ga)
     ga.loader.exec_module(gam)
 
-    if gengo_src.is_file():
-        md, ids = inject_gengo(strip_key(gengo_src.read_text(encoding="utf-8"),
-                                         gengo_src))
-        missing = [str(q) for q in range(1, 76) if str(q) not in ids]
-        if missing:
-            print(f"  warning: no radio group for question(s) {missing}")
-        gkeys = gam.parse_gengo_keys(gengo_src)
-        nokey = [q for q in ids if int(q) not in gkeys]
-        if nokey:
-            print(f"  warning: no answer key for question(s) {nokey} — "
-                  f"they cannot be graded")
-        out = d / "言語知識・読解_解答.html"
-        render(md, gengo_src, "gengo", testid, ids,
-               f"N2 言語知識・読解 ({testid})", out,
-               grading_data(gam, "gengo", ids, gkeys))
-        print(f"  {out}  ({len(ids)} questions, grades in-page)")
+    gmd, gids = inject_gengo(strip_key(gengo_src.read_text(encoding="utf-8"), gengo_src))
+    gkeys = gam.parse_gengo_keys(gengo_src)
 
-    if choukai_src.is_file():
-        ckeys = gam.parse_choukai_keys(choukai_src)
-        want = list(ckeys.keys())
+    ckeys = gam.parse_choukai_keys(choukai_src)
+    cmd, cused = inject_choukai(strip_key(choukai_src.read_text(encoding="utf-8"), choukai_src), list(ckeys.keys()))
 
-        md, used = inject_choukai(
-            strip_key(choukai_src.read_text(encoding="utf-8"), choukai_src), want)
-        missing = [k for k in want if k not in used]
-        extra = [k for k in used if k not in want]
-        if missing:
-            print(f"  warning: no radio group for {missing}")
-        if extra:
-            print(f"  warning: radio group with no answer key: {extra}")
-        out = d / "聴解_解答.html"
-        render(md, choukai_src, "choukai", testid, used,
-               f"N2 聴解 ({testid})", out,
-               grading_data(gam, "choukai", used, ckeys),
-               player=player_html(d))
-        has_mp3 = (d / "聴解.mp3").is_file()
-        chap = d / "聴解_チャプター.json"
-        note = "player" + ("" if has_mp3 else ", MP3 MISSING") + \
-               (", chapters" if chap.is_file() else ", no chapter marks — "
-                "re-run make_choukai_mp3.py to generate them")
-        print(f"  {out}  ({len(used)} items, {note})")
+    combined_keys = {**{str(k): v for k, v in gkeys.items()}, **ckeys}
+    all_keys = gids + cused
+
+    out = d / "解答.html"
+    gdata = grading_data(gam, gids, ckeys, combined_keys)
+    render_combined(gmd, cmd, testid, all_keys, out, gdata, player=player_html(d))
+
+    has_mp3 = (d / "聴解.mp3").is_file()
+    chap = d / "聴解_チャプター.json"
+    note = "player" + ("" if has_mp3 else ", MP3 MISSING") + \
+           (", chapters" if chap.is_file() else ", no chapters")
+    print(f"  {out}  ({len(all_keys)} items: 75 Gengo/Dokkai, 32 Choukai; {note})")
 
 
 if __name__ == "__main__":
