@@ -51,6 +51,10 @@ section, under these caps (full rules: web-topic-research):
 傾向, 効率, 険しい. Build distractors from REAL confusions:
 - reading traps: 措置(そち) vs しょち/そうち; homophone kanji sets:
   納める/収める/治める/修める, 敗れる/破れる; same-radical fakes: 険/検/剣/験.
+- **Conjugation lock (読み):** when the stem shows conjugated okurigana, every
+  option must fit that conjugation — not a different verb class whose ending
+  the print already rules out. Each option must also be a real word. See Item
+  integrity below (test 1's 慌てて).
 
 **問題3 (語形成)** — 諸〜, 〜化, 準〜, 〜済み, 〜制, 未〜, 〜性. All four
 options must be real affixes; only one collocates.
@@ -102,10 +106,10 @@ you. Run it before calling any authoring work done.
   `1. 削減  2. 削減` and `1. ぶった … 3. ぶった`. When building near-miss kanji
   distractors, read the four back to yourself before moving on.
 - **The key goes where `answer_positions` says.** `logs/test_spec.json`
-  prescribes the correct-option number for all 107 items so no number is
+  prescribes the correct-option number for all 101 items so no number is
   over-used. Write the item, then *order the options* so the correct one lands
   on the prescribed slot. Do not write the key you feel like and do not
-  "fix" the imbalance later — `make check` compares all 107 against the spec.
+  "fix" the imbalance later — `make check` compares all 101 against the spec.
 - **問題8: the answer is the option on ★, which is the 3rd of 4 blanks.**
   Assemble the full sentence first, confirm it is grammatical, number the
   positions, and only then read off which option sits third. Test 2 shipped
@@ -179,6 +183,23 @@ you. Run it before calling any authoring work done.
   (やしなって・なぐさめて・あがめて), so the answer was identifiable without
   reading the kanji at all. Distractors are READINGS of the same written form —
   ideally a genuine trap the kanji supports (労う = ねぎらう for 労わる = いたわる).
+- **問題1 漢字読み: conjugation must not give the answer away.** Test 1 keyed
+  慌てて with `1. あきれて  2. あわてて  3. あふれて  4. あばれて`. The stem's
+  okurigana is ～てて (～てる class); three distractors are ～れて (～れる
+  class: あきれる・あふれる・あばれる). Only the key fits the printed
+  conjugation, so the item is solvable without reading the kanji. Mora count
+  need not match — the leak is the conjugation class clash. The same defect
+  appears whenever okurigana already selects one option's ending and rules out
+  the others (～てて vs ～れて, ～って vs ～いて, ～んで vs ～いで, …). **Every
+  option must be a real Japanese word** (a genuine reading of some real verb/
+  adjective/noun), not a made-up near-miss string. **The test before shipping:**
+  cover the kanji, keep okurigana visible — if exactly one option still fits
+  the conjugation, rewrite. Fixes, in order of preference: (1) put the target
+  in dictionary form so okurigana does not advertise the class (慌てる → real
+  ～る readings that could confuse); (2) keep the conjugated stem but give every
+  distractor the same conjugation class and a real-word reading; (3) pick a
+  different carrier whose written form does not leak. Never mix ～れる-class
+  readings under a ～てる-class stem just because the words "look related."
 - **One grammar point may be the KEY only once per paper.** Not just one item
   per 問題: test 4 keyed 〜にともなって in 問題7 (33) and again as the 問題9
   blank (53). Cross-check the 問題7/8/9 key list against itself, and keep a
@@ -224,7 +245,7 @@ you. Run it before calling any authoring work done.
 ## Markdown formatting contract (CRITICAL to prevent HTML numbering bugs)
 
 - **Question stems MUST use bold numbers, NOT Markdown list syntax**:
-  - Write `**1** 労働組合は...`, `**6** 最近...`, `**75** ...` (for `言語知識・読解.md`).
+  - Write `**1** 労働組合は...`, `**6** 最近...`, `**71** ...` (for `言語知識・読解.md`).
   - Write `**例**`, `**1番**`, `**2番**` (for `聴解.md`).
   - **NEVER** write `1. 労働組合...` or `6. 最近...` — Markdown converts `N.` lines into HTML `<ol>` lists, which resets the question number back to 1 at every section header and indents sub-options as nested lists.
 - **Horizontal Options Layout (問題1–5, 問題7, 問題8)**:
@@ -255,9 +276,9 @@ with an error** if there is none. Two consequences:
 
 ### 1. `言語知識・読解.md` Answer Key Format
 Under the key heading (see above), must contain three distinct section headers:
-- `## 文字・語彙`: Multi-column table (`| 問 | 答 | | 問 | 答 | | 問 | 答 | | 問 | 答 |`) for Q1–32, plus key notes for notable kanji/words.
-- `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q33–54 with exact grammar point explanations and scramble sequence breakdowns for Q45–49.
-- `## 読解`: 3-column table (`| 問 | 答 | 解説 |`) for Q55–75 quoting key passage text and rationale.
+- `## 文字・語彙`: Multi-column table (`| 問 | 答 | | 問 | 答 | | 問 | 答 | | 問 | 答 |`) for Q1–30, plus key notes for notable kanji/words.
+- `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q31–51 with exact grammar point explanations and scramble sequence breakdowns for Q43–47.
+- `## 読解`: 3-column table (`| 問 | 答 | 解説 |`) for Q52–71 quoting key passage text and rationale.
 
 ### 2. `聴解.md` Answer Key Format
 Must contain two main parts:
@@ -267,7 +288,7 @@ Must contain two main parts:
   - `## 問題2 ポイント理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–6番.
   - `## 問題3 概要理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番.
   - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–12番 detailing honorifics/idiom points.
-  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **4 rows, not 3** — 問題5 has 3 items but 4 answers, so a 3-row table silently loses one scored answer. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2`, `問5-3-1`, `問5-3-2`; it accepts either label style used so far — `**1番**` / `**2番**` / `**3番 質問1**` / `**3番 質問2**` (preferred for new tests; used by the first, since-removed test 4 — removed in 9a794d5, last at b9b90de; the current `tests/4/` is a different test) or `1` / `2` / `3-質問1` / `3-質問2` (test 1, still on disk). The 3番 rows MUST carry `質問1`/`質問2`; the 1番/2番 rows must NOT.
+  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **3 rows** — 問題5 has 2 items but 3 answers. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2-1`, `問5-2-2`; it accepts either label style — `**1番**` / `**2番 質問1**` / `**2番 質問2**` (preferred) or `1` / `2-質問1` / `2-質問2`. The 2番 rows MUST carry `質問1`/`質問2`; the 1番 row must NOT.
   - `## 得点の目安`: Score range guidelines.
 
 

@@ -98,7 +98,7 @@ Inside `tests/<test_id>/`:
 | Listening Booklet                    | `聴解.html`                            | Rendered from Markdown source `tests/<test_id>/聴解.md`                                |
 | Listening TTS Script                 | `聴解スクリプト.txt`                   | Pure official-style narration text                                                     |
 | Listening Audio MP3                  | `聴解.mp3`                             | Synthesized audio generated from the TTS script                                        |
-| Interactive Answer Sheet             | `解答.html`                            | Combined booklet (75 Gengo/Dokkai + 32 Choukai + Audio player); in-page 180pt grading |
+| Interactive Answer Sheet             | `解答.html`                            | Combined booklet (71 Gengo/Dokkai + 30 Choukai + Audio player); in-page 180pt grading |
 | Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
 | User Answers Record                  | `user_answers.json`                    | Saved automatically on submit from `解答.html`                                         |
 | Combined Grading Report              | `採点結果.md`                          | Generated on submit from `解答.html` or written by `grade_answers.py`                  |
@@ -195,7 +195,7 @@ _(The generator automatically cleans up temporary `segments/` audio files upon s
 ```bash
 # Step 1: build the interactive answer sheet (combined booklet + inline radio bubbles)
 python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id>
-#   -> tests/<test_id>/解答.html  (107 questions total)
+#   -> tests/<test_id>/解答.html  (101 questions total)
 
 # Step 2: serve & answer in a browser (with direct saving to tests/<test_id>/)
 make serve <test_id>
@@ -220,11 +220,11 @@ because prose cannot be executed: every `refs/` path named in a doc exists; all
 deliverable names appear in the script that writes them and retired ones stay
 retired; the choukai pacing table matches `ANSWER_PAUSE`/`GAP_*`; the 大問 table
 matches `GENGO_QUESTION_TAXONOMY`; and for every test on disk the script
-validates, 75+32 keys parse, the sheet has 107 correctly-sized radio groups, and
+validates, 71+30 keys parse, the sheet has 101 correctly-sized radio groups, and
 the in-page grader agrees with `grade_answers.py` on identical answers.
 
 It also checks item integrity, which no other gate can see: no question offers
-the same option twice; all 107 keys sit on the position `logs/test_spec.json`
+the same option twice; all 101 keys sit on the position `logs/test_spec.json`
 prescribed; 問題8 stems have four blanks with ★ third, their keys name the
 option that lands there, **and the stem does not already contain the words the
 options supply**; the passages carry **no un-transliterated Latin words**; the
@@ -307,7 +307,7 @@ modes are context problems:
 | 1 | Setup | Workflow steps 1–3.5: read the skills, sample the pool, harvest seeds, merge, verify the blend report | own subagent |
 | 2–5 | Authoring ×4 | One per section — 文字・語彙 (問1–6), 文法 (問7–9), 読解 (問10–14), 聴解 (booklet + script). Each re-reads `logs/test_spec.json` and the relevant SKILL.md at its start instead of trusting a long context's memory | one subagent each; only in the no-subagent fallback may sections share a context, and then the spec + skill re-read between sections is the minimum |
 | 6 | Build + gate | Steps 6–9: booklet HTML, MP3, `解答.html`, `make check` (read every line incl. WARN), whole-paper topic table | may share a subagent with pass 5 |
-| 7 | QA | `exam-qa-review` in full — blind-solve first, all 107 items, report with verdict | **own subagent — must NOT be any authoring context, and the orchestrator must not leak authoring detail into its prompt** |
+| 7 | QA | `exam-qa-review` in full — blind-solve first, all 101 items, report with verdict | **own subagent — must NOT be any authoring context, and the orchestrator must not leak authoring detail into its prompt** |
 | 8+ | Fix → re-review | Repair findings in the sources, regenerate, re-gate; then the changed items and their whole 問題 re-reviewed | fix may reuse an authoring subagent; the re-review must again be fresh eyes |
 
 **Floor: 7 passes** when QA finds nothing. Every QA finding adds a fix + re-

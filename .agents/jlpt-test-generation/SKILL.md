@@ -48,7 +48,7 @@ All exam files follow a strict directory structure:
 | 3 | `聴解スクリプト.txt` | Pure official-style narration text |
 | 4 | `聴解.mp3` | Listening audio generated from file 3 |
 | 5 | `聴解_チャプター.json` | Per-問題/item offsets in the MP3 (written with it) |
-| 6 | `解答.html` | The ONE merged problem+answer sheet — full 107-question exam with radio bubbles, audio player, in-page 180pt grading (`build_interactive.py`) |
+| 6 | `解答.html` | The ONE merged problem+answer sheet — full 101-question exam with radio bubbles, audio player, in-page 180pt grading (`build_interactive.py`) |
 | 7 | `採点結果.md`, `user_answers.json` | Written on 「採点する」 from `解答.html`, or by `grade_answers.py` |
 
 ## Workflow (follow in order)

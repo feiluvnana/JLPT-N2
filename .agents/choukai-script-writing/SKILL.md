@@ -96,11 +96,11 @@ uniform inside 問題5:
 |---|---|
 | 1, 2 | PRINTED in `聴解.md` — never spoken |
 | 3, 4 | SPOKEN only — booklet prints nothing |
-| 5, 1番/2番 | SPOKEN only |
-| 5, 3番 | **PRINTED** — the two-question item's options are in the booklet |
+| 5, 1番 | SPOKEN only |
+| 5, 2番 | **PRINTED** — the two-question item's options are in the booklet |
 
-Speaking 問題5-3番's options is not a harmless extra: the printed and spoken
-lists then drift, and test 2 shipped a 3番 whose booklet printed 学食 proposals
+Speaking 問題5 2番's options is not a harmless extra: the printed and spoken
+lists then drift, and test 2 shipped a 2番 whose booklet printed 学食 proposals
 while the audio read out 「全自動モデル」「省エネモデル」「小型モデル」 —
 leftovers from the 家電 item in 問題1, which made the answer guessable from the
 booklet alone. `make check` now counts spoken choice lines per 問題 and fails on
@@ -189,13 +189,13 @@ gender over two same-gender voices separated only by a few percent of rate
 
 ## Required structure — every element is mandatory
 
-A full N2 script is **exactly 35 item blocks** (`例。`/`N番。`) in the per-問題
+A full N2 script is **exactly 33 item blocks** (`例。`/`N番。`) in the per-問題
 counts below, plus the 問題 headers, instructions, announcer lines and 例
 confirmations. **The TOTAL block count is not fixed** — test 1 is 48 blocks and
 the first, since-removed test 4 (removed in 9a794d5, last at b9b90de; the
 current tests/4 is 113) was 56, all valid; the difference is
 only how instruction and announcer text is split. So do not treat any total as a target: `validate_script()`
-enforces the 35 item blocks and their distribution and merely *prints* the
+enforces the 33 item blocks and their distribution and merely *prints* the
 total (`script OK: N blocks, …`).
 
 Missing pieces are otherwise SILENT: the MP3 still builds and just quietly
@@ -209,8 +209,8 @@ following are now enforced:
 | 問題1〜5 headers | `問題N。` as its own block, all five, in order |
 | 問題1〜4 practice | each: instruction ending 「では、練習しましょう。」 → ONE `例。` item → ONE full confirmation line → items |
 | 問題5 practice | NONE. Instruction must contain 「この問題には練習はありません。」 and there must be no `例。` block |
-| 問題5 announcer | 「1番、2番。問題用紙に何も印刷されていません。…では、始めます。」 before 1番 |
-| Item counts (incl. 例) | 問題1=6, 問題2=7, 問題3=6, 問題4=13, 問題5=3 |
+| 問題5 announcer | 「1番、2番。問題用紙に何も印刷されていません。…では、始めます。」 before 1番 (2番 options printed only) |
+| Item counts (incl. 例) | 問題1=6, 問題2=7, 問題3=6, 問題4=12, 問題5=2 |
 | Closing | file must END with 「これで、聴解試験を終わります。」 |
 | Answer reveals | 例 confirmations only — see the section above |
 | Annotations | none (`（※…）`) |
@@ -218,7 +218,7 @@ following are now enforced:
 | 質問1/質問2 | must sit in the SAME block |
 | Speaker labels | every label must exist in `SPEAKER_MAP` |
 
-問題5 has 3 item blocks but 4 answers — its 3番 carries 質問1 and 質問2.
+問題5 has 2 item blocks but 3 answers — its 2番 carries 質問1 and 質問2.
 
 ## Speaker labels
 

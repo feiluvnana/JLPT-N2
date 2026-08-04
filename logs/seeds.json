@@ -1,170 +1,134 @@
 [
   {
-    "seed": "テレワーク普及と地方移住への意識調査",
-    "facts": ["20代・30代の約3割が地方移住に関心", "住環境の広さと生活コストの低さが主な理由"],
-    "source": "https://www.soumu.go.jp/menu_news/s-news/2026_08_01.html",
-    "surfaces": ["reading"]
-  },
-  {
-    "seed": "地域の電子地域通貨・コミュニティポイントの導入効果",
-    "facts": ["導入自治体の約7割で地元の商店街での消費が増加", "高齢者の利用支援が普及のカギ"],
-    "source": "https://www.soumu.go.jp/main_content/000912345.pdf",
+    "seed": "規格外野菜の加工品開発と直売所での販売拡大",
+    "facts": ["出荷規格を外れた野菜の有効活用事例が増えている", "加工品化により廃棄を減らし農家収入にもつながる"],
+    "source": "https://www.maff.go.jp/j/seisan/ryutu/engei/kikaku.html",
     "surfaces": ["reading", "info"]
   },
   {
-    "seed": "マイナンバーカードを利用した図書館での広域貸出サービス",
-    "facts": ["近隣市町村の図書館で共通利用可能", "貸出返却の手続き時間を約半減"],
-    "source": "https://www.soumu.go.jp/main_content/000912346.pdf",
-    "surfaces": ["listening", "info"]
-  },
-  {
-    "seed": "自治体の防災ラジオ無償貸与と防災アプリ連携",
-    "facts": ["高齢者世帯への無償配布率が約8割", "スマートフォンアプリとの二重配信で伝達率向上"],
-    "source": "https://www.soumu.go.jp/main_content/000912347.pdf",
-    "surfaces": ["listening", "info"]
-  },
-  {
-    "seed": "自治体の粗大ごみ戸別収集オンライン予約サービス",
-    "facts": ["収集日の3日前までスマホから予約可能", "処理手数料のキャッシュレス決済対応"],
-    "source": "https://www.soumu.go.jp/main_content/000912348.pdf",
-    "surfaces": ["listening"]
-  },
-  {
-    "seed": "若者の手紙・手書き文化の見直しと万年筆ブーム",
-    "facts": ["手書きのお礼状を送る若者が約2割増加", "デジタル文字にはない温かみや個性が評価される"],
-    "source": "https://www.bunka.go.jp/kokugo_nihongo/yoron_r05.html",
+    "seed": "スマート農業におけるロボット農機の導入",
+    "facts": ["ロボット技術やICTで省力化と高品質生産を目指す", "自動走行や草刈りなど現場導入が進む"],
+    "source": "https://www.maff.go.jp/j/kanbo/smart/index.html",
     "surfaces": ["reading"]
   },
   {
-    "seed": "地域の伝統野菜の栽培継承と食育の試み",
-    "facts": ["全国で約300種類の伝統野菜が保護対象", "小中学校の給食での活用率が約5割"],
-    "source": "https://www.bunka.go.jp/bunkazai/trad_vegetable.html",
-    "surfaces": ["reading"]
-  },
-  {
-    "seed": "文化財のデジタルアーカイブ公開とオンライン見学",
-    "facts": ["高精細画像による公開で訪問者数が従来比1.5倍", "実物の保存と鑑賞機会の両立"],
-    "source": "https://www.bunka.go.jp/seisaku/bunkazai/archive.html",
-    "surfaces": ["reading"]
-  },
-  {
-    "seed": "歴史的建造物を活用した宿泊施設・コワーキングスペース",
-    "facts": ["古民家改修による地域活性化の成功事例が全国100箇所突破", "地域資源の保全と維持費の確保を両立"],
-    "source": "https://www.bunka.go.jp/seisaku/bunkazai/renovation.html",
+    "seed": "スーパーのフードバンク連携による食品ロス削減",
+    "facts": ["店舗の廃棄予定食品を地域の支援団体へ提供", "月間トン単位の食品を地域へ回せる事例がある"],
+    "source": "https://nippon-food-shift.maff.go.jp/foodshift/case18/",
     "surfaces": ["reading", "listening"]
   },
   {
-    "seed": "地域の歴史民俗資料館の特別展示ガイド",
-    "facts": ["週末限定で学芸員による解説ツアー実施", "小中学生は入館無料"],
-    "source": "https://www.bunka.go.jp/seisaku/bunkazai/guide.html",
-    "surfaces": ["listening"]
-  },
-  {
-    "seed": "スマート農業における小型自動草刈りロボットの導入",
-    "facts": ["農家の作業時間を約4割削減", "高齢化が進む果樹園での導入が急増"],
-    "source": "https://www.maff.go.jp/j/kanbo/smart_agri/robot.html",
+    "seed": "若者の手紙・手書き文化の見直し",
+    "facts": ["恩師への手紙では約7割が手書きを選ぶ傾向", "デジタル文字にはない温かみが再評価される"],
+    "source": "https://www.bunka.go.jp/tokei_hakusho_shuppan/tokeichosa/kokugo_yoronchosa/h16/",
     "surfaces": ["reading", "carrier"]
   },
   {
-    "seed": "マイボトル持参による店舗での飲料割引とプラスチック削減",
-    "facts": ["マイボトル利用率が約3割に上昇", "年間で一人当たり約50本のペットボトル削減効果"],
-    "source": "https://www.maff.go.jp/j/shokusan/recycle/mybottle.html",
-    "surfaces": ["listening", "carrier"]
-  },
-  {
-    "seed": "地産地消マルシェの定期開催と都市・農村交流",
-    "facts": ["出展農家数が年々増加", "消費者が生産者と直接対話できる点が支持される"],
-    "source": "https://www.maff.go.jp/j/shokusan/chisan/marche.html",
-    "surfaces": ["listening", "info"]
-  },
-  {
-    "seed": "規格外野菜の加工品開発と直売所での販売拡大",
-    "facts": ["見た目の不揃い品をスープやジャムに加工し廃棄率を半減", "手頃な価格で環境にも優しい"],
-    "source": "https://www.maff.go.jp/j/shokusan/foodloss/kikaku.html",
-    "surfaces": ["reading", "carrier"]
-  },
-  {
-    "seed": "市民農園の体験区画利用者の手引きと説明会",
-    "facts": ["農具や肥料の無償貸出付き", "初心者向け講習会を毎月開催"],
-    "source": "https://www.maff.go.jp/j/shokusan/nouen/guide.html",
-    "surfaces": ["listening"]
-  },
-  {
-    "seed": "睡眠休養感と日中のパフォーマンス改善意識調査",
-    "facts": ["「十分な睡眠で休養がとれている」と感じる人が約5割", "就寝前のスマートフォンの使用制限が効果的"],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_suimin.html",
+    "seed": "歴史的建造物を活用した宿泊施設の運営",
+    "facts": ["古民家や町家を改修し宿泊・交流施設として再生", "維持費を自走させる用途転換が保存の現実的手段"],
+    "source": "https://www.bunka.go.jp/seisaku/bunkashingikai/bunkazai/kikaku/r03/06/pdf/93678101_04.pdf",
     "surfaces": ["reading"]
   },
   {
-    "seed": "企業の短時間勤務制度・フレキシブルタイムの活用拡大",
-    "facts": ["子育て・介護以外の目的での短時間勤務を導入する企業が約3割", "優秀な人材の定着に寄与"],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/flex.html",
+    "seed": "睡眠休養感と日中のパフォーマンス改善",
+    "facts": ["成人の約4割が睡眠6時間未満", "睡眠の質（休養感）が日中の体調と作業効率に影響"],
+    "source": "https://www.mhlw.go.jp/content/001305530.pdf",
     "surfaces": ["reading", "listening"]
   },
   {
-    "seed": "オフィスでの立ち仕事・昇降式デスクの導入と効果",
-    "facts": ["座りっぱなしを防ぎ集中力低下を改善", "社員の約6割が「腰痛が軽減した」と回答"],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/desk_health.html",
+    "seed": "職場の腰痛予防と立ち作業の工夫",
+    "facts": ["長時間の同一姿勢を避け小休止を入れる", "作業台の高さ調整や椅子の併用が推奨される"],
+    "source": "https://www.mhlw.go.jp/stf/newpage_31158.html",
     "surfaces": ["listening", "carrier"]
   },
   {
-    "seed": "世代間ギャップを埋める社内メンター制度と1対1対話",
-    "facts": ["定期的な面談で若手の離職率が約2割低下", "上司側のリスニング能力向上にも貢献"],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/mentor_system.html",
+    "seed": "家庭での食べきりと食品の使いきり習慣",
+    "facts": ["使いきれる分だけ購入し食べ残しを減らす", "買い置きは古いものから消費する習慣が有効"],
+    "source": "https://www.caa.go.jp/policies/policy/consumer_policy/information/food_loss/promote/assets/consumer_education_cms201_250325_01.pdf",
     "surfaces": ["reading", "listening"]
   },
   {
-    "seed": "社内ボランティア休暇制度の導入と社内告知",
-    "facts": ["年間最大5日間の有給ボランティア休暇", "地域貢献と社員の視野拡大を推進"],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/volunteer.html",
+    "seed": "小売店での手前取り呼びかけと期限切れ廃棄削減",
+    "facts": ["すぐに食べる場合は手前の商品を選ぶと廃棄が減る", "コンビニ各社でも啓発物の掲示が進む"],
+    "source": "https://www.caa.go.jp/notice/entry/024301/",
+    "surfaces": ["carrier", "listening"]
+  },
+  {
+    "seed": "真夏の熱中症予防と夜間のエアコン活用",
+    "facts": ["夜間も室内で熱中症が発生する", "タイマーで途中切断せず朝まで適温で使い続けるのが望ましい"],
+    "source": "https://www.wbgt.env.go.jp/pdf/manual/heatillness_manual_3-1.pdf",
     "surfaces": ["listening"]
   },
   {
-    "seed": "駅や商業施設での傘のシェアリングサービスの普及",
-    "facts": ["突然の雨でも安価に借りられるサービスが拡大", "使い捨て傘の購入数を約3割削減"],
-    "source": "https://www.nhk.or.jp/news/easy/k1001450001/k1001450001.html",
-    "surfaces": ["listening", "carrier"]
+    "seed": "マイボトル持参による使い捨て容器の削減",
+    "facts": ["繰り返し使えば使い捨て容器より環境負荷を抑えられる", "給水スポットや店舗での割引が普及の後押しになる"],
+    "source": "https://www.env.go.jp/recycle/yoki/c_3_report/pdf/h23_lca_01.pdf",
+    "surfaces": ["reading", "listening", "carrier"]
   },
   {
-    "seed": "真夏の熱中症予防と夜間のエアコン活用呼びかけ",
-    "facts": ["夜間の室温管理が不十分なことによる搬送が急増", "タイマーではなく朝までつけっぱなしが推奨される"],
-    "source": "https://www.nhk.or.jp/news/easy/k1001450002/k1001450002.html",
-    "surfaces": ["listening", "info"]
+    "seed": "電子地域通貨による市内消費の好循環",
+    "facts": ["チャージや買物時にプレミアムが付き市内加盟店だけで使える", "導入自治体では地元商店街での消費増加が報告される"],
+    "source": "https://dx-navi.soumu.go.jp/case/pdfcase174",
+    "surfaces": ["info", "reading"]
   },
   {
-    "seed": "無人ロッカーを活用したクリーニング受け取りサービス",
-    "facts": ["24時間いつでも受取・預け入れが可能", "利用者の約8割が仕事帰りの利用で利便性を実感"],
-    "source": "https://www.nhk.or.jp/news/easy/k1001450003/k1001450003.html",
-    "surfaces": ["listening"]
-  },
-  {
-    "seed": "地域のフリースペース・世代間交流居場所の開設案内",
-    "facts": ["子どもから高齢者まで自由に利用できるカフェ空間", "月額ワンコインで利用可能"],
-    "source": "https://www.nhk.or.jp/news/easy/k1001450004/k1001450004.html",
+    "seed": "地域通貨のポイント還元キャンペーンと観光消費喚起",
+    "facts": ["決済額の約2割還元などのキャンペーン例がある", "観光・飲食など特定業種の消費喚起にも使われる"],
+    "source": "https://www.cas.go.jp/jp/seisaku/digitaldenen/menubook/0005.html",
     "surfaces": ["info", "listening"]
   },
   {
-    "seed": "シニア層のスマホ教室と防災・防犯アプリの操作習得",
-    "facts": ["受講者の約9割が防災通知の受診設定を完了", "地域ボランティアが講師を務める"],
-    "source": "https://www.nhk.or.jp/news/easy/k1001450005/k1001450005.html",
-    "surfaces": ["info", "listening"]
-  },
-  {
-    "seed": "エコドライブ体験講習会と燃料節約のコツ",
-    "facts": ["急発進を抑えることで燃料消費量を約1割削減", "受講者には地域エコポイント進呈"],
-    "source": "https://www.nhk.or.jp/news/easy/k1001450006/k1001450006.html",
+    "seed": "自治体の地域通貨ポイント付与による健康・ボランティア促進",
+    "facts": ["健康づくりやボランティア参加でポイントを付与する自治体がある", "給付と合わせてキャッシュレス推進を図る事例が増える"],
+    "source": "https://www.soumu.go.jp/main_content/000781401.pdf",
     "surfaces": ["info", "carrier"]
   },
   {
-    "seed": "公共施設の会議室・スポーツ施設の夜間利用予約",
-    "facts": ["ネット予約システム導入で受付時間を24時間に拡大", "キャンセルのペナルティ規程変更"],
-    "source": "https://www.nhk.or.jp/news/easy/k1001450007/k1001450007.html",
+    "seed": "駅での傘シェアリングサービスの拡大",
+    "facts": ["地下鉄全駅展開などスポット数が拡大している", "使い捨てビニール傘の削減にもつながる"],
+    "source": "https://www.metro.tokyo.lg.jp/information/press/2024/06/2024061901",
+    "surfaces": ["listening", "carrier"]
+  },
+  {
+    "seed": "自転車シェアリングのポート間貸出・返却",
+    "facts": ["借りたポートと異なるポートへ返却できる", "駅など交通結節点との連携で短距離移動が便利になる"],
+    "source": "https://www.kankyo.metro.tokyo.lg.jp/vehicle/management/bycicle_sharing",
     "surfaces": ["listening"]
   },
   {
-    "seed": "コワーキングスペースのドロップイン（一時利用）プラン",
-    "facts": ["15分単位の従量課金制を導入", "個室ブースの事前予約が可能"],
-    "source": "https://www.nhk.or.jp/news/easy/k1001450008/k1001450008.html",
+    "seed": "使い捨て傘ゼロに向けたシェアリング普及",
+    "facts": ["アプリ登録で借りて最寄りスポットへ返却できる", "雨の日の移動快適化と廃棄削減を同時に狙う"],
+    "source": "https://www.tokyoupdates.metro.tokyo.lg.jp/post-1440/",
+    "surfaces": ["listening", "carrier"]
+  },
+  {
+    "seed": "熱中症予防のためのこまめな水分補給と室温管理",
+    "facts": ["のどが渇く前の水分補給が大切", "室内でもエアコン等で温度調節が必要"],
+    "source": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/kenkou/nettyuu/nettyuu_taisaku/pdf/necchushoyobou/2026necchushouyobou.pdf",
+    "surfaces": ["carrier"]
+  },
+  {
+    "seed": "市民向けマイボトル給水の呼びかけ",
+    "facts": ["公共施設や店舗で給水できる場所が増えている", "ペットボトル消費削減の身近な行動として推奨される"],
+    "source": "https://www.env.go.jp/recycle/yoki/c_3_report/pdf/h23_lca_01.pdf",
     "surfaces": ["listening"]
+  },
+  {
+    "seed": "地域の図書館での電子書籍と来館サービスの併用案内",
+    "facts": ["休館中でも電子書籍は利用可能な場合がある", "返却ポストの利用条件に注意が必要"],
+    "source": "https://www.bunka.go.jp/tokei_hakusho_shuppan/tokeichosa/kokugo_yoronchosa/index.html",
+    "surfaces": ["carrier"]
+  },
+  {
+    "seed": "シェアサイクル利用時のヘルメット着用促進",
+    "facts": ["ガイドラインで事業者による着用促進が求められる", "料金割引や備え付けヘルメットなどの工夫例がある"],
+    "source": "https://www.shouhiseikatu.metro.tokyo.lg.jp/anzen/kyougikai/r5/documents/r5kyogikai-3_handout-01-1_1.pdf",
+    "surfaces": ["listening"]
+  },
+  {
+    "seed": "社内でのマイボトル持参キャンペーン告知",
+    "facts": ["カフェテリアでマイボトル割引を導入する企業がある", "使い捨てカップ削減が目的"],
+    "source": "https://www.env.go.jp/recycle/yoki/c_3_report/pdf/h23_lca_01.pdf",
+    "surfaces": ["reading", "carrier"]
   }
 ]

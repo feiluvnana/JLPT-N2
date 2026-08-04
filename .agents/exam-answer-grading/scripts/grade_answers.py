@@ -33,27 +33,27 @@ GENGO_QUESTION_TAXONOMY = {
     # 言語知識（文字・語彙）
     "問1": {"name": "漢字読み (Kanji Reading)", "range": (1, 5), "section": "言語知識", "total": 5},
     "問2": {"name": "表記 (Orthography)", "range": (6, 10), "section": "言語知識", "total": 5},
-    "問3": {"name": "語形成 (Word Formation)", "range": (11, 15), "section": "言語知識", "total": 5},
-    "問4": {"name": "文脈規定 (Word in Context)", "range": (16, 22), "section": "言語知識", "total": 7},
-    "問5": {"name": "言い換え類義 (Paraphrases)", "range": (23, 27), "section": "言語知識", "total": 5},
-    "問6": {"name": "用法 (Correct Usage)", "range": (28, 32), "section": "言語知識", "total": 5},
+    "問3": {"name": "語形成 (Word Formation)", "range": (11, 13), "section": "言語知識", "total": 3},
+    "問4": {"name": "文脈規定 (Word in Context)", "range": (14, 20), "section": "言語知識", "total": 7},
+    "問5": {"name": "言い換え類義 (Paraphrases)", "range": (21, 25), "section": "言語知識", "total": 5},
+    "問6": {"name": "用法 (Correct Usage)", "range": (26, 30), "section": "言語知識", "total": 5},
     # 言語知識（文法）
-    "問7": {"name": "文法形式の判断 (Grammar Form)", "range": (33, 44), "section": "言語知識", "total": 12},
-    "問8": {"name": "文の組み立て (Sentence Composition ★)", "range": (45, 49), "section": "言語知識", "total": 5},
-    "問9": {"name": "文章の文法 (Text Grammar / Cloze)", "range": (50, 54), "section": "言語知識", "total": 5},
+    "問7": {"name": "文法形式の判断 (Grammar Form)", "range": (31, 42), "section": "言語知識", "total": 12},
+    "問8": {"name": "文の組み立て (Sentence Composition ★)", "range": (43, 47), "section": "言語知識", "total": 5},
+    "問9": {"name": "文章の文法 (Text Grammar / Cloze)", "range": (48, 51), "section": "言語知識", "total": 4},
     # 読解
-    "問10": {"name": "内容理解・短文 (Short Passages)", "range": (55, 59), "section": "読解", "total": 5},
-    "問11": {"name": "内容理解・中文 (Medium Passages)", "range": (60, 68), "section": "読解", "total": 9},
-    "問12": {"name": "統合理解 (A/B Comparative Texts)", "range": (69, 70), "section": "読解", "total": 2},
-    "問13": {"name": "主張理解・長文 (Long Essay)", "range": (71, 73), "section": "読解", "total": 3},
-    "問14": {"name": "情報検索 (Information Retrieval)", "range": (74, 75), "section": "読解", "total": 2},
+    "問10": {"name": "内容理解・短文 (Short Passages)", "range": (52, 56), "section": "読解", "total": 5},
+    "問11": {"name": "内容理解・中文 (Medium Passages)", "range": (57, 64), "section": "読解", "total": 8},
+    "問12": {"name": "統合理解 (A/B Comparative Texts)", "range": (65, 66), "section": "読解", "total": 2},
+    "問13": {"name": "主張理解・長文 (Long Essay)", "range": (67, 69), "section": "読解", "total": 3},
+    "問14": {"name": "情報検索 (Information Retrieval)", "range": (70, 71), "section": "読解", "total": 2},
 }
 
-# Guard: the taxonomy must tile 1..75 exactly, with no gap and no overlap.
+# Guard: the taxonomy must tile 1..71 exactly, with no gap and no overlap.
 _covered = [q for s in GENGO_QUESTION_TAXONOMY.values()
             for q in range(s["range"][0], s["range"][1] + 1)]
-assert sorted(_covered) == list(range(1, 76)), (
-    "GENGO_QUESTION_TAXONOMY must tile questions 1-75 exactly "
+assert sorted(_covered) == list(range(1, 72)), (
+    "GENGO_QUESTION_TAXONOMY must tile questions 1-71 exactly "
     f"(got {len(_covered)} entries, duplicates/gaps present)")
 assert all(s["total"] == s["range"][1] - s["range"][0] + 1
            for s in GENGO_QUESTION_TAXONOMY.values()), \
@@ -87,7 +87,7 @@ ADVICE_FOR = {code: text for codes, text in ADVICE for code in codes}
 
 
 def parse_gengo_keys(gengo_md_path: Path) -> dict:
-    """Extract correct answers for Language Knowledge & Reading (Questions 1 to 75)."""
+    """Extract correct answers for Language Knowledge & Reading (Questions 1 to 71)."""
     if not gengo_md_path.is_file():
         raise FileNotFoundError(f"File not found: {gengo_md_path}")
 
@@ -105,7 +105,7 @@ def parse_gengo_keys(gengo_md_path: Path) -> dict:
                 if q_clean.isdigit() and a_clean.isdigit():
                     q_num = int(q_clean)
                     a_num = int(a_clean)
-                    if 1 <= q_num <= 75 and 1 <= a_num <= 4:
+                    if 1 <= q_num <= 71 and 1 <= a_num <= 4:
                         answers[q_num] = a_num
 
     return answers
@@ -114,7 +114,7 @@ def parse_gengo_keys(gengo_md_path: Path) -> dict:
 def parse_choukai_keys(choukai_md_path: Path) -> dict:
     """
     Extract correct answers for Listening (Choukai).
-    Returns dict mapping item key (e.g. '問1-1', '問4-5', '問5-3-1') to correct answer option (1-4).
+    Returns dict mapping item key (e.g. '問1-1', '問4-5', '問5-2-1') to correct answer option (1-4).
     """
     if not choukai_md_path.is_file():
         return {}
@@ -151,19 +151,13 @@ def parse_choukai_keys(choukai_md_path: Path) -> dict:
                         if q_digit:
                             answers[f"問{current_mondai}-{q_digit.group(1)}"] = ans_val
                     elif current_mondai == 5:
-                        if "1" in q_label and "質問" not in q_label and "3" not in q_label:
+                        if re.search(r"質問1|2[-\s]*質問1|2番.*質問1", q_label):
+                            answers["問5-2-1"] = ans_val
+                        elif re.search(r"質問2|2[-\s]*質問2|2番.*質問2", q_label):
+                            answers["問5-2-2"] = ans_val
+                        elif re.search(r"^1$|^1番$|1番(?!.*質問)", q_label) or (
+                                "1" in q_label and "質問" not in q_label and "2" not in q_label):
                             answers["問5-1"] = ans_val
-                        elif "2" in q_label and "質問" not in q_label and "3" not in q_label:
-                            answers["問5-2"] = ans_val
-                        elif "3" in q_label or "質問" in q_label:
-                            q_sub = re.search(r"質問([12])|3番-(\d)", q_label)
-                            if q_sub:
-                                sub_num = q_sub.group(1) or q_sub.group(2)
-                                answers[f"問5-3-{sub_num}"] = ans_val
-                            elif "1" in q_label:
-                                answers["問5-3-1"] = ans_val
-                            elif "2" in q_label:
-                                answers["問5-3-2"] = ans_val
 
     return answers
 
@@ -176,12 +170,12 @@ def grade(gengo_keys: dict, choukai_keys: dict, user_answers: dict) -> dict:
     user_gengo = user_answers.get("言語知識_読解", {})
     user_choukai = user_answers.get("聴解", {})
 
-    # 1. Language Knowledge (Goi & Bunpou: Q1 - Q54)
-    goi_bunpou_total = 54
+    # 1. Language Knowledge (Goi & Bunpou: Q1 - Q51)
+    goi_bunpou_total = 51
     goi_bunpou_correct = 0
     gengo_detail = {}
 
-    for q in range(1, 55):
+    for q in range(1, 52):
         correct = gengo_keys.get(q)
         user_choice = user_gengo.get(str(q))
         if user_choice is not None:
@@ -195,10 +189,10 @@ def grade(gengo_keys: dict, choukai_keys: dict, user_answers: dict) -> dict:
             "is_correct": is_correct
         }
 
-    # 2. Reading (Dokkai: Q55 - Q75)
-    dokkai_total = 21
+    # 2. Reading (Dokkai: Q52 - Q71)
+    dokkai_total = 20
     dokkai_correct = 0
-    for q in range(55, 76):
+    for q in range(52, 72):
         correct = gengo_keys.get(q)
         user_choice = user_gengo.get(str(q))
         if user_choice is not None:
@@ -213,7 +207,7 @@ def grade(gengo_keys: dict, choukai_keys: dict, user_answers: dict) -> dict:
         }
 
     # 3. Listening (Choukai)
-    choukai_total = len(choukai_keys) if choukai_keys else 31
+    choukai_total = len(choukai_keys) if choukai_keys else 30
     choukai_correct = 0
     choukai_detail = {}
 
@@ -390,14 +384,14 @@ def render_report(results: dict, test_id: str) -> str:
 
     lines.append("## 4. 全設問解答チェック表")
     lines.append("")
-    lines.append("### 言語知識・読解 (問1 〜 問75)")
+    lines.append("### 言語知識・読解 (問1 〜 問71)")
     lines.append("")
     lines.append("| 問 | あなたの解答 | 正解 | 結果 | 問 | あなたの解答 | 正解 | 結果 |")
     lines.append("|---|---|---|---|---|---|---|---|")
 
     g_detail = results["detail_gengo"]
-    for q1 in range(1, 39):
-        q2 = q1 + 38
+    for q1 in range(1, 36):
+        q2 = q1 + 36
         item1 = g_detail.get(q1, {})
         item2 = g_detail.get(q2, {})
 
@@ -405,7 +399,7 @@ def render_report(results: dict, test_id: str) -> str:
         c1 = item1.get("correct", "-")
         r1 = "○" if item1.get("is_correct") else "×"
 
-        if q2 <= 75:
+        if q2 <= 71:
             u2 = item2.get("user", "-")
             c2 = item2.get("correct", "-")
             r2 = "○" if item2.get("is_correct") else "×"

@@ -24,7 +24,7 @@ Outputs into `tests/<test_id>/`:
 
 | File        | Contents                                                                                    |
 | ----------- | ------------------------------------------------------------------------------------------- |
-| `解答.html` | Full exam (75 Gengo/Dokkai questions + 32 Choukai items + Audio player, in-page 180pt grading) |
+| `解答.html` | Full exam (71 Gengo/Dokkai questions + 30 Choukai items + Audio player, in-page 180pt grading) |
 
 Re-run after ANY edit to `言語知識・読解.md` / `聴解.md` — the Markdown stays
 the single source of truth, exactly as for the booklet HTML.
@@ -33,7 +33,7 @@ the single source of truth, exactly as for the booklet HTML.
 
 Pressing the button:
 
-1. grades the full 107 questions immediately against embedded keys (Language Knowledge, Reading, Listening),
+1. grades the full 101 questions immediately against embedded keys (Language Knowledge, Reading, Listening),
 2. evaluates section cutoffs ($\ge 19/60$) and total threshold ($\ge 90/180$),
 3. **renders the full 180-point report on screen** and scrolls to it, and
 4. **saves directly to `tests/<test_id>/`** (`採点結果.md` and `user_answers.json`) if served via `make serve` or local HTTP server, or downloads them if opened standalone.
@@ -49,7 +49,7 @@ out of `grade_answers.py` at build time** (`GENGO_QUESTION_TAXONOMY`,
 the JS — a second copy is exactly how the grader's 大問 ranges drifted from
 `jlpt-exam-structure` in the first place. `make check` proves the two agree by
 running the sheet's own JS under node and comparing raw scores with
-`grade_answers.py` on identical simulated answers (36/54 + 14/21 + 21/32 for
+`grade_answers.py` on identical simulated answers (36/51 + 14/20 + 21/30 for
 test 1 at the time of writing).
 
 ## The answer key must never be VISIBLE
@@ -103,7 +103,7 @@ merged sheet covers the whole exam.
 ## On-screen layout
 
 The sheet imports `SCREEN_CSS` from `build_booklet.py`, so it uses the same
-centered 46 em measure as the booklets instead of stretching to the window
+centered 60 em measure as the booklets instead of stretching to the window
 width (unreadable line lengths on a wide monitor). `SCREEN_CSS` exposes
 `--gutter`; the sticky `#bar` and `#player` pull out to it with negative
 margins so they still read as full-width chrome over the text column. It is all
@@ -112,16 +112,15 @@ prints the booklet.
 
 ## Answer capture
 
-- **Every radio click** writes progress two places: `localStorage`
-  (`jlpt:<test_id>:combined_answers`) and, when served via `make serve`,
-  `tests/<test_id>/user_answers.json` via `POST /api/save-answers` (debounced
-  ~250 ms so rapid clicks do not thrash the disk). Reload prefers the on-disk
-  file over `localStorage` when both exist.
+- **Every radio click** writes progress to one place: `tests/<test_id>/user_answers.json`
+  via `POST /api/save-answers` when served with `make serve` (debounced ~250 ms so
+  rapid clicks do not thrash the disk). On reload the sheet loads that same file
+  with `fetch('user_answers.json')` — no `localStorage`, no second copy.
 - 「採点する」 grades in-page and writes `採点結果.md` plus the same
   `user_answers.json` shape `grade_answers.py` reads:
   `{"言語知識_読解": {"33": 2, …}, "聴解": {"問1-1": 2, …}}`. Over `file://`
-  (no server) the click still updates `localStorage`; grading falls back to
-  browser downloads for the two files.
+  (no server) radio clicks cannot persist; grading falls back to browser
+  downloads for the two files.
 
 ## Parser contract (why the Markdown conventions are load-bearing)
 
@@ -148,9 +147,9 @@ make check            # asserts everything below, for every test on disk
 ```
 
 `make check` (`tools/check_consistency.py`) is the real gate. On the answer
-sheet it asserts: **107 radio groups**, one per scored question; every expected
+sheet it asserts: **101 radio groups**, one per scored question; every expected
 key present; no group name shared by two questions; 4 options for each of the
-75 gengo questions; 3 for 問題4's 即時応答 items (416 inputs total); no emoji in
+71 gengo questions; 3 for 問題4's 即時応答 items (393 inputs total); no emoji in
 the report labels; and that the in-page grader and `grade_answers.py` return
 identical raw scores on the same simulated answers.
 
@@ -159,21 +158,19 @@ every earlier version of the sheet and made the exam partly unanswerable:
 
 - **one bubble per horizontal question.** 問題1-8 print all four choices on a
   single line; the option regex reports only the FIRST number on a line, so the
-  group got `width=1` and you could only ever answer 1. 46 of 107 questions in
-  test 1 were affected. `option_run()` now counts a consecutive `1..k` run on
+  group got `width=1` and you could only ever answer 1. Many horizontal-layout
+  questions in test 1 were affected. `option_run()` now counts a consecutive `1..k` run on
   the line (a consecutive run only, so `1. 価格が3.5倍…` is not miscounted).
-- **問題5's 質問1/質問2 colliding with 1番/2番.** Routing them to `問5-3-N`
-  required 3番 to be a *heading*; the first, since-removed test 4 (removed in
-  9a794d5, last at b9b90de) wrote `**3番**`
-  in bold, so they fell through to `問5-1`/`問5-2` — two items unanswerable and
-  two answers clobbered.
-  質問N now always belongs to 3番 whenever the section is 問題5.
+- **問題5's 質問1/質問2 colliding with 1番.** Routing them to `問5-2-N`
+  requires 2番 to be identifiable; if 質問1/質問2 fall through to `問5-1`,
+  two items become unanswerable and two answers clobber each other.
+  質問N now always belongs to 2番 whenever the section is 問題5.
 
 Manual spot-check if you change the parser:
 
 ```bash
 python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
-# expect exactly: 107 items (75 Gengo/Dokkai, 32 Choukai), zero warnings
+# expect exactly: 101 items (71 Gengo/Dokkai, 30 Choukai), zero warnings
 ```
 
 To check the in-page grader against the Python one, extract the last `<script>`

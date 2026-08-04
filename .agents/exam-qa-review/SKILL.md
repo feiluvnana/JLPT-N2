@@ -51,7 +51,7 @@ with the sources side by side, and refuse to pass anything it cannot prove.
 - **Evidence or it didn't pass.** Every verdict below is backed by a quoted
   line, a spliced sentence, or a table — never "looks fine". If you cannot
   produce the evidence, the item fails.
-- **No sampling. All 107 items, every check.** "Spot-checked and it looked
+- **No sampling. All 101 items, every check.** "Spot-checked and it looked
   good" is a skipped step, not a pass. The only sampling allowed is the harvest
   URL fetch in step 6 (2–3 URLs), because the rest of that step is exhaustive.
 - **Any single automatic-fail finding fails the WHOLE test** until fixed and
@@ -74,7 +74,7 @@ with the sources side by side, and refuse to pass anything it cannot prove.
 
 ## The pass, in order
 
-### 1. Key-by-key proof (all 107 items)
+### 1. Key-by-key proof (all 101 items)
 
 For each item, find the line in the passage/script that DECIDES it, and confirm
 the keyed option restates that line — not a paraphrase of what the author
@@ -109,7 +109,11 @@ real collocations (品質に妥協する, 考慮に値する — search before t
   adverb/adjunct (ほとんど, 直接, 一度…) that reads naturally in two slots is
   two ★ answers. One such item shipped in each of tests 2, 3, and 4.
 - **問題9 cloze:** read stem + option aloud as one sentence, all four options.
-- **問題1 漢字読み:** all four options the same word form as the target.
+- **問題1 漢字読み:** all four options the same word form as the target; each
+  a real word; and none uniquely selected by the stem's conjugation/okurigana.
+  Cover the kanji, keep okurigana visible — if only one option still fits the
+  conjugation class, fail it (test 1: 慌てて with three ～れて vs one ～てて).
+  Same mora count is not required.
 - **One grammar point, one KEY per paper** — check 問題7/8/9 keys against each
   other AND against the reading passages' running text.
 - **Every sentence is Japanese.** Read the whole paper aloud once. Test 4 had

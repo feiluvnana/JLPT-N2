@@ -237,7 +237,7 @@ def verify(html_path: Path, src: Path):
     if "言語知識" in src.name:
         nums = {int(m.group(1)) for m in
                 re.finditer(r"<strong>(\d{1,2})(?:</strong>|\s)", html)}
-        missing = [n for n in range(1, 76) if n not in nums]
+        missing = [n for n in range(1, 72) if n not in nums]
         if missing:
             problems.append(f"no bold stem found for question(s) {missing}")
     if problems:

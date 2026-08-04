@@ -210,16 +210,16 @@ def check_item_counts():
         cells = [c.strip() for c in line.split("|")[1:-1]]
         if len(cells) >= 3 and cells[0].isdigit():
             counts[f"問題{cells[0]}"] = int(re.search(r"\d+", cells[2]).group())
-    # 問題1-4 print one 例 on top of the scored items; 問題5 has 3 blocks, 4 answers.
+    # 問題1-4 print one 例 on top of the scored items; 問題5 has 2 blocks, 3 answers.
     derived = {k: v - 1 for k, v in m.EXPECTED_ITEMS.items() if k != "問題5"}
     check("問題1-4 scored counts = EXPECTED_ITEMS − 例",
           {k: counts.get(k) for k in derived} == derived,
           f"doc {[counts.get(k) for k in derived]} vs derived {list(derived.values())}")
-    check("問題5 = 4 answers from 3 blocks",
-          counts.get("問題5") == 4 and m.EXPECTED_ITEMS["問題5"] == 3,
+    check("問題5 = 3 answers from 2 blocks",
+          counts.get("問題5") == 3 and m.EXPECTED_ITEMS["問題5"] == 2,
           f"doc {counts.get('問題5')} answers, code {m.EXPECTED_ITEMS['問題5']} blocks")
     total = sum(counts.values())
-    check(f"聴解 totals {total} = 32 answers", total == 32)
+    check(f"聴解 totals {total} = 30 answers", total == 30)
 
 
 # --------------------------------------------------------------------- taxonomy
@@ -242,14 +242,14 @@ def check_taxonomy():
                   or g.GENGO_QUESTION_TAXONOMY[k]["range"] != rng]
     check(f"{len(doc_rows)} 大問 rows match GENGO_QUESTION_TAXONOMY", not mismatched,
           f"differ: {mismatched}")
-    check("gengo table sums to 75", sum(c for c, _ in doc_rows.values()) == 75,
+    check("gengo table sums to 71", sum(c for c, _ in doc_rows.values()) == 71,
           f"sums to {sum(c for c, _ in doc_rows.values())}")
 
     sect = {}
     for s in g.GENGO_QUESTION_TAXONOMY.values():
         sect[s["section"]] = sect.get(s["section"], 0) + s["total"]
     grading_doc = (AGENTS / "exam-answer-grading" / "SKILL.md").read_text(encoding="utf-8")
-    for label, key, want in (("言語知識", "言語知識", 54), ("読解", "読解", 21)):
+    for label, key, want in (("言語知識", "言語知識", 51), ("読解", "読解", 20)):
         check(f"{label} = {want} items", sect.get(key) == want, f"taxonomy gives {sect.get(key)}")
         check(f"{label} {want} documented in exam-answer-grading",
               re.search(rf"{want} questions max|{want} items", grading_doc) is not None)
@@ -260,7 +260,7 @@ def check_taxonomy():
 # option list contained the same string twice (so two options were correct),
 # a 問題8 key naming the option in the 2nd blank instead of the ★ (3rd) one,
 # a cloze blank whose key pointed at a different option than its own
-# explanation, and 問題5-3番 printing one option set while the audio spoke
+# explanation, and 問題5 2番 printing one option set while the audio spoke
 # another. None of it is visible to the shape checks in check_tests().
 
 def gengo_option_sets(md: str, bi) -> dict[int, list[str]]:
@@ -307,9 +307,9 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
     numbers that did not exist in the stem.
     """
     stems = {int(n): s for n, s in
-             re.findall(r"^\*\*(4[5-9])\*\*\s*(.+)$", gt, re.M)}
+             re.findall(r"^\*\*(4[3-7])\*\*\s*(.+)$", gt, re.M)}
     bad_stem = []
-    for q in range(45, 50):
+    for q in range(43, 48):
         run = BLANK_RUN.search(stems.get(q, ""))
         slots = run.group().split() if run else []
         if len(slots) != 4 or [i for i, s in enumerate(slots) if "★" in s] != [2]:
@@ -318,7 +318,7 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
     check("問題8 stems offer 4 blanks with ★ third", not bad_stem, ", ".join(bad_stem))
 
     mismatch, unparsed = [], []
-    for hit in re.finditer(r"^\|\s*(4[5-9])\s*\|\s*([1-4])\s*\|(.*)\|", gt, re.M):
+    for hit in re.finditer(r"^\|\s*(4[3-7])\s*\|\s*([1-4])\s*\|(.*)\|", gt, re.M):
         q, ans, expl = int(hit.group(1)), int(hit.group(2)), hit.group(3)
         seq = [int(d) for d in re.findall(r"[（(]([1-4])[）)]", expl)]
         if sorted(seq) != [1, 2, 3, 4]:
@@ -339,7 +339,7 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
     # an option butting straight up against the blanks, and a long option
     # already spelled out somewhere in the stem.
     echoes = []
-    for q in range(45, 50):
+    for q in range(43, 48):
         run = BLANK_RUN.search(stems.get(q, ""))
         if not run:
             continue
@@ -529,8 +529,8 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
     choukai_ids = {1: [f"問1-{i}" for i in range(1, 6)],
                    2: [f"問2-{i}" for i in range(1, 7)],
                    3: [f"問3-{i}" for i in range(1, 6)],
-                   4: [f"問4-{i}" for i in range(1, 13)],
-                   5: ["問5-1", "問5-2", "問5-3-1", "問5-3-2"]}
+                   4: [f"問4-{i}" for i in range(1, 12)],
+                   5: ["問5-1", "問5-2-1", "問5-2-2"]}
     for n, ids in choukai_ids.items():
         for qid, a in zip(ids, pos.get(f"聴解_問題{n}") or []):
             want[qid] = a
@@ -553,18 +553,18 @@ def check_script_shape(script_text: str, ct: str, m):
     spoken = {int(secs[i]): len(re.findall(r"^[1-4]、", secs[i + 1], re.M))
               for i in range(1, len(secs), 2)}
     # 問題1/2 print their options; 問題3 speaks 4 per item, 問題4 speaks 3;
-    # 問題5 speaks 4 each for 1番/2番 only — 3番's are printed.
+    # 問題5 speaks 4 for 1番 only — 2番's are printed.
     ei = m.EXPECTED_ITEMS
-    want = {1: 0, 2: 0, 3: 4 * ei["問題3"], 4: 3 * ei["問題4"], 5: 8}
+    want = {1: 0, 2: 0, 3: 4 * ei["問題3"], 4: 3 * ei["問題4"], 5: 4}
     check("options are spoken exactly where the booklet prints none",
           spoken == want, f"spoken option lines {spoken}, expected {want}")
 
-    if (tail := re.split(r"^3番。まず話を聞いてください。", script_text, flags=re.M)):
+    if (tail := re.split(r"^2番。まず話を聞いてください。", script_text, flags=re.M)):
         if len(tail) > 1 and re.search(r"^[1-4]、", tail[1], re.M):
-            check("問題5 3番 does not speak its printed options", False,
+            check("問題5 2番 does not speak its printed options", False,
                   "options for the two-question item are printed in the booklet only")
         else:
-            check("問題5 3番 does not speak its printed options", True)
+            check("問題5 2番 does not speak its printed options", True)
 
     ascii_punct = re.findall(r"(?<!\d)[,.](?!\d)", script_text)
     check("no ASCII , or . in the script (TTS mis-times them)", not ascii_punct,
@@ -582,7 +582,7 @@ def check_example_premarks(ct: str, st: str, bi):
     answer grid shows that same number pre-marked — one demonstration, seen and
     heard together. Tests 2 (問題3) and 4 (問題4) shipped grids pre-marking a
     different number than the announcement; nothing caught it because 例 rows
-    are not among the 32 scored keys.
+    are not among the 30 scored keys.
     """
     cut = bi.KEY_HEADING.search(ct)
     lines = ct[cut.start():].splitlines() if cut else []
@@ -624,9 +624,9 @@ def check_tests():
     m = load(".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py")
     bi = load(".agents/interactive-answer-sheet/scripts/build_interactive.py")
     key_heading = re.compile(r"^#+\s*(解答|【?正解)", re.M)
-    expected_choukai = ([f"問{s}-{i}" for s, n in ((1, 5), (2, 6), (3, 5), (4, 12))
+    expected_choukai = ([f"問{s}-{i}" for s, n in ((1, 5), (2, 6), (3, 5), (4, 11))
                          for i in range(1, n + 1)]
-                        + ["問5-1", "問5-2", "問5-3-1", "問5-3-2"])
+                        + ["問5-1", "問5-2-1", "問5-2-2"])
 
     dirs = sorted(p for p in (ROOT / "tests").glob("*") if p.is_dir()) if (ROOT / "tests").is_dir() else []
     if not dirs:
@@ -651,10 +651,10 @@ def check_tests():
                   "use `# 【問題】` + `## 問題N` (jlpt-exam-structure)")
 
         keys = g.parse_gengo_keys(gengo)
-        check("75 gengo answer keys parse", len(keys) == 75,
-              f"got {len(keys)}, missing {[q for q in range(1, 76) if q not in keys]}")
+        check("71 gengo answer keys parse", len(keys) == 71,
+              f"got {len(keys)}, missing {[q for q in range(1, 72) if q not in keys]}")
         ck = g.parse_choukai_keys(choukai)
-        check("32 choukai answer keys parse with the expected labels",
+        check("30 choukai answer keys parse with the expected labels",
               sorted(ck) == sorted(expected_choukai),
               f"missing {[k for k in expected_choukai if k not in ck]}, "
               f"unexpected {[k for k in ck if k not in expected_choukai]}")
@@ -721,9 +721,9 @@ def check_tests():
         for hit in re.finditer(r'<input[^>]*type="radio"[^>]*name="q_([^"]+)"', html):
             groups[hit.group(1)] = groups.get(hit.group(1), 0) + 1
 
-        check(f"one radio group per question ({len(groups)} groups)", len(groups) == 107,
-              f"expected 107, got {len(groups)}")
-        missing = [k for k in list(map(str, range(1, 76))) + expected_choukai if k not in groups]
+        check(f"one radio group per question ({len(groups)} groups)", len(groups) == 101,
+              f"expected 101, got {len(groups)}")
+        missing = [k for k in list(map(str, range(1, 72))) + expected_choukai if k not in groups]
         check("every scored question has a radio group", not missing, f"missing {missing}")
         oversized = {k: n for k, n in groups.items() if n > 4}
         check("no question shares a group name with another",
@@ -732,7 +732,7 @@ def check_tests():
         check("no question offers fewer than 3 options", not thin,
               f"under-filled groups: {thin} (horizontal option rows must yield 4 bubbles)")
         gengo_bad = {k: n for k, n in groups.items() if k.isdigit() and n != 4}
-        check("all 75 gengo questions offer exactly 4 options", not gengo_bad, f"{gengo_bad}")
+        check("all 71 gengo questions offer exactly 4 options", not gengo_bad, f"{gengo_bad}")
         q4 = {k: n for k, n in groups.items() if k.startswith("問4-") and n != 3}
         check("問題4 (即時応答) offers exactly 3 options", not q4, f"{q4}")
 
@@ -799,7 +799,7 @@ def check_grader_parity():
             # The report also lists per-大問 rows (`3 / 5`); keep only the three
             # section totals, whose denominators are the section sizes.
             js_raw = {int(t): int(c) for c, t in re.findall(r"\|\s*(\d+) / (\d+)\s*\|", r.stdout)
-                      if int(t) in (54, 21, 32)}
+                      if int(t) in (51, 20, 30)}
             flat = json.loads(answers.read_text(encoding="utf-8"))
             ua = {"言語知識_読解": {k: v for k, v in flat.items() if not k.startswith("問")},
                   "聴解": {k: v for k, v in flat.items() if k.startswith("問")}}
@@ -808,7 +808,7 @@ def check_grader_parity():
             py_raw = {s["raw_total"]: s["raw_correct"] for s in res["summary"]["sections"].values()}
 
             check(f"{d.name}: raw scores agree "
-                  f"({py_raw.get(54)}/54 + {py_raw.get(21)}/21 + {py_raw.get(32)}/32)",
+                  f"({py_raw.get(51)}/51 + {py_raw.get(20)}/20 + {py_raw.get(30)}/30)",
                   js_raw == py_raw, f"JS {js_raw} vs Python {py_raw}")
 
 

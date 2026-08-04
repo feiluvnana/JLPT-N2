@@ -216,9 +216,9 @@ ANNOTATION_RE = re.compile(r"[（(]※")
 
 
 # Required structure of a full N2 script. Counts INCLUDE the 例 where one exists.
-# 問題5 has no 例 (「この問題には練習はありません。」) and its 3rd item carries two
-# questions, giving 4 answers from 3 item blocks.
-EXPECTED_ITEMS = {"問題1": 6, "問題2": 7, "問題3": 6, "問題4": 13, "問題5": 3}
+# 問題5 has no 例 (「この問題には練習はありません。」) and its 2番 block carries two
+# questions (質問1/質問2), giving 3 answers from 2 item blocks.
+EXPECTED_ITEMS = {"問題1": 6, "問題2": 7, "問題3": 6, "問題4": 12, "問題5": 2}
 NEEDS_EXAMPLE = ("問題1", "問題2", "問題3", "問題4")
 OPENING = "これから、N2の聴解試験を始めます"
 CLOSING = "これで、聴解試験を終わります。"

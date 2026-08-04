@@ -151,7 +151,6 @@ SCRIPT = """
 const KEYS = %(keys)s, TESTID = "%(testid)s";
 const GENGO_KEYS = %(gengo_keys)s, CHOUKAI_KEYS = %(choukai_keys)s;
 const ANSWER_KEY = %(answer_key)s, TAXONOMY = %(taxonomy)s, ADVICE = %(advice)s;
-const LS = "jlpt:"+TESTID+":combined_answers";
 
 function state(){
   const o = {};
@@ -168,7 +167,8 @@ function answersPayload(ans){
 }
 let _saveTimer = null;
 function persistAnswers(ans){
-  localStorage.setItem(LS, JSON.stringify(ans));
+  // Single source of truth: tests/<id>/user_answers.json via make serve.
+  // Over file:// the POST is a no-op; 「採点する」 still downloads the JSON.
   clearTimeout(_saveTimer);
   _saveTimer = setTimeout(()=>{
     fetch('/api/save-answers', {
@@ -178,7 +178,7 @@ function persistAnswers(ans){
         json_filename: 'user_answers.json',
         json_data: answersPayload(ans)
       })
-    }).catch(()=>{ /* file:// or offline: localStorage only */ });
+    }).catch(()=>{ /* file:// or offline: no server — grade download only */ });
   }, 250);
 }
 function refresh(){
@@ -188,7 +188,7 @@ function refresh(){
   for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) cCount++; }
   const total = gCount + cCount;
   document.getElementById('done').textContent =
-    "言語: " + gCount + "/75 | 聴解: " + cCount + "/32 | 計: " + total + " / " + KEYS.length;
+    "言語: " + gCount + "/71 | 聴解: " + cCount + "/30 | 計: " + total + " / " + KEYS.length;
   persistAnswers(ans);
 }
 function applyAnswers(o){
@@ -219,11 +219,15 @@ async function restore(){
     const r = await fetch('user_answers.json', {cache: 'no-store'});
     if (r.ok) o = flattenSaved(await r.json());
   } catch(e){}
-  if (!Object.keys(o).length){
-    try { o = JSON.parse(localStorage.getItem(LS) || "{}"); } catch(e){}
-  }
   applyAnswers(o);
-  refresh();
+  // Apply without re-POSTing: refresh() would persistAnswers and race the load.
+  const ans = state();
+  let gCount = 0, cCount = 0;
+  for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gCount++; }
+  for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) cCount++; }
+  const total = gCount + cCount;
+  document.getElementById('done').textContent =
+    "言語: " + gCount + "/71 | 聴解: " + cCount + "/30 | 計: " + total + " / " + KEYS.length;
 }
 function clearAll(){
   if (!confirm("すべての解答を消去しますか？")) return;
@@ -236,23 +240,23 @@ function pct(c, t){ return (t ? Math.round(c / t * 1000) / 10 : 0).toFixed(1); }
 
 function buildReport(ans){
   // Calculate scaled scores for 3 JLPT N2 sections
-  // 1. Language Knowledge (Q1-54): 54 questions -> 60 scaled
-  // 2. Reading (Q55-75): 21 questions -> 60 scaled
-  // 3. Listening (問1-問5): 32 items -> 60 scaled
+  // 1. Language Knowledge (Q1-51): 51 questions -> 60 scaled
+  // 2. Reading (Q52-71): 20 questions -> 60 scaled
+  // 3. Listening (問1-問5): 30 items -> 60 scaled
   let gengoCorrect = 0, dokkaiCorrect = 0, choukaiCorrect = 0;
-  for (let q = 1; q <= 54; q++){
+  for (let q = 1; q <= 51; q++){
     if (ans[String(q)] !== undefined && ans[String(q)] === ANSWER_KEY[String(q)]) gengoCorrect++;
   }
-  for (let q = 55; q <= 75; q++){
+  for (let q = 52; q <= 71; q++){
     if (ans[String(q)] !== undefined && ans[String(q)] === ANSWER_KEY[String(q)]) dokkaiCorrect++;
   }
   for (const k of CHOUKAI_KEYS){
     if (ans[k] !== undefined && ans[k] === ANSWER_KEY[k]) choukaiCorrect++;
   }
 
-  const scaledGengo = Math.round(gengoCorrect / 54 * 60);
-  const scaledDokkai = Math.round(dokkaiCorrect / 21 * 60);
-  const scaledChoukai = Math.round(choukaiCorrect / 32 * 60);
+  const scaledGengo = Math.round(gengoCorrect / 51 * 60);
+  const scaledDokkai = Math.round(dokkaiCorrect / 20 * 60);
+  const scaledChoukai = Math.round(choukaiCorrect / 30 * 60);
   const totalScaled = scaledGengo + scaledDokkai + scaledChoukai;
 
   const passedGengo = scaledGengo >= 19;
@@ -285,9 +289,9 @@ function buildReport(ans){
   L.push("");
   L.push("| セクション | 素点 (正解数/全問) | 換算得点 | 基準点 (足切り) | 判定 |");
   L.push("|---|---|---|---|---|");
-  L.push("| **言語知識 (文字・語彙・文法)** | " + gengoCorrect + " / 54 | **" + scaledGengo + " / 60** | 19点 | " + (passedGengo ? "基準点クリア" : "基準点未達") + " |");
-  L.push("| **読解** | " + dokkaiCorrect + " / 21 | **" + scaledDokkai + " / 60** | 19点 | " + (passedDokkai ? "基準点クリア" : "基準点未達") + " |");
-  L.push("| **聴解** | " + choukaiCorrect + " / 32 | **" + scaledChoukai + " / 60** | 19点 | " + (passedChoukai ? "基準点クリア" : "基準点未達") + " |");
+  L.push("| **言語知識 (文字・語彙・文法)** | " + gengoCorrect + " / 51 | **" + scaledGengo + " / 60** | 19点 | " + (passedGengo ? "基準点クリア" : "基準点未達") + " |");
+  L.push("| **読解** | " + dokkaiCorrect + " / 20 | **" + scaledDokkai + " / 60** | 19点 | " + (passedDokkai ? "基準点クリア" : "基準点未達") + " |");
+  L.push("| **聴解** | " + choukaiCorrect + " / 30 | **" + scaledChoukai + " / 60** | 19点 | " + (passedChoukai ? "基準点クリア" : "基準点未達") + " |");
   L.push("| **総合計** | **-** | **" + totalScaled + " / 180** | **90点** | **" + passStr + "** |");
   L.push("");
 
@@ -324,18 +328,18 @@ function buildReport(ans){
 
   L.push("## 4. 全設問解答チェック表");
   L.push("");
-  L.push("### 言語知識・読解 (問1 〜 問75)");
+  L.push("### 言語知識・読解 (問1 〜 問71)");
   L.push("");
   L.push("| 問 | あなたの解答 | 正解 | 結果 | 問 | あなたの解答 | 正解 | 結果 |");
   L.push("|---|---|---|---|---|---|---|---|");
 
-  for (let q1 = 1; q1 <= 38; q1++){
-    const q2 = q1 + 38;
+  for (let q1 = 1; q1 <= 35; q1++){
+    const q2 = q1 + 36;
     const u1 = ans[String(q1)], c1 = ANSWER_KEY[String(q1)];
     const r1 = u1 === undefined ? "-" : (u1 === c1 ? "○" : "×");
     const u1Str = u1 === undefined ? "-" : String(u1);
 
-    if (q2 <= 75){
+    if (q2 <= 71){
       const u2 = ans[String(q2)], c2 = ANSWER_KEY[String(q2)];
       const r2 = u2 === undefined ? "-" : (u2 === c2 ? "○" : "×");
       const u2Str = u2 === undefined ? "-" : String(u2);
@@ -483,7 +487,7 @@ def inject_choukai(md: str, keys: list):
         if item == "例" or section is None:
             return None
         if sub:
-            return f"問5-3-{sub}"
+            return f"問5-2-{sub}"
         n = re.sub(r"\D", "", item)
         return f"問{section}-{n}" if n else None
 
@@ -531,12 +535,8 @@ def inject_choukai(md: str, keys: list):
         if m_item:
             lbl = m_item.group(1)
             if lbl.startswith("質問") and section == "5":
-                # Only 問題5's final item carries 質問1/質問2 (jlpt-exam-structure),
-                # so they always belong to 3番. This used to require 3番 to be a
-                # HEADING (`## 3番`); test 4 writes it in bold (`**3番**`), so
-                # 質問1/質問2 fell through to key_for("質問1") -> 問5-1, colliding
-                # with 1番's group: two items unanswerable, two answers clobbered.
-                cur, width = key_for("3番", lbl[-1]), 0
+                # 問題5's 2番 carries 質問1/質問2 (jlpt-exam-structure); keys are 問5-2-1/2.
+                cur, width = key_for("2番", lbl[-1]), 0
             else:
                 cur, width = key_for(lbl), 0
         out.append(line)
@@ -600,7 +600,7 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
     title = f"N2 模擬試験 解答用紙 ({testid})"
     bar = (f'<div id="bar"><b>{title}</b>'
            f'<span class="grow"></span>'
-           f'<span><b id="done">解答済み 0 / 107</b></span>'
+           f'<span><b id="done">解答済み 0 / 101</b></span>'
            f'<button onclick="clearAll()">消去</button>'
            f'<button onclick="save()" class="primary">採点する</button></div>')
 
@@ -660,7 +660,7 @@ def main():
     chap = d / "聴解_チャプター.json"
     note = "player" + ("" if has_mp3 else ", MP3 MISSING") + \
            (", chapters" if chap.is_file() else ", no chapters")
-    print(f"  {out}  ({len(all_keys)} items: 75 Gengo/Dokkai, 32 Choukai; {note})")
+    print(f"  {out}  ({len(all_keys)} items: 71 Gengo/Dokkai, 30 Choukai; {note})")
 
 
 if __name__ == "__main__":

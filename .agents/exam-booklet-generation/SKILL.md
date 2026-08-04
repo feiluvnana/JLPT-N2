@@ -47,7 +47,7 @@ applies it only to files whose name contains 聴解, and `build_interactive.py`
 does not call it at all, so `聴解.html` carries auto-furigana that the 聴解
 half of `解答.html` lacks — a known rendering difference, not an import bug.
 
-`SCREEN_CSS` is the screen-only shell: a centered 46 em column (an unbounded
+`SCREEN_CSS` is the screen-only shell: a centered 60 em column (an unbounded
 full-width line is unreadable on a monitor) plus a `--gutter` variable the
 answer sheet's sticky bar and audio player pull out to. It lives entirely
 inside `@media screen`, so the `@page` A4 geometry below is untouched and
@@ -94,7 +94,7 @@ Cmd-P still yields the booklet.
 - **`<ol>` in the output** — a stem used `N.` list syntax, which makes
   python-markdown restart numbering at 1 in every section. Stems must be bold
   `**6**`, `**11**` (see question-authoring);
-- **a missing bold stem** for any of questions 1–75 in `言語知識・読解.html`,
+- **a missing bold stem** for any of questions 1–71 in `言語知識・読解.html`,
   which is how a dropped or mis-numbered question gets caught.
 
 Still check by eye: that the answer key and explanations render as

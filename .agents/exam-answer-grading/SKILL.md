@@ -14,15 +14,15 @@ This skill automates the grading of examinee responses for JLPT mock tests, calc
 When a user submits their answers or asks to grade a completed JLPT test:
 
 1. **Answer Key Extraction**: Automatically parses correct answer tables from the exam Markdown sources:
-   - `tests/<test_id>/言語知識・読解.md` (Questions 1 to 75)
+   - `tests/<test_id>/言語知識・読解.md` (Questions 1 to 71)
    - `tests/<test_id>/聴解.md` (Listening questions: 問1〜問5)
 2. **User Input Ingestion**: Reads examinee responses from:
    - `user_answers*.json` saved by the **merged answer sheet** `解答.html` (below) — the default source, auto-discovered in the test dir and cwd. Several matching files merge, so hand-split halves also work.
    - Inline CLI arguments (`--answers-gengo` / `--answers-choukai`), which override.
 3. **Scaled Score Calculation**: Converts raw section counts into JLPT standardized 0–60 scores:
-   - **Language Knowledge (言語知識: 文字・語彙・文法)**: 54 questions max -> scaled to 60.
-   - **Reading (読解)**: 21 questions max -> scaled to 60.
-   - **Listening (聴解)**: 32 answers max (問題5 3番 yields two) -> scaled to 60.
+   - **Language Knowledge (言語知識: 文字・語彙・文法)**: 51 questions max -> scaled to 60.
+   - **Reading (読解)**: 20 questions max -> scaled to 60.
+   - **Listening (聴解)**: 30 answers max (問題5 2番 yields two) -> scaled to 60.
    - **Total Score**: 180 points max.
 4. **Pass / Fail Criteria Evaluation (JLPT N2 Standard)**:
    - **Overall Total**: $\ge 90 / 180$ points.
@@ -66,7 +66,7 @@ removed; the `interactive-answer-sheet` skill replaces them.
    make sheet 1
    # or: python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
    ```
-   → `tests/1/解答.html` (107 questions total: 75 Gengo/Dokkai + 32 Choukai with audio player).
+   → `tests/1/解答.html` (101 questions total: 71 Gengo/Dokkai + 30 Choukai with audio player).
 2. Serve & answer in browser:
    ```bash
    make serve 1
@@ -96,30 +96,30 @@ python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 
 
 These ranges are owned by `jlpt-exam-structure`; this table and
 `GENGO_QUESTION_TAXONOMY` in `grade_answers.py` must mirror it exactly. The
-script asserts that its ranges tile 1–75 with no gap or overlap at import.
+script asserts that its ranges tile 1–71 with no gap or overlap at import.
 
 | Section      | Problem | Sub-Category Name                     | Questions           | Raw Items | Scaled Max                  |
 | ------------ | ------- | ------------------------------------- | ------------------- | --------- | --------------------------- |
 | **言語知識** | 問1     | 漢字読み (Kanji Reading)              | 1–5                 | 5         | -                           |
 |              | 問2     | 表記 (Orthography)                    | 6–10                | 5         | -                           |
-|              | 問3     | 語形成 (Word Formation)               | 11–15               | 5         | -                           |
-|              | 問4     | 文脈規定 (Word in Context)            | 16–22               | 7         | -                           |
-|              | 問5     | 言い換え類義 (Paraphrases)            | 23–27               | 5         | -                           |
-|              | 問6     | 用法 (Correct Usage)                  | 28–32               | 5         | -                           |
-|              | 問7     | 文法形式の判断 (Grammar Form)         | 33–44               | 12        | -                           |
-|              | 問8     | 文の組み立て (Sentence Composition ★) | 45–49               | 5         | -                           |
-|              | 問9     | 文章の文法 (Text Grammar / Cloze)     | 50–54               | 5         | **60 (Combined, 54 items)** |
-| **読解**     | 問10    | 内容理解・短文 (Short Passages)       | 55–59               | 5         | -                           |
-|              | 問11    | 内容理解・中文 (Medium Passages)      | 60–68               | 9         | -                           |
-|              | 問12    | 統合理解 (A/B Comparative Texts)      | 69–70               | 2         | -                           |
-|              | 問13    | 主張理解・長文 (Long Essay)           | 71–73               | 3         | -                           |
-|              | 問14    | 情報検索 (Information Retrieval)      | 74–75               | 2         | **60 (21 items)**           |
+|              | 問3     | 語形成 (Word Formation)               | 11–13               | 3         | -                           |
+|              | 問4     | 文脈規定 (Word in Context)            | 14–20               | 7         | -                           |
+|              | 問5     | 言い換え類義 (Paraphrases)            | 21–25               | 5         | -                           |
+|              | 問6     | 用法 (Correct Usage)                  | 26–30               | 5         | -                           |
+|              | 問7     | 文法形式の判断 (Grammar Form)         | 31–42               | 12        | -                           |
+|              | 問8     | 文の組み立て (Sentence Composition ★) | 43–47               | 5         | -                           |
+|              | 問9     | 文章の文法 (Text Grammar / Cloze)     | 48–51               | 4         | **60 (Combined, 51 items)** |
+| **読解**     | 問10    | 内容理解・短文 (Short Passages)       | 52–56               | 5         | -                           |
+|              | 問11    | 内容理解・中文 (Medium Passages)      | 57–64               | 8         | -                           |
+|              | 問12    | 統合理解 (A/B Comparative Texts)      | 65–66               | 2         | -                           |
+|              | 問13    | 主張理解・長文 (Long Essay)           | 67–69               | 3         | -                           |
+|              | 問14    | 情報検索 (Information Retrieval)      | 70–71               | 2         | **60 (20 items)**           |
 | **聴解**     | 問題1   | 課題理解 (Task Comprehension)         | 1番–5番             | 5         | -                           |
 |              | 問題2   | ポイント理解 (Point Comprehension)    | 1番–6番             | 6         | -                           |
 |              | 問題3   | 概要理解 (Summary Comprehension)      | 1番–5番             | 5         | -                           |
-|              | 問題4   | 即時応答 (Quick Response)             | 1番–12番            | 12        | -                           |
-|              | 問題5   | 統合理解 (Integrated Comprehension)   | 1番–3番 (4 answers) | 4         | **60 (32 items)**           |
-| **合計**     |         |                                       |                     | **107**   | **180**                     |
+|              | 問題4   | 即時応答 (Quick Response)             | 1番–11番            | 11        | -                           |
+|              | 問題5   | 統合理解 (Integrated Comprehension)   | 1番–2番 (3 answers) | 3         | **60 (30 items)**           |
+| **合計**     |         |                                       |                     | **101**   | **180**                     |
 
 ---
 

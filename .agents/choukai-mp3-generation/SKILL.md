@@ -101,17 +101,17 @@ and update ONLY these constants.
 ## Dry-run before synthesis (no network needed)
 
 Simulate block parsing + pause assignment. Expected for a full N2 — these
-follow directly from `ANSWER_PAUSE` above and the 35 item blocks
-(問題1=6, 問題2=7, 問題3=6, 問題4=13, 問題5=3, 例 included):
+follow directly from `ANSWER_PAUSE` above and the 33 item blocks
+(問題1=6, 問題2=7, 問題3=6, 問題4=12, 問題5=2, 例 included):
 
 | Pause | Count | Source |
 |---|---|---|
 | 12 s answer | 13 | 問題1 (6) + 問題2 (7) |
-| 8 s answer | 19 | 問題3 (6) + 問題4 (13) |
-| 10 s answer | 3 | 問題5 |
+| 8 s answer | 18 | 問題3 (6) + 問題4 (12) |
+| 10 s answer | 2 | 問題5 |
 | 20 s option-reading | 7 | 問題2 only (例+6) |
 
-The 35 item blocks are fixed; the TOTAL block count is not (48 in test 1; the
+The 33 item blocks are fixed; the TOTAL block count is not (48 in test 1; the
 first, since-removed test 4 — removed in 9a794d5, last at b9b90de — was 56;
 the current test 4 is 113 — instruction splitting differs), so never treat it
 as a target.

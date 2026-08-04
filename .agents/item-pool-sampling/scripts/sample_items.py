@@ -33,26 +33,26 @@ SPEC = LOGS_DIR / "test_spec.json"
 DRAW = {
     "kanji_reading": 5,
     "orthography": 5,
-    "word_formation": 5,
+    "word_formation": 3,
     "context_words": 7,
     "paraphrase": 5,
     "usage": 5,
     "grammar_p7": 12,
     "grammar_p8": 5,
-    "quick_response": 12,
-    "listening_scenarios": 20,   # 5+6+5 items + 例×3 + 統合3 (author maps them)
+    "quick_response": 11,
+    "listening_scenarios": 19,   # 5+6+5 items + 例×3 + 統合2 (author maps them)
     "reading_topics": 11,        # 5 short + 3 medium + 1 A/B + 1 long + 1 info
 }
 
 # answer-position plans: (section, count, positions)
 ANSWER_SECTIONS = [
-    ("問題1_語彙", 5, 4), ("問題2_語彙", 5, 4), ("問題3_語彙", 5, 4),
+    ("問題1_語彙", 5, 4), ("問題2_語彙", 5, 4), ("問題3_語彙", 3, 4),
     ("問題4_語彙", 7, 4), ("問題5_語彙", 5, 4), ("問題6_語彙", 5, 4),
-    ("問題7", 12, 4), ("問題8", 5, 4), ("問題9", 5, 4),
-    ("問題10", 5, 4), ("問題11", 9, 4), ("問題12", 2, 4),
+    ("問題7", 12, 4), ("問題8", 5, 4), ("問題9", 4, 4),
+    ("問題10", 5, 4), ("問題11", 8, 4), ("問題12", 2, 4),
     ("問題13", 3, 4), ("問題14", 2, 4),
     ("聴解_問題1", 5, 4), ("聴解_問題2", 6, 4), ("聴解_問題3", 5, 4),
-    ("聴解_問題4", 12, 3), ("聴解_問題5", 4, 4),
+    ("聴解_問題4", 11, 3), ("聴解_問題5", 3, 4),
 ]
 
 
