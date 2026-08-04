@@ -9,8 +9,9 @@ Usage:
                                                 # keep the rest of test_spec.json
 
 Outputs test_spec.json (the authoring contract) and updates ledger.json
-(items used by past tests — excluded from future draws until a pool is
-exhausted, then that pool's history resets).
+(v2 LRU cooldown: an item drawn within the last COOLDOWN draws is ineligible;
+when a pool cannot fill a draw the cooldown relaxes one step at a time and
+says so — history is never reset).
 """
 
 import argparse

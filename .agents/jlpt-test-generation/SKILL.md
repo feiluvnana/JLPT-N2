@@ -72,12 +72,17 @@ anything.
    **Use a seed no previous test used** (`logs/ledger.json` records them). The
    ledger keeps pool items from repeating whatever seed you pass, but step 3.5's
    blend is a pure function of the seed, so reusing one replays the previous
-   test's web topics into the same slots. `make check` fails on a repeat.
+   test's web topics into the same slots. `make check` fails only when a seed is
+   reused against the SAME harvest (and on any harvest reuse) — a repeated seed
+   with a fresh harvest passes green, so picking a fresh seed is on you; tests 2
+   and 3 shipped sharing seed 20260804 that way.
 3.5. **Research fresh topics (Optional / Web available)** → read `web-topic-research/SKILL.md`.
    **Re-harvest `logs/seeds.json` for every test** — it is a per-test input, not
    a repo fixture. Leaving test N-1's harvest in place is what turned test 3
    into a re-skin of test 2.
-   Harvest 18-25 real-world topic seeds (≥4 source domains) into `logs/seeds.json` and run:
+   Harvest 18-25 real-world topic seeds (**≥6 distinct source domains** — fewer
+   cannot fund every surface's 30% floor at `MAX_PER_DOMAIN`=2) into
+   `logs/seeds.json` and run:
    `python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json`
    (or `make merge-seeds`, which uses exactly those two paths)
    This blends web seeds across ALL surfaces (reading topics, listening scenarios,
@@ -93,7 +98,9 @@ anything.
    問題 types, an unanswerable 例, five phantom 解説 quotes). Finish 文字・語彙,
    then 文法, then 読解, then 聴解, re-reading the spec and the relevant skill
    section at the start of each pass instead of trusting a long context's
-   memory of them. If the harness supports subagents, one per pass is ideal.
+   memory of them. With subagents available, one per section is the rule
+   (AGENTS.md §6); sections may share a context only in the no-subagent
+   fallback.
 5. **Write the listening script** → read `choukai-script-writing/SKILL.md`.
    Create `tests/<test_id>/聴解スクリプト.txt`. It must contain ONLY spoken exam text.
 6. **Render the booklet HTML (no PDF)** → read `exam-booklet-generation/SKILL.md`.
@@ -152,6 +159,15 @@ Before running the gate, list every surface's topic in one place — 問題9, ea
   paper: test 4 put a 不動産屋 call about a flat near the university under a
   6万円 budget in 問題1-4番, and choosing a flat by 大学に近い/家賃 in 問題5-3番.
   Same table, one row per 聴解 item, same rule.
+- **Errand ARCHETYPES repeat across tests even when subjects differ — check
+  them two tests back.** A "phone call to reschedule an appointment" ran in
+  tests 1, 2, AND 3 (訪問/内見/チェックイン); "choose a model at the store"
+  ran in tests 1 and 2 (炊飯器/空気清浄機); municipal 防災 and store-format
+  reinvention each ran three papers straight; the fictional みどり市 headlined
+  three consecutive 問題14/掲示 surfaces. Add a row-shape column to the table:
+  the errand's shape (reschedule call, model choice, campaign flyer…), not just
+  its subject, and reject a shape that appeared in either of the two previous
+  tests.
 - **The A/B slot (問題12) needs its own cross-test column.** It is one topic per
   paper and the easiest to repeat: test 3 argued 労働時間, test 4 arrived with
   リモートワーク vs 出社 — the third paper in a row on 働き方 — while 問題11(1)

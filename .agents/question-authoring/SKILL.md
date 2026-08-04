@@ -84,6 +84,10 @@ matching where one tempting option fails exactly one condition.
 
 **聴解 dialogues** — every wrong option must be MENTIONED then eliminated
 (already done / rejected / explicitly denied: 「それが理由ではありません」).
+An option that is raised and left TRUE is a second answer even if it is "only
+a contributing factor": test 1's 遅刻理由 item affirmed 道が混んでいた in the
+audio while keying USB忘れ — a どうして item's wrong causes must be denied,
+not merely outweighed.
 課題理解 hides the correct first action behind 「その前に」「それが先」.
 即時応答 tests idioms and keigo: 目を通す, お言葉に甘えて, 〜かと思いきや,
 〜ようがない, 席を外しております, 在庫を切らしております.
@@ -124,6 +128,15 @@ you. Run it before calling any authoring work done.
   coexist make the item unanswerable no matter the key: test 2 offered both
   「まったく」 and 「ほとんど持てていない」 in one set, and both 「わりに」 and
   「にもかかわらず」 in another. One contrast marker, one degree adverb.
+- **問題8: exactly ONE ordering may be natural.** A floating adverb or adjunct
+  (ほとんど, 直接, 一度, 年々, 世界中で…) that reads equally well in two slots
+  gives the item two defensible ★ answers — QA failed one such item in each of
+  tests 2, 3, and 4 (「ほとんど自分の時間を/自分の時間をほとんど」,
+  「窓口に直接/直接窓口に」, 「一度原点に/原点に一度」). After assembling the
+  sentence, actively try to permute every option into every other slot; if any
+  alternative order is grammatical and natural, replace the floating word with
+  one that is position-locked (an object with its particle, a conjugation-bound
+  form) before shipping the item.
 - **A cloze blank must not repeat what the stem already says.** `…からでも
   ( 54 )はいかがだろうか` with option `試してみてはいかがだろうか` ends the
   sentence twice. Read stem-plus-option aloud as one sentence for all four.
@@ -149,6 +162,13 @@ you. Run it before calling any authoring work done.
   key, and the fix is to REPLACE THE DISTRACTOR, not to defend the key.
   Near-synonyms are the whole risk: two connectives that both summarize, two
   negative prefixes that both attach, two adverbs that both take 〜にする.
+  The same class then failed QA in every earlier test too: 停滞 beside the key
+  難航 on 交渉が(　)している (交渉が停滞する is attested), 大満員 beside 超満員,
+  消費 beside 需要 on 〜が伸びている, こと beside だけ in a cloze, and a 問題6
+  distractor using 把握 in ordinary reportage phrasing. **The test is a search,
+  not a feeling**: for every distractor, check whether distractor+frame is an
+  attested collocation (search 「<word> 例文」 if unsure); if it exists, the
+  item has two keys — replace the distractor.
 - **問題5 言い換え: the option must be substitutable.** Read the stem with the
   option swapped in and confirm it is still a grammatical sentence. Test 4
   underlined わりに in 「値段の**わりに**美味しい」 and keyed 比較的, which
@@ -188,6 +208,18 @@ you. Run it before calling any authoring work done.
   that were nowhere in `聴解スクリプト.txt`, which hid a keyed answer that the
   script did not actually support. If you cannot find the quote, the item is
   broken, not the explanation.
+  **A paraphrase inside 「」 is a defect even when the key is right** — QA found
+  the condensed-quote class in every one of tests 1–3 (13 non-verbatim 「」
+  spans in test 3 alone, two of which misstated the audio). Write every 解説
+  quote by selecting and pasting the source line at authoring time, then treat
+  each `make check` 解説-quote WARN as a diff list to re-paste, never as noise
+  to justify.
+- **即時応答: the keyed reply must fit the speaker's rank and direction.**
+  Keigo has a direction: test 2 keyed a 社長 answering a subordinate with
+  「かしこまりました。会議室でお伺いします」 (humble, wrong way up), which made
+  a register-appropriate distractor equally defensible, and had a 課長 say
+  「拝見しました」 about a subordinate's 議事録. When the prompt names roles,
+  check every option's honorific direction against them.
 
 ## Markdown formatting contract (CRITICAL to prevent HTML numbering bugs)
 
@@ -235,7 +267,7 @@ Must contain two main parts:
   - `## 問題2 ポイント理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–6番.
   - `## 問題3 概要理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番.
   - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–12番 detailing honorifics/idiom points.
-  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **4 rows, not 3** — 問題5 has 3 items but 4 answers, so a 3-row table silently loses one scored answer. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2`, `問5-3-1`, `問5-3-2`; it accepts either label style used so far — `**1番**` / `**2番**` / `**3番 質問1**` / `**3番 質問2**` (preferred for new tests; used by the retired test 4, in git at b9b90de) or `1` / `2` / `3-質問1` / `3-質問2` (test 1, still on disk). The 3番 rows MUST carry `質問1`/`質問2`; the 1番/2番 rows must NOT.
+  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **4 rows, not 3** — 問題5 has 3 items but 4 answers, so a 3-row table silently loses one scored answer. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2`, `問5-3-1`, `問5-3-2`; it accepts either label style used so far — `**1番**` / `**2番**` / `**3番 質問1**` / `**3番 質問2**` (preferred for new tests; used by the first, since-removed test 4 — removed in 9a794d5, last at b9b90de; the current `tests/4/` is a different test) or `1` / `2` / `3-質問1` / `3-質問2` (test 1, still on disk). The 3番 rows MUST carry `質問1`/`質問2`; the 1番/2番 rows must NOT.
   - `## 得点の目安`: Score range guidelines.
 
 

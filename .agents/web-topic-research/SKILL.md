@@ -61,6 +61,17 @@ harvest at all. Do not hand-edit those fields to silence it.
 
 ## Step 1 — Harvest topic seeds (18-25 per test; ~22 funds every surface at full ratios)
 
+**Every seed must come from a page you actually fetched — no web, no harvest.**
+If web access is unavailable, SKIP this skill entirely (the pure-pool pipeline
+is the documented offline mode); never fabricate plausible seeds, URLs, or
+facts to fill `logs/seeds.json`. Test 4 shipped an invented harvest — sequential
+made-up IDs (`soumu.go.jp/main_content/000912345.pdf` → …346 → …347 → …348,
+eight consecutive NHK Easy IDs on the wrong host) that 404 when fetched — which
+silently voids the no-two-tests-share-a-harvest rotation guarantee: a fabricated
+harvest can collide with or repeat topics no gate can trace. QA (step 6 of
+`exam-qa-review`) fetches sample URLs and reports an invented harvest as a major
+finding.
+
 **Run `merge_seeds.py` exactly once per test, on a spec straight from the
 sampler.** Re-running it used to blend on top of its own output — compounding
 the web share past the ceiling and writing one seed into two slots. It now

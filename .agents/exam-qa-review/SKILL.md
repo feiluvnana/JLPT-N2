@@ -31,11 +31,13 @@ with the sources side by side, and refuse to pass anything it cannot prove.
   produced its evidence. The reviewer's job is to break the paper; "I found
   nothing" is only a pass if the evidence trail shows where you looked. Doubt
   resolves AGAINST the item: if you have to argue for a key, the item fails.
-- **Fresh eyes, mandatory.** The reviewer must not be the context that authored
-  the test. Run this skill in a NEW session or a subagent that has read nothing
-  but this file and the test's files. If the same session must do it, re-read
-  every file from disk — memory of what you meant to write is exactly the thing
-  being audited. (This also keeps the authoring context small: author, then
+- **Fresh eyes, mandatory — no same-session fallback.** The reviewer must not
+  be a context that authored anything in the test. Run this skill in a subagent
+  or a NEW session that has read nothing but this file and the test's files.
+  AGENTS.md §6 makes authoring-vs-QA the one non-negotiable split even in the
+  worst fallback; a context that wrote any part of the paper re-reading it from
+  disk is still the author auditing its own intent — the setup every defective
+  test shipped through. (This also keeps authoring contexts small: author, then
   hand off; don't interleave.)
 - **Blind-solve before reading the keys.** Take the paper first: answer every
   文字・語彙/文法/読解 item and, from the script, every 聴解 item, WITHOUT
@@ -103,6 +105,9 @@ real collocations (品質に妥協する, 考慮に値する — search before t
 - **問題5 言い換え:** swap the option into the stem; the sentence must survive
   (test 4: 「値段の比較的美味しい」 did not).
 - **問題8:** splice stem + options in 解説 order; read end to end; no word twice.
+  Then hunt the SECOND ordering: try each option in each other slot — a floating
+  adverb/adjunct (ほとんど, 直接, 一度…) that reads naturally in two slots is
+  two ★ answers. One such item shipped in each of tests 2, 3, and 4.
 - **問題9 cloze:** read stem + option aloud as one sentence, all four options.
 - **問題1 漢字読み:** all four options the same word form as the target.
 - **One grammar point, one KEY per paper** — check 問題7/8/9 keys against each
@@ -117,7 +122,14 @@ real collocations (品質に妥協する, 考慮に値する — search before t
   何が一番 in 問題2, 何について in 問題3. Test 4 shipped 問題1↔問題2 swapped.
 - Every 例 is answerable from its printed options AND the announced number is
   the option the dialogue supports (test 4's 問題1 例 printed options for a
-  different question, and the announcer declared one of them correct).
+  different question, and the announcer declared one of them correct; test 3's
+  問題1 例 kept the announcement while its option set was mangled so the true
+  first action was not printed at all). The marksheet's pre-marked 例 must equal
+  the announced number — `make check` now compares them (it caught mismatches
+  in three of the four shipped tests), but the dialogue-supports-it half is
+  yours.
+- 即時応答 keyed replies must match the speakers' rank (keigo direction — see
+  question-authoring; test 2 keyed a 社長 speaking humble keigo downward).
 - Narration ↔ voice ↔ `SPEAKER_MAP`: 「女の学生」 must not be spoken by a
   male-mapped label. Wrong options must each be raised and DENIED in the audio;
   a second true statement is a second answer.

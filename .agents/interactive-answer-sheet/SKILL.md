@@ -112,8 +112,9 @@ prints the booklet.
 
 ## Answer capture
 
-- Progress autosaves to `localStorage`, keyed `jlpt:<test_id>:<section>`, so a
-  refresh or accidental close does not lose work.
+- Progress autosaves to `localStorage` under one combined key,
+  `jlpt:<test_id>:combined_answers`, so a refresh or accidental close does not
+  lose work.
 - 「採点する」 also emits `user_answers.json` in exactly the shape
   `grade_answers.py` reads:
   `{"言語知識_読解": {"33": 2, …}, "聴解": {"問1-1": 2, …}}` — one file covering
@@ -160,7 +161,8 @@ every earlier version of the sheet and made the exam partly unanswerable:
   test 1 were affected. `option_run()` now counts a consecutive `1..k` run on
   the line (a consecutive run only, so `1. 価格が3.5倍…` is not miscounted).
 - **問題5's 質問1/質問2 colliding with 1番/2番.** Routing them to `問5-3-N`
-  required 3番 to be a *heading*; the retired test 4 (git b9b90de) wrote `**3番**`
+  required 3番 to be a *heading*; the first, since-removed test 4 (removed in
+  9a794d5, last at b9b90de) wrote `**3番**`
   in bold, so they fell through to `問5-1`/`問5-2` — two items unanswerable and
   two answers clobbered.
   質問N now always belongs to 3番 whenever the section is 問題5.

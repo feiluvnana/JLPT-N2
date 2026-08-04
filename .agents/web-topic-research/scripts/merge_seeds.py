@@ -26,7 +26,8 @@ Surfaces touched in test_spec.json:
 ALLOCATION: a small texture cut (info/qr/carrier) is reserved FIRST so every
 surface receives seeds even with a thin harvest; the remaining seeds fund
 reading/listening, scaled down proportionally if supply < demand. The skill's
-recommended harvest (18-25 seeds, >=4 domains) funds all surfaces at full
+recommended harvest (18-25 seeds, >=6 domains — MAX_PER_DOMAIN=2 makes fewer
+domains unable to fund every surface's 30% floor) funds all surfaces at full
 target ratios.
 
 BALANCE INVARIANTS (enforced, not advisory):
@@ -320,7 +321,7 @@ def main():
         print(f"  warning: only {n_dom} distinct source domain(s) — web ratios "
               f"were scaled down; harvest from more domains for a fuller blend")
     if supply < 18:
-        print(f"  note: {supply} seeds supplied; ~22 across >=4 domains funds "
+        print(f"  note: {supply} seeds supplied; ~22 across >=6 domains funds "
               f"all surfaces at full target ratios")
 
 

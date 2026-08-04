@@ -192,7 +192,8 @@ gender over two same-gender voices separated only by a few percent of rate
 A full N2 script is **exactly 35 item blocks** (`例。`/`N番。`) in the per-問題
 counts below, plus the 問題 headers, instructions, announcer lines and 例
 confirmations. **The TOTAL block count is not fixed** — test 1 is 48 blocks and
-the retired test 4 (in git at b9b90de) was 56, both valid; the difference is
+the first, since-removed test 4 (removed in 9a794d5, last at b9b90de; the
+current tests/4 is 113) was 56, all valid; the difference is
 only how instruction and announcer text is split. So do not treat any total as a target: `validate_script()`
 enforces the 35 item blocks and their distribution and merely *prints* the
 total (`script OK: N blocks, …`).

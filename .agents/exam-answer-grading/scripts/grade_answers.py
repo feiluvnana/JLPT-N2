@@ -15,7 +15,7 @@ Usage:
     python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 --user-answers tests/1/user_answers.json
 
     # 3. Quick grade via CLI strings:
-    python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 --answers-gengo "1:4,2:2,3:1..." --answers-choukai "1:2,2:3..."
+    python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 --answers-gengo "1:4,2:2,3:1..." --answers-choukai "問1-1:2,問1-2:3..."
 """
 
 import argparse

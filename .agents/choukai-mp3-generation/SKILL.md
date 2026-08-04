@@ -112,9 +112,10 @@ follow directly from `ANSWER_PAUSE` above and the 35 item blocks
 | 20 s option-reading | 7 | 問題2 only (例+6) |
 
 The 35 item blocks are fixed; the TOTAL block count is not (48 in test 1; the
-retired test 4, in git at b9b90de, was 56 — instruction splitting differs), so
-never treat it as a target.
-Estimated length ≈ 33 min with TTS at these rates
-(official ≈ 51 min — human actors speak slower; lower all rates ~15%
-if the user wants closer parity).
+first, since-removed test 4 — removed in 9a794d5, last at b9b90de — was 56;
+the current test 4 is 113 — instruction splitting differs), so never treat it
+as a target.
+Estimated length ≈ 45 min with TTS at these rates — the four built tests
+measure 41.6–45.7 min per their 聴解_チャプター.json (official ≈ 51 min;
+human actors speak slower, and the remaining gap is acceptable).
 

@@ -571,6 +571,53 @@ def check_script_shape(script_text: str, ct: str, m):
           f"{len(ascii_punct)} found — use 、 and 。")
 
 
+EXAMPLE_PREMARK = re.compile(r"\*\*[（(]([1-4])[)）]\*\*")
+
+
+def check_example_premarks(ct: str, st: str, bi):
+    """The 例 the marksheet pre-marks must be the answer the announcer declares.
+
+    問題1-4 each open with a practice 例 whose answer the script announces
+    (「最もよいものは◯番です…答えはこのように書きます」) while the booklet's
+    answer grid shows that same number pre-marked — one demonstration, seen and
+    heard together. Tests 2 (問題3) and 4 (問題4) shipped grids pre-marking a
+    different number than the announcement; nothing caught it because 例 rows
+    are not among the 32 scored keys.
+    """
+    cut = bi.KEY_HEADING.search(ct)
+    lines = ct[cut.start():].splitlines() if cut else []
+    marks: list[int] = []
+    for i, line in enumerate(lines):
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if not cells or cells[0] != "例":
+            continue
+        m = EXAMPLE_PREMARK.search(line)
+        if not m:
+            # horizontal grid (tests 1-3): 例 is a column header; its bubbles
+            # sit in the first cell of the next data row.
+            for nxt in lines[i + 1:]:
+                ncells = [c.strip() for c in nxt.split("|")[1:-1]]
+                if not ncells or set(nxt.strip()) <= set("|-: "):
+                    continue
+                m = EXAMPLE_PREMARK.search(ncells[0])
+                break
+        if m:
+            marks.append(int(m.group(1)))
+
+    announced: list[int] = []
+    secs = re.split(r"^問題([1-5])。$", st, flags=re.M)
+    for i in range(1, len(secs), 2):
+        if secs[i] != "5":       # 問題5 has no 例 (この問題には練習はありません)
+            hit = re.search(r"最もよいものは([1-4])番です", secs[i + 1])
+            if hit:
+                announced.append(int(hit.group(1)))
+
+    check(f"例 pre-marks match the script's announcements ({marks} vs {announced})",
+          len(marks) == 4 and marks == announced,
+          "the grid demonstrates a different answer than the announcer declares "
+          "— fix the marksheet 例 row (or the 例 itself), not just one of them")
+
+
 # --------------------------------------------------------------- per-test checks
 def check_tests():
     g = load(".agents/exam-answer-grading/scripts/grade_answers.py")
@@ -650,6 +697,7 @@ def check_tests():
             except SystemExit as e:
                 check("聴解スクリプト.txt passes validate_script", False, str(e).replace("\n", " ")[:300])
             check_script_shape(st, ct, m)
+            check_example_premarks(ct, st, bi)
         else:
             check("聴解スクリプト.txt present", False, "canonical name required")
 

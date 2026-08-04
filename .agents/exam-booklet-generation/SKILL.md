@@ -39,10 +39,13 @@ out of it. Editing HTML by hand is always wrong; edit the Markdown and rebuild.
 
 ### Shared with interactive-answer-sheet
 
-`CSS`, `SCREEN_CSS`, `widen()`, `fit_ruby()`, `mark_furigana_blocks()` and
-`add_choukai_furigana()` are imported by `build_interactive.py` so the answer
-sheet and the booklet render identically. Changing any of them changes both —
-rebuild both after touching this file.
+`CSS`, `SCREEN_CSS`, `widen()`, `fit_ruby()` and `mark_furigana_blocks()` are
+imported by `build_interactive.py` so the answer sheet and the booklet render
+identically. Changing any of them changes both — rebuild both after touching
+this file. `add_choukai_furigana()` is NOT among them: `build_booklet.py`
+applies it only to files whose name contains 聴解, and `build_interactive.py`
+does not call it at all, so `聴解.html` carries auto-furigana that the 聴解
+half of `解答.html` lacks — a known rendering difference, not an import bug.
 
 `SCREEN_CSS` is the screen-only shell: a centered 46 em column (an unbounded
 full-width line is unreadable on a monitor) plus a `--gutter` variable the

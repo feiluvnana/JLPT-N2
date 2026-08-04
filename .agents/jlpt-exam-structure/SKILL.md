@@ -60,7 +60,11 @@ Question numbering is continuous 1-75 across the whole paper.
   `GAP_BETWEEN_SPOKEN_CHOICES` in `choukai-mp3-generation` applies to 問題3/問題5
   only — not an oversight; do not "fix" it.
 - Exam closes: 「これで、聴解試験を終わります。」
-- Answer grids include an 例 column with the sample answer pre-marked.
+- Answer grids include an 例 column with the sample answer pre-marked — and the
+  pre-marked number MUST equal the number the announcer declares
+  (「最もよいものは◯番です」): the grid and the announcement are one
+  demonstration, seen and heard together. `make check` compares them; three of
+  the four shipped tests had at least one grid pre-marking a different number.
 
 ## Booklet layout conventions
 

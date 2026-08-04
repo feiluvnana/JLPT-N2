@@ -166,7 +166,7 @@ python3 .agents/item-pool-sampling/scripts/sample_items.py --seed 20260803
 
 ### Web Topic Research (Seed Merging — Optional / When Online)
 
-Harvest 18–25 seeds across ≥4 source domains into `logs/seeds.json` (see `web-topic-research/SKILL.md` for the harvest and N2-gate rules), then:
+Harvest 18–25 seeds across **≥6 distinct source domains** into `logs/seeds.json` (`MAX_PER_DOMAIN` is 2, so fewer domains cannot fund every surface's 30% floor — test 4's 聴解 landed at 20% web from a 5-domain harvest; see `web-topic-research/SKILL.md` for the arithmetic and N2-gate rules), then:
 
 ```bash
 python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json
@@ -305,7 +305,7 @@ modes are context problems:
 | # | Pass | Scope | Subagent rule |
 |---|------|-------|---------------|
 | 1 | Setup | Workflow steps 1–3.5: read the skills, sample the pool, harvest seeds, merge, verify the blend report | own subagent |
-| 2–5 | Authoring ×4 | One per section — 文字・語彙 (問1–6), 文法 (問7–9), 読解 (問10–14), 聴解 (booklet + script). Each re-reads `logs/test_spec.json` and the relevant SKILL.md at its start instead of trusting a long context's memory | one subagent each (ideal); at minimum re-read spec + skill between sections |
+| 2–5 | Authoring ×4 | One per section — 文字・語彙 (問1–6), 文法 (問7–9), 読解 (問10–14), 聴解 (booklet + script). Each re-reads `logs/test_spec.json` and the relevant SKILL.md at its start instead of trusting a long context's memory | one subagent each; only in the no-subagent fallback may sections share a context, and then the spec + skill re-read between sections is the minimum |
 | 6 | Build + gate | Steps 6–9: booklet HTML, MP3, `解答.html`, `make check` (read every line incl. WARN), whole-paper topic table | may share a subagent with pass 5 |
 | 7 | QA | `exam-qa-review` in full — blind-solve first, all 107 items, report with verdict | **own subagent — must NOT be any authoring context, and the orchestrator must not leak authoring detail into its prompt** |
 | 8+ | Fix → re-review | Repair findings in the sources, regenerate, re-gate; then the changed items and their whole 問題 re-reviewed | fix may reuse an authoring subagent; the re-review must again be fresh eyes |

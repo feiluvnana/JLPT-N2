@@ -80,3 +80,9 @@ A pacing table in this exact shape (feed to choukai-mp3-generation):
 | answer pause 問5 (each item; the 質問1 → 質問2 gap is also 10 s) | 10 s |
 | loudness target | −17 LUFS |
 
+Note: Step 3 measures 問題5's 1番/2番 answer pause at 8.5 s; the table adopts
+10 s deliberately, aligning it with the 質問1→質問2 gap rather than the single
+measured instance. The copy of this table in `choukai-mp3-generation/SKILL.md`
+is the one `make check` diffs against the code — change values there (and in
+the code) first, then mirror here.
+

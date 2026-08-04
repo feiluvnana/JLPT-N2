@@ -17,7 +17,8 @@ determinism wearing a randomness costume. True variety requires:
 2. **Seeded RNG sampling** (`scripts/sample_items.py`) — code, not vibes.
 3. **An LRU coverage ledger** (`logs/ledger.json`, auto-managed) — see below.
 4. **Answer-position balancing** — the script emits a pre-shuffled answer
-   key per section (uniform 1-4, never 3+ identical in a row).
+   key per section (uniform over the option count — 1-4, or 1-3 for 即時応答;
+   never 3+ identical in a row).
 
 ## Rotation model (ledger v2 — LRU, not reset)
 
@@ -65,6 +66,13 @@ sequence per 問題.
 - Author questions ONLY for the sampled items. Substituting a "better" item
   from memory defeats the whole mechanism — if an item is genuinely
   unusable, re-run the sampler with `--reroll <category>`.
+- **Scan `listening_scenarios` for same-errand pairs before authoring.** The
+  sampler draws scenarios independently, so two draws can land in one domain:
+  test 3 drew 旅行代理店のプラン変更 AND ホテルのチェックイン変更, test 4 drew
+  不動産屋の部屋探し AND 留学生の住居相談 — each pair authored into two 聴解
+  items running the same errand, which QA fails ("two 聴解 items may not run
+  the same errand"). If two scenarios share a domain or errand shape,
+  `--reroll listening_scenarios` before writing anything.
 - Place each correct answer at the position the spec dictates; design
   distractors around that position, not the other way.
 - Record the seed in the exam's source file header (comment) so any test is
