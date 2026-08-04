@@ -155,13 +155,8 @@
     "origin": "pool"
    },
    {
-    "scenario": "オフィスでの立ち仕事・昇降式デスクの導入と効果",
-    "origin": "web",
-    "facts": [
-     "座りっぱなしを防ぎ集中力低下を改善",
-     "社員の約6割が「腰痛が軽減した」と回答"
-    ],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/desk_health.html"
+    "scenario": "見本市:名刺交換と案内",
+    "origin": "pool"
    },
    {
     "scenario": "自治体の防災ラジオ無償貸与と防災アプリ連携",
@@ -177,8 +172,13 @@
     "origin": "pool"
    },
    {
-    "scenario": "テレビ:専門家の解説",
-    "origin": "pool"
+    "scenario": "地域のフリースペース・世代間交流居場所の開設案内",
+    "origin": "web",
+    "facts": [
+     "子どもから高齢者まで自由に利用できるカフェ空間",
+     "月額ワンコインで利用可能"
+    ],
+    "source": "https://www.nhk.or.jp/news/easy/k1001450004/k1001450004.html"
    },
    {
     "scenario": "大学:研究室の配属説明",
@@ -191,13 +191,8 @@
   ],
   "reading_topics": [
    {
-    "topic": "文化財のデジタルアーカイブ公開とオンライン見学",
-    "origin": "web",
-    "facts": [
-     "高精細画像による公開で訪問者数が従来比1.5倍",
-     "実物の保存と鑑賞機会の両立"
-    ],
-    "source": "https://www.bunka.go.jp/seisaku/bunkazai/archive.html"
+    "topic": "方言の価値",
+    "origin": "pool"
    },
    {
     "topic": "図書館の休館日および電子書籍サービス案内",
@@ -240,13 +235,8 @@
     "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/flex.html"
    },
    {
-    "topic": "規格外野菜の加工品開発と直売所での販売拡大",
-    "origin": "web",
-    "facts": [
-     "見た目の不揃い品をスープやジャムに加工し廃棄率を半減",
-     "手頃な価格で環境にも優しい"
-    ],
-    "source": "https://www.maff.go.jp/j/shokusan/foodloss/kikaku.html"
+    "topic": "模倣と独創",
+    "origin": "pool"
    },
    {
     "topic": "スマート農業における小型自動草刈りロボットの導入",
@@ -262,13 +252,8 @@
     "origin": "pool"
    },
    {
-    "topic": "スマート農業における小型自動草刈りロボットの導入",
-    "origin": "web",
-    "facts": [
-     "農家の作業時間を約4割削減",
-     "高齢化が進む果樹園での導入が急増"
-    ],
-    "source": "https://www.maff.go.jp/j/kanbo/smart_agri/robot.html"
+    "topic": "時間の余白と思考の休息",
+    "origin": "pool"
    },
    {
     "topic": "歴史的建造物を活用した宿泊施設・コワーキングスペース",
@@ -485,15 +470,6 @@
     "年間で一人当たり約50本のペットボトル削減効果"
    ],
    "source": "https://www.maff.go.jp/j/shokusan/recycle/mybottle.html"
-  },
-  {
-   "detail": "地域のフリースペース・世代間交流居場所の開設案内",
-   "origin": "web",
-   "facts": [
-    "子どもから高齢者まで自由に利用できるカフェ空間",
-    "月額ワンコインで利用可能"
-   ],
-   "source": "https://www.nhk.or.jp/news/easy/k1001450004/k1001450004.html"
   },
   {
    "detail": "自治体の粗大ごみ戸別収集オンライン予約サービス",

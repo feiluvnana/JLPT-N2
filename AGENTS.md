@@ -232,6 +232,19 @@ spoken only for the 問題 whose booklet prints none (so 問題5-3番's printed
 options can't drift from the audio); and the script carries no ASCII `,`/`.`
 for edge-tts to mis-time.
 
+It also validates the **blend contract** the authoring step reads off
+`logs/test_spec.json`: every surface gets a distinct topic (a repeated entry
+silently starves one 問題, which then gets authored off-contract) and the pool
+side keeps ≥40% of every blended surface. Both broke in test 4 because
+`merge_seeds.py` had been run twice over its own output.
+
+Some rules cannot be decided by matching, so the gate **warns** instead of
+failing — currently: a 解説 that quotes text found in neither the passage nor
+the script. Warnings are part of the output you must read (§0.5): resolve each
+one, or state in your final report why it is a false positive. That warning is
+what surfaced test 4's five invented 聴解 quotes, including a keyed option the
+audio never speaks.
+
 Finally it checks the **rotation inputs** — the two knobs that decide whether a
 new test is actually new. Pool items rotate through the ledger, but the web
 blend is a pure function of `(--seed, logs/seeds.json)`: no two tests may share

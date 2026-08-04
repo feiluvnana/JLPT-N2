@@ -36,6 +36,12 @@ synthetic oldest draw).
   41 such) can never be tested twice in the same paper. A post-draw assertion
   re-checks this and aborts on any collision. This bug shipped once: test 3
   tested 〜に限らず in both 問題7 and 問題8.
+- **Cooldown is by WORD, across categories.** The recency map used to be built
+  per category, so an overlapping word could be tested in consecutive papers
+  through a different 問題 — あらかじめ was test 3's 問題4 (context_words) and
+  then test 4's 問題5 (paraphrase, spelled 「あらかじめ(前もって)」). Entries are
+  now keyed by both the raw string and its head (everything before the
+  disambiguating gloss), so either spelling counts as used.
 - **Attribution.** Pass `--test-id <id>` so each draw records which test
   consumed it.
 

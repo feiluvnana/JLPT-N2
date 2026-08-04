@@ -61,11 +61,22 @@ harvest at all. Do not hand-edit those fields to silence it.
 
 ## Step 1 — Harvest topic seeds (18-25 per test; ~22 funds every surface at full ratios)
 
-More surfaces need more seeds than before. Spread the harvest across **at
-least 4 distinct source domains** — `merge_seeds.py` shrinks the whole web
-share proportionally below `MIN_DOMAINS` (3), so 4 leaves one domain of
-margin. Good sources and query recipes (prefer
-Japanese-language results):
+**Run `merge_seeds.py` exactly once per test, on a spec straight from the
+sampler.** Re-running it used to blend on top of its own output — compounding
+the web share past the ceiling and writing one seed into two slots. It now
+restores the sampler's draw from the ledger first, and aborts if the ledger
+cannot supply it. Never hand-edit the blended spec to patch a bad blend.
+
+Spread the harvest across **at least 6 distinct source domains** — count them,
+this is arithmetic, not taste. `MAX_PER_DOMAIN` is 2, so a harvest spans at
+most `2 × domains` topic-level seeds, and reading + listening + cloze + info
+need roughly 12 to reach their 30% floors on an N2 paper (11 reading topics,
+20 listening scenarios). Test 4 harvested 28 seeds from 5 domains: the cap
+allowed 10, reading and the texture surfaces took them first, and 聴解 finished
+at 4/20 = 20% web — below the floor, with the warning printed and ignored.
+Below `MIN_DOMAINS` (3) the script also shrinks the whole web share.
+
+Good sources and query recipes (prefer Japanese-language results):
 
 - **NHK NEWS WEB EASY** — pre-simplified news; ideal difficulty reference and
   topic source. Query: `NHK news easy 今週`. Cap: NHK Easy alone must not be

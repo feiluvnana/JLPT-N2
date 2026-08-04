@@ -136,6 +136,41 @@ you. Run it before calling any authoring work done.
   For every distractor, name the reason it is *wrong* — not merely less apt. If
   the reason is "the key is slightly more natural", rewrite the stem until the
   distractor is impossible (切実 → put it on 願い, where 深刻 cannot go).
+- **Name the reason each distractor is IMPOSSIBLE — in writing.** This is the
+  single rule that catches the two-defensible-answer family before it ships,
+  and test 4 shipped six of them at once: 問題9 (51) offered すなわち against
+  the key つまり (the same word), (52) したがって against そう考えると (both
+  fit); 問題7 (38) keyed に即して with に沿って in the list, and
+  「ニーズに沿ったサービス」 is if anything the commoner collocation; 問題3 (14)
+  keyed 未記入 with 無記入 available (both are words); 問題4 (19) keyed おろそか
+  with いいかげん beside it, and 健康管理をいいかげんにする is ordinary
+  Japanese. Every one reads as a well-made item. Write the reason in the 解説
+  cell (「1『に沿って』は…」) — a distractor you cannot explain away is a second
+  key, and the fix is to REPLACE THE DISTRACTOR, not to defend the key.
+  Near-synonyms are the whole risk: two connectives that both summarize, two
+  negative prefixes that both attach, two adverbs that both take 〜にする.
+- **問題5 言い換え: the option must be substitutable.** Read the stem with the
+  option swapped in and confirm it is still a grammatical sentence. Test 4
+  underlined わりに in 「値段の**わりに**美味しい」 and keyed 比較的, which
+  yields 「値段の比較的美味しい」 — the item cannot be answered as printed. A
+  meaning match is not enough; the frame around the word has to accept it.
+- **問題1 漢字読み: all four options must be the same word form.** Test 4 gave
+  the dictionary form 労わる four options of which three were て-forms
+  (やしなって・なぐさめて・あがめて), so the answer was identifiable without
+  reading the kanji at all. Distractors are READINGS of the same written form —
+  ideally a genuine trap the kanji supports (労う = ねぎらう for 労わる = いたわる).
+- **One grammar point may be the KEY only once per paper.** Not just one item
+  per 問題: test 4 keyed 〜にともなって in 問題7 (33) and again as the 問題9
+  blank (53). Cross-check the 問題7/8/9 key list against itself, and keep a
+  tested form out of the reading passages too (問題9's passage said
+  「時代に即した」 while 問題7 (38) was testing 〜に即して).
+- **問題6 用法: the correct sentence must be flawless, the wrong ones merely
+  wrong.** Test 4's 妥協 key read 「互いの条件を歩み寄り」 (歩み寄る is
+  intransitive) — the one sentence that must be beyond doubt was ungrammatical.
+  And a distractor has to be a MISUSE, not a rarer valid use: the same item
+  offered 「品質の向上に妥協した」 and the 考慮 item offered 「考慮に値する」,
+  both real collocations, so both items had two correct sentences. Before
+  keeping a wrong sentence, search the collocation; if it exists, rewrite it.
 - **Japanese only — no Latin script in the prose.** A stray English word means
   the sentence was drafted and never finished: test 3's 問題9 read 「単なる無音の
   contrast ではない」. Loan words go in katakana. `make check` allows only the

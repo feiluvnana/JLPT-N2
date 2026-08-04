@@ -88,6 +88,48 @@ def as_records(topics: list, key: str) -> list[dict]:
             for t in topics]
 
 
+def unblend(spec: dict, ledger_path: Path) -> None:
+    """Restore the sampler's pool draw so a re-run blends from scratch.
+
+    blend() replaces a budgeted share of the records it is HANDED. Run a second
+    time against an already-blended spec it blends on top of its own output:
+    the MAX_WEB ceiling applies per run, so the web share compounds, and a seed
+    can be written into a second slot while its first copy still sits in the
+    spec. Test 4 shipped that way — 規格外野菜 and スマート農業 each in two
+    reading slots, 昇降式デスク in two listening slots, 9 of 11 reading topics
+    web against a cap of 6 — which left two reading surfaces with no distinct
+    topic to author from, so they were written off-contract. Nothing caught it:
+    every downstream gate reads the spec, and the spec looked full.
+
+    The sampler's draw is recorded in logs/ledger.json, so it can be put back.
+    Without it there is nothing to restore from and re-running would silently
+    keep compounding, so refuse instead.
+    """
+    fields = (("reading_topics", "topic"), ("listening_scenarios", "scenario"))
+    already = [f for f, k in fields
+               if any(isinstance(e, dict) and e.get("origin") == "web"
+                      for e in spec.get("items", {}).get(f, []))]
+    if not already:
+        return
+    entry = None
+    if ledger_path.is_file():
+        for h in json.loads(ledger_path.read_text(encoding="utf-8")).get("history", []):
+            if str(h.get("test_id")) == str(spec.get("test_id")):
+                entry = h
+    if not entry:
+        raise SystemExit(
+            f"test_spec.json is already blended ({', '.join(already)}) and "
+            f"logs/ledger.json has no draw for test {spec.get('test_id')} to "
+            f"restore from. Re-run sample_items.py for a clean spec, then "
+            f"merge_seeds.py once.")
+    for field, key in fields:
+        pooled = entry.get("items", {}).get(field)
+        if pooled:
+            spec["items"][field] = list(pooled)
+    print(f"  note: spec was already blended ({', '.join(already)}) — restored "
+          f"the pool draw from the ledger before re-blending")
+
+
 def take(rng: random.Random, pool: list[dict], n: int, pref) -> list[dict]:
     """Take up to n seeds from pool (mutates pool), preferring pref(seed)."""
     ordered = sorted(pool, key=lambda s: (not pref(s), rng.random()))
@@ -136,6 +178,7 @@ def main():
     seeds = json.loads(Path(args.seeds).read_text(encoding="utf-8"))
     spec_path = Path(args.spec)
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    unblend(spec, spec_path.parent / "ledger.json")   # make re-runs idempotent
 
     rng = random.Random(f"{spec.get('seed', 0)}-webmerge")
     rng.shuffle(seeds)
@@ -225,6 +268,17 @@ def main():
     # unchanged seeds.json reproduces the previous test's blend slot for slot.
     # Recording the harvest identity in both the spec and the ledger lets
     # `make check` tell "a genuinely new harvest" from "step 3.5 was skipped".
+    # Every surface must end up with DISTINCT topics: the author needs one
+    # subject per 問題, and a spec that repeats itself silently starves a
+    # surface (see unblend()). Cheap to assert, impossible to spot by eye.
+    for field, key in (("reading_topics", "topic"),
+                       ("listening_scenarios", "scenario")):
+        names = [r.get(key) for r in spec["items"][field]]
+        dups = sorted({n for n in names if names.count(n) > 1})
+        if dups:
+            raise SystemExit(f"{field} would carry duplicate entries {dups} — "
+                             f"blend is broken; do not author from this spec")
+
     harvest_sha = hashlib.sha1(
         Path(args.seeds).read_bytes()).hexdigest()[:12]
     spec["harvest_sha"] = harvest_sha

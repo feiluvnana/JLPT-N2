@@ -29,6 +29,7 @@ SKILL_DIRS = sorted(p for p in AGENTS.iterdir() if (p / "SKILL.md").is_file())
 
 _fail: list[str] = []
 _skip: list[str] = []
+_warn: list[str] = []
 
 
 def load(rel: str):
@@ -50,6 +51,19 @@ def check(name: str, ok: bool, detail: str = "") -> bool:
 def skip(name: str, why: str):
     print(f"  skip  {name} — {why}")
     _skip.append(name)
+
+
+def warn(name: str, ok: bool, detail: str = ""):
+    """Report a suspicion without failing the gate.
+
+    For rules that are real but not decidable by string matching — a 解説 may
+    legitimately put its own prose in 「」. A warn line is not noise to scroll
+    past: resolve each one or say in your final report why it is a false
+    positive (AGENTS.md §0.5).
+    """
+    print(f"  {'ok  ' if ok else 'WARN'}  {name}" + (f" — {detail}" if detail and not ok else ""))
+    if not ok:
+        _warn.append(f"{name}: {detail}")
 
 
 def docs() -> dict[Path, str]:
@@ -361,6 +375,69 @@ def check_no_latin_prose(name: str, text: str):
           f"{bad} — write it in katakana or Japanese")
 
 
+# 解説 cells decide items, so a quote inside one is load-bearing. When it is
+# invented, the item it justifies is usually broken too and nothing shows:
+# test 2's 聴解 key quoted four lines of dialogue that were not in the script;
+# test 4's 問題2-6番 key quoted a 「3日前」 rule the script gives as 1週間前, and
+# named two speakers (アンさん・キムさん) the script never introduces.
+QUOTE = re.compile(r"「([^」]{14,})」")
+QUOTE_ELLIPSIS = re.compile(r"[…‥]+")
+
+
+def _flat(s: str) -> str:
+    """Strip what varies between a quote and its source but carries no meaning:
+    whitespace, table/emphasis markup, and the quote marks themselves (a nested
+    quote is 『』 inside 「」 but 「」 in the passage)."""
+    return re.sub(r"[\s「」『』]|\*\*|<[^>]+>", "", s)
+
+
+def check_explanation_quotes(name: str, key_section: str, source: str):
+    """A long 「…」 span in a key table should occur in the passage or script.
+
+    Reported, not enforced: a 解説 may legitimately put its own wording in 「」,
+    so this cannot be decided by matching alone. What it catches is the class
+    of bug where it is NOT the explanation that is wrong — test 2's 聴解 key
+    quoted four lines of dialogue that were nowhere in the script, and test 4's
+    問題4-10番 key quoted an option 「本当ですか！ぜひお願いしたいです」 that the
+    script never speaks. A quote nobody can find usually means the item was
+    keyed against a draft that no longer exists.
+    """
+    src = _flat(source)
+    missing = []
+    for q in QUOTE.findall(key_section):
+        parts = [_flat(p) for p in QUOTE_ELLIPSIS.split(q)]
+        if any(len(p) >= 14 and p not in src for p in parts):
+            missing.append(q[:38] + ("…" if len(q) > 38 else ""))
+    warn(f"{name}: 解説 quotes trace to the passage/script", not missing,
+         f"not found in the source: {missing} — quote by copy-paste; if the "
+         f"line really is not there, the ITEM is wrong, not the explanation")
+
+
+def check_spec_blend(spec: dict):
+    """The blend contract the authoring step reads off logs/test_spec.json.
+
+    Two invariants no other gate can see, both violated by test 4's spec:
+    every surface needs a DISTINCT topic (a duplicate silently starves one
+    問題, which then gets authored off-contract), and the pool side keeps >=40%
+    of every blended surface (AGENTS.md §5). merge_seeds.py compounds both when
+    it is re-run over its own output.
+    """
+    for field, key in (("reading_topics", "topic"),
+                       ("listening_scenarios", "scenario")):
+        recs = spec.get("items", {}).get(field, [])
+        names = [r.get(key) if isinstance(r, dict) else r for r in recs]
+        dups = sorted({n for n in names if names.count(n) > 1})
+        check(f"test_spec {field}: one distinct topic per surface", not dups,
+              f"repeated: {dups} — re-run merge_seeds.py (it restores the "
+              f"pool draw first); do not author from a spec that repeats itself")
+        web = sum(1 for r in recs if isinstance(r, dict) and r.get("origin") == "web")
+        over = recs and web > int(len(recs) * 0.60)
+        check(f"test_spec {field}: pool keeps >=40% ({web}/{len(recs)} web)",
+              not over,
+              f"web share {web}/{len(recs)} exceeds the MAX_WEB ceiling — "
+              f"merge_seeds was re-run over an already-blended spec")
+
+
 def check_rotation_inputs():
     """The two knobs that decide whether a new test is actually new.
 
@@ -406,6 +483,7 @@ def check_rotation_inputs():
         return skip("every web entry in test_spec traces to logs/seeds.json",
                     "no test_spec.json or seeds.json")
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    check_spec_blend(spec)
     harvest = {s["seed"] for s in json.loads(seeds_path.read_text(encoding="utf-8"))}
 
     blended: list[tuple[str, str]] = []
@@ -550,9 +628,21 @@ def check_tests():
             cut = bi.KEY_HEADING.search(body)
             check_no_latin_prose(f.name, body[: cut.start()] if cut else body)
 
+        # Only the 読解 key table quotes running text; the 文字・語彙 and 文法
+        # tables put grammar glosses in 「」 by design, which is not a quote.
+        gcut = bi.KEY_HEADING.search(gt)
+        dokkai = re.search(r"^##\s*読解\s*$(.*)", gt[gcut.start():] if gcut else "",
+                           re.M | re.S)
+        if gcut and dokkai:
+            check_explanation_quotes(gengo.name, dokkai.group(1), gt[: gcut.start()])
+
         script = d / "聴解スクリプト.txt"
         if script.is_file():
             st = script.read_text(encoding="utf-8")
+            ccut = bi.KEY_HEADING.search(ct)
+            if ccut:
+                check_explanation_quotes(choukai.name, ct[ccut.start():],
+                                         st + ct[: ccut.start()])
             blocks = [b.strip() for b in re.split(r"\n\s*\n", st) if b.strip()]
             try:
                 m.validate_script(blocks)
@@ -693,12 +783,19 @@ def main():
     check_grader_parity()
 
     print()
+    if _warn:
+        print(f"{len(_warn)} warning(s) — resolve each or say why it is a false "
+              f"positive in your final report:")
+        for w in _warn:
+            print(f"  - {w}")
+        print()
     if _fail:
         print(f"FAILED — {len(_fail)} problem(s):")
         for f in _fail:
             print(f"  - {f}")
         return 1
-    print(f"All checks passed{f' ({len(_skip)} skipped)' if _skip else ''}.")
+    print(f"All checks passed{f' ({len(_skip)} skipped)' if _skip else ''}"
+          f"{f', {len(_warn)} warning(s)' if _warn else ''}.")
     return 0
 
 

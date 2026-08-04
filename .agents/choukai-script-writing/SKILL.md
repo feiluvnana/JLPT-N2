@@ -116,6 +116,60 @@ missing 「まず…それから」 — so the examinee heard different wording 
 read. Take the canonical text from jlpt-exam-structure, paste it into both
 files, and let `make check` confirm they match.
 
+## The 例 must be answerable, and its announced number must be the answer
+
+`最もよいものは◯番です。` names a number in the BOOKLET's 例 option list, so
+the two are one item split across two files. Test 4's 問題1 例 played a
+忘年会 dialogue ending 「君は店の予約をお願いできるかな」「すぐ電話します」,
+asked 「このあとまず何をしますか」, and printed
+`1. 忘年会をする / 2. 新年会をする / 3. 送別会をする / 4. 歓迎会をする` —
+options that answer a different question, with the announcer declaring 2番
+(新年会をする), which the dialogue never mentions. The demonstration of how to
+mark the sheet was itself unanswerable, in the first thing the examinee hears.
+
+Check every 例 by reading the printed options against the spoken 例 and its
+question, then confirming the announced number is the option the dialogue
+supports. `make check` cannot: 問題1/2 options are printed, so there is nothing
+to compare them against.
+
+## The 問題 decides the QUESTION TYPE, not just the topic
+
+`logs/test_spec.json` hands you a list of scenarios, not an assignment of
+scenarios to 問題. Placing one is your call, and the section's task type binds:
+
+| 問題 | Task | Question shape | Shape of the item |
+|---|---|---|---|
+| 1 | 課題理解 | 〜は、このあとまず何をしますか | a conversation where one person must ACT |
+| 2 | ポイント理解 | どうして〜か / 何が一番〜か / どのように説明していますか | conversation or monologue, no action required |
+| 3 | 概要理解 | 〜は何について話していますか | monologue, gist only |
+
+Test 4 shipped these swapped: a radio monologue asking 「夜間のエアコンの使用に
+ついて、どのように説明していますか」 sat in 問題1, and a 課題理解 item asking
+「これからまず何をしますか」 sat in 問題2. Both were repaired by exchanging the
+two items (and re-ordering their options, since the key must land on the
+position `answer_positions` prescribes for its new slot).
+
+## The keyed option must be quotable, and every other option denied
+
+Two separate rules, both broken by test 4:
+
+- **Quotable.** 問題1-5番 keyed 「点検作業員に車移動の連絡をする」 while the
+  script says 「事前に管理事務所へご連絡の上」 — the keyed action named the
+  wrong party, so the keyed option was simply not what the audio said. Copy the
+  deciding line out of the script into the 解説 cell; if you cannot, the item is
+  wrong. (`make check` now WARNS when a 解説 quote is nowhere in the script —
+  that warning is how test 4's invented 「本当ですか！ぜひお願いしたいです」 and
+  four other phantom quotes were found. Warnings are not optional reading.)
+- **Denied.** A wrong option must be raised and then killed, and a second TRUE
+  statement is a second answer. 問題2-6番 asked why the student cannot take the
+  day off, keyed 「申告期限を過ぎている」, and had the 店長 also say that nobody
+  else can cover the shift — which option 1 stated. Give each distractor its
+  own denial line (「その日に休みを希望している人も他にいない」).
+- **A 理由 question must be keyed to the CAUSE, not to the measure.** 問題2-4番
+  asked the reason for a timetable change; the script gave 運転手不足 as the
+  cause and the key was 「利用者が少ない夜間の便を減らすため」, which is what was
+  DONE about it — while another option named the actual cause.
+
 ## One voice per person, and questions that name them unambiguously
 
 If an item's questions say 「男の学生は」/「女の学生は」, the item must contain
@@ -123,6 +177,15 @@ exactly one of each. Test 2's 問題5-3番 had 男1 and 男2 both speaking as st
 while 質問1 asked about 「男の学生」 — unanswerable as posed. Either give the
 item one speaker per gender/role, or word the questions so each maps to exactly
 one voice.
+
+**The narration must also agree with the VOICE the label gets.** The label
+picks the voice out of `SPEAKER_MAP`; the narration tells the examinee who is
+speaking; nothing checks that the two agree. Test 4 broke it both ways in one
+paper: 問題5-3番 announced 「担当者の男の人」 while `担当者:` is mapped female,
+and 問題2-6番 announced 「女の学生」 while `学生:` is mapped male. Look the label
+up in the map before writing the narration, and prefer labels of contrasting
+gender over two same-gender voices separated only by a few percent of rate
+(問題1-4番 had 女 and 担当者 both on Nanami, 4% apart, in a two-person call).
 
 ## Required structure — every element is mandatory
 

@@ -127,6 +127,20 @@ Before running the gate, list every surface's topic in one place — 問題9, ea
   automated check; this table is the only place they surface.
 - **No condition, number, or rule is shared** between the flyer and a listening
   item. Shared *setting* is tolerable; shared *decisive detail* is not.
+- **Two 聴解 items may not run the same errand.** The 聴解 half is its own
+  paper: test 4 put a 不動産屋 call about a flat near the university under a
+  6万円 budget in 問題1-4番, and choosing a flat by 大学に近い/家賃 in 問題5-3番.
+  Same table, one row per 聴解 item, same rule.
+- **The A/B slot (問題12) needs its own cross-test column.** It is one topic per
+  paper and the easiest to repeat: test 3 argued 労働時間, test 4 arrived with
+  リモートワーク vs 出社 — the third paper in a row on 働き方 — while 問題11(1)
+  was already built on テレワーク. Check 問題12 against the previous test's 問題12
+  specifically, not just against the pile.
+- **A duplicated seed in the spec is a defect, not a spare.** If two spec
+  entries name the same topic, `merge_seeds.py` was re-run over its own output;
+  re-run it (it now restores the pool draw first) instead of inventing a topic
+  for the starved surface. Test 4's 問題12 and 問題13 were authored off-contract
+  for exactly this reason. `make check` now fails on a spec that repeats itself.
 - Each `logs/test_spec.json` topic/scenario seed feeds **exactly one** surface.
   There are more seeds than surfaces on purpose — if a topic looks used twice,
   an unused seed is sitting in the spec. `cloze_topic`'s `origin` is binding

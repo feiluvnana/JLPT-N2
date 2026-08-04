@@ -96,12 +96,32 @@ def load_ledger() -> dict:
                          "generated_at": None, "items": legacy}] if legacy else []}
 
 
-def recency_map(history: list, cat: str) -> dict:
-    """item -> how many draws ago it was last used (0 = most recent draw)."""
-    rec = {}
+def head(item: str) -> str:
+    """Normalized identity of a pool entry, ignoring the disambiguating gloss.
+
+    Pools spell the same word differently per category — 「あらかじめ」 in
+    context_words, 「あらかじめ(前もって)」 in paraphrase — so a raw string
+    comparison misses cross-category repeats.
+    """
+    return str(item).split("(")[0].split("（")[0].strip()
+
+
+def recency_map(history: list) -> dict:
+    """item -> how many draws ago it was last used (0 = most recent draw).
+
+    Recency is tracked BY WORD, ACROSS CATEGORIES, not per category. Pools
+    overlap on purpose (41 words are both context_words and usage items), and
+    a category-local map let 「あらかじめ」 be tested in test 3's 問題4 and again
+    in test 4's 問題5 — consecutive papers testing the same word, with every
+    gate green. `taken` stops that inside one test; this stops it across tests.
+    Keys are both the raw string and its head(), so either spelling matches.
+    """
+    rec: dict = {}
     for ago, entry in enumerate(reversed(history)):
-        for item in entry.get("items", {}).get(cat, []):
-            rec.setdefault(item, ago)
+        for items in entry.get("items", {}).values():
+            for item in items:
+                rec.setdefault(item, ago)
+                rec.setdefault(head(item), ago)
     return rec
 
 
@@ -112,9 +132,13 @@ def draw(rng: random.Random, pool: list[str], recency: dict, n: int,
     if len(pool) < 2.5 * n:
         print(f"  warning: pool '{name}' is thin ({len(pool)} for draws of {n}) "
               f"— consider adding items from the reference books")
+    inf = 10 ** 9
+
+    def ago(x: str) -> int:
+        return min(recency.get(x, inf), recency.get(head(x), inf))
+
     for cool in range(COOLDOWN, -1, -1):
-        eligible = [x for x in pool
-                    if x not in taken and recency.get(x, 10 ** 9) > cool]
+        eligible = [x for x in pool if x not in taken and ago(x) > cool]
         if len(eligible) >= n:
             if cool < COOLDOWN:
                 print(f"  note: pool '{name}' is tight — cooldown relaxed to "
@@ -161,7 +185,7 @@ def main():
         if history and history[-1].get("seed") == spec.get("seed"):
             history[-1]["items"].pop(cat, None)
         taken = {x for c, xs in spec["items"].items() if c != cat for x in xs}
-        picked = draw(rng, pools[cat], recency_map(history, cat),
+        picked = draw(rng, pools[cat], recency_map(history),
                       DRAW[cat], cat, taken)
         spec["items"][cat] = picked
         spec["seed"] = f"{spec.get('seed')}+reroll({cat},{seed})"
@@ -174,7 +198,7 @@ def main():
         for cat, n in DRAW.items():
             if cat not in pools:
                 sys.exit(f"category '{cat}' is in DRAW but missing from pools.json")
-            picked = draw(rng, pools[cat], recency_map(history, cat), n, cat, taken)
+            picked = draw(rng, pools[cat], recency_map(history), n, cat, taken)
             items[cat] = picked
             taken.update(picked)
         spec = {
@@ -208,7 +232,7 @@ def main():
           f"ledger updated at {LEDGER.relative_to(ROOT)} "
           f"({len(history)} draw(s) recorded)")
     for cat, xs in spec["items"].items():
-        rec = recency_map(history[:-1], cat) if history else {}
+        rec = recency_map(history[:-1]) if history else {}
         reused = sum(1 for x in xs if x in rec)
         print(f"  {cat}: {len(xs)} items ({len(xs) - reused} never used before)")
 
