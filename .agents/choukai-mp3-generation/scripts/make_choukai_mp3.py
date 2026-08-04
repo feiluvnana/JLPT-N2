@@ -2,12 +2,12 @@
 """
 N2 choukai exam MP3 generator (v2) — official-style audio.
 
-Calibrated against a real JLPT-prep CD track:
+Calibrated against official JLPT N2 exam audio (in refs/JLPT/):
   - Narrator/announcer: FEMALE voice (ja-JP-NanamiNeural), slightly slow,
     like the official test announcer.
-  - ~1.3 s of air between utterances (measured from the sample track).
+  - ~1.3 s of air between utterances (measured from official exam audio).
   - Answer pauses: 12 s after each question (8 s for 問題4 quick response).
-  - Output loudness normalized to about -17 LUFS to match the sample level.
+  - Output loudness normalized to about -17 LUFS to match official exam levels.
 
 Setup (one time):
     pip install edge-tts
