@@ -42,7 +42,7 @@ Inside `tests/<test_id>/`:
 | ------------------------------------ | -------------------------------------- | -------------------------------------------------------------------------------------- |
 | Language Knowledge & Reading Booklet | `言語知識・読解.html`                  | Rendered from Markdown source `tests/<test_id>/言語知識・読解.md`                      |
 | Listening Booklet                    | `聴解.html`                            | Rendered from Markdown source `tests/<test_id>/聴解.md`                                |
-| Listening TTS Script                 | `聴解スクリプト.txt` (or `script.txt`) | Pure official-style narration text                                                     |
+| Listening TTS Script                 | `聴解スクリプト.txt`                   | Pure official-style narration text                                                     |
 | Listening Audio MP3                  | `聴解.mp3`                             | Synthesized audio generated from the TTS script                                        |
 | Interactive Answer Sheet             | `解答.html`                            | Combined booklet (75 Gengo/Dokkai + 32 Choukai + Audio player); in-page 180pt grading |
 | Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |

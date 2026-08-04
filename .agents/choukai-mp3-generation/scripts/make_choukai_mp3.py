@@ -14,10 +14,11 @@ Setup (one time):
     # ffmpeg must be on PATH (macOS: brew install ffmpeg)
 
 Run:
-    python make_choukai_mp3.py 3_n2_choukai_tts_script.txt
+    python make_choukai_mp3.py tests/<test_id>/聴解スクリプト.txt
 
-Output:
-    n2_choukai_exam.mp3   (full exam)
+Output (written next to the input script):
+    聴解.mp3               (full exam)
+    聴解_チャプター.json    (per-問題/per-item offsets)
     segments/             (per-block mp3s for drilling single questions)
 
 Re-running is cheap: already-synthesized lines are skipped (delete the

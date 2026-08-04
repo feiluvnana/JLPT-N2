@@ -11,7 +11,7 @@ All section layouts, question counts, and item specifications in this document a
 
 - **言語知識・読解**: Source `tests/<test_id>/言語知識・読解.md` → Booklet `tests/<test_id>/言語知識・読解.html`
 - **聴解 (Booklet)**: Source `tests/<test_id>/聴解.md` → Booklet `tests/<test_id>/聴解.html`
-- **聴解 (TTS Script)**: `tests/<test_id>/聴解スクリプト.txt` (or `script.txt`) → Output MP3 `tests/<test_id>/聴解.mp3`
+- **聴解 (TTS Script)**: `tests/<test_id>/聴解スクリプト.txt` → Output MP3 `tests/<test_id>/聴解.mp3`
 - **Answer sheet**: both Markdown sources → the ONE merged `tests/<test_id>/解答.html` (there are no per-section `*_解答.html` files)
 
 ## 言語知識(文字・語彙・文法)・読解 — 105 min, 75 questions
@@ -54,6 +54,11 @@ Question numbering is continuous 1-75 across the whole paper.
   最もよいものは◯番ですから、答えはこのように書きます。では、始めます。」
 - 問題1/2 questions are spoken TWICE: before and after the conversation.
 - 問題3/4/5(1番・2番): choices are SPOKEN (「1、…。2、…。」), not printed.
+  **Spoken ≠ same pacing**: measured on the official Dec 2025 audio, 問題3 and
+  問題5 leave ~3.0 s between choices, while 問題4's three choices are read
+  continuously (1.0–2.0 s apart, i.e. ordinary dialogue spacing). That is why
+  `GAP_BETWEEN_SPOKEN_CHOICES` in `choukai-mp3-generation` applies to 問題3/問題5
+  only — not an oversight; do not "fix" it.
 - Exam closes: 「これで、聴解試験を終わります。」
 - Answer grids include an 例 column with the sample answer pre-marked.
 
@@ -69,12 +74,16 @@ Question numbering is continuous 1-75 across the whole paper.
 
 ## Answer Key & Explanation Table Structure
 
-Both booklets must conclude with structured table-formatted answer keys and explanations:
+Both booklets must conclude with structured table-formatted answer keys and
+explanations, opened by a **top-level `# 解答…` / `# 【正解…` heading** — the
+marker `build_interactive.py` truncates from (it aborts if absent):
 - `言語知識・読解.md`:
+  - `# 解答と解説` (required heading), containing:
   - `## 文字・語彙`: Multi-column key table (`| 問 | 答 | ...`)
   - `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q33–54
   - `## 読解`: 3-column table (`| 問 | 答 | 解説 |`) for Q55–75
 - `聴解.md`:
   - `# 解答用紙(マークシート)`: Bubble sheets for 問題1〜問題5
   - `# 【正解・解説】※解き終わってから見てください`: Section-by-section tables (`| 番号 | 正解 | 解説 |`) for 問題1〜問題5 + `## 得点の目安`
+  - 問題5's table carries **4 rows for 3 items** — `**1番**`, `**2番**`, `**3番 質問1**`, `**3番 質問2**` (see question-authoring)
 

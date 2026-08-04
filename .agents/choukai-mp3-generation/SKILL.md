@@ -8,7 +8,7 @@ description: Single owner of synthesizing the choukai exam MP3 from the TTS scri
 ## Executable & File Paths
 
 - **Script location**: `.agents/choukai-mp3-generation/scripts/make_choukai_mp3.py`
-- **Input text script**: `tests/<test_id>/聴解スクリプト.txt` (or `tests/<test_id>/script.txt`)
+- **Input text script**: `tests/<test_id>/聴解スクリプト.txt` (canonical name — see choukai-script-writing)
 - **Output audio**: `tests/<test_id>/聴解.mp3` + per-question files in `tests/<test_id>/segments/`
 - **Output chapters**: `tests/<test_id>/聴解_チャプター.json` — the start offset
   of every 問題 and every 例/N番 item, accumulated by the assembler as it

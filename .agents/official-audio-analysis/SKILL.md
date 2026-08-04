@@ -48,6 +48,19 @@ identify sections without hearing a word:
 - dense run of lone `8s` pauses → 問題4
 - `10s` then `12s` near the end → 問題5 two-question item (質問1/質問2)
 
+Measured on Dec 2025 (`silencedetect` at `d=2.5` then `d=0.4`), which is where
+the constants in `choukai-mp3-generation` come from:
+
+| Region | Signature | Section |
+|---|---|---|
+| 36.4–37.0 min | 3 × 3.0 s gaps → 4 spoken choices → 8.57 s answer pause | 問題3 |
+| 38.8–44.8 min | internal gaps only 1.0–2.0 s (nothing ≥2.5 s) → 8.19 s answer pause, 13 items over ~8 min | 問題4 |
+| 47.4–51.2 min | 3 × 3.0 s gaps → 8.5 s; then 10 s + 12.3 s at the very end | 問題5 (1番/2番, then 3番's 質問1/質問2) |
+
+**The 問題4 row is the load-bearing one**: its three choices are read
+continuously, so the 3 s spoken-choice gap belongs to 問題3/問題5 ONLY. Whole-file
+histogram for cross-checking a full N2: 7 × 20 s, 12 × ~12 s, 17 × ~8 s, 42 × ~3 s.
+
 ## Step 4 — Short gaps (dialogue pacing)
 
 Re-run with `d=0.8` on a single-item track: gaps between dialogue turns in

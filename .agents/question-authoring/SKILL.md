@@ -107,8 +107,15 @@ matching where one tempting option fails exactly one condition.
 
 Answer keys and explanations MUST be formatted as Markdown tables at the end of `言語知識・読解.md` and `聴解.md`. Single grid summary tables without explanations are STRICTLY FORBIDDEN.
 
+**Both files MUST open their key section with a top-level heading matching
+`# 解答…` or `# 【正解…`** — `言語知識・読解.md` uses `# 解答と解説`, `聴解.md` uses
+`# 解答用紙(マークシート)`. This is not cosmetic: `build_interactive.py` truncates
+the document from that heading onward so the key never renders on the answer
+sheet, and it **exits with an error** if the heading is missing. A key section
+introduced only by `##` sub-headers will fail the build.
+
 ### 1. `言語知識・読解.md` Answer Key Format
-Must contain three distinct section headers:
+Under `# 解答と解説`, must contain three distinct section headers:
 - `## 文字・語彙`: Multi-column table (`| 問 | 答 | | 問 | 答 | | 問 | 答 | | 問 | 答 |`) for Q1–32, plus key notes for notable kanji/words.
 - `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q33–54 with exact grammar point explanations and scramble sequence breakdowns for Q45–49.
 - `## 読解`: 3-column table (`| 問 | 答 | 解説 |`) for Q55–75 quoting key passage text and rationale.
@@ -121,7 +128,7 @@ Must contain two main parts:
   - `## 問題2 ポイント理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–6番.
   - `## 問題3 概要理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番.
   - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–12番 detailing honorifics/idiom points.
-  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–3番.
+  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **4 rows, not 3** — 問題5 has 3 items but 4 answers. Label them exactly `**1番**`, `**2番**`, `**3番 質問1**`, `**3番 質問2**`: `parse_choukai_keys()` maps those to the keys `問5-1`, `問5-2`, `問5-3-1`, `問5-3-2`, and a 3-row table silently loses one scored answer.
   - `## 得点の目安`: Score range guidelines.
 
 

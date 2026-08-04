@@ -31,7 +31,7 @@ All exam files follow a strict directory structure:
 |---|-----------|----------------------|
 | 1 | `言語知識・読解.html` | Booklet rendered from Markdown source `tests/<test_id>/言語知識・読解.md` (no PDF) |
 | 2 | `聴解.html` | Booklet rendered from Markdown source `tests/<test_id>/聴解.md` (no PDF) |
-| 3 | `聴解スクリプト.txt` (or `script.txt`) | Pure official-style narration text |
+| 3 | `聴解スクリプト.txt` | Pure official-style narration text |
 | 4 | `聴解.mp3` | Listening audio generated from file 3 |
 | 5 | `聴解_チャプター.json` | Per-問題/item offsets in the MP3 (written with it) |
 | 6 | `解答.html` | The ONE merged problem+answer sheet — full 107-question exam with radio bubbles, audio player, in-page 180pt grading (`build_interactive.py`) |
@@ -60,13 +60,13 @@ All exam files follow a strict directory structure:
 4. **Author the content** → read `question-authoring/SKILL.md`.
    Write Markdown sources (`言語知識・読解.md`, `聴解.md`) in `tests/<test_id>/`. Author ONLY items specified in `logs/test_spec.json` and set answer keys according to `answer_positions`.
 5. **Write the listening script** → read `choukai-script-writing/SKILL.md`.
-   Create `tests/<test_id>/聴解スクリプト.txt` (or `script.txt`). It must contain ONLY spoken exam text.
+   Create `tests/<test_id>/聴解スクリプト.txt`. It must contain ONLY spoken exam text.
 6. **Render the booklet HTML (no PDF)** → read `exam-booklet-generation/SKILL.md`.
    Run: `python3 .agents/exam-booklet-generation/scripts/build_booklet.py tests/<test_id>/言語知識・読解.md tests/<test_id>/聴解.md`
    (or `make booklet <test_id>`). The browser's Cmd-P is the only renderer — do
    not reintroduce weasyprint/wkhtmltopdf.
 7. **Generate MP3 Audio** → read `choukai-mp3-generation/SKILL.md`.
-   Run: `python3 .agents/choukai-mp3-generation/scripts/make_choukai_mp3.py tests/<test_id>/聴解スクリプト.txt` (or `script.txt`)
+   Run: `python3 .agents/choukai-mp3-generation/scripts/make_choukai_mp3.py tests/<test_id>/聴解スクリプト.txt`
    Also writes `聴解_チャプター.json` (per-item offsets) for the answer sheet.
 8. **Build the interactive answer sheet** → read `interactive-answer-sheet/SKILL.md`.
    Run: `python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id>`
@@ -81,10 +81,10 @@ All exam files follow a strict directory structure:
 
 ## Invariants (apply to every run)
 
-- Japanese file names must be used for all files in `tests/<test_id>/` (`言語知識・読解.md`/`.html`, `聴解.md`/`.html`, `聴解スクリプト.txt`/`script.txt`, `聴解.mp3`, `解答.html`).
+- Japanese file names must be used for all files in `tests/<test_id>/` (`言語知識・読解.md`/`.html`, `聴解.md`/`.html`, `聴解スクリプト.txt`, `聴解.mp3`, `解答.html`).
 - Markdown files in `tests/<test_id>/` are the editable source; regenerate the booklet HTML **and** `解答.html` after ANY content edit.
 - Answer keys live at the END of both Markdown sources (`言語知識・読解.md`, `聴解.md`), clearly separated, never inline. `build_interactive.py` aborts if it cannot find the key heading to truncate.
-- The booklet (`聴解.md`) and the script (`聴解スクリプト.txt`/`script.txt`) must stay synchronized:
+- The booklet (`聴解.md`) and the script (`聴解スクリプト.txt`) must stay synchronized:
   printed 例 options ↔ spoken 例; any script item change requires a key check.
 - After edits, always re-run the dry-run validators described in
   `choukai-script-writing` and `choukai-mp3-generation` (block count, speaker

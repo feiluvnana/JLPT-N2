@@ -8,7 +8,12 @@ description: Single owner of the choukai TTS script file format — the .txt con
 ## File Location & Naming (Japanese File Names)
 
 The TTS script file is written to the test folder:
-- Path: `tests/<test_id>/聴解スクリプト.txt` (or `tests/<test_id>/script.txt`, e.g., `tests/1/script.txt`).
+- Path: `tests/<test_id>/聴解スクリプト.txt` — **always this name**, per the
+  Japanese-file-names invariant. `make mp3 <test_id>` passes exactly this path,
+  and every test in the repo's history has used it.
+- `script.txt` exists only as a legacy fallback inside `make_choukai_mp3.py`:
+  when invoked with NO argument it looks for `聴解スクリプト.txt` in the current
+  directory and falls back to `script.txt`. Do not author new tests against it.
 
 ## Content rule: official narration ONLY
 
