@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 Serve interactive answer sheets via a local HTTP server and automatically save
-submitted results (採点結果.md and user_answers.json) directly into tests/<test_id>/.
+results into tests/<test_id>/:
+  - each radio selection → user_answers.json  (POST /api/save-answers)
+  - 「採点する」 → 採点結果.md + user_answers.json  (POST /api/submit)
 
 Usage:
     python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py tests/1
@@ -124,47 +126,58 @@ class AnswerSheetHandler(SimpleHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
 
+    def _write_json_response(self, code: int, payload: dict):
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _save_submission(self, data: dict) -> list[str]:
+        """Write optional 採点結果.md and/or user_answers.json into the test dir."""
+        saved_files = []
+
+        md_name = data.get("filename", "採点結果.md")
+        md_content = data.get("content")
+        if md_name and md_content:
+            target = self.test_dir / Path(md_name).name
+            target.write_text(md_content, encoding="utf-8")
+            saved_files.append(target.name)
+
+        json_name = data.get("json_filename", "user_answers.json")
+        json_data = data.get("json_data")
+        if json_name and json_data is not None:
+            target_json = self.test_dir / Path(json_name).name
+            target_json.write_text(
+                json.dumps(json_data, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            saved_files.append(target_json.name)
+
+        return saved_files
+
     def do_POST(self):
-        unquoted_path = urllib.parse.unquote(self.path)
-        if unquoted_path == "/api/submit" or unquoted_path.rstrip("/") == "/api/submit":
+        unquoted_path = urllib.parse.unquote(self.path).rstrip("/")
+        if unquoted_path in ("/api/submit", "/api/save-answers"):
             content_length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(content_length)
             try:
                 data = json.loads(body.decode("utf-8"))
-                saved_files = []
-
-                # Write Markdown report if provided
-                md_name = data.get("filename", "採点結果.md")
-                md_content = data.get("content")
-                if md_name and md_content:
-                    target = self.test_dir / Path(md_name).name
-                    target.write_text(md_content, encoding="utf-8")
-                    saved_files.append(target.name)
-
-                # Write JSON answers if provided
-                json_name = data.get("json_filename", "user_answers.json")
-                json_data = data.get("json_data")
-                if json_name and json_data is not None:
-                    target_json = self.test_dir / Path(json_name).name
-                    target_json.write_text(json.dumps(json_data, indent=2, ensure_ascii=False),
-                                           encoding="utf-8")
-                    saved_files.append(target_json.name)
-
-                resp = {
+                # Autosave on radio click: answers JSON only. 採点する: report + JSON.
+                if unquoted_path == "/api/save-answers":
+                    data = {
+                        "json_filename": data.get("json_filename", "user_answers.json"),
+                        "json_data": data.get("json_data"),
+                    }
+                saved_files = self._save_submission(data)
+                self._write_json_response(200, {
                     "success": True,
                     "message": f"Saved {', '.join(saved_files)} directly to {self.test_dir.name}/",
-                    "saved_files": saved_files
-                }
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps(resp, ensure_ascii=False).encode("utf-8"))
+                    "saved_files": saved_files,
+                })
             except Exception as e:
-                self.send_response(500)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                err_resp = {"success": False, "error": str(e)}
-                self.wfile.write(json.dumps(err_resp, ensure_ascii=False).encode("utf-8"))
+                self._write_json_response(500, {"success": False, "error": str(e)})
         else:
             self.send_error(404, "Not Found")
 
@@ -199,7 +212,7 @@ def run_server(test_dir: Path, port: int = 8765, open_browser: bool = True):
     print(f" Answer Sheet Server running for: {test_dir.name} ({test_dir})")
     print(f" URL: http://127.0.0.1:{actual_port}/")
     print(f" Direct URL: http://127.0.0.1:{actual_port}/{encoded_name}")
-    print(" Submitting answers will automatically save directly into this directory!")
+    print(" Selecting a choice autosaves user_answers.json; 採点する also saves 採点結果.md.")
     print(" Press Ctrl+C to stop the server.")
     print("==========================================================================")
 

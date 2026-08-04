@@ -112,14 +112,16 @@ prints the booklet.
 
 ## Answer capture
 
-- Progress autosaves to `localStorage` under one combined key,
-  `jlpt:<test_id>:combined_answers`, so a refresh or accidental close does not
-  lose work.
-- 「採点する」 also emits `user_answers.json` in exactly the shape
-  `grade_answers.py` reads:
-  `{"言語知識_読解": {"33": 2, …}, "聴解": {"問1-1": 2, …}}` — one file covering
-  both halves. It goes straight into `tests/<test_id>/` when served, and falls
-  back to a browser download when the page is opened over `file://`.
+- **Every radio click** writes progress two places: `localStorage`
+  (`jlpt:<test_id>:combined_answers`) and, when served via `make serve`,
+  `tests/<test_id>/user_answers.json` via `POST /api/save-answers` (debounced
+  ~250 ms so rapid clicks do not thrash the disk). Reload prefers the on-disk
+  file over `localStorage` when both exist.
+- 「採点する」 grades in-page and writes `採点結果.md` plus the same
+  `user_answers.json` shape `grade_answers.py` reads:
+  `{"言語知識_読解": {"33": 2, …}, "聴解": {"問1-1": 2, …}}`. Over `file://`
+  (no server) the click still updates `localStorage`; grading falls back to
+  browser downloads for the two files.
 
 ## Parser contract (why the Markdown conventions are load-bearing)
 

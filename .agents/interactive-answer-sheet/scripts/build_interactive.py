@@ -160,6 +160,27 @@ function state(){
   });
   return o;
 }
+function answersPayload(ans){
+  const gengoAns = {}, choukaiAns = {};
+  for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gengoAns[k] = ans[k]; }
+  for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) choukaiAns[k] = ans[k]; }
+  return {"言語知識_読解": gengoAns, "聴解": choukaiAns};
+}
+let _saveTimer = null;
+function persistAnswers(ans){
+  localStorage.setItem(LS, JSON.stringify(ans));
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(()=>{
+    fetch('/api/save-answers', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        json_filename: 'user_answers.json',
+        json_data: answersPayload(ans)
+      })
+    }).catch(()=>{ /* file:// or offline: localStorage only */ });
+  }, 250);
+}
 function refresh(){
   const ans = state();
   let gCount = 0, cCount = 0;
@@ -168,15 +189,40 @@ function refresh(){
   const total = gCount + cCount;
   document.getElementById('done').textContent =
     "言語: " + gCount + "/75 | 聴解: " + cCount + "/32 | 計: " + total + " / " + KEYS.length;
-  localStorage.setItem(LS, JSON.stringify(ans));
+  persistAnswers(ans);
 }
-function restore(){
-  let o = {};
-  try { o = JSON.parse(localStorage.getItem(LS) || "{}"); } catch(e){}
+function applyAnswers(o){
   for (const k in o){
     const el = document.querySelector('input[name="q_'+CSS.escape(k)+'"][value="'+o[k]+'"]');
     if (el) el.checked = true;
   }
+}
+function flattenSaved(data){
+  const o = {};
+  if (!data || typeof data !== 'object') return o;
+  const g = data["言語知識_読解"] || data.gengo || {};
+  const c = data["聴解"] || data.choukai || {};
+  for (const k in g){ if (g[k] !== undefined && g[k] !== null) o[k] = parseInt(g[k], 10); }
+  for (const k in c){ if (c[k] !== undefined && c[k] !== null) o[k] = parseInt(c[k], 10); }
+  // also accept a flat map { "33": 2, "問1-1": 1 }
+  if (!Object.keys(o).length){
+    for (const k in data){
+      if (k === "言語知識_読解" || k === "聴解") continue;
+      if (typeof data[k] === 'number' || /^\\d+$/.test(String(data[k]))) o[k] = parseInt(data[k], 10);
+    }
+  }
+  return o;
+}
+async function restore(){
+  let o = {};
+  try {
+    const r = await fetch('user_answers.json', {cache: 'no-store'});
+    if (r.ok) o = flattenSaved(await r.json());
+  } catch(e){}
+  if (!Object.keys(o).length){
+    try { o = JSON.parse(localStorage.getItem(LS) || "{}"); } catch(e){}
+  }
+  applyAnswers(o);
   refresh();
 }
 function clearAll(){
@@ -333,10 +379,7 @@ function save(){
   const md = buildReport(ans);
   const name = "採点結果.md";
   const jsonName = "user_answers.json";
-  const gengoAns = {}, choukaiAns = {};
-  for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gengoAns[k] = ans[k]; }
-  for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) choukaiAns[k] = ans[k]; }
-  const payloadJson = {"言語知識_読解": gengoAns, "聴解": choukaiAns};
+  const payloadJson = answersPayload(ans);
 
   fetch('/api/submit', {
     method: 'POST',
