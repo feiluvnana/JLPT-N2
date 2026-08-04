@@ -34,6 +34,12 @@ This repository is dedicated to generating, calibrating, rendering, and synthesi
 - `logs/`: Operational logs, item coverage ledger (`logs/ledger.json`), test blueprints (`logs/test_spec.json`), and web seed harvests (`logs/seeds.json`).
 - `.agents/`: Internal skill definitions, guidelines, and execution scripts.
 
+**`tests/` and `logs/*.json` are gitignored working state**: the repo tracks only
+`AGENTS.md`, `Makefile`, `.agents/` and `refs/`. Every exam deliverable is
+reproducible from the pipeline, so a fresh clone starts with no `tests/` and no
+`logs/` at all — `sample_items.py` creates `logs/` on its first run; create it by
+hand (`mkdir -p logs`) before writing `logs/seeds.json` for a web-blended test.
+
 ### Deliverables Naming Convention (Japanese File Names Mandatory)
 
 Inside `tests/<test_id>/`:
@@ -96,8 +102,8 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 `--seed <n> --test-id <id>` so the ledger records attribution — see
 `item-pool-sampling/SKILL.md`.
 
-A fresh clone has **no `tests/` directory and an empty `logs/`** — generate a
-test before any `make grade` / `make sheet` invocation.
+A fresh clone has **no `tests/` and no `logs/`** (both are gitignored, see §2) —
+generate a test before any `make grade` / `make sheet` invocation.
 
 ### Item Pool Sampling (Blueprint Generation & Item Rotation)
 

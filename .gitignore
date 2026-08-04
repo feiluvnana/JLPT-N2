@@ -5,5 +5,13 @@
 __pycache__/
 *.py[cod]
 
-# Temporary per-question audio cache (auto-deleted on success anyway)
-tests/*/segments/
+# Generated exams. Everything under tests/ is a working file reproducible from
+# the pipeline (sources + booklets + MP3 + answer sheet + reports); the repo
+# tracks only the skills, refs and build tooling. Includes the temporary
+# per-question audio cache tests/*/segments/, which is auto-deleted on success.
+tests/
+
+# Operational state written by the pipeline: item ledger, blueprint, web seeds.
+# The logs/ directory itself is not tracked either (git cannot track empty
+# dirs) — sample_items.py creates it on first run.
+logs/*.json
