@@ -27,6 +27,15 @@ python .agents/choukai-mp3-generation/scripts/make_choukai_mp3.py tests/<test_id
 ```
 → Outputs `聴解.mp3` inside `tests/<test_id>/`.
 
+A cold build of a full N2 script (~250 lines → ~45 min of audio) takes about a
+minute. Lines are synthesized concurrently (`TTS_JOBS = 8`); lower it if the
+endpoint starts throttling:
+```bash
+python .agents/choukai-mp3-generation/scripts/make_choukai_mp3.py tests/<test_id>/聴解スクリプト.txt --jobs 3
+```
+The floor is the final `loudnorm` encode (~35 s for a 45-minute file) — that pass
+reads the whole assembled stream, so it cannot be split.
+
 ## Cleanup & Segment Retention
 
 - **Automatic Cleanup**: Upon successful generation of `聴解.mp3`, the temporary `segments/` directory is automatically cleaned up and deleted to save disk space.
@@ -68,6 +77,17 @@ and update ONLY these constants.
   so re-runs skip finished lines. The cache key is a hash of
   **text + voice + rate**, not the line's position — keying on position alone
   meant a reworded line or a remapped speaker silently reused the old audio.
+- **Parse into a plan, then synthesize, then assemble — in that order.** The
+  plan pins every segment path and every gap duration up front, which is what
+  makes the parallel passes safe: two tasks can never target the same file, and
+  the assembled output is byte-identical to a sequential build (verified by
+  running both versions over one set of cached segments).
+- **Silence files are all created before block assembly begins.** Creating them
+  lazily let two blocks shell out to ffmpeg for the same `_sil_1.3.wav`
+  simultaneously; the loser got a truncated gap. Nothing downstream can detect
+  that — the file is still valid audio, just the wrong length.
+- Chapter offsets stay a strictly in-order running sum. Block durations are
+  measured in parallel, but `clock` must accumulate block by block.
 - **Script validation is a hard gate.** `validate_script()` runs before any
   synthesis and refuses to build on a missing 例, a wrong item count, an
   answer spoken aloud, an authoring annotation, or an unmapped speaker label.

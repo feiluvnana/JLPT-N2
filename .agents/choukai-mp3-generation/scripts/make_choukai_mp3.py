@@ -15,6 +15,7 @@ Setup (one time):
 
 Run:
     python make_choukai_mp3.py tests/<test_id>/聴解スクリプト.txt
+    python make_choukai_mp3.py … --jobs 4      # fewer parallel TTS requests
 
 Output (written next to the input script):
     聴解.mp3               (full exam)
@@ -22,13 +23,15 @@ Output (written next to the input script):
     segments/             (per-block mp3s for drilling single questions)
 
 Re-running is cheap: already-synthesized lines are skipped (delete the
-segments/ folder to force a full rebuild).
+segments/ folder to force a full rebuild). A cold build synthesizes lines
+concurrently — see TTS_JOBS.
 """
 
 import asyncio
 import hashlib
 import json
 import inspect
+import os
 import re
 import subprocess
 import sys
@@ -92,6 +95,15 @@ PAUSE_AFTER_INSTRUCTION = 3.0
 PAUSE_DEFAULT = 1.5
 
 SR = 24000  # edge-tts native sample rate
+
+# Parallelism. Synthesizing a line is a network round trip (0.6–1.9 s measured),
+# so a cold build of a ~250-line script is latency-bound, not CPU-bound, and runs
+# ~4x faster with a handful of requests in flight. The cap is deliberately low:
+# the edge-tts endpoint throttles, and while synth() retries with backoff, the
+# cap is what keeps 429s rare enough that retries stay invisible.
+TTS_JOBS = 8
+# ffmpeg calls are one core each, so bound them separately from the network work.
+FFMPEG_JOBS = max(2, (os.cpu_count() or 4) - 2)
 ITEM_RE = re.compile(r"^(例。|\d+番。)")
 SPEAKER_RE = re.compile(r"^([^:: ]{1,6})[::](.*)$")
 
@@ -325,9 +337,137 @@ def validate_script(blocks):
           + ", ".join(f"{k}={items[k]}" for k in EXPECTED_ITEMS))
 
 
+def build_plan(blocks, seg: Path):
+    """Parse the script into an explicit build plan before anything is synthesized.
+
+    Parsing is separated from assembly so that every line's TTS request can be
+    dispatched at once instead of one per block. The plan is what makes that safe:
+    it pins each line's segment path and each gap's exact duration up front, so
+    the parallel passes only fill in files whose names and contents were already
+    decided sequentially.
+    """
+    plan = []
+    section = ""
+    for bi, block in enumerate(blocks):
+        lines = [l for l in block.splitlines() if l.strip()]
+        first = lines[0]
+        if re.match(r"^問題\d+。", first):
+            section = first.rstrip("。")
+        is_item_block = bool(ITEM_RE.match(first))
+
+        entries = []
+        prev_line = ""
+        for li, line in enumerate(lines):
+            spec, spoken = voice_for(line)
+            if not spoken:
+                continue
+            # Cache key includes the text AND the voice/rate, not just the
+            # position: keying on position alone silently reuses stale audio
+            # when a line is reworded or a speaker is remapped to a new voice.
+            tag = hashlib.sha1(
+                f"{spoken}|{spec['voice']}|{spec['rate']}".encode("utf-8")
+            ).hexdigest()[:10]
+            mp3 = seg / f"b{bi:03d}_l{li:02d}_{tag}.mp3"
+            entries.append({
+                "spoken": spoken, "spec": spec,
+                "mp3": mp3, "wav": mp3.with_suffix(".wav"),
+                # None for the block's first spoken line: nothing precedes it.
+                "gap": None if not entries else
+                       gap_before_line(section, li, line, prev_line, is_item_block),
+            })
+            prev_line = line
+
+        plan.append({"bi": bi, "first": first, "section": section,
+                     "entries": entries, "pause": pause_after(first, section),
+                     "wav": seg / f"block_{bi:03d}.wav"})
+    return plan
+
+
+async def synthesize_lines(plan, limit: int):
+    """Synthesize every not-yet-cached line, `limit` requests in flight."""
+    todo = [e for b in plan for e in b["entries"] if not e["wav"].exists()]
+    cached = sum(len(b["entries"]) for b in plan) - len(todo)
+    print(f"  synthesizing {len(todo)} line(s) with {limit} in parallel"
+          + (f" ({cached} cached)" if cached else ""))
+    if not todo:
+        return
+
+    sem = asyncio.Semaphore(limit)
+    done = 0
+
+    async def one(e):
+        nonlocal done
+        async with sem:
+            await synth(e["spoken"], e["spec"]["voice"], e["spec"]["rate"], e["mp3"])
+            await asyncio.to_thread(to_wav, e["mp3"], e["wav"])
+        done += 1
+        print(f"  [{done}/{len(todo)}] {e['spoken'][:40]}")
+
+    await asyncio.gather(*(one(e) for e in todo))
+
+
+async def make_silences(plan, seg: Path, limit: int):
+    """Pre-create every silence file the plan needs, before parallel assembly.
+
+    Creating them lazily during assembly would let two blocks shell out to ffmpeg
+    for the same `_sil_1.3.wav` at once and leave one block with a truncated gap —
+    a corruption no downstream check can see, since the file is still valid audio.
+    """
+    wanted = {e["gap"] for b in plan for e in b["entries"] if e["gap"]}
+    wanted |= {b["pause"] for b in plan if b["pause"]}
+    paths = {s: seg / f"_sil_{s:g}.wav" for s in sorted(wanted)}
+
+    sem = asyncio.Semaphore(limit)
+
+    async def one(seconds, path):
+        async with sem:
+            await asyncio.to_thread(make_silence_wav, seconds, path)
+
+    await asyncio.gather(*(one(s, p) for s, p in paths.items()
+                           if not p.exists()))
+    return paths
+
+
+async def assemble_blocks(plan, silences, seg: Path, limit: int):
+    """Concat each block, encode its drill mp3, and measure it — blocks in parallel.
+
+    Safe to parallelize because every input file already exists and each block
+    writes only paths derived from its own index.
+    """
+    sem = asyncio.Semaphore(limit)
+
+    async def one(b):
+        wavs = []
+        for e in b["entries"]:
+            if e["gap"] is not None:
+                wavs.append(silences[e["gap"]])
+            wavs.append(e["wav"])
+        async with sem:
+            await asyncio.to_thread(concat_wavs, wavs, b["wav"])
+            # per-question drill file
+            await asyncio.to_thread(wav_to_mp3, b["wav"], seg / f"block_{b['bi']:03d}.mp3")
+            return await asyncio.to_thread(wav_duration, b["wav"])
+
+    print(f"  assembling {len(plan)} block(s) with {limit} in parallel")
+    return await asyncio.gather(*(one(b) for b in plan))
+
+
 async def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
     keep_segments = "--keep-segments" in sys.argv
+    tts_jobs = TTS_JOBS
+    args = []
+    skip_next = False
+    for i, a in enumerate(sys.argv[1:]):
+        if skip_next:
+            skip_next = False
+            continue
+        if a == "--jobs":
+            tts_jobs = max(1, int(sys.argv[i + 2]))
+            skip_next = True
+        elif a.startswith("--jobs="):
+            tts_jobs = max(1, int(a.split("=", 1)[1]))
+        elif not a.startswith("--"):
+            args.append(a)
 
     if args:
         src = Path(args[0])
@@ -342,58 +482,21 @@ async def main():
     seg = out_dir / "segments"
     seg.mkdir(exist_ok=True)
 
-    silence_cache = {}
+    plan = build_plan(blocks, seg)
+    await synthesize_lines(plan, tts_jobs)
+    silences = await make_silences(plan, seg, FFMPEG_JOBS)
+    durations = await assemble_blocks(plan, silences, seg, FFMPEG_JOBS)
 
-    def silence(seconds: float) -> Path:
-        if seconds not in silence_cache:
-            f = seg / f"_sil_{seconds:g}.wav"
-            if not f.exists():
-                make_silence_wav(seconds, f)
-            silence_cache[seconds] = f
-        return silence_cache[seconds]
-
+    # Chapter marks and the playlist are accumulated strictly in block order:
+    # the offsets are a running sum, so this stays sequential even though the
+    # durations feeding it were measured in parallel. Computed here rather than
+    # recovered later with silence detection — the assembler knows the true
+    # offsets, a detector only guesses them.
     playlist = []
     chapters = []
     clock = 0.0        # exact position in the assembled file, seconds
-    section = ""
-    for bi, block in enumerate(blocks):
-        lines = [l for l in block.splitlines() if l.strip()]
-        first = lines[0]
-        if re.match(r"^問題\d+。", first):
-            section = first.rstrip("。")
-        print(f"[{bi + 1}/{len(blocks)}] {first[:34]}")
-
-        is_item_block = bool(ITEM_RE.match(first))
-        wavs = []
-        prev_line = ""
-        for li, line in enumerate(lines):
-            spec, spoken = voice_for(line)
-            if not spoken:
-                continue
-            # Cache key includes the text AND the voice/rate, not just the
-            # position: keying on position alone silently reuses stale audio
-            # when a line is reworded or a speaker is remapped to a new voice.
-            tag = hashlib.sha1(
-                f"{spoken}|{spec['voice']}|{spec['rate']}".encode("utf-8")
-            ).hexdigest()[:10]
-            mp3 = seg / f"b{bi:03d}_l{li:02d}_{tag}.mp3"
-            wav = mp3.with_suffix(".wav")
-            if not wav.exists():
-                await synth(spoken, spec["voice"], spec["rate"], mp3)
-                to_wav(mp3, wav)
-            if wavs:
-                gap = gap_before_line(section, li, line, prev_line, is_item_block)
-                wavs.append(silence(gap))
-            wavs.append(wav)
-            prev_line = line
-
-        block_wav = seg / f"block_{bi:03d}.wav"
-        concat_wavs(wavs, block_wav)
-        wav_to_mp3(block_wav, seg / f"block_{bi:03d}.mp3")  # per-question drill file
-
-        # Chapter mark for this block, at its exact start in the final file.
-        # Computed here rather than recovered later with silence detection:
-        # the assembler knows the true offsets, a detector only guesses them.
+    for b, duration in zip(plan, durations):
+        first, section = b["first"], b["section"]
         label = first.split("。")[0] + "。" if ITEM_RE.match(first) else None
         if re.match(r"^問題\d+。", first):
             chapters.append({"type": "section", "section": section,
@@ -403,11 +506,10 @@ async def main():
                              "label": label.rstrip("。"),
                              "start": round(clock, 2)})
 
-        playlist.append(block_wav)
-        clock += wav_duration(block_wav)
-        pause = pause_after(first, section)
-        playlist.append(silence(pause))
-        clock += pause
+        playlist.append(b["wav"])
+        clock += duration
+        playlist.append(silences[b["pause"]])
+        clock += b["pause"]
 
     full_wav = out_dir / "_n2_full.wav"
     out_mp3 = out_dir / "聴解.mp3"
