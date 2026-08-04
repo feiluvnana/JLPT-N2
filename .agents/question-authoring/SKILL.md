@@ -88,6 +88,49 @@ matching where one tempting option fails exactly one condition.
 即時応答 tests idioms and keigo: 目を通す, お言葉に甘えて, 〜かと思いきや,
 〜ようがない, 席を外しております, 在庫を切らしております.
 
+## Item integrity (every rule here shipped broken at least once)
+
+`make check` enforces the mechanical half of this list per test; the rest is on
+you. Run it before calling any authoring work done.
+
+- **Four DIFFERENT options.** Never let the same string appear twice in one
+  option set — that is a second correct answer. Test 2 shipped
+  `1. 削減  2. 削減` and `1. ぶった … 3. ぶった`. When building near-miss kanji
+  distractors, read the four back to yourself before moving on.
+- **The key goes where `answer_positions` says.** `logs/test_spec.json`
+  prescribes the correct-option number for all 107 items so no number is
+  over-used. Write the item, then *order the options* so the correct one lands
+  on the prescribed slot. Do not write the key you feel like and do not
+  "fix" the imbalance later — `make check` compares all 107 against the spec.
+- **問題8: the answer is the option on ★, which is the 3rd of 4 blanks.**
+  Assemble the full sentence first, confirm it is grammatical, number the
+  positions, and only then read off which option sits third. Test 2 shipped
+  three of five keys naming the 2nd or 4th blank instead. Write the 解説 as the
+  word order with option numbers in parentheses, correct one bolded:
+  `状況に(2)→おいて(4)→**価格競争が(1)**→続く限り(3)`. `make check` parses that
+  sequence and asserts its 3rd entry equals the key, so it must be a real
+  permutation of 1-4 that matches the stem's options.
+- **Every scramble must form ONE grammatical sentence.** Two options that cannot
+  coexist make the item unanswerable no matter the key: test 2 offered both
+  「まったく」 and 「ほとんど持てていない」 in one set, and both 「わりに」 and
+  「にもかかわらず」 in another. One contrast marker, one degree adverb.
+- **A cloze blank must not repeat what the stem already says.** `…からでも
+  ( 54 )はいかがだろうか` with option `試してみてはいかがだろうか` ends the
+  sentence twice. Read stem-plus-option aloud as one sentence for all four.
+- **Distractors must be grammatical Japanese that is merely WRONG.** 用法
+  (問題6) distractors are sentences a learner could believe — a wrong
+  collocation or domain, never word salad. 「整備がおろそかに完璧だった」 is not
+  a distractor, it is a bug: nobody can be tempted by it, so the item tests
+  nothing.
+- **One grammar point, one item.** Do not test 〜にほかならない in 問題7 and
+  again as a 問題9 blank. Check the 問題7/8/9 sets against each other.
+- **Explanations must quote the real text.** The 解説 cell for a 読解 or 聴解
+  item has to quote the passage or script line that decides it — copy-paste,
+  do not paraphrase from memory. Test 2's 聴解 key quoted four lines of dialogue
+  that were nowhere in `聴解スクリプト.txt`, which hid a keyed answer that the
+  script did not actually support. If you cannot find the quote, the item is
+  broken, not the explanation.
+
 ## Markdown formatting contract (CRITICAL to prevent HTML numbering bugs)
 
 - **Question stems MUST use bold numbers, NOT Markdown list syntax**:

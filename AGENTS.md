@@ -177,6 +177,14 @@ matches `GENGO_QUESTION_TAXONOMY`; and for every test on disk the script
 validates, 75+32 keys parse, the sheet has 107 correctly-sized radio groups, and
 the in-page grader agrees with `grade_answers.py` on identical answers.
 
+It also checks item integrity, which no other gate can see: no question offers
+the same option twice; all 107 keys sit on the position `logs/test_spec.json`
+prescribed; 問題8 stems have four blanks with ★ third and their keys name the
+option that lands there; the 聴解 script's 問題N instructions match the
+booklet's verbatim; choices are spoken only for the 問題 whose booklet prints
+none (so 問題5-3番's printed options can't drift from the audio); and the script
+carries no ASCII `,`/`.` for edge-tts to mis-time.
+
 **Run it after touching any script, skill doc, or test.** It is read-only and
 takes a couple of seconds. Every check in it exists because that exact
 inconsistency shipped at least once.

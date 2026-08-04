@@ -241,10 +241,154 @@ def check_taxonomy():
               re.search(rf"{want} questions max|{want} items", grading_doc) is not None)
 
 
+# ------------------------------------------- item-level content contracts
+# Everything below caught a bug in test 2 as generated: two questions whose
+# option list contained the same string twice (so two options were correct),
+# a 問題8 key naming the option in the 2nd blank instead of the ★ (3rd) one,
+# a cloze blank whose key pointed at a different option than its own
+# explanation, and 問題5-3番 printing one option set while the audio spoke
+# another. None of it is visible to the shape checks in check_tests().
+
+def gengo_option_sets(md: str, bi) -> dict[int, list[str]]:
+    """{question number: [option text, …]} from the question body only.
+
+    Handles every layout in use: four options on their own line (問題1-5, 7, 8),
+    one option per line (問題6, 10-14), and options trailing the stem itself on
+    one line (test 1's 問題9).
+    """
+    def split_row(text: str) -> list[str]:
+        return [p.strip() for p in re.split(r"(?<![^\s（(])[1-4]\.\s*", text.strip())
+                if p.strip()]
+
+    cut = bi.KEY_HEADING.search(md)
+    body = md[: cut.start()] if cut else md
+    out: dict[int, list[str]] = {}
+    cur: int | None = None
+    for line in body.splitlines():
+        q = bi.GENGO_Q.match(line)
+        if q:
+            cur = int(q.group(1))
+            rest = line[q.end():]
+            out[cur] = split_row(rest) if bi.option_run(rest) else []
+            continue
+        if cur is None or not bi.OPTION.match(line):
+            continue
+        if bi.option_run(line):  # horizontal row: split it into its options
+            out[cur] = split_row(line)
+        else:
+            out[cur].append(bi.OPTION.match(line).group(2).strip())
+    return out
+
+
+BLANK_RUN = re.compile(r"(?:[＿_]+★?[＿_]*|★)(?:\s*(?:[＿_]+★?[＿_]*|★))+")
+
+
+def check_scramble_stars(gt: str, keys: dict[int, int]):
+    """問題8: the key must name the option that lands on ★ (the 3rd blank).
+
+    Both facts are checkable from the Markdown alone: the stem must offer four
+    blanks with ★ on the third, and the 解説 cell must spell the word order out
+    as `語(n)→語(n)→語(n)→語(n)`, whose 3rd entry is the answer. Test 2 shipped
+    with three of five keys naming a different blank, and one 解説 citing option
+    numbers that did not exist in the stem.
+    """
+    stems = {int(n): s for n, s in
+             re.findall(r"^\*\*(4[5-9])\*\*\s*(.+)$", gt, re.M)}
+    bad_stem = []
+    for q in range(45, 50):
+        run = BLANK_RUN.search(stems.get(q, ""))
+        slots = run.group().split() if run else []
+        if len(slots) != 4 or [i for i, s in enumerate(slots) if "★" in s] != [2]:
+            bad_stem.append(f"{q}({len(slots)} blanks, ★ at "
+                            f"{[i + 1 for i, s in enumerate(slots) if '★' in s]})")
+    check("問題8 stems offer 4 blanks with ★ third", not bad_stem, ", ".join(bad_stem))
+
+    mismatch, unparsed = [], []
+    for hit in re.finditer(r"^\|\s*(4[5-9])\s*\|\s*([1-4])\s*\|(.*)\|", gt, re.M):
+        q, ans, expl = int(hit.group(1)), int(hit.group(2)), hit.group(3)
+        seq = [int(d) for d in re.findall(r"[（(]([1-4])[）)]", expl)]
+        if sorted(seq) != [1, 2, 3, 4]:
+            unparsed.append(f"{q}(order={seq or 'none'})")
+        elif seq[2] != ans:
+            mismatch.append(f"{q}: key={ans} but ★(3rd) is option {seq[2]}")
+    check("問題8 解説 spells the word order as a 1-4 permutation", not unparsed,
+          f"{', '.join(unparsed)} — write `語(1)→語(4)→語(2)→語(3)`")
+    check("問題8 keys name the option on ★", not mismatch, "; ".join(mismatch))
+
+
+def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
+    """Keys must sit where sample_items.py put them (the balance contract).
+
+    logs/test_spec.json prescribes the answer position of every item so no
+    number is over-used; authoring is supposed to place the correct choice
+    there. Only the test that spec belongs to can be checked.
+    """
+    spec_path = ROOT / "logs" / "test_spec.json"
+    if not spec_path.is_file():
+        return skip("keys match logs/test_spec.json answer_positions", "no test_spec.json")
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    if str(spec.get("test_id")) != d.name:
+        return skip(f"keys match logs/test_spec.json answer_positions",
+                    f"spec is for test {spec.get('test_id')}, not {d.name}")
+    pos = spec.get("answer_positions") or {}
+
+    want: dict[str, int] = {}
+    for tag, meta in g.GENGO_QUESTION_TAXONOMY.items():
+        lo, hi = meta["range"]
+        n = tag[1:]
+        row = pos.get(f"問題{n}_語彙") or pos.get(f"問題{n}") or []
+        for q, a in zip(range(lo, hi + 1), row):
+            want[str(q)] = a
+    choukai_ids = {1: [f"問1-{i}" for i in range(1, 6)],
+                   2: [f"問2-{i}" for i in range(1, 7)],
+                   3: [f"問3-{i}" for i in range(1, 6)],
+                   4: [f"問4-{i}" for i in range(1, 13)],
+                   5: ["問5-1", "問5-2", "問5-3-1", "問5-3-2"]}
+    for n, ids in choukai_ids.items():
+        for qid, a in zip(ids, pos.get(f"聴解_問題{n}") or []):
+            want[qid] = a
+
+    have = {str(q): a for q, a in keys.items()} | dict(ck)
+    off = {q: (a, have.get(q)) for q, a in want.items() if have.get(q) != a}
+    check(f"keys match logs/test_spec.json answer_positions ({len(want)} prescribed)",
+          not off, f"prescribed vs actual: {off}")
+
+
+def check_script_shape(script_text: str, ct: str, m):
+    """聴解 script ↔ booklet: same instructions, options spoken only where the
+    booklet prints none (jlpt-exam-structure's 'Printed in booklet' column)."""
+    drift = [ln for ln in re.findall(r"^問題[1-5]では、.*$", ct, re.M)
+             if ln.strip() not in script_text]
+    check("問題N instructions are identical in booklet and script", not drift,
+          f"booklet wording absent from the script: {[d[:34] + '…' for d in drift]}")
+
+    secs = re.split(r"^問題([1-5])。$", script_text, flags=re.M)
+    spoken = {int(secs[i]): len(re.findall(r"^[1-4]、", secs[i + 1], re.M))
+              for i in range(1, len(secs), 2)}
+    # 問題1/2 print their options; 問題3 speaks 4 per item, 問題4 speaks 3;
+    # 問題5 speaks 4 each for 1番/2番 only — 3番's are printed.
+    ei = m.EXPECTED_ITEMS
+    want = {1: 0, 2: 0, 3: 4 * ei["問題3"], 4: 3 * ei["問題4"], 5: 8}
+    check("options are spoken exactly where the booklet prints none",
+          spoken == want, f"spoken option lines {spoken}, expected {want}")
+
+    if (tail := re.split(r"^3番。まず話を聞いてください。", script_text, flags=re.M)):
+        if len(tail) > 1 and re.search(r"^[1-4]、", tail[1], re.M):
+            check("問題5 3番 does not speak its printed options", False,
+                  "options for the two-question item are printed in the booklet only")
+        else:
+            check("問題5 3番 does not speak its printed options", True)
+
+    ascii_punct = re.findall(r"(?<!\d)[,.](?!\d)", script_text)
+    check("no ASCII , or . in the script (TTS mis-times them)", not ascii_punct,
+          f"{len(ascii_punct)} found — use 、 and 。")
+
+
 # --------------------------------------------------------------- per-test checks
 def check_tests():
     g = load(".agents/exam-answer-grading/scripts/grade_answers.py")
     m = load(".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py")
+    bi = load(".agents/interactive-answer-sheet/scripts/build_interactive.py")
     key_heading = re.compile(r"^#+\s*(解答|【?正解)", re.M)
     expected_choukai = ([f"問{s}-{i}" for s, n in ((1, 5), (2, 6), (3, 5), (4, 12))
                          for i in range(1, n + 1)]
@@ -281,14 +425,28 @@ def check_tests():
               f"missing {[k for k in expected_choukai if k not in ck]}, "
               f"unexpected {[k for k in ck if k not in expected_choukai]}")
 
+        # No question may offer the same option twice — a silent second correct
+        # answer, and the radio-count checks below cannot see it.
+        opts = gengo_option_sets(gt, bi)
+        dupes = {q: [o for o in set(v) if v.count(o) > 1] for q, v in opts.items()}
+        dupes = {q: v for q, v in dupes.items() if v}
+        check("no gengo question repeats an option", not dupes,
+              "; ".join(f"{q}: {v}" for q, v in sorted(dupes.items())))
+        wrong_n = {q: len(v) for q, v in opts.items() if len(v) != 4}
+        check("every gengo question parses to exactly 4 options", not wrong_n, f"{wrong_n}")
+        check_scramble_stars(gt, keys)
+        check_answer_positions(d, keys, ck, g)
+
         script = d / "聴解スクリプト.txt"
         if script.is_file():
-            blocks = [b.strip() for b in re.split(r"\n\s*\n", script.read_text(encoding="utf-8")) if b.strip()]
+            st = script.read_text(encoding="utf-8")
+            blocks = [b.strip() for b in re.split(r"\n\s*\n", st) if b.strip()]
             try:
                 m.validate_script(blocks)
                 check(f"聴解スクリプト.txt passes validate_script ({len(blocks)} blocks)", True)
             except SystemExit as e:
                 check("聴解スクリプト.txt passes validate_script", False, str(e).replace("\n", " ")[:300])
+            check_script_shape(st, ct, m)
         else:
             check("聴解スクリプト.txt present", False, "canonical name required")
 

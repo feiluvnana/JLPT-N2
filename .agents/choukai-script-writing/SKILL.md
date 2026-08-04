@@ -83,6 +83,46 @@ violating script cannot produce an MP3.
 - 問題1/2: repeat the question as the block's last line.
 - 問題3/4/5 spoken choices: one per line, format `1、…。` `2、…。` (読点 after
   the digit — the parser and pacing engine key on `^[1-4]、`).
+- Japanese punctuation only: 、and 。 An ASCII `,` or `.` in a spoken line makes
+  edge-tts mis-time the pause. (`?` is fine and is used throughout for
+  colloquial questions.) `make check` rejects ASCII commas/periods.
+
+## Spoken vs printed choices — do not speak the printed ones
+
+jlpt-exam-structure's "Printed in booklet" column decides this, and it is not
+uniform inside 問題5:
+
+| 問題 | Choices are |
+|---|---|
+| 1, 2 | PRINTED in `聴解.md` — never spoken |
+| 3, 4 | SPOKEN only — booklet prints nothing |
+| 5, 1番/2番 | SPOKEN only |
+| 5, 3番 | **PRINTED** — the two-question item's options are in the booklet |
+
+Speaking 問題5-3番's options is not a harmless extra: the printed and spoken
+lists then drift, and test 2 shipped a 3番 whose booklet printed 学食 proposals
+while the audio read out 「全自動モデル」「省エネモデル」「小型モデル」 —
+leftovers from the 家電 item in 問題1, which made the answer guessable from the
+booklet alone. `make check` now counts spoken choice lines per 問題 and fails on
+any that belong in the booklet instead.
+
+## Instructions are copied, not re-worded
+
+The 問題N instruction in the script must be **character-for-character** the one
+in `聴解.md` (the script adds only 「では、練習しましょう。」 after it). Test 2
+drifted in three places — 「どのような内容か」 for 「どんな内容か」,
+「文章がやや長くなります」 for 「長めの話を聞きます」, and a 問題4 instruction
+missing 「まず…それから」 — so the examinee heard different wording than they
+read. Take the canonical text from jlpt-exam-structure, paste it into both
+files, and let `make check` confirm they match.
+
+## One voice per person, and questions that name them unambiguously
+
+If an item's questions say 「男の学生は」/「女の学生は」, the item must contain
+exactly one of each. Test 2's 問題5-3番 had 男1 and 男2 both speaking as students
+while 質問1 asked about 「男の学生」 — unanswerable as posed. Either give the
+item one speaker per gender/role, or word the questions so each maps to exactly
+one voice.
 
 ## Required structure — every element is mandatory
 

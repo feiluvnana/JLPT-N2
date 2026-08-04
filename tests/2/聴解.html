@@ -1,0 +1,546 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>聴解</title><style>
+@page { size: A4; margin: 18mm 16mm; }
+body { font-family: "Noto Serif CJK JP", serif; font-size: 10.5pt;
+       line-height: 1.9; color: #1a1a1a; }
+h1 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 15pt;
+     border-bottom: 2.5px solid #1a1a1a; padding-bottom: 5px;
+     margin: 30px 0 14px; page-break-after: avoid; }
+h2 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 12pt;
+     background: #efefef; border-left: 5px solid #444; padding: 5px 10px;
+     margin: 26px 0 12px; page-break-after: avoid; }
+h3 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 11pt;
+     margin: 20px 0 8px; page-break-after: avoid; }
+p { margin: 12px 0; }
+/* Furigana: WeasyPrint has NO ruby layout (and ignores ruby-position), so the
+   reading is stacked manually. rt is taken out of flow and pinned above the
+   base, which keeps the base glyphs on the text baseline and leaves line
+   spacing untouched. Do NOT go back to display:inline-table -- WeasyPrint
+   drops the base onto its own line under the reading. */
+ruby {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: baseline;
+  /* line-height 1 keeps the ruby box hugging its glyphs; with a taller
+     inherited line-height the box grows and `bottom: 100%` would push the
+     reading far above the text. */
+  line-height: 1;
+}
+rb { display: inline; }
+rt {
+  position: absolute;
+  bottom: calc(100% + 0.1em);
+  left: -0.6em;
+  right: -0.6em;
+  font-size: 0.5em;
+  line-height: 1;
+  font-weight: normal;
+  color: #333;
+  white-space: nowrap;
+  text-align: center;
+}
+rp { display: none; }
+/* Only blocks that actually carry furigana get extra leading, so the reading
+   clears the descenders of the line above without loosening plain text. */
+p.furi, li.furi { line-height: 2.1; }
+.vocab-notes { margin-top: 8px; font-size: 9pt; color: #333; line-height: 1.6; border-top: 1px dashed #aaa; padding-top: 6px; }
+table { border-collapse: collapse; margin: 10px 0; width: 100%; page-break-inside: avoid; }
+th, td { border: 1px solid #888; padding: 4px 9px; font-size: 9.5pt;
+         line-height: 1.6; }
+th { background: #f0f0f0; font-family: "Noto Sans CJK JP", sans-serif; }
+blockquote { border: 1px solid #999; background: #fafafa; margin: 10px 0;
+             padding: 10px 14px; page-break-inside: avoid; }
+hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
+strong { font-family: "Noto Sans CJK JP", sans-serif; }
+
+@media screen {
+  body { max-width: 46em; margin: 0 auto; padding: 2.5em 1.6em 6em;
+         background: #fff; }
+}
+@media screen and (max-width: 48em) { body { padding: 1.2em 1em 4em; } }
+</style></head><body><h1>日本語能力試験 N2 模擬試験 — 聴解</h1>
+<h1>問題用紙・解答用紙</h1>
+<p class="furi"><strong><ruby>時間<rt>じかん</rt></ruby>: <ruby>約<rt>やく</rt></ruby>50<ruby>分<rt>ふん</rt></ruby> <ruby>問題数<rt>もんだいすう</rt></ruby>: 32<ruby>問<rt>もん</rt></ruby></strong><br />
+このファイルには<strong>スクリプトは<ruby>入<rt>はい</rt></ruby>っていません</strong>。<ruby>音声<rt>おんせい</rt></ruby>(<code>&lt;ruby&gt;聴解&lt;rt&gt;ちょうかい&lt;/rt&gt;&lt;/ruby&gt;.mp3</code>)を<ruby>聞<rt>き</rt></ruby>きながら、この<ruby>用紙<rt>ようし</rt></ruby>だけを<ruby>見<rt>み</rt></ruby>て<ruby>解答<rt>かいとう</rt></ruby>してください。<br />
+<strong><ruby>正解<rt>せいかい</rt></ruby>と<ruby>解説<rt>かいせつ</rt></ruby>は、このファイルの<ruby>一番最後<rt>いちばんさいご</rt></ruby>にあります。</strong></p>
+<hr />
+<h1>【問題】</h1>
+<h2>問題1 課題理解</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>1では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby>作文<rt>さくぶん</rt></ruby>を<ruby>書<rt>か</rt></ruby>く<br />
+ 2. <ruby>教科書<rt>きょうかしょ</rt></ruby>の<ruby>問題<rt>もんだい</rt></ruby>をやる<br />
+ 3. ノートを<ruby>買<rt>か</rt></ruby>う<br />
+ 4. プリントを<ruby>作<rt>つく</rt></ruby>る</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>無料<rt>むりょう</rt></ruby>の<ruby>音声<rt>おんせい</rt></ruby>ガイドアプリをダウンロードする<br />
+ 2. <ruby>企画展<rt>きかくてん</rt></ruby>の<ruby>特別<rt>とくべつ</rt></ruby><ruby style="min-width:3.00em">入場<rt>にゅうじょう</rt></ruby>チケットを<ruby>買<rt>か</rt></ruby>う<br />
+ 3. ボランティアガイドツアーの<ruby>受付<rt>うけつけ</rt></ruby>に<ruby>並<rt>なら</rt></ruby>ぶ<br />
+ 4. <ruby>受付<rt>うけつけ</rt></ruby>で<ruby>専用<rt>せんよう</rt></ruby>の<ruby>音声<rt>おんせい</rt></ruby>ガイド<ruby>端末<rt>たんまつ</rt></ruby>を<ruby>借<rt>か</rt></ruby>りる</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>一番<rt>いちばん</rt></ruby><ruby>高額<rt>こうがく</rt></ruby>な<ruby>最新<rt>さいしん</rt></ruby>フラッグシップモデルを<ruby style="min-width:2.50em">購入<rt>こうにゅう</rt></ruby>する<br />
+ 2. <ruby>多数<rt>たすう</rt></ruby>の<ruby>機能<rt>きのう</rt></ruby>がついた<ruby>大型<rt>おおがた</rt></ruby>モデルを<ruby style="min-width:2.50em">購入<rt>こうにゅう</rt></ruby>する<br />
+ 3. <ruby style="min-width:5.50em">必要最小限<rt>ひつようさいしょうげん</rt></ruby>の<ruby>機能<rt>きのう</rt></ruby>がついた<ruby>小型<rt>こがた</rt></ruby>モデルを<ruby style="min-width:2.50em">購入<rt>こうにゅう</rt></ruby>する<br />
+ 4. <ruby>去年<rt>きょねん</rt></ruby>の<ruby>型<rt>かた</rt></ruby><ruby>落<rt>お</rt></ruby>ちモデルを<ruby style="min-width:2.50em">購入<rt>こうにゅう</rt></ruby>する</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>寄付<rt>きふ</rt></ruby>できる<ruby style="min-width:2.50em">食品<rt>しょくひん</rt></ruby>の<ruby style="min-width:2.50em">条件<rt>じょうけん</rt></ruby>を<ruby>書<rt>か</rt></ruby>いた<ruby>案内<rt>あんない</rt></ruby>チラシを<ruby>作<rt>つく</rt></ruby>る<br />
+ 2. <ruby>市役所<rt>しやくしょ</rt></ruby>の<ruby>福祉課<rt>ふくしか</rt></ruby>へ<ruby>活動<rt>かつどう</rt></ruby>の<ruby>届け出<rt>とどけで</rt></ruby>をする<br />
+ 3. スーパーに<ruby style="min-width:2.50em">回収<rt>かいしゅう</rt></ruby>ボックスの<ruby>設置<rt>せっち</rt></ruby>を<ruby>依頼<rt>いらい</rt></ruby>する<br />
+ 4. <ruby>集<rt>あつ</rt></ruby>まった<ruby style="min-width:2.50em">食品<rt>しょくひん</rt></ruby>の<ruby>数<rt>かず</rt></ruby>を<ruby>数<rt>かぞ</rt></ruby>えて<ruby>記録<rt>きろく</rt></ruby>する</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>相手<rt>あいて</rt></ruby>の<ruby>留守電<rt>るすでん</rt></ruby>メッセージを<ruby>残<rt>のこ</rt></ruby>さずに<ruby>切<rt>き</rt></ruby>る<br />
+ 2. <ruby>社名<rt>しゃめい</rt></ruby>と<ruby>用件<rt>ようけん</rt></ruby>を<ruby>伝<rt>つた</rt></ruby>えて<ruby>折り返<rt>おりかえ</rt></ruby>しの<ruby>電話<rt>でんわ</rt></ruby>を<ruby>頼<rt>たの</rt></ruby>む<br />
+ 3. <ruby>担当者<rt>たんとうしゃ</rt></ruby>の<ruby>携帯電話<rt>けいたいでんわ</rt></ruby>に<ruby style="min-width:2.50em">直接<rt>ちょくせつ</rt></ruby>かけ<ruby>直<rt>なお</rt></ruby>す<br />
+ 4. <ruby>先方<rt>せんぽう</rt></ruby>のメールアドレス<ruby>宛<rt>あて</rt></ruby>にメールを<ruby>送<rt>おく</rt></ruby>る</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>航空券<rt>こうくうけん</rt></ruby>の<ruby>手配<rt>てはい</rt></ruby>をキャンセルする<br />
+ 2. <ruby>現地<rt>げんち</rt></ruby>のコワーキングスペースを<ruby>予約<rt>よやく</rt></ruby>する<br />
+ 3. <ruby style="min-width:3.50em">宿泊先<rt>しゅくはくさき</rt></ruby>をビジネスホテルに<ruby>変更<rt>へんこう</rt></ruby>する<br />
+ 4. <ruby>会社<rt>かいしゃ</rt></ruby>にワーケーションの<ruby>申請書<rt>しんせいしょ</rt></ruby>を<ruby>出<rt>だ</rt></ruby>す</p>
+<hr />
+<h2>問題2 ポイント理解</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>2では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。そのあと、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>のせんたくしを<ruby>読<rt>よ</rt></ruby>んでください。<ruby>読<rt>よ</rt></ruby>む<ruby>時間<rt>じかん</rt></ruby>があります。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby>仕事<rt>しごと</rt></ruby>が<ruby style="min-width:1.50em">忙<rt>いそが</rt></ruby>しかったから<br />
+ 2. <ruby>夜遅<rt>よるおそ</rt></ruby>くまで<ruby>映画<rt>えいが</rt></ruby>を<ruby>見<rt>み</rt></ruby>ていたから<br />
+ 3. <ruby>友達<rt>ともだち</rt></ruby>と<ruby>電話<rt>でんわ</rt></ruby>でおしゃべりをしていたから<br />
+ 4. <ruby style="min-width:2.50em">体調<rt>たいちょう</rt></ruby>が<ruby>悪<rt>わる</rt></ruby>くて<ruby>眠<rt>ねむ</rt></ruby>れなかったから</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>高価<rt>こうか</rt></ruby>な<ruby>安眠<rt>あんみん</rt></ruby>まくらやマットレスを<ruby>買<rt>か</rt></ruby>ったこと<br />
+ 2. <ruby>睡眠<rt>すいみん</rt></ruby>アプリで<ruby>呼吸<rt>こきゅう</rt></ruby>を<ruby>計測<rt>けいそく</rt></ruby>し<ruby>毎朝<rt>まいあさ</rt></ruby>の<ruby>起床<rt>きしょう</rt></ruby><ruby>時間<rt>じかん</rt></ruby>を<ruby>揃<rt>そろ</rt></ruby>えたこと<br />
+ 3. <ruby style="min-width:2.50em">就寝<rt>しゅうしん</rt></ruby><ruby style="min-width:2.50em">直前<rt>ちょくぜん</rt></ruby>までスマホで<ruby>動画<rt>どうが</rt></ruby>を<ruby>見<rt>み</rt></ruby>てリラックスしたこと<br />
+ 4. <ruby>毎晩<rt>まいばん</rt></ruby><ruby>激<rt>はげ</rt></ruby>しい<ruby style="min-width:2.50em">筋力<rt>きんりょく</rt></ruby>トレーニングを<ruby>行<rt>い</rt></ruby>ったこと</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>以前<rt>いぜん</rt></ruby>の<ruby>訓練<rt>くんれん</rt></ruby>で<ruby>非常階段<rt>ひじょうかいだん</rt></ruby>の<ruby>避難<rt>ひなん</rt></ruby>ルート<ruby>確認<rt>かくにん</rt></ruby>が<ruby>不十分<rt>ふじゅうぶん</rt></ruby>だったこと<br />
+ 2. <ruby>防災<rt>ぼうさい</rt></ruby><ruby>用<rt>よう</rt></ruby>ヘルメットの<ruby>数<rt>かず</rt></ruby>が<ruby>社員<rt>しゃいん</rt></ruby><ruby>全員分<rt>ぜんいんぶん</rt></ruby><ruby>足<rt>た</rt></ruby>りなかったこと<br />
+ 3. <ruby>消火器<rt>しょうかき</rt></ruby>の<ruby>設置場所<rt>せっちばしょ</rt></ruby>がわかりにくかったこと<br />
+ 4. <ruby>避難場所<rt>ひなんばしょ</rt></ruby>への<ruby>到着時間<rt>とうちゃくじかん</rt></ruby>が<ruby>予定<rt>よてい</rt></ruby>より<ruby>遅<rt>おく</rt></ruby>れたこと</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>若<rt>わか</rt></ruby>い<ruby>社員<rt>しゃいん</rt></ruby>の<ruby>好<rt>この</rt></ruby>みに<ruby>合<rt>あ</rt></ruby>わせたヘルシーなメニューを<ruby>増<rt>ふ</rt></ruby>やすこと<br />
+ 2. <ruby style="min-width:2.50em">定食<rt>ていしょく</rt></ruby>の<ruby>値段<rt>ねだん</rt></ruby>を<ruby>大幅<rt>おおはば</rt></ruby>に<ruby>値下<rt>ねさ</rt></ruby>げすること<br />
+ 3. <ruby style="min-width:2.50em">食堂<rt>しょくどう</rt></ruby>の<ruby>営業時間<rt>えいぎょうじかん</rt></ruby>を<ruby>夜遅<rt>よるおそ</rt></ruby>くまで<ruby style="min-width:2.50em">延長<rt>えんちょう</rt></ruby>すること<br />
+ 4. セルフサービスのドリンクバーを<ruby>設置<rt>せっち</rt></ruby>すること</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby style="min-width:2.50em">会場<rt>かいじょう</rt></ruby><ruby>設営<rt>せつえい</rt></ruby>と<ruby>椅子<rt>いす</rt></ruby>の<ruby>配置<rt>はいち</rt></ruby>を<ruby style="min-width:1.50em">行<rt>おこな</rt></ruby>うこと<br />
+ 2. <ruby>当日<rt>とうじつ</rt></ruby>の<ruby style="min-width:3.50em">来場者<rt>らいじょうしゃ</rt></ruby><ruby>受付<rt>うけつけ</rt></ruby>と<ruby>案内<rt>あんない</rt></ruby><ruby>誘導<rt>ゆうどう</rt></ruby>を<ruby>担当<rt>たんとう</rt></ruby>すること<br />
+ 3. プレゼン<ruby>資料<rt>しりょう</rt></ruby>の<ruby>印刷<rt>いんさつ</rt></ruby>と<ruby>配布<rt>はいふ</rt></ruby>を<ruby style="min-width:1.50em">行<rt>おこな</rt></ruby>うこと<br />
+ 4. <ruby>懇親会<rt>こんしんかい</rt></ruby>のお<ruby>弁当<rt>べんとう</rt></ruby>とお<ruby>茶<rt>ちゃ</rt></ruby>を<ruby>手配<rt>てはい</rt></ruby>すること</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby style="min-width:1.50em">隣<rt>となり</rt></ruby>の<ruby>部屋<rt>へや</rt></ruby>からの<ruby>話し声<rt>はなしごえ</rt></ruby>が<ruby>聞<rt>き</rt></ruby>こえること<br />
+ 2. <ruby>階段<rt>かいだん</rt></ruby>の<ruby>足音<rt>あしおと</rt></ruby>やドアの<ruby>開閉<rt>かいへい</rt></ruby><ruby>音<rt>おと</rt></ruby>がうるさいこと<br />
+ 3. <ruby>上<rt>うえ</rt></ruby>の<ruby>階<rt>かい</rt></ruby>からの<ruby>深夜<rt>しんや</rt></ruby>の<ruby>足音<rt>あしおと</rt></ruby>や<ruby>生活<rt>せいかつ</rt></ruby><ruby>音<rt>おと</rt></ruby>が<ruby>響<rt>ひび</rt></ruby>くこと<br />
+ 4. エレベーターの<ruby>動作音<rt>どうさおん</rt></ruby>が<ruby>部屋<rt>へや</rt></ruby>まで<ruby>届<rt>とど</rt></ruby>くこと</p>
+<p class="furi"><strong>6<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>海外<rt>かいがい</rt></ruby>のブランド<ruby>古着<rt>ふるぎ</rt></ruby>を<ruby>安<rt>やす</rt></ruby>く<ruby>輸入<rt>ゆにゅう</rt></ruby>して<ruby>販売<rt>はんばい</rt></ruby>すること<br />
+ 2. <ruby>着<rt>き</rt></ruby>なくなった<ruby>服<rt>ふく</rt></ruby>をそのまま<ruby>中古品<rt>ちゅうこひん</rt></ruby>として<ruby>買い取<rt>かいと</rt></ruby>ること<br />
+ 3. <ruby>古着<rt>ふるぎ</rt></ruby>を<ruby style="min-width:2.50em">回収<rt>かいしゅう</rt></ruby>して<ruby>化学<rt>かがく</rt></ruby><ruby>繊維<rt>せんい</rt></ruby>の<ruby style="min-width:2.50em">原料<rt>げんりょう</rt></ruby>に<ruby>分解<rt>ぶんかい</rt></ruby>すること<br />
+ 4. <ruby style="min-width:2.50em">回収<rt>かいしゅう</rt></ruby>した<ruby>服<rt>ふく</rt></ruby>を<ruby style="min-width:1.50em">新<rt>あたら</rt></ruby>しいデザインのバッグや<ruby>小物<rt>こもの</rt></ruby>へ<ruby>再利用<rt>さいりよう</rt></ruby>すること</p>
+<hr />
+<h2>問題3 概要理解</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>3では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。この<ruby>問題<rt>もんだい</rt></ruby>は、<ruby>全体<rt>ぜんたい</rt></ruby>としてどんな<ruby>内容<rt>ないよう</rt></ruby>かを<ruby>聞<rt>き</rt></ruby>く<ruby>問題<rt>もんだい</rt></ruby>です。<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<ruby>質問<rt>しつもん</rt></ruby>はありません。まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>質問<rt>しつもん</rt></ruby>とせんたくしを<ruby>聞<rt>き</rt></ruby>いて、1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4<br />
+<strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4<br />
+<strong>2<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4<br />
+<strong>3<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4<br />
+<strong>4<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4<br />
+<strong>5<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi">(メモ<ruby>欄<rt>らん</rt></ruby>)</p>
+<hr />
+<h2>問題4 即時応答</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>4では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby>文<rt>ぶん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、それに<ruby>対<rt>たい</rt></ruby>する<ruby>返事<rt>へんじ</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、1から3の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong> 1 ・ 2 ・ 3<br />
+<strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3  <strong>7<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3<br />
+<strong>2<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3  <strong>8<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3<br />
+<strong>3<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3  <strong>9<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3<br />
+<strong>4<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3  <strong>10<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3<br />
+<strong>5<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3  <strong>11<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3<br />
+<strong>6<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3  <strong>12<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<hr />
+<h2>問題5 統合理解</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>5では、<ruby>長<rt>なが</rt></ruby>めの<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>きます。この<ruby>問題<rt>もんだい</rt></ruby>には<ruby style="min-width:2.50em">練習<rt>れんしゅう</rt></ruby>はありません。メモをとってもかまいません。</p>
+<h2>1番・2番</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>質問<rt>しつもん</rt></ruby>とせんたくしを<ruby>聞<rt>き</rt></ruby>いて、1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4<br />
+<strong>2<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi">(メモ<ruby>欄<rt>らん</rt></ruby>)</p>
+<h2>3番</h2>
+<p class="furi">まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>二<rt>ふた</rt></ruby>つの<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、それぞれ<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>質問<rt>しつもん</rt></ruby>1</strong><br />
+ 1. <ruby>屋外<rt>おくがい</rt></ruby>テラス<ruby>席<rt>せき</rt></ruby>の<ruby>増設<rt>ぞうせつ</rt></ruby><ruby>案<rt>あん</rt></ruby><br />
+ 2. <ruby style="min-width:2.50em">学食<rt>がくしょく</rt></ruby>の<ruby>夜間<rt>やかん</rt></ruby><ruby style="min-width:2.50em">営業<rt>えいぎょう</rt></ruby>の<ruby style="min-width:2.50em">延長<rt>えんちょう</rt></ruby><ruby>案<rt>あん</rt></ruby><br />
+ 3. <ruby>自動販売機<rt>じどうはんばいき</rt></ruby>の<ruby style="min-width:2.50em">軽食<rt>けいしょく</rt></ruby>コーナー<ruby style="min-width:2.50em">拡充<rt>かくじゅう</rt></ruby><ruby>案<rt>あん</rt></ruby><br />
+ 4. <ruby>移動<rt>いどう</rt></ruby><ruby>販売<rt>はんばい</rt></ruby><ruby style="min-width:1.50em">車<rt>くるま</rt></ruby>（キッチンカー）の<ruby style="min-width:2.50em">導入<rt>どうにゅう</rt></ruby><ruby>案<rt>あん</rt></ruby></p>
+<p class="furi"><strong><ruby>質問<rt>しつもん</rt></ruby>2</strong><br />
+ 1. <ruby>移動<rt>いどう</rt></ruby><ruby>販売<rt>はんばい</rt></ruby><ruby style="min-width:1.50em">車<rt>くるま</rt></ruby>（キッチンカー）の<ruby style="min-width:2.50em">導入<rt>どうにゅう</rt></ruby><ruby>案<rt>あん</rt></ruby><br />
+ 2. <ruby>屋外<rt>おくがい</rt></ruby>テラス<ruby>席<rt>せき</rt></ruby>の<ruby>増設<rt>ぞうせつ</rt></ruby><ruby>案<rt>あん</rt></ruby><br />
+ 3. <ruby>自動販売機<rt>じどうはんばいき</rt></ruby>の<ruby style="min-width:2.50em">軽食<rt>けいしょく</rt></ruby>コーナー<ruby style="min-width:2.50em">拡充<rt>かくじゅう</rt></ruby><ruby>案<rt>あん</rt></ruby><br />
+ 4. <ruby style="min-width:2.50em">学食<rt>がくしょく</rt></ruby>の<ruby>夜間<rt>やかん</rt></ruby><ruby style="min-width:2.50em">営業<rt>えいぎょう</rt></ruby>の<ruby style="min-width:2.50em">延長<rt>えんちょう</rt></ruby><ruby>案<rt>あん</rt></ruby></p>
+<hr />
+<h1>解答用紙(マークシート)</h1>
+<p>答えの番号に○をつけてください。</p>
+<h2>問題1</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+</tr>
+</tbody>
+</table>
+<h2>問題2</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+<th>6番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+</tr>
+</tbody>
+</table>
+<h2>問題3</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+</tr>
+</tbody>
+</table>
+<h2>問題4</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+<th>6番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>(1)</strong> 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>7番</th>
+<th>8番</th>
+<th>9番</th>
+<th>10番</th>
+<th>11番</th>
+<th>12番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+</tr>
+</tbody>
+</table>
+<h2>問題5</h2>
+<table>
+<thead>
+<tr>
+<th>1番</th>
+<th>2番</th>
+<th>3番 質問1</th>
+<th>3番 質問2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+</tr>
+</tbody>
+</table>
+<h2>---</h2>
+<hr />
+<h1>【正解・解説】※解き終わってから見てください</h1>
+<h2>問題1 課題理解</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>1</strong></td>
+<td>「お手持ちのスマホで館内Wi-Fiに接続して、無料アプリをダウンロードしていただくのが一番便利です」「じゃあ、そっちにしよう。自分でダウンロードしますね」→ アプリのダウンロード。専用端末(4)は有料かつ窓口が混雑しているため回避。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>3</strong></td>
+<td>「機能が多すぎるのも使いこなせるか心配だな。部屋が狭いから、あまり大きいのも困る」→「じゃあ、こちらの小型モデルにします」。最新フラッグシップ(1)(2)は多機能すぎ、型落ち(4)は「迷うけど」で退けている。</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>1</strong></td>
+<td>「周知用のチラシとチェックリストを作成するのが最初ですね」→「条件を書いた案内チラシの原稿を準備します」。市役所への届け出(2)とスーパーへの設置依頼(3)は「その後にやりましょう」、記録(4)は食品が集まった後。</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>2</strong></td>
+<td>「社名とお名前を伝えて、会社に戻られたら折り返しお電話をいただくよう、留守電かメッセージを入れておきましょうか」「ええ、それが一番確実ですね」→ 社名と用件を伝えて折り返しを依頼。メール(4)は「後で大丈夫」。</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>4</strong></td>
+<td>「ワーケーションを始めるには、まず社内の専用申請書を出して承認を得る必要があるの」「では、今日中に申請書を提出します」→ 会社に申請書を提出。宿泊先やコワーキングスペースの予約(2)(3)は申請の後。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題2 ポイント理解</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>2</strong></td>
+<td>「アプリのアドバイスで『毎朝起きる時間を休日も平日も揃える』ようにしたんだ。これが一番効果的だったよ」。まくら(1)は「変えてない」、就寝前の筋トレ(4)は「逆に目が冴えちゃって良くなかった」。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>1</strong></td>
+<td>「前回の訓練で問題になった非常階段への誘導ですが、今回も途中で人が集中して大混雑してしまいました」「ルートの周知徹底を優先しましょう」。ヘルメット(2)・消火器(3)・到着時間(4)は「問題なかった」。</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>1</strong></td>
+<td>「最近若い社員が増えたこともあって、『野菜を多く使ったヘルシーなメニューを増やしてほしい』という声が最も多かったんです」。値下げ(2)は「意見はそれほど多くありませんでした」、営業時間(3)・ドリンクバー(4)は要望はあるが一番ではない。</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>2</strong></td>
+<td>「男の人にお願いしたいのは、当日の来場者受付と会場内での案内誘導なの」。設営(1)は学生ボランティア、資料(3)とお弁当(4)は「事務局で済ませてある」。</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>3</strong></td>
+<td>「一番困っているのは、上の階の部屋から聞こえる深夜のドタバタという足音や生活音なの」。階段の足音やドアの音(2)は「許容範囲」、道路側(=外)は静か。</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>4</strong></td>
+<td>「古着を新しいデザインの製品へ再利用することが一番の魅力です」。中古品としての再販売(2)や輸入古着(1)との違いが問われている。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題3 概要理解</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>1</strong></td>
+<td>中心テーマは「プレミアム付き地域商品券の発行による地元商店街の消費促進効果」。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>4</strong></td>
+<td>サークル活動の成功には「部員ごとの明確な役割分担と全体のスケジュール管理」が不可欠だと述べている。</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>3</strong></td>
+<td>「置き配サービスや宅配ボックスの利用定着が、再配達を減らし物流のCO2削減に大きく貢献している」という内容。</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>1</strong></td>
+<td>話者は税務署の窓口で「医療費控除の申請に必要な書類と手続き」について説明している。</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>2</strong></td>
+<td>「無人決済店舗やAIロボットの導入がレジ待ち時間を短縮し、店舗業務の効率化をもたらしている」という内容。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題4 即時応答</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>ポイント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>1</strong></td>
+<td>「二の足を踏む」= 躊躇する・迷う → 1「確かに、慎重になるのも無理はないね。」</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>2</strong></td>
+<td>「見合わせる」= 実施を見送る・延期する → 2「そうですか。残念ですが今回は延期ですね。」</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>3</strong></td>
+<td>依頼・任せる申し出 → 3「ありがとうございます。では、よろしくお願いいたします。」</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>2</strong></td>
+<td>報告の申し出「ご説明させていただきます」→ 2「かしこまりました。会議室でお伺いします。」</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>3</strong></td>
+<td>「釘を刺す」= あらかじめ注意・警告する → 3「あらかじめ注意しておいた方がいいですね。」</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>2</strong></td>
+<td>議事録確認の依頼 → 2「拝見しました。よくまとめられていますね。」</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>3</strong></td>
+<td>懇親会への遅れての参加許可を求める → 3「ええ、仕事が落ち着き次第、お越しください。」</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>1</strong></td>
+<td>混雑の案内「混み合っておりまして…」→ 1「では、席が空くまでこちらで待たせていただきます。」</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>1</strong></td>
+<td>「力不足でした」という謝罪 → 1「気にしないでください。次から気をつけましょう。」</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>3</strong></td>
+<td>「お先に失礼します」という挨拶 → 3「お疲れ様でした。お気をつけて。」</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>1</strong></td>
+<td>「ご要望に沿えるよう検討します」→ 1「お手数ですが、よろしくお願いいたします。」</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>2</strong></td>
+<td>オンライン参加の許可確認「〜よろしいでしょうか」→ 2「ええ、構いませんよ。接続リンクを送りますね。」</td>
+</tr>
+</tbody>
+</table>
+<h2>問題5 統合理解</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>3</strong></td>
+<td>「紙の申請書は全廃されて、新しい経費精算システムからオンラインで直接申請することになった」。手書き(1)は廃止、メール添付(2)は「不可」。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>1</strong></td>
+<td>留守番電話のメッセージ。当初の木曜14時が「現在お住まいの方のご都合」で難しくなり、「翌日の金曜日、10月15日の14時に変更させていただけないでしょうか」。</td>
+</tr>
+<tr>
+<td>3番 質問1</td>
+<td><strong>4</strong></td>
+<td>男の学生:「僕はやっぱり、昼休みの混雑解消になる移動販売車の導入が一番助かると思います」。</td>
+</tr>
+<tr>
+<td>3番 質問2</td>
+<td><strong>2</strong></td>
+<td>女の学生:「雨の日も晴れの日も座れる場所が足りないと感じているので、屋外テラス席の増設を一番に推したいです」。</td>
+</tr>
+</tbody>
+</table>
+<h2>得点の目安</h2>
+<ul>
+<li>27〜32問:合格ライン以上</li>
+<li>20〜26問:合格圏内。問題4の慣用表現・即時応答を重点復習</li>
+<li>19問以下:N2文法と敬語・慣用句の聞き取りを強化</li>
+</ul></body></html>

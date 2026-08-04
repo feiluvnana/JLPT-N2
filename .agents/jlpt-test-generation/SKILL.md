@@ -73,11 +73,38 @@ All exam files follow a strict directory structure:
    (or `make sheet <test_id>`). Produces the single merged `解答.html` — the whole
    booklet with a radio bubble per choice, an audio player for 聴解, and in-page
    180-point grading. Re-run after ANY Markdown edit, like the booklet HTML.
-9. **Take the exam & grade** → read `exam-answer-grading/SKILL.md`.
+9. **Gate the test** → run `make check`.
+   It validates every test on disk: answer keys parse, keys sit where
+   `answer_positions` put them, no question repeats an option, 問題8 keys name
+   the option on ★, the script's instructions match the booklet's, options are
+   spoken only where the booklet prints none, and both graders agree. Fix
+   failures before step 10 — a mis-keyed item is invisible once the MP3 is built.
+10. **Take the exam & grade** → read `exam-answer-grading/SKILL.md`.
    Serve the sheet (`make serve <test_id>`), answer, and press 「採点する」: the
    report renders in-page and saves `採点結果.md` + `user_answers.json` into
    `tests/<test_id>/`. CLI grading stays available for offline/batch runs:
    `make grade <test_id>` (= `grade_answers.py --test-dir tests/<test_id>`).
+
+## One topic, one surface (whole-paper pass before step 9)
+
+`make check` cannot see this, and it is the failure mode that survives every
+other gate: the same content appearing on two surfaces of one paper. Reading the
+問題14 flyer must not hand the examinee a 聴解 answer, and no topic may be tested
+twice. Test 2 shipped with a フードドライブ listening item whose keyed first
+action was spelled out verbatim in the 問題14 flyer's fine print, and with the
+same デジタルデトックス essay used for both the 問題9 cloze and 問題10(1).
+
+Before running the gate, list every surface's topic in one place — 問題9, each
+問題10-13 passage, the 問題14 flyer, each 聴解 item — and check:
+
+- **No topic appears twice**, even in a different register (an essay and a
+  monologue on the same subject are still a repeat).
+- **No condition, number, or rule is shared** between the flyer and a listening
+  item. Shared *setting* is tolerable; shared *decisive detail* is not.
+- Each `logs/test_spec.json` topic/scenario seed feeds **exactly one** surface.
+  There are more seeds than surfaces on purpose — if a topic looks used twice,
+  an unused seed is sitting in the spec. `cloze_topic`'s `origin` is binding
+  too: a `"pool"` cloze must not borrow a web reading seed.
 
 ## Invariants (apply to every run)
 
