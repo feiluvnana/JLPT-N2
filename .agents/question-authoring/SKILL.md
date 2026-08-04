@@ -121,7 +121,7 @@ with an error** if there is none. Two consequences:
   (`# 問題用紙・解答用紙` is safe: it starts with 問.)
 
 ### 1. `言語知識・読解.md` Answer Key Format
-Under `# 解答と解説`, must contain three distinct section headers:
+Under the key heading (see above), must contain three distinct section headers:
 - `## 文字・語彙`: Multi-column table (`| 問 | 答 | | 問 | 答 | | 問 | 答 | | 問 | 答 |`) for Q1–32, plus key notes for notable kanji/words.
 - `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q33–54 with exact grammar point explanations and scramble sequence breakdowns for Q45–49.
 - `## 読解`: 3-column table (`| 問 | 答 | 解説 |`) for Q55–75 quoting key passage text and rationale.
@@ -134,7 +134,7 @@ Must contain two main parts:
   - `## 問題2 ポイント理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–6番.
   - `## 問題3 概要理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番.
   - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–12番 detailing honorifics/idiom points.
-  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **4 rows, not 3** — 問題5 has 3 items but 4 answers, so a 3-row table silently loses one scored answer. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2`, `問5-3-1`, `問5-3-2`; it accepts either label style used so far — `**1番**` / `**2番**` / `**3番 質問1**` / `**3番 質問2**` (test 4, preferred for new tests) or `1` / `2` / `3-質問1` / `3-質問2` (test 1). The 3番 rows MUST carry `質問1`/`質問2`; the 1番/2番 rows must NOT.
+  - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **4 rows, not 3** — 問題5 has 3 items but 4 answers, so a 3-row table silently loses one scored answer. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2`, `問5-3-1`, `問5-3-2`; it accepts either label style used so far — `**1番**` / `**2番**` / `**3番 質問1**` / `**3番 質問2**` (preferred for new tests; used by the retired test 4, in git at b9b90de) or `1` / `2` / `3-質問1` / `3-質問2` (test 1, still on disk). The 3番 rows MUST carry `質問1`/`質問2`; the 1番/2番 rows must NOT.
   - `## 得点の目安`: Score range guidelines.
 
 

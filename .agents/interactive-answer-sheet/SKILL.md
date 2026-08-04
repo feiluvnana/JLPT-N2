@@ -50,7 +50,7 @@ the JS — a second copy is exactly how the grader's 大問 ranges drifted from
 `jlpt-exam-structure` in the first place. `make check` proves the two agree by
 running the sheet's own JS under node and comparing raw scores with
 `grade_answers.py` on identical simulated answers (36/54 + 14/21 + 21/32 for
-both tests at the time of writing).
+test 1 at the time of writing).
 
 ## The answer key must never be VISIBLE
 
@@ -133,8 +133,9 @@ every earlier version of the sheet and made the exam partly unanswerable:
   test 1 were affected. `option_run()` now counts a consecutive `1..k` run on
   the line (a consecutive run only, so `1. 価格が3.5倍…` is not miscounted).
 - **問題5's 質問1/質問2 colliding with 1番/2番.** Routing them to `問5-3-N`
-  required 3番 to be a *heading*; test 4 writes `**3番**` in bold, so they fell
-  through to `問5-1`/`問5-2` — two items unanswerable, two answers clobbered.
+  required 3番 to be a *heading*; the retired test 4 (git b9b90de) wrote `**3番**`
+  in bold, so they fell through to `問5-1`/`問5-2` — two items unanswerable and
+  two answers clobbered.
   質問N now always belongs to 3番 whenever the section is 問題5.
 
 Manual spot-check if you change the parser:
