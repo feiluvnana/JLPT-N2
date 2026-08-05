@@ -41,25 +41,53 @@ synthetic oldest draw).
 - **One item, one 問題 per test.** Categories are drawn in order against a
   shared `taken` set, so a word in both `context_words` and `usage` (there are
   41 such) can never be tested twice in the same paper. A post-draw assertion
-  re-checks this and aborts on any collision. This bug shipped once: test 3
-  tested 〜に限らず in both 問題7 and 問題8.
-- **Cooldown is by WORD, across categories.** The recency map used to be built
-  per category, so an overlapping word could be tested in consecutive papers
-  through a different 問題 — あらかじめ was test 3's 問題4 (context_words) and
-  then test 4's 問題5 (paraphrase, spelled 「あらかじめ(前もって)」). Entries are
-  now keyed by both the raw string and its head (everything before the
-  disambiguating gloss), so either spelling counts as used.
+  re-checks this and aborts on any collision.
+- **Cooldown is by WORD, across categories.** Recency is tracked across categories by both raw string and `head()` identity so a word tested in one section cannot immediately reappear in another section in the next exam.
 - **Attribution.** Pass `--test-id <id>` so each draw records which test
   consumed it.
 
-Keep every pool ≥ 2.5× the per-test draw; the script warns below that. Current
-headroom is ≥7.9× everywhere (`listening_scenarios` is the tightest at 158/20).
+Keep every pool ≥ 2.5× the per-test draw; inspect headroom with `sample_items.py --check-depth`.
 
-## Workflow
+## Adjunct staging (non-pool items, Option A)
+
+Pool growth and one-off draws share one gate: **classify → stage → promote** (or
+a one-shot adjunct draw at sample time). Nothing enters a test without N2
+evidence.
 
 ```bash
+# Classify a candidate (OpenJLPT, level_band, or pools.json hit)
+make classify ITEM='措置' CATEGORY=context_words
+make classify ITEM='措置' CATEGORY=context_words STAGE=1   # -> logs/adjunct_staging.json
+
+make promote-adjunct          # status=approved -> pools.json
+make expand-pools             # batch OpenJLPT N2 + curated topics into pools.json
+make fetch-openjlpt           # refresh vendored slices under references/openjlpt/
+make suggest-pool WRITE_STAGING=1   # diff OpenJLPT vs pools, optional staging
+```
+
+`sample_items.py` may replace up to **20%** of each category's draw with
+`status=ready` staging rows (`--no-adjunct` for pure pool). Adjunct records in
+`test_spec.json` look like
+`{"item": "…", "origin": "adjunct", "level": "N2", "evidence": [...]}`.
+Author them like pool items; `make check` enforces the cap and provenance.
+
+New items learned from reference books: run `classify_level.py`, stage, then
+either `promote_adjunct.py` (permanent pool) or leave `ready` for adjunct draw.
+Never inline an unclassified string into a test or `pools.json`.
+
+## Workflow & Scripts Reference
+
+### 1. Blueprint Sampling & Resampling (`scripts/sample_items.py`)
+
+```bash
+# General sampling with test-id attribution
 python .agents/item-pool-sampling/scripts/sample_items.py --seed 20260803 --test-id 4
-# omit --seed for a random one; -> writes logs/test_spec.json, updates logs/ledger.json
+
+# Check pool depth and headroom multipliers
+python .agents/item-pool-sampling/scripts/sample_items.py --check-depth
+
+# Resample a single category (e.g. listening_scenarios) keeping the rest of test_spec.json
+python .agents/item-pool-sampling/scripts/sample_items.py --reroll listening_scenarios --seed 99999
 ```
 
 `logs/test_spec.json` is the authoring contract. It contains, per section, the
@@ -67,24 +95,25 @@ exact items to test (e.g., `"grammar_p7": ["〜に反して", "〜どころか",
 the scenario list for listening, topics for reading, and the answer-position
 sequence per 問題.
 
+### 2. Level Classification (`scripts/classify_level.py`)
+
+Validates candidate items against OpenJLPT N2 data, `pools.json`, and `level_band_grammar.txt`. Only items verified as N2 can be staged or added to pools.
+
+### 3. Pool Expansion & Curation (`scripts/expand_pools.py`, `scripts/suggest_pool_additions.py`)
+
+Proposes and appends verified N2 items from OpenJLPT and curated N2 affixes/topics into `references/pools.json`.
+
 ## Rules for the authoring step (binding)
 
 - Author questions ONLY for the sampled items. Substituting a "better" item
   from memory defeats the whole mechanism — if an item is genuinely
   unusable, re-run the sampler with `--reroll <category>`.
-- **Scan `listening_scenarios` for same-errand pairs before authoring.** The
-  sampler draws scenarios independently, so two draws can land in one domain:
-  test 3 drew 旅行代理店のプラン変更 AND ホテルのチェックイン変更, test 4 drew
-  不動産屋の部屋探し AND 留学生の住居相談 — each pair authored into two 聴解
-  items running the same errand, which QA fails ("two 聴解 items may not run
-  the same errand"). If two scenarios share a domain or errand shape,
-  `--reroll listening_scenarios` before writing anything.
+- **Domain Collision Check for `listening_scenarios`:** `sample_items.py` automatically checks and warns if sampled scenarios share identical domain prefixes (e.g., two `不動産` or `旅行代理店` settings). If a warning is printed, check if the items run the same errand. If so, run `python .agents/item-pool-sampling/scripts/sample_items.py --reroll listening_scenarios` before writing anything.
 - Place each correct answer at the position the spec dictates; design
   distractors around that position, not the other way.
 - Record the seed in the exam's source file header (comment) so any test is
   reproducible and auditable.
-- New items learned from reference books go INTO pools.json (the owner),
-  never inlined ad hoc into a test.
+- New items learned from reference books go INTO `pools.json` via classification and promotion, never inlined ad hoc into a test — use `classify_level.py` → staging → `promote_adjunct.py`.
 
 ## Pool maintenance
 
@@ -95,4 +124,5 @@ listening_scenarios, reading_topics.
 Pools may legitimately overlap (a word can be both a `context_words` and a
 `usage` item) — the sampler keeps them apart *within a test*, so there is no
 need to make the pools disjoint. What matters is depth: raise a pool as soon
-as the script starts printing cooldown-relaxed notes for it.
+as `sample_items.py --check-depth` or cooldown messages indicate a tight pool.
+

@@ -79,6 +79,9 @@ anything.
 3. **Sample item pool & answer key blueprint** → read `item-pool-sampling/SKILL.md`.
    Run: `python3 .agents/item-pool-sampling/scripts/sample_items.py --seed <seed> --test-id <id>`
    This outputs `logs/test_spec.json` and updates `logs/ledger.json`.
+   Pool growth / one-off draws: `make classify ITEM=… CATEGORY=… STAGE=1`, then
+   sample (≤20% adjunct per category) or `make promote-adjunct` — see
+   `item-pool-sampling` **Adjunct staging**.
    **Use a seed no previous test used** (`logs/ledger.json` records them). The
    ledger keeps pool items from repeating whatever seed you pass, but step 3.5's
    blend is a pure function of the seed, so reusing one replays the previous

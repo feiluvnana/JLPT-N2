@@ -1,6 +1,7 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check grade sheet serve booklet mp3 sample merge-seeds init-import extract-pdf
+.PHONY: help check grade sheet serve booklet mp3 sample merge-seeds init-import extract-pdf \
+       classify promote-adjunct fetch-openjlpt suggest-pool expand-pools
 
 # Handle positional arguments for targets (e.g., "make grade 1", "make sheet 1", "make booklet 1", "make mp3 1").
 # `serve` is deliberately NOT here: one server covers every test, so it takes no id.
@@ -32,6 +33,11 @@ help:
 	@echo "  make check            Verify docs/code/tests consistency (read-only)"
 	@echo "  make sample           Sample question pool (item-pool-sampling)"
 	@echo "  make merge-seeds      Merge logs/seeds.json into logs/test_spec.json"
+	@echo "  make classify ITEM=x CATEGORY=y   Classify item level; optional STAGE=1"
+	@echo "  make promote-adjunct  Promote approved staging rows into pools.json"
+	@echo "  make fetch-openjlpt   Refresh OpenJLPT N1-N3 vocab/kanji slices"
+	@echo "  make suggest-pool     Diff OpenJLPT N2 vs pools (WRITE_STAGING=1 to stage)"
+	@echo "  make expand-pools     Batch-expand pools from OpenJLPT + curated topics"
 	@echo "  make init-import SLUG=n2-2025-12   Scaffold tests/imported-<slug>/"
 	@echo "  make extract-pdf PDF=a.pdf OUT=tests/imported-x/_extract/a.txt"
 	@echo "=========================================================================="
@@ -71,6 +77,24 @@ mp3-%:
 
 sample:
 	python3 .agents/item-pool-sampling/scripts/sample_items.py --seed $(SEED)
+
+classify:
+	@test -n "$(ITEM)" || (echo "usage: make classify ITEM=措置 CATEGORY=context_words [STAGE=1]"; exit 1)
+	python3 .agents/item-pool-sampling/scripts/classify_level.py --item "$(ITEM)" \
+		$(if $(CATEGORY),--category "$(CATEGORY)",) $(if $(STAGE),--stage,)
+
+promote-adjunct:
+	python3 .agents/item-pool-sampling/scripts/promote_adjunct.py
+
+fetch-openjlpt:
+	python3 .agents/item-pool-sampling/scripts/fetch_openjlpt.py
+
+suggest-pool:
+	python3 .agents/item-pool-sampling/scripts/suggest_pool_additions.py \
+		$(if $(WRITE_STAGING),--write-staging,)
+
+expand-pools:
+	python3 .agents/item-pool-sampling/scripts/expand_pools.py
 
 merge-seeds:
 	python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json

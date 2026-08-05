@@ -131,6 +131,7 @@ def check_filename_contracts():
         ("聴解_チャプター.json", ".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py"),
         ("ledger.json", ".agents/item-pool-sampling/scripts/sample_items.py"),
         ("test_spec.json", ".agents/item-pool-sampling/scripts/sample_items.py"),
+        ("adjunct_staging.json", ".agents/item-pool-sampling/scripts/classify_level.py"),
         ("import_meta.json", ".agents/external-test-import/scripts/init_imported_test.py"),
     ]
     for literal, script in contracts:
@@ -663,6 +664,49 @@ def check_spec_blend(spec: dict):
               f"merge_seeds was re-run over an already-blended spec")
 
 
+def check_pool_infrastructure():
+    print("\npool expansion / adjunct staging")
+    oj = AGENTS / "item-pool-sampling" / "references" / "openjlpt"
+    for name in ("vocab-n2.json", "kanji-n2.json", "NOTICE.md"):
+        check(f"openjlpt/{name} exists", (oj / name).is_file())
+    staging = ROOT / "logs" / "adjunct_staging.json"
+    check("logs/adjunct_staging.json exists", staging.is_file())
+    if staging.is_file():
+        data = json.loads(staging.read_text(encoding="utf-8"))
+        check("adjunct_staging.json version == 1", data.get("version") == 1,
+              f"got {data.get('version')!r}")
+        bad = []
+        for e in data.get("entries", []):
+            if not e.get("item") or not e.get("category"):
+                bad.append("missing item/category")
+            elif e.get("level") != "N2":
+                bad.append(f"{e.get('item')}: level {e.get('level')!r}")
+        check("adjunct staging rows are N2 with item+category", not bad,
+              "; ".join(bad[:5]))
+
+
+ADJUNCT_CAP = 0.20
+
+
+def check_spec_adjunct(spec: dict):
+    """Adjunct draws from logs/adjunct_staging.json must carry provenance."""
+    for cat, items in spec.get("items", {}).items():
+        adjunct = [x for x in items if isinstance(x, dict) and x.get("origin") == "adjunct"]
+        if not adjunct:
+            continue
+        cap = int(len(items) * ADJUNCT_CAP)
+        check(f"test_spec {cat}: adjunct within {ADJUNCT_CAP:.0%} cap "
+              f"({len(adjunct)}/{len(items)})",
+              len(adjunct) <= cap if cap >= 1 else len(adjunct) == 0,
+              f"cap allows {cap}, got {len(adjunct)} — sample_items ADJUNCT_CAP")
+        for a in adjunct:
+            label = a.get("item", "?")
+            check(f"test_spec adjunct {cat}/{label}: has item+level N2+evidence",
+                  bool(a.get("item")) and a.get("level") == "N2"
+                  and isinstance(a.get("evidence"), list),
+                  str(a)[:80])
+
+
 def check_rotation_inputs():
     """The two knobs that decide whether a new test is actually new.
 
@@ -709,6 +753,7 @@ def check_rotation_inputs():
                     "no test_spec.json or seeds.json")
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
     check_spec_blend(spec)
+    check_spec_adjunct(spec)
     harvest = {s["seed"] for s in json.loads(seeds_path.read_text(encoding="utf-8"))}
 
     blended: list[tuple[str, str]] = []
@@ -1133,6 +1178,7 @@ def main():
         check_pacing()
         check_item_counts()
         check_taxonomy()
+        check_pool_infrastructure()
         print("\nrotation inputs (why a new test is actually new)")
         check_rotation_inputs()
     check_tests()

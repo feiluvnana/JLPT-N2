@@ -143,6 +143,11 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 | ------------------------- | -------------------------------------------------- |
 | `make check`              | `tools/check_consistency.py` — read-only consistency gate |
 | `make sample`             | `sample_items.py --seed $(SEED)` (default `SEED=20260803`) |
+| `make classify ITEM=…`    | `classify_level.py` — optional `CATEGORY=`, `STAGE=1` |
+| `make promote-adjunct`    | `promote_adjunct.py` — approved staging → `pools.json` |
+| `make expand-pools`       | `expand_pools.py` — OpenJLPT N2 + curated topic growth |
+| `make fetch-openjlpt`     | `fetch_openjlpt.py` — refresh vendored OpenJLPT slices |
+| `make suggest-pool`       | `suggest_pool_additions.py` — optional `WRITE_STAGING=1` |
 | `make merge-seeds`        | `merge_seeds.py logs/seeds.json logs/test_spec.json` |
 | `make booklet <test_id>`  | `build_booklet.py` on both Markdown sources        |
 | `make mp3 <test_id>`      | `make_choukai_mp3.py` on `聴解スクリプト.txt`       |
@@ -167,6 +172,10 @@ them.
 
 ```bash
 python3 .agents/item-pool-sampling/scripts/sample_items.py --seed 20260803
+# adjunct one-shots: classify → --stage, then sample (cap 20%); --no-adjunct for pure pool
+python3 .agents/item-pool-sampling/scripts/classify_level.py --item '措置' --category context_words --stage
+python3 .agents/item-pool-sampling/scripts/promote_adjunct.py
+python3 .agents/item-pool-sampling/scripts/expand_pools.py
 ```
 
 ### Web Topic Research (Seed Merging — Optional / When Online)
@@ -277,6 +286,11 @@ every `"origin": "web"` entry in the spec must trace back to a seed still
 present in `logs/seeds.json`. Test 3 shipped as a re-skin of test 2 — same web
 topics, several in the same slots — because it reused test 2's seed against
 test 2's untouched harvest, and no other gate could see it.
+
+It also checks **adjunct provenance**: `logs/adjunct_staging.json` exists,
+OpenJLPT slices are on disk, and any `"origin": "adjunct"` row in
+`test_spec.json` carries `item`, `level: N2`, `evidence`, and stays within the
+20% per-category cap.
 
 **Run it after touching any script, skill doc, or test.** It is read-only and
 takes a couple of seconds. Every check in it exists because that exact

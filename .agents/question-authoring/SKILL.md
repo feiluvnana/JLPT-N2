@@ -27,7 +27,9 @@ KEYS are an automatic QA fail — see `exam-qa-review` §2.5 and
 Verify every tested word/grammar point against `refs/Shinkanzen/` (N2
 inventory) and benchmark sentence structure, distractor density, and passage
 length against the 5 official past exam sets in `refs/JLPT/` (see
-`reference-book-reading`).
+`reference-book-reading`). Items drawn with `"origin": "adjunct"` in
+`logs/test_spec.json` passed `classify_level.py` — treat them like pool items;
+do not swap them for memory picks.
 
 ## Benchmark against Official Exams (`refs/JLPT/`)
 
