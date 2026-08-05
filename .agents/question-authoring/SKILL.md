@@ -11,10 +11,23 @@ Questions are written to Markdown source files inside `tests/<test_id>/`:
 - Language Knowledge & Reading: `tests/<test_id>/言語知識・読解.md`
 - Listening Booklet: `tests/<test_id>/聴解.md`
 
-## The golden rule
+## The golden rule — stay inside the N2 band
 
-Draft an item, then ask: "would this appear in an N3 book?" If yes, discard.
-Verify every tested word/grammar point against reference books in `refs/Shinkanzen/` and benchmark sentence structure, distractor density, and passage length directly against the 5 official past exam sets in `refs/JLPT/` (see `reference-book-reading`).
+Draft an item, then ask **both** sides before keeping it:
+
+1. **"Would this appear as a headed item in an N3 (or N4/N5) book?"** If yes, discard — too easy.
+2. **"Would Shin Kanzen N1 / a standard N1 list claim this as an N1 form?"** If yes, and it is **not** in Shin Kanzen N2's inventory, discard — too hard.
+
+The tested point (kanji, word, grammar, idiom) must be something an N2 mock
+is allowed to key on. Passiveive harder wording in a 読解 passage is fine when
+glossed with `（注N）`; it must not be the answer discrimination. Off-level
+KEYS are an automatic QA fail — see `exam-qa-review` §2.5 and
+`exam-qa-review/references/level_band_grammar.txt`.
+
+Verify every tested word/grammar point against `refs/Shinkanzen/` (N2
+inventory) and benchmark sentence structure, distractor density, and passage
+length against the 5 official past exam sets in `refs/JLPT/` (see
+`reference-book-reading`).
 
 ## Benchmark against Official Exams (`refs/JLPT/`)
 
@@ -22,7 +35,21 @@ Maintain high consistency with the 5 recent official exams (07/2023, 12/2023, 12
 - **Dokkai Character Counts**: Short (~200 chars), Medium (~500 chars), A/B combined (~600 chars), Long (~900 chars), Flyer (~700 chars; 1 table + 2 matching scenarios). These 目安 mirror the table in `jlpt-exam-structure`.
 - **Grammar stem lengths (問題7–9) — measured on all 5 papers in `refs/JLPT/`**:
   - **問題7**: official stems average **~43 JP chars** (median ~41; interquartile ~33–54). A paper whose 12 stems average under ~35, or that ships many under ~30, reads as textbook-drill short, not exam-length. Target: **each stem ≥30 JP chars**, **paper average ≥40**, with most items in the **35–55** band. Build length with scene-setting (職場・電話・掲示・インタビュー), a subordinate clause, or a short dialogue lead-in — not by padding the tested form. Official items often open with `(会社で)` / `(電話で)` / a named role before the blank.
-  - **問題8**: official frames are rarely bare (`姉は ★ なった`-tier). Put **context before and/or after** the blank run so the assembled sentence lands in the **~40–70 JP char** range once the four options are spliced in. Short stems are acceptable only when the options themselves carry the missing substance.
+  - **問題8 (文の組み立て) — length is mostly in the OPTIONS**: measured on all 5
+    `refs/JLPT/` papers + the official 2018 sample (`jlpt.jp` N2G.pdf) and the
+    clean import `imported-n2-2025-07`:
+    - **Sum of the four options** typically **16–29 JP chars** (July 2025 items
+      sit ~16–29; sample 2018 has chunks like「山を下りて何日かすると」「二度と
+      したくないと」).
+    - **Per option**: mix is fine (a 2–3 char particle next to an 8–12 char
+      clause), but **≥2 options must be ≥5 JP chars**, and the longest should
+      usually be **≥7**. Four scraps of 2–4 chars (`わりに/ケーキは/とても/値段の`
+      — test 1) read as textbook drills, not N2 scramble chunks.
+    - **Assembled sentence** (stem frame + four options) **≥45 JP chars**;
+      prefer ~50–75. Stem context before/after the blank run is required when
+      options alone cannot fund that length.
+    - Prefer **nested/phrase chunks** (thinka/N2 guides: 複文フレーム) over
+      isolated particles when the grammar point allows.
   - **問題9**: official cloze passages run **~500–700 JP chars** (title + body, excluding the four option lists). Do not ship a 150–200 char mini-paragraph — that is N3 drill length. Four blanks still; the prose around them must feel like a short magazine/column piece.
   - Count Japanese characters only (hiragana/katakana/kanji/JP punctuation); ignore spaces and the `(　)` / `＿＿` / `★` markers themselves when eyeballing, but do not strip scene-setting just to hit a number.
 - **Distractor Design**: Distractor options must replicate official confusion logic (e.g. 近義語 nuances, 誤用 collocations, condition disqualifications).
@@ -72,13 +99,26 @@ options must be real affixes; only one collocates.
 
 **問題6 (usage)** — 1 correct + 3 sentences that are grammatical but misuse
 the word's collocation/domain (妥協, 発揮, 解消, 募集, あふれる). Wrong
-sentences must be tempting, not absurd.
+sentences must be tempting, not absurd. Official July 2025 option sentences
+average ~27 JP chars — do not ship telegram-length misuse lines (~15–18 chars).
+Each of the four sentences needs a full situation (who/when/what), not a
+three-word fragment.
 
-**問題7-9 (grammar)** — only N2-list items: 〜かねない, 〜ざるを得ない,
-〜わけにはいかない, 〜に先立って, 〜を契機に, 〜つつも, 〜ようがない,
-〜に限って, 〜ものの, 〜ばかりに, 〜たところ, humble/honorific traps
-(伺う; include one FAKE form like 参られます as a distractor).
-BANNED (too easy): 〜によると, 〜ば〜ほど, 〜がち alone, お〜ください.
+**問題7-9 (grammar)** — only N2-list items (Shin Kanzen N2 文法 headed forms):
+〜かねない, 〜ざるを得ない, 〜わけにはいかない, 〜に先立って, 〜を契機に,
+〜つつも, 〜ようがない, 〜に限って, 〜ものの, 〜ばかりに, 〜たところ,
+humble/honorific traps (伺う; include one FAKE form like 参られます as a
+distractor). Pool draws come from `item-pool-sampling` — do not invent a form
+outside that inventory.
+BANNED too easy (N3–N5): 〜によると, 〜ば〜ほど, 〜がち alone, お〜ください,
+〜てください, 〜ほうがいい, 〜ことができる, 〜たいです, 〜前に/〜後で as the
+sole point — full list in `exam-qa-review/references/level_band_grammar.txt`
+`## TOO_EASY`.
+BANNED too hard (N1): 〜にあって, 〜をもって, 〜ともなると, 〜までもなく
+(except the set phrase 言うまでもなく as running text, not a productive key),
+〜を皮切りに, 〜がてら/〜かたわら as keys, 〜ずにはおかない, 〜余儀なくされる
+as the tested form — full list under `## TOO_HARD` in the same file. Tests 2–4
+shipped several of these as 問題7 keys through a green gate.
 **Length is part of the N2 bar** (see Benchmark above): tests 1–4 shipped
 問題7 stems averaging 20–34 JP chars against an official ~43 average — the
 grammar point was right, the carrier was too short. Lengthen the *situation*,
@@ -87,6 +127,30 @@ not the grammar tag. A one-clause stem like
 when かねない is the correct key; rewrite toward
 「最近残業が続き休日もほとんど取れない。このまま働きすぎると、体を壊し(　)よ。」
 (scene + consequence). Same rule for 問題8 frames and 問題9 cloze prose.
+**Also match official stem *shape*:** every paper in `refs/JLPT/` includes
+several 問題7 items with dialogue turns or a setting label
+`（会社で）` / `（電話で）` / `（インタビューで）` / homepage notice. Generated
+tests 1–4 shipped zero dialogue stems — include **at least 2** (prefer 2–4)
+per paper among the 12.
+
+**問題7 dialogue / setting layout (Markdown):** do **not** crush the stem onto
+one line. Official booklets put the place label first, then each speaker on
+its own line (see July 2025 問41 司会／医者 in the booklet extract). Write:
+
+```
+**40** （会社で）
+A「どうしたの。」
+B「経験がないのに引き受けた(　)、大変な目にあってしまったよ。」
+ 1. どころか  2. ばかりに  3. ながらに  4. おきに
+```
+
+Rules: (1) `（会社で）` / `（電話で）` / `（窓口で）` etc. alone on the stem’s first
+line after `**N**`; (2) each speaker turn (`A「…」` / `山田「…」`) on its own
+following line; (3) the horizontal option row still on one line under the
+turns. Collapsing to
+`**40** （会社で）A「…」B「…」` is forbidden — it reads as a drill line, not a
+booklet stem. `build_interactive.py` keeps `cur` across those stem lines, so
+radios still attach; do not “fix” a sheet by flattening the dialogue.
 
 **問題10-14 (reading)** — difficulty lives in the QUESTIONS, not vocabulary:
 ask 筆者の考え/一番言いたいこと/どういうことか, never mere fact lookup.
@@ -94,10 +158,27 @@ Passages: opinions with a turn (しかし/ところが), one business email, one
 notice with 3 false options contradicted by ※ fine print, one A/B pair
 (agree on one point, differ on conclusion), one flyer with two-condition
 matching where one tempting option fails exactly one condition.
+- **Length bands (official July 2025 / `imported-n2-2025-07`):**
+  - 問題10 短文: ~200–280 JP chars each (five passages). Test 1 shipped
+    several under ~180.
+  - 問題11 中文: **4 passages × 2Q**, each passage ~400–550 JP chars before
+    notes; use `（中略）` when a quoted source would otherwise run long.
+  - 問題13 長文: ~900–1100 JP chars (July 2025 ≈1050). Tests 1–4 often
+    shipped ~600–750 — too short for 主張理解.
+  - 問題14: ~700–900 JP chars including table/conditions.
 - **Vocabulary Explanations & Furigana Rules for Dokkai (MANDATORY)**:
-  - When authoring reading passages containing uncommon vocabulary, N1/specialized terms, or rare idioms, annotate them in text as `（注1）`, `（注2）`... or HTML ruby syntax `<ruby>難解漢字<rt>なんかいかんじ</rt></ruby>`.
-  - Immediately following the passage (before question items), provide a structured vocabulary note block `（注1） 語彙：簡潔な意味の説明` wrapped in a `<div class="vocab-notes">` block or clean paragraph.
-  - Furigana should be attached to non-standard readings, proper nouns, or rare kanji above N2 target level using `<ruby>漢字<rt>ルビ</rt></ruby>`.
+  - Official papers gloss freely: July 2025 carries **≈50+ `（注N）`** across
+    読解. Generated tests with 0–2 notes are under-annotated. For every 中文/
+    長文, plan **several** notes (typically 3–7 per medium/long passage) on
+    N1/rare/specialized terms — not one decorative note per paper.
+  - Annotate in text as `（注1）`, `（注2）`… or HTML ruby
+    `<ruby>難解漢字<rt>なんかいかんじ</rt></ruby>`.
+  - Immediately following the passage (before question items), provide the
+    note block `（注1）語彙：簡潔な意味の説明` (one line per note).
+  - Use `（中略）` at least once across 問題11–13 when cutting a longer
+    exposition — official papers do; generated tests 1–4 never did.
+  - Furigana via `<ruby>` for non-standard readings, proper nouns, or rare
+    kanji above N2.
 
 **聴解 dialogues** — every wrong option must be MENTIONED then eliminated
 (already done / rejected / explicitly denied: 「それが理由ではありません」).
@@ -265,6 +346,8 @@ you. Run it before calling any authoring work done.
   - Options must run on a SINGLE line with leading space and double spaces between choices:
     ` 1. こうしょう  2. こうちょう  3. きょうしょう  4. こうしゅう`
   - The booklet builder detects 3+ options on a line and converts spaces into wide ideographic spaces (`\u3000\u3000\u3000`).
+  - **例外ではない — 問題7 dialogue stems:** setting + speaker turns are multi-line
+    (see above); only the `1. … 2. … 3. … 4. …` row stays horizontal on one line.
 - **Vertical Options Layout (問題6, 問題10–14, 聴解)**:
   - Options must be on separate lines with a leading space:
     ` 1. 資料をコピーする`

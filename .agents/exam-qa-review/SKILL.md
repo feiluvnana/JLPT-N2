@@ -59,7 +59,8 @@ with the sources side by side, and refuse to pass anything it cannot prove.
   source does not state; an unanswerable item or 例; a 解説 quote not in the
   source; a topic repeated within the paper or from the previous test; broken
   Japanese anywhere in stems, options, passages, or script; narration
-  contradicting the mapped voice; a spec/paper provenance mismatch.
+  contradicting the mapped voice; a spec/paper provenance mismatch; **an
+  off-level KEY** (N1-hard or N3/N4/N5-easy — see step 2.5 / `references/level_band_grammar.txt`).
 - **Fix, regenerate, re-check, RE-REVIEW.** Findings are repaired in the
   Markdown/script sources, then booklet HTML + `解答.html` (+ MP3 if the script
   changed) are regenerated and `make check` re-run. Then the changed items AND
@@ -102,16 +103,46 @@ prefixes that both attach (無記入/未記入), adverbs sharing the frame
 (いいかげん/おろそか on 〜にする), and 問題6 "wrong" sentences that are actually
 real collocations (品質に妥協する, 考慮に値する — search before trusting).
 
+### 2.5. Level band (N2 only — not N1, not N3–N5)
+
+The paper's **tested** items (問題1–9 keys, 問題5's hard word, 聴解 即時応答
+idioms) must sit inside the N2 band. Drifting either way is a fail:
+
+| Drift | Symptom | Action |
+|-------|---------|--------|
+| **Too hard (N1)** | Keyed grammar/vocab that Shin Kanzen N2 does not head, and common N1 lists do (にあって, をもって, ともなると, までもなく as productive grammar, を皮切りに, 余儀なくされる as a tested form, …) | Replace the KEY with an N2 form; keep `answer_positions` |
+| **Too easy (N3–N5)** | Keyed form a lower-level textbook would drill (によると, ば〜ほど, てください, ほうがいい, ことができる, たいです, 前に/後で as the sole point, がち alone, …) | Replace with a real N2 discrimination |
+
+Procedure for every 問題7–9 key (and spot-check 問題1–6 / 即時応答):
+
+1. Name the form the item actually tests (from the keyed option + 解説 gloss).
+2. Ask both sides, not one: *"Would Shin Kanzen N1 / a Tettei-N1 list claim this?"* AND *"Would this appear as a headed item in an N3 (or easier) book?"* If either is yes, the item fails — rewrite, do not argue "examinees should know it anyway".
+3. Cross-check the hard side against `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-*.pdf` TOC / inventory (rasterize when there is no text layer — see `reference-book-reading`). Forms absent from N2 Shin Kanzen and present in N1 lists are TOO_HARD.
+4. Distractors may show off-level forms **only when they are morphologically or collocationally impossible in the stem** so an N2 examinee can eliminate them without knowing the N1/N3 item. Prefer N2-band distractors.
+5. Passiveive N1 wording inside 読解/聴解 prose is allowed when glossed (`（注N）`) or simplified; it must not be what the question keys on.
+
+`make check` enforces the string-decidable half via
+`references/level_band_grammar.txt` (TOO_HARD / TOO_EASY / ALLOW). This step
+still owns the judgment calls the gate cannot see (vocab keys, 問題5 hard
+words, "がちだ" vs bare "がち", 読解 questions that only test N5 fact-lookup).
+
 ### 3. Mechanical reads
 
 - **問題7 stem length:** count JP chars on every stem. Official papers average
   ~43 (band ~33–54). Fail the paper if the 12-stem average is under ~35, or if
   more than a couple of stems sit under ~30 — that is the short-carrier defect
   tests 1–4 shipped (avg 20–34) while the grammar keys looked fine. Fix by
-  rewriting the situation, not by changing the keyed form.
+  rewriting the situation, not by changing the keyed form. Also fail a paper
+  whose 問題7 set has **zero** dialogue/setting-label stems (`「…」` turns or
+  `（会社で）` etc.) — official papers always include a few.
 - **問題8 / 問題9 length:** 問題8 assembled sentences should not read as
   three-word drills; 問題9 cloze body should land ~500–700 JP chars (official),
   not a 150–200 char stub.
+- **読解 apparatus vs official:** using `imported-n2-2025-07` (July 2025) as
+  the bar — fail (or hard-warn) a generated paper with fewer than ~15 `（注N）`
+  across 問題10–13, with **no** `（中略）` anywhere in 中文/長文, or with 問題13
+  under ~850 JP chars. Tests 1–4 shipped 0–2 notes and ~600–750 長文.
+- **問題11:** must be 4 passages × 2 questions with instruction `(1)から(4)`.
 - **問題5 言い換え:** swap the option into the stem; the sentence must survive
   (test 4: 「値段の比較的美味しい」 did not).
 - **問題8:** splice stem + options in 解説 order; read end to end; no word twice.

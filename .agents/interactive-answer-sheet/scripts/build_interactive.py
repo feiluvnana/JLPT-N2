@@ -133,6 +133,26 @@ EXTRA_CSS = app_style.APP_CSS + """
   margin:.6em 0;font-size:10.5pt}
 .rs-advice b{display:block;margin-bottom:.25em}
 .rs-grid{display:flex;flex-wrap:wrap;gap:.3em;margin:.5em 0 1.2em}
+.rs-check-tools{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;
+  margin:.2em 0 .7em}
+.rs-hint{font-size:10pt;color:var(--muted);margin:0}
+.rs-all-detail{margin:.2em 0 1.4em}
+.rs-all-detail[hidden]{display:none!important}
+.rs-item{border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;
+  padding:.85em 1.05em;margin:0 0 .7em}
+.rs-detail-meta{display:flex;flex-wrap:wrap;gap:.4em 1.1em;align-items:center;
+  font-size:10.5pt;margin:0 0 .65em}
+.rs-detail-meta .tag{font-weight:700;padding:.1em .45em;border-radius:4px;
+  border:1px solid}
+.rs-detail-meta .tag.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
+.rs-detail-meta .tag.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.rs-detail-meta .tag.na{background:#fff;border-color:var(--line);color:#64748b}
+.rs-detail-body{background:#fff;border:1px solid #e2e8f0;border-radius:8px;
+  padding:.75em 1em;line-height:1.75;font-size:11pt}
+.rs-detail-body .qa,.rs-detail-body input{display:none!important}
+.rs-detail-body h1,.rs-detail-body h2,.rs-detail-body h3{background:none;border:0;
+  padding:0;margin:.35em 0 .45em;font-size:11.5pt;color:var(--ink)}
+.rs-detail-note{font-size:10pt;color:var(--muted);margin:.55em 0 0}
 @media print{#bar,#player,.rs-nav{display:none}.qa label{border-color:#666}}
 /* On screen the sheet keeps the booklet's centered 60em measure (SCREEN_CSS), so
    the exam text and the printed booklet render identically — but the measure
@@ -371,6 +391,139 @@ function chip(label, d){
   return '<span class="chip ' + cls + '"><i>' + label + '</i>' + body + '</span>';
 }
 
+function _isQa(el){ return !!(el && el.classList && el.classList.contains('qa')); }
+function _isBreak(el){ return !!(el && (/^H[12]$/.test(el.tagName) || el.tagName === 'HR')); }
+function _isUnit(el){ return !!(el && el.tagName === 'H3'); }
+function _isOptLine(el){
+  return !!(el && el.tagName === 'P' && /^\\s*[1-4][.．]/.test(el.textContent || ''));
+}
+function _looksLikeStem(el){
+  if (!el || el.tagName !== 'P') return false;
+  const s = el.querySelector('strong');
+  if (!s) return false;
+  const t = (s.textContent || '').trim();
+  return /^(?:\\d{1,2}\\b|例|[1-5]番|質問\\s*[12])/.test(t);
+}
+
+/** Clone the exam nodes for one scored item (stem + shared passage / 問題 heading).
+ *  Contiguous slices are wrong: walking back to h2 would drag in every earlier
+ *  item in that 問題. Collect stem nodes, then prepend passage context while
+ *  skipping other questions' stems/.qa blocks. */
+function extractQuestionHtml(key){
+  const inp = document.querySelector(
+    '#screen-exam input[name="q_' + CSS.escape(key) + '"]');
+  if (!inp) return '';
+  const qa = inp.closest('.qa');
+  if (!qa || !qa.parentElement) return '';
+  const kids = Array.from(qa.parentElement.children);
+  const qi = kids.indexOf(qa);
+  if (qi < 0) return '';
+
+  const nodes = [];
+  let i = qi - 1;
+  while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))){
+    nodes.unshift(kids[i]);
+    i--;
+  }
+  while (i >= 0){
+    const n = kids[i];
+    if (_isQa(n)){
+      i--;
+      while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))) i--;
+      continue;
+    }
+    if (n.tagName === 'HR') break;
+    if (n.tagName === 'H1' && n.classList.contains('section-title')) break;
+    if (n.tagName === 'H1' || n.tagName === 'H2'){
+      nodes.unshift(n);
+      break;
+    }
+    if (_isUnit(n)){
+      nodes.unshift(n);
+      break;
+    }
+    nodes.unshift(n);
+    i--;
+  }
+
+  const wrap = document.createElement('div');
+  nodes.forEach(n => wrap.appendChild(n.cloneNode(true)));
+  wrap.querySelectorAll('input, .qa').forEach(el => el.remove());
+  return wrap.innerHTML;
+}
+
+function detailMetaHtml(key, d){
+  const cls = d.user === null ? 'na' : (d.is_correct ? 'ok' : 'ng');
+  const verdict = d.user === null ? '未解答'
+                : (d.is_correct ? '正解' : '不正解');
+  const user = d.user === null ? '—' : String(d.user);
+  const correct = d.correct === null || d.correct === undefined ? '—' : String(d.correct);
+  return '<div class="rs-detail-meta">'
+    + '<span><b>設問 ' + key + '</b></span>'
+    + '<span class="tag ' + cls + '">' + verdict + '</span>'
+    + '<span>あなたの答え: <b>' + user + '</b></span>'
+    + '<span>正解: <b>' + correct + '</b></span>'
+    + '</div>';
+}
+
+function itemDetailHtml(key, d){
+  let body = extractQuestionHtml(key);
+  if (!body){
+    body = '<p>（この設問の問題文を画面から取得できませんでした。）</p>';
+  }
+  let note = '';
+  if (!/^\\d+$/.test(key)){
+    note = '<p class="rs-detail-note">聴解の音声は「解答に戻ってやり直す」から'
+      + '受験画面のプレイヤーで確認できます。</p>';
+  }
+  return '<div class="rs-item" id="rs-item-' + key + '">'
+    + detailMetaHtml(key, d)
+    + '<div class="rs-detail-body">' + body + '</div>' + note
+    + '</div>';
+}
+
+function buildAllDetailsHtml(res){
+  const L = [];
+  L.push('<h3>言語知識・読解 — 設問詳細</h3>');
+  for (let q = 1; q <= 71; q++){
+    const k = String(q);
+    L.push(itemDetailHtml(k, res.detail_gengo[k] || {}));
+  }
+  L.push('<h3>聴解 — 設問詳細</h3>');
+  for (const k of CHOUKAI_KEYS){
+    L.push(itemDetailHtml(k, res.detail_choukai[k] || {}));
+  }
+  return L.join('');
+}
+
+function setCheckExpanded(on, res){
+  const panel = document.getElementById('rs-all-detail');
+  const btn = document.getElementById('rs-expand-btn');
+  if (!panel || !btn) return;
+  if (on){
+    if (!panel.dataset.built){
+      panel.innerHTML = buildAllDetailsHtml(res);
+      panel.dataset.built = '1';
+    }
+    panel.hidden = false;
+    btn.textContent = '詳細を折りたたむ';
+    btn.setAttribute('aria-expanded', 'true');
+  } else {
+    panel.hidden = true;
+    btn.textContent = 'すべての設問詳細を展開';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+function bindResultExpand(res){
+  const btn = document.getElementById('rs-expand-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    setCheckExpanded(!open, res);
+  });
+}
+
 function resultHtml(res, msg, saved){
   const s = res.summary, cls = s.passed ? 'pass' : 'fail';
   const L = [];
@@ -439,11 +592,17 @@ function resultHtml(res, msg, saved){
   }
 
   L.push('<h2>4. 全設問解答チェック表</h2>');
+  L.push('<div class="rs-check-tools">'
+    + '<button type="button" class="ui-btn" id="rs-expand-btn" aria-expanded="false">'
+    + 'すべての設問詳細を展開</button>'
+    + '<p class="rs-hint">展開すると全101問の問題文・選択肢・正誤が一覧で表示されます。</p>'
+    + '</div>');
   L.push('<h3>言語知識・読解 (1 〜 71)</h3><div class="rs-grid">');
   for (let q = 1; q <= 71; q++){ L.push(chip(String(q), res.detail_gengo[String(q)])); }
   L.push('</div><h3>聴解</h3><div class="rs-grid">');
   for (const k of CHOUKAI_KEYS){ L.push(chip(k, res.detail_choukai[k])); }
   L.push('</div>');
+  L.push('<div id="rs-all-detail" class="rs-all-detail" hidden></div>');
 
   L.push('<div class="rs-nav">'
     + '<button class="ui-btn primary" onclick="goList()">← テスト一覧へ戻る</button>'
@@ -474,6 +633,7 @@ function showScreen(name){
 
 function showResult(res, msg, saved){
   document.getElementById('screen-result').innerHTML = resultHtml(res, msg, saved);
+  bindResultExpand(res);
   showScreen('result');
 }
 
@@ -646,10 +806,9 @@ def inject_gengo(md: str):
             width = max(width, option_run(line) or int(m_opt.group(1)))
             out.append(line)
             continue
-        if line.strip():
-            flush()
         m_q = GENGO_Q.match(line)
         if m_q:
+            flush()
             qid = m_q.group(1)
             inline = option_run(line[m_q.end():])   # 問題9's all-on-one-line stem
             if inline:
@@ -658,6 +817,14 @@ def inject_gengo(md: str):
                 ids.append(qid)
                 continue
             cur, width = qid, 0
+            out.append(line)
+            continue
+        # Multi-line 問題7 stems (setting on its own line, then each speaker
+        # turn) must NOT flush — width is still 0 until the option row.
+        # Only flush once options have been seen and non-option prose resumes
+        # (読解 passage after a vertical option list, etc.).
+        if cur and width and line.strip():
+            flush()
         out.append(line)
     flush()
     return "\n".join(out), ids

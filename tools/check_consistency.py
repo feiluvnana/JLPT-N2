@@ -305,6 +305,10 @@ JP_CHAR = re.compile(r"[\u3040-\u30ff\u4e00-\u9fffー。、！？（）「」『
 P7_STEM_MIN = 30
 P7_PAPER_AVG_MIN = 35
 P9_PASSAGE_MIN = 450
+# 問題8: official option-chunk mass (5 papers + 2018 sample / imported-n2-2025-07)
+P8_OPT_SUM_MIN = 16
+P8_LONG_OPTS_MIN = 2  # options with ≥5 JP chars
+P8_ASSEMBLED_MIN = 45
 
 
 def jp_char_count(s: str) -> int:
@@ -374,6 +378,148 @@ def check_grammar_stem_lengths(gt: str, bi):
               f"(official ~500–700; got {p9})",
               p9 >= P9_PASSAGE_MIN,
               "expand the cloze prose around the four blanks")
+
+
+def check_mondai8_chunk_lengths(gt: str, opts: dict[int, list[str]], bi):
+    """問題8 options must be N2-sized chunks, not four 2-char scraps.
+
+    Official papers (and jlpt.jp 2018 sample) put real phrase mass in the four
+    strips — sum often 16–29 JP chars, with several options ≥5. Test 1 shipped
+    `わりに/ケーキは/とても/値段の` (sum 13).
+    """
+    cut = bi.KEY_HEADING.search(gt)
+    body = gt[: cut.start()] if cut else gt
+    m8 = re.search(r"^##\s*問題8\b.*?(?=^##\s*問題9\b)", body, re.M | re.S)
+    stems: dict[int, str] = {}
+    if m8:
+        cur = None
+        buf: list[str] = []
+        for line in m8.group(0).splitlines():
+            q = bi.GENGO_Q.match(line)
+            if q:
+                if cur is not None and 43 <= cur <= 47:
+                    stems[cur] = "".join(buf)
+                cur = int(q.group(1))
+                rest = line[q.end():]
+                if bi.option_run(rest):
+                    rest = re.split(r"(?<![^\s（(])[1-4]\.\s*", rest, maxsplit=1)[0]
+                buf = [rest]
+                continue
+            if cur is None:
+                continue
+            if bi.OPTION.match(line):
+                if cur is not None and 43 <= cur <= 47:
+                    stems[cur] = "".join(buf)
+                cur = None
+                buf = []
+                continue
+            buf.append(line)
+        if cur is not None and 43 <= cur <= 47:
+            stems[cur] = "".join(buf)
+
+    bad_sum, bad_long, bad_asm = [], [], []
+    for q in range(43, 48):
+        o = opts.get(q) or []
+        ol = [jp_char_count(x) for x in o]
+        ssum = sum(ol)
+        long_n = sum(1 for n in ol if n >= 5)
+        asm = jp_char_count(stems.get(q, "")) + ssum
+        if len(ol) != 4 or ssum < P8_OPT_SUM_MIN:
+            bad_sum.append(f"{q}(sum={ssum}, opts={ol})")
+        if long_n < P8_LONG_OPTS_MIN:
+            bad_long.append(f"{q}(≥5chars:{long_n}, opts={ol})")
+        if asm < P8_ASSEMBLED_MIN:
+            bad_asm.append(f"{q}(assembled~{asm})")
+    check(f"問題8 four options sum ≥{P8_OPT_SUM_MIN} JP chars each item",
+          not bad_sum, "; ".join(bad_sum) + " — lengthen option chunks (see question-authoring)")
+    check(f"問題8 each item has ≥{P8_LONG_OPTS_MIN} options of ≥5 JP chars",
+          not bad_long, "; ".join(bad_long))
+    check(f"問題8 assembled sentence ≥{P8_ASSEMBLED_MIN} JP chars",
+          not bad_asm, "; ".join(bad_asm))
+
+
+LEVEL_BAND_PATH = (
+    AGENTS / "exam-qa-review" / "references" / "level_band_grammar.txt"
+)
+
+
+def load_level_band(path: Path = LEVEL_BAND_PATH) -> dict[str, list[str]]:
+    """Parse TOO_HARD / TOO_EASY / ALLOW sections from the level-band list."""
+    sections: dict[str, list[str]] = {"TOO_HARD": [], "TOO_EASY": [], "ALLOW": []}
+    if not path.is_file():
+        return sections
+    cur = None
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        # Section headers use Markdown ## — strip comments only after that.
+        if raw.lstrip().startswith("## "):
+            name = raw.lstrip()[3:].split("#", 1)[0].strip().upper()
+            cur = name if name in sections else None
+            continue
+        line = raw.split("#", 1)[0].strip()
+        if not line or cur is None:
+            continue
+        sections[cur].append(line)
+    return sections
+
+
+def _level_band_hits(haystack: str, bans: list[str], allows: list[str]) -> list[str]:
+    """Return ban substrings found in haystack, skipping those covered by ALLOW."""
+    hits = []
+    for ban in bans:
+        if ban not in haystack:
+            continue
+        # ALLOW wins when it appears in the haystack and itself contains the ban
+        # (ようがない covers ようが; 言うまでもなく covers までもなく).
+        if any(allow in haystack and ban in allow for allow in allows):
+            continue
+        hits.append(ban)
+    return hits
+
+
+def check_level_band_grammar(gt: str, keys: dict[int, int],
+                             opts: dict[int, list[str]], origin: str):
+    """Generated 問題7–9 keys must stay inside the N2 band.
+
+    String-decidable half of exam-qa-review §2.5. Imported papers are skipped
+    (they reproduce an outside source). Tests 2–4 shipped N1 keys
+    (にあって / をもって / ともなると / までもなく) through a green gate.
+    """
+    if origin != "generated":
+        return skip("問題7–9 keys stay inside N2 level band", "imported test")
+    band = load_level_band()
+    if not band["TOO_HARD"] and not band["TOO_EASY"]:
+        return skip("問題7–9 keys stay inside N2 level band",
+                    f"missing {LEVEL_BAND_PATH.relative_to(ROOT)}")
+
+    # 文法 answer rows: | 問 | 答 | 解説 |
+    gloss: dict[int, str] = {}
+    m = re.search(r"^##\s*文法\s*$(.*?)(?=^##\s|\Z)", gt, re.M | re.S)
+    if m:
+        for q, expl in re.findall(
+            r"\|\s*(\d+)\s*\|\s*[1-4]\s*\|\s*([^|]+)\|", m.group(1)
+        ):
+            gloss[int(q)] = expl.strip()
+
+    hard, easy = [], []
+    for q in range(31, 52):
+        ans = keys.get(q)
+        if ans is None:
+            continue
+        keyed = (opts.get(q) or [""] * 4)
+        keyed_s = keyed[ans - 1] if 1 <= ans <= len(keyed) else ""
+        # Prefer the leading 「〜…」 gloss; fall back to full 解説 + keyed text.
+        gtext = gloss.get(q, "")
+        gm = re.search(r"「([^」]+)」", gtext)
+        haystack = f"{keyed_s} {gm.group(1) if gm else gtext}"
+        for ban in _level_band_hits(haystack, band["TOO_HARD"], band["ALLOW"]):
+            hard.append(f"{q}:{keyed_s or gm and gm.group(1) or '?'}({ban})")
+        for ban in _level_band_hits(haystack, band["TOO_EASY"], band["ALLOW"]):
+            easy.append(f"{q}:{keyed_s or gm and gm.group(1) or '?'}({ban})")
+
+    check("問題7–9 keys are not N1-hard (level band)", not hard,
+          "; ".join(hard) + " — see exam-qa-review/references/level_band_grammar.txt")
+    check("問題7–9 keys are not N3–N5-easy (level band)", not easy,
+          "; ".join(easy) + " — see exam-qa-review/references/level_band_grammar.txt")
 
 
 def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str]]):
@@ -777,6 +923,11 @@ def check_tests():
         check("every gengo question parses to exactly 4 options", not wrong_n, f"{wrong_n}")
         check_scramble_stars(gt, keys, opts)
         check_grammar_stem_lengths(gt, bi)
+        # Official papers include short particle strips; the drill-length defect
+        # is a generation failure mode — do not fail imported transcriptions.
+        if origin == "generated":
+            check_mondai8_chunk_lengths(gt, opts, bi)
+        check_level_band_grammar(gt, keys, opts, origin)
         check_answer_positions(d, keys, ck, g)
         for f in (gengo, choukai):
             body = f.read_text(encoding="utf-8")
@@ -790,6 +941,35 @@ def check_tests():
                            re.M | re.S)
         if gcut and dokkai:
             check_explanation_quotes(gengo.name, dokkai.group(1), gt[: gcut.start()])
+
+        # Official July 2025 (~50+ 注, 中略 in 中文, 長文 ~1000) is the bar.
+        # Generated tests 1–4 under-annotated; warn so authoring cannot ignore it.
+        if origin == "generated":
+            notes = len(re.findall(r"（注\d+）|\(注\d+\)", gt))
+            warn(f"{d.name}: 読解 has substantial （注N） glosses "
+                 f"(official July 2025 ≈50+; got {notes})",
+                 notes >= 15,
+                 "add glosses on N1/rare terms in 問題10–13 — see question-authoring")
+            warn(f"{d.name}: 読解 uses （中略） at least once",
+                 "中略" in gt,
+                 "official 中文/長文 cut with （中略）; generated tests shipped none")
+            m13 = re.search(r"^##\s*問題13\b.*?(?=^##\s*問題14\b)", gt, re.M | re.S)
+            if m13:
+                body13 = re.split(r"\*\*67\*\*", m13.group(0), maxsplit=1)[0]
+                n13 = jp_char_count(body13)
+                warn(f"{d.name}: 問題13 長文 ≥850 JP chars "
+                     f"(official ~900–1100; got {n13})",
+                     n13 >= 850,
+                     "主張理解 is under-length vs refs/JLPT")
+            m7 = re.search(r"^##\s*問題7\b.*?(?=^##\s*問題8\b)", gt, re.M | re.S)
+            if m7:
+                dialogueish = (
+                    len(re.findall(r"[「『]", m7.group(0))) >= 2
+                    or bool(re.search(r"（[^）]{2,12}）", m7.group(0)))
+                )
+                warn(f"{d.name}: 問題7 includes dialogue or setting-label stems",
+                     dialogueish,
+                     "official papers mix （会社で）/インタビュー/dialogue turns")
 
         script = d / "聴解スクリプト.txt"
         if script.is_file():

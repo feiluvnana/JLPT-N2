@@ -19,22 +19,32 @@ APP_CSS = """
   --ui:"Hiragino Sans","Yu Gothic",sans-serif}
 /* The bar spans the full window on every screen, so the scrollbar sits ON its
    right edge — the horizontal padding has to clear it or it covers 採点する. */
+/* Fixed bar height on all three screens — exam controls must not wrap taller
+   than the list/result bars. */
 #bar{position:sticky;top:0;z-index:99;background:#111;color:#fff;
-  padding:.6em 1.8em;display:flex;flex-wrap:wrap;gap:.45em 1em;align-items:center;
-  font-family:var(--ui);font-size:11pt}
-#bar b{font-size:12pt;font-weight:700}
-#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums}
-#bar .grow{flex:1}
-#bar button{font-size:11pt;padding:.35em .9em;cursor:pointer;border-radius:6px;
-  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui)}
+  box-sizing:border-box;height:3.25em;min-height:3.25em;max-height:3.25em;
+  padding:0 1.8em;display:flex;flex-wrap:nowrap;gap:.45em 1em;align-items:center;
+  font-family:var(--ui);font-size:11pt;overflow:hidden}
+#bar b{font-size:12pt;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;min-width:0;max-width:18em}
+#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#bar .grow{flex:1 1 auto;min-width:.5em}
+#bar-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:.45em;flex:0 0 auto}
+#bar button{font-size:10pt;padding:.2em .7em;cursor:pointer;border-radius:6px;
+  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui);
+  white-space:nowrap;line-height:1.35}
 #bar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);
   font-weight:700}
-#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap}
+#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap;
+  flex:0 0 auto}
 #bar a.back:hover{color:#fff;text-decoration:underline}
 .ui-btn{display:inline-block;font-size:11pt;padding:.45em 1.1em;border-radius:6px;
   text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--ink);
   cursor:pointer;font-family:var(--ui)}
 .ui-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.ui-btn.danger{background:#fff;border-color:#fca5a5;color:#991b1b}
+.ui-btn.danger:hover{background:#fef2f2}
 .ui-btn:hover{filter:brightness(.96)}
 .ui-table{border-collapse:collapse;width:100%;font-size:10.5pt;margin:.4em 0;
   font-family:var(--ui)}
@@ -56,9 +66,10 @@ APP_CSS = """
 .chip.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
 .chip.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
 .chip.na{background:#f8fafc;border-color:var(--line);color:#64748b}
-.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden}
+.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden;
+  text-align:left}
 .meter .fill{height:100%;background:var(--accent)}
 .meter .fill.done{background:#16a34a}
-.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;
+.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;text-align:left;
   font-variant-numeric:tabular-nums;font-family:var(--ui)}
 """

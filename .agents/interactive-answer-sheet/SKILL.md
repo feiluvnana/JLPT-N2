@@ -56,6 +56,14 @@ Pressing the button:
 If anything is unanswered the button asks for confirmation first, and
 unanswered items appear as 「未解答」 chips in the check grid rather than as wrong.
 
+**全設問解答チェック表 expands as one list.** 「すべての設問詳細を展開」 builds
+detail blocks for all 101 items at once (chip grid stays as the summary). Each
+block clones that item’s problem text from the still-in-DOM `#screen-exam`
+(stem, options, and for 読解/問題9 the shared passage / `（n）` unit) plus
+あなたの答え / 正解. 「詳細を折りたたむ」 hides the list. `computeResult()` stays
+data-only; extraction is display-only in `extractQuestionHtml` /
+`buildAllDetailsHtml`.
+
 ### The result is data, not prose
 
 `computeResult()` returns the **same document `grade_answers.py` writes** — the
@@ -111,11 +119,14 @@ merged sheet covers the whole exam.
 1. **One server, every test.** It is started with no arguments and serves the
    whole `tests/` tree; the routes are `/` (list), `/api/tests` (the same list
    as JSON), `/tests/<id>/…` (static, range-aware),
-   `POST /api/tests/<id>/answers` and `POST /api/tests/<id>/submit`. Only paths
-   under `tests/` are reachable, so the repo is not on the web.
+   `POST /api/tests/<id>/answers`, `POST /api/tests/<id>/submit`, and
+   `POST /api/tests/<id>/clear` (deletes `採点結果.json` + `ユーザー解答.json`
+   from the list’s 「結果を削除」). Only paths under `tests/` are reachable.
 2. **Screen 1 reads the disk, never a cache.** Progress comes from
    `ユーザー解答.json` and `採点結果.json` in each test dir, and the index is
    sent `Cache-Control: no-store` — a stale list is worse than no list.
+   Cards share one fixed height (long ids ellipsize); the sticky `#bar` is the
+   same fixed height on all three screens (exam controls must not wrap taller).
 3. **Range requests.** `聴解.mp3` is ~30 MB and the `<audio>` element re-requests
    it with `Range:` on every seek. `SimpleHTTPRequestHandler` ignores Range and
    restreams the whole file, so the browser cancelled each previous transfer:
@@ -140,14 +151,13 @@ how they drift, and no gate can see a drifted colour. Add chrome there, not in
 either script. `APP_CSS` must stay free of bare element selectors — 解答.html
 loads it on top of the booklet stylesheet.
 
-The sheet also imports `SCREEN_CSS` from `build_booklet.py` so the exam text
-keeps the booklets' centered 60 em measure (unreadable line lengths otherwise on
-a wide monitor). But the measure is moved off `<body>` onto `#screen-exam` /
-`#screen-result`, because **the bar must span the window exactly as it does on
-screen 1** and a bar inside a centered body cannot. Do not "simplify" that back
-to `width:100vw`: `100vw` includes the scrollbar, so the bar overflowed and
-「採点する」 fell off the right edge. `#bar` also carries generous horizontal
-padding for the same reason — the scrollbar sits on its right edge.
+The sheet also imports `SCREEN_CSS` from `build_booklet.py` so screens 2–3 keep
+the booklets' centered **60em** measure. The measure is moved off `<body>` onto
+`#screen-exam` / `#screen-result` so **the bar can span the window** like screen
+1. Screen 1’s `<main>` is wider (**80em**) so test cards with several actions
+fit; do not widen the exam/result columns to match. Do not "simplify" to
+`width:100vw`: it includes the scrollbar and shoved 「採点する」 off-screen.
+`#bar` also carries generous horizontal padding for the same reason.
 
 It is all inside `@media screen` — the A4 `@page` geometry is untouched, so
 Cmd-P still prints the booklet.
@@ -179,6 +189,12 @@ formatting rules are not cosmetic:
 
 - 言語知識: `**33** stem` then indented ` 1. … 2. …` option lines, OR 問題6's
   `**28 募集**`, OR 問題9's all-on-one-line `**50** 1. こと  2. だけ …`.
+  **問題7 dialogue stems may span lines** after `**N**` — setting
+  `（会社で）` on the first line, each `A「…」` / role turn on the next —
+  before the horizontal option row. `inject_gengo` must keep `cur` across
+  those stem lines (flush only on a new `**N**`, or after options when
+  non-option prose resumes). Flushing on every non-option line used to drop
+  radios for Q32/39/40/41/42 whenever dialogue was formatted correctly.
 - 聴解: `**1番**` + indented options, OR a bare bubble row
   `**1番** 1 ・ 2 ・ 3 ・ 4` for the 問題3/4/5 items that print nothing.
 - `**例**` rows get a STATIC row with the answer already filled in, never radios

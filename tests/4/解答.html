@@ -67,22 +67,32 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   --ui:"Hiragino Sans","Yu Gothic",sans-serif}
 /* The bar spans the full window on every screen, so the scrollbar sits ON its
    right edge — the horizontal padding has to clear it or it covers 採点する. */
+/* Fixed bar height on all three screens — exam controls must not wrap taller
+   than the list/result bars. */
 #bar{position:sticky;top:0;z-index:99;background:#111;color:#fff;
-  padding:.6em 1.8em;display:flex;flex-wrap:wrap;gap:.45em 1em;align-items:center;
-  font-family:var(--ui);font-size:11pt}
-#bar b{font-size:12pt;font-weight:700}
-#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums}
-#bar .grow{flex:1}
-#bar button{font-size:11pt;padding:.35em .9em;cursor:pointer;border-radius:6px;
-  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui)}
+  box-sizing:border-box;height:3.25em;min-height:3.25em;max-height:3.25em;
+  padding:0 1.8em;display:flex;flex-wrap:nowrap;gap:.45em 1em;align-items:center;
+  font-family:var(--ui);font-size:11pt;overflow:hidden}
+#bar b{font-size:12pt;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;min-width:0;max-width:18em}
+#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#bar .grow{flex:1 1 auto;min-width:.5em}
+#bar-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:.45em;flex:0 0 auto}
+#bar button{font-size:10pt;padding:.2em .7em;cursor:pointer;border-radius:6px;
+  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui);
+  white-space:nowrap;line-height:1.35}
 #bar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);
   font-weight:700}
-#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap}
+#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap;
+  flex:0 0 auto}
 #bar a.back:hover{color:#fff;text-decoration:underline}
 .ui-btn{display:inline-block;font-size:11pt;padding:.45em 1.1em;border-radius:6px;
   text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--ink);
   cursor:pointer;font-family:var(--ui)}
 .ui-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.ui-btn.danger{background:#fff;border-color:#fca5a5;color:#991b1b}
+.ui-btn.danger:hover{background:#fef2f2}
 .ui-btn:hover{filter:brightness(.96)}
 .ui-table{border-collapse:collapse;width:100%;font-size:10.5pt;margin:.4em 0;
   font-family:var(--ui)}
@@ -104,10 +114,11 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 .chip.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
 .chip.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
 .chip.na{background:#f8fafc;border-color:var(--line);color:#64748b}
-.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden}
+.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden;
+  text-align:left}
 .meter .fill{height:100%;background:var(--accent)}
 .meter .fill.done{background:#16a34a}
-.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;
+.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;text-align:left;
   font-variant-numeric:tabular-nums;font-family:var(--ui)}
 
 .qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
@@ -173,6 +184,26 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   margin:.6em 0;font-size:10.5pt}
 .rs-advice b{display:block;margin-bottom:.25em}
 .rs-grid{display:flex;flex-wrap:wrap;gap:.3em;margin:.5em 0 1.2em}
+.rs-check-tools{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;
+  margin:.2em 0 .7em}
+.rs-hint{font-size:10pt;color:var(--muted);margin:0}
+.rs-all-detail{margin:.2em 0 1.4em}
+.rs-all-detail[hidden]{display:none!important}
+.rs-item{border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;
+  padding:.85em 1.05em;margin:0 0 .7em}
+.rs-detail-meta{display:flex;flex-wrap:wrap;gap:.4em 1.1em;align-items:center;
+  font-size:10.5pt;margin:0 0 .65em}
+.rs-detail-meta .tag{font-weight:700;padding:.1em .45em;border-radius:4px;
+  border:1px solid}
+.rs-detail-meta .tag.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
+.rs-detail-meta .tag.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.rs-detail-meta .tag.na{background:#fff;border-color:var(--line);color:#64748b}
+.rs-detail-body{background:#fff;border:1px solid #e2e8f0;border-radius:8px;
+  padding:.75em 1em;line-height:1.75;font-size:11pt}
+.rs-detail-body .qa,.rs-detail-body input{display:none!important}
+.rs-detail-body h1,.rs-detail-body h2,.rs-detail-body h3{background:none;border:0;
+  padding:0;margin:.35em 0 .45em;font-size:11.5pt;color:var(--ink)}
+.rs-detail-note{font-size:10pt;color:var(--muted);margin:.55em 0 0}
 @media print{#bar,#player,.rs-nav{display:none}.qa label{border-color:#666}}
 /* On screen the sheet keeps the booklet's centered 60em measure (SCREEN_CSS), so
    the exam text and the printed booklet render identically — but the measure
@@ -312,13 +343,13 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  1. にあたって　　　2. にそって　　　3. に応じて　　　4. にともなって</p>
 <div class="qa"><label><input type="radio" name="q_31" value="1"><span>1</span></label><label><input type="radio" name="q_31" value="2"><span>2</span></label><label><input type="radio" name="q_31" value="3"><span>3</span></label><label><input type="radio" name="q_31" value="4"><span>4</span></label></div>
 <p><strong>32</strong> 原材料費の高騰と経営状況の悪化により、当社は商品の値上げに踏み切ら（　）状況となった。<br />
- 1. ざるを得ない　　　2. ないではいられない　　　3. ずにはおかない　　　4. ないに越したことはない</p>
+ 1. ざるを得ない　　　2. ないではいられない　　　3. わけにはいかない　　　4. ないに越したことはない</p>
 <div class="qa"><label><input type="radio" name="q_32" value="1"><span>1</span></label><label><input type="radio" name="q_32" value="2"><span>2</span></label><label><input type="radio" name="q_32" value="3"><span>3</span></label><label><input type="radio" name="q_32" value="4"><span>4</span></label></div>
 <p><strong>33</strong> 夏祭りの期間中、駅前広場では3日間に（　）様々なイベントや屋台が開催される。<br />
- 1. 至って　　　2. 加えて　　　3. 限って　　　4. わたって</p>
+ 1. 対して　　　2. 加えて　　　3. 限って　　　4. わたって</p>
 <div class="qa"><label><input type="radio" name="q_33" value="1"><span>1</span></label><label><input type="radio" name="q_33" value="2"><span>2</span></label><label><input type="radio" name="q_33" value="3"><span>3</span></label><label><input type="radio" name="q_33" value="4"><span>4</span></label></div>
-<p><strong>34</strong> 会場の座席配置などの準備が整い（　）、受付を開始いたしますので、今しばらくお待ちください。<br />
- 1. がてら　　　2. 次第　　　3. ながら　　　4. かたわら</p>
+<p><strong>34</strong> （会場アナウンス）会場の座席配置などの準備が整い（　）、受付を開始いたしますので、今しばらくお待ちください。<br />
+ 1. 次第に　　　2. 次第　　　3. ながら　　　4. つつ</p>
 <div class="qa"><label><input type="radio" name="q_34" value="1"><span>1</span></label><label><input type="radio" name="q_34" value="2"><span>2</span></label><label><input type="radio" name="q_34" value="3"><span>3</span></label><label><input type="radio" name="q_34" value="4"><span>4</span></label></div>
 <p><strong>35</strong> これまでの経験が豊富（　）、新しい職種の仕事で必ず成功するとは限らない。<br />
  1. なだけあって　　　2. だからといって　　　3. である以上　　　4. なばかりか</p>
@@ -332,34 +363,36 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <p><strong>38</strong> 事故の直接の原因については、第三者の調査結果を待つよりほかに確かめ（　）。<br />
  1. ようがない　　　2. かねない　　　3. にほかならない　　　4. わけがない</p>
 <div class="qa"><label><input type="radio" name="q_38" value="1"><span>1</span></label><label><input type="radio" name="q_38" value="2"><span>2</span></label><label><input type="radio" name="q_38" value="3"><span>3</span></label><label><input type="radio" name="q_38" value="4"><span>4</span></label></div>
-<p><strong>39</strong> 言う（　）、日々の食事や睡眠といった健康管理は、日頃の積み重ねが重要である。<br />
- 1. までもなく　　　2. にかかわらず　　　3. といっても　　　4. に過ぎず</p>
+<p><strong>39</strong> 健康を保ちたいなら、まずは規則正しい食事と十分な睡眠を心がける（　）。<br />
+ 1. ことだ　　　2. にかかわらず　　　3. といっても　　　4. に過ぎず</p>
 <div class="qa"><label><input type="radio" name="q_39" value="1"><span>1</span></label><label><input type="radio" name="q_39" value="2"><span>2</span></label><label><input type="radio" name="q_39" value="3"><span>3</span></label><label><input type="radio" name="q_39" value="4"><span>4</span></label></div>
 <p><strong>40</strong> 大学の同級生である友人（　）知り合った人と、新しい小さなビジネスを立ち上げた。<br />
  1. に沿って　　　2. をめぐって　　　3. を通して　　　4. に際して</p>
 <div class="qa"><label><input type="radio" name="q_40" value="1"><span>1</span></label><label><input type="radio" name="q_40" value="2"><span>2</span></label><label><input type="radio" name="q_40" value="3"><span>3</span></label><label><input type="radio" name="q_40" value="4"><span>4</span></label></div>
-<p><strong>41</strong> 月末の締め切り直前で書類作成に追われており、今は旅行（　）状況ではない。<br />
+<p><strong>41</strong> （同僚に）<br />
+A「今週末、温泉に行かない？」<br />
+B「月末の締め切り直前で書類作成に追われており、今は旅行（　）状況ではないよ。」<br />
  1. というより　　　2. にほかならない　　　3. どころではない　　　4. に限った</p>
 <div class="qa"><label><input type="radio" name="q_41" value="1"><span>1</span></label><label><input type="radio" name="q_41" value="2"><span>2</span></label><label><input type="radio" name="q_41" value="3"><span>3</span></label><label><input type="radio" name="q_41" value="4"><span>4</span></label></div>
 <p><strong>42</strong> 新しい公共施設の建設場所（　）、住民の間で賛否両論の議論が続いている。<br />
- 1. を皮切りに　　　2. をめぐって　　　3. に即して　　　4. をもって</p>
+ 1. に関して　　　2. をめぐって　　　3. に即して　　　4. に沿って</p>
 <div class="qa"><label><input type="radio" name="q_42" value="1"><span>1</span></label><label><input type="radio" name="q_42" value="2"><span>2</span></label><label><input type="radio" name="q_42" value="3"><span>3</span></label><label><input type="radio" name="q_42" value="4"><span>4</span></label></div>
 <h2>問題8 次の文の＿に入る最もよいものを、1・2・3・4から一つ選びなさい。</h2>
 <p>（文の組み立て：正しい順番に並べたとき、★に入る選択肢を選ぶ）</p>
 <p><strong>43</strong> 来月のセミナーの参加申込は本日で締め切ります。＿＿ ＿＿ ★ ＿＿ お問い合わせください。<br />
- 1. ございましたら　　　2. なお　　　3. 事務局まで　　　4. ご不明な点が</p>
+ 1. ございましたらすぐに　　　2. なお何か　　　3. 事務局までご連絡を　　　4. ご不明な点が少しでも</p>
 <div class="qa"><label><input type="radio" name="q_43" value="1"><span>1</span></label><label><input type="radio" name="q_43" value="2"><span>2</span></label><label><input type="radio" name="q_43" value="3"><span>3</span></label><label><input type="radio" name="q_43" value="4"><span>4</span></label></div>
 <p><strong>44</strong> 地球温暖化への対策として、当地域では、＿＿ ＿＿ ★ ＿＿ 目指している。<br />
-  1. 実現を　　　2. 環境保全の　　　3. 省エネ対策　　　4. をはじめとする</p>
+  1. 実現を急いで　　　2. 環境保全の総合的な　　　3. 省エネ対策など　　　4. をはじめとする各種</p>
 <div class="qa"><label><input type="radio" name="q_44" value="1"><span>1</span></label><label><input type="radio" name="q_44" value="2"><span>2</span></label><label><input type="radio" name="q_44" value="3"><span>3</span></label><label><input type="radio" name="q_44" value="4"><span>4</span></label></div>
 <p><strong>45</strong> 健康診断で指摘を受けたあと、彼は、＿＿ ＿＿ ★ ＿＿ 始めたそうだ。<br />
- 1. ジョギングを　　　2. 生活習慣を　　　3. きっかけに　　　4. 見直したのを</p>
+ 1. 毎朝のジョギングを本格的に　　　2. 乱れていた生活習慣を　　　3. きっかけに思い切って　　　4. 見直したのをちょうど</p>
 <div class="qa"><label><input type="radio" name="q_45" value="1"><span>1</span></label><label><input type="radio" name="q_45" value="2"><span>2</span></label><label><input type="radio" name="q_45" value="3"><span>3</span></label><label><input type="radio" name="q_45" value="4"><span>4</span></label></div>
 <p><strong>46</strong> 発売からわずか一か月で、この新商品は、＿＿ ＿＿ ★ ＿＿ 注目されている。<br />
- 1. 海外市場からも　　　2. 国内市場　　　3. のみならず　　　4. アジアをはじめ</p>
+ 1. 海外市場からも高い　　　2. 国内市場　　　3. のみならず　　　4. アジアをはじめ広く</p>
 <div class="qa"><label><input type="radio" name="q_46" value="1"><span>1</span></label><label><input type="radio" name="q_46" value="2"><span>2</span></label><label><input type="radio" name="q_46" value="3"><span>3</span></label><label><input type="radio" name="q_46" value="4"><span>4</span></label></div>
 <p><strong>47</strong> 想定外の問題が続く今、プロジェクトの成功のためには、＿＿ ＿＿ ★ ＿＿ なければならない。<br />
- 1. 基本理念に　　　2. 計画そのものを　　　3. 白紙に戻して　　　4. 立ち返ら</p>
+ 1. 基本理念にもう一度　　　2. 計画そのものをいったん　　　3. 白紙に戻してから　　　4. 立ち返らねば</p>
 <div class="qa"><label><input type="radio" name="q_47" value="1"><span>1</span></label><label><input type="radio" name="q_47" value="2"><span>2</span></label><label><input type="radio" name="q_47" value="3"><span>3</span></label><label><input type="radio" name="q_47" value="4"><span>4</span></label></div>
 <h2>問題9 次の文章を読んで、文章全体の文脈を考えて、48から51の中に入る最もよいものを、1・2・3・4から一つ選びなさい。</h2>
 <p>以下は、あるWebコラムに掲載された文章である。</p>
@@ -437,10 +470,13 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  4. 食品ロスを減らすと同時に、農家の収入増にもつながる取組みである。</p>
 <div class="qa"><label><input type="radio" name="q_56" value="1"><span>1</span></label><label><input type="radio" name="q_56" value="2"><span>2</span></label><label><input type="radio" name="q_56" value="3"><span>3</span></label><label><input type="radio" name="q_56" value="4"><span>4</span></label></div>
 <h2>問題11 次の(1)から(4)の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
+<p>（中略）</p>
 <h3>(1)</h3>
 <p>市民団体「あおぞらネットワーク」では、来月開催の地域交流イベントに向けて、当日スタッフを募集しています。</p>
 <p>募集人数は15名程度で、活動日は11月15日（土）の午前9時から午後4時までです。内容は受付案内、会場設営の補助、来場者への展示説明です。応募条件は18歳以上であることのみで、活動経験は問いません。ただし、当日は午前8時30分までに集合できる方に限ります。応募は公式サイトの専用フォームから、11月5日（水）午後5時までに行なってください。電話での受付は行なっていません。交通費は実費を支給しますが、上限は2,000円です。昼食は主催側で用意します。</p>
 <p>（注1）荒天: 激しい雨や風などで屋外活動が難しい天候。</p>
+<p>（注1）現象：目に見える出来事や様子<br />
+（注2）経由：途中を通ること</p>
 <p><strong>57</strong> この案内の主な目的は何か。<br />
  1. イベントの来場者に展示の見どころを紹介すること。<br />
  2. 雨天時の中止判断基準を来場者に知らせること。<br />
@@ -457,6 +493,7 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <h3>(2)</h3>
 <p>農業分野における高齢化と人手不足が深刻化する中、先進技術を活用した「スマート農業」の導入が進んでいる。中でも近年注目を集めているのが、小型の自動草刈りロボットである。果樹園や傾斜地などの広大な農地において、雑草の刈り取りは農家にとって最も体力を消耗する重労働の一つであった。</p>
 <p>自動草刈りロボットは、あらかじめ設定したルートを位置情報システムやセンサーで確認しながら自動で走行し、効率的に草を刈り取っていく。導入した農家のデータによれば、草刈りにかかる作業時間が従来比で約4割削減されたという。</p>
+<p>（注1）偏り：一方に片寄ること</p>
 <p><strong>59</strong> 自動草刈りロボットが導入された主な背景は何か。<br />
  1. 農家の高齢化と人手不足により草刈り作業が大きな負担となっていたから。<br />
  2. 雑草の種類が増えて手作業では見分けられなくなったから。<br />
@@ -473,6 +510,8 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <h3>(3)</h3>
 <p>各地で、築年数の経過した古民家や歴史的建造物をリノベーション（改修）し、宿泊施設や地域の交流スペースとして再生させるプロジェクトが話題となっている。</p>
 <p>歴史的建造物は、その土地の文化や建築技術を現代に伝える貴重な地域資源である。しかし、維持管理費の高騰や所有者の高齢化により、解体の危機に瀕しているものが少なくない。建物の歴史的価値を活かしながら現代のニーズに合わせた機能を与えることで、観光客や地域住民を呼び込み、地域経済の活性化につなげる試みが成果を上げている。</p>
+<p>（注1）前提：成り立つための条件<br />
+（注2）手順：物事を進める決まったやり方</p>
 <p><strong>61</strong> 古民家や歴史的建造物を改修して活用するプロジェクトの目的は何か。<br />
  1. 古い建造物をすべて取り壊し、最新のオフィスビルを建てるため。<br />
  2. 観光客の立ち入りを制限して、建造物の損壊を防ぐため。<br />
@@ -487,9 +526,11 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <div class="qa"><label><input type="radio" name="q_62" value="1"><span>1</span></label><label><input type="radio" name="q_62" value="2"><span>2</span></label><label><input type="radio" name="q_62" value="3"><span>3</span></label><label><input type="radio" name="q_62" value="4"><span>4</span></label></div>
 <hr />
 <h3>(4)</h3>
-<p>全国各地で長く受け継がれてきた伝統的な祭りや行事が、少子高齢化に伴う担い手不足により、縮小や中断を余儀なくされている。地域社会の連帯感を高め、歴史を今に伝える貴重な文化資源であるものの、従来の保存会や保存組織だけでは維持が困難になっているのが現状だ。</p>
+<p>全国各地で長く受け継がれてきた伝統的な祭りや行事が、少子高齢化に伴う担い手不足により、縮小や中断をせざるを得ない状況になっている。地域社会の連帯感を高め、歴史を今に伝える貴重な文化資源であるものの、従来の保存会や保存組織だけでは維持が困難になっているのが現状だ。</p>
 <p>そうした中、従来の地域住民限定の枠組みを広げ、外部の若者や大学生ボランティアを受け入れる取り組みが成果を上げている。神輿の担ぎ手や運営スタッフとして若者が関わることで、行事自体が活気を取り戻すだけでなく、地域外からのファンやリピーターの増加にもつながっている。</p>
 <p>ただし、伝統の形式やルールを守りたい保存会側と、新しいアイディアを取り入れたい若者側との間での意識のすれ違いが課題となることもある。歴史への敬意を払いながらも、時代に合わせた柔軟な変化を受け入れる姿勢が求められている。</p>
+<p>（注1）維持：長く保てるようにすること<br />
+（注2）設計：計画を立てて形にすること</p>
 <p><strong>63</strong> 伝統行事へ外部の若者を受け入れる際の課題として、本文で挙げられているものはどれか。<br />
  1. 若者の参加費用が高すぎて参加者が集まらないこと。<br />
  2. 神輿や衣装が破損して修理費用が膨らむこと。<br />
@@ -521,9 +562,16 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  4. AもBも、独創は生まれつきの才能によって決まると述べている。</p>
 <div class="qa"><label><input type="radio" name="q_66" value="1"><span>1</span></label><label><input type="radio" name="q_66" value="2"><span>2</span></label><label><input type="radio" name="q_66" value="3"><span>3</span></label><label><input type="radio" name="q_66" value="4"><span>4</span></label></div>
 <h2>問題13 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
-<p>現代社会は「効率」と「スピード」を至上の価値とする時代である。移動時間は短縮され、情報は指一本で瞬時に入手できる。仕事においても、いかに短時間で多くの成果を上げるかが評価の基準となりがちだ。しかし、あらゆる隙間時間をタスクの処理や情報の消費で埋め尽くしてしまう生活に、私たちは本当に満足しているのだろうか。</p>
-<p>私たちが豊かな思考や創造性を発揮するためには、一見すると無駄に見える「時間の余白」が不可欠である。何の予定も入れず、スマートフォンからも離れてただボーッと過ごす時間や、あてもなく散歩する時間の中にこそ、自分自身の内面とじっくり向き合う機会が潜んでいる。常に外部からの刺激を受け続けている脳は、過小評価されがちだが極度の疲労状態に陥っている。情報を遮断し、思考を休ませることで初めて、抑圧されていた新しいアイデアや本質的な問いが表面化してくるのだ。</p>
-<p>「何もしていない時間」を「時間を無駄にした」と罪悪感を持つ必要はない。むしろ、意識的にスケジュールの余白を作り出し、心と頭を休ませることこそが、結果として日中のパフォーマンスや人生の質を高めることになる。スピードに流されることなく、自分のペースを取り戻すための「静かな時間」を、意識して生活に取り入れていくべきではないだろうか。</p>
+<p>現代社会は「効率」と「スピード」を至上（注1）の価値とする時代である。移動時間は短縮され、情報は指一本で瞬時に入手できる。仕事においても、いかに短時間で多くの成果を上げるかが評価の基準となりがちだ。しかし、あらゆる隙間時間をタスクの処理や情報の消費で埋め尽くしてしまう生活に、私たちは本当に満足しているのだろうか。便利さと引き換えに、心の余裕まで失っていないか、問い直す必要がある。</p>
+<p>私たちが豊かな思考や創造性を発揮するためには、一見すると無駄に見える「時間の余白」（注2）が不可欠である。何の予定も入れず、スマートフォンからも離れてただボーッと過ごす時間や、あてもなく散歩する時間の中にこそ、自分自身の内面とじっくり向き合う機会が潜んでいる。</p>
+<p>（中略）</p>
+<p>常に外部からの刺激を受け続けている脳は、過小評価されがちだが極度の疲労状態に陥っている。情報を遮断し、思考を休ませることで初めて、抑圧（注3）されていた新しいアイデアや本質的な問いが表面化してくるのだ。忙しい人ほど「休む暇がない」と言うが、休まないからこそ思考が浅くなる、という逆の道もある。</p>
+<p>「何もしていない時間」を「時間を無駄にした」と罪悪感（注4）を持つ必要はない。むしろ、意識的にスケジュールの余白を作り出し、心と頭を休ませることこそが、結果として日中のパフォーマンスや人生の質を高めることになる。スピードに流されることなく、自分のペースを取り戻すための「静かな時間」を、意識して生活に取り入れていくべきではないだろうか。余白は怠慢ではなく、次の集中のための準備（注5）なのだと、私は考えている。週末に予定を詰め込みすぎず、何もしない午後を一つ残しておく。そうした小さな選択の積み重ねが、日々の疲れ方を変えていく。忙しい週ほど、あらかじめ余白を書き込んでおく勇気が要る。</p>
+<p>（注1）至上：何よりも上であること\<br />
+（注2）余白：予定で埋まっていない空きの時間\<br />
+（注3）抑圧：押さえつけて表に出さないこと\<br />
+（注4）罪悪感：悪いことをしたように感じる気持ち\<br />
+（注5）準備：次に備えて整えておくこと</p>
 <p><strong>67</strong> 筆者は、現代社会のどのような傾向に対して疑問を投げかけているか。<br />
  1. 移動手段の発達により旅行にかかる時間が短縮されたこと。<br />
  2. 技術の進歩によって個人のプライバシーが脅かされていること。<br />
@@ -1115,6 +1163,139 @@ function chip(label, d){
   return '<span class="chip ' + cls + '"><i>' + label + '</i>' + body + '</span>';
 }
 
+function _isQa(el){ return !!(el && el.classList && el.classList.contains('qa')); }
+function _isBreak(el){ return !!(el && (/^H[12]$/.test(el.tagName) || el.tagName === 'HR')); }
+function _isUnit(el){ return !!(el && el.tagName === 'H3'); }
+function _isOptLine(el){
+  return !!(el && el.tagName === 'P' && /^\s*[1-4][.．]/.test(el.textContent || ''));
+}
+function _looksLikeStem(el){
+  if (!el || el.tagName !== 'P') return false;
+  const s = el.querySelector('strong');
+  if (!s) return false;
+  const t = (s.textContent || '').trim();
+  return /^(?:\d{1,2}\b|例|[1-5]番|質問\s*[12])/.test(t);
+}
+
+/** Clone the exam nodes for one scored item (stem + shared passage / 問題 heading).
+ *  Contiguous slices are wrong: walking back to h2 would drag in every earlier
+ *  item in that 問題. Collect stem nodes, then prepend passage context while
+ *  skipping other questions' stems/.qa blocks. */
+function extractQuestionHtml(key){
+  const inp = document.querySelector(
+    '#screen-exam input[name="q_' + CSS.escape(key) + '"]');
+  if (!inp) return '';
+  const qa = inp.closest('.qa');
+  if (!qa || !qa.parentElement) return '';
+  const kids = Array.from(qa.parentElement.children);
+  const qi = kids.indexOf(qa);
+  if (qi < 0) return '';
+
+  const nodes = [];
+  let i = qi - 1;
+  while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))){
+    nodes.unshift(kids[i]);
+    i--;
+  }
+  while (i >= 0){
+    const n = kids[i];
+    if (_isQa(n)){
+      i--;
+      while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))) i--;
+      continue;
+    }
+    if (n.tagName === 'HR') break;
+    if (n.tagName === 'H1' && n.classList.contains('section-title')) break;
+    if (n.tagName === 'H1' || n.tagName === 'H2'){
+      nodes.unshift(n);
+      break;
+    }
+    if (_isUnit(n)){
+      nodes.unshift(n);
+      break;
+    }
+    nodes.unshift(n);
+    i--;
+  }
+
+  const wrap = document.createElement('div');
+  nodes.forEach(n => wrap.appendChild(n.cloneNode(true)));
+  wrap.querySelectorAll('input, .qa').forEach(el => el.remove());
+  return wrap.innerHTML;
+}
+
+function detailMetaHtml(key, d){
+  const cls = d.user === null ? 'na' : (d.is_correct ? 'ok' : 'ng');
+  const verdict = d.user === null ? '未解答'
+                : (d.is_correct ? '正解' : '不正解');
+  const user = d.user === null ? '—' : String(d.user);
+  const correct = d.correct === null || d.correct === undefined ? '—' : String(d.correct);
+  return '<div class="rs-detail-meta">'
+    + '<span><b>設問 ' + key + '</b></span>'
+    + '<span class="tag ' + cls + '">' + verdict + '</span>'
+    + '<span>あなたの答え: <b>' + user + '</b></span>'
+    + '<span>正解: <b>' + correct + '</b></span>'
+    + '</div>';
+}
+
+function itemDetailHtml(key, d){
+  let body = extractQuestionHtml(key);
+  if (!body){
+    body = '<p>（この設問の問題文を画面から取得できませんでした。）</p>';
+  }
+  let note = '';
+  if (!/^\d+$/.test(key)){
+    note = '<p class="rs-detail-note">聴解の音声は「解答に戻ってやり直す」から'
+      + '受験画面のプレイヤーで確認できます。</p>';
+  }
+  return '<div class="rs-item" id="rs-item-' + key + '">'
+    + detailMetaHtml(key, d)
+    + '<div class="rs-detail-body">' + body + '</div>' + note
+    + '</div>';
+}
+
+function buildAllDetailsHtml(res){
+  const L = [];
+  L.push('<h3>言語知識・読解 — 設問詳細</h3>');
+  for (let q = 1; q <= 71; q++){
+    const k = String(q);
+    L.push(itemDetailHtml(k, res.detail_gengo[k] || {}));
+  }
+  L.push('<h3>聴解 — 設問詳細</h3>');
+  for (const k of CHOUKAI_KEYS){
+    L.push(itemDetailHtml(k, res.detail_choukai[k] || {}));
+  }
+  return L.join('');
+}
+
+function setCheckExpanded(on, res){
+  const panel = document.getElementById('rs-all-detail');
+  const btn = document.getElementById('rs-expand-btn');
+  if (!panel || !btn) return;
+  if (on){
+    if (!panel.dataset.built){
+      panel.innerHTML = buildAllDetailsHtml(res);
+      panel.dataset.built = '1';
+    }
+    panel.hidden = false;
+    btn.textContent = '詳細を折りたたむ';
+    btn.setAttribute('aria-expanded', 'true');
+  } else {
+    panel.hidden = true;
+    btn.textContent = 'すべての設問詳細を展開';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+function bindResultExpand(res){
+  const btn = document.getElementById('rs-expand-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    setCheckExpanded(!open, res);
+  });
+}
+
 function resultHtml(res, msg, saved){
   const s = res.summary, cls = s.passed ? 'pass' : 'fail';
   const L = [];
@@ -1183,11 +1364,17 @@ function resultHtml(res, msg, saved){
   }
 
   L.push('<h2>4. 全設問解答チェック表</h2>');
+  L.push('<div class="rs-check-tools">'
+    + '<button type="button" class="ui-btn" id="rs-expand-btn" aria-expanded="false">'
+    + 'すべての設問詳細を展開</button>'
+    + '<p class="rs-hint">展開すると全101問の問題文・選択肢・正誤が一覧で表示されます。</p>'
+    + '</div>');
   L.push('<h3>言語知識・読解 (1 〜 71)</h3><div class="rs-grid">');
   for (let q = 1; q <= 71; q++){ L.push(chip(String(q), res.detail_gengo[String(q)])); }
   L.push('</div><h3>聴解</h3><div class="rs-grid">');
   for (const k of CHOUKAI_KEYS){ L.push(chip(k, res.detail_choukai[k])); }
   L.push('</div>');
+  L.push('<div id="rs-all-detail" class="rs-all-detail" hidden></div>');
 
   L.push('<div class="rs-nav">'
     + '<button class="ui-btn primary" onclick="goList()">← テスト一覧へ戻る</button>'
@@ -1218,6 +1405,7 @@ function showScreen(name){
 
 function showResult(res, msg, saved){
   document.getElementById('screen-result').innerHTML = resultHtml(res, msg, saved);
+  bindResultExpand(res);
   showScreen('result');
 }
 

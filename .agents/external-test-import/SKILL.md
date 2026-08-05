@@ -105,6 +105,54 @@ tables. Defer format facts to `jlpt-exam-structure`. Defer script block rules to
 - 問題8: four blanks, ★ third; key = option that lands on ★ (same integrity
   rules as generated tests — `make check` enforces them).
 
+**Answer-key reconciliation (NON-NEGOTIABLE — `imported-n2-2025-07` shipped
+one wrong 聴解 key by spot-check alone)**
+
+When an answer-key PDF/sheet is available (`import_meta.json` → `answer_key`):
+
+1. Parse **all 101** keys (71 gengo + 30 choukai) from the sheet into a table.
+2. Diff against the imported Markdown keys before `make check`. Zero mismatches.
+3. **Layout trap on official 聴解 answer grids:** 問題4's 7–11 answers often
+   sit on the same visual row as 問題5's headers. Do not assign the `3 1 2 3 2`
+   (or similar) five-number run to 問題5. 問題5 is the separate three-number
+   run (`1番`, `2番 質問1`, `2番 質問2`). July 2025's import keyed 質問1 as 3
+   (さくら公園) from a plausible 解説, while the sheet's 問題5 row is `3 1 2`
+   → 質問1 = **1**. Always prefer the sheet over a re-solved 解説.
+4. After fixing a key, rewrite that row's 解説 from the script/booklet line that
+   actually decides it (paste, do not paraphrase).
+
+**OCR / text-layer hygiene**
+
+- Scanned script PDFs need OCR (`_extract/script_ocr.txt`). After OCR, **replay
+  decisive listening lines against the external MP3** (especially 問題5 統合理解
+  and any item whose options are near-synonym places/reasons).
+- Obvious text-layer glitches may be cleaned when certain (doubled tokens like
+  「何を何を支え」→「何を支え」). Ambiguous glitches (`人か愛着` vs `人が愛情`)
+  require a rasterized page check — do not guess; flag in the report if still
+  unclear.
+- Preserve source apparatus the project format supports: `（注N）` glosses,
+  `（中略）`, setting labels like `（会社で）`, and dialogue turns in 問題7.
+  Dropping notes during transcription is a fidelity bug, not cleanup.
+  When the booklet puts `（会社で）` / a place label on its own line and each
+  speaker on the next (e.g. 司会「…」 then 医者「…」), keep that line break in
+  Markdown — do not flatten to one line for the sheet parser (it accepts
+  multi-line stems; see `question-authoring` + `inject_gengo`).
+- 問題11: official bodies are **4 passages × 2Q** even when the instruction
+  line says `(1)から(3)` (known print typo on multiple recent papers). Import
+  **both** the instruction as printed and all four passages — do not delete
+  passage (4) to "match" the header, and do not silently rewrite the header
+  unless the user asks for a normalized project copy (note the rewrite).
+
+**Fidelity QA (replaces "spot-check ≥5")**
+
+1. Full 101-key diff vs answer sheet (above).
+2. For 言語知識: every 問題1–9 stem's distinctive 12+ char span must appear in
+   the booklet extract; 問題6's four sentences each must appear.
+3. For 読解: passage openings + all `（注N）` labels present; 中略 markers kept.
+4. For 聴解: booklet options ↔ script for 問題1–2 / 問題5-2番; 例 pre-mark =
+   announcer number (`make check`).
+5. `make serve` → imported badge → audio plays.
+
 ### 4. Listening audio
 
 **Prefer the external MP3** when the user supplies one (official timing):
@@ -137,17 +185,14 @@ failures in the Markdown/script; do not paper over them.
 ### 6. QA for imports (different from generated)
 
 Do **not** run the generation-style “originality / topic reuse” pass as if you
-authored the paper. Instead:
-
-1. Spot-check ≥5 言語知識 items and ≥3 聴解 items against the source PDF/extract
-   (stem, options, keyed answer).
-2. Confirm booklet ↔ script option sync for 問題1–2 / 問題5-2番.
-3. Open `make serve` → test list shows an **imported** badge → sheet loads →
-   audio plays if present.
+authored the paper. Instead run the **Fidelity QA** checklist in §3 (full 101
+key diff, stem/option presence, 注/中略 kept, booklet↔script sync).
 
 `exam-qa-review` still applies for **solvability / two-defensible-answer /
 marksheet 例 sync** defects introduced by a bad transcription — run it on
-touched items with fresh eyes after `make check` is green.
+touched items with fresh eyes after `make check` is green. When the official
+sheet and a re-solve disagree, **the sheet wins** and the 解説 must be rewritten
+to the sheet's answer (see July 2025 問題5 質問1).
 
 ## What not to do
 

@@ -107,6 +107,11 @@ anything.
    stem ≥30; 問題9 cloze ~500–700). Short one-clause stems are a known shipped
    defect — see `question-authoring` Benchmark section. `make check` enforces
    the floor.
+   **読解 must match official apparatus** (calibrate against
+   `tests/imported-n2-2025-07` / `refs/JLPT/`): dozens of `（注N）`, at least
+   one `（中略）` in 中文/長文, 問題11 as 4×2, 問題13 ~900–1100 JP chars,
+   問題7 including dialogue/setting stems. Tests 1–4 under-shipped notes and
+   長文 length even after grammar-stem lengthening.
    **Author in section-sized passes, not one long run.** Defects cluster in
    whatever is generated last (test 4: the entire listening half — swapped
    問題 types, an unanswerable 例, five phantom 解説 quotes). Finish 文字・語彙,

@@ -9,6 +9,7 @@ ONE server for every test in tests/ — the three screens of the exam app:
 It saves as you go, into tests/<id>/:
   - each radio selection → ユーザー解答.json        (POST /api/tests/<id>/answers)
   - 「採点する」          → 採点結果.json + ユーザー解答.json (POST /api/tests/<id>/submit)
+  - 「結果を削除」 on the list → deletes both JSON files (POST /api/tests/<id>/clear)
 
 There is no per-test server any more: `make serve` takes no test id, and screen 1
 reads the two JSON files above to show how far each test has got.
@@ -44,8 +45,8 @@ _style_spec.loader.exec_module(app_style)
 QUESTION_COUNT = 101
 
 RANGE_RE = re.compile(r"^bytes=(\d*)-(\d*)$")
-# /api/tests/<id>/answers | /api/tests/<id>/submit
-API_RE = re.compile(r"^/api/tests/([^/]+)/(answers|submit)$")
+# /api/tests/<id>/answers | /api/tests/<id>/submit | /api/tests/<id>/clear
+API_RE = re.compile(r"^/api/tests/([^/]+)/(answers|submit|clear)$")
 SHEET = "解答.html"
 ANSWERS_JSON = "ユーザー解答.json"
 RESULT_JSON = "採点結果.json"
@@ -126,13 +127,29 @@ def all_tests() -> list[dict]:
 INDEX_CSS = """
 *{box-sizing:border-box}
 body{margin:0;background:#f8fafc;color:var(--ink);font-family:var(--ui)}
-main{max-width:60em;margin:0 auto;padding:1.4em 1.2em 4em}
+/* Wider than exam/result (60em): cards with many action buttons need the room. */
+main{max-width:80em;margin:0 auto;padding:1.4em 1.2em 4em}
 .lede{margin:0 0 1.4em;font-size:10.5pt;color:var(--muted)}
-.card{display:flex;flex-wrap:wrap;gap:.6em 1.2em;align-items:center;background:#fff;
-  border:1px solid #e2e8f0;border-radius:10px;padding:1em 1.2em;margin-bottom:.9em}
-.card h2{margin:0;font-size:13pt;flex:0 0 8em}
-.card .meter{flex:1 1 14em;min-width:12em}
-.acts{display:flex;gap:.5em;margin-left:auto}
+/* Equal card height. Meter uses display:contents so the track shares a row with
+   the status chip (left-aligned); the lbl sits on the row under the track —
+   flex + align-items:center was optically centering the whole meter block and
+   made the bar look offset from the chip. */
+.card{display:grid;grid-template-columns:20em auto minmax(12em,1fr) auto auto;
+  grid-template-rows:1fr auto;column-gap:1em;row-gap:.2em;align-items:center;
+  background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.55em 1.2em;
+  margin-bottom:.9em;box-sizing:border-box;height:5.1em;min-height:5.1em;
+  max-height:5.1em;overflow:hidden}
+.card h2{grid-column:1;grid-row:1/-1;margin:0;font-size:13pt;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;align-self:center}
+.card .origin{grid-column:2;grid-row:1/-1;align-self:center}
+.card .meter{display:contents}
+.card .meter .track{grid-column:3;grid-row:1;align-self:center;width:100%;min-width:0}
+.card .meter .lbl{grid-column:3;grid-row:2;text-align:left;margin:0;line-height:1.2;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .status{grid-column:4;grid-row:1/-1;align-self:center}
+.acts{grid-column:5;grid-row:1/-1;display:flex;flex-wrap:nowrap;gap:.4em;
+  align-self:center}
+.acts .ui-btn{padding:.35em .75em;font-size:10.5pt;white-space:nowrap}
 .empty{background:#fff;border:1px dashed var(--line);border-radius:10px;padding:2em;
   text-align:center;color:var(--muted)}
 code{background:#f1f5f9;padding:.1em .4em;border-radius:4px;font-size:10pt}
@@ -170,6 +187,7 @@ def badge_html(t: dict) -> str:
 
 def card_html(t: dict) -> str:
     tid = html.escape(t["id"])
+    tid_js = html.escape(t["id"], quote=True)
     base = "/tests/" + urllib.parse.quote(t["id"]) + "/" + urllib.parse.quote(SHEET)
     if t["has_sheet"]:
         if t["result"]:
@@ -183,9 +201,43 @@ def card_html(t: dict) -> str:
     else:
         acts = [f'<a class="ui-btn" href="#" onclick="return false" '
                 f'title="make sheet {tid} を実行">受験する</a>']
-    return (f'<div class="card"><h2>テスト {tid}</h2>{origin_badge_html(t)}'
-            f'{meter_html(t)}{badge_html(t)}'
+    # Clear progress whenever either file exists — graded or mid-exam.
+    if t["result"] or t["answered"]:
+        acts.append(
+            f'<button type="button" class="ui-btn danger" '
+            f'data-clear="{tid_js}">結果を削除</button>')
+    return (f'<div class="card"><h2 title="テスト {tid}">テスト {tid}</h2>'
+            f'<span class="origin">{origin_badge_html(t)}</span>'
+            f'{meter_html(t)}'
+            f'<span class="status">{badge_html(t)}</span>'
             f'<div class="acts">{"".join(acts)}</div></div>')
+
+
+INDEX_JS = """
+async function clearTestProgress(id){
+  if (!confirm('テスト「' + id + '」の採点結果と保存済みの解答を削除しますか？\\n'
+             + 'この操作は元に戻せません。')) return;
+  try {
+    const r = await fetch('/api/tests/' + encodeURIComponent(id) + '/clear', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: '{}'
+    });
+    const data = await r.json();
+    if (!r.ok || !data.success){
+      alert((data && data.error) || '削除に失敗しました。');
+      return;
+    }
+    location.reload();
+  } catch (e){
+    alert('削除に失敗しました: ' + e);
+  }
+}
+document.addEventListener('click', (ev) => {
+  const btn = ev.target && ev.target.closest && ev.target.closest('[data-clear]');
+  if (btn) clearTestProgress(btn.getAttribute('data-clear'));
+});
+"""
 
 
 def index_html() -> str:
@@ -205,9 +257,9 @@ def index_html() -> str:
         '<div id="bar"><b>JLPT N2 模擬試験</b><span class="grow"></span>'
         f'<span class="sub">テスト {len(tests)} 件 / 採点済み {graded} 件</span></div>'
         '<main><p class="lede">受験するテストを選んでください。'
-        '解答は選択するたびに保存され、採点結果は 採点結果.json に残ります。</p>'
-        f'{body}</main></body></html>')
-
+        '解答は選択するたびに保存され、採点結果は 採点結果.json に残ります。'
+        '「結果を削除」で採点結果と解答の両方を消せます。</p>'
+        f'{body}</main><script>{INDEX_JS}</script></body></html>')
 
 # ------------------------------------------------------------------- handler
 class AnswerSheetHandler(SimpleHTTPRequestHandler):
@@ -383,13 +435,30 @@ class AnswerSheetHandler(SimpleHTTPRequestHandler):
 
         try:
             length = int(self.headers.get("Content-Length", 0))
-            data = json.loads(self.rfile.read(length).decode("utf-8"))
+            raw = self.rfile.read(length).decode("utf-8") if length else "{}"
+            data = json.loads(raw or "{}")
+
+            action = m.group(2)
+            if action == "clear":
+                removed = []
+                for name in (RESULT_JSON, ANSWERS_JSON):
+                    p = d / name
+                    if p.is_file():
+                        p.unlink()
+                        removed.append(name)
+                msg = (f"{'、'.join(removed)} を削除しました。" if removed
+                       else "削除するファイルはありませんでした。")
+                return self._write_json(200, {
+                    "success": True,
+                    "message": msg,
+                    "removed_files": removed,
+                })
 
             saved = []
             answers = data.get("answers")
             if answers is not None:
                 saved.append(self._write_json_file(d, ANSWERS_JSON, answers))
-            if m.group(2) == "submit":
+            if action == "submit":
                 result = data.get("result")
                 if result is None:
                     return self._write_json(400, {"success": False,

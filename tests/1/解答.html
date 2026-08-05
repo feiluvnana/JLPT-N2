@@ -67,22 +67,32 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   --ui:"Hiragino Sans","Yu Gothic",sans-serif}
 /* The bar spans the full window on every screen, so the scrollbar sits ON its
    right edge — the horizontal padding has to clear it or it covers 採点する. */
+/* Fixed bar height on all three screens — exam controls must not wrap taller
+   than the list/result bars. */
 #bar{position:sticky;top:0;z-index:99;background:#111;color:#fff;
-  padding:.6em 1.8em;display:flex;flex-wrap:wrap;gap:.45em 1em;align-items:center;
-  font-family:var(--ui);font-size:11pt}
-#bar b{font-size:12pt;font-weight:700}
-#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums}
-#bar .grow{flex:1}
-#bar button{font-size:11pt;padding:.35em .9em;cursor:pointer;border-radius:6px;
-  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui)}
+  box-sizing:border-box;height:3.25em;min-height:3.25em;max-height:3.25em;
+  padding:0 1.8em;display:flex;flex-wrap:nowrap;gap:.45em 1em;align-items:center;
+  font-family:var(--ui);font-size:11pt;overflow:hidden}
+#bar b{font-size:12pt;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;min-width:0;max-width:18em}
+#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#bar .grow{flex:1 1 auto;min-width:.5em}
+#bar-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:.45em;flex:0 0 auto}
+#bar button{font-size:10pt;padding:.2em .7em;cursor:pointer;border-radius:6px;
+  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui);
+  white-space:nowrap;line-height:1.35}
 #bar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);
   font-weight:700}
-#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap}
+#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap;
+  flex:0 0 auto}
 #bar a.back:hover{color:#fff;text-decoration:underline}
 .ui-btn{display:inline-block;font-size:11pt;padding:.45em 1.1em;border-radius:6px;
   text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--ink);
   cursor:pointer;font-family:var(--ui)}
 .ui-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.ui-btn.danger{background:#fff;border-color:#fca5a5;color:#991b1b}
+.ui-btn.danger:hover{background:#fef2f2}
 .ui-btn:hover{filter:brightness(.96)}
 .ui-table{border-collapse:collapse;width:100%;font-size:10.5pt;margin:.4em 0;
   font-family:var(--ui)}
@@ -104,10 +114,11 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 .chip.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
 .chip.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
 .chip.na{background:#f8fafc;border-color:var(--line);color:#64748b}
-.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden}
+.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden;
+  text-align:left}
 .meter .fill{height:100%;background:var(--accent)}
 .meter .fill.done{background:#16a34a}
-.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;
+.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;text-align:left;
   font-variant-numeric:tabular-nums;font-family:var(--ui)}
 
 .qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
@@ -173,6 +184,26 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   margin:.6em 0;font-size:10.5pt}
 .rs-advice b{display:block;margin-bottom:.25em}
 .rs-grid{display:flex;flex-wrap:wrap;gap:.3em;margin:.5em 0 1.2em}
+.rs-check-tools{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;
+  margin:.2em 0 .7em}
+.rs-hint{font-size:10pt;color:var(--muted);margin:0}
+.rs-all-detail{margin:.2em 0 1.4em}
+.rs-all-detail[hidden]{display:none!important}
+.rs-item{border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;
+  padding:.85em 1.05em;margin:0 0 .7em}
+.rs-detail-meta{display:flex;flex-wrap:wrap;gap:.4em 1.1em;align-items:center;
+  font-size:10.5pt;margin:0 0 .65em}
+.rs-detail-meta .tag{font-weight:700;padding:.1em .45em;border-radius:4px;
+  border:1px solid}
+.rs-detail-meta .tag.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
+.rs-detail-meta .tag.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.rs-detail-meta .tag.na{background:#fff;border-color:var(--line);color:#64748b}
+.rs-detail-body{background:#fff;border:1px solid #e2e8f0;border-radius:8px;
+  padding:.75em 1em;line-height:1.75;font-size:11pt}
+.rs-detail-body .qa,.rs-detail-body input{display:none!important}
+.rs-detail-body h1,.rs-detail-body h2,.rs-detail-body h3{background:none;border:0;
+  padding:0;margin:.35em 0 .45em;font-size:11.5pt;color:var(--ink)}
+.rs-detail-note{font-size:10pt;color:var(--muted);margin:.55em 0 0}
 @media print{#bar,#player,.rs-nav{display:none}.qa label{border-color:#666}}
 /* On screen the sheet keeps the booklet's centered 60em measure (SCREEN_CSS), so
    the exam text and the printed booklet render identically — but the measure
@@ -332,7 +363,7 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  1. をもとに　　　2. を契機に　　　3. を問わず　　　4. をこめて</p>
 <div class="qa"><label><input type="radio" name="q_35" value="1"><span>1</span></label><label><input type="radio" name="q_35" value="2"><span>2</span></label><label><input type="radio" name="q_35" value="3"><span>3</span></label><label><input type="radio" name="q_35" value="4"><span>4</span></label></div>
 <p><strong>36</strong> 忙しい時期だったにもかかわらず、彼は文句を言い(　)、最後まで手伝ってくれた。<br />
- 1. つつも　　　2. ぬきに　　　3. がてら　　　4. かぎりに</p>
+ 1. つつも　　　2. ぬきに　　　3. ついでに　　　4. かぎりに</p>
 <div class="qa"><label><input type="radio" name="q_36" value="1"><span>1</span></label><label><input type="radio" name="q_36" value="2"><span>2</span></label><label><input type="radio" name="q_36" value="3"><span>3</span></label><label><input type="radio" name="q_36" value="4"><span>4</span></label></div>
 <p><strong>37</strong> 友人に荷物を送りたいが、引っ越し先の連絡先がわからないので、知らせ(　)。<br />
  1. かねない　　　2. きれない　　　3. がたい　　　4. ようがない</p>
@@ -343,31 +374,34 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <p><strong>39</strong> オンラインで注文した家具は値段は予想より高かった(　)、品質には十分満足している。<br />
  1. ものなら　　　2. ものだから　　　3. ものの　　　4. ものか</p>
 <div class="qa"><label><input type="radio" name="q_39" value="1"><span>1</span></label><label><input type="radio" name="q_39" value="2"><span>2</span></label><label><input type="radio" name="q_39" value="3"><span>3</span></label><label><input type="radio" name="q_39" value="4"><span>4</span></label></div>
-<p><strong>40</strong> 経験がないのに軽い気持ちで引き受けた(　)、予想以上に大変な目にあってしまった。<br />
+<p><strong>40</strong> （会社の休憩室で）<br />
+A「どうしたの、疲れた顔して。」<br />
+B「経験がないのに軽い気持ちで引き受けた(　)、予想以上に大変な目にあってしまったよ。」<br />
  1. どころか　　　2. ばかりに　　　3. ながらに　　　4. おきに</p>
 <div class="qa"><label><input type="radio" name="q_40" value="1"><span>1</span></label><label><input type="radio" name="q_40" value="2"><span>2</span></label><label><input type="radio" name="q_40" value="3"><span>3</span></label><label><input type="radio" name="q_40" value="4"><span>4</span></label></div>
-<p><strong>41</strong> 電車が止まっている理由を駅員に聞いた(　)、事故で電車が遅れているとのことだった。<br />
+<p><strong>41</strong> （駅の案内所で）電車が止まっている理由を駅員に聞いた(　)、事故で電車が遅れているとのことだった。<br />
  1. とたん　　　2. ばかり　　　3. ところ　　　4. 末</p>
 <div class="qa"><label><input type="radio" name="q_41" value="1"><span>1</span></label><label><input type="radio" name="q_41" value="2"><span>2</span></label><label><input type="radio" name="q_41" value="3"><span>3</span></label><label><input type="radio" name="q_41" value="4"><span>4</span></label></div>
-<p><strong>42</strong> 先日お送りした見積書の件でご相談があり、明日の午後、こちらから御社に(　)。<br />
+<p><strong>42</strong> （電話で）<br />
+山田「先日お送りした見積書の件ですが、明日の午後、こちらから御社に(　)。」<br />
  1. いらっしゃいます　　　2. お越しになります　　　3. 伺います　　　4. 参られます</p>
 <div class="qa"><label><input type="radio" name="q_42" value="1"><span>1</span></label><label><input type="radio" name="q_42" value="2"><span>2</span></label><label><input type="radio" name="q_42" value="3"><span>3</span></label><label><input type="radio" name="q_42" value="4"><span>4</span></label></div>
 <hr />
 <h2>問題8 次の文の ★ に入る最もよいものを、1・2・3・4から一つ選びなさい。</h2>
-<p><strong>43</strong> 友人への手土産として昨日買った ＿＿ ＿＿ ★ ＿＿ おいしかった。<br />
- 1. わりに　　　2. ケーキは　　　3. とても　　　4. 値段の</p>
+<p><strong>43</strong> 友人への手土産として駅前の店で買った ＿＿ ＿＿ ★ ＿＿ とても喜ばれた。<br />
+ 1. わりに　　　2. このチーズケーキは　　　3. 濃厚な味で　　　4. 値段の安さの</p>
 <div class="qa"><label><input type="radio" name="q_43" value="1"><span>1</span></label><label><input type="radio" name="q_43" value="2"><span>2</span></label><label><input type="radio" name="q_43" value="3"><span>3</span></label><label><input type="radio" name="q_43" value="4"><span>4</span></label></div>
-<p><strong>44</strong> 経験の浅い社員にも任せられるよう、この仕事は ＿＿ ＿＿ ★ ＿＿ できない。<br />
- 1. 経験が　　　2. 豊富な　　　3. ある人で　　　4. なければ</p>
+<p><strong>44</strong> 経験の浅い社員にも簡単には任せられず、この仕事は ＿＿ ＿＿ ★ ＿＿ できない。<br />
+ 1. 現場経験が　　　2. かなり豊富な　　　3. ある人で　　　4. なければとうてい</p>
 <div class="qa"><label><input type="radio" name="q_44" value="1"><span>1</span></label><label><input type="radio" name="q_44" value="2"><span>2</span></label><label><input type="radio" name="q_44" value="3"><span>3</span></label><label><input type="radio" name="q_44" value="4"><span>4</span></label></div>
-<p><strong>45</strong> 弟がゲームばかりしているのに比べ、姉は ＿＿ ＿＿ ★ ＿＿ なった。<br />
- 1. 合格を　　　2. 目指して　　　3. 毎日日本語を勉強する　　　4. ように</p>
+<p><strong>45</strong> 弟が一日中ゲームばかりしているのに対し、姉は ＿＿ ＿＿ ★ ＿＿ なったそうだ。<br />
+ 1. 難関試験の合格を　　　2. 目指して休みなく　　　3. 毎日日本語を勉強する　　　4. ように</p>
 <div class="qa"><label><input type="radio" name="q_45" value="1"><span>1</span></label><label><input type="radio" name="q_45" value="2"><span>2</span></label><label><input type="radio" name="q_45" value="3"><span>3</span></label><label><input type="radio" name="q_45" value="4"><span>4</span></label></div>
-<p><strong>46</strong> ある調査によると、環境問題に対する関心は ＿＿ ＿＿ ★ ＿＿ 。<br />
- 1. つつある　　　2. 世界中で　　　3. 高まり　　　4. 近年</p>
+<p><strong>46</strong> 国際世論調査によると、環境問題に対する関心は ＿＿ ＿＿ ★ ＿＿ 。<br />
+ 1. つつあるという　　　2. 世界各国で　　　3. 急速に高まり　　　4. ここ数年</p>
 <div class="qa"><label><input type="radio" name="q_46" value="1"><span>1</span></label><label><input type="radio" name="q_46" value="2"><span>2</span></label><label><input type="radio" name="q_46" value="3"><span>3</span></label><label><input type="radio" name="q_46" value="4"><span>4</span></label></div>
 <p><strong>47</strong> 当店ではお客様一人一人のご要望に合わせて、 ＿＿ ＿＿ ★ ＿＿ ご提案いたします。<br />
- 1. 年齢に　　　2. 応じた　　　3. プランを　　　4. 料金の</p>
+ 1. ご年齢やご予算に　　　2. 細かく応じた　　　3. プランをいくつか　　　4. 料金帯の異なる</p>
 <div class="qa"><label><input type="radio" name="q_47" value="1"><span>1</span></label><label><input type="radio" name="q_47" value="2"><span>2</span></label><label><input type="radio" name="q_47" value="3"><span>3</span></label><label><input type="radio" name="q_47" value="4"><span>4</span></label></div>
 <hr />
 <h2>問題9 次の文章を読んで、文章全体の内容を考えて、<strong>48</strong>から<strong>51</strong>の中に入る最もよいものを、1・2・3・4から一つ選びなさい。</h2>
@@ -425,7 +459,8 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  4. 断水に備えて、水をためておいたほうがいい。</p>
 <div class="qa"><label><input type="radio" name="q_54" value="1"><span>1</span></label><label><input type="radio" name="q_54" value="2"><span>2</span></label><label><input type="radio" name="q_54" value="3"><span>3</span></label><label><input type="radio" name="q_54" value="4"><span>4</span></label></div>
 <h3>(4)</h3>
-<p>「おはようございます」と声をかけても、返事がない。最近はそういうことが珍しくない。しかし挨拶とは、本来、情報を伝える行為ではない。「私はあなたの存在に気づいています」という信号なのだ。毎朝顔を合わせて声を交わす。それだけのことが、いざというとき「あの人、今日は見かけなかったな」という小さな気づきを生む。挨拶とは、目に見えない安全の網を編む行為なのである。</p>
+<p>「おはようございます」と声をかけても、返事がない。最近はそういうことが珍しくない。しかし挨拶とは、本来、情報を伝える行為ではない。「私はあなたの存在に気づいています」という信号（注1）なのだ。毎朝顔を合わせて声を交わす。それだけのことが、いざというとき「あの人、今日は見かけなかったな」という小さな気づきを生む。挨拶とは、目に見えない安全の網を編む行為なのである。</p>
+<p>（注1）信号：ここでは、相手に伝える合図</p>
 <p><strong>55</strong> 筆者は挨拶をどのようなものだと考えているか。<br />
  1. 相手に情報を伝えるための手段<br />
  2. 互いの存在を確認し合い、安全につながる行為<br />
@@ -443,9 +478,11 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <hr />
 <h2>問題11 次の(1)から(4)の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
 <h3>(1)</h3>
-<p>スマートフォンで何枚でも気軽に撮れるようになってから、旅行先での写真の枚数は格段に増えた。帰ってきてアルバムを見返す楽しみも増えたように思える。撮っておけば安心だ、という気持ちはよくわかる。<br />
+<p>スマートフォンで何枚でも気軽に撮れるようになってから、旅行先での写真の枚数は格段（注1）に増えた。帰ってきてアルバムを見返す楽しみも増えたように思える。撮っておけば安心だ、という気持ちはよくわかる。<br />
  しかし、心理学者の実験は①<strong>意外な事実</strong>を示している。博物館で展示品を「見るだけ」にしたグループと、「写真を撮った」グループとでは、翌日のテストで写真グループのほうが細部を覚えていなかったのだ。カメラに記録を任せた瞬間、脳は「覚えなくてもいい」と判断するらしい。<br />
- もちろん、写真がすべて悪いわけではない。研究者によれば、ズームで一部分だけを切り取って撮った場合には、記憶への悪影響は見られなかったという。「何を残すか」を自分で選ぶ行為が、注意を引き戻すからだと考えられている。撮ること自体が問題なのではなく、考えずにシャッターを押すことが記憶を薄めるのである。記録の道具をどう使うかで、残る記憶の質まで変わってしまうのだ。</p>
+（中略）<br />
+ もちろん、写真がすべて悪いわけではない。研究者によれば、ズームで一部分だけを切り取って撮った場合には、記憶への悪影響は見られなかったという。「何を残すか」を自分で選ぶ行為が、注意を引き戻すからだと考えられている。撮ること自体が問題なのではなく、考えずにシャッターを押すことが記憶を薄めるのである。記録の道具をどう使うかで、残る記憶の質（注2）まで変わってしまうのだ。</p>
+<p>（注1）格段に：はっきりと大きく（注2）質：ここでは、内容のよさや深さ</p>
 <p><strong>57</strong> ①<strong>意外な事実</strong>とは何か。<br />
  1. 博物館の展示品は撮影が禁止されていること<br />
  2. 旅行先の写真の枚数が減っていること<br />
@@ -461,7 +498,9 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <h3>(2)</h3>
 <p>子どもに習い事をさせる親は多い。ピアノ、水泳、英語、プログラミング。「小さいうちから始めたほうが身につく」と言われれば、親としては焦ってしまう。<br />
  だが、幼児教育の研究者である友人は、意外なことを言った。「何を習わせるかより、やめ方のほうがずっと大事ですよ」と。子どもが「やめたい」と言ったとき、親はつい「一度始めたことは最後まで続けなさい」と言いたくなる。継続の大切さを教えたいからだ。しかしその結果、子どもが学ぶのは「嫌なことでも我慢し続けるべきだ」という感覚かもしれない。<br />
- 友人によれば、大切なのは、やめる前に親子でよく話し合うことだという。なぜやめたいのか。嫌なのは練習か、先生か、それとも友達関係か。話し合った上でやめるなら、それは「逃げ」ではなく「選択」になる。自分で考えて選んだという経験は、続けることと同じくらい、子どもを成長させるのだそうだ。</p>
+（中略）<br />
+ 友人によれば、大切なのは、やめる前に親子でよく話し合うことだという。なぜやめたいのか。嫌なのは練習か、先生か、それとも友達関係か。話し合った上でやめるなら、それは「逃げ」ではなく「選択」（注1）になる。自分で考えて選んだという経験は、続けることと同じくらい、子どもを成長させるのだそうだ。</p>
+<p>（注1）選択：自分の意思で選ぶこと</p>
 <p><strong>59</strong> 筆者の友人によると、子どもが「やめたい」と言ったとき、親はどうするのがいいか。<br />
  1. 最後まで続けるように説得する<br />
  2. 理由について子どもとよく話し合う<br />
@@ -475,9 +514,10 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  4. 嫌なことを我慢する経験が子どもを成長させる。</p>
 <div class="qa"><label><input type="radio" name="q_60" value="1"><span>1</span></label><label><input type="radio" name="q_60" value="2"><span>2</span></label><label><input type="radio" name="q_60" value="3"><span>3</span></label><label><input type="radio" name="q_60" value="4"><span>4</span></label></div>
 <h3>(3)</h3>
-<p>電車の運転士がホームを指差しながら「出発進行」と声に出す姿は、日本では日常の風景だ。この「指差し確認」は、もともと鉄道の現場で生まれた安全技術である。目で見て、指で差して、声に出す。この三つを同時に行うことで、見落としの確率が大幅に下がるという研究結果がある。単なる習慣ではなく、注意力の弱点を補うための技術なのである。<br />
+<p>電車の運転士がホームを指差しながら「出発進行」と声に出す姿は、日本では日常の風景だ。この「指差し確認」は、もともと鉄道の現場で生まれた安全技術である。目で見て、指で差して、声に出す。この三つを同時に行うことで、見落としの確率が大幅に下がるという研究結果がある。単なる習慣ではなく、注意力の弱点を補うための技術（注1）なのである。<br />
  ①<strong>興味深いのは、この技術が日常生活にも応用できることだ</strong>。家を出る前に「鍵、よし。ガス、よし」と声に出して指を差す。それだけで、駅に着いてから「あれ、鍵を閉めたかな」という不安が消える。声に出すという行為が、脳に「確認した」という記録を残すからだ。<br />
- 指差し確認が効果的なのは、人間の注意力の限界を前提にしている点である。「気をつけよう」という精神論ではなく、体の動きを使って注意を強制的に向ける。忘れ物が多い人に必要なのは、注意力を鍛えることではなく、②<strong>注意力に頼らない仕組み</strong>なのかもしれない。意志の力だけでミスを防ごうとするより、体を動かす手順を決めておくほうが確実なのである。</p>
+ 指差し確認が効果的なのは、人間の注意力の限界を前提にしている点である。「気をつけよう」という精神論（注2）ではなく、体の動きを使って注意を強制的に向ける。忘れ物が多い人に必要なのは、注意力を鍛えることではなく、②<strong>注意力に頼らない仕組み</strong>なのかもしれない。意志の力だけでミスを防ごうとするより、体を動かす手順を決めておくほうが確実なのである。</p>
+<p>（注1）技術：ここでは、安全のための具体的な方法（注2）精神論：気持ちや心がけだけで何とかしようとする考え方</p>
 <p><strong>61</strong> ①<strong>興味深いのは、この技術が日常生活にも応用できることだ</strong>とあるが、筆者はどのような例を挙げているか。<br />
  1. 電車の運転士が安全を確認する例<br />
  2. 研究者が実験で効果を証明した例<br />
@@ -491,10 +531,12 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  4. 体の動きで注意を強制的に向けるから</p>
 <div class="qa"><label><input type="radio" name="q_62" value="1"><span>1</span></label><label><input type="radio" name="q_62" value="2"><span>2</span></label><label><input type="radio" name="q_62" value="3"><span>3</span></label><label><input type="radio" name="q_62" value="4"><span>4</span></label></div>
 <h3>(4)</h3>
-<p class="furi">都市の中心部では、新しく公園を作るための土地を確保するのは容易ではない。そこで注目されているのが、ビルの屋上を庭園や<ruby>菜園<rt>さいえん</rt></ruby>にする「屋上緑化」である。これまで使われていなかった空間が、緑のある場所に変わるのだ。<br />
+<p class="furi">都市の中心部では、新しく公園を作るための土地を確保するのは容易ではない。そこで注目されているのが、ビルの屋上を庭園や<ruby>菜園<rt>さいえん</rt></ruby>にする「屋上緑化」（注1）である。これまで使われていなかった空間が、緑のある場所に変わるのだ。<br />
  屋上緑化の利点は、見た目の美しさだけではない。土と植物の層が屋根への直射日光を<ruby style="min-width:1.50em">遮<rt>さえぎ</rt></ruby>るため、建物内の温度変化が緩やかになり、冷暖房の使用を減らせるという報告がある。また、ある会社では、屋上を社員が野菜を育てる菜園にしたところ、部署の違う社員同士の会話が増えたという。①<strong>緑は、建物の性能だけでなく、そこにいる人の関係まで変えることがある</strong>のだ。<br />
+（中略）<br />
  もっとも、課題がないわけではない。土や水を含んだ植物は重いため、建物によっては屋上に載せられる重さに限りがある。また、水やりや草取りといった世話を誰が続けるのかという問題もある。実際、完成した直後は美しかった屋上庭園が、数年後には手入れされないまま荒れてしまった例も少なくない。<br />
- つまり、屋上緑化は「作って終わり」の設備ではなく、②<strong>育て続ける仕組みごと設計すべきもの</strong>なのである。導入を考えるなら、完成後に誰がどう関わり続けるのかまで含めて計画することが欠かせない。</p>
+ つまり、屋上緑化は「作って終わり」の設備ではなく、②<strong>育て続ける仕組みごと設計すべきもの</strong>なのである。導入を考えるなら、完成後に誰がどう関わり続けるのかまで含めて計画することが欠かせない。維持管理（注2）まで含めた設計が求められる。</p>
+<p>（注1）屋上緑化：建物の屋上に植物を植えて緑を増やすこと（注2）維持管理：長く使えるように手入れし続けること</p>
 <p><strong>63</strong> ①<strong>緑は、建物の性能だけでなく、そこにいる人の関係まで変えることがある</strong>とあるが、「人の関係まで変える」例として筆者が挙げているのはどれか。<br />
  1. 屋上庭園が街の観光名所になった例<br />
  2. 近所の住民が庭園の見学に集まった例<br />
@@ -526,15 +568,12 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <div class="qa"><label><input type="radio" name="q_66" value="1"><span>1</span></label><label><input type="radio" name="q_66" value="2"><span>2</span></label><label><input type="radio" name="q_66" value="3"><span>3</span></label><label><input type="radio" name="q_66" value="4"><span>4</span></label></div>
 <hr />
 <h2>問題13 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
-<p class="furi">「失敗は成功のもと」ということわざがある。誰もが知っている言葉だが、私はこの言葉が長い間、好きになれなかった。失敗した直後の人間に必要なのは、そんな正論ではなく、まず落ち込む時間だと思っていたからだ。<br />
- 考えが変わったのは、ある<ruby>陶芸家<rt>とうげいか</rt></ruby>の工房を取材したときだ。彼の工房の棚には、ひび割れた茶碗や、形のゆがんだ皿が大量に並んでいた。失敗作を捨てずに取ってあるのだという。「恥ずかしくないですか」と尋ねると、彼は笑って言った。「これは失敗の記録じゃなくて、実験の記録なんです」。<br />
- 彼によれば、うまくいった作品からは、実は学べることが少ない。なぜうまくいったのか、要因が多すぎて特定できないからだ。一方、失敗作は<ruby>雄弁<rt>ゆうべん</rt></ruby>（注1）だ。この温度で焼くとこうひびが入る、この厚さだとこうゆがむ。①<strong>失敗だけが、確かな知識をくれる</strong>。だから彼は、新しい技法を試すとき、まず「どう失敗するか」を確かめるために焼くのだという。<br />
- 話を聞きながら、私は自分の勘違いに気づいた。「失敗は成功のもと」という言葉を、私は「失敗しても、いつか報われるから元気を出せ」という慰めだと思っていた。だが本当は、もっと実践的な技術の話だったのだ。失敗を情報として扱い、そこから具体的に学ぶ。落ち込むかどうかとは別の話として、失敗には使い道がある。<br />
- ②<strong>失敗を「感情の問題」から「情報の問題」へ</strong>。この切り替えができたとき、人は失敗を怖がりすぎずに、新しいことに挑戦できるようになるのではないだろうか。</p>
-<div class="vocab-notes">
-（注1）雄弁：言葉でハッキリと多くの情報を伝える様子。本文では「失敗作が多くの情報を与えてくれる」という意味。
-</div>
-
+<p>「失敗は成功のもと」ということわざがある。誰もが知っている言葉だが、私はこの言葉が長い間、好きになれなかった。失敗した直後の人間に必要なのは、そんな正論ではなく、まず落ち込む時間だと思っていたからだ。落ち込んでいる相手に教訓を並べるのは、ときに残酷ですらある。</p>
+<p class="furi">考えが変わったのは、ある<ruby>陶芸家<rt>とうげいか</rt></ruby>の工房を取材したときだ。彼の工房の棚には、ひび割れた茶碗や、形のゆがんだ皿が大量に並んでいた。失敗作を捨てずに取ってあるのだという。「恥ずかしくないですか」と尋ねると、彼は笑って言った。「これは失敗の記録じゃなくて、実験の記録なんです」。来場者にもその棚を見せ、温度や粘土の配合（注1）を説明しながら話す姿は、失敗を隠す人の態度ではなかった。</p>
+<p class="furi">彼によれば、うまくいった作品からは、実は学べることが少ない。なぜうまくいったのか、要因が多すぎて特定できないからだ。（中略）一方、失敗作は<ruby>雄弁<rt>ゆうべん</rt></ruby>（注2）だ。この温度で焼くとこうひびが入る、この厚さだとこうゆがむ。①<strong>失敗だけが、確かな知識をくれる</strong>。だから彼は、新しい技法を試すとき、まず「どう失敗するか」を確かめるために焼くのだという。成功を急ぐより、失敗の地図を広げておくほうが、長い目で見れば早いのだと彼は言う。</p>
+<p>話を聞きながら、私は自分の勘違いに気づいた。「失敗は成功のもと」という言葉を、私は「失敗しても、いつか報われるから元気を出せ」という慰め（注3）だと思っていた。だが本当は、もっと実践的な技術の話だったのだ。失敗を情報として扱い、そこから具体的に学ぶ。落ち込むかどうかとは別の話として、失敗には使い道がある。感情を否定する必要はない。ただ、感情だけで終わらせないことが大切なのだ。</p>
+<p>学校教育や職場の評価制度（注4）は、しばしば失敗を減点の対象として扱う。その空気の中では、人は安全な道ばかり選び、新しい試みを避けるようになる。②<strong>失敗を「感情の問題」から「情報の問題」へ</strong>。この切り替えができたとき、人は失敗を怖がりすぎずに、新しいことに挑戦できるようになるのではないだろうか。失敗を記録し、共有し、次の一手に変える文化（注5）こそが、本当の意味で「成功のもと」をつくるのだと、私は今では考えている。</p>
+<p>（注1）配合：材料を混ぜ合わせる割合（注2）雄弁：多くの情報をはっきり伝える様子。本文では失敗作が多くの情報を与えること（注3）慰め：相手を元気づけようとする言葉や態度（注4）評価制度：成績や成果を測る仕組み（注5）文化：ここでは、職場や社会で共有されている習慣・考え方</p>
 <p><strong>67</strong> ①<strong>失敗だけが、確かな知識をくれる</strong>とあるが、なぜか。<br />
  1. 成功した作品は要因が多すぎて、理由を特定しにくいから<br />
  2. 失敗作のほうが数が多く、データがたくさんあるから<br />
@@ -1162,6 +1201,139 @@ function chip(label, d){
   return '<span class="chip ' + cls + '"><i>' + label + '</i>' + body + '</span>';
 }
 
+function _isQa(el){ return !!(el && el.classList && el.classList.contains('qa')); }
+function _isBreak(el){ return !!(el && (/^H[12]$/.test(el.tagName) || el.tagName === 'HR')); }
+function _isUnit(el){ return !!(el && el.tagName === 'H3'); }
+function _isOptLine(el){
+  return !!(el && el.tagName === 'P' && /^\s*[1-4][.．]/.test(el.textContent || ''));
+}
+function _looksLikeStem(el){
+  if (!el || el.tagName !== 'P') return false;
+  const s = el.querySelector('strong');
+  if (!s) return false;
+  const t = (s.textContent || '').trim();
+  return /^(?:\d{1,2}\b|例|[1-5]番|質問\s*[12])/.test(t);
+}
+
+/** Clone the exam nodes for one scored item (stem + shared passage / 問題 heading).
+ *  Contiguous slices are wrong: walking back to h2 would drag in every earlier
+ *  item in that 問題. Collect stem nodes, then prepend passage context while
+ *  skipping other questions' stems/.qa blocks. */
+function extractQuestionHtml(key){
+  const inp = document.querySelector(
+    '#screen-exam input[name="q_' + CSS.escape(key) + '"]');
+  if (!inp) return '';
+  const qa = inp.closest('.qa');
+  if (!qa || !qa.parentElement) return '';
+  const kids = Array.from(qa.parentElement.children);
+  const qi = kids.indexOf(qa);
+  if (qi < 0) return '';
+
+  const nodes = [];
+  let i = qi - 1;
+  while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))){
+    nodes.unshift(kids[i]);
+    i--;
+  }
+  while (i >= 0){
+    const n = kids[i];
+    if (_isQa(n)){
+      i--;
+      while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))) i--;
+      continue;
+    }
+    if (n.tagName === 'HR') break;
+    if (n.tagName === 'H1' && n.classList.contains('section-title')) break;
+    if (n.tagName === 'H1' || n.tagName === 'H2'){
+      nodes.unshift(n);
+      break;
+    }
+    if (_isUnit(n)){
+      nodes.unshift(n);
+      break;
+    }
+    nodes.unshift(n);
+    i--;
+  }
+
+  const wrap = document.createElement('div');
+  nodes.forEach(n => wrap.appendChild(n.cloneNode(true)));
+  wrap.querySelectorAll('input, .qa').forEach(el => el.remove());
+  return wrap.innerHTML;
+}
+
+function detailMetaHtml(key, d){
+  const cls = d.user === null ? 'na' : (d.is_correct ? 'ok' : 'ng');
+  const verdict = d.user === null ? '未解答'
+                : (d.is_correct ? '正解' : '不正解');
+  const user = d.user === null ? '—' : String(d.user);
+  const correct = d.correct === null || d.correct === undefined ? '—' : String(d.correct);
+  return '<div class="rs-detail-meta">'
+    + '<span><b>設問 ' + key + '</b></span>'
+    + '<span class="tag ' + cls + '">' + verdict + '</span>'
+    + '<span>あなたの答え: <b>' + user + '</b></span>'
+    + '<span>正解: <b>' + correct + '</b></span>'
+    + '</div>';
+}
+
+function itemDetailHtml(key, d){
+  let body = extractQuestionHtml(key);
+  if (!body){
+    body = '<p>（この設問の問題文を画面から取得できませんでした。）</p>';
+  }
+  let note = '';
+  if (!/^\d+$/.test(key)){
+    note = '<p class="rs-detail-note">聴解の音声は「解答に戻ってやり直す」から'
+      + '受験画面のプレイヤーで確認できます。</p>';
+  }
+  return '<div class="rs-item" id="rs-item-' + key + '">'
+    + detailMetaHtml(key, d)
+    + '<div class="rs-detail-body">' + body + '</div>' + note
+    + '</div>';
+}
+
+function buildAllDetailsHtml(res){
+  const L = [];
+  L.push('<h3>言語知識・読解 — 設問詳細</h3>');
+  for (let q = 1; q <= 71; q++){
+    const k = String(q);
+    L.push(itemDetailHtml(k, res.detail_gengo[k] || {}));
+  }
+  L.push('<h3>聴解 — 設問詳細</h3>');
+  for (const k of CHOUKAI_KEYS){
+    L.push(itemDetailHtml(k, res.detail_choukai[k] || {}));
+  }
+  return L.join('');
+}
+
+function setCheckExpanded(on, res){
+  const panel = document.getElementById('rs-all-detail');
+  const btn = document.getElementById('rs-expand-btn');
+  if (!panel || !btn) return;
+  if (on){
+    if (!panel.dataset.built){
+      panel.innerHTML = buildAllDetailsHtml(res);
+      panel.dataset.built = '1';
+    }
+    panel.hidden = false;
+    btn.textContent = '詳細を折りたたむ';
+    btn.setAttribute('aria-expanded', 'true');
+  } else {
+    panel.hidden = true;
+    btn.textContent = 'すべての設問詳細を展開';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+function bindResultExpand(res){
+  const btn = document.getElementById('rs-expand-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    setCheckExpanded(!open, res);
+  });
+}
+
 function resultHtml(res, msg, saved){
   const s = res.summary, cls = s.passed ? 'pass' : 'fail';
   const L = [];
@@ -1230,11 +1402,17 @@ function resultHtml(res, msg, saved){
   }
 
   L.push('<h2>4. 全設問解答チェック表</h2>');
+  L.push('<div class="rs-check-tools">'
+    + '<button type="button" class="ui-btn" id="rs-expand-btn" aria-expanded="false">'
+    + 'すべての設問詳細を展開</button>'
+    + '<p class="rs-hint">展開すると全101問の問題文・選択肢・正誤が一覧で表示されます。</p>'
+    + '</div>');
   L.push('<h3>言語知識・読解 (1 〜 71)</h3><div class="rs-grid">');
   for (let q = 1; q <= 71; q++){ L.push(chip(String(q), res.detail_gengo[String(q)])); }
   L.push('</div><h3>聴解</h3><div class="rs-grid">');
   for (const k of CHOUKAI_KEYS){ L.push(chip(k, res.detail_choukai[k])); }
   L.push('</div>');
+  L.push('<div id="rs-all-detail" class="rs-all-detail" hidden></div>');
 
   L.push('<div class="rs-nav">'
     + '<button class="ui-btn primary" onclick="goList()">← テスト一覧へ戻る</button>'
@@ -1265,6 +1443,7 @@ function showScreen(name){
 
 function showResult(res, msg, saved){
   document.getElementById('screen-result').innerHTML = resultHtml(res, msg, saved);
+  bindResultExpand(res);
   showScreen('result');
 }
 

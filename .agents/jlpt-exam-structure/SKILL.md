@@ -30,11 +30,11 @@ The official JLPT guidebook lists slightly higher 小問数 as 目安; **actual 
 | 7 | 文法形式判断 (grammar fill-in) | 12 | 31-42 |
 | 8 | 文の組み立て (scramble, ★ position) | 5 | 43-47 |
 | 9 | 文章の文法 (cloze passage, 4 blanks) | 4 | 48-51 |
-| 10 | 短文 (5 short passages ~200字 × 1Q; include one business email and one notice/掲示) | 5 | 52-56 |
-| 11 | 中文 (4 passages ~500字 × 2Q — see deviation note below) | 8 | 57-64 |
+| 10 | 短文 (5 short passages ~200–280字 × 1Q; include one business email and one notice/掲示) | 5 | 52-56 |
+| 11 | 中文 (4 passages ~400–550字 × 2Q each) | 8 | 57-64 |
 | 12 | 統合理解 (A/B compared texts, ~600字 combined, 2Q) | 2 | 65-66 |
-| 13 | 主張理解 (1 long essay ~900字, 3Q) | 3 | 67-69 |
-| 14 | 情報検索 (flyer/table ~700字 + 2 condition-matching Q) | 2 | 70-71 |
+| 13 | 主張理解 (1 long essay ~900–1100字, 3Q) | 3 | 67-69 |
+| 14 | 情報検索 (flyer/table ~700–900字 + 2 condition-matching Q) | 2 | 70-71 |
 
 Question numbering is continuous 1-71 across the whole paper.
 
@@ -44,14 +44,18 @@ Authoring rules and the consistency gate live in `question-authoring` /
 `tools/check_consistency.py` — length is part of the format bar, not just the
 grammar-point inventory.
 
-**問題11 passage split — known pipeline deviation.** All five official papers
-in `refs/JLPT/` print 問題11 as **4 passages × 2 questions** (Q57-64; the
-Dec 2024 transcription's 「(1)から(3)」 instruction line is a typo — its body
-has four passages). This repo's sampler (`sample_items.py`:
-`"reading_topics": 11  # 5 short + 3 medium + …`) and tests 1-4 as shipped use
-3 passages split 3+3+2. Question count and numbering are unaffected, but new
-authoring should move to the official 4×2 shape once the sampler draws a 4th
-中文 topic; until then, state the deviation in the generation report.
+**読解 apparatus (official baseline — measured on `imported-n2-2025-07` =
+July 2025):** a real paper carries **dozens** of `（注N）` glosses across 問題10–13
+(July 2025 ≈50+), uses `（中略）` inside 中文/長文, and prints 問題13 near
+~1000 JP chars. Generated tests 1–4 shipped with 0–2 notes, no 中略, and 長文
+often ~600–750 — treat that as under-calibrated even when keys parse.
+
+**問題11 shape:** all five official papers in `refs/JLPT/` are **4 passages × 2
+questions** (Q57–64). The instruction line sometimes still says `(1)から(3)`
+(print typo); the body has four passages. Generated mocks must author **4×2**
+and print `(1)から(4)` in the instruction. The sampler's older
+`reading_topics: 11  # 5 short + 3 medium` comment is stale — draw four 中文
+topics.
 
 ### 時間配分の目安 (105分)
 

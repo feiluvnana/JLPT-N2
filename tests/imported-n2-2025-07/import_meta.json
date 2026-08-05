@@ -9,5 +9,5 @@
     "audio": "refs/JLPT/Nghe N2 T7-2025.mp3",
     "answer_key": "refs/JLPT/ĐÁP ÁN JLPT N2 (update 10.4.2026).pdf"
   },
-  "notes": "Folder flag `imported-` marks origin=imported. Folders without that prefix are generated."
+  "notes": "Folder flag `imported-` marks origin=imported. Folders without that prefix are generated. 2026-08-05 fidelity pass: gengo 71/71 keys match answer sheet; 聴解 問5-2-1 corrected 3→1 to match sheet (海沿い→夕日通り). Preserve （注）/（中略）; 問題11 has 4 passages despite (1)から(3) header typo."
 }

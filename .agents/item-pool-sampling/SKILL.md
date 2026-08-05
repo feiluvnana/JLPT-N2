@@ -7,6 +7,12 @@ description: Single owner of RANDOM, non-repeating selection of what each exam t
 
 ## Why this skill exists
 
+Pool entries must stay inside the N2 band. Do not add N1-only forms
+(〜にあって, 〜をもって, 〜ともなると, …) or N3–N5 drills (〜によると,
+〜ことができる, …) to `references/pools.json` — see
+`exam-qa-review/references/level_band_grammar.txt` and `question-authoring`.
+`make check` fails generated papers whose 問題7–9 keys hit that list.
+
 A language model asked to "pick 12 N2 grammar points" picks nearly the same
 12 every time (〜ざるを得ない, 〜かねない, …), reuses the same scenarios
 (会議, レストラン), and biases correct answers toward positions 2-3. That is

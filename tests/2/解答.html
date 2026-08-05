@@ -67,22 +67,32 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   --ui:"Hiragino Sans","Yu Gothic",sans-serif}
 /* The bar spans the full window on every screen, so the scrollbar sits ON its
    right edge — the horizontal padding has to clear it or it covers 採点する. */
+/* Fixed bar height on all three screens — exam controls must not wrap taller
+   than the list/result bars. */
 #bar{position:sticky;top:0;z-index:99;background:#111;color:#fff;
-  padding:.6em 1.8em;display:flex;flex-wrap:wrap;gap:.45em 1em;align-items:center;
-  font-family:var(--ui);font-size:11pt}
-#bar b{font-size:12pt;font-weight:700}
-#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums}
-#bar .grow{flex:1}
-#bar button{font-size:11pt;padding:.35em .9em;cursor:pointer;border-radius:6px;
-  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui)}
+  box-sizing:border-box;height:3.25em;min-height:3.25em;max-height:3.25em;
+  padding:0 1.8em;display:flex;flex-wrap:nowrap;gap:.45em 1em;align-items:center;
+  font-family:var(--ui);font-size:11pt;overflow:hidden}
+#bar b{font-size:12pt;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;min-width:0;max-width:18em}
+#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#bar .grow{flex:1 1 auto;min-width:.5em}
+#bar-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:.45em;flex:0 0 auto}
+#bar button{font-size:10pt;padding:.2em .7em;cursor:pointer;border-radius:6px;
+  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui);
+  white-space:nowrap;line-height:1.35}
 #bar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);
   font-weight:700}
-#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap}
+#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap;
+  flex:0 0 auto}
 #bar a.back:hover{color:#fff;text-decoration:underline}
 .ui-btn{display:inline-block;font-size:11pt;padding:.45em 1.1em;border-radius:6px;
   text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--ink);
   cursor:pointer;font-family:var(--ui)}
 .ui-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.ui-btn.danger{background:#fff;border-color:#fca5a5;color:#991b1b}
+.ui-btn.danger:hover{background:#fef2f2}
 .ui-btn:hover{filter:brightness(.96)}
 .ui-table{border-collapse:collapse;width:100%;font-size:10.5pt;margin:.4em 0;
   font-family:var(--ui)}
@@ -104,10 +114,11 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 .chip.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
 .chip.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
 .chip.na{background:#f8fafc;border-color:var(--line);color:#64748b}
-.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden}
+.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden;
+  text-align:left}
 .meter .fill{height:100%;background:var(--accent)}
 .meter .fill.done{background:#16a34a}
-.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;
+.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;text-align:left;
   font-variant-numeric:tabular-nums;font-family:var(--ui)}
 
 .qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
@@ -173,6 +184,26 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   margin:.6em 0;font-size:10.5pt}
 .rs-advice b{display:block;margin-bottom:.25em}
 .rs-grid{display:flex;flex-wrap:wrap;gap:.3em;margin:.5em 0 1.2em}
+.rs-check-tools{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;
+  margin:.2em 0 .7em}
+.rs-hint{font-size:10pt;color:var(--muted);margin:0}
+.rs-all-detail{margin:.2em 0 1.4em}
+.rs-all-detail[hidden]{display:none!important}
+.rs-item{border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;
+  padding:.85em 1.05em;margin:0 0 .7em}
+.rs-detail-meta{display:flex;flex-wrap:wrap;gap:.4em 1.1em;align-items:center;
+  font-size:10.5pt;margin:0 0 .65em}
+.rs-detail-meta .tag{font-weight:700;padding:.1em .45em;border-radius:4px;
+  border:1px solid}
+.rs-detail-meta .tag.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
+.rs-detail-meta .tag.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.rs-detail-meta .tag.na{background:#fff;border-color:var(--line);color:#64748b}
+.rs-detail-body{background:#fff;border:1px solid #e2e8f0;border-radius:8px;
+  padding:.75em 1em;line-height:1.75;font-size:11pt}
+.rs-detail-body .qa,.rs-detail-body input{display:none!important}
+.rs-detail-body h1,.rs-detail-body h2,.rs-detail-body h3{background:none;border:0;
+  padding:0;margin:.35em 0 .45em;font-size:11.5pt;color:var(--ink)}
+.rs-detail-note{font-size:10pt;color:var(--muted);margin:.55em 0 0}
 @media print{#bar,#player,.rs-nav{display:none}.qa label{border-color:#666}}
 /* On screen the sheet keeps the booklet's centered 60em measure (SCREEN_CSS), so
    the exam text and the printed booklet render identically — but the measure
@@ -326,10 +357,10 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
  1. にあたって　　　2. にしたがって　　　3. にともなって　　　4. に応じて</p>
 <div class="qa"><label><input type="radio" name="q_33" value="1"><span>1</span></label><label><input type="radio" name="q_33" value="2"><span>2</span></label><label><input type="radio" name="q_33" value="3"><span>3</span></label><label><input type="radio" name="q_33" value="4"><span>4</span></label></div>
 <p><strong>34</strong> 大口契約が成立するかどうかは、明日の交渉における先方の最終回答(　)。<br />
- 1. にかけてだ　　　2. 次第だ　　　3. をもってだ　　　4. に基づいてだ</p>
+ 1. にかけてだ　　　2. 次第だ　　　3. に応じてだ　　　4. に基づいてだ</p>
 <div class="qa"><label><input type="radio" name="q_34" value="1"><span>1</span></label><label><input type="radio" name="q_34" value="2"><span>2</span></label><label><input type="radio" name="q_34" value="3"><span>3</span></label><label><input type="radio" name="q_34" value="4"><span>4</span></label></div>
-<p><strong>35</strong> 資金繰りが厳しい状況(　)も、彼女は決して諦めずに新事業への努力を続けた。<br />
- 1. にあって　　　2. に即して　　　3. に先立って　　　4. に乗じて</p>
+<p><strong>35</strong> 資金繰りが厳しい(　)、彼女は決して諦めずに新事業への努力を続けた。<br />
+ 1. にもかかわらず　　　2. に即して　　　3. に先立って　　　4. に乗じて</p>
 <div class="qa"><label><input type="radio" name="q_35" value="1"><span>1</span></label><label><input type="radio" name="q_35" value="2"><span>2</span></label><label><input type="radio" name="q_35" value="3"><span>3</span></label><label><input type="radio" name="q_35" value="4"><span>4</span></label></div>
 <p><strong>36</strong> こちらのミスを認めて謝罪する(　)、逆にこちらを強く非難してきたのには驚いた。<br />
  1. ところで　　　2. どころか　　　3. 反面　　　4. つもりで</p>
@@ -340,14 +371,15 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <p><strong>38</strong> 長年応援してくれるファンの大きな期待(　)、今夜は素晴らしい演奏を披露することができた。<br />
  1. をめぐって　　　2. に加えて　　　3. にともなって　　　4. に応えて</p>
 <div class="qa"><label><input type="radio" name="q_38" value="1"><span>1</span></label><label><input type="radio" name="q_38" value="2"><span>2</span></label><label><input type="radio" name="q_38" value="3"><span>3</span></label><label><input type="radio" name="q_38" value="4"><span>4</span></label></div>
-<p><strong>39</strong> 申し訳ございませんが、個人情報保護の観点から、お客様の登録内容に関するご質問にはお答え(　)。<br />
+<p><strong>39</strong> （窓口で）<br />
+職員「申し訳ございませんが、個人情報保護の観点から、お客様の登録内容に関するご質問にはお答え(　)。」<br />
  1. かねます　　　2. 得ます　　　3. 兼ねません　　　4. かねかねます</p>
 <div class="qa"><label><input type="radio" name="q_39" value="1"><span>1</span></label><label><input type="radio" name="q_39" value="2"><span>2</span></label><label><input type="radio" name="q_39" value="3"><span>3</span></label><label><input type="radio" name="q_39" value="4"><span>4</span></label></div>
 <p><strong>40</strong> 周囲の人の迷惑(　)、夜遅くまで大声で騒ぐ行為は、マンションの規則でも慎むべきだ。<br />
  1. に限らず　　　2. にかかわらず　　　3. もかまわず　　　4. に反して</p>
 <div class="qa"><label><input type="radio" name="q_40" value="1"><span>1</span></label><label><input type="radio" name="q_40" value="2"><span>2</span></label><label><input type="radio" name="q_40" value="3"><span>3</span></label><label><input type="radio" name="q_40" value="4"><span>4</span></label></div>
-<p><strong>41</strong> 本日の午後5時(　)、今年度の助成金申請の受付をすべて終了いたしますのでご注意ください。<br />
- 1. をめぐって　　　2. を通じて　　　3. を皮切りに　　　4. をもって</p>
+<p><strong>41</strong> （市のホームページで）本日の午後5時(　)、今年度の助成金申請の受付をすべて終了いたしますのでご注意ください。<br />
+ 1. をめぐって　　　2. を通じて　　　3. に向けて　　　4. 限り</p>
 <div class="qa"><label><input type="radio" name="q_41" value="1"><span>1</span></label><label><input type="radio" name="q_41" value="2"><span>2</span></label><label><input type="radio" name="q_41" value="3"><span>3</span></label><label><input type="radio" name="q_41" value="4"><span>4</span></label></div>
 <p><strong>42</strong> 来月の新しい店舗のオープン(　)、地域の住民に向けた内覧会と説明会が行われた。<br />
  1. に沿って　　　2. を抜きに　　　3. に先立って　　　4. にもかかわらず</p>
@@ -355,19 +387,19 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <hr />
 <h2>問題8 次の文の ★ に入る最もよいものを、1・2・3・4から一つ選びなさい。</h2>
 <p><strong>43</strong> 彼は毎日遅くまで残業し、休日も仕事をしている。＿＿ ＿＿ ＿★＿ ＿＿ということだ。<br />
- 1. つまり　　　2. 自分の時間　　　3. 持てていない　　　4. というものを</p>
+ 1. つまり今の彼には　　　2. 自分の自由な時間　　　3. ほとんど持てていない　　　4. というものを</p>
 <div class="qa"><label><input type="radio" name="q_43" value="1"><span>1</span></label><label><input type="radio" name="q_43" value="2"><span>2</span></label><label><input type="radio" name="q_43" value="3"><span>3</span></label><label><input type="radio" name="q_43" value="4"><span>4</span></label></div>
-<p><strong>44</strong> 今回の一人旅は、知らない土地で新しい町を＿＿ ＿＿ ＿★＿ ＿＿思い出深いものとなった。<br />
- 1. 発見があり　　　2. 新しい　　　3. 訪れる　　　4. たびに</p>
+<p><strong>44</strong> 今回の一人旅は、＿＿ ＿＿ ＿★＿ ＿＿思い出深いものとなった。<br />
+ 1. 発見が何度もあり　　　2. 予想もしない新しい　　　3. 知らない町を訪れる　　　4. たびに必ず</p>
 <div class="qa"><label><input type="radio" name="q_44" value="1"><span>1</span></label><label><input type="radio" name="q_44" value="2"><span>2</span></label><label><input type="radio" name="q_44" value="3"><span>3</span></label><label><input type="radio" name="q_44" value="4"><span>4</span></label></div>
 <p><strong>45</strong> 大きな壁に直面したとき、信頼できる＿＿ ＿＿ ＿★＿ ＿＿困難を乗り越えることはできない。<br />
- 1. でなければ　　　2. 仲間　　　3. との協力　　　4. どんな</p>
+ 1. でなければ到底　　　2. 経験豊富な仲間　　　3. との十分な協力　　　4. どんな大きな</p>
 <div class="qa"><label><input type="radio" name="q_45" value="1"><span>1</span></label><label><input type="radio" name="q_45" value="2"><span>2</span></label><label><input type="radio" name="q_45" value="3"><span>3</span></label><label><input type="radio" name="q_45" value="4"><span>4</span></label></div>
-<p><strong>46</strong> 彼は初心者である＿＿ ＿＿ ＿★＿ ＿＿見事な成果を収めた。<br />
- 1. 発揮し　　　2. 本番での緊張を　　　3. 乗り越えて高いパフォーマンスを　　　4. わりに</p>
+<p><strong>46</strong> 彼はまだ初心者である＿＿ ＿＿ ＿★＿ ＿＿見事な成果を収めた。<br />
+ 1. しっかり発揮し　　　2. 本番での強い緊張を　　　3. 乗り越えて高いパフォーマンスを　　　4. わりにうまく</p>
 <div class="qa"><label><input type="radio" name="q_46" value="1"><span>1</span></label><label><input type="radio" name="q_46" value="2"><span>2</span></label><label><input type="radio" name="q_46" value="3"><span>3</span></label><label><input type="radio" name="q_46" value="4"><span>4</span></label></div>
 <p><strong>47</strong> 厳しい経済＿＿ ＿＿ ＿★＿ ＿＿、企業は新たな生き残り策を求めている。<br />
- 1. 価格競争が　　　2. 状況に　　　3. 続く限り　　　4. おいて</p>
+ 1. 激しい価格競争が　　　2. 状況のなかに　　　3. 続く限りは常に　　　4. おいては</p>
 <div class="qa"><label><input type="radio" name="q_47" value="1"><span>1</span></label><label><input type="radio" name="q_47" value="2"><span>2</span></label><label><input type="radio" name="q_47" value="3"><span>3</span></label><label><input type="radio" name="q_47" value="4"><span>4</span></label></div>
 <hr />
 <h2>問題9 次の文章を読んで、文章全体の文脈を考えて、48から51の中に入る最もよいものを、1・2・3・4から一つ選びなさい。</h2>
@@ -392,7 +424,9 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <h1>【読解】</h1>
 <h2>問題10 次の(1)から(5)の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
 <h3>(1)</h3>
-<p>近年、若者の間でも「デジタルデトックス」への関心が高まっている。週末にスマートフォンの電源をオフにし、山や海などの自然環境の中で過ごす体験ツアーが好評だという。参加者からは「通知に追われない時間がこれほど心地よいとは思わなかった」「睡眠の質が改善した」といった声が寄せられている。デジタル機器は利便性をもたらす一方で、私たちの集中力や休息の質を無意識のうちに奪っている可能性がある。意識的に通知を切る時間を持つことが、現代人にとって真の休息につながるのである。</p>
+<p>近年、若者の間でも「デジタルデトックス」（注1）への関心が高まっている。</p>
+<p>（注1）デジタルデトックス：デジタル機器から離れて休むこと<br />
+週末にスマートフォンの電源をオフにし、山や海などの自然環境の中で過ごす体験ツアーが好評だという。参加者からは「通知に追われない時間がこれほど心地よいとは思わなかった」「睡眠の質が改善した」といった声が寄せられている。デジタル機器は利便性をもたらす一方で、私たちの集中力や休息の質を無意識のうちに奪っている可能性がある。意識的に通知を切る時間を持つことが、現代人にとって真の休息につながるのである。</p>
 <p><strong>52</strong> 筆者が最も伝えたいことは何か。<br />
  1. デジタル機器の利便性をさらに高める工夫が必要だ。<br />
  2. 意識的にデジタル機器から離れる時間が真の休息になる。<br />
@@ -439,10 +473,13 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <div class="qa"><label><input type="radio" name="q_56" value="1"><span>1</span></label><label><input type="radio" name="q_56" value="2"><span>2</span></label><label><input type="radio" name="q_56" value="3"><span>3</span></label><label><input type="radio" name="q_56" value="4"><span>4</span></label></div>
 <hr />
 <h2>問題11 次の(1)から(4)の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
+<p>（中略）</p>
 <h3>(1)</h3>
 <p>近年、地球環境問題への関心の高まりとともに、プラスチック容器の削減を目指す取り組みが急速に広がっている。大手食品メーカーや流通企業では、従来のプラスチックパッケージを紙製パッケージや生分解性素材へと切り替える動きが相次いでいる。</p>
 <p>脱プラスチックに向けたこの移行は、海洋プラスチックごみ問題の解決や二酸化炭素排出量の削減に直接寄与するものとして、消費者からも高い評価を得ている。特に若年層を中心に、環境に配慮した商品を選択する「エシカル消費」の傾向が強まっており、企業にとっても環境対策は単なる社会貢献にとどまらず、ブランド価値を高める重要な経営戦略となっている。</p>
-<p>しかし、プラスチック代替素材への切り替えには課題も少なくない。最大の壁はコスト面である。生分解性プラスチックや特殊加工された紙素材は、従来のプラスチックに比べて製造コストが高く、製品価格への転嫁を余儀なくされる場合がある。また、食品の保存性や耐水性・耐久性の面で、従来のプラスチックと同等の品質を維持することが難しい技術的課題も存在する。</p>
+<p>しかし、プラスチック代替素材への切り替えには課題も少なくない。最大の壁はコスト面である。生分解性プラスチックや特殊加工された紙素材は、従来のプラスチックに比べて製造コストが高く、製品価格へ転嫁せざるを得ない場合がある。また、食品の保存性や耐水性・耐久性の面で、従来のプラスチックと同等の品質を維持することが難しい技術的課題も存在する。</p>
+<p>（注1）格段：程度がはっきり大きいこと<br />
+（注2）細部：細かい部分</p>
 <p><strong>57</strong> 環境配慮型素材への移行について、本文で述べられているメリットはどれか。<br />
  1. 海洋ごみ削減に寄与し、企業のブランド価値を高める。<br />
  2. 製造コストが大幅に安くなり、製品価格を下げられる。<br />
@@ -461,6 +498,7 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <p>従来の観光は、完成した工芸品を売店で鑑賞・購入するスタイルが主流であった。これに対し、クラフトツーリズムでは、観光客が工房を訪れ、職人の指導のもとで実際に自分の手を動かして作品を作り上げる。自らの手で素材に触れ、職人の技とこだわりに直接触れる体験は、単に物を買う以上の深い感動と満足感を観光客にもたらす。</p>
 <p>この取り組みは、観光客に魅力的な体験を提供するだけでなく、産地側にも大きな恩恵をもたらしている。体験料による直接的な収入増加に加え、ものづくりの背景にあるストーリーに共感した「ファン」が定着し、リピーターや自発的なSNS発信者となってくれるのだ。</p>
 <p>さらに重要なのは、若い世代への波及効果である。体験ワークショップを通じて伝統工芸の魅力に目覚めた若者が、将来の職人を目指して産地に移住する事例も生まれ始めている。クラフトツーリズムは、単なる観光振興を超えて、伝統文化の継承と地域活性化を支える新たな原動力となりつつある。</p>
+<p>（注1）継続：途中でやめずに続けること</p>
 <p><strong>59</strong> 「クラフトツーリズム」の特徴として、本文で述べられていることはどれか。<br />
  1. 高級な伝統工芸品を割安な価格で大量に購入できること。<br />
  2. 工房の見学を一切行わず、オンラインで作品を鑑賞すること。<br />
@@ -479,6 +517,8 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <p>こうした中、現在多くの企業で定着しつつあるのが、出社とテレワークを組み合わせた「ハイブリッドワーク」という働き方である。週に2〜3日はオフィスに出社して対面でのミーティングや偶発的な議論を行い、残りの日は自宅で集中して個人作業を行うというスタイルだ。</p>
 <p>ある最新の意識調査によると、テレワーク経験者の約7割が出社と在宅の併用（ハイブリッドワーク）を希望しているという。この結果は、人々が単に「家で楽に働きたい」と考えているのではなく、対面コミュニケーションが持つ独自の価値を再評価していることを示している。画面越しでは伝わりにくいニュアンスや、廊下でのふとした雑談から生まれる革新的なアイディアは、やはりリアルな場においてこそ生まれやすい。</p>
 <p>これからの企業経営には、出社か在宅かという二者択一ではなく、両者の強みを融合させたフレキシブルな職場環境をデザインすることが求められている。</p>
+<p>（注1）前提：物事の成り立つための条件<br />
+（注2）精神論：気持ちだけで解決しようとする考え方</p>
 <p><strong>61</strong> 完全在宅勤務の課題として本文で挙げられているものはどれか。<br />
  1. 同僚との対面対話が減り、アイディア発想や連帯感に影が差すこと。<br />
  2. 通勤にかかる時間と費用が増大してしまうこと。<br />
@@ -496,6 +536,8 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <p>都市部を中心に、地域住民が主体となって街の街路樹や公園の草花を管理する「グリーンパートナー制度」を導入する自治体が増えている。これまで行政が一括して行っていた緑地の維持管理を、地域住民やボランティア団体と協力して進める取り組みである。</p>
 <p>住民にとっては、日常的に自然と触れ合い、近隣住民との交流を深めるきっかけとなる。また、行政側にとっても、管理コストを抑えつつ、きめ細かな手入れによって地域の景観や安全を保てるという利点がある。</p>
 <p>しかし、参加者の高齢化や若年層の参加率の低さが今後の課題となっている。持続可能な活動にするためには、学校や企業と連携し、より幅広い世代が気軽に関われる仕組み作りが求められている。</p>
+<p>（注1）屋上緑化：建物の屋上に植物を植えること<br />
+（注2）維持：長く保てるようにすること</p>
 <p><strong>63</strong> 「グリーンパートナー制度」の今後の課題として挙げられているものはどれか。<br />
  1. 行政が緑地の維持管理費用を全額負担できなくなること。<br />
  2. 参加者の高齢化や若年層の参加不足により持続性が危ぶまれること。<br />
@@ -527,10 +569,12 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <div class="qa"><label><input type="radio" name="q_66" value="1"><span>1</span></label><label><input type="radio" name="q_66" value="2"><span>2</span></label><label><input type="radio" name="q_66" value="3"><span>3</span></label><label><input type="radio" name="q_66" value="4"><span>4</span></label></div>
 <hr />
 <h2>問題13 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
-<p>私たちが日常生活の中でふと懐かしい記憶を思い出すとき、そこにはしばしば「匂い」が深く関係している。昔通った学校の木造校舎の匂い、夕暮れ時の家々から漂う夕飯の匂い、あるいは雨が降り始めた瞬間の土の匂い——。それらの香りを嗅いだ瞬間、一瞬にして当時の風景や感情が鮮やかによみがえってきたという経験は、だれにでもあるのではないだろうか。</p>
-<p>こうした五感の中でも、特に嗅覚が記憶や感情と直結している現象は、脳科学の分野でも証明されている。視覚や聴覚からの情報は、脳の思考や言語を司る領域を経由して認識されるのに対し、嗅覚からの情報は、本能や感情、記憶を司る「大脳辺縁系」と呼ばれる部位にダイレクトに到達する。そのため、理屈による解釈を挟むことなく、強い感情とともに記憶が呼び覚まされるのである。</p>
-<p>興味深いことに、匂いによって呼び起こされる記憶は、単なる事実の記憶にとどまらない。そのとき感じていた安心感や切なさといった「感情の質感」までもが、当時のまま再現される点に特徴がある。</p>
-<p>現代社会は視覚情報や言語情報に溢れており、私たちは日頃、目や耳からの情報ばかりに頼って生活している。しかし、たまには目を閉じ、鼻をくすぐる季節の風や植物の香りに意識を向けてみてはどうだろうか。匂いに心を澄ませる時間は、忙しい日常の中で忘れかけていた大切な記憶や、豊かな感情を取り戻すための密やかな扉となってくれるはずだ。</p>
+<p>私たちが日常生活の中でふと懐かしい記憶を思い出すとき、そこにはしばしば「匂い」が深く関係している。昔通った学校の木造校舎の匂い、夕暮れ時の家々から漂う夕飯の匂い、あるいは雨が降り始めた瞬間の土の匂い——。それらの香りを嗅いだ瞬間、一瞬にして当時の風景や感情が鮮やかによみがえってきたという経験は、だれにでもあるのではないだろうか。写真を見返しても起きないような強い感情が、ほんのわずかな香りで戻ってくることがある。</p>
+<p>こうした五感の中でも、特に嗅覚（注1）が記憶や感情と直結している現象は、脳科学の分野でも証明されている。視覚や聴覚からの情報は、脳の思考や言語を司る領域を経由して認識されるのに対し、嗅覚からの情報は、本能や感情、記憶を司る「大脳辺縁系」（注2）と呼ばれる部位にダイレクトに到達する。そのため、理屈による解釈を挟むことなく、強い感情とともに記憶が呼び覚まされるのである。</p>
+<p>（中略）</p>
+<p>興味深いことに、匂いによって呼び起こされる記憶は、単なる事実の記憶にとどまらない。そのとき感じていた安心感や切なさといった「感情の質感」（注3）までもが、当時のまま再現される点に特徴がある。だからこそ、匂いはときどき予想外の強さで人の心を揺さぶる。うれしい記憶ばかりではなく、忘れたかった出来事まで連れてくることもある。</p>
+<p>現代社会は視覚情報や言語情報に溢れており、私たちは日頃、目や耳からの情報ばかりに頼って生活している。画面の明るさや通知音に注意を奪われ、季節の変化を鼻で感じる余裕を失いがちだ。しかし、たまには目を閉じ、鼻をくすぐる季節の風や植物の香りに意識を向けてみてはどうだろうか。匂いに心を澄ませる時間は、忙しい日常の中で忘れかけていた大切な記憶や、豊かな感情を取り戻すための密やかな扉（注4）となってくれるはずだ。便利さを追うだけでなく、感覚のバランス（注5）を取り戻すことが、心の健康にもつながると私は思う。</p>
+<p>（注1）嗅覚：においを感じる働き（注2）大脳辺縁系：感情や記憶に関わる脳の部位（注3）質感：ここでは、感じ方の細かい様子（注4）扉：ここでは、思い出へつながるきっかけ（注5）バランス：偏りすぎない釣り合い</p>
 <p><strong>67</strong> 嗅覚による記憶の呼び起され方について、本文で説明されている特徴はどれか。<br />
  1. 思考や言語の領域を経由せず、大脳辺縁系に直接届くため感情とともに鮮やかによみがえる。<br />
  2. 視覚や聴覚からの情報よりも解釈に時間がかかり、徐々に思い出される。<br />
@@ -1141,6 +1185,139 @@ function chip(label, d){
   return '<span class="chip ' + cls + '"><i>' + label + '</i>' + body + '</span>';
 }
 
+function _isQa(el){ return !!(el && el.classList && el.classList.contains('qa')); }
+function _isBreak(el){ return !!(el && (/^H[12]$/.test(el.tagName) || el.tagName === 'HR')); }
+function _isUnit(el){ return !!(el && el.tagName === 'H3'); }
+function _isOptLine(el){
+  return !!(el && el.tagName === 'P' && /^\s*[1-4][.．]/.test(el.textContent || ''));
+}
+function _looksLikeStem(el){
+  if (!el || el.tagName !== 'P') return false;
+  const s = el.querySelector('strong');
+  if (!s) return false;
+  const t = (s.textContent || '').trim();
+  return /^(?:\d{1,2}\b|例|[1-5]番|質問\s*[12])/.test(t);
+}
+
+/** Clone the exam nodes for one scored item (stem + shared passage / 問題 heading).
+ *  Contiguous slices are wrong: walking back to h2 would drag in every earlier
+ *  item in that 問題. Collect stem nodes, then prepend passage context while
+ *  skipping other questions' stems/.qa blocks. */
+function extractQuestionHtml(key){
+  const inp = document.querySelector(
+    '#screen-exam input[name="q_' + CSS.escape(key) + '"]');
+  if (!inp) return '';
+  const qa = inp.closest('.qa');
+  if (!qa || !qa.parentElement) return '';
+  const kids = Array.from(qa.parentElement.children);
+  const qi = kids.indexOf(qa);
+  if (qi < 0) return '';
+
+  const nodes = [];
+  let i = qi - 1;
+  while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))){
+    nodes.unshift(kids[i]);
+    i--;
+  }
+  while (i >= 0){
+    const n = kids[i];
+    if (_isQa(n)){
+      i--;
+      while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))) i--;
+      continue;
+    }
+    if (n.tagName === 'HR') break;
+    if (n.tagName === 'H1' && n.classList.contains('section-title')) break;
+    if (n.tagName === 'H1' || n.tagName === 'H2'){
+      nodes.unshift(n);
+      break;
+    }
+    if (_isUnit(n)){
+      nodes.unshift(n);
+      break;
+    }
+    nodes.unshift(n);
+    i--;
+  }
+
+  const wrap = document.createElement('div');
+  nodes.forEach(n => wrap.appendChild(n.cloneNode(true)));
+  wrap.querySelectorAll('input, .qa').forEach(el => el.remove());
+  return wrap.innerHTML;
+}
+
+function detailMetaHtml(key, d){
+  const cls = d.user === null ? 'na' : (d.is_correct ? 'ok' : 'ng');
+  const verdict = d.user === null ? '未解答'
+                : (d.is_correct ? '正解' : '不正解');
+  const user = d.user === null ? '—' : String(d.user);
+  const correct = d.correct === null || d.correct === undefined ? '—' : String(d.correct);
+  return '<div class="rs-detail-meta">'
+    + '<span><b>設問 ' + key + '</b></span>'
+    + '<span class="tag ' + cls + '">' + verdict + '</span>'
+    + '<span>あなたの答え: <b>' + user + '</b></span>'
+    + '<span>正解: <b>' + correct + '</b></span>'
+    + '</div>';
+}
+
+function itemDetailHtml(key, d){
+  let body = extractQuestionHtml(key);
+  if (!body){
+    body = '<p>（この設問の問題文を画面から取得できませんでした。）</p>';
+  }
+  let note = '';
+  if (!/^\d+$/.test(key)){
+    note = '<p class="rs-detail-note">聴解の音声は「解答に戻ってやり直す」から'
+      + '受験画面のプレイヤーで確認できます。</p>';
+  }
+  return '<div class="rs-item" id="rs-item-' + key + '">'
+    + detailMetaHtml(key, d)
+    + '<div class="rs-detail-body">' + body + '</div>' + note
+    + '</div>';
+}
+
+function buildAllDetailsHtml(res){
+  const L = [];
+  L.push('<h3>言語知識・読解 — 設問詳細</h3>');
+  for (let q = 1; q <= 71; q++){
+    const k = String(q);
+    L.push(itemDetailHtml(k, res.detail_gengo[k] || {}));
+  }
+  L.push('<h3>聴解 — 設問詳細</h3>');
+  for (const k of CHOUKAI_KEYS){
+    L.push(itemDetailHtml(k, res.detail_choukai[k] || {}));
+  }
+  return L.join('');
+}
+
+function setCheckExpanded(on, res){
+  const panel = document.getElementById('rs-all-detail');
+  const btn = document.getElementById('rs-expand-btn');
+  if (!panel || !btn) return;
+  if (on){
+    if (!panel.dataset.built){
+      panel.innerHTML = buildAllDetailsHtml(res);
+      panel.dataset.built = '1';
+    }
+    panel.hidden = false;
+    btn.textContent = '詳細を折りたたむ';
+    btn.setAttribute('aria-expanded', 'true');
+  } else {
+    panel.hidden = true;
+    btn.textContent = 'すべての設問詳細を展開';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+function bindResultExpand(res){
+  const btn = document.getElementById('rs-expand-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    setCheckExpanded(!open, res);
+  });
+}
+
 function resultHtml(res, msg, saved){
   const s = res.summary, cls = s.passed ? 'pass' : 'fail';
   const L = [];
@@ -1209,11 +1386,17 @@ function resultHtml(res, msg, saved){
   }
 
   L.push('<h2>4. 全設問解答チェック表</h2>');
+  L.push('<div class="rs-check-tools">'
+    + '<button type="button" class="ui-btn" id="rs-expand-btn" aria-expanded="false">'
+    + 'すべての設問詳細を展開</button>'
+    + '<p class="rs-hint">展開すると全101問の問題文・選択肢・正誤が一覧で表示されます。</p>'
+    + '</div>');
   L.push('<h3>言語知識・読解 (1 〜 71)</h3><div class="rs-grid">');
   for (let q = 1; q <= 71; q++){ L.push(chip(String(q), res.detail_gengo[String(q)])); }
   L.push('</div><h3>聴解</h3><div class="rs-grid">');
   for (const k of CHOUKAI_KEYS){ L.push(chip(k, res.detail_choukai[k])); }
   L.push('</div>');
+  L.push('<div id="rs-all-detail" class="rs-all-detail" hidden></div>');
 
   L.push('<div class="rs-nav">'
     + '<button class="ui-btn primary" onclick="goList()">← テスト一覧へ戻る</button>'
@@ -1244,6 +1427,7 @@ function showScreen(name){
 
 function showResult(res, msg, saved){
   document.getElementById('screen-result').innerHTML = resultHtml(res, msg, saved);
+  bindResultExpand(res);
   showScreen('result');
 }
 
