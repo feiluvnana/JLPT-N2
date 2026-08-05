@@ -166,7 +166,7 @@ Procedure for every 問題7–9 key (and spot-check 問題1–6 / 即時応答):
 2. Ask both sides, not one: *"Would Shin Kanzen N1 / a Tettei-N1 list claim this?"* AND *"Would this appear as a headed item in an N3 (or easier) book?"* If either is yes, the item fails — rewrite, do not argue "examinees should know it anyway".
 3. Cross-check the hard side against `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-*.pdf` TOC / inventory (rasterize when there is no text layer — see `reference-book-reading`). Forms absent from N2 Shin Kanzen and present in N1 lists are TOO_HARD.
 4. Distractors may show off-level forms **only when they are morphologically or collocationally impossible in the stem** so an N2 examinee can eliminate them without knowing the N1/N3 item. Prefer N2-band distractors.
-5. Passiveive N1 wording inside 読解/聴解 prose is allowed when glossed (`（注N）`) or simplified; it must not be what the question keys on.
+5. Passive exposure to N1 wording inside 読解/聴解 prose is allowed when glossed (`（注N）`) or simplified; it must not be what the question keys on.
 
 `make check` enforces the string-decidable half via
 `references/level_band_grammar.txt` (TOO_HARD / TOO_EASY / ALLOW). This step
@@ -280,7 +280,7 @@ the previous tests' 問題12 specifically (three papers in a row argued 働き�
 Verify `logs/test_spec.json` against the authored paper end to end:
 
 1. **Target Item Match Audit (問題1–8 & 聴解 問題4):**
-   - Verify every item tested in `漢字読み` (問1), `表記` (問2), `語形成` (問3), `文脈指示語` (問4), `言い換え` (問5), `用法` (問6), `文法問題7` (問7), `文法問題8` (問8), and `即時応答` (聴解 問4) matches the EXACT target item specified in `test_spec.json["items"]`.
+   - Verify every item tested in `漢字読み` (問1), `表記` (問2), `語形成` (問3), `文脈規定` (問4), `言い換え類義` (問5), `用法` (問6), `文法問題7` (問7), `文法問題8` (問8), and `即時応答` (聴解 問4) matches the EXACT target item specified in `test_spec.json["items"]`.
    - Fail any paper where an author substituted a different target item during drafting — unrecorded substitutions corrupt the rotation ledger.
 2. **Answer Positions Compliance Audit:**
    - Verify all 101 answer key positions (71 Gengo + 30 Choukai) match `test_spec.json["answer_positions"]` exactly.

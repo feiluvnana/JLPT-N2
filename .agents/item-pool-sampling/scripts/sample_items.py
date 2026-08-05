@@ -43,7 +43,10 @@ DRAW = {
     "grammar_p7": 12,
     "grammar_p8": 5,
     "quick_response": 11,
-    "listening_scenarios": 19,   # 5+6+5 items + 例×3 + 統合2 (author maps them)
+    # 5+6+5 scored items + 例×3 + 統合2 = 21. This was 19 (and 20 before that):
+    # the 統合 term was in the comment but never in the value, so 問題5's two
+    # items got no sampled scenario and the author had to invent one.
+    "listening_scenarios": 21,   # 5+6+5 items + 例×3 + 統合2 (author maps them)
     "reading_topics": 12,        # 5 short + 4 medium + 1 A/B + 1 long + 1 info
 }
 

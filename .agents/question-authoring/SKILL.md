@@ -19,8 +19,8 @@ Draft an item, then ask **both** sides before keeping it:
 2. **"Would Shin Kanzen N1 / a standard N1 list claim this as an N1 form?"** If yes, and it is **not** in Shin Kanzen N2's inventory, discard — too hard.
 
 The tested point (kanji, word, grammar, idiom) must be something an N2 mock
-is allowed to key on. Passiveive harder wording in a 読解 passage is fine when
-glossed with `（注N）`; it must not be the answer discrimination. Off-level
+is allowed to key on. Passive exposure to harder wording in a 読解 passage is
+fine when glossed with `（注N）`; it must not be the answer discrimination. Off-level
 KEYS are an automatic QA fail — see `exam-qa-review` §2.5 and
 `exam-qa-review/references/level_band_grammar.txt`.
 
@@ -34,7 +34,7 @@ do not swap them for memory picks.
 ## Benchmark against Official Exams (`refs/JLPT/`)
 
 Maintain high consistency with the 5 recent official exams (07/2023, 12/2023, 12/2024, 07/2025, 12/2025):
-- **Dokkai Character Counts**: Short (~200 chars), Medium (~500 chars), A/B combined (~600 chars), Long (~900 chars), Flyer (~700 chars; 1 table + 2 matching scenarios). These 目安 mirror the table in `jlpt-exam-structure`.
+- **Dokkai Character Counts**: Short (~200–280 chars), Medium (~400–550 chars), A/B combined (~600 chars), Long (~900–1100 chars), Flyer (~700–900 chars; 1 table + 2 matching scenarios). These 目安 mirror the table in `jlpt-exam-structure` and the per-section bands below — keep the three copies in step.
 - **Grammar stem lengths (問題7–9) — measured on all 5 papers in `refs/JLPT/`**:
   - **問題7**: official stems average **~43 JP chars** (median ~41; interquartile ~33–54). A paper whose 12 stems average under ~35, or that ships many under ~30, reads as textbook-drill short, not exam-length. Target: **each stem ≥30 JP chars**, **paper average ≥40**, with most items in the **35–55** band. Build length with scene-setting (職場・電話・掲示・インタビュー), a subordinate clause, or a short dialogue lead-in — not by padding the tested form. Official items often open with `(会社で)` / `(電話で)` / a named role before the blank.
   - **問題8 (文の組み立て) — length is mostly in the OPTIONS**: measured on all 5
@@ -441,8 +441,6 @@ you. Run it before calling any authoring work done.
   collocation or domain, never word salad. 「整備がおろそかに完璧だった」 is not
   a distractor, it is a bug: nobody can be tempted by it, so the item tests
   nothing.
-- **One grammar point, one item.** Do not test 〜にほかならない in 問題7 and
-  again as a 問題9 blank. Check the 問題7/8/9 sets against each other.
 - **Explanations must quote the real text.** The 解説 cell for a 読解 or 聴解
   item has to quote the passage or script line that decides it — copy-paste,
   do not paraphrase from memory. Test 2's 聴解 key quoted four lines of dialogue
@@ -509,7 +507,7 @@ Must contain two main parts:
   - `## 問題1 課題理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番 quoting deciding phrase.
   - `## 問題2 ポイント理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–6番.
   - `## 問題3 概要理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番.
-  - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–12番 detailing honorifics/idiom points.
+  - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–11番 detailing honorifics/idiom points. **Eleven**, not twelve — 12 is the 2009 guidebook's 目安; every paper in `refs/JLPT/` speaks 11 items (measurable in the official audio as 11 × 8 s answer pauses), and `expected_choukai` / `answer_positions` both require 11.
   - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **3 rows** — 問題5 has 2 items but 3 answers. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2-1`, `問5-2-2`; it accepts either label style — `**1番**` / `**2番 質問1**` / `**2番 質問2**` (preferred) or `1` / `2-質問1` / `2-質問2`. The 2番 rows MUST carry `質問1`/`質問2`; the 1番 row must NOT.
   - `## 得点の目安`: Score range guidelines.
 

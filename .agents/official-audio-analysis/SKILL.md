@@ -53,12 +53,31 @@ the constants in `choukai-mp3-generation` come from:
 | Region | Signature | Section |
 |---|---|---|
 | 36.4–37.0 min | 3 × 3.0 s gaps → 4 spoken choices → 8.57 s answer pause | 問題3 |
-| 38.8–44.8 min | internal gaps only 1.0–2.0 s (nothing ≥2.5 s) → 8.19 s answer pause, 13 items over ~8 min | 問題4 |
-| 47.4–51.2 min | 3 × 3.0 s gaps → 8.5 s; then 10 s + 12.3 s at the very end | 問題5 (1番/2番, then 3番's 質問1/質問2) |
+| 38.7–44.7 min | internal gaps only 1.0–2.0 s (nothing ≥2.5 s) → 8.19 s answer pause, **11 items** over ~6 min | 問題4 |
+| 47.3–51.4 min | 3 × 3.0 s gaps → 8.5 s; then 10.0 s + 12.3 s at the very end | 問題5 — **1番** (spoken choices), then **2番's** 質問1 / 質問2 |
 
 **The 問題4 row is the load-bearing one**: its three choices are read
 continuously, so the 3 s spoken-choice gap belongs to 問題3/問題5 ONLY. Whole-file
 histogram for cross-checking a full N2: 7 × 20 s, 12 × ~12 s, 17 × ~8 s, 42 × ~3 s.
+
+**The histogram is also the cheapest proof of the item counts** (re-measured on
+the Dec 2025 file, total 51.4 min), because official audio gives an answer pause
+after **scored items only** — never after an 例, which is followed straight by
+the 「最もよいものは◯番です…」 confirmation:
+
+- 12 × 12 s = 問題1 (5) + 問題2 (6) + the final 質問2 (1)
+- 7 × 20 s = 問題2's option-reading time, 例 + 6 items
+- 17 × 8 s = 問題3 (5) + 問題4 (**11**) + 問題5 1番 (1)
+- so the paper is 5 / 6 / 5 / 11 / 3 = 30 answers, exactly the table in
+  `jlpt-exam-structure` — and **not** the 2009 guidebook's 目安 (12 即時応答,
+  4 統合理解). If a future measurement disagrees with those counts, re-measure
+  before believing it; two earlier revisions of this file carried the
+  guidebook's numbers as if they had been measured.
+
+Note this is where our build deliberately deviates: `make_choukai_mp3.py`
+appends `ANSWER_PAUSE` after **every** item block, 例 included, so a generated
+MP3 has 13 × 12 s / 18 × 8 s where the official file has 12 / 17. See the
+dry-run table in `choukai-mp3-generation`.
 
 ## Step 4 — Short gaps (dialogue pacing)
 
@@ -78,10 +97,15 @@ speech tempo.
 Measure rate in **morae/minute**, not characters/minute — kanji-heavy text
 compresses multiple morae per character, so a raw character count
 understates true speech density. Natural adult Japanese conversation runs
-**~300–400+ morae/min**; N1/N2 listening audio is deliberately natural-speed
-(unlike N4/N5, which examiners slow down for beginners), so anything
-noticeably under that band on DIALOGUE lines (not narrator instructions) is a
-real defect, not a stylistic choice.
+**~300–400+ morae/min**.
+
+**Mind the level band: N2 is not N1.** The official 認定の目安 says N1 listens
+to 「**自然な**スピードの、まとまりのある会話やニュース、講義」 while N2 listens
+to 「**自然に近い**スピードの、まとまりのある会話やニュース」 (N3: 「やや自然に
+近い」). So the target for N2 dialogue is at or a little below natural — not the
+top of the natural band. Anything *noticeably* under it is still a real defect
+(N4/N5 slow-for-beginners pacing makes the exam easier than it is), but do not
+push rates upward to reach an N1 figure.
 
 Verified for this repo's current voices (synthesize a representative line at
 the exact production voice/rate, measure duration, count morae by hand):
@@ -112,7 +136,7 @@ A pacing table in this exact shape (feed to choukai-mp3-generation):
 | answer pause 問3/問4 | 8 s |
 | answer pause 問5 (each item; the 質問1 → 質問2 gap is also 10 s) | 10 s |
 | loudness target | −17 LUFS |
-| dialogue speech rate (character voices) | ~300–400+ morae/min (natural; verified ~378) |
+| dialogue speech rate (character voices) | ~300–400 morae/min; N2's 認定の目安 is 自然に**近い** speed, so sit at or just below natural (verified ~378 — already at the top of the band; do not raise) |
 | narrator/announcer speech rate | more measured than dialogue is fine (verified ~295); never let it drift onto scored content |
 
 Note: Step 3 measures 問題5's 1番/2番 answer pause at 8.5 s; the table adopts

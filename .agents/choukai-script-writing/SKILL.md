@@ -132,8 +132,16 @@ in `聴解.md` (the script adds only 「では、練習しましょう。」 aft
 drifted in three places — 「どのような内容か」 for 「どんな内容か」,
 「文章がやや長くなります」 for 「長めの話を聞きます」, and a 問題4 instruction
 missing 「まず…それから」 — so the examinee heard different wording than they
-read. Take the canonical text from jlpt-exam-structure, paste it into both
-files, and let `make check` confirm they match.
+read. Take the canonical text from **`jlpt-exam-structure` §"問題N instruction
+lines"** (transcribed from `refs/JLPT/`), paste it into both files, and let
+`make check` confirm they match.
+
+`make check` compares the booklet against the SCRIPT, not against the official
+wording, so a paper where both files drift the same way passes green. The tests
+on disk do drift — 問題2 says 「問題用紙の**せんたくしを読んで**ください」 where
+official says 「問題用紙を見てください」, and every 問題5 drops
+「**問題用紙に**メモをとっても…」 — so copy from that section, not from a
+previous test.
 
 ## The 例 must be answerable, and its announced number must be the answer
 
@@ -210,25 +218,27 @@ gender over two same-gender voices separated only by a few percent of rate
 
 A full N2 script is **exactly 33 item blocks** (`例。`/`N番。`) in the per-問題
 counts below, plus the 問題 headers, instructions, announcer lines and 例
-confirmations. **The TOTAL block count is not fixed** — test 1 is 48 blocks and
-the first, since-removed test 4 (removed in 9a794d5, last at b9b90de; the
-current tests/4 is 113) was 56, all valid; the difference is
+confirmations. **The TOTAL block count is not fixed** — the scripts on disk run
+43–46 blocks (tests 1–4: 46, 44, 43, 43; `imported-n2-2025-07`: 46) and the
+first, since-removed test 4 (removed in 9a794d5, last at b9b90de) was 56, all
+valid; the difference is
 only how instruction and announcer text is split. So do not treat any total as a target: `validate_script()`
 enforces the 33 item blocks and their distribution and merely *prints* the
 total (`script OK: N blocks, …`).
 
 Missing pieces are otherwise SILENT: the MP3 still builds and just quietly
 stops being an official-format exam. Tests 2 and 3 shipped with no 例 at all
-for 問題3/問題4 and no 問題5 announcer line, and nothing caught it. All of the
-following are now enforced:
+for 問題3/問題4, and nothing caught it. `validate_script()` enforces every row
+below **except the two marked (eye)** — those cannot be decided by string
+matching, so they are yours to check:
 
 | Element | Rule |
 |---|---|
 | Opening | 「これから、N2の聴解試験を始めます…」 must be present |
-| 問題1〜5 headers | `問題N。` as its own block, all five, in order |
+| 問題1〜5 headers | `問題N。` as its own block, all five. **(eye)** for own-block-ness and order — the code only tests that the substring 「問題N。」 occurs somewhere |
 | 問題1〜4 practice | each: instruction ending 「では、練習しましょう。」 → ONE `例。` item → ONE full confirmation line → items |
 | 問題5 practice | NONE. Instruction must contain 「この問題には練習はありません。」 and there must be no `例。` block |
-| 問題5 announcer | 「1番、2番。問題用紙に何も印刷されていません。…では、始めます。」 before 1番 (2番 options printed only) |
+| 問題5 1番 lead-in | **(eye)** Its own block between the instruction and `1番。`: 「問題用紙に何も印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。では、始めます。」 — this covers **1番 only**. 2番's options are printed, so it gets no spoken lead-in; its 「まず話を聞いてください。それから、二つの質問を聞いて、それぞれ問題用紙の1から4の中から…」 is booklet text. Do **not** write a combined 「1番、2番。問題用紙に何も印刷されていません」 line: it would tell the examinee nothing is printed for 2番, where the options are printed (`jlpt-exam-structure`, 「Printed in booklet」 column), and no official paper has it |
 | Item counts (incl. 例) | 問題1=6, 問題2=7, 問題3=6, 問題4=12, 問題5=2 |
 | Closing | file must END with 「これで、聴解試験を終わります。」 |
 | Answer reveals | 例 confirmations only — see the section above |

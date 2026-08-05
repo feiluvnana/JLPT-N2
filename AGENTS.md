@@ -142,6 +142,7 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 | Command | Runs |
 | ------------------------- | -------------------------------------------------- |
 | `make check`              | `tools/check_consistency.py` — read-only consistency gate |
+| `make check-tests`        | the same gate with `--tests` (per-test contracts only) |
 | `make sample`             | `sample_items.py --seed $(SEED)` (default `SEED=20260803`) |
 | `make classify ITEM=…`    | `classify_level.py` — optional `CATEGORY=`, `STAGE=1` |
 | `make promote-adjunct`    | `promote_adjunct.py` — approved staging → `pools.json` |
@@ -154,6 +155,12 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 | `make sheet <test_id>`    | `build_interactive.py` → `解答.html`               |
 | `make serve`              | `serve_sheet.py` — ONE server for every test (takes no test id) |
 | `make grade <test_id>`    | `grade_answers.py --test-dir tests/<test_id>`      |
+| `make init-import SLUG=…` | `init_imported_test.py --slug <slug>` — **slug only**; pass `--booklet/--script/--audio` with the raw command below |
+| `make extract-pdf PDF=… OUT=…` | `extract_pdf_text.py` |
+
+Every per-test target also has a `-<id>` form (`make sheet-1`, `make mp3-2`),
+which is what to use when the target is not the first goal on the command line —
+the positional form only works there.
 
 `make sample` reuses the same default seed on every run and has no way to pass
 `--test-id`. When generating a new test, either override the seed
@@ -272,11 +279,13 @@ side keeps ≥40% of every blended surface. Both broke in test 4 because
 `merge_seeds.py` had been run twice over its own output.
 
 Some rules cannot be decided by matching, so the gate **warns** instead of
-failing — currently: a 解説 that quotes text found in neither the passage nor
-the script. Warnings are part of the output you must read (§0.5): resolve each
-one, or state in your final report why it is a false positive. That warning is
-what surfaced test 4's five invented 聴解 quotes, including a keyed option the
-audio never speaks.
+failing. There are six warn classes: a 解説 that quotes text found in neither
+the passage nor the script; too few `（注N）` glosses; notes glossing basic
+N3–N5/standard-N2 words; no `（中略）` anywhere; a 問題13 under ~850 JP chars; and
+a 問題7 set with no dialogue/setting-label stems. Warnings are part of the output
+you must read (§0.5): resolve each one, or state in your final report why it is a
+false positive. The quote warning is what surfaced test 4's five invented 聴解
+quotes, including a keyed option the audio never speaks.
 
 Finally it checks the **rotation inputs** — the two knobs that decide whether a
 new test is actually new. Pool items rotate through the ledger, but the web
@@ -286,6 +295,12 @@ every `"origin": "web"` entry in the spec must trace back to a seed still
 present in `logs/seeds.json`. Test 3 shipped as a re-skin of test 2 — same web
 topics, several in the same slots — because it reused test 2's seed against
 test 2's untouched harvest, and no other gate could see it.
+
+For a shared seed, an **unrecorded** `harvest_sha` now fails too: `None` is not
+evidence of a different harvest. That hole is why tests 2 and 3 (both seed
+20260804) passed this check for as long as they did — test 2 predates the stamp.
+Fix it by re-harvesting and re-running `merge_seeds.py` for the affected test,
+never by hand-writing a sha.
 
 It also checks **adjunct provenance**: `logs/adjunct_staging.json` exists,
 OpenJLPT slices are on disk, and any `"origin": "adjunct"` row in

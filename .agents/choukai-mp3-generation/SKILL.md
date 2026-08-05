@@ -104,8 +104,12 @@ and update ONLY these constants.
 - **Every speaker label must be in `SPEAKER_MAP`.** An unmapped label does not
   raise — `voice_for()` falls back to the narrator, so the line is read by the
   announcer instead of the character. The validator now catches this.
-- Item detection regex is `^(例。|\d+番。)` — WITH the 。 so the 問題5 header
-  line 「1番、2番。…」 is not mistaken for a question item.
+- Item detection regex is `^(例。|\d+番。)` — WITH the 。, so a line that merely
+  opens with a number and a 読点 (a spoken choice 「1、…」, or an enumerating
+  lead-in like 「1番、2番。…」) is not mistaken for a question item. Note no
+  official N2 paper carries that enumerating 問題5 line — 1番 gets its own
+  lead-in and 2番's options are printed (see `choukai-script-writing`); the
+  guard is defensive.
 
 ## Dry-run before synthesis (no network needed)
 
@@ -120,11 +124,23 @@ follow directly from `ANSWER_PAUSE` above and the 33 item blocks
 | 10 s answer | 2 | 問題5 |
 | 20 s option-reading | 7 | 問題2 only (例+6) |
 
-The 33 item blocks are fixed; the TOTAL block count is not (48 in test 1; the
-first, since-removed test 4 — removed in 9a794d5, last at b9b90de — was 56;
-the current test 4 is 113 — instruction splitting differs), so never treat it
-as a target.
+**These counts describe OUR build, not the official file.** `pause_after()`
+appends an answer pause after every item block, 例 included, while the official
+recording follows an 例 straight into the 「最もよいものは◯番です…」
+confirmation. So the official Dec 2025 audio measures 12 × 12 s and 17 × 8 s
+where the table above says 13 and 18 (see `official-audio-analysis`). `make check`
+asserts the table against `EXPECTED_ITEMS`/`ANSWER_PAUSE`, so do not "correct"
+it toward the official histogram — change `pause_after()` first if the
+deviation is ever worth closing.
+
+The 33 item blocks are fixed; the TOTAL block count is not — the scripts on disk
+run **43–46 blocks** (tests 1–4: 46, 44, 43, 43; `imported-n2-2025-07`: 46), and
+the first, since-removed test 4 (removed in 9a794d5, last at b9b90de) was 56 —
+all valid; the difference is only how instruction and announcer text is split.
+So do not treat any total as a target: `validate_script()` enforces the 33 item
+blocks and their distribution and merely *prints* the total
+(`script OK: N blocks, …`).
 Estimated length ≈ 45 min with TTS at these rates — the four built tests
-measure 41.6–45.7 min per their 聴解_チャプター.json (official ≈ 51 min;
+measure **41.1–46.7 min** per their 聴解_チャプター.json (official ≈ 51.4 min;
 human actors speak slower, and the remaining gap is acceptable).
 

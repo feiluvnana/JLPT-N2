@@ -321,8 +321,15 @@ def main():
         print(f"  warning: only {n_dom} distinct source domain(s) — web ratios "
               f"were scaled down; harvest from more domains for a fuller blend")
     if supply < 18:
-        print(f"  note: {supply} seeds supplied; ~22 across >=6 domains funds "
-              f"all surfaces at full target ratios")
+        print(f"  note: {supply} seeds supplied; harvest 18-25")
+    # Domains, not seed count, cap the blend: MAX_PER_DOMAIN is shared across
+    # every topic-level surface, so N domains fund at most 2N picks. 6 domains
+    # covers the 30% floor (12 picks) and no more; the default ratios want 16.
+    if n_dom < 8:
+        print(f"  note: {n_dom} domain(s) => at most {2 * n_dom} topic-level "
+              f"web picks. 6 domains funds only the 30% floor (12); the default "
+              f"0.5/0.4 ratios need 16 picks (8 domains), full 60% needs 22 "
+              f"(11). More seeds from the SAME domains cannot raise the share.")
 
 
 if __name__ == "__main__":

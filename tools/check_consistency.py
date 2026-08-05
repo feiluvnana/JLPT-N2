@@ -745,16 +745,30 @@ def check_rotation_inputs():
                 by_seed.setdefault(h["seed"], []).append(h)
         # Sharing a seed is only safe when the harvest differs: the blend is a
         # pure function of (seed, seeds.json). merge_seeds stamps harvest_sha,
-        # so two entries that agree on the seed must disagree on the harvest.
+        # so two entries that agree on the seed must EACH carry a harvest_sha
+        # and disagree on it.
+        #
+        # An unrecorded harvest is a failure, not an excuse. This check was
+        # written for tests 2 and 3 (both seed 20260804) and passed them
+        # anyway, because test 2 predates the stamp: `None` counted as "a
+        # different harvest", so the re-skin the rule exists to catch stayed
+        # green. Treat a missing sha as unknown-and-therefore-unsafe; fix it by
+        # re-harvesting and re-running merge_seeds for that test, not by
+        # hand-writing a sha.
         clash = []
         for s, entries in by_seed.items():
             if len(entries) < 2:
                 continue
+            ids = [str(e.get("test_id")) for e in entries]
             shas = [e.get("harvest_sha") for e in entries]
-            if len(set(shas)) < len(shas):
-                ids = [str(e.get("test_id")) for e in entries]
+            unrecorded = [i for i, sha in zip(ids, shas) if not sha]
+            if unrecorded:
+                clash.append(f"seed {s} shared by tests {ids}, and "
+                             f"{unrecorded} record no harvest_sha "
+                             f"(unrecorded ≠ different)")
+            elif len(set(shas)) < len(shas):
                 clash.append(f"seed {s} shared by tests {ids} with the same "
-                             f"harvest ({shas[0] or 'unrecorded'})")
+                             f"harvest ({shas[0]})")
         check("no two tests share both a --seed and a web harvest", not clash,
               "; ".join(clash) + " — merge_seeds replays the previous blend "
               "slot for slot; re-harvest logs/seeds.json or pick a new seed")

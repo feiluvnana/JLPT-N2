@@ -5,7 +5,7 @@ description: Grade user answers for JLPT mock exams (primarily N2), calculate st
 
 # Exam Answer Grading (採点・弱点分析)
 
-This skill automates the grading of examinee responses for JLPT mock tests, calculates official-style standardized scaled scores, evaluates pass/fail status against JLPT thresholds, identifies weak problem types, and writes the structured diagnostic document `採点結果.json`.
+This skill automates the grading of examinee responses for JLPT mock tests, calculates 0–180 scaled scores in the official shape (proportional per section — **not** equated like the real exam, see §5), evaluates pass/fail status against the published JLPT thresholds, identifies weak problem types, and writes the structured diagnostic document `採点結果.json`.
 
 ---
 
@@ -24,7 +24,7 @@ When a user submits their answers or asks to grade a completed JLPT test:
    - **Reading (読解)**: 20 questions max -> scaled to 60.
    - **Listening (聴解)**: 30 answers max (問題5 2番 yields two) -> scaled to 60.
    - **Total Score**: 180 points max.
-4. **Pass / Fail Criteria Evaluation (JLPT N2 Standard)**:
+4. **Pass / Fail Criteria Evaluation** (published JLPT N2 criteria — jlpt.jp 「合否の判定」; the 2009 概要版 predates them and gives no numbers):
    - **Overall Total**: $\ge 90 / 180$ points.
    - **Sectional Cutoffs (基準点)**: $\ge 19 / 60$ points in **ALL THREE** individual sections:
      - Language Knowledge $\ge 19$
@@ -166,10 +166,18 @@ Its 大問 ratings are exactly the labels both graders agree on: `優 (Strong)`
 4cad944 removed emoji from the report symbols and both graders must stay in
 lockstep.
 
+**These bands are a repo-internal study diagnostic, not the official 参考情報.**
+The real 合否結果通知書 reports A (正答率67%以上) / B (34%以上67%未満) /
+C (34%未満), only for 文字・語彙 and 文法, and states it is 合否判定の対象外. Ours
+rates every 大問 on 80/60 thresholds because the point is "what to revise next",
+not to reproduce the notice. Keep the distinction when wording the report, and if
+you ever align the two, change both graders plus the `make check` parity test
+together.
+
 ---
 
 ## 5. Invariants & Rules
 
-- **Strict Scale Calculation**: Raw scores must be converted proportionally to the 60-point scale per section to reflect real JLPT results accurately.
+- **Scale Calculation (an approximation, and say so)**: raw section counts are converted **proportionally** to the 0–60 scale. The real exam does not do this — it equates scores across sittings (「得点等化」, so a score is comparable between papers of different difficulty), which needs item statistics we do not have. Proportional scaling is the honest stand-in for a mock; do not describe its output as matching a real JLPT score, and do not "improve" it with invented difficulty weights.
 - **Sectional Cutoff Rules**: Always enforce the 19-point sectional cutoff rule. Even if the total is 120/180, if Reading is 18/60, the result is `不合格`.
 - **Reference Integrity**: Advice for weak areas must map directly to the corresponding _Shin Kanzen Masuta N2_ study area (Vocab/Kanji/Grammar/Reading/Listening).

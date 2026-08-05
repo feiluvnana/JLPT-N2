@@ -32,6 +32,26 @@ pdffonts refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Bunpou.pdf  # EMPTY table = scann
 
 If `pdffonts` shows no fonts, `pdftotext` returns empty results. For scanned books and exam scans, use the visual/rasterize strategy below.
 
+**All of the above needs poppler** (`pdfinfo`/`pdffonts`/`pdftotext`/`pdftoppm`),
+and it is NOT part of this repo's documented environment — on a machine without
+it every command in this section fails, and the harness cannot rasterize PDF
+pages either. Check with `which pdfinfo`; install via `brew install poppler` /
+`apt-get install poppler-utils`. Without poppler you still have a text-layer
+path, which is enough for the booklet PDFs in `refs/JLPT/` (they have one):
+
+```bash
+python3 .agents/external-test-import/scripts/extract_pdf_text.py \
+  "refs/JLPT/16. N2 07-2025.pdf" --pages 1-8 -o /tmp/booklet.txt
+python3 -c "import sys;from pdfminer.high_level import extract_text;print(extract_text(sys.argv[1])[:2000])" \
+  "refs/JLPT/16. N2 07-2025.pdf"
+```
+
+A third diagnosis the two commands above cannot make: a PDF with a real text
+layer whose font is CID-keyed with no ToUnicode map extracts as **non-empty
+nonsense with the digits silently dropped** — so a 問題数 table reads as labels
+with no numbers. `extract_pdf_text.py` detects that and falls back to pdfminer;
+see `external-test-import` step 2. Never calibrate off a garbled extract.
+
 ## Step 2 — Textbook TOC-first calibration
 
 The tables of contents in `refs/Shinkanzen/` ARE the official level inventory. Rasterize TOC pages to extract target items:

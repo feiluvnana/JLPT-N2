@@ -5,13 +5,14 @@ description: Single owner of RANDOM, non-repeating selection of what each exam t
 
 # Item Pool Sampling
 
-## Why this skill exists
+## Pool entries stay inside the N2 band
 
-Pool entries must stay inside the N2 band. Do not add N1-only forms
-(〜にあって, 〜をもって, 〜ともなると, …) or N3–N5 drills (〜によると,
-〜ことができる, …) to `references/pools.json` — see
+Do not add N1-only forms (〜にあって, 〜をもって, 〜ともなると, …) or N3–N5
+drills (〜によると, 〜ことができる, …) to `references/pools.json` — see
 `exam-qa-review/references/level_band_grammar.txt` and `question-authoring`.
 `make check` fails generated papers whose 問題7–9 keys hit that list.
+
+## Why this skill exists
 
 A language model asked to "pick 12 N2 grammar points" picks nearly the same
 12 every time (〜ざるを得ない, 〜かねない, …), reuses the same scenarios
@@ -94,6 +95,17 @@ python .agents/item-pool-sampling/scripts/sample_items.py --reroll listening_sce
 exact items to test (e.g., `"grammar_p7": ["〜に反して", "〜どころか", …]`),
 the scenario list for listening, topics for reading, and the answer-position
 sequence per 問題.
+
+**It belongs to ONE test and may predate the current `DRAW`.** The spec on disk
+is whatever the last `sample_items.py` run produced, so after a format fix its
+cardinalities can differ from the code's — the file currently in `logs/` carries
+11 reading topics and 20 listening scenarios against a `DRAW` of 12 and 21.
+`check_answer_positions` zips the prescribed positions against the questions that
+exist, so extra prescribed entries are silently ignored and the mismatch is
+invisible. Do not "reconcile" it by re-sampling for a test that is already
+authored — that rewrites the contract its 101 keys were placed against and turns
+the gate red. Re-sample when you start the NEXT test, and read the printed draw
+counts then.
 
 ### 2. Level Classification (`scripts/classify_level.py`)
 

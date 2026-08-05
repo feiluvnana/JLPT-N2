@@ -79,8 +79,18 @@ python3 .agents/external-test-import/scripts/extract_pdf_text.py path/to/script.
 ```
 
 `_extract/` is a working cache (gitignored pattern recommended; leave untracked).
-Scanned PDFs with no text layer need OCR first — say so and stop rather than
-inventing content.
+
+Three failure modes, only one of which is "scanned":
+
+1. **No text layer** (a scan) — every page extracts empty, the script exits.
+   OCR first; say so and stop rather than inventing content.
+2. **Mojibake from a CID-keyed font** (Adobe-Japan1 + Identity-H with no
+   ToUnicode — ordinary Japanese DTP output). The text is *not* empty, it is
+   nonsense, and digits disappear entirely, so an unwary reader "extracts" a
+   table with every number missing. The script detects this and retries with
+   pdfminer (`--engine pdfminer` forces it, `--engine pypdf` disables it); it
+   warns if the result is still garbage. Never author from a warned extract.
+3. **Clean text layer** — the normal path.
 
 ### 3. Author project Markdown from the extract
 

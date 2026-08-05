@@ -9,7 +9,16 @@ description: Single owner of official JLPT exam format facts — section layout,
 
 All section layouts, question counts, and item specifications in this document are benchmarked against and aligned with the 5 official JLPT past exams in `refs/JLPT/` (07/2023, 12/2023, 12/2024, 07/2025, 12/2025).
 
-The official JLPT guidebook lists slightly higher 小問数 as 目安; **actual recent papers** (every exam in `refs/JLPT/`) use the counts below. Prefer the past-exam counts over the guidebook table when they disagree.
+The 2009 概要版 guidebook lists 小問数 as a pre-launch 目安 (「実際の試験での出題数は多少異なることがあります」); **actual recent papers** (every exam in `refs/JLPT/`) use the counts below. Prefer the past-exam counts over the guidebook table — always.
+
+That is not a formality: guidebook numbers have twice been copied into this repo
+as if measured. The rows where it disagrees with reality, so nobody "fixes" them
+back: 語形成 5 (real: **3**), 文章の文法 5 (**4**), 内容理解（中文） 9 (**8**,
+i.e. 4 passages × 2), 即時応答 12 (**11**), 聴解 統合理解 4 (**3** answers from
+2 items), totals 75+32 (**71+30**). The 聴解 counts are checkable without
+reading a script: the official audio puts an answer pause after scored items
+only, so its histogram is 12 × 12 s (問題1+2), 17 × 8 s (問題3+4+問題5 1番),
+7 × 20 s (問題2 option-reading) — see `official-audio-analysis`.
 
 - **言語知識・読解**: Source `tests/<test_id>/言語知識・読解.md` → Booklet `tests/<test_id>/言語知識・読解.html`
 - **聴解 (Booklet)**: Source `tests/<test_id>/聴解.md` → Booklet `tests/<test_id>/聴解.html`
@@ -27,8 +36,8 @@ The official JLPT guidebook lists slightly higher 小問数 as 目安; **actual 
 | 4 | 文脈規定 (word in context) | 7 | 14-20 |
 | 5 | 言い換え類義 (paraphrase) | 5 | 21-25 |
 | 6 | 用法 (correct usage among 4 sentences) | 5 | 26-30 |
-| 7 | 文法形式判断 (grammar fill-in) | 12 | 31-42 |
-| 8 | 文の組み立て (scramble, ★ position) | 5 | 43-47 |
+| 7 | 文の文法1・文法形式の判断 (grammar fill-in) | 12 | 31-42 |
+| 8 | 文の文法2・文の組み立て (scramble, ★ position) | 5 | 43-47 |
 | 9 | 文章の文法 (cloze passage, 4 blanks) | 4 | 48-51 |
 | 10 | 短文 (5 short passages ~200–280字 × 1Q; include one business email and one notice/掲示) | 5 | 52-56 |
 | 11 | 中文 (4 passages ~400–550字 × 2Q each) | 8 | 57-64 |
@@ -53,9 +62,10 @@ often ~600–750 — treat that as under-calibrated even when keys parse.
 **問題11 shape:** all five official papers in `refs/JLPT/` are **4 passages × 2
 questions** (Q57–64). The instruction line sometimes still says `(1)から(3)`
 (print typo); the body has four passages. Generated mocks must author **4×2**
-and print `(1)から(4)` in the instruction. The sampler's older
-`reading_topics: 11  # 5 short + 3 medium` comment is stale — draw four 中文
-topics.
+and print `(1)から(4)` in the instruction. The sampler matches this: it draws
+`reading_topics: 12  # 5 short + 4 medium + 1 A/B + 1 long + 1 info`. A spec
+carrying only 11 reading topics was drawn before that fix and is one 中文 topic
+short.
 
 ### 時間配分の目安 (105分)
 
@@ -100,6 +110,56 @@ review):
   only — not an oversight; do not "fix" it.
 - 問題5 2番 options are printed only — do not speak them.
 - Exam closes: 「これで、聴解試験を終わります。」
+
+## 問題N instruction lines (canonical — transcribed from `refs/JLPT/`)
+
+These are the texts `choukai-script-writing` tells you to paste into BOTH
+`聴解.md` and `聴解スクリプト.txt`. Copy from here, never from a previous test:
+`make check` only proves the booklet and the script agree with **each other**, so
+a paper where both drift the same way passes green, and the tests on disk do
+drift. Transcribed from the July 2025 booklet (`refs/JLPT/16. N2 07-2025.pdf`).
+
+| Where | Text |
+|---|---|
+| 問題1 | 問題1では、まず質問を聞いてください。それから話を聞いて、問題用紙の1から4の中から、最もよいものを一つ選んでください。 |
+| 問題2 | 問題2では、まず質問を聞いてください。そのあと、問題用紙を見てください。読む時間があります。それから話を聞いて、問題用紙の1から4の中から、最もよいものを一つ選んでください。 |
+| 問題3 | 問題3では、問題用紙に何も印刷されていません。この問題は、全体としてどんな内容かを聞く問題です。話の前に質問はありません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。 |
+| 問題4 | 問題4では、問題用紙に何も印刷されていません。まず文を聞いてください。それから、それに対する返事を聞いて、1から3の中から、最もよいものを一つ選んでください。 |
+| 問題5 | 問題5では、長めの話を聞きます。この問題には練習はありません。問題用紙にメモをとってもかまいません。 |
+| 問題5 1番 | 問題用紙に何も印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。 |
+| 問題5 2番 | まず話を聞いてください。それから、二つの質問を聞いて、それぞれ問題用紙の1から4の中から、最もよいものを一つ選んでください。 |
+
+- 問題1〜4: the SCRIPT appends 「では、練習しましょう。」 to the instruction, then
+  the 例, then the confirmation line ending 「では、始めます。」. The BOOKLET
+  prints the instruction only.
+- 問題5: the 1番 lead-in is spoken (script blocks add 「では、始めます。」 after
+  it); 2番's line is **booklet-only**, because its options are printed. There is
+  no combined 「1番、2番。…」 line.
+- The official scan renders some words in kana (いんさつ, えらんで); this repo
+  writes 印刷 / 選んで, and `make check`'s typo guard expects 印刷. Either is
+  acceptable as long as the booklet and the script match — do not "fix" one file
+  alone.
+
+## 認定の目安 (official level descriptor — what N2 is allowed to test)
+
+The published 認定の目安 for N2 (「読む」「聞く」 language behaviours) bounds
+passage genre and listening pace, so it belongs here rather than in an
+authoring skill's head:
+
+> 日常的な場面で使われる日本語の理解に加え、より幅広い場面で使われる日本語をある程度理解することができる
+>
+> **読む** ・幅広い話題について書かれた新聞や雑誌の記事・解説、平易な評論など、**論旨が明快な**文章を読んで文章の内容を理解することができる。・**一般的な話題**に関する読み物を読んで、話の流れや表現意図を理解することができる。
+>
+> **聞く** ・日常的な場面に加えて幅広い場面で、**自然に近いスピード**の、まとまりのある会話やニュースを聞いて、話の流れや内容、登場人物の関係を理解したり、要旨を把握したりすることができる。
+
+Two consequences the pipeline actually uses:
+
+- 読解 passages are 新聞・雑誌の記事/解説/平易な評論 with a **clear line of
+  argument** — N1's descriptor is the one that says 論理的にやや複雑 /
+  抽象度の高い文章. A 問題13 that reads as dense abstraction is off-level even at
+  the right character count.
+- 聴解 dialogue is **自然に近い** speed, not N1's 自然な speed — see
+  `official-audio-analysis` step 5 before touching any `SPEAKER_MAP` rate.
 - Answer grids include an 例 column with the sample answer pre-marked — and the
   pre-marked number MUST equal the number the announcer declares
   (「最もよいものは◯番です」): the grid and the announcement are one

@@ -1,6 +1,6 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check grade sheet serve booklet mp3 sample merge-seeds init-import extract-pdf \
+.PHONY: help check check-tests grade sheet serve booklet mp3 sample merge-seeds init-import extract-pdf \
        classify promote-adjunct fetch-openjlpt suggest-pool expand-pools
 
 # Handle positional arguments for targets (e.g., "make grade 1", "make sheet 1", "make booklet 1", "make mp3 1").
@@ -31,6 +31,7 @@ help:
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
 	@echo "  make mp3 1            Synthesize listening audio for test 1 (聴解.mp3)"
 	@echo "  make check            Verify docs/code/tests consistency (read-only)"
+	@echo "  make check-tests      Same gate, per-test contracts only (skips doc/code checks)"
 	@echo "  make sample           Sample question pool (item-pool-sampling)"
 	@echo "  make merge-seeds      Merge logs/seeds.json into logs/test_spec.json"
 	@echo "  make classify ITEM=x CATEGORY=y   Classify item level; optional STAGE=1"

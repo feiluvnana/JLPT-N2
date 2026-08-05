@@ -59,7 +59,7 @@ nothing from the previous two tests.
 `make check` fails when two tests share both a seed and a harvest, or reuse a
 harvest at all. Do not hand-edit those fields to silence it.
 
-## Step 1 — Harvest topic seeds (18-25 per test; ~22 funds every surface at full ratios)
+## Step 1 — Harvest topic seeds (18-25 per test, across as many domains as you can)
 
 **Every seed must come from a page you actually fetched — no web, no harvest.**
 If web access is unavailable, SKIP this skill entirely (the pure-pool pipeline
@@ -79,13 +79,27 @@ restores the sampler's draw from the ledger first, and aborts if the ledger
 cannot supply it. Never hand-edit the blended spec to patch a bad blend.
 
 Spread the harvest across **at least 6 distinct source domains** — count them,
-this is arithmetic, not taste. `MAX_PER_DOMAIN` is 2, so a harvest spans at
-most `2 × domains` topic-level seeds, and reading + listening + cloze + info
-need roughly 12 to reach their 30% floors on an N2 paper (11 reading topics,
-20 listening scenarios). Test 4 harvested 28 seeds from 5 domains: the cap
-allowed 10, reading and the texture surfaces took them first, and 聴解 finished
-at 4/20 = 20% web — below the floor, with the warning printed and ignored.
-Below `MIN_DOMAINS` (3) the script also shrinks the whole web share.
+this is arithmetic, not taste. **Domains, not seed count, are the binding
+constraint**: `MAX_PER_DOMAIN` is 2 and that budget is shared across all
+topic-level surfaces, so a harvest can fund at most `2 × domains` of them no
+matter how many seeds you collect.
+
+The sampler draws **12 reading topics** and **21 listening scenarios**, so:
+
+| Target | reading | listening | cloze | info | topic-level picks | domains needed |
+|---|---|---|---|---|---|---|
+| 30% floor | 4 | 6 | 1 | 1 | 12 | **6** |
+| default (0.5 / 0.4) | 6 | 8 | 1 | 1 | 16 | 8 |
+| full 60% | 7 | 13 | 1 | 1 | 22 | 11 |
+
+So 6 domains funds the floor exactly and nothing more — 22 seeds from 6 domains
+still caps at 12 picks. If you want the default or full ratios, harvest from
+more *domains*; adding seeds to the same domains does nothing. Test 4 harvested
+28 seeds from 5 domains: the cap allowed 10, reading and the texture surfaces
+took them first, and 聴解 finished at 4/20 = 20% web — below the floor, with the
+warning printed and ignored. Below `MIN_DOMAINS` (3) the script also shrinks the
+whole web share. (`qr_situation_seeds` and `carrier_seeds` come from leftovers
+and are not domain-capped.)
 
 Good sources and query recipes (prefer Japanese-language results):
 
