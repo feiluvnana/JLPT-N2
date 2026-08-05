@@ -25,9 +25,12 @@ Code, and any other):
 
 1. **Read `AGENTS.md` end to end before your first tool call.** Not the
    section you think applies. All of it. It is short on purpose.
-2. **Read `jlpt-test-generation/SKILL.md` end to end before ANY exam work** —
-   including a partial request ("just the listening section", "just fix the
-   MP3"). It routes to the other skills in order.
+2. **For generating a mock, read `jlpt-test-generation/SKILL.md` end to
+   end before ANY generation work** — including a partial request ("just the
+   listening section", "just fix the MP3"). It routes to the other skills in
+   order. **For importing an external PDF/past paper, read
+   `external-test-import/SKILL.md` instead** (folder must be
+   `tests/imported-<slug>/`).
 3. **Read each specialist `SKILL.md` in full before you act in its area**, and
    read it *again* rather than working from memory of a previous session.
    Partial reads are the failure mode: skimming to the code block and running
@@ -56,10 +59,10 @@ not route around it silently.
 
 - Skills are located in `.agents/<skill_name>/SKILL.md`.
 - Before performing any specialized task, **read the corresponding `SKILL.md` file** (they are plain Markdown — open them with whatever file-reading tool your harness provides).
-- **Claude Code**: the same 13 skills are exposed natively via symlinks in `.claude/skills/<skill_name>` → `.agents/<skill_name>`, so they are auto-discovered and invocable as `/<skill-name>`. `.agents/` remains the single copy — edit files there.
-- **`jlpt-test-generation` is the entry point.** Read it FIRST for any exam work, even a partial request like "make a listening section"; it routes to the other skills in order.
+- **Claude Code**: the same 14 skills are exposed natively via symlinks in `.claude/skills/<skill_name>` → `.agents/<skill_name>`, so they are auto-discovered and invocable as `/<skill-name>`. `.agents/` remains the single copy — edit files there.
+- **`jlpt-test-generation` is the entry point for generating mocks.** For importing an outside PDF/past paper, read `external-test-import` instead. For any other exam work, read `jlpt-test-generation` first — it routes to the other skills in order.
 - Available Skills:
-  1. `jlpt-test-generation`: End-to-end mock exam generation orchestrator — **read this one first**.
+  1. `jlpt-test-generation`: End-to-end mock exam generation orchestrator — **read this one first** for generated exams.
   2. `jlpt-exam-structure`: Official JLPT exam format spec, section layouts, question counts, booklet rules.
   3. `question-authoring`: Writing N2-calibrated exam questions, distractors, and answer keys.
   4. `reference-book-reading`: Reading/calibrating against reference books in `refs/`.
@@ -72,6 +75,7 @@ not route around it silently.
   11. `exam-answer-grading`: Grading user responses against answer keys, calculating scaled scores (0-180), evaluating Pass/Fail thresholds, analyzing sub-question weak points, and writing the structured result document `採点結果.json` (`grade_answers.py`).
   12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the complete booklet with radio bubbles beside every choice, an in-page audio player for 聴解, **in-page 180-point grading** that saves `採点結果.json` directly (`build_interactive.py`), and the one server that lists every test and runs them (`serve_sheet.py`).
   13. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test).
+  14. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
 
 ---
 
@@ -80,7 +84,7 @@ not route around it silently.
 ### Root Directories
 
 - `refs/`: Reference input files (scanned PDFs and audio recordings).
-- `tests/<test_id>/`: Output folder for each generated exam (e.g. `tests/1/`, `tests/n2_mock_01/`).
+- `tests/<test_id>/`: Output folder for each exam. **Origin is encoded in the folder name:** ids starting with `imported-` are external imports (e.g. `tests/imported-n2-2025-12/`); any other id is **generated** (e.g. `tests/1/`, `tests/n2_mock_01/`). See `external-test-import`.
 - `logs/`: Operational logs, item coverage ledger (`logs/ledger.json`), test blueprints (`logs/test_spec.json`), and web seed harvests (`logs/seeds.json`).
 - `.agents/`: Internal skill definitions, guidelines, and execution scripts.
 - `tools/`: Repo-level tooling that is not a skill (`check_consistency.py`, run via `make check`).
@@ -102,6 +106,7 @@ Inside `tests/<test_id>/`:
 | Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
 | User Answers Record                  | `ユーザー解答.json`                    | Saved automatically on submit from `解答.html`                                         |
 | Combined Grading Result              | `採点結果.json`                        | Generated on submit from `解答.html` or written by `grade_answers.py`. There is no Markdown report — the result is data, read back by the result screen and by the test list |
+| Import provenance (imported only)    | `import_meta.json`                     | Written by `external-test-import` for `tests/imported-<slug>/` only — generated tests must not have this file |
 
 ---
 
@@ -176,6 +181,19 @@ python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/t
 
 The script blends seeds into every surface of `logs/test_spec.json` (reading topics, listening scenarios, `cloze_topic` for 問9, `info_retrieval_texture` for 問14, `qr_situation_seeds` for 問4, `carrier_seeds` for 問1–8) and prints a **blend report**. Check the report before authoring: web share must sit within 30–60% per surface with the pool side ≥40%, and no source domain may dominate (≤2 topic-level seeds each). Re-harvest and re-run if it warns.
 
+### External Test Import (PDF / past paper → project format)
+
+Folder ids **must** start with `imported-` (e.g. `tests/imported-n2-2025-12/`). No prefix means **generated**. See `external-test-import/SKILL.md`.
+
+```bash
+python3 .agents/external-test-import/scripts/init_imported_test.py --slug n2-2025-12 \
+  --booklet "path/to/booklet.pdf" --script "path/to/script.pdf" --audio "path/to.mp3"
+python3 .agents/external-test-import/scripts/extract_pdf_text.py booklet.pdf \
+  -o tests/imported-n2-2025-12/_extract/booklet.txt
+# then author Markdown from the extract, then:
+make booklet imported-n2-2025-12 && make sheet imported-n2-2025-12 && make check
+```
+
 ### Booklet Generation (HTML — no PDF)
 
 ```bash
@@ -221,7 +239,7 @@ is now the JSON document both graders write.
 
 `tools/check_consistency.py` asserts the facts the docs duplicate from the code,
 because prose cannot be executed: every `refs/` path named in a doc exists; all
-13 skills are listed here and symlinked under `.claude/skills/`; documented
+14 skills are listed here and symlinked under `.claude/skills/`; documented
 deliverable names appear in the script that writes them and retired ones stay
 retired; the choukai pacing table matches `ANSWER_PAUSE`/`GAP_*`; the 大問 table
 matches `GENGO_QUESTION_TAXONOMY`; and for every test on disk the script

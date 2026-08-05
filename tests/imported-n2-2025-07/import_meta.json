@@ -1,0 +1,13 @@
+{
+  "origin": "imported",
+  "test_id": "imported-n2-2025-07",
+  "level": "N2",
+  "imported_at": "2026-08-05T02:58:09Z",
+  "sources": {
+    "booklet": "refs/JLPT/16. N2 07-2025.pdf",
+    "script": "refs/JLPT/16. N2-7.2025 (script).pdf",
+    "audio": "refs/JLPT/Nghe N2 T7-2025.mp3",
+    "answer_key": "refs/JLPT/ĐÁP ÁN JLPT N2 (update 10.4.2026).pdf"
+  },
+  "notes": "Folder flag `imported-` marks origin=imported. Folders without that prefix are generated."
+}

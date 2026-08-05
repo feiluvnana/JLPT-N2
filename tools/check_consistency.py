@@ -131,6 +131,7 @@ def check_filename_contracts():
         ("聴解_チャプター.json", ".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py"),
         ("ledger.json", ".agents/item-pool-sampling/scripts/sample_items.py"),
         ("test_spec.json", ".agents/item-pool-sampling/scripts/sample_items.py"),
+        ("import_meta.json", ".agents/external-test-import/scripts/init_imported_test.py"),
     ]
     for literal, script in contracts:
         src = (ROOT / script).read_text(encoding="utf-8")
@@ -299,6 +300,80 @@ def gengo_option_sets(md: str, bi) -> dict[int, list[str]]:
 
 
 BLANK_RUN = re.compile(r"(?:[＿_]+★?[＿_]*|★)(?:\s*(?:[＿_]+★?[＿_]*|★))+")
+JP_CHAR = re.compile(r"[\u3040-\u30ff\u4e00-\u9fffー。、！？（）「」『』…・]")
+# Official N2 問題7 across refs/JLPT/ (5 papers): avg ~43, median ~41, IQR ~33–54.
+P7_STEM_MIN = 30
+P7_PAPER_AVG_MIN = 35
+P9_PASSAGE_MIN = 450
+
+
+def jp_char_count(s: str) -> int:
+    return len(JP_CHAR.findall(re.sub(r"\s+", "", s)))
+
+
+def check_grammar_stem_lengths(gt: str, bi):
+    """問題7/9 carrier lengths must sit near the official JLPT band.
+
+    Tests 1–4 shipped 問題7 stems averaging 20–34 JP chars against an official
+    ~43 average — keys looked fine, carriers read as textbook drills. Fail hard
+    on under-length stems/averages; warn when the paper average is merely soft.
+    """
+    cut = bi.KEY_HEADING.search(gt)
+    body = gt[: cut.start()] if cut else gt
+    m7 = re.search(r"^##\s*問題7\b.*?(?=^##\s*問題8\b)", body, re.M | re.S)
+    m9 = re.search(r"^##\s*問題9\b.*?(?=^#\s*【?読解|^##\s*問題10\b)", body, re.M | re.S)
+
+    stems7: list[tuple[int, int]] = []
+    if m7:
+        cur = None
+        stem_buf: list[str] = []
+        for line in m7.group(0).splitlines():
+            q = bi.GENGO_Q.match(line)
+            if q:
+                if cur is not None and 31 <= cur <= 42:
+                    stems7.append((cur, jp_char_count("".join(stem_buf))))
+                cur = int(q.group(1))
+                rest = line[q.end():]
+                # stem may share the line with options; keep text before option run
+                if bi.option_run(rest):
+                    rest = re.split(r"(?<![^\s（(])[1-4]\.\s*", rest, maxsplit=1)[0]
+                stem_buf = [rest]
+                continue
+            if cur is None:
+                continue
+            if bi.OPTION.match(line):
+                if cur is not None and 31 <= cur <= 42:
+                    stems7.append((cur, jp_char_count("".join(stem_buf))))
+                cur = None
+                stem_buf = []
+                continue
+            stem_buf.append(line)
+        if cur is not None and 31 <= cur <= 42:
+            stems7.append((cur, jp_char_count("".join(stem_buf))))
+
+    short = [f"{q}({n})" for q, n in stems7 if n < P7_STEM_MIN]
+    avg = (sum(n for _, n in stems7) / len(stems7)) if stems7 else 0.0
+    check(f"問題7 stems each ≥{P7_STEM_MIN} JP chars "
+          f"(official ~33–54; got {[n for _, n in stems7]})",
+          len(stems7) == 12 and not short,
+          f"short={short or 'n/a'}; rewrite situation carriers, not the keyed form")
+    check(f"問題7 stem average ≥{P7_PAPER_AVG_MIN} JP chars "
+          f"(official ~43; got {avg:.1f})",
+          len(stems7) == 12 and avg >= P7_PAPER_AVG_MIN,
+          "paper still reads as drill-length — lengthen scene-setting")
+
+    if m9:
+        # Drop the instruction header and the option lists (from **48** / 48 onward).
+        sec = m9.group(0)
+        sec = re.sub(r"^##\s*問題9[^\n]*\n", "", sec)
+        sec = re.split(r"\n\*\*48\*\*|\n\*\*48\b|\n48\n", sec, maxsplit=1)[0]
+        # Also stop at option rows that start a blank's choices without a bold num
+        # on their own line (some tests put **48** then options).
+        p9 = jp_char_count(sec)
+        check(f"問題9 cloze passage ≥{P9_PASSAGE_MIN} JP chars "
+              f"(official ~500–700; got {p9})",
+              p9 >= P9_PASSAGE_MIN,
+              "expand the cloze prose around the four blanks")
 
 
 def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str]]):
@@ -640,6 +715,34 @@ def check_tests():
 
     for d in dirs:
         print(f"\nper-test contracts: {d.relative_to(ROOT)}")
+        origin = "imported" if d.name.startswith("imported-") else "generated"
+        if origin == "imported":
+            slug = d.name[len("imported-"):]
+            check("imported- slug is non-empty kebab-case",
+                  bool(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug)),
+                  f"got {d.name!r}")
+        meta = d / "import_meta.json"
+        if origin == "imported":
+            if not meta.is_file():
+                check("imported test has import_meta.json", False,
+                      "run init_imported_test.py")
+            else:
+                try:
+                    mdata = json.loads(meta.read_text(encoding="utf-8"))
+                except json.JSONDecodeError as e:
+                    check("import_meta.json parses", False, str(e))
+                    mdata = {}
+                check("import_meta.json origin is imported",
+                      mdata.get("origin") == "imported",
+                      f"got {mdata.get('origin')!r}")
+                check("import_meta.json test_id matches folder",
+                      mdata.get("test_id") == d.name,
+                      f"meta={mdata.get('test_id')!r} folder={d.name!r}")
+        elif meta.is_file():
+            check("generated test has no import_meta.json", False,
+                  "import_meta.json is only for imported-* folders — "
+                  "rename to imported-<slug> or remove the meta file")
+
         gengo, choukai = d / "言語知識・読解.md", d / "聴解.md"
         if not (gengo.is_file() and choukai.is_file()):
             check("both Markdown sources present", False,
@@ -673,6 +776,7 @@ def check_tests():
         wrong_n = {q: len(v) for q, v in opts.items() if len(v) != 4}
         check("every gengo question parses to exactly 4 options", not wrong_n, f"{wrong_n}")
         check_scramble_stars(gt, keys, opts)
+        check_grammar_stem_lengths(gt, bi)
         check_answer_positions(d, keys, ck, g)
         for f in (gengo, choukai):
             body = f.read_text(encoding="utf-8")

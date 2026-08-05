@@ -53,8 +53,17 @@ RESULT_JSON = "採点結果.json"
 
 # ------------------------------------------------------------ test discovery
 def natural_key(name: str):
-    """`10` sorts after `9`, and named tests sort after numbered ones."""
-    return (0, int(name), "") if name.isdigit() else (1, 0, name)
+    """`10` sorts after `9`; imported-* after plain ids; other names last."""
+    if name.isdigit():
+        return (0, int(name), "")
+    if name.startswith("imported-"):
+        return (1, 0, name)
+    return (2, 0, name)
+
+
+def test_origin(test_id: str) -> str:
+    """Folder-name origin flag: ``imported-`` prefix ⇒ imported; else generated."""
+    return "imported" if test_id.startswith("imported-") else "generated"
 
 
 def test_dir(test_id: str) -> Path | None:
@@ -96,6 +105,7 @@ def progress_of(d: Path) -> dict:
 
     return {
         "id": d.name,
+        "origin": test_origin(d.name),
         "answered": answered,
         "total": QUESTION_COUNT,
         "has_sheet": (d / SHEET).is_file(),
@@ -126,6 +136,8 @@ main{max-width:60em;margin:0 auto;padding:1.4em 1.2em 4em}
 .empty{background:#fff;border:1px dashed var(--line);border-radius:10px;padding:2em;
   text-align:center;color:var(--muted)}
 code{background:#f1f5f9;padding:.1em .4em;border-radius:4px;font-size:10pt}
+.badge.origin-imp{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd}
+.badge.origin-gen{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
 """
 
 
@@ -136,6 +148,12 @@ def meter_html(t: dict) -> str:
     return (f'<div class="meter"><div class="track">'
             f'<div class="{fill}" style="width:{ratio}%"></div></div>'
             f'<div class="lbl">解答済み {answered} / {total}（{ratio}%）</div></div>')
+
+
+def origin_badge_html(t: dict) -> str:
+    if t.get("origin") == "imported":
+        return '<span class="badge origin-imp">imported</span>'
+    return '<span class="badge origin-gen">generated</span>'
 
 
 def badge_html(t: dict) -> str:
@@ -165,7 +183,8 @@ def card_html(t: dict) -> str:
     else:
         acts = [f'<a class="ui-btn" href="#" onclick="return false" '
                 f'title="make sheet {tid} を実行">受験する</a>']
-    return (f'<div class="card"><h2>テスト {tid}</h2>{meter_html(t)}{badge_html(t)}'
+    return (f'<div class="card"><h2>テスト {tid}</h2>{origin_badge_html(t)}'
+            f'{meter_html(t)}{badge_html(t)}'
             f'<div class="acts">{"".join(acts)}</div></div>')
 
 

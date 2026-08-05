@@ -71,6 +71,8 @@ with the sources side by side, and refuse to pass anything it cannot prove.
   test is "mostly fine", the deadline is close, or the author already ran the
   gate. If a rule here seems wrong, propose the change in the report; apply the
   rule as written to this test.
+- **Imported Tests (`tests/imported-*`) Rule:** Do NOT update `logs/ledger.json`, `logs/seeds.json`, or `logs/test_spec.json` for an imported test. Imported tests do not sample from the item pool or web seeds. For imported tests, skip Step 5 (topic table against past generated tests) and Step 6 (provenance audit). Focus QA strictly on transcription fidelity against source PDFs/audio, booklet-script option sync, and solvability.
+
 
 ## The pass, in order
 
@@ -102,6 +104,14 @@ real collocations (品質に妥協する, 考慮に値する — search before t
 
 ### 3. Mechanical reads
 
+- **問題7 stem length:** count JP chars on every stem. Official papers average
+  ~43 (band ~33–54). Fail the paper if the 12-stem average is under ~35, or if
+  more than a couple of stems sit under ~30 — that is the short-carrier defect
+  tests 1–4 shipped (avg 20–34) while the grammar keys looked fine. Fix by
+  rewriting the situation, not by changing the keyed form.
+- **問題8 / 問題9 length:** 問題8 assembled sentences should not read as
+  three-word drills; 問題9 cloze body should land ~500–700 JP chars (official),
+  not a 150–200 char stub.
 - **問題5 言い換え:** swap the option into the stem; the sentence must survive
   (test 4: 「値段の比較的美味しい」 did not).
 - **問題8:** splice stem + options in 解説 order; read end to end; no word twice.

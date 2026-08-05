@@ -7,3 +7,6 @@ __pycache__/
 
 # Temporary per-question audio cache (auto-deleted on success anyway)
 tests/*/segments/
+
+# PDF text dumps from external-test-import (working cache only)
+tests/*/_extract/

@@ -20,6 +20,11 @@ Verify every tested word/grammar point against reference books in `refs/Shinkanz
 
 Maintain high consistency with the 5 recent official exams (07/2023, 12/2023, 12/2024, 07/2025, 12/2025):
 - **Dokkai Character Counts**: Short (~200 chars), Medium (~500 chars), A/B combined (~600 chars), Long (~900 chars), Flyer (~700 chars; 1 table + 2 matching scenarios). These 目安 mirror the table in `jlpt-exam-structure`.
+- **Grammar stem lengths (問題7–9) — measured on all 5 papers in `refs/JLPT/`**:
+  - **問題7**: official stems average **~43 JP chars** (median ~41; interquartile ~33–54). A paper whose 12 stems average under ~35, or that ships many under ~30, reads as textbook-drill short, not exam-length. Target: **each stem ≥30 JP chars**, **paper average ≥40**, with most items in the **35–55** band. Build length with scene-setting (職場・電話・掲示・インタビュー), a subordinate clause, or a short dialogue lead-in — not by padding the tested form. Official items often open with `(会社で)` / `(電話で)` / a named role before the blank.
+  - **問題8**: official frames are rarely bare (`姉は ★ なった`-tier). Put **context before and/or after** the blank run so the assembled sentence lands in the **~40–70 JP char** range once the four options are spliced in. Short stems are acceptable only when the options themselves carry the missing substance.
+  - **問題9**: official cloze passages run **~500–700 JP chars** (title + body, excluding the four option lists). Do not ship a 150–200 char mini-paragraph — that is N3 drill length. Four blanks still; the prose around them must feel like a short magazine/column piece.
+  - Count Japanese characters only (hiragana/katakana/kanji/JP punctuation); ignore spaces and the `(　)` / `＿＿` / `★` markers themselves when eyeballing, but do not strip scene-setting just to hit a number.
 - **Distractor Design**: Distractor options must replicate official confusion logic (e.g. 近義語 nuances, 誤用 collocations, condition disqualifications).
 - **Listening Spoken Choice Pacing**: Options spoken in 聴解 must follow official lengths (~10-15 chars per choice in 問題3/問題4).
 
@@ -74,6 +79,14 @@ sentences must be tempting, not absurd.
 〜に限って, 〜ものの, 〜ばかりに, 〜たところ, humble/honorific traps
 (伺う; include one FAKE form like 参られます as a distractor).
 BANNED (too easy): 〜によると, 〜ば〜ほど, 〜がち alone, お〜ください.
+**Length is part of the N2 bar** (see Benchmark above): tests 1–4 shipped
+問題7 stems averaging 20–34 JP chars against an official ~43 average — the
+grammar point was right, the carrier was too short. Lengthen the *situation*,
+not the grammar tag. A one-clause stem like
+「このまま働きすぎると、体を壊し(　)よ。」 fails the official length band even
+when かねない is the correct key; rewrite toward
+「最近残業が続き休日もほとんど取れない。このまま働きすぎると、体を壊し(　)よ。」
+(scene + consequence). Same rule for 問題8 frames and 問題9 cloze prose.
 
 **問題10-14 (reading)** — difficulty lives in the QUESTIONS, not vocabulary:
 ask 筆者の考え/一番言いたいこと/どういうことか, never mere fact lookup.

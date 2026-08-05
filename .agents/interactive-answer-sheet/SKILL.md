@@ -16,7 +16,7 @@ per-test server: `make serve` takes no test id.
 
 | # | Screen | Where it lives | What it does |
 | - | ------ | -------------- | ------------ |
-| 1 | テスト一覧 | `GET /` — built by `serve_sheet.py` | Every test in `tests/`, each with its answered count (out of 101) and last score. Links to screen 2, or straight to screen 3 for a graded test |
+| 1 | テスト一覧 | `GET /` — built by `serve_sheet.py` | Every test in `tests/`, each with its answered count (out of 101), last score, and an **origin badge** (`imported` if the folder starts with `imported-`, else `generated`). Links to screen 2, or straight to screen 3 for a graded test |
 | 2 | 受験 | `GET /tests/<id>/解答.html` — built by `build_interactive.py` | The exam. Each click autosaves; 「← 一覧」 returns to screen 1 |
 | 3 | 採点結果 | in the same page, `#screen-result` | Rendered from the result object on 「採点する」, or fetched from `採点結果.json` when the URL carries `?screen=result`. Its buttons (「← テスト一覧へ戻る」/「解答に戻ってやり直す」) sit at the END of the page — the bar already carries the way out, so a second nav row above the report only pushes the report down |
 

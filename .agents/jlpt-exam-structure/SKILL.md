@@ -38,6 +38,12 @@ The official JLPT guidebook lists slightly higher 小問数 as 目安; **actual 
 
 Question numbering is continuous 1-71 across the whole paper.
 
+**Grammar carrier length (official baseline, all 5 `refs/JLPT/` papers):** 問題7
+stems average ~43 JP chars (typical 33–54); 問題9 cloze body ~500–700 JP chars.
+Authoring rules and the consistency gate live in `question-authoring` /
+`tools/check_consistency.py` — length is part of the format bar, not just the
+grammar-point inventory.
+
 **問題11 passage split — known pipeline deviation.** All five official papers
 in `refs/JLPT/` print 問題11 as **4 passages × 2 questions** (Q57-64; the
 Dec 2024 transcription's 「(1)から(3)」 instruction line is a typo — its body

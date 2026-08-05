@@ -1,15 +1,23 @@
 ---
 name: jlpt-test-generation
-description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5, primarily N2). Use this skill whenever the user asks to create, generate, or build a JLPT test, mock exam, 模擬試験, practice test, or any subset of one (言語知識, 文字・語彙, 文法, 読解, 聴解/choukai), or asks to regenerate/fix exam deliverables. This is the entry-point skill — it routes to the specialized skills for each step. Consult it FIRST before any exam work, even for partial requests like "make a listening section" or "create N2 grammar questions".
+description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5, primarily N2). Use this skill whenever the user asks to create, generate, or build a JLPT test, mock exam, 模擬試験, practice test, or any subset of one (言語知識, 文字・語彙, 文法, 読解, 聴解/choukai), or asks to regenerate/fix exam deliverables. This is the entry-point skill for generation — it routes to the specialized skills for each step. Consult it FIRST before any generated exam work, even for partial requests like "make a listening section" or "create N2 grammar questions". For importing an external PDF/past paper, use external-test-import instead.
 ---
 
 # JLPT Test Generation (Orchestrator)
 
+## Import vs generate
+
+If the user wants to **import** an existing external exam (PDF booklet, past
+paper under `refs/JLPT/`, script PDF, listening MP3) into project format → stop
+here and read `external-test-import/SKILL.md` instead. Those tests live under
+`tests/imported-<slug>/`. This file is only for **generating** new mocks.
+
 ## Read this file to the end before your first tool call
 
-This is the entry point for **all** exam work, including partial requests. Read
-it through, then read each specialist `SKILL.md` in full before acting in its
-area — re-read it, rather than working from memory of a previous session.
+This is the entry point for **all generated** exam work, including partial
+requests. Read it through, then read each specialist `SKILL.md` in full before
+acting in its area — re-read it, rather than working from memory of a previous
+session.
 
 Then run **every** numbered step below, in order. No step is optional because
 its output file already exists: `logs/seeds.json` and `logs/test_spec.json` are
@@ -27,7 +35,9 @@ All exam files follow a strict directory structure:
   - Textbooks (`refs/Shinkanzen/`): `refs/Shinkanzen/Shin_Kanzen_Masuta_<level>-<section>.pdf` (e.g. `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Bunpou.pdf`).
   - Official Past Exam Sets (`refs/JLPT/`): Booklets, listening scripts, and audio MP3s from the 5 nearest exams (e.g., `refs/JLPT/17.N2 12-2025 _260603.pdf`, `refs/JLPT/JLPT N2 12.2025 Choukai.mp3`).
   - Textbook Audio: `refs/Shinkanzen/Shin_Kanzen_Masuta_<level>-Choukai-CD/`.
-- **Test outputs**: `tests/<test_id>/` directory (e.g., `tests/1/` or `tests/n2_mock_01/`).
+- **Test outputs**: `tests/<test_id>/` — generated ids have no special prefix
+  (`tests/1/`); imported exams MUST use `tests/imported-<slug>/` (see
+  `external-test-import`).
 - **Operational tracking**: `logs/` directory (`logs/ledger.json` for item history, `logs/test_spec.json` for current blueprint).
 - **Internal execution scripts** (all are also wrapped by Makefile targets — see
   `make help`; every target takes the test id positionally, e.g. `make sheet 1`):
@@ -93,6 +103,10 @@ anything.
    Check the printed blend report before authoring.
 4. **Author the content** → read `question-authoring/SKILL.md`.
    Write Markdown sources (`言語知識・読解.md`, `聴解.md`) in `tests/<test_id>/`. Author ONLY items specified in `logs/test_spec.json` and set answer keys according to `answer_positions`.
+   **Grammar carriers must match official length** (問題7 avg ~43 JP chars /
+   stem ≥30; 問題9 cloze ~500–700). Short one-clause stems are a known shipped
+   defect — see `question-authoring` Benchmark section. `make check` enforces
+   the floor.
    **Author in section-sized passes, not one long run.** Defects cluster in
    whatever is generated last (test 4: the entire listening half — swapped
    問題 types, an unanswerable 例, five phantom 解説 quotes). Finish 文字・語彙,

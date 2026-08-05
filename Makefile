@@ -1,6 +1,6 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check grade sheet serve booklet mp3 sample merge-seeds
+.PHONY: help check grade sheet serve booklet mp3 sample merge-seeds init-import extract-pdf
 
 # Handle positional arguments for targets (e.g., "make grade 1", "make sheet 1", "make booklet 1", "make mp3 1").
 # `serve` is deliberately NOT here: one server covers every test, so it takes no id.
@@ -17,6 +17,7 @@ endif
 
 TEST ?= $(if $(POS_ARG),$(POS_ARG),1)
 SEED ?= 20260803
+SLUG ?=
 
 help:
 	@echo "=========================================================================="
@@ -31,6 +32,8 @@ help:
 	@echo "  make check            Verify docs/code/tests consistency (read-only)"
 	@echo "  make sample           Sample question pool (item-pool-sampling)"
 	@echo "  make merge-seeds      Merge logs/seeds.json into logs/test_spec.json"
+	@echo "  make init-import SLUG=n2-2025-12   Scaffold tests/imported-<slug>/"
+	@echo "  make extract-pdf PDF=a.pdf OUT=tests/imported-x/_extract/a.txt"
 	@echo "=========================================================================="
 
 check:
@@ -71,5 +74,13 @@ sample:
 
 merge-seeds:
 	python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json
+
+init-import:
+	@test -n "$(SLUG)" || (echo "usage: make init-import SLUG=n2-2025-12"; exit 1)
+	python3 .agents/external-test-import/scripts/init_imported_test.py --slug $(SLUG)
+
+extract-pdf:
+	@test -n "$(PDF)" && test -n "$(OUT)" || (echo "usage: make extract-pdf PDF=a.pdf OUT=out.txt"; exit 1)
+	python3 .agents/external-test-import/scripts/extract_pdf_text.py "$(PDF)" -o "$(OUT)"
 
 
