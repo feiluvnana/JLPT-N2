@@ -1,92 +1,92 @@
 {
- "seed": 20260805,
- "generated_at": "2026-08-04 14:55:02",
- "test_id": "4",
+ "seed": 20260806,
+ "generated_at": "2026-08-05 18:53:58",
+ "test_id": "3",
  "items": {
   "kanji_reading": [
-   "労わる(いたわる)",
-   "賢い(かしこい)",
-   "却下(きゃっか)",
-   "省みる(かえりみる)",
-   "逃す(のがす)"
+   "軍(いくさ)",
+   "尋ねる(たずねる)",
+   "副(フク)",
+   "改(あらた.める)",
+   "縮小(しゅくしょう)"
   ],
   "orthography": [
-   "転換",
-   "務める(役職を)",
-   "依頼",
-   "審査",
-   "支援"
+   "解答",
+   "過程",
+   "就職",
+   "下車",
+   "為替"
   ],
   "word_formation": [
-   "〜連れ(家族連れ)",
-   "全〜(全自動)",
-   "無〜(無計画)",
-   "未〜(未記入)",
-   "〜がち(遅刻がち)"
+   "〜放題(食べ放題)",
+   "〜嫌い(人嫌い)",
+   "異〜(異文化)"
   ],
   "context_words": [
-   "抜粋",
-   "拠点",
-   "じっくり",
-   "おろそか",
-   "実施",
-   "しみじみ",
-   "克服"
+   "ジャーナリスト",
+   "アクセント",
+   "いきなり",
+   "途上",
+   "インキ",
+   "しぼむ",
+   {
+    "item": "ワンピース",
+    "origin": "adjunct",
+    "level": "N2",
+    "evidence": [
+     "openjlpt vocab N2"
+    ]
+   }
   ],
   "paraphrase": [
-   "たまたま(偶然)",
-   "徐々に(少しずつ)",
-   "さっさと(すぐに/早く)",
-   "わりに(比較的)",
-   "あらかじめ(前もって)"
+   "愚かだ(馬鹿げている)",
+   "ゼミ",
+   "テンポ",
+   "わずかに",
+   "どっと"
   ],
   "usage": [
-   "解消",
-   "把握",
-   "妥協",
-   "模索",
-   "考慮"
+   "ベテラン",
+   "普及",
+   "まあまあ",
+   "あふれる",
+   "ふわふわ"
   ],
   "grammar_p7": [
-   "〜にともなって",
-   "〜を皮切りに",
-   "〜にわたって",
-   "〜をもちまして",
-   "〜ともあろう者が",
-   "〜に即して",
-   "〜にかけては",
-   "〜ようがない",
-   "〜までもなく",
-   "〜を通して",
-   "〜どころではない",
-   "〜をめぐって"
+   "〜気味",
+   "〜まい",
+   "〜たところ",
+   "〜たとたん",
+   "〜に沿って",
+   "〜とともに",
+   "敬語:伺う",
+   "〜を踏まえて",
+   "〜きり",
+   "〜に伴って",
+   "〜あげく",
+   "〜ぎみだ"
   ],
   "grammar_p8": [
-   "補足追加(〜なお…)",
-   "〜をはじめ",
-   "〜をきっかけに",
-   "限定表現(〜のみならず…も)",
-   "義務当然(〜ねばならない)"
+   "目的達成(〜ように努力する)",
+   "〜ばかりか",
+   "理由説明(〜のは…からだ)",
+   "相対比較(〜ば〜ほど)",
+   "心理変化(〜意欲が湧いてくる)"
   ],
   "quick_response": [
-   "このプロジェクト、君が中心になって進めてくれないか。",
-   "来週の出張の件ですが、新幹線のチケットを手配しておきましょうか。",
-   "存じております",
-   "田中さん、そのやり方だと二度手間になりませんか。",
-   "気が利く",
-   "明日の会議の件ですが、あいにく先方のご都合が悪くなりまして…",
-   "先日の件、せっかくご提案いただいたのに、お役に立てず申し訳ありません。",
-   "板につく",
-   "新しいシステム、慣れるまで少し時間がかかりそうですね。",
-   "願ってもない",
-   "先方の担当者様、明日10時に弊社へお越しいただくことになっております。",
-   "皆さんのおかげで無事に終えることができました。"
+   "昨日のセミナー、途中で退席してしまい、申し訳ありませんでした。",
+   "課長、新商品のサンプルが届きましたので、お持ちいたしました。",
+   "会場までは駅から歩いて15分ほどかかりますが、よろしいでしょうか。",
+   "お手数をおかけします",
+   "お忘れ物のないよう、ご確認ください。",
+   "顔が広い",
+   "大目に見る",
+   "こちらこそ、いつもお世話になっております。",
+   "お疲れ様です。先ほどのメール、確認いただけましたでしょうか。",
+   "お会計、カードと現金、どちらがよろしいですか。",
+   "到着予定は3日後です。それでもよろしいですか。"
   ],
   "listening_scenarios": [
-   {
-    "scenario": "郵便局:再配達の依頼",
-    "origin": "pool"
-   },
    {
     "scenario": "真夏の熱中症予防と夜間のエアコン活用",
     "origin": "web",
@@ -97,7 +97,80 @@
     "source": "https://www.wbgt.env.go.jp/pdf/manual/heatillness_manual_3-1.pdf"
    },
    {
-    "scenario": "タクシー:配車アプリの使い方",
+    "scenario": "塾:体験授業",
+    "origin": "pool"
+   },
+   {
+    "scenario": "小売店での手前取り呼びかけと期限切れ廃棄削減",
+    "origin": "web",
+    "facts": [
+     "すぐに食べる場合は手前の商品を選ぶと廃棄が減る",
+     "コンビニ各社でも啓発物の掲示が進む"
+    ],
+    "source": "https://www.caa.go.jp/notice/entry/024301/"
+   },
+   {
+    "scenario": "銀行:口座開設の手続き",
+    "origin": "pool"
+   },
+   {
+    "scenario": "使い捨て傘ゼロに向けたシェアリング普及",
+    "origin": "web",
+    "facts": [
+     "アプリ登録で借りて最寄りスポットへ返却できる",
+     "雨の日の移動快適化と廃棄削減を同時に狙う"
+    ],
+    "source": "https://www.tokyoupdates.metro.tokyo.lg.jp/post-1440/"
+   },
+   {
+    "scenario": "職場の腰痛予防と立ち作業の工夫",
+    "origin": "web",
+    "facts": [
+     "長時間の同一姿勢を避け小休止を入れる",
+     "作業台の高さ調整や椅子の併用が推奨される"
+    ],
+    "source": "https://www.mhlw.go.jp/stf/newpage_31158.html"
+   },
+   {
+    "scenario": "自転車シェアリングのポート間貸出・返却",
+    "origin": "web",
+    "facts": [
+     "借りたポートと異なるポートへ返却できる",
+     "駅など交通結節点との連携で短距離移動が便利になる"
+    ],
+    "source": "https://www.kankyo.metro.tokyo.lg.jp/vehicle/management/bycicle_sharing"
+   },
+   {
+    "scenario": "コンサート会場:入場方法の案内",
+    "origin": "pool"
+   },
+   {
+    "scenario": "就職課:面接対策の助言",
+    "origin": "pool"
+   },
+   {
+    "scenario": "天気予報と週末の予定",
+    "origin": "pool"
+   },
+   {
+    "scenario": "電気工事:立ち会い日程の調整",
+    "origin": "pool"
+   },
+   {
+    "scenario": "開発:仕様変更",
+    "origin": "pool"
+   },
+   {
+    "scenario": "シェアサイクル利用時のヘルメット着用促進",
+    "origin": "web",
+    "facts": [
+     "ガイドラインで事業者による着用促進が求められる",
+     "料金割引や備え付けヘルメットなどの工夫例がある"
+    ],
+    "source": "https://www.shouhiseikatu.metro.tokyo.lg.jp/anzen/kyougikai/r5/documents/r5kyogikai-3_handout-01-1_1.pdf"
+   },
+   {
+    "scenario": "保険窓口:内容変更",
     "origin": "pool"
    },
    {
@@ -110,61 +183,38 @@
     "source": "https://www.metro.tokyo.lg.jp/information/press/2024/06/2024061901"
    },
    {
-    "scenario": "マンションの設備点検のお知らせ",
-    "origin": "pool"
-   },
-   {
-    "scenario": "大学:レポート指導",
-    "origin": "pool"
-   },
-   {
-    "scenario": "職場の腰痛予防と立ち作業の工夫",
+    "scenario": "睡眠休養感と日中のパフォーマンス改善",
     "origin": "web",
     "facts": [
-     "長時間の同一姿勢を避け小休止を入れる",
-     "作業台の高さ調整や椅子の併用が推奨される"
+     "成人の約4割が睡眠6時間未満",
+     "睡眠の質（休養感）が日中の体調と作業効率に影響"
     ],
-    "source": "https://www.mhlw.go.jp/stf/newpage_31158.html"
+    "source": "https://www.mhlw.go.jp/content/001305530.pdf"
    },
    {
-    "scenario": "出張の手配",
+    "scenario": "観光案内:モデルコース",
     "origin": "pool"
    },
    {
-    "scenario": "バス会社:路線変更のお知らせ",
+    "scenario": "文房具:法人契約",
     "origin": "pool"
    },
    {
-    "scenario": "自転車シェアリングのポート間貸出・返却",
-    "origin": "web",
-    "facts": [
-     "借りたポートと異なるポートへ返却できる",
-     "駅など交通結節点との連携で短距離移動が便利になる"
-    ],
-    "source": "https://www.kankyo.metro.tokyo.lg.jp/vehicle/management/bycicle_sharing"
-   },
-   {
-    "scenario": "アルバイトのシフト変更の相談",
+    "scenario": "地域センター:食品寄付の受付",
     "origin": "pool"
    },
    {
-    "scenario": "日本語教室:教材の選定",
+    "scenario": "研修会でのグループワークの進め方",
     "origin": "pool"
    },
    {
-    "scenario": "路上喫煙禁止区域の説明会",
+    "scenario": "税務署:確定申告",
     "origin": "pool"
-   },
+   }
+  ],
+  "reading_topics": [
    {
-    "scenario": "会社での新製品プレゼン準備",
-    "origin": "pool"
-   },
-   {
-    "scenario": "見本市:名刺交換と案内",
-    "origin": "pool"
-   },
-   {
-    "scenario": "家庭での食べきりと食品の使いきり習慣",
+    "topic": "家庭での食べきりと食品の使いきり習慣",
     "origin": "web",
     "facts": [
      "使いきれる分だけ購入し食べ残しを減らす",
@@ -173,34 +223,11 @@
     "source": "https://www.caa.go.jp/policies/policy/consumer_policy/information/food_loss/promote/assets/consumer_education_cms201_250325_01.pdf"
    },
    {
-    "scenario": "商店街のスタンプラリーイベント企画",
+    "topic": "育休取得の男性化",
     "origin": "pool"
    },
    {
-    "scenario": "スーパーのフードバンク連携による食品ロス削減",
-    "origin": "web",
-    "facts": [
-     "店舗の廃棄予定食品を地域の支援団体へ提供",
-     "月間トン単位の食品を地域へ回せる事例がある"
-    ],
-    "source": "https://nippon-food-shift.maff.go.jp/foodshift/case18/"
-   },
-   {
-    "scenario": "大学:研究室の配属説明",
-    "origin": "pool"
-   },
-   {
-    "scenario": "留学生センター:住居の相談",
-    "origin": "pool"
-   }
-  ],
-  "reading_topics": [
-   {
-    "topic": "方言の価値",
-    "origin": "pool"
-   },
-   {
-    "topic": "図書館の休館日および電子書籍サービス案内",
+    "topic": "観光公害とマナー",
     "origin": "pool"
    },
    {
@@ -213,29 +240,7 @@
     "source": "https://www.bunka.go.jp/tokei_hakusho_shuppan/tokeichosa/kokugo_yoronchosa/h16/"
    },
    {
-    "topic": "睡眠休養感と日中のパフォーマンス改善",
-    "origin": "web",
-    "facts": [
-     "成人の約4割が睡眠6時間未満",
-     "睡眠の質（休養感）が日中の体調と作業効率に影響"
-    ],
-    "source": "https://www.mhlw.go.jp/content/001305530.pdf"
-   },
-   {
-    "topic": "規格外野菜の加工品開発と直売所での販売拡大",
-    "origin": "web",
-    "facts": [
-     "出荷規格を外れた野菜の有効活用事例が増えている",
-     "加工品化により廃棄を減らし農家収入にもつながる"
-    ],
-    "source": "https://www.maff.go.jp/j/seisan/ryutu/engei/kikaku.html"
-   },
-   {
-    "topic": "ボランティア団体からのスタッフ募集案内",
-    "origin": "pool"
-   },
-   {
-    "topic": "模倣と独創",
+    "topic": "職人の道具作り",
     "origin": "pool"
    },
    {
@@ -248,21 +253,43 @@
     "source": "https://www.maff.go.jp/j/kanbo/smart/index.html"
    },
    {
-    "topic": "買い物のかたちの変化",
+    "topic": "郷土料理と記憶",
     "origin": "pool"
    },
    {
-    "topic": "時間の余白と思考の休息",
-    "origin": "pool"
-   },
-   {
-    "topic": "歴史的建造物を活用した宿泊施設の運営",
+    "topic": "社内でのマイボトル持参キャンペーン告知",
     "origin": "web",
     "facts": [
-     "古民家や町家を改修し宿泊・交流施設として再生",
-     "維持費を自走させる用途転換が保存の現実的手段"
+     "カフェテリアでマイボトル割引を導入する企業がある",
+     "使い捨てカップ削減が目的"
     ],
-    "source": "https://www.bunka.go.jp/seisaku/bunkashingikai/bunkazai/kikaku/r03/06/pdf/93678101_04.pdf"
+    "source": "https://www.env.go.jp/recycle/yoki/c_3_report/pdf/h23_lca_01.pdf"
+   },
+   {
+    "topic": "スーパーのフードバンク連携による食品ロス削減",
+    "origin": "web",
+    "facts": [
+     "店舗の廃棄予定食品を地域の支援団体へ提供",
+     "月間トン単位の食品を地域へ回せる事例がある"
+    ],
+    "source": "https://nippon-food-shift.maff.go.jp/foodshift/case18/"
+   },
+   {
+    "topic": "音楽と記憶",
+    "origin": "pool"
+   },
+   {
+    "topic": "マイボトル持参による使い捨て容器の削減",
+    "origin": "web",
+    "facts": [
+     "繰り返し使えば使い捨て容器より環境負荷を抑えられる",
+     "給水スポットや店舗での割引が普及の後押しになる"
+    ],
+    "source": "https://www.env.go.jp/recycle/yoki/c_3_report/pdf/h23_lca_01.pdf"
+   },
+   {
+    "topic": "スマート農業と担い手",
+    "origin": "pool"
    }
   ]
  },
@@ -270,97 +297,97 @@
   "問題1_語彙": [
    1,
    1,
+   2,
    4,
-   3,
-   2
+   3
   ],
   "問題2_語彙": [
    4,
-   1,
-   1,
+   3,
    2,
-   3
+   1,
+   1
   ],
   "問題3_語彙": [
-   1,
-   1,
-   2
+   3,
+   2,
+   1
   ],
   "問題4_語彙": [
+   1,
    2,
-   3,
    2,
-   3,
    1,
    4,
-   1
+   3,
+   3
   ],
   "問題5_語彙": [
    3,
+   4,
    1,
    2,
-   4,
    1
   ],
   "問題6_語彙": [
    1,
-   4,
-   1,
-   3,
-   2
-  ],
-  "問題7": [
-   4,
-   1,
-   4,
-   2,
-   2,
-   4,
    3,
    1,
-   1,
-   3,
-   3,
-   2
-  ],
-  "問題8": [
-   1,
-   2,
-   3,
-   4,
-   1
-  ],
-  "問題9": [
-   1,
-   4,
-   2,
-   3
-  ],
-  "問題10": [
-   1,
-   1,
-   3,
    2,
    4
   ],
-  "問題11": [
+  "問題7": [
+   3,
+   4,
+   1,
+   4,
    3,
    2,
    1,
    4,
+   2,
+   2,
+   1,
+   3
+  ],
+  "問題8": [
+   3,
+   2,
+   4,
+   1,
+   1
+  ],
+  "問題9": [
+   3,
+   2,
+   4,
+   1
+  ],
+  "問題10": [
+   1,
+   3,
+   2,
+   4,
+   1
+  ],
+  "問題11": [
+   3,
+   1,
+   1,
+   3,
+   4,
    4,
    2,
-   3,
-   1
+   2
   ],
   "問題12": [
    1,
    2
   ],
   "問題13": [
-   3,
+   2,
    1,
-   2
+   3
   ],
   "問題14": [
    2,
@@ -369,93 +396,80 @@
   "聴解_問題1": [
    4,
    1,
-   1,
-   2,
-   3
-  ],
-  "聴解_問題2": [
-   1,
-   2,
    3,
    1,
-   4,
    2
   ],
-  "聴解_問題3": [
-   1,
+  "聴解_問題2": [
+   4,
+   2,
+   2,
    3,
    1,
+   1
+  ],
+  "聴解_問題3": [
    2,
-   4
+   4,
+   3,
+   1,
+   1
   ],
   "聴解_問題4": [
-   1,
    3,
+   2,
+   1,
    3,
    1,
    2,
    1,
    3,
-   2,
-   2,
    1,
+   2,
    2
   ],
   "聴解_問題5": [
+   3,
    1,
-   4,
    2
   ]
  },
  "cloze_topic": {
-  "origin": "pool",
-  "note": "author picks any pool reading topic register"
- },
- "info_retrieval_texture": {
-  "detail": "電子地域通貨による市内消費の好循環",
+  "topic": "歴史的建造物を活用した宿泊施設の運営",
   "origin": "web",
   "facts": [
-   "チャージや買物時にプレミアムが付き市内加盟店だけで使える",
-   "導入自治体では地元商店街での消費増加が報告される"
+   "古民家や町家を改修し宿泊・交流施設として再生",
+   "維持費を自走させる用途転換が保存の現実的手段"
   ],
-  "source": "https://dx-navi.soumu.go.jp/case/pdfcase174"
+  "source": "https://www.bunka.go.jp/seisaku/bunkashingikai/bunkazai/kikaku/r03/06/pdf/93678101_04.pdf"
+ },
+ "info_retrieval_texture": {
+  "detail": "地域通貨のポイント還元キャンペーンと観光消費喚起",
+  "origin": "web",
+  "facts": [
+   "決済額の約2割還元などのキャンペーン例がある",
+   "観光・飲食など特定業種の消費喚起にも使われる"
+  ],
+  "source": "https://www.cas.go.jp/jp/seisaku/digitaldenen/menubook/0005.html"
  },
  "qr_situation_seeds": [
   {
-   "detail": "小売店での手前取り呼びかけと期限切れ廃棄削減",
+   "detail": "自治体の地域通貨ポイント付与による健康・ボランティア促進",
    "origin": "web",
-   "source": "https://www.caa.go.jp/notice/entry/024301/"
+   "source": "https://www.soumu.go.jp/main_content/000781401.pdf"
   },
   {
-   "detail": "マイボトル持参による使い捨て容器の削減",
+   "detail": "市民向けマイボトル給水の呼びかけ",
    "origin": "web",
    "source": "https://www.env.go.jp/recycle/yoki/c_3_report/pdf/h23_lca_01.pdf"
   },
   {
-   "detail": "地域通貨のポイント還元キャンペーンと観光消費喚起",
+   "detail": "地域の図書館での電子書籍と来館サービスの併用案内",
    "origin": "web",
-   "source": "https://www.cas.go.jp/jp/seisaku/digitaldenen/menubook/0005.html"
+   "source": "https://www.bunka.go.jp/tokei_hakusho_shuppan/tokeichosa/kokugo_yoronchosa/index.html"
   }
  ],
  "carrier_seeds": [
-  {
-   "detail": "自治体の地域通貨ポイント付与による健康・ボランティア促進",
-   "origin": "web",
-   "facts": [
-    "健康づくりやボランティア参加でポイントを付与する自治体がある",
-    "給付と合わせてキャッシュレス推進を図る事例が増える"
-   ],
-   "source": "https://www.soumu.go.jp/main_content/000781401.pdf"
-  },
-  {
-   "detail": "使い捨て傘ゼロに向けたシェアリング普及",
-   "origin": "web",
-   "facts": [
-    "アプリ登録で借りて最寄りスポットへ返却できる",
-    "雨の日の移動快適化と廃棄削減を同時に狙う"
-   ],
-   "source": "https://www.tokyoupdates.metro.tokyo.lg.jp/post-1440/"
-  },
   {
    "detail": "熱中症予防のためのこまめな水分補給と室温管理",
    "origin": "web",
@@ -466,31 +480,22 @@
    "source": "https://www.mhlw.go.jp/seisakunitsuite/bunya/kenkou_iryou/kenkou/nettyuu/nettyuu_taisaku/pdf/necchushoyobou/2026necchushouyobou.pdf"
   },
   {
-   "detail": "地域の図書館での電子書籍と来館サービスの併用案内",
+   "detail": "電子地域通貨による市内消費の好循環",
    "origin": "web",
    "facts": [
-    "休館中でも電子書籍は利用可能な場合がある",
-    "返却ポストの利用条件に注意が必要"
+    "チャージや買物時にプレミアムが付き市内加盟店だけで使える",
+    "導入自治体では地元商店街での消費増加が報告される"
    ],
-   "source": "https://www.bunka.go.jp/tokei_hakusho_shuppan/tokeichosa/kokugo_yoronchosa/index.html"
+   "source": "https://dx-navi.soumu.go.jp/case/pdfcase174"
   },
   {
-   "detail": "シェアサイクル利用時のヘルメット着用促進",
+   "detail": "規格外野菜の加工品開発と直売所での販売拡大",
    "origin": "web",
    "facts": [
-    "ガイドラインで事業者による着用促進が求められる",
-    "料金割引や備え付けヘルメットなどの工夫例がある"
+    "出荷規格を外れた野菜の有効活用事例が増えている",
+    "加工品化により廃棄を減らし農家収入にもつながる"
    ],
-   "source": "https://www.shouhiseikatu.metro.tokyo.lg.jp/anzen/kyougikai/r5/documents/r5kyogikai-3_handout-01-1_1.pdf"
-  },
-  {
-   "detail": "社内でのマイボトル持参キャンペーン告知",
-   "origin": "web",
-   "facts": [
-    "カフェテリアでマイボトル割引を導入する企業がある",
-    "使い捨てカップ削減が目的"
-   ],
-   "source": "https://www.env.go.jp/recycle/yoki/c_3_report/pdf/h23_lca_01.pdf"
+   "source": "https://www.maff.go.jp/j/seisan/ryutu/engei/kikaku.html"
   }
  ],
  "harvest_sha": "dc34edede771"

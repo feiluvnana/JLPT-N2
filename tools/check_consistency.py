@@ -850,6 +850,18 @@ def check_script_shape(script_text: str, ct: str, m):
     check("問題N instructions are identical in booklet and script", not drift,
           f"booklet wording absent from the script: {[d[:34] + '…' for d in drift]}")
 
+    # Check for instruction drift from canonical official wording (warn)
+    canon_drift = []
+    if "問題用紙のせんたくしを読んで" in ct or "問題用紙の選択肢を読んで" in ct:
+        canon_drift.append("問題2: uses 'せんたくしを読んで' instead of '問題用紙を見て'")
+    if re.search(r"問題5では、.*メモをとってもかまいません", ct) and "問題用紙にメモを" not in ct:
+        canon_drift.append("問題5: missing '問題用紙に' before 'メモをとっても'")
+    if "選びなさい" in ct:
+        canon_drift.append("聴解 instruction uses '選びなさい' instead of '選んでください'")
+    warn("問題N instructions follow official wording", not canon_drift,
+         "; ".join(canon_drift))
+
+
     secs = re.split(r"^問題([1-5])。$", script_text, flags=re.M)
     spoken = {int(secs[i]): len(re.findall(r"^[1-4]、", secs[i + 1], re.M))
               for i in range(1, len(secs), 2)}
