@@ -2,8 +2,9 @@
 
 .PHONY: help check grade sheet serve booklet mp3 sample merge-seeds
 
-# Handle positional arguments for targets (e.g., "make grade 1", "make sheet 1", "make serve 1", "make booklet 1", "make mp3 1")
-TARGET_CMDS := grade sheet serve booklet mp3
+# Handle positional arguments for targets (e.g., "make grade 1", "make sheet 1", "make booklet 1", "make mp3 1").
+# `serve` is deliberately NOT here: one server covers every test, so it takes no id.
+TARGET_CMDS := grade sheet booklet mp3
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -21,10 +22,10 @@ help:
 	@echo "=========================================================================="
 	@echo "                      JLPT N2 Mock Exam Commands                          "
 	@echo "=========================================================================="
-	@echo "  make grade 1          Grade test 1 (reads tests/1/user_answers*.json)"
+	@echo "  make grade 1          Grade test 1 (reads tests/1/ユーザー解答*.json)"
 	@echo "  make grade TEST=2     Grade test 2"
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
-	@echo "  make serve 1          Serve answer sheet for test 1 & auto-save to tests/1/"
+	@echo "  make serve            Serve ALL tests: list -> exam -> result (no test id)"
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
 	@echo "  make mp3 1            Synthesize listening audio for test 1 (聴解.mp3)"
 	@echo "  make check            Verify docs/code/tests consistency (read-only)"
@@ -51,10 +52,7 @@ sheet-%:
 	python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/$*
 
 serve:
-	python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py tests/$(TEST)
-
-serve-%:
-	python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py tests/$*
+	python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py
 
 booklet:
 	python3 .agents/exam-booklet-generation/scripts/build_booklet.py tests/$(TEST)/言語知識・読解.md tests/$(TEST)/聴解.md

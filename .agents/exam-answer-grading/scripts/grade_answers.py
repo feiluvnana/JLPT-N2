@@ -4,15 +4,16 @@ JLPT Mock Exam Grading & Diagnostic Script.
 
 Grades user responses against official answer keys in tests/<test_id>/,
 calculates standardized scaled scores (0-180), evaluates Pass/Fail criteria,
-identifies weak sub-sections, and generates detailed Markdown diagnostic reports.
+identifies weak sub-sections, and writes the structured result document
+tests/<test_id>/採点結果.json.
 
 Usage:
     # 1. Build the merged answer sheet (once per test, or `make sheet 1`):
     python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
 
-    # 2. Answer it in a browser (`make serve 1`), press 「採点する」 — that already
-    #    writes 採点結果.md and user_answers.json. To re-grade from the CLI:
-    python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 --user-answers tests/1/user_answers.json
+    # 2. Answer it in a browser (`make serve`, pick the test), press 「採点する」 —
+    #    that already writes 採点結果.json and ユーザー解答.json. To re-grade from the CLI:
+    python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 --user-answers tests/1/ユーザー解答.json
 
     # 3. Quick grade via CLI strings:
     python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/1 --answers-gengo "1:4,2:2,3:1..." --answers-choukai "問1-1:2,問1-2:3..."
@@ -22,6 +23,7 @@ import argparse
 import json
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Sub-question mapping definitions for JLPT N2.
@@ -309,116 +311,29 @@ def grade(gengo_keys: dict, choukai_keys: dict, user_answers: dict) -> dict:
     }
 
 
-def render_report(results: dict, test_id: str) -> str:
-    """Generate Markdown grading report with detailed diagnosis."""
-    summary = results["summary"]
-    pass_str = "**合格 (PASS)**" if summary["passed"] else "**不合格 (FAIL)**"
+def result_payload(results: dict, test_id: str, graded_at: str | None = None) -> dict:
+    """The 採点結果.json document.
 
-    lines = []
-    lines.append(f"# JLPT N2 模擬試験 採点結果・弱点分析レポート ({test_id})")
-    lines.append("")
-    lines.append(f"## 総合判定: {pass_str}")
-    lines.append("")
-
-    if not summary["passed"]:
-        reasons = []
-        if not summary["overall_threshold_passed"]:
-            reasons.append(f"総合点 ({summary['total_scaled_score']}点) が合格ライン (90点) に届いていません。")
-        if not summary["cutoff_passed"]:
-            failed_secs = [k for k, v in summary["sections"].items() if not v["passed_cutoff"]]
-            reasons.append(f"基準点未達のセクションがあります: {', '.join(failed_secs)} (各セクション19点以上が必要)。")
-        lines.append(f"> **判定理由**: {' '.join(reasons)}")
-        lines.append("")
-
-    lines.append("## 1. 得点サマリー (得点等化スケールスコア 換算)")
-    lines.append("")
-    lines.append("| セクション | 素点 (正解数/全問) | 換算得点 | 基準点 (足切り) | 判定 |")
-    lines.append("|---|---|---|---|---|")
-
-    for sec_name, sec_data in summary["sections"].items():
-        status = "基準点クリア" if sec_data["passed_cutoff"] else "基準点未達"
-        lines.append(
-            f"| **{sec_name}** | {sec_data['raw_correct']} / {sec_data['raw_total']} | **{sec_data['scaled_score']} / 60** | {sec_data['cutoff']}点 | {status} |"
-        )
-
-    lines.append(
-        f"| **総合計** | **-** | **{summary['total_scaled_score']} / 180** | **90点** | **{pass_str}** |"
-    )
-    lines.append("")
-
-    lines.append("## 2. 大問別（問題形式別）詳細分析")
-    lines.append("")
-    lines.append("| 分野 | 問題 | 大問名 | 正解率 | 正解数 / 問題数 | 評価 |")
-    lines.append("|---|---|---|---|---|---|")
-
-    weak_areas = []
-    for code, stats in results["taxonomy_stats"].items():
-        pct = stats["percentage"]
-        if pct >= 80:
-            eval_icon = "優 (Strong)"
-        elif pct >= 60:
-            eval_icon = "良 (Fair)"
-        else:
-            eval_icon = "要強化 (Weak)"
-            weak_areas.append((code, stats))
-
-        lines.append(
-            f"| {stats['section']} | **{code}** | {stats['name']} | **{pct}%** | {stats['correct']} / {stats['total']} | {eval_icon} |"
-        )
-
-    lines.append("")
-
-    lines.append("## 3. 弱点診断と今後の学習アドバイス")
-    lines.append("")
-    if weak_areas:
-        lines.append("以下の分野は正解率が60%未満となっています。重点的な復習を推奨します：")
-        lines.append("")
-        for code, stats in weak_areas:
-            lines.append(f"### {stats['section']} {code}: {stats['name']} (正解率: {stats['percentage']}%)")
-            if code in ADVICE_FOR:
-                lines.append(f"- **対策**: {ADVICE_FOR[code]}")
-            lines.append("")
-    else:
-        lines.append("全セクションで高い正解率を維持できています！この調子で本試験に向けて実戦問題演習を継続しましょう。")
-        lines.append("")
-
-    lines.append("## 4. 全設問解答チェック表")
-    lines.append("")
-    lines.append("### 言語知識・読解 (問1 〜 問71)")
-    lines.append("")
-    lines.append("| 問 | あなたの解答 | 正解 | 結果 | 問 | あなたの解答 | 正解 | 結果 |")
-    lines.append("|---|---|---|---|---|---|---|---|")
-
-    g_detail = results["detail_gengo"]
-    for q1 in range(1, 36):
-        q2 = q1 + 36
-        item1 = g_detail.get(q1, {})
-        item2 = g_detail.get(q2, {})
-
-        u1 = item1.get("user", "-")
-        c1 = item1.get("correct", "-")
-        r1 = "○" if item1.get("is_correct") else "×"
-
-        if q2 <= 71:
-            u2 = item2.get("user", "-")
-            c2 = item2.get("correct", "-")
-            r2 = "○" if item2.get("is_correct") else "×"
-            lines.append(f"| {q1} | {u1} | {c1} | {r1} | {q2} | {u2} | {c2} | {r2} |")
-        else:
-            lines.append(f"| {q1} | {u1} | {c1} | {r1} | - | - | - | - |")
-
-    lines.append("")
-    lines.append("### 聴解")
-    lines.append("")
-    lines.append("| 問題 | あなたの解答 | 正解 | 結果 |")
-    lines.append("|---|---|---|---|")
-    for k, item in results["detail_choukai"].items():
-        u = item.get("user", "-")
-        c = item.get("correct", "-")
-        r = "○" if item.get("is_correct") else "×"
-        lines.append(f"| {k} | {u} | {c} | {r} |")
-
-    return "\n".join(lines)
+    This is the ONLY report artifact — there is no Markdown report any more.
+    The in-page grader in 解答.html builds the identical structure (the exam app
+    saves it over POST /api/tests/<id>/submit), and `make check` compares the two
+    documents field by field, so the shape here is a contract, not a preference.
+    Entries with no items are dropped so a partially built test cannot show a
+    大問 as 0% purely because it has no questions yet.
+    """
+    stats = {code: s for code, s in results["taxonomy_stats"].items() if s["total"]}
+    weak = [{"code": code, "name": s["name"], "section": s["section"],
+             "percentage": s["percentage"], "advice": ADVICE_FOR.get(code, "")}
+            for code, s in stats.items() if s["percentage"] < 60]
+    return {
+        "test_id": test_id,
+        "graded_at": graded_at or datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "summary": results["summary"],
+        "taxonomy_stats": stats,
+        "weak_areas": weak,
+        "detail_gengo": {str(q): d for q, d in results["detail_gengo"].items()},
+        "detail_choukai": results["detail_choukai"],
+    }
 
 
 def main():
@@ -426,7 +341,7 @@ def main():
     parser.add_argument("--test-dir", required=True, help="Path to test output directory, e.g. tests/1")
     parser.add_argument("--user-answers",
                         help="Comma-separated user answer JSON file(s). "
-                             "Default: user_answers*.json in the test dir or cwd.")
+                             "Default: ユーザー解答*.json in the test dir or cwd.")
     parser.add_argument("--answers-gengo", help="Quick gengo answers string like '1:4,2:2,3:1...'")
     parser.add_argument("--answers-choukai", help="Quick choukai answers string like '問1-1:2,問1-2:3...'")
 
@@ -456,8 +371,8 @@ def main():
     if args.user_answers:
         sources = [Path(x.strip()) for x in args.user_answers.split(",")]
     else:
-        sources = sorted(test_path.glob("user_answers*.json")) + \
-                  sorted(Path.cwd().glob("user_answers*.json"))
+        sources = sorted(test_path.glob("ユーザー解答*.json")) + \
+                  sorted(Path.cwd().glob("ユーザー解答*.json"))
 
     for ua_path in sources:
         if not ua_path.exists():
@@ -468,9 +383,8 @@ def main():
         user_answers["聴解"].update(loaded.get("聴解", {}))
         print(f"Loaded user answers from {ua_path}")
     if not sources:
-        print("  no user_answers*.json found — run "
-              "`make serve <test_id>` to open <test>/解答.html, "
-              "answer, then press 「採点する」.", file=sys.stderr)
+        print("  no ユーザー解答*.json found — run `make serve`, pick this test "
+              "from the list, answer, then press 「採点する」.", file=sys.stderr)
 
     if args.answers_gengo:
         pairs = args.answers_gengo.split(",")
@@ -489,10 +403,10 @@ def main():
     # 3. Perform Grading
     results = grade(gengo_keys, choukai_keys, user_answers)
 
-    # 4. Save diagnostic Markdown report
-    report_md = render_report(results, test_path.name)
-    out_md = test_path / "採点結果.md"
-    out_md.write_text(report_md, encoding="utf-8")
+    # 4. Save the structured result document
+    payload = result_payload(results, test_path.name)
+    out_json = test_path / "採点結果.json"
+    out_json.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
     # 5. Print summary output to stdout
     summary = results["summary"]
@@ -505,8 +419,11 @@ def main():
     for sec_name, sec_data in summary["sections"].items():
         pass_cut = "OK" if sec_data["passed_cutoff"] else "FAIL (Cutoff < 19)"
         print(f"  - {sec_name:<16}: {sec_data['scaled_score']:2d}/60 (Raw: {sec_data['raw_correct']}/{sec_data['raw_total']}) [{pass_cut}]")
+    if payload["weak_areas"]:
+        print(" Weak areas (<60%): " +
+              ", ".join(f"{w['code']} {w['percentage']}%" for w in payload["weak_areas"]))
     print(f"==========================================")
-    print(f"Detailed Markdown report saved to: {out_md}\n")
+    print(f"Result document saved to: {out_json}\n")
 
 
 if __name__ == "__main__":

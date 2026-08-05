@@ -36,7 +36,7 @@ All exam files follow a strict directory structure:
   - Booklet HTML builder: `.agents/exam-booklet-generation/scripts/build_booklet.py` (`make booklet`)
   - Audio generator: `.agents/choukai-mp3-generation/scripts/make_choukai_mp3.py` (`make mp3`)
   - Answer-sheet builder: `.agents/interactive-answer-sheet/scripts/build_interactive.py` (`make sheet`)
-  - Answer-sheet server: `.agents/interactive-answer-sheet/scripts/serve_sheet.py` (`make serve`)
+  - Exam server (ALL tests, no test id): `.agents/interactive-answer-sheet/scripts/serve_sheet.py` (`make serve`)
   - Grader: `.agents/exam-answer-grading/scripts/grade_answers.py` (`make grade`)
 
 ### Standard Deliverables in `tests/<test_id>/` (Japanese File Names Mandatory)
@@ -49,7 +49,7 @@ All exam files follow a strict directory structure:
 | 4 | `聴解.mp3` | Listening audio generated from file 3 |
 | 5 | `聴解_チャプター.json` | Per-問題/item offsets in the MP3 (written with it) |
 | 6 | `解答.html` | The ONE merged problem+answer sheet — full 101-question exam with radio bubbles, audio player, in-page 180pt grading (`build_interactive.py`) |
-| 7 | `採点結果.md`, `user_answers.json` | Written on 「採点する」 from `解答.html`, or by `grade_answers.py` |
+| 7 | `採点結果.json`, `ユーザー解答.json` | Written on 「採点する」 from `解答.html`, or by `grade_answers.py`. Both are results of taking the exam, not of generating it |
 
 ## Workflow (follow in order)
 
@@ -129,10 +129,12 @@ anything.
    6-8), re-run `make check`, and only then move on. A test that has not
    survived this pass is not done, whatever the gate says.
 10. **Take the exam & grade** → read `exam-answer-grading/SKILL.md`.
-   Serve the sheet (`make serve <test_id>`), answer, and press 「採点する」: the
-   report renders in-page and saves `採点結果.md` + `user_answers.json` into
-   `tests/<test_id>/`. CLI grading stays available for offline/batch runs:
-   `make grade <test_id>` (= `grade_answers.py --test-dir tests/<test_id>`).
+   Start the server with `make serve` — it takes no test id; one server lists
+   every test in `tests/` with its progress. Pick this test, answer, and press
+   「採点する」: the page switches to its result screen and saves `採点結果.json`
+   + `ユーザー解答.json` into `tests/<test_id>/`. CLI grading stays available for
+   offline/batch runs: `make grade <test_id>`
+   (= `grade_answers.py --test-dir tests/<test_id>`).
 
 ## One topic, one surface (whole-paper pass before step 9)
 

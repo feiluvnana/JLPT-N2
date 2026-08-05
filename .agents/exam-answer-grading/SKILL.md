@@ -1,11 +1,11 @@
 ---
 name: exam-answer-grading
-description: Grade user answers for JLPT mock exams (primarily N2), calculate standardized scaled scores (0-180), evaluate Pass/Fail criteria (overall >=90, section cutoffs >=19), analyze weaknesses by sub-question (問1-問14, 問題1-問題5), and generate detailed Markdown feedback reports (採点結果.md) with tailored reference-book study recommendations. Use this skill whenever the user asks to grade, score, check answers, evaluate test performance, 採点, 答え合わせ, or analyze exam results for a JLPT mock test.
+description: Grade user answers for JLPT mock exams (primarily N2), calculate standardized scaled scores (0-180), evaluate Pass/Fail criteria (overall >=90, section cutoffs >=19), analyze weaknesses by sub-question (問1-問14, 問題1-問題5), and write the structured result document (採点結果.json) with tailored reference-book study recommendations. Use this skill whenever the user asks to grade, score, check answers, evaluate test performance, 採点, 答え合わせ, or analyze exam results for a JLPT mock test.
 ---
 
 # Exam Answer Grading (採点・弱点分析)
 
-This skill automates the grading of examinee responses for JLPT mock tests, calculates official-style standardized scaled scores, evaluates pass/fail status against JLPT thresholds, identifies weak problem types, and generates comprehensive Japanese Markdown diagnostic reports.
+This skill automates the grading of examinee responses for JLPT mock tests, calculates official-style standardized scaled scores, evaluates pass/fail status against JLPT thresholds, identifies weak problem types, and writes the structured diagnostic document `採点結果.json`.
 
 ---
 
@@ -17,7 +17,7 @@ When a user submits their answers or asks to grade a completed JLPT test:
    - `tests/<test_id>/言語知識・読解.md` (Questions 1 to 71)
    - `tests/<test_id>/聴解.md` (Listening questions: 問1〜問5)
 2. **User Input Ingestion**: Reads examinee responses from:
-   - `user_answers*.json` saved by the **merged answer sheet** `解答.html` (below) — the default source, auto-discovered in the test dir and cwd. Several matching files merge, so hand-split halves also work.
+   - `ユーザー解答*.json` saved by the **merged answer sheet** `解答.html` (below) — the default source, auto-discovered in the test dir and cwd. Several matching files merge, so hand-split halves also work.
    - Inline CLI arguments (`--answers-gengo` / `--answers-choukai`), which override.
 3. **Scaled Score Calculation**: Converts raw section counts into JLPT standardized 0–60 scores:
    - **Language Knowledge (言語知識: 文字・語彙・文法)**: 51 questions max -> scaled to 60.
@@ -35,13 +35,13 @@ When a user submits their answers or asks to grade a completed JLPT test:
    - Evaluates performance per大問 (問1〜問14 for Language/Reading, 問題1〜問題5 for Listening).
    - Flags weak areas (accuracy < 60%) and provides targeted recommendations referencing _Shin Kanzen Masuta N2_ textbooks (`refs/Shinkanzen/Shin_Kanzen_Masuta_N2-*.pdf`).
 6. **Artifact Output**:
-   - Saves `tests/<test_id>/採点結果.md` (Detailed Markdown Report)
+   - Saves `tests/<test_id>/採点結果.json` (the structured result document — see §4)
 
 The merged answer sheet (`解答.html`) is owned by the
 **`interactive-answer-sheet`** skill. It grades the whole 180-point exam in-page
-on button press and writes `採点結果.md` + `user_answers.json` itself — that is
+on button press and writes `採点結果.json` + `ユーザー解答.json` itself — that is
 the normal path. **This skill is the CLI equivalent**, for offline/batch runs
-and for re-grading from a saved `user_answers.json`.
+and for re-grading from a saved `ユーザー解答.json`.
 
 Its in-page grader is generated FROM this module's `GENGO_QUESTION_TAXONOMY`,
 `CHOUKAI_QUESTION_TAXONOMY` and `ADVICE_FOR` at build time, so the two can
@@ -67,11 +67,12 @@ removed; the `interactive-answer-sheet` skill replaces them.
    # or: python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
    ```
    → `tests/1/解答.html` (101 questions total: 71 Gengo/Dokkai + 30 Choukai with audio player).
-2. Serve & answer in browser:
+2. Serve & answer in browser — one server covers every test, so no test id:
    ```bash
-   make serve 1
+   make serve
    ```
-3. Press **「採点する」** → the full 180-point exam is graded on the spot: the report is shown in the page and saved directly as `tests/1/採点結果.md` and `tests/1/user_answers.json`.
+   Pick the test from the list it opens on.
+3. Press **「採点する」** → the full 180-point exam is graded on the spot: the page switches to its result screen and saves `tests/1/採点結果.json` and `tests/1/ユーザー解答.json`. The list then shows that score, and reopens the result screen on demand.
 4. Command line grading remains available for batch/offline CLI workflows:
    ```bash
    make grade 1
@@ -123,15 +124,47 @@ script asserts that its ranges tile 1–71 with no gap or overlap at import.
 
 ---
 
-## 4. Report Structure (`採点結果.md`)
+## 4. Result Document (`採点結果.json`)
 
-The generated report contains 5 major sections:
+The result is **data, not prose** — there is no Markdown report. `解答.html` and
+the test list both read this file back, and `result_payload()` in
+`grade_answers.py` is its only definition on the Python side. The in-page
+`computeResult()` builds the identical structure, and `make check` compares the
+two documents field for field, so this shape is a contract:
 
-1. **総合判定**: Pass/Fail status, reason for failure if any (overall score < 90 or sectional cutoff < 19).
-2. **得点サマリー**: Table showing raw score, scaled score, sectional cutoffs, and overall total.
-3. **大問別詳細分析**: Accuracy percentage and evaluation per大問 — exactly the labels emitted by `grade_answers.py` and the in-page grader: `優 (Strong)` (>=80%), `良 (Fair)` (60-79%), `要強化 (Weak)` (<60%). Plain text, no emoji — 4cad944 removed emoji from the report symbols and both graders must stay in lockstep.
-4. **弱点診断 & 今後の学習アドバイス**: Targeted textbook practice recommendations for flagged weak areas referencing `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-*.pdf`.
-5. **全設問解答チェック表**: Complete comparison matrix comparing user selection vs correct answer key for every question.
+```jsonc
+{
+  "test_id": "1",
+  "graded_at": "2026-08-05T09:12:33+00:00",   // the ONLY field allowed to differ between graders
+  "summary": {
+    "passed": false,                           // overall >=90 AND every section >=19
+    "total_scaled_score": 118, "max_scaled_score": 180,
+    "cutoff_passed": true, "overall_threshold_passed": true,
+    "sections": {                              // keyed by section name
+      "言語知識（文字・語彙・文法）": {"raw_correct": 33, "raw_total": 51,
+                                     "scaled_score": 39, "cutoff": 19, "passed_cutoff": true},
+      "読解":   {"raw_correct": 14, "raw_total": 20, "scaled_score": 42, "cutoff": 19, "passed_cutoff": true},
+      "聴解":   {"raw_correct": 20, "raw_total": 30, "scaled_score": 40, "cutoff": 19, "passed_cutoff": true}
+    }
+  },
+  "taxonomy_stats": {                          // per 大問; empty 大問 are omitted
+    "問1": {"name": "漢字読み (Kanji Reading)", "section": "言語知識",
+            "correct": 3, "total": 5, "percentage": 60.0}
+  },
+  "weak_areas": [                              // percentage < 60, with the study advice
+    {"code": "問3", "name": "…", "section": "言語知識", "percentage": 33.3, "advice": "…"}
+  ],
+  "detail_gengo":  {"1": {"correct": 4, "user": 2, "is_correct": false}},   // all 71
+  "detail_choukai": {"問1-1": {"correct": 2, "user": null, "is_correct": false}}
+}
+```
+
+The result **screen** renders that document into the five familiar parts —
+総合判定, 得点サマリー, 大問別詳細分析, 弱点診断とアドバイス, 全設問解答チェック表.
+Its 大問 ratings are exactly the labels both graders agree on: `優 (Strong)`
+(>=80%), `良 (Fair)` (60-79%), `要強化 (Weak)` (<60%). Plain text, no emoji —
+4cad944 removed emoji from the report symbols and both graders must stay in
+lockstep.
 
 ---
 

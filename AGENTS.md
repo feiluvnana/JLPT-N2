@@ -69,8 +69,8 @@ not route around it silently.
   8. `choukai-mp3-generation`: Synthesizing edge-tts speech audio into exam MP3s (`make_choukai_mp3.py`).
   9. `item-pool-sampling`: Sampling non-repeating items from pool & balancing answer positions (`sample_items.py`).
   10. `web-topic-research`: Sourcing fresh real-world topic seeds, factual texture, and collocation checks from the web, then blending them across ALL exam surfaces (reading, listening, cloze, 問14 flyer, 即時応答 settings, carrier sentences) under enforced balance caps (`merge_seeds.py`).
-  11. `exam-answer-grading`: Grading user responses against answer keys, calculating scaled scores (0-180), evaluating Pass/Fail thresholds, analyzing sub-question weak points, and generating diagnostic Markdown reports (`grade_answers.py`).
-  12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the complete booklet with radio bubbles beside every choice, an in-page audio player for 聴解, and **in-page 180-point grading** that saves `採点結果.md` directly (`build_interactive.py`).
+  11. `exam-answer-grading`: Grading user responses against answer keys, calculating scaled scores (0-180), evaluating Pass/Fail thresholds, analyzing sub-question weak points, and writing the structured result document `採点結果.json` (`grade_answers.py`).
+  12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the complete booklet with radio bubbles beside every choice, an in-page audio player for 聴解, **in-page 180-point grading** that saves `採点結果.json` directly (`build_interactive.py`), and the one server that lists every test and runs them (`serve_sheet.py`).
   13. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test).
 
 ---
@@ -100,8 +100,8 @@ Inside `tests/<test_id>/`:
 | Listening Audio MP3                  | `聴解.mp3`                             | Synthesized audio generated from the TTS script                                        |
 | Interactive Answer Sheet             | `解答.html`                            | Combined booklet (71 Gengo/Dokkai + 30 Choukai + Audio player); in-page 180pt grading |
 | Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
-| User Answers Record                  | `user_answers.json`                    | Saved automatically on submit from `解答.html`                                         |
-| Combined Grading Report              | `採点結果.md`                          | Generated on submit from `解答.html` or written by `grade_answers.py`                  |
+| User Answers Record                  | `ユーザー解答.json`                    | Saved automatically on submit from `解答.html`                                         |
+| Combined Grading Result              | `採点結果.json`                        | Generated on submit from `解答.html` or written by `grade_answers.py`. There is no Markdown report — the result is data, read back by the result screen and by the test list |
 
 ---
 
@@ -142,7 +142,7 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 | `make booklet <test_id>`  | `build_booklet.py` on both Markdown sources        |
 | `make mp3 <test_id>`      | `make_choukai_mp3.py` on `聴解スクリプト.txt`       |
 | `make sheet <test_id>`    | `build_interactive.py` → `解答.html`               |
-| `make serve <test_id>`    | `serve_sheet.py` (browser + direct saving)         |
+| `make serve`              | `serve_sheet.py` — ONE server for every test (takes no test id) |
 | `make grade <test_id>`    | `grade_answers.py --test-dir tests/<test_id>`      |
 
 `make sample` reuses the same default seed on every run and has no way to pass
@@ -197,18 +197,23 @@ _(The generator automatically cleans up temporary `segments/` audio files upon s
 python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id>
 #   -> tests/<test_id>/解答.html  (101 questions total)
 
-# Step 2: serve & answer in a browser (with direct saving to tests/<test_id>/)
-make serve <test_id>
-#   or: python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py tests/<test_id>
-#   Pressing 「採点する」 automatically saves 採点結果.md & user_answers.json directly into tests/<test_id>/.
+# Step 2: serve & answer in a browser — ONE server covers every test, so no id here
+make serve
+#   or: python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py [--port 8765] [--no-open]
+#   Screen 1 (`/`)                        the test list, with each test's progress and last score
+#   Screen 2 (`/tests/<test_id>/解答.html`) the exam; every click saves ユーザー解答.json
+#   Screen 3 (in page, after 「採点する」)   the result, saved as 採点結果.json, with a back button
+#   A graded test opens straight on screen 3 from the list, and can still be redone.
 
 # Step 3: command line grading (optional)
 python3 .agents/exam-answer-grading/scripts/grade_answers.py --test-dir tests/<test_id>
-#   auto-discovers user_answers*.json in the test dir and cwd
+#   auto-discovers ユーザー解答*.json in the test dir and cwd; writes 採点結果.json
 ```
 
 The legacy `マークシート.pdf` / `マークシート.html` mark sheets are gone; the
-answer sheet is merged into the problem sheet.
+answer sheet is merged into the problem sheet. The per-test server is gone too —
+`make serve <id>` no longer exists, and so is the Markdown grading report, which
+is now the JSON document both graders write.
 
 ---
 

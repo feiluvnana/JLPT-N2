@@ -19,7 +19,8 @@ this repo has shipped came from skipping a rule that was already written.
 - `jlpt-test-generation` is the entry point: invoke or read it first for any
   exam work, even a partial request like "make a listening section".
 - Scripts always run from the workspace root; prefer the `make` targets
-  documented in `AGENTS.md` §4 (`make sheet 1`, `make serve 1`, `make grade 1`).
+  documented in `AGENTS.md` §4 (`make sheet 1`, `make grade 1`). `make serve`
+  is the exception — one server covers every test, so it takes no test id.
 - **Run `make check` before you report any pipeline change as done.** It is the
   read-only gate that catches docs drifting from the scripts and malformed
   answer sheets; see `AGENTS.md` §4.

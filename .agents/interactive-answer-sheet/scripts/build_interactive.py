@@ -5,10 +5,10 @@ merged into a single interactive file solved in a browser.
 
     python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/1
 
-Writes tests/<id>/解答.html.
-Click through the full exam, press 「採点する」, and the entire 180-point exam is graded
-in the page: the combined report is shown inline and saved as 採点結果.md along with
-user_answers.json directly into tests/<id>/.
+Writes tests/<id>/解答.html — screens 2 and 3 of the unified server (`make serve`):
+the exam itself, and the result view it switches to on 「採点する」. The whole
+180-point exam is graded in the page; the structured result is saved as
+採点結果.json along with ユーザー解答.json directly into tests/<id>/.
 
 SAFETY: answer keys live at the end of the source Markdowns. Everything from the
 key heading onward is TRUNCATED out of the rendered document — keys are embedded
@@ -27,6 +27,12 @@ _spec = importlib.util.spec_from_file_location(
     ROOT / ".agents/exam-booklet-generation/scripts/build_booklet.py")
 booklet = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(booklet)
+
+_style_spec = importlib.util.spec_from_file_location(
+    "app_style", Path(__file__).resolve().with_name("app_style.py"))
+app_style = importlib.util.module_from_spec(_style_spec)
+_style_spec.loader.exec_module(app_style)
+
 import markdown  # noqa: E402  (after booklet, which asserts its deps)
 
 # Everything from here down is the answer key — never rendered.
@@ -39,6 +45,8 @@ CHOUKAI_ITEM = re.compile(r"^\*\*(例|\d{1,2}番|質問[12])\*\*\s*$")
 # 聴解 inline bubble rows: `**1番** 1 ・ 2 ・ 3 ・ 4` (可 two per line)
 CHOUKAI_INLINE = re.compile(r"\*\*(例|\d{1,2}番)\*\*\s*((?:[1-4]\s*・\s*)+[1-4])")
 OPTION = re.compile(r"^\s+([1-4])\.\s*(.+)$")
+# 例 answers pre-marked on the 解答用紙 grid: `| 1 **(2)** 3 4 | …`
+EXAMPLE_PREMARK = re.compile(r"\*\*[（(]([1-4])[)）]\*\*")
 # Options numbered inside a line: ` 1. あ　2. い　3. う　4. え`. The lookbehind
 # keeps 「（1）」-style references in prose from counting as options.
 INLINE_OPT = re.compile(r"(?<![^\s（(])([1-4])\.\s*\S")
@@ -59,7 +67,9 @@ def option_run(text: str) -> int | None:
         return len(nums)
     return None
 
-EXTRA_CSS = """
+# The chrome shared with screen 1 (the test list) lives in app_style.py — see the
+# note there. Everything below is sheet-only: bubbles, player, screen switching.
+EXTRA_CSS = app_style.APP_CSS + """
 .qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
 .qa label{display:inline-flex;align-items:center;gap:.28em;cursor:pointer;
   padding:.08em .45em;border:1px solid #bbb;border-radius:999px;font-size:10pt;
@@ -69,21 +79,21 @@ EXTRA_CSS = """
 .qa input:checked+span{font-weight:700}
 .qa label:has(input:checked){background:#1d4ed8;border-color:#1d4ed8;color:#fff}
 .qa .qid{border:none;background:none;color:#888;font-size:9pt;padding-left:0}
+/* The 例 row is shown, not answerable — its answer is already marked, because
+   the announcer says 「解答用紙の問題◯の例のところを見てください」. */
+.qa.ex .mark{display:inline-flex;align-items:center;justify-content:center;
+  min-width:2em;padding:.08em .5em;border:1px solid #bbb;border-radius:999px;
+  font-size:10pt;background:#fff;line-height:1.5;color:#777}
+.qa.ex .mark.on{background:#111;border-color:#111;color:#fff;font-weight:700}
 .opt{display:flex;align-items:flex-start;gap:.5em;margin:.1em 0}
 .opt .b{flex:0 0 auto;margin-top:.25em}
-#bar{position:sticky;top:0;z-index:99;background:#111;color:#fff;
-  padding:.55em .9em;display:flex;gap:1em;align-items:center;
-  font-family:sans-serif;font-size:11pt}
-#bar button{font-size:11pt;padding:.35em .9em;cursor:pointer;border-radius:6px;
-  border:1px solid #555;background:#fff;color:#111}
-#bar button.primary{background:#1d4ed8;color:#fff;border-color:#1d4ed8;font-weight:bold}
-#bar .grow{flex:1}
 #done{font-variant-numeric:tabular-nums}
-#player{position:sticky;top:2.6em;z-index:98;background:#f3f4f6;
-  border-bottom:1px solid #d1d5db;padding:.5em .9em;font-family:sans-serif}
-#player audio{width:100%;height:34px;display:block}
+#player{position:sticky;top:3.4em;z-index:98;background:#f3f4f6;
+  border-top:1px solid #d1d5db;border-bottom:1px solid #d1d5db;
+  padding:.9em 1em;font-family:var(--ui)}
+#player audio{width:100%;height:36px;display:block}
 .pctl{display:flex;flex-wrap:wrap;gap:.5em .8em;align-items:center;
-  margin-top:.4em;font-size:10pt}
+  margin-top:.7em;font-size:10pt}
 .pctl button,.pctl select{font-size:10pt;padding:.2em .5em;cursor:pointer}
 .pctl .pick{cursor:pointer;color:#1d4ed8;text-decoration:underline}
 .pctl .pick input{display:none}
@@ -93,21 +103,54 @@ EXTRA_CSS = """
 .section-divider{margin:3em 0;border:0;border-top:3px double #333}
 .section-title{font-size:16pt;background:#1e293b;color:#fff;padding:.4em .8em;
   margin:2em 0 1em;border-radius:4px}
-#result:not(:empty){margin:2em 0 4em;padding:1em 1.2em;border:2px solid #1d4ed8;
-  border-radius:8px;background:#f8fafc;font-family:sans-serif}
-#result pre{white-space:pre-wrap;word-break:break-word;font-size:9.5pt;
-  line-height:1.65;background:#fff;border:1px solid #e2e8f0;border-radius:6px;
-  padding:.9em;max-height:60vh;overflow:auto}
-#result .hint{font-size:10pt;color:#475569}
-@media print{#bar,#player{display:none}.qa label{border-color:#666}}
-/* On screen the sheet uses the booklet's centered 60em measure (SCREEN_CSS) so
-   the two render identically; the sticky bar and player are pulled out to the
-   column's gutters so they still look like full-width chrome. */
+/* Screen 3 — the result view the sheet switches to on 採点する. Screen 1 is the
+   test list served by serve_sheet.py; screen 2 is #screen-exam above. Both reuse
+   APP_CSS above, so the three screens share one look. */
+#screen-result{display:none;font-family:var(--ui);color:var(--ink);margin:1.4em 0 4em}
+/* The result screen is app UI, not exam paper: undo the booklet's heading
+   chrome (the gray 問題 bars, the ruled rules) so it matches screen 1. */
+#screen-result h1,#screen-result h2,#screen-result h3{background:none;border:0;
+  padding:0;color:var(--ink);font-family:var(--ui)}
+#screen-result h1{font-size:15pt;margin:.2em 0 .6em}
+#screen-result h2{font-size:13pt;margin:1.8em 0 .5em;border-bottom:2px solid #e2e8f0;
+  padding-bottom:.25em}
+#screen-result h3{font-size:11pt;margin:1.2em 0 .3em;color:var(--muted)}
+.rs-nav{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin:2em 0 0;
+  padding-top:1.2em;border-top:1px solid #e2e8f0}
+.rs-head{display:flex;flex-wrap:wrap;gap:1em;align-items:center;padding:1em 1.2em;
+  border-radius:10px;border:2px solid}
+.rs-head.pass{background:#f0fdf4;border-color:#16a34a}
+.rs-head.fail{background:#fef2f2;border-color:#dc2626}
+.rs-verdict{font-size:18pt;font-weight:700}
+.rs-head.pass .rs-verdict{color:#166534}
+.rs-head.fail .rs-verdict{color:#991b1b}
+.rs-score{font-size:24pt;font-weight:700;font-variant-numeric:tabular-nums;margin-left:auto}
+.rs-score small{font-size:11pt;font-weight:400;color:var(--muted)}
+.rs-why{flex-basis:100%;font-size:10.5pt;color:var(--muted);margin:0}
+.rs-saved{font-size:10pt;color:var(--muted);margin:.2em 0 1.2em}
+.rs-saved.ok{color:#15803d;font-weight:700}
+.rs-advice{border-left:4px solid #f59e0b;background:#fffbeb;padding:.7em 1em;
+  margin:.6em 0;font-size:10.5pt}
+.rs-advice b{display:block;margin-bottom:.25em}
+.rs-grid{display:flex;flex-wrap:wrap;gap:.3em;margin:.5em 0 1.2em}
+@media print{#bar,#player,.rs-nav{display:none}.qa label{border-color:#666}}
+/* On screen the sheet keeps the booklet's centered 60em measure (SCREEN_CSS), so
+   the exam text and the printed booklet render identically — but the measure
+   moves OFF <body> and ONTO the screen wrappers. The bar is the app's chrome and
+   must span the window exactly as it does on screen 1, and a bar inside a
+   centered body cannot. (`width:100vw` was tried and is wrong: 100vw includes
+   the scrollbar, so the bar overflowed and the 採点する button fell off-screen.)
+   All of this is inside @media screen — the A4 @page geometry is untouched. */
 @media screen{
-  body{padding-top:0}
-  #bar,#player{margin-left:calc(-1 * var(--gutter));
-    margin-right:calc(-1 * var(--gutter));
-    padding-left:var(--gutter);padding-right:var(--gutter)}
+  body{max-width:none;margin:0;padding:0;background:#eef1f5}
+  #screen-exam,#screen-result{max-width:60em;margin:0 auto;background:#fff;
+    padding:2.5em var(--gutter) 6em}
+  /* The player is chrome too, so it spans its card and sticks under the bar;
+     boot() sets its offset from the bar's measured height. */
+  #player{margin:.2em calc(-1 * var(--gutter)) 1em;padding:.9em var(--gutter)}
+}
+@media screen and (max-width:48em){
+  #screen-exam,#screen-result{padding:1.2em var(--gutter) 4em}
 }
 """
 
@@ -152,6 +195,14 @@ const KEYS = %(keys)s, TESTID = "%(testid)s";
 const GENGO_KEYS = %(gengo_keys)s, CHOUKAI_KEYS = %(choukai_keys)s;
 const ANSWER_KEY = %(answer_key)s, TAXONOMY = %(taxonomy)s, ADVICE = %(advice)s;
 
+// Routes on the unified server (serve_sheet.py, `make serve`). Opened over
+// file:// these fetches simply fail and grading falls back to a download.
+const API = '/api/tests/' + encodeURIComponent(TESTID) + '/';
+// Section labels are the keys grade_answers.py uses in its own result JSON —
+// the two graders write the SAME 採点結果.json shape, and make check proves it.
+const SEC_GENGO = "言語知識（文字・語彙・文法）", SEC_DOKKAI = "読解", SEC_CHOUKAI = "聴解";
+const EXAM_TITLE = "テスト " + TESTID + "（受験）", RESULT_TITLE = "テスト " + TESTID + "（採点結果）";
+
 function state(){
   const o = {};
   document.querySelectorAll('input[type=radio]:checked').forEach(r=>{
@@ -167,28 +218,29 @@ function answersPayload(ans){
 }
 let _saveTimer = null;
 function persistAnswers(ans){
-  // Single source of truth: tests/<id>/user_answers.json via make serve.
+  // Single source of truth: tests/<id>/ユーザー解答.json via make serve. The
+  // server reads the same file back to show progress on the test list (screen 1).
   // Over file:// the POST is a no-op; 「採点する」 still downloads the JSON.
   clearTimeout(_saveTimer);
   _saveTimer = setTimeout(()=>{
-    fetch('/api/save-answers', {
+    fetch(API + 'answers', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        json_filename: 'user_answers.json',
-        json_data: answersPayload(ans)
-      })
+      body: JSON.stringify({answers: answersPayload(ans)})
     }).catch(()=>{ /* file:// or offline: no server — grade download only */ });
   }, 250);
 }
-function refresh(){
-  const ans = state();
+function updateCounter(ans){
   let gCount = 0, cCount = 0;
   for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gCount++; }
   for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) cCount++; }
   const total = gCount + cCount;
   document.getElementById('done').textContent =
     "言語: " + gCount + "/71 | 聴解: " + cCount + "/30 | 計: " + total + " / " + KEYS.length;
+}
+function refresh(){
+  const ans = state();
+  updateCounter(ans);
   persistAnswers(ans);
 }
 function applyAnswers(o){
@@ -216,210 +268,344 @@ function flattenSaved(data){
 async function restore(){
   let o = {};
   try {
-    const r = await fetch('user_answers.json', {cache: 'no-store'});
+    const r = await fetch('ユーザー解答.json', {cache: 'no-store'});
     if (r.ok) o = flattenSaved(await r.json());
   } catch(e){}
   applyAnswers(o);
   // Apply without re-POSTing: refresh() would persistAnswers and race the load.
-  const ans = state();
-  let gCount = 0, cCount = 0;
-  for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gCount++; }
-  for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) cCount++; }
-  const total = gCount + cCount;
-  document.getElementById('done').textContent =
-    "言語: " + gCount + "/71 | 聴解: " + cCount + "/30 | 計: " + total + " / " + KEYS.length;
+  updateCounter(state());
 }
 function clearAll(){
   if (!confirm("すべての解答を消去しますか？")) return;
   document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
-  document.getElementById('result').innerHTML = "";
   refresh();
 }
 
-function pct(c, t){ return (t ? Math.round(c / t * 1000) / 10 : 0).toFixed(1); }
+/* ---------------------------------------------------------------- grading
+   computeResult() is the ONLY scoring path in the page and it returns DATA,
+   never markup — the same object grade_answers.py builds, so 採点結果.json has
+   one shape whichever grader wrote it. Keep it pure (no DOM, no Date): make
+   check runs this exact function under node and compares it with the Python
+   grader on identical answers. */
+function computeResult(ans){
+  const detailGengo = {}, detailChoukai = {};
+  let goi = 0, dokkai = 0, choukai = 0;
 
-function buildReport(ans){
-  // Calculate scaled scores for 3 JLPT N2 sections
-  // 1. Language Knowledge (Q1-51): 51 questions -> 60 scaled
-  // 2. Reading (Q52-71): 20 questions -> 60 scaled
-  // 3. Listening (問1-問5): 30 items -> 60 scaled
-  let gengoCorrect = 0, dokkaiCorrect = 0, choukaiCorrect = 0;
-  for (let q = 1; q <= 51; q++){
-    if (ans[String(q)] !== undefined && ans[String(q)] === ANSWER_KEY[String(q)]) gengoCorrect++;
-  }
-  for (let q = 52; q <= 71; q++){
-    if (ans[String(q)] !== undefined && ans[String(q)] === ANSWER_KEY[String(q)]) dokkaiCorrect++;
+  for (let q = 1; q <= 71; q++){
+    const k = String(q);
+    const correct = ANSWER_KEY[k] === undefined ? null : ANSWER_KEY[k];
+    const user = ans[k] === undefined ? null : ans[k];
+    const ok = correct !== null && user !== null && user === correct;
+    if (ok){ if (q <= 51) goi++; else dokkai++; }
+    detailGengo[k] = {correct: correct, user: user, is_correct: ok};
   }
   for (const k of CHOUKAI_KEYS){
-    if (ans[k] !== undefined && ans[k] === ANSWER_KEY[k]) choukaiCorrect++;
+    const correct = ANSWER_KEY[k] === undefined ? null : ANSWER_KEY[k];
+    const user = ans[k] === undefined ? null : ans[k];
+    const ok = correct !== null && user !== null && user === correct;
+    if (ok) choukai++;
+    detailChoukai[k] = {correct: correct, user: user, is_correct: ok};
   }
 
-  const scaledGengo = Math.round(gengoCorrect / 51 * 60);
-  const scaledDokkai = Math.round(dokkaiCorrect / 20 * 60);
-  const scaledChoukai = Math.round(choukaiCorrect / 30 * 60);
-  const totalScaled = scaledGengo + scaledDokkai + scaledChoukai;
+  // Raw section sizes: 51 / 20 / 30, each scaled to 60 (JLPT equating).
+  const nGoi = 51, nDokkai = 20, nChoukai = CHOUKAI_KEYS.length || 30;
+  const sGoi = Math.round((goi / nGoi) * 60);
+  const sDokkai = Math.round((dokkai / nDokkai) * 60);
+  const sChoukai = Math.round((choukai / nChoukai) * 60);
+  const totalScaled = sGoi + sDokkai + sChoukai;
+  const cutoffPassed = sGoi >= 19 && sDokkai >= 19 && sChoukai >= 19;
+  const overallPassed = totalScaled >= 90;
 
-  const passedGengo = scaledGengo >= 19;
-  const passedDokkai = scaledDokkai >= 19;
-  const passedChoukai = scaledChoukai >= 19;
-  const passedOverall = totalScaled >= 90;
-  const passedTotal = passedOverall && passedGengo && passedDokkai && passedChoukai;
-
-  const passStr = passedTotal ? "**合格 (PASS)**" : "**不合格 (FAIL)**";
-
-  const L = [];
-  L.push("# JLPT N2 模擬試験 採点結果・弱点分析レポート (" + TESTID + ")");
-  L.push("");
-  L.push("## 総合判定: " + passStr);
-  L.push("");
-
-  if (!passedTotal){
-    const reasons = [];
-    if (!passedOverall) reasons.push("総合点 (" + totalScaled + "点) が合格ライン (90点) に届いていません。");
-    const failedSecs = [];
-    if (!passedGengo) failedSecs.push("言語知識");
-    if (!passedDokkai) failedSecs.push("読解");
-    if (!passedChoukai) failedSecs.push("聴解");
-    if (failedSecs.length) reasons.push("基準点未達のセクションがあります: " + failedSecs.join("、") + " (各セクション19点以上が必要)。");
-    L.push("> **判定理由**: " + reasons.join(" "));
-    L.push("");
+  function sec(correct, total, scaled){
+    return {raw_correct: correct, raw_total: total, scaled_score: scaled,
+            cutoff: 19, passed_cutoff: scaled >= 19};
   }
+  const sections = {};
+  sections[SEC_GENGO] = sec(goi, nGoi, sGoi);
+  sections[SEC_DOKKAI] = sec(dokkai, nDokkai, sDokkai);
+  sections[SEC_CHOUKAI] = sec(choukai, nChoukai, sChoukai);
 
-  L.push("## 1. 得点サマリー (得点等化スケールスコア 換算)");
-  L.push("");
-  L.push("| セクション | 素点 (正解数/全問) | 換算得点 | 基準点 (足切り) | 判定 |");
-  L.push("|---|---|---|---|---|");
-  L.push("| **言語知識 (文字・語彙・文法)** | " + gengoCorrect + " / 51 | **" + scaledGengo + " / 60** | 19点 | " + (passedGengo ? "基準点クリア" : "基準点未達") + " |");
-  L.push("| **読解** | " + dokkaiCorrect + " / 20 | **" + scaledDokkai + " / 60** | 19点 | " + (passedDokkai ? "基準点クリア" : "基準点未達") + " |");
-  L.push("| **聴解** | " + choukaiCorrect + " / 30 | **" + scaledChoukai + " / 60** | 19点 | " + (passedChoukai ? "基準点クリア" : "基準点未達") + " |");
-  L.push("| **総合計** | **-** | **" + totalScaled + " / 180** | **90点** | **" + passStr + "** |");
-  L.push("");
-
-  L.push("## 2. 大問別（問題形式別）詳細分析");
-  L.push("");
-  L.push("| 分野 | 問題 | 大問名 | 正解率 | 正解数 / 問題数 | 評価 |");
-  L.push("|---|---|---|---|---|---|");
-
-  const weak = [];
+  const taxonomy = {};
   for (const t of TAXONOMY){
     let c = 0;
     for (const k of t.keys){ if (ans[k] !== undefined && ans[k] === ANSWER_KEY[k]) c++; }
-    const p = pct(c, t.keys.length);
-    let icon = p >= 80 ? "優 (Strong)" : p >= 60 ? "良 (Fair)" : "要強化 (Weak)";
-    if (p < 60) weak.push({code:t.code, name:t.name, section:t.section, p:p});
-    L.push("| " + t.section + " | **" + t.code + "** | " + t.name + " | **" + p + "%%** | " + c + " / " + t.keys.length + " | " + icon + " |");
+    const n = t.keys.length;
+    taxonomy[t.code] = {name: t.name, section: t.section, correct: c, total: n,
+                        percentage: n ? Math.round((c / n) * 100 * 10) / 10 : 0};
   }
-  L.push("");
 
-  L.push("## 3. 弱点診断と今後の学習アドバイス");
-  L.push("");
-  if (weak.length){
-    L.push("以下の分野は正解率が60%%未満となっています。重点的な復習を推奨します：");
-    L.push("");
-    for (const w of weak){
-      L.push("### " + w.section + " " + w.code + ": " + w.name + " (正解率: " + w.p + "%%)");
-      if (ADVICE[w.code]) L.push("- **対策**: " + ADVICE[w.code]);
-      L.push("");
+  const weak = [];
+  for (const t of TAXONOMY){
+    const s = taxonomy[t.code];
+    if (s.percentage < 60){
+      weak.push({code: t.code, name: s.name, section: s.section,
+                 percentage: s.percentage, advice: ADVICE[t.code] || ""});
+    }
+  }
+
+  return {
+    test_id: TESTID,
+    graded_at: null,
+    summary: {
+      passed: overallPassed && cutoffPassed,
+      total_scaled_score: totalScaled,
+      max_scaled_score: 180,
+      cutoff_passed: cutoffPassed,
+      overall_threshold_passed: overallPassed,
+      sections: sections
+    },
+    taxonomy_stats: taxonomy,
+    weak_areas: weak,
+    detail_gengo: detailGengo,
+    detail_choukai: detailChoukai
+  };
+}
+
+/* ------------------------------------------------------- screen 3: 採点結果 */
+function rating(p){ return p >= 80 ? "優 (Strong)" : p >= 60 ? "良 (Fair)" : "要強化 (Weak)"; }
+
+function chip(label, d){
+  const cls = d.user === null ? 'na' : (d.is_correct ? 'ok' : 'ng');
+  const body = d.user === null ? '未解答'
+             : (d.is_correct ? String(d.user) : d.user + ' → ' + d.correct);
+  return '<span class="chip ' + cls + '"><i>' + label + '</i>' + body + '</span>';
+}
+
+function resultHtml(res, msg, saved){
+  const s = res.summary, cls = s.passed ? 'pass' : 'fail';
+  const L = [];
+
+  // Screen 3 carries the same sticky #bar as screens 1 and 2, so its own
+  // buttons belong at the END of the page — after the report you came to read.
+  L.push('<h1>JLPT N2 模擬試験 採点結果（テスト ' + res.test_id + '）</h1>');
+  L.push('<p class="rs-saved' + (saved ? ' ok' : '') + '">' + msg + '</p>');
+  L.push('<div class="rs-head ' + cls + '">'
+    + '<span class="rs-verdict">' + (s.passed ? '合格 (PASS)' : '不合格 (FAIL)') + '</span>'
+    + '<span class="rs-score">' + s.total_scaled_score
+    + ' <small>/ ' + s.max_scaled_score + '</small></span>');
+  if (!s.passed){
+    const why = [];
+    if (!s.overall_threshold_passed){
+      why.push('総合点 (' + s.total_scaled_score + '点) が合格ライン (90点) に届いていません。');
+    }
+    const failed = Object.keys(s.sections).filter(k => !s.sections[k].passed_cutoff);
+    if (failed.length){
+      why.push('基準点未達のセクションがあります: ' + failed.join('、') + ' (各19点以上が必要)。');
+    }
+    L.push('<p class="rs-why"><b>判定理由:</b> ' + why.join(' ') + '</p>');
+  }
+  L.push('</div>');
+
+  L.push('<h2>1. 得点サマリー (得点等化スケールスコア 換算)</h2>');
+  L.push('<table class="ui-table"><thead><tr><th>セクション</th><th>素点</th><th>換算得点</th>'
+    + '<th>基準点</th><th>判定</th></tr></thead><tbody>');
+  for (const name in s.sections){
+    const d = s.sections[name];
+    L.push('<tr><td>' + name + '</td>'
+      + '<td class="n">' + d.raw_correct + ' / ' + d.raw_total + '</td>'
+      + '<td class="n"><b>' + d.scaled_score + '</b> / 60</td>'
+      + '<td class="n">' + d.cutoff + '点</td>'
+      + '<td>' + (d.passed_cutoff ? '基準点クリア' : '基準点未達') + '</td></tr>');
+  }
+  L.push('<tr><td><b>総合計</b></td><td class="n">-</td>'
+    + '<td class="n"><b>' + s.total_scaled_score + '</b> / 180</td>'
+    + '<td class="n">90点</td><td><b>'
+    + (s.passed ? '合格 (PASS)' : '不合格 (FAIL)') + '</b></td></tr>');
+  L.push('</tbody></table>');
+
+  L.push('<h2>2. 大問別（問題形式別）詳細分析</h2>');
+  L.push('<table class="ui-table"><thead><tr><th>分野</th><th>問題</th><th>大問名</th><th>正解率</th>'
+    + '<th>正解数 / 問題数</th><th>評価</th></tr></thead><tbody>');
+  for (const code in res.taxonomy_stats){
+    const t = res.taxonomy_stats[code];
+    L.push('<tr' + (t.percentage < 60 ? ' class="weak"' : '') + '>'
+      + '<td>' + t.section + '</td><td><b>' + code + '</b></td><td>' + t.name + '</td>'
+      + '<td class="n">' + t.percentage.toFixed(1) + '%%</td>'
+      + '<td class="n">' + t.correct + ' / ' + t.total + '</td>'
+      + '<td>' + rating(t.percentage) + '</td></tr>');
+  }
+  L.push('</tbody></table>');
+
+  L.push('<h2>3. 弱点診断と今後の学習アドバイス</h2>');
+  if (res.weak_areas.length){
+    L.push('<p>以下の分野は正解率が60%%未満です。重点的な復習を推奨します。</p>');
+    for (const w of res.weak_areas){
+      L.push('<div class="rs-advice"><b>' + w.section + ' ' + w.code + ': ' + w.name
+        + ' (正解率 ' + w.percentage.toFixed(1) + '%%)</b>' + w.advice + '</div>');
     }
   } else {
-    L.push("全セクションで高い正解率を維持できています！この調子で本試験に向けて実戦問題演習を継続しましょう。");
-    L.push("");
+    L.push('<p>全セクションで高い正解率を維持できています。この調子で本試験に向けて'
+      + '実戦問題演習を継続しましょう。</p>');
   }
 
-  L.push("## 4. 全設問解答チェック表");
-  L.push("");
-  L.push("### 言語知識・読解 (問1 〜 問71)");
-  L.push("");
-  L.push("| 問 | あなたの解答 | 正解 | 結果 | 問 | あなたの解答 | 正解 | 結果 |");
-  L.push("|---|---|---|---|---|---|---|---|");
+  L.push('<h2>4. 全設問解答チェック表</h2>');
+  L.push('<h3>言語知識・読解 (1 〜 71)</h3><div class="rs-grid">');
+  for (let q = 1; q <= 71; q++){ L.push(chip(String(q), res.detail_gengo[String(q)])); }
+  L.push('</div><h3>聴解</h3><div class="rs-grid">');
+  for (const k of CHOUKAI_KEYS){ L.push(chip(k, res.detail_choukai[k])); }
+  L.push('</div>');
 
-  for (let q1 = 1; q1 <= 35; q1++){
-    const q2 = q1 + 36;
-    const u1 = ans[String(q1)], c1 = ANSWER_KEY[String(q1)];
-    const r1 = u1 === undefined ? "-" : (u1 === c1 ? "○" : "×");
-    const u1Str = u1 === undefined ? "-" : String(u1);
+  L.push('<div class="rs-nav">'
+    + '<button class="ui-btn primary" onclick="goList()">← テスト一覧へ戻る</button>'
+    + '<button class="ui-btn" onclick="showScreen(\\'exam\\')">解答に戻ってやり直す</button></div>');
 
-    if (q2 <= 71){
-      const u2 = ans[String(q2)], c2 = ANSWER_KEY[String(q2)];
-      const r2 = u2 === undefined ? "-" : (u2 === c2 ? "○" : "×");
-      const u2Str = u2 === undefined ? "-" : String(u2);
-      L.push("| " + q1 + " | " + u1Str + " | " + c1 + " | " + r1 + " | " + q2 + " | " + u2Str + " | " + c2 + " | " + r2 + " |");
-    } else {
-      L.push("| " + q1 + " | " + u1Str + " | " + c1 + " | " + r1 + " | - | - | - | - |");
-    }
-  }
-
-  L.push("");
-  L.push("### 聴解");
-  L.push("");
-  L.push("| 問題 | あなたの解答 | 正解 | 結果 |");
-  L.push("|---|---|---|---|");
-  for (const k of CHOUKAI_KEYS){
-    const u = ans[k], c = ANSWER_KEY[k];
-    const r = u === undefined ? "-" : (u === c ? "○" : "×");
-    L.push("| " + k + " | " + (u === undefined ? "-" : u) + " | " + c + " | " + r + " |");
-  }
-
-  return L.join("\\n");
+  return L.join('');
 }
 
-function renderResult(md, msg, directSaved){
-  const box = document.getElementById('result');
-  let statusHtml = directSaved
-    ? '<span style="color:#15803d;font-weight:bold;">✓ ' + msg + '</span>'
-    : '<span class="hint">↓ ' + msg + '</span>';
-  box.innerHTML = '<h2 style="margin-top:0">総合採点結果</h2>'
-    + '<p class="hint">' + statusHtml + '</p>'
-    + '<pre></pre>';
-  box.querySelector('pre').textContent = md;
-  box.scrollIntoView({behavior:'smooth'});
+function goList(){ location.href = '/'; }
+
+function showScreen(name){
+  const exam = name === 'exam';
+  document.getElementById('screen-exam').style.display = exam ? '' : 'none';
+  document.getElementById('screen-result').style.display = exam ? 'none' : 'block';
+  // The bar itself never goes away — it is the same chrome on all three screens.
+  // Only the solving controls (counter, 消去, 採点する) belong to screen 2.
+  document.getElementById('bar-controls').style.display = exam ? '' : 'none';
+  document.getElementById('where').style.display = exam ? '' : 'none';
+  document.getElementById('bar-title').textContent = exam ? EXAM_TITLE : RESULT_TITLE;
+  if (exam) updateSpy();
+  const audio = document.getElementById('au');
+  if (!exam && audio) audio.pause();
+  // Drop ?screen=result once you go back to solving, so a reload does not
+  // bounce you straight back into the (now stale) result view.
+  if (exam && location.search) history.replaceState(null, '', location.pathname);
+  window.scrollTo(0, 0);
 }
 
-function save(){
+function showResult(res, msg, saved){
+  document.getElementById('screen-result').innerHTML = resultHtml(res, msg, saved);
+  showScreen('result');
+}
+
+async function save(){
   const ans = state();
   const unanswered = KEYS.filter(k => ans[k] === undefined).length;
   if (unanswered && !confirm(unanswered + "問が未解答です。このまま採点しますか？")) return;
 
-  const md = buildReport(ans);
-  const name = "採点結果.md";
-  const jsonName = "user_answers.json";
-  const payloadJson = answersPayload(ans);
+  const res = computeResult(ans);
+  res.graded_at = new Date().toISOString();
 
-  fetch('/api/submit', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      filename: name,
-      content: md,
-      json_filename: jsonName,
-      json_data: payloadJson
-    })
-  }).then(r => r.ok ? r.json() : null).then(data => {
-    if (data && data.success) {
-      renderResult(md, data.message, true);
-    } else {
-      fallbackDownload(md, name, payloadJson, jsonName);
-    }
-  }).catch(() => {
-    fallbackDownload(md, name, payloadJson, jsonName);
-  });
+  let msg = "", saved = false;
+  try {
+    const r = await fetch(API + 'submit', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({answers: answersPayload(ans), result: res})
+    });
+    const data = r.ok ? await r.json() : null;
+    if (data && data.success){ saved = true; msg = '✓ ' + data.message; }
+  } catch(e){}
+
+  if (!saved) msg = '↓ ' + downloadResult(res, answersPayload(ans));
+  showResult(res, msg, saved);
 }
 
-function fallbackDownload(md, name, payloadJson, jsonName){
-  const blobMd = new Blob([md], {type:"text/markdown;charset=utf-8"});
-  const a1 = document.createElement('a');
-  a1.href = URL.createObjectURL(blobMd); a1.download = name; a1.click();
+function downloadResult(res, answers){
+  // No server (file://): hand the two files to the browser instead.
+  function dl(name, obj){
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)],
+                                          {type: "application/json"}));
+    a.download = name; a.click();
+  }
+  dl("採点結果.json", res);
+  dl("ユーザー解答.json", answers);
+  return "採点結果.json および ユーザー解答.json としてダウンロードしました。";
+}
 
-  const blobJson = new Blob([JSON.stringify(payloadJson, null, 2)], {type:"application/json"});
-  const a2 = document.createElement('a');
-  a2.href = URL.createObjectURL(blobJson); a2.download = jsonName; a2.click();
+/* --------------------------------------------------- where am I in the paper
+   The bar names the section and 大問 you are currently reading, from scroll
+   position: the exam is one very long page, and 「問題7」 on screen 2 tells you
+   which 大問 you are in without scrolling back to its heading. */
+let SPOTS = [];
 
-  renderResult(md, name + " および " + jsonName + " としてダウンロードしました。", false);
+function initSpy(){
+  const root = document.getElementById('screen-exam');
+  if (!root) return;
+  SPOTS = [...root.querySelectorAll('h1,h2,h3,h4')].map(el => {
+    const t = el.textContent.trim();
+    if (el.classList.contains('section-title')){
+      return {el: el, sec: (t.indexOf('聴解') >= 0 && t.indexOf('読解') < 0)
+                            ? '聴解' : '言語知識・読解', q: null};
+    }
+    const m = t.match(/^問題\\s*(\\d+)/);
+    return m ? {el: el, sec: null, q: '問題' + m[1]} : null;
+  }).filter(Boolean);
+  window.addEventListener('scroll', updateSpy, {passive: true});
+  updateSpy();
+}
+
+function updateSpy(){
+  const where = document.getElementById('where');
+  if (!where || !SPOTS.length) return;
+  const bar = document.getElementById('bar');
+  const edge = (bar ? bar.offsetHeight : 0) + 8;
+  let sec = '', q = '';
+  for (const s of SPOTS){
+    if (s.el.getBoundingClientRect().top > edge) break;
+    if (s.sec){ sec = s.sec; q = ''; } else { q = s.q; }
+  }
+  where.textContent = sec ? (q ? sec + ' ｜ ' + q : sec) : '';
+}
+
+function fitPlayer(){
+  // The player sticks directly under the bar. Measure rather than guess: the
+  // bar's height depends on the font and on whether its controls wrap.
+  const bar = document.getElementById('bar'), p = document.getElementById('player');
+  if (bar && p && bar.offsetHeight) p.style.top = bar.offsetHeight + 'px';
+}
+
+async function boot(){
+  fitPlayer();
+  initSpy();
+  window.addEventListener('resize', fitPlayer);
+  await restore();
+  // The test list links here with ?screen=result to reopen a saved result.
+  if (location.search.indexOf('screen=result') !== -1){
+    try {
+      const r = await fetch('採点結果.json', {cache: 'no-store'});
+      if (r.ok) showResult(await r.json(), '保存済みの採点結果です。', true);
+    } catch(e){}
+  }
 }
 
 document.addEventListener('change', e=>{ if(e.target.type==='radio') refresh(); });
-window.addEventListener('DOMContentLoaded', restore);
+window.addEventListener('DOMContentLoaded', boot);
 """
+
+
+def example_premarks(md: str) -> dict:
+    """The 例 answer pre-marked on the 解答用紙 grid, per 問題.
+
+    `jlpt-exam-structure`: each 問題1-4 opens with a practice 例 whose answer the
+    announcer declares and the answer sheet shows ALREADY MARKED — one
+    demonstration, seen and heard together. The grid this reads is truncated out
+    of the sheet by strip_key (the sheet has its own bubbles), so the mark has to
+    be carried over here or the 例 renders as three blank circles and the
+    announcement 「解答用紙の例のところを見てください」 points at nothing.
+
+    Only the grid writes `**(n)**`; the 解説 tables write `**n**`, so the first
+    match under each `問題N` heading is unambiguous.
+    """
+    marks, section = {}, None
+    for line in md.splitlines():
+        m_sec = re.match(r"^#+\s*問題([1-5])", line)
+        if m_sec:
+            section = m_sec.group(1)
+            continue
+        if section and section not in marks:
+            m = EXAMPLE_PREMARK.search(line)
+            if m:
+                marks[section] = int(m.group(1))
+    return marks
+
+
+def example_row(width: int, marked) -> str:
+    """The 例's bubbles — shown, not answerable: the 例 is never scored."""
+    cells = "".join(
+        f'<span class="mark{" on" if i == marked else ""}">{i}</span>'
+        for i in range(1, width + 1))
+    return f'<div class="qa ex"><span class="qid">例</span>{cells}</div>'
 
 
 def radios(qid: str, width: int, label: str = "") -> str:
@@ -477,11 +663,16 @@ def inject_gengo(md: str):
     return "\n".join(out), ids
 
 
-def inject_choukai(md: str, keys: list):
-    """聴解 has printed options and bare bubble rows. Inject radios."""
+def inject_choukai(md: str, keys: list, premarks: dict | None = None):
+    """聴解 has printed options and bare bubble rows. Inject radios.
+
+    The 例 of each 問題 gets a STATIC row with its answer already marked instead
+    of radios — it is a demonstration, not a scored item.
+    """
+    premarks = premarks or {}
     out, used = [], []
     section = None
-    cur, width = None, 0
+    cur, width, ex = None, 0, None
 
     def key_for(item: str, sub: str = "") -> str | None:
         if item == "例" or section is None:
@@ -492,11 +683,14 @@ def inject_choukai(md: str, keys: list):
         return f"問{section}-{n}" if n else None
 
     def flush():
-        nonlocal cur, width
-        if cur and width:
-            out.append(radios(cur, width))
-            used.append(cur)
-        cur, width = None, 0
+        nonlocal cur, width, ex
+        if width:
+            if ex:
+                out.append(example_row(width, premarks.get(ex)))
+            elif cur:
+                out.append(radios(cur, width))
+                used.append(cur)
+        cur, width, ex = None, 0, None
 
     for line in md.split("\n"):
         m_sec = re.match(r"^#+\s*問題([1-5])", line)
@@ -517,6 +711,8 @@ def inject_choukai(md: str, keys: list):
                 if k:
                     parts.append(f"**{item}** " + radios(k, w))
                     used.append(k)
+                elif item == "例":
+                    parts.append(example_row(w, premarks.get(section)))
                 else:
                     parts.append(m.group(0))
                 last = m.end()
@@ -525,7 +721,7 @@ def inject_choukai(md: str, keys: list):
             continue
 
         m_opt = OPTION.match(line)
-        if cur and m_opt:
+        if (cur or ex) and m_opt:
             width = max(width, option_run(line) or int(m_opt.group(1)))
             out.append(line)
             continue
@@ -534,11 +730,13 @@ def inject_choukai(md: str, keys: list):
         m_item = CHOUKAI_ITEM.match(line.strip())
         if m_item:
             lbl = m_item.group(1)
-            if lbl.startswith("質問") and section == "5":
+            if lbl == "例":
+                cur, width, ex = None, 0, section
+            elif lbl.startswith("質問") and section == "5":
                 # 問題5's 2番 carries 質問1/質問2 (jlpt-exam-structure); keys are 問5-2-1/2.
-                cur, width = key_for("2番", lbl[-1]), 0
+                cur, width, ex = key_for("2番", lbl[-1]), 0, None
             else:
-                cur, width = key_for(lbl), 0
+                cur, width, ex = key_for(lbl), 0, None
         out.append(line)
     flush()
     return "\n".join(out), used
@@ -598,13 +796,20 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
     choukai_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(choukai_md, extensions=["tables", "nl2br"])))
 
     title = f"N2 模擬試験 解答用紙 ({testid})"
-    bar = (f'<div id="bar"><b>{title}</b>'
+    # The SAME bar as screen 1's, so the app reads as one thing. `/` is the
+    # unified server's test list; opened as a bare file that link is dead, which
+    # is the same trade-off as the /api/ POSTs.
+    bar = (f'<div id="bar"><a class="back" href="/">← テスト一覧</a>'
+           f'<b id="bar-title">テスト {testid}（受験）</b>'
+           f'<span class="sub" id="where"></span>'
            f'<span class="grow"></span>'
-           f'<span><b id="done">解答済み 0 / 101</b></span>'
-           f'<button onclick="clearAll()">消去</button>'
-           f'<button onclick="save()" class="primary">採点する</button></div>')
+           f'<span id="bar-controls">'
+           f'<span class="sub" id="done">解答済み 0 / 101</span> '
+           f'<button onclick="clearAll()">消去</button> '
+           f'<button onclick="save()" class="primary">採点する</button></span></div>')
 
     body = (
+        f'<div id="screen-exam">'
         f'<div id="section-gengo">'
         f'<h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1>'
         f'{gengo_body}</div>'
@@ -612,6 +817,7 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
         f'<div id="section-choukai">'
         f'<h1 class="section-title">JLPT N2 聴解</h1>'
         f'{player}{choukai_body}</div>'
+        f'</div>'
     )
 
     js = SCRIPT % {"keys": json.dumps(keys, ensure_ascii=False), "testid": testid, **gdata}
@@ -620,7 +826,7 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
         f'<title>{title}</title>'
         f'<style>{booklet.CSS}{booklet.SCREEN_CSS}{EXTRA_CSS}</style></head>'
-        f'<body>{bar}{body}<div id="result"></div>'
+        f'<body>{bar}{body}<div id="screen-result"></div>'
         f'<script>{js}{PLAYER_JS if player else ""}</script>'
         f'</body></html>',
         encoding="utf-8")
@@ -647,7 +853,9 @@ def main():
     gkeys = gam.parse_gengo_keys(gengo_src)
 
     ckeys = gam.parse_choukai_keys(choukai_src)
-    cmd, cused = inject_choukai(strip_key(choukai_src.read_text(encoding="utf-8"), choukai_src), list(ckeys.keys()))
+    craw = choukai_src.read_text(encoding="utf-8")
+    cmd, cused = inject_choukai(strip_key(craw, choukai_src), list(ckeys.keys()),
+                                example_premarks(craw))
 
     combined_keys = {**{str(k): v for k, v in gkeys.items()}, **ckeys}
     all_keys = gids + cused

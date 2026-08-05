@@ -123,8 +123,10 @@ def check_filename_contracts():
     print("\ndocumented deliverable names appear in the script that writes them")
     contracts = [
         ("解答.html", ".agents/interactive-answer-sheet/scripts/build_interactive.py"),
-        ("採点結果.md", ".agents/interactive-answer-sheet/scripts/build_interactive.py"),
-        ("user_answers.json", ".agents/interactive-answer-sheet/scripts/build_interactive.py"),
+        ("採点結果.json", ".agents/interactive-answer-sheet/scripts/build_interactive.py"),
+        ("採点結果.json", ".agents/exam-answer-grading/scripts/grade_answers.py"),
+        ("ユーザー解答.json", ".agents/interactive-answer-sheet/scripts/build_interactive.py"),
+        ("ユーザー解答.json", ".agents/interactive-answer-sheet/scripts/serve_sheet.py"),
         ("聴解.mp3", ".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py"),
         ("聴解_チャプター.json", ".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py"),
         ("ledger.json", ".agents/item-pool-sampling/scripts/sample_items.py"),
@@ -134,9 +136,11 @@ def check_filename_contracts():
         src = (ROOT / script).read_text(encoding="utf-8")
         check(f"{literal} written by {Path(script).name}", literal in src)
 
-    # Filenames retired by the merge to a single sheet must not come back.
+    # Filenames and commands retired by the merge to a single sheet, and then by
+    # the move to one server + a JSON result document, must not come back.
     retired = ["言語知識・読解_解答.html", "聴解_解答.html", "採点結果_",
-               "user_answers_gengo", "user_answers_choukai", "マークシート.pdf"]
+               "採点結果.md", "user_answers", "マークシート.pdf",
+               "make serve 1", "make serve <test_id>"]
     exonerated = re.compile(r"gone|no per-section|legacy|removed|replaces|there are no")
     offenders = []
     for f, text in docs().items():
@@ -759,7 +763,7 @@ global.alert = noop; global.confirm = () => true; global.fetch = () => Promise.r
 global.Blob = function(){}; global.URL = {createObjectURL: () => '', revokeObjectURL: noop};
 
 const sandbox = {};
-new Function('ctx', js + '\nctx.buildReport = buildReport; ctx.ANSWER_KEY = ANSWER_KEY;')(sandbox);
+new Function('ctx', js + '\nctx.computeResult = computeResult; ctx.ANSWER_KEY = ANSWER_KEY;')(sandbox);
 
 // Deterministic simulated answers: correct unless the index is divisible by 3.
 const ans = {};
@@ -768,12 +772,30 @@ Object.keys(sandbox.ANSWER_KEY).sort().forEach((k, i) => {
   ans[k] = (i % 3 === 0) ? (correct % 4) + 1 : correct;
 });
 fs.writeFileSync(process.argv[3], JSON.stringify(ans));
-process.stdout.write(sandbox.buildReport(ans));
+process.stdout.write(JSON.stringify(sandbox.computeResult(ans)));
 """
 
 
+def first_diff(a, b, path: str = "") -> str:
+    """Where two 採点結果.json documents stop agreeing — one readable location."""
+    if isinstance(a, dict) and isinstance(b, dict):
+        only_a, only_b = set(a) - set(b), set(b) - set(a)
+        if only_a or only_b:
+            return f"{path or '/'}: JS-only {sorted(only_b)}, Python-only {sorted(only_a)}"
+        for k in a:
+            if a[k] != b[k]:
+                return first_diff(a[k], b[k], f"{path}.{k}")
+        return ""
+    if isinstance(a, list) and isinstance(b, list) and len(a) == len(b):
+        for i, (x, y) in enumerate(zip(a, b)):
+            if x != y:
+                return first_diff(x, y, f"{path}[{i}]")
+        return ""
+    return f"{path}: Python {a!r} vs JS {b!r}"
+
+
 def check_grader_parity():
-    print("\nin-page grader ↔ grade_answers.py (same answers, same raw scores)")
+    print("\nin-page grader ↔ grade_answers.py (same answers, same 採点結果.json)")
     if not (ROOT / "tests").is_dir():
         return skip("grader parity", "no tests/ on disk")
     sheets = sorted((ROOT / "tests").glob("*/解答.html"))
@@ -796,20 +818,22 @@ def check_grader_parity():
                       r.stderr.strip().splitlines()[-1] if r.stderr.strip() else "no stderr")
                 continue
 
-            # The report also lists per-大問 rows (`3 / 5`); keep only the three
-            # section totals, whose denominators are the section sizes.
-            js_raw = {int(t): int(c) for c, t in re.findall(r"\|\s*(\d+) / (\d+)\s*\|", r.stdout)
-                      if int(t) in (51, 20, 30)}
+            js_doc = json.loads(r.stdout)
             flat = json.loads(answers.read_text(encoding="utf-8"))
             ua = {"言語知識_読解": {k: v for k, v in flat.items() if not k.startswith("問")},
                   "聴解": {k: v for k, v in flat.items() if k.startswith("問")}}
             res = g.grade(g.parse_gengo_keys(d / "言語知識・読解.md"),
                           g.parse_choukai_keys(d / "聴解.md"), ua)
-            py_raw = {s["raw_total"]: s["raw_correct"] for s in res["summary"]["sections"].values()}
+            py_doc = g.result_payload(res, d.name)
 
-            check(f"{d.name}: raw scores agree "
-                  f"({py_raw.get(51)}/51 + {py_raw.get(20)}/20 + {py_raw.get(30)}/30)",
-                  js_raw == py_raw, f"JS {js_raw} vs Python {py_raw}")
+            # Only the timestamp may differ: 採点結果.json must be byte-comparable
+            # whichever grader wrote it, since screen 1 and screen 3 both read it.
+            py_doc.pop("graded_at", None)
+            js_doc.pop("graded_at", None)
+            sec = py_doc["summary"]["sections"]
+            raw = " + ".join(f"{s['raw_correct']}/{s['raw_total']}" for s in sec.values())
+            check(f"{d.name}: 採点結果.json agrees field for field ({raw})",
+                  py_doc == js_doc, first_diff(py_doc, js_doc))
 
 
 def main():
