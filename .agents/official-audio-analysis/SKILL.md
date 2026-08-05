@@ -65,6 +65,39 @@ histogram for cross-checking a full N2: 7 × 20 s, 12 × ~12 s, 17 × ~8 s, 42 �
 Re-run with `d=0.8` on a single-item track: gaps between dialogue turns in
 official audio ≈ 1.0-1.5 s (use 1.3 s).
 
+## Step 5 — Speech rate (not just pauses)
+
+Pause structure alone does not prove the exam isn't underestimating N2 level —
+a correctly-paced recording of speech that is itself too SLOW still makes the
+exam easier than the real thing. This was never checked before it shipped
+across 4 generated tests: `choukai-mp3-generation`'s `SPEAKER_MAP` rates
+(−8% to +6% per character, −10% narrator) were chosen only to make voices
+distinguishable from each other, never calibrated against measured official
+speech tempo.
+
+Measure rate in **morae/minute**, not characters/minute — kanji-heavy text
+compresses multiple morae per character, so a raw character count
+understates true speech density. Natural adult Japanese conversation runs
+**~300–400+ morae/min**; N1/N2 listening audio is deliberately natural-speed
+(unlike N4/N5, which examiners slow down for beginners), so anything
+noticeably under that band on DIALOGUE lines (not narrator instructions) is a
+real defect, not a stylistic choice.
+
+Verified for this repo's current voices (synthesize a representative line at
+the exact production voice/rate, measure duration, count morae by hand):
+- **Dialogue lines** (character voices, rate ±0–6%): a 43-mora line took
+  6.816 s → **~378 morae/min** — within/above natural range. This is the
+  actually-tested content; it is not underestimating N2 pace.
+- **Narrator/announcer** (rate −10%): a 42-mora line took 8.544 s →
+  **~295 morae/min** — more measured than the dialogue rate, but this only
+  affects administrative instructions ("問題1では…"), never scored content.
+
+Re-verify this whenever a voice or rate value changes in
+`choukai-mp3-generation`'s `SPEAKER_MAP`/`NARRATOR` — a "faster to build" or
+"clearer" rate tweak is exactly the kind of change that can silently drift
+back toward underestimating difficulty without anyone noticing, since nothing
+else in the pipeline checks rate.
+
 ## Deliverable
 
 A pacing table in this exact shape (feed to choukai-mp3-generation):
@@ -79,6 +112,8 @@ A pacing table in this exact shape (feed to choukai-mp3-generation):
 | answer pause 問3/問4 | 8 s |
 | answer pause 問5 (each item; the 質問1 → 質問2 gap is also 10 s) | 10 s |
 | loudness target | −17 LUFS |
+| dialogue speech rate (character voices) | ~300–400+ morae/min (natural; verified ~378) |
+| narrator/announcer speech rate | more measured than dialogue is fine (verified ~295); never let it drift onto scored content |
 
 Note: Step 3 measures 問題5's 1番/2番 answer pause at 8.5 s; the table adopts
 10 s deliberately, aligning it with the 質問1→質問2 gap rather than the single

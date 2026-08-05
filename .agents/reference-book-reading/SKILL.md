@@ -55,7 +55,7 @@ Use the 5 official past exam PDFs to calibrate overall exam feel, sentence struc
    - **問題9**: cloze passage body ~500–700 JP chars. A 150–200 char mini-paragraph is not official length.
    Shin Kanzen `N2-Bunpou` example sentences are also multi-clause situational carriers — use them as a second length check when the PDF is scanned (rasterize a 課 page), never as copyable content.
 3. **読解 apparatus**: count `（注N）` and `（中略）` on an official paper before authoring. Generated tests that ship 0–2 notes and no 中略 fail this calibration even if passage topics look fine.
-4. **Distractor Patterns**: Examine how official items create plausible distractors (e.g. 近義語 traps in 問題5, 誤用 types in 問題6, condition traps in 問題14).
+4. **Distractor Patterns**: Examine how official items create plausible distractors (e.g. 近義語 traps in 問題5, 誤用 types in 問題6, condition traps in 問題14). The recipe, not just the label, is authoritative in `question-authoring`'s "Distractor plausibility" section — confirmed structural conventions from `refs/JLPT/`: 問題2 uses a 2×2 component matrix (swap each of 2 kanji independently, e.g. 傾向/頃向/傾高/頃高); 問題9's four blanks always test four distinct categories (connective / modal / content-inference / idiom), never two of the same; 問題11 splits its 2 questions per passage into one factual + one opinion question; 問題14 always requires combining ≥2 constraints (never a single-field lookup), grounded in the printed text.
 5. **Furigana & Vocab Notes**: Benchmark `（注1）` explanations against official formatting in reading passages.
 6. **Listening Script Phrasing**: Compare spoken option length and dialogue turns against the script PDFs in `refs/JLPT/`.
 

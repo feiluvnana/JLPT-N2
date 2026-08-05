@@ -53,9 +53,78 @@ Maintain high consistency with the 5 recent official exams (07/2023, 12/2023, 12
     - Prefer **nested/phrase chunks** (thinka/N2 guides: 複文フレーム) over
       isolated particles when the grammar point allows.
   - **問題9**: official cloze passages run **~500–700 JP chars** (title + body, excluding the four option lists). Do not ship a 150–200 char mini-paragraph — that is N3 drill length. Four blanks still; the prose around them must feel like a short magazine/column piece.
+  - **問題9 — the four blanks must test four DIFFERENT categories.** Before
+    writing the four blanks, assign each one a distinct type from this list
+    (or an equivalent), then check no type repeats: (a) **論理接続表現** —
+    sentence-initial discourse connective (しかし/そのうえ/つまり…); (b)
+    **文末モーダル表現** — a modal/inference family attached to the previous
+    clause (わけだ/わけがない/わけではない/わけにはいかない, はずだ/はずがない,
+    のも無理はない…) — pick ONE such family per paper, not two different
+    blanks drawing on the same family; (c) **内容推論** — a full predicate
+    that requires tracking the whole passage's argument, not just the local
+    sentence, to choose (this is where the "passage-level trap" lives — at
+    least one of the four blanks must be this type); (d) **慣用/形式名詞** — a
+    set phrase or formal noun (つもり, 元も子もない, 願ってもない…). Test 4
+    shipped two connective blanks and two content-inference blanks (four
+    slots, two categories); test 2 and test 3 each repeated one pair. Four
+    slots, four categories — no exceptions.
   - Count Japanese characters only (hiragana/katakana/kanji/JP punctuation); ignore spaces and the `(　)` / `＿＿` / `★` markers themselves when eyeballing, but do not strip scene-setting just to hit a number.
-- **Distractor Design**: Distractor options must replicate official confusion logic (e.g. 近義語 nuances, 誤用 collocations, condition disqualifications).
+- **Distractor Design**: Distractor options must replicate official confusion logic (e.g. 近義語 nuances, 誤用 collocations, condition disqualifications). See "Distractor plausibility" below — this is not optional polish.
 - **Listening Spoken Choice Pacing**: Options spoken in 聴解 must follow official lengths (~10-15 chars per choice in 問題3/問題4).
+
+## Distractor plausibility — the sniff-test rule (governs every section below)
+
+`exam-qa-review`'s two-answer hunt (§2) catches a distractor that is too STRONG
+(a second defensible answer). This rule catches the opposite failure, which is
+just as real and was never checked anywhere: a distractor that is too WEAK —
+eliminable on sight, for a reason that has nothing to do with the point being
+tested. Four tests shipped this pattern across 問1, 問4, 問5, 問6, and 聴解問題1
+〜3 simultaneously: distractors from an unrelated semantic/tonal/domain
+category, discarded by a sniff test rather than by knowing the tested word.
+
+**The test, for every distractor before you ship it:** *"Would a well-prepared
+N2 examinee, moving quickly, seriously weigh this option before ruling it out
+— for the SPECIFIC reason the item is supposed to test — or does it die on
+sight for some unrelated reason (wrong part of speech, wrong domain, wrong
+tone, wrong register, not even a competitor in the same functional category)?"*
+If it dies on sight, it is not a distractor, it is noise, and the item
+effectively becomes a 2-way or 1-way choice. Replace it with a real competitor
+in the SAME category as the key:
+
+- **Vocabulary-in-context / paraphrase / usage (問4-6):** every distractor must
+  be the same part of speech AND the same functional category as the key —
+  e.g. if the key is a comparative/concessive adverb (わりに), every distractor
+  must also be a degree/comparison adverb, not a grab-bag of regret (あいにく),
+  gradualness (徐々に), and coincidence (たまたま) that share nothing with the
+  tested function. If the key is tonally neutral, no distractor may be
+  jarringly upbeat or negative (痛快 next to 切実/深刻 is discarded on tone
+  alone before the reader engages the meaning). For 問題6, every wrong sentence
+  must describe a plausible situation for THAT WORD'S domain — a wrong
+  collocation or register, never a domain the word doesn't apply to at all
+  (解消 applied to physically discarding a computer, 把握 personified onto a
+  medicine, are sniff-test fails, not misuse traps).
+- **Kanji reading (問1):** see the existing 問題1 rules in "Item integrity"
+  below (same word form, conjugation lock) — this rule adds: distractors must
+  be readings of the SAME kanji or a kanji sharing a radical/visual component,
+  never readings of an entirely unrelated kanji that a reader can rule out
+  without ever considering the target kanji (いたわる's distractors must not be
+  ことわる/さわる/かわる — readings of 断る/触る/代わる, kanji sharing nothing
+  with 労).
+- **聴解 dialogues (問題1-3):** "every wrong option must be MENTIONED then
+  eliminated" (below) is the plausibility rule for listening — an option
+  nobody says in the dialogue is not a distractor, it is fabricated noise, and
+  it lets the item be solved without tracking the conversation at all. Every
+  wrong option must correspond to a real task/statement/fact from the audio
+  that is reassigned, superseded, denied, or reinterpreted — never invented
+  from nothing.
+
+This is a construction-time discipline, not a post-hoc filter: when drafting
+four options, draft the key, then draft three competitors from the SAME
+category first, and only then check they're each impossible for a specific,
+nameable reason (the existing "name the reason each distractor is IMPOSSIBLE"
+rule). A distractor that fails the plausibility test and a distractor that
+creates a second answer are two ends of the same axis — aim for the narrow
+band between them.
 
 ## Using web seeds from `logs/test_spec.json` (when present)
 
@@ -81,7 +150,7 @@ section, under these caps (full rules: web-topic-research):
 
 ## Per-section rules
 
-**問題1-2 (kanji)** — test N2-band words: 交渉, 慌てる, 妨げる, 潔い, 措置,
+**問題1 (漢字読み)** — test N2-band words: 交渉, 慌てる, 妨げる, 潔い, 措置,
 傾向, 効率, 険しい. Build distractors from REAL confusions:
 - reading traps: 措置(そち) vs しょち/そうち; homophone kanji sets:
   納める/収める/治める/修める, 敗れる/破れる; same-radical fakes: 険/検/剣/験.
@@ -89,9 +158,32 @@ section, under these caps (full rules: web-topic-research):
   option must fit that conjugation — not a different verb class whose ending
   the print already rules out. Each option must also be a real word. See Item
   integrity below (test 1's 慌てて).
+- **Same-kanji rule:** every distractor must be a reading of the target's OWN
+  kanji, or of a kanji sharing a radical/visual component with it — never a
+  reading of a wholly unrelated kanji (test 4's いたわる/ことわる/さわる/かわる
+  are readings of 断る/触る/代わる, which share nothing with 労). See
+  "Distractor plausibility" above.
 
-**問題3 (語形成)** — 諸〜, 〜化, 準〜, 〜済み, 〜制, 未〜, 〜性. All four
-options must be real affixes; only one collocates.
+**問題2 (表記)** — official items use a **2×2 component matrix**: take the
+correct 2-kanji compound and swap EACH kanji independently for a
+visually/structurally similar wrong one, so all four options share the same
+two-character skeleton (けいこう → 傾向/頃向/傾高/頃高; のうこう → 濃厚/農厚/
+濃高/農高; かくじゅう → 拡張/拡充/各充/各張). Do not vary only one character
+position while holding the other fixed, and never let a "distractor" be a
+real, unrelated word (展開 next to 傾向 is not a matrix swap, it's a different
+word). For single-kanji or verb items, use phonetically-adjacent whole-word
+swaps sharing the conjugation instead (すくわれました vs 嫌われました/敬われ
+ました/疑われました).
+
+**問題3 (語形成)** — 諸〜, 〜化, 準〜, 〜済み, 〜制, 未〜, 〜性, and the four
+real negation prefixes 非〜/無〜/未〜/不〜 (there is no fifth — 迷〜 is not a
+negation prefix and is not a real word attached to most nouns; test 4 shipped
+it as a 問題3 distractor and it was eliminable as nonsense, not as a
+near-miss). All four options must be real, productive affixes that a reader
+would need the specific collocation to rule out — not just plausible affixes
+in the abstract, but affixes that could plausibly attach to THIS stem (伴い/
+同行/組み合わせ do not suffix onto 家族 the way a real 語形成 distractor must);
+only one collocates.
 
 **問題4 (context)** — N2 nouns/adverbs: 難航, 発足(distractor: 成立),
 かろうじて, うんざり, てきぱき, 需要. Distractors share the semantic field.
@@ -164,10 +256,25 @@ matching where one tempting option fails exactly one condition.
   - 問題10 短文: ~200–280 JP chars each (five passages). Test 1 shipped
     several under ~180.
   - 問題11 中文: **4 passages × 2Q**, each passage ~400–550 JP chars before
-    notes; use `（中略）` when a quoted source would otherwise run long.
+    notes; use `（中略）` when a quoted source would otherwise run long. Each
+    passage's two questions must be ONE factual-comprehension question
+    ("背景/効果/理由は何か") plus ONE main-point/opinion question ("筆者の考え
+    に合うのはどれか" / "筆者は…についてどう述べているか") — never two factual
+    questions on the same passage (test 4 shipped a passage with both Qs
+    factual, no opinion question). Every `（注N）` gloss must annotate a word
+    that actually appears in that passage's body — an orphaned note (the
+    glossed term never occurs in the text) is a shipped defect (test 3
+    shipped this across all four 問題11 passages), not a stylistic slip.
   - 問題13 長文: ~900–1100 JP chars (July 2025 ≈1050). Tests 1–4 often
     shipped ~600–750 — too short for 主張理解.
-  - 問題14: ~700–900 JP chars including table/conditions.
+  - 問題14: ~700–900 JP chars including table/conditions. The correct answer
+    must always require combining **at least two** constraints from the table
+    (topic + date/time, or a category + a footnote exception) — never a
+    single-field lookup. Every constraint the QUESTION references (a role,
+    category, or condition) must actually be describable from the flyer/table
+    text as printed — do not invent a scenario detail (test 3 asked how
+    someone applies as "補助スタッフ" when the source flyer never described a
+    staff/volunteer role at all).
 - **Vocabulary Explanations for Dokkai (NO FURIGANA / MANDATORY)**:
   - **NO FURIGANA IN DOKKAI**: Reading passages (問題9–14) and question stems/options in 言語知識・読解 contain **NO FURIGANA** (`<ruby>`). Test-takers are expected to read N2 kanji without furigana. Over-the-level, rare, or domain-specific words must ONLY be glossed using `（注1）`, `（注2）` notes at the bottom of the passage.
   - Official papers gloss freely: July 2025 carries **≈50+ `（注N）`** across
@@ -234,6 +341,17 @@ you. Run it before calling any authoring work done.
   coexist make the item unanswerable no matter the key: test 2 offered both
   「まったく」 and 「ほとんど持てていない」 in one set, and both 「わりに」 and
   「にもかかわらず」 in another. One contrast marker, one degree adverb.
+- **問題8: check the GLUE at both ends, not just among the four options.**
+  The four options must chain into each other correctly (above), but they
+  must ALSO glue grammatically onto the stem's fixed text immediately before
+  the first blank and immediately after the last one — test 4 shipped three
+  items where the option chain was internally fine but stacked an
+  incompatible verb or a duplicate conditional/particle against the FIXED
+  trailing text outside the blank span (`…ご連絡を` + fixed tail
+  `お問い合わせください`; `…立ち返らねば` + fixed tail `なければならない`,
+  double-stacking the conditional). Read the fixed lead-in, then all four
+  options in key order, then the fixed tail, as one unbroken sentence — the
+  join points are exactly as much a failure surface as the internal order.
 - **問題8: exactly ONE ordering may be natural.** A floating adverb or adjunct
   (ほとんど, 直接, 一度, 年々, 世界中で…) that reads equally well in two slots
   gives the item two defensible ★ answers — QA failed one such item in each of

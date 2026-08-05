@@ -60,7 +60,16 @@ with the sources side by side, and refuse to pass anything it cannot prove.
   source; a topic repeated within the paper or from the previous test; broken
   Japanese anywhere in stems, options, passages, or script; narration
   contradicting the mapped voice; a spec/paper provenance mismatch; **an
-  off-level KEY** (N1-hard or N3/N4/N5-easy — see step 2.5 / `references/level_band_grammar.txt`).
+  off-level KEY** (N1-hard or N3/N4/N5-easy — see step 2.5 /
+  `references/level_band_grammar.txt`); **a distractor eliminable on sight for
+  a reason unrelated to the tested point** — wrong part of speech, wrong
+  domain, wrong tone, or an unrelated functional category (see step 2b); **a
+  聴解 distractor not grounded in anything said in the dialogue**; **a 問題9
+  blank testing the same grammatical/functional category as another blank in
+  the same passage**; **an orphaned `（注N）` gloss whose term never appears in
+  the passage body**; **a 問題14 item answerable from a single constraint, or
+  referencing a scenario detail (a role, category) the source text never
+  describes**.
 - **Fix, regenerate, re-check, RE-REVIEW.** Findings are repaired in the
   Markdown/script sources, then booklet HTML + `解答.html` (+ MP3 if the script
   changed) are regenerated and `make check` re-run. Then the changed items AND
@@ -102,6 +111,44 @@ competing particles on the same noun (に沿って/に即して on ニーズ), n
 prefixes that both attach (無記入/未記入), adverbs sharing the frame
 (いいかげん/おろそか on 〜にする), and 問題6 "wrong" sentences that are actually
 real collocations (品質に妥協する, 考慮に値する — search before trusting).
+
+### 2b. Distractor plausibility (the opposite failure — too WEAK, not too strong)
+
+Step 2 catches a distractor that creates a second answer. This step catches
+the mirror failure, which passed a green gate in tests 1–4 across 問1, 問4,
+問5, 問6, and 聴解問題1–3 at once: a distractor eliminable on sight, for a
+reason that has nothing to do with the tested point, so the item collapses
+from a 4-way discrimination into "spot the one option that isn't nonsense."
+
+For every item, ask of each wrong option: *"Is this the SAME part of
+speech/functional category/domain/tone as the key, competing on the specific
+point being tested — or does it die for an unrelated reason before the reader
+ever engages that point?"* Evidence, not a feeling:
+
+- **Vocab-in-context/paraphrase/usage (問4-6):** write the functional category
+  each option belongs to (degree adverb, regret adverb, coincidence adverb,
+  …). If the four options don't share one category, FAIL — e.g. わりに (key)
+  with 案の定/とっくに/一段と (as-expected / already / increasingly — none is a
+  comparison/degree competitor); まして (key) with あいにく/徐々に/たまたま
+  (regret / gradualness / coincidence — none is a comparative-adverb
+  competitor); 切実 (key) with 痛快 in the set (tonally opposite, discarded
+  without reading). For 問題6, confirm each wrong sentence describes a
+  situation inside the word's own domain, merely misusing it — 解消 applied to
+  physically discarding a computer, or 把握 personified onto a medicine, are
+  domain violations, not collocation traps, and FAIL this step even though
+  they are grammatically well-formed.
+- **問1 漢字読み:** confirm every distractor is a reading of the target's own
+  kanji or a visually/radically similar one. いたわる with ことわる/さわる/
+  かわる (readings of 断る/触る/代わる, unrelated kanji) fails — a reader
+  eliminates all three without ever considering 労.
+- **聴解問題1-3:** for every wrong option, find the line in the script that
+  raises it. If no line raises it, it is fabricated, not a distractor — FAIL.
+  (This is the listening form of the same check; do it here as well as in
+  step 4, since it is a plausibility defect, not only a structural one.)
+
+If you cannot point to the shared category, the reason it's the SAME kind of
+option as the key, the item fails this step — replace the distractor with a
+real competitor, do not argue the current one is "close enough."
 
 ### 2.5. Level band (N2 only — not N1, not N3–N5)
 
@@ -146,6 +193,29 @@ words, "がちだ" vs bare "がち", 読解 questions that only test N5 fact-loo
   **Fail any paper containing `<ruby>` (furigana) in `言語知識・読解.md`** — test-takers read N2 kanji without furigana; over-the-level terms must use only `（注N）` notes.
   **Fail any paper with mismatched passage numbered markers (`①**...**`, `②**...**`)** — every numbered marker in a passage must match 1-to-1 with a question stem in that question block (no orphaned/unused markers).
 - **問題11:** must be 4 passages × 2 questions with instruction `(1)から(4)`.
+  Each passage's two questions must split ONE factual-comprehension question
+  + ONE main-point/opinion question — fail a passage with two factual
+  questions and no opinion question (test 4 shipped one). For every `（注N）`
+  in each passage, confirm the glossed term actually occurs in that passage's
+  body — an orphaned gloss (test 3 shipped this across all 4 passages) fails
+  the paper.
+- **問題2 表記:** confirm the 2×2 component-matrix shape — each of the 4
+  options should share the compound's two-character skeleton with only one
+  or both characters swapped for a visually/structurally similar wrong one.
+  Fail a set where a "distractor" is a real, unrelated word (test 4's 展開
+  next to 傾向), or where only one character position ever varies across all
+  four options.
+- **問題3 語形成:** confirm every option is a real, productive affix that
+  could plausibly attach to the SPECIFIC stem — not just a plausible affix in
+  the abstract. Fail a nonsense affix (test 4's 迷〜, not a real negation
+  prefix — the real four are 非/無/未/不) or an option that doesn't suffix
+  onto the stem at all (伴い/同行/組み合わせ on 家族).
+- **問題14:** confirm the correct answer requires combining **at least two**
+  constraints from the table/flyer (never a single-field lookup), and that
+  every scenario detail the question references (a role, category, condition)
+  is actually describable from the source text as printed — fail a question
+  that invents a detail the flyer never mentions (test 3 asked about a
+  "補助スタッフ" role the source never described).
 - **問題5 言い換え:** swap the option into the stem; the sentence must survive
   (test 4: 「値段の比較的美味しい」 did not).
 - **問題8:** splice stem + options in 解説 order; read end to end; no word twice.
@@ -153,6 +223,12 @@ words, "がちだ" vs bare "がち", 読解 questions that only test N5 fact-loo
   adverb/adjunct (ほとんど, 直接, 一度…) that reads naturally in two slots is
   two ★ answers. One such item shipped in each of tests 2, 3, and 4.
 - **問題9 cloze:** read stem + option aloud as one sentence, all four options.
+  Then name each blank's category (論理接続表現 / 文末モーダル表現 / 内容推論 /
+  慣用・形式名詞 — see `question-authoring`'s 問題9 rule). Fail the passage if
+  two or more blanks share a category (test 4 shipped two connective blanks
+  and two content-inference blanks; test 2 and test 3 each repeated one
+  pair) or if NONE of the four blanks requires tracking the whole passage's
+  argument rather than just the local sentence.
 - **問題1 漢字読み:** all four options the same word form as the target; each
   a real word; and none uniquely selected by the stem's conjugation/okurigana.
   Cover the kanji, keep okurigana visible — if only one option still fits the
@@ -168,6 +244,13 @@ words, "がちだ" vs bare "がち", 読解 questions that only test N5 fact-loo
 
 - The question type matches the 問題: 何をしますか lives in 問題1, どうして/
   何が一番 in 問題2, 何について in 問題3. Test 4 shipped 問題1↔問題2 swapped.
+- **Every 問題1-3 wrong option must be grounded in the script.** For each
+  distractor, find the line that raises it (a task/statement mentioned then
+  reassigned, superseded, or denied). An option nobody says is fabricated
+  noise, not a distractor, and it lets the item be solved without tracking the
+  conversation — fail it and demand a real one (test 4's 問題1 1番 and 問題2
+  1番 each shipped one fabricated option; test 1's 問題3 2番 had 3 of 4 options
+  never mentioned at all).
 - Every 例 is answerable from its printed options AND the announced number is
   the option the dialogue supports (test 4's 問題1 例 printed options for a
   different question, and the announcer declared one of them correct; test 3's

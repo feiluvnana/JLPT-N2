@@ -115,6 +115,17 @@ anything.
    one `（中略）` in 中文/長文, 問題11 as 4×2, 問題13 ~900–1100 JP chars,
    問題7 including dialogue/setting stems. Tests 1–4 under-shipped notes and
    長文 length even after grammar-stem lengthening.
+   **Every distractor must be a plausible near-miss, not a sniff-test fail**
+   (`question-authoring` "Distractor plausibility") — same functional/domain/
+   tone category as the key, never eliminable on sight for an unrelated
+   reason. This governs 問1-6 and every 聴解 dialogue equally.
+   **問題9's four blanks must each test a different grammatical/functional
+   category** (connective / modal / content-inference / idiom — see
+   `question-authoring`'s 問題9 rule); at least one blank must require the
+   whole passage's logic. **問題11** splits its two questions per passage into
+   one factual + one opinion question, and every `（注N）` gloss must annotate
+   a word that appears in that passage. **問題14** always needs ≥2 constraints
+   combined, grounded in the source text as printed.
    **Author in section-sized passes, not one long run.** Defects cluster in
    whatever is generated last (test 4: the entire listening half — swapped
    問題 types, an unanswerable 例, five phantom 解説 quotes). Finish 文字・語彙,

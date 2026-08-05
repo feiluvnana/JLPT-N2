@@ -77,9 +77,28 @@ violating script cannot produce an MP3.
   question ON THE SAME LINE: `1番。会社で女の人と男の人が話しています。…か。`
 - Section markers are their own blocks: `問題1。` (numbered, with 。).
 - Instruction text (問題1では、…) is its own block.
-- **The two-question 問題5 item must be ONE block**: instruction line,
-  dialogue lines, 質問1。…, 質問2。… — a blank line inside it puts the
-  12-second answer pause in the wrong place (this bug happened; don't repeat it).
+- **EVERY item — not just 問題5's two-question one — must be ONE block, start
+  to finish: marker line, all dialogue/monologue turns (or, for 問題4, all
+  spoken options), and the repeated closing question, with NO blank line
+  anywhere inside it.** `gap_before_line()`/`pause_after()` key off each
+  block's OWN first line, so a stray blank line mid-item doesn't drop content
+  — the dialogue still gets synthesized in its own separate block — but it
+  silently relocates the pauses: 問題2's 20-second option-reading pause
+  disappears (it fires on the block's *own* first→second line transition,
+  which no longer exists once the dialogue is its own block), and far worse,
+  the ANSWER-TIME pause lands right after the marker+question line — **before
+  the dialogue has even played** — because `pause_after()` fires on the
+  item-marker block finishing, not on the item's true end. This shipped
+  silently in tests 2 (問題2/3 numbered items), 3, and 4 (問題1–5, the ENTIRE
+  listening section) — the MP3 still built, sounded plausible skimmed in
+  isolation, and passed every prior gate, because nothing checked that an
+  item's dialogue lived in the same block as its marker.
+  `validate_script()` now catches this directly: every item block must
+  contain either a speaker-tagged line (問題1/2/3/5 — a monologue's own
+  speech is tagged too, e.g. 専門家:/講師:) or, for 問題4, at least 3 spoken
+  option lines (`1、`/`2、`/`3、`) — a block with neither is conclusive
+  evidence its content was split off into a separate block by a stray blank
+  line.
 - 問題1/2: repeat the question as the block's last line.
 - 問題3/4/5 spoken choices: one per line, format `1、…。` `2、…。` (読点 after
   the digit — the parser and pacing engine key on `^[1-4]、`).

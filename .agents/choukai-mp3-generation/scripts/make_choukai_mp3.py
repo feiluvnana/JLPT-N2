@@ -200,7 +200,16 @@ def gap_before_line(section: str, line_index: int, line: str,
             return GAP_OPTION_READING        # printed-option reading time
         if section == "問題1":
             return GAP_AFTER_PRE_QUESTION    # beat before the talk starts
-    if CHOICE_RE.match(line) and section in ("問題3", "問題5"):
+    # 3 s apart is the gap BETWEEN spoken choices, not before the first one:
+    # official Dec 2025 audio measures exactly 3 gaps around 4 choices
+    # (question -> ~1s natural pause -> choice1 -> 3.0s -> choice2 -> 3.0s ->
+    # choice3 -> 3.0s -> choice4 -> answer pause). Applying it whenever the
+    # CURRENT line is a choice — regardless of what preceded it — inserted a
+    # 4th, extra 3 s gap between the repeated question and choice 1 in every
+    # 問題3/5 item, silently lengthening that transition by ~2 s versus the
+    # official recording. Require the PREVIOUS line to also be a choice.
+    if (CHOICE_RE.match(line) and section in ("問題3", "問題5")
+            and CHOICE_RE.match(prev_line or "")):
         return GAP_BETWEEN_SPOKEN_CHOICES    # spoken choices, 3 s apart
     return GAP_BETWEEN_LINES
 
@@ -287,6 +296,40 @@ def validate_script(blocks):
         if "質問1。" in block and "質問2。" not in block:
             errors.append(f"block {bi} — 質問1 without 質問2 in the same block; "
                           f"the 問題5 two-question item must not be split")
+
+        # Every item (例/N番) must carry its own dialogue/speech/options in the
+        # SAME block, not just the opening narration+question. A stray blank
+        # line between the marker line and the rest splits one item into
+        # marker-only / dialogue / repeated-question blocks: the item's actual
+        # content still gets synthesized (nothing is silently dropped), but
+        # gap_before_line() and pause_after() key off each block's OWN first
+        # line, so 問題2's option-reading pause disappears and — far worse —
+        # the answer-time pause lands right after the question, BEFORE the
+        # dialogue plays, instead of after it. This shipped silently in tests
+        # 2 (問題2/3), 3, and 4 (問題1-5, entire listening section) because the
+        # MP3 still built and sounded plausible in isolation. 問題4's stimulus
+        # line itself is conventionally untagged (read by the narrator), so it
+        # is checked for its spoken option lines instead of a speaker tag;
+        # every other 問題's item — monologues included, e.g. 専門家:/講師: —
+        # carries at least one speaker-tagged line in a valid script.
+        if ITEM_RE.match(first) and section:
+            rest = lines[1:]
+            if section == "問題4":
+                if sum(1 for l in rest if CHOICE_RE.match(l)) < 3:
+                    errors.append(
+                        f"block {bi} ({first[:30]}…) — item has fewer than 3 "
+                        f"spoken option lines (`1、`/`2、`/`3、`) in the same "
+                        f"block as its marker; they were likely split into a "
+                        f"separate block by a stray blank line, which "
+                        f"corrupts pause placement (see "
+                        f"choukai-script-writing/SKILL.md 'Block conventions')")
+            elif not any(SPEAKER_RE.match(l) for l in rest):
+                errors.append(
+                    f"block {bi} ({first[:30]}…) — item has no speaker-tagged "
+                    f"line in the same block as its marker; the dialogue/speech "
+                    f"was likely split into a separate block by a stray blank "
+                    f"line, which corrupts pause placement (see "
+                    f"choukai-script-writing/SKILL.md 'Block conventions')")
 
     # --- whole-file structure ---
     if OPENING not in text:

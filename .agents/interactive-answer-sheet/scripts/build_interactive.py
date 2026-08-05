@@ -153,6 +153,16 @@ EXTRA_CSS = app_style.APP_CSS + """
 .rs-detail-body h1,.rs-detail-body h2,.rs-detail-body h3{background:none;border:0;
   padding:0;margin:.35em 0 .45em;font-size:11.5pt;color:var(--ink)}
 .rs-detail-note{font-size:10pt;color:var(--muted);margin:.55em 0 0}
+.rs-group{border:1px solid #cbd5e1;border-radius:10px;background:#eef2f7;
+  padding:.85em 1.05em;margin:0 0 .7em}
+.rs-group-shared{margin:0 0 .7em}
+.rs-group-item{margin:0 0 .5em}
+.rs-group-item:last-child{margin-bottom:0}
+.rs-script-label{font-size:9.5pt;font-weight:700;color:var(--muted);
+  margin:0 0 .3em;letter-spacing:.02em}
+.rs-script{margin:.6em 0 0;padding:.6em .8em;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:8px;font-size:10.5pt;line-height:1.7}
+.rs-script p{margin:.15em 0}
 @media print{#bar,#player,.rs-nav{display:none}.qa label{border-color:#666}}
 /* On screen the sheet keeps the booklet's centered 60em measure (SCREEN_CSS), so
    the exam text and the printed booklet render identically — but the measure
@@ -214,6 +224,7 @@ SCRIPT = """
 const KEYS = %(keys)s, TESTID = "%(testid)s";
 const GENGO_KEYS = %(gengo_keys)s, CHOUKAI_KEYS = %(choukai_keys)s;
 const ANSWER_KEY = %(answer_key)s, TAXONOMY = %(taxonomy)s, ADVICE = %(advice)s;
+const CHOUKAI_SCRIPTS = %(choukai_scripts)s;
 
 // Routes on the unified server (serve_sheet.py, `make serve`). Opened over
 // file:// these fetches simply fail and grading falls back to a download.
@@ -405,19 +416,22 @@ function _looksLikeStem(el){
   return /^(?:\\d{1,2}\\b|例|[1-5]番|質問\\s*[12])/.test(t);
 }
 
-/** Clone the exam nodes for one scored item (stem + shared passage / 問題 heading).
+/** Live exam nodes for one scored item (stem + shared passage / 問題 heading),
+ *  as node REFERENCES — not yet cloned. Kept as references (not HTML) so two
+ *  items whose walks converge on the same preceding nodes can be detected by
+ *  reference equality, which is how shared-passage GROUPING works below.
  *  Contiguous slices are wrong: walking back to h2 would drag in every earlier
  *  item in that 問題. Collect stem nodes, then prepend passage context while
  *  skipping other questions' stems/.qa blocks. */
-function extractQuestionHtml(key){
+function extractQuestionNodes(key){
   const inp = document.querySelector(
     '#screen-exam input[name="q_' + CSS.escape(key) + '"]');
-  if (!inp) return '';
+  if (!inp) return [];
   const qa = inp.closest('.qa');
-  if (!qa || !qa.parentElement) return '';
+  if (!qa || !qa.parentElement) return [];
   const kids = Array.from(qa.parentElement.children);
   const qi = kids.indexOf(qa);
-  if (qi < 0) return '';
+  if (qi < 0) return [];
 
   const nodes = [];
   let i = qi - 1;
@@ -445,11 +459,90 @@ function extractQuestionHtml(key){
     nodes.unshift(n);
     i--;
   }
+  return nodes;
+}
 
+function nodesToHtml(nodes){
+  if (!nodes.length) return '';
   const wrap = document.createElement('div');
   nodes.forEach(n => wrap.appendChild(n.cloneNode(true)));
   wrap.querySelectorAll('input, .qa').forEach(el => el.remove());
   return wrap.innerHTML;
+}
+
+function extractQuestionHtml(key){
+  return nodesToHtml(extractQuestionNodes(key));
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+}
+
+function scriptBlockHtml(text, label){
+  if (!text) return '';
+  const lines = text.split("\\n").map(l => l.trim()).filter(l => l.length > 0);
+  const formatted = lines.map(l => '<p>' + escapeHtml(l) + '</p>').join('');
+  return '<div class="rs-script"><p class="rs-script-label">🎧 ' + escapeHtml(label) + '</p>'
+    + formatted + '</div>';
+}
+
+/** Two adjacent items share a passage when their node-walks converge on the
+ *  SAME preceding nodes by reference — but a bare 問題1-8 item's only shared
+ *  ancestor is the whole-問題 H2 (prefix length 1), which is not a passage.
+ *  Require either 2+ shared nodes, or exactly 1 that is itself an H3 unit
+ *  (a passage numbered (1)〜(4) with nothing else before its first
+ *  question) — this is what distinguishes a real shared passage/cloze essay
+ *  from every item in a 問題 just sharing that 問題's own header. */
+function sharedPrefixLen(a, b){
+  const n = Math.min(a.length, b.length);
+  let i = 0;
+  while (i < n && a[i] === b[i]) i++;
+  return i;
+}
+function isRealSharedPrefix(nodes, len){
+  if (len >= 2) return true;
+  if (len === 1) return _isUnit(nodes[0]);
+  return false;
+}
+
+/** Group the 71 言語知識・読解 keys by shared passage/cloze essay. Singleton
+ *  groups (no sharing) are the overwhelmingly common case (問1-8, 問10). */
+function computeGengoGroups(){
+  const nodesByKey = {};
+  for (let q = 1; q <= 71; q++) nodesByKey[q] = extractQuestionNodes(String(q));
+  const groups = [];
+  let i = 1;
+  while (i <= 71){
+    let j = i;
+    while (j < 71 && isRealSharedPrefix(
+        nodesByKey[j], sharedPrefixLen(nodesByKey[j], nodesByKey[j + 1]))) j++;
+    const sharedLen = j > i ? sharedPrefixLen(nodesByKey[i], nodesByKey[i + 1]) : 0;
+    groups.push({
+      keys: Array.from({length: j - i + 1}, (_, k) => String(i + k)),
+      sharedLen, nodesByKey
+    });
+    i = j + 1;
+  }
+  return groups;
+}
+
+/** 聴解 grouping is a fixed structural fact, not a heuristic: only 問5の2番
+ *  carries two sub-answers (質問1/質問2) off ONE script — every other item
+ *  is already 1 script : 1 key. */
+function computeChoukaiGroups(){
+  const groups = [];
+  const seen = new Set();
+  for (const k of CHOUKAI_KEYS){
+    if (seen.has(k)) continue;
+    if (k === '問5-2-1' && CHOUKAI_KEYS.includes('問5-2-2')){
+      groups.push({keys: ['問5-2-1', '問5-2-2'], shared: true});
+      seen.add('問5-2-1'); seen.add('問5-2-2');
+    } else {
+      groups.push({keys: [k], shared: false});
+      seen.add(k);
+    }
+  }
+  return groups;
 }
 
 function detailMetaHtml(key, d){
@@ -468,30 +561,101 @@ function detailMetaHtml(key, d){
 
 function itemDetailHtml(key, d){
   let body = extractQuestionHtml(key);
-  if (!body){
-    body = '<p>（この設問の問題文を画面から取得できませんでした。）</p>';
-  }
+  let script = '';
   let note = '';
-  if (!/^\\d+$/.test(key)){
+  const isChoukai = !/^\\d+$/.test(key);
+  if (isChoukai){
+    script = scriptBlockHtml(CHOUKAI_SCRIPTS[key], '聴解スクリプト');
     note = '<p class="rs-detail-note">聴解の音声は「解答に戻ってやり直す」から'
       + '受験画面のプレイヤーで確認できます。</p>';
   }
+  if (!body && !isChoukai){
+    body = '<p>（この設問の問題文を画面から取得できませんでした。）</p>';
+  }
+  const bodyBlock = body ? '<div class="rs-detail-body">' + body + '</div>' : '';
   return '<div class="rs-item" id="rs-item-' + key + '">'
     + detailMetaHtml(key, d)
-    + '<div class="rs-detail-body">' + body + '</div>' + note
+    + bodyBlock + script + note
     + '</div>';
+}
+
+/** A member's own-only markup: for 言語知識・読解, the node suffix beyond the
+ *  group's shared passage prefix; for 聴解, whatever the DOM has for that
+ *  specific sub-key (質問1/質問2 each have their own bubble row). */
+function groupMemberHtml(key, d, ownHtml){
+  const isChoukai = !/^\\d+$/.test(key);
+  if (!ownHtml && !isChoukai){
+    ownHtml = '<p>（この設問の問題文を画面から取得できませんでした。）</p>';
+  }
+  const bodyBlock = ownHtml ? '<div class="rs-detail-body">' + ownHtml + '</div>' : '';
+  return '<div class="rs-item rs-group-item" id="rs-item-' + key + '">'
+    + detailMetaHtml(key, d)
+    + bodyBlock
+    + '</div>';
+}
+
+function groupHeaderLabel(keys){
+  if (!keys || !keys.length) return '';
+  if (keys.length === 1) return '設問 ' + keys[0];
+  const first = keys[0], last = keys[keys.length - 1];
+  if (/^\\d+$/.test(first)){
+    let sub = '';
+    if (first === '48') sub = '（問題9 文章の文法）';
+    else if (first === '57') sub = '（問題11 中文 (1)）';
+    else if (first === '59') sub = '（問題11 中文 (2)）';
+    else if (first === '61') sub = '（問題11 中文 (3)）';
+    else if (first === '63') sub = '（問題11 中文 (4)）';
+    else if (first === '65') sub = '（問題12 統合理解）';
+    else if (first === '67') sub = '（問題13 長文）';
+    else if (first === '70') sub = '（問題14 情報検索）';
+    return '設問 ' + first + ' 〜 ' + last + sub;
+  }
+  return '設問 ' + keys.join(' ・ ') + '（問題5 2番 共通）';
+}
+
+function gengoGroupHtml(group, detailFor){
+  const { keys, sharedLen, nodesByKey } = group;
+  if (keys.length === 1 || sharedLen === 0){
+    return keys.map(k => itemDetailHtml(k, detailFor(k))).join('');
+  }
+  const title = groupHeaderLabel(keys);
+  const sharedHtml = nodesToHtml(nodesByKey[keys[0]].slice(0, sharedLen));
+  const members = keys.map(k =>
+    groupMemberHtml(k, detailFor(k), nodesToHtml(nodesByKey[k].slice(sharedLen)))
+  ).join('');
+  return '<div class="rs-group">'
+    + '<div class="rs-group-title">' + title + '</div>'
+    + '<div class="rs-group-shared rs-detail-body">' + sharedHtml + '</div>'
+    + members + '</div>';
+}
+
+function choukaiGroupHtml(group, detailFor){
+  if (!group.shared){
+    return itemDetailHtml(group.keys[0], detailFor(group.keys[0]));
+  }
+  const title = groupHeaderLabel(group.keys);
+  const sharedHtml = scriptBlockHtml(
+    CHOUKAI_SCRIPTS[group.keys[0]], '聴解スクリプト（質問1・質問2 共通）');
+  const members = group.keys.map(k =>
+    groupMemberHtml(k, detailFor(k), extractQuestionHtml(k))
+  ).join('');
+  return '<div class="rs-group">'
+    + '<div class="rs-group-title">' + title + '</div>'
+    + '<div class="rs-group-shared">' + sharedHtml
+    + '<p class="rs-detail-note">聴解の音声は「解答に戻ってやり直す」から'
+    + '受験画面のプレイヤーで確認できます。</p></div>'
+    + members + '</div>';
 }
 
 function buildAllDetailsHtml(res){
   const L = [];
   L.push('<h3>言語知識・読解 — 設問詳細</h3>');
-  for (let q = 1; q <= 71; q++){
-    const k = String(q);
-    L.push(itemDetailHtml(k, res.detail_gengo[k] || {}));
+  for (const g of computeGengoGroups()){
+    L.push(gengoGroupHtml(g, k => res.detail_gengo[k] || {}));
   }
   L.push('<h3>聴解 — 設問詳細</h3>');
-  for (const k of CHOUKAI_KEYS){
-    L.push(itemDetailHtml(k, res.detail_choukai[k] || {}));
+  for (const g of computeChoukaiGroups()){
+    L.push(choukaiGroupHtml(g, k => res.detail_choukai[k] || {}));
   }
   return L.join('');
 }
@@ -579,19 +743,7 @@ function resultHtml(res, msg, saved){
   }
   L.push('</tbody></table>');
 
-  L.push('<h2>3. 弱点診断と今後の学習アドバイス</h2>');
-  if (res.weak_areas.length){
-    L.push('<p>以下の分野は正解率が60%%未満です。重点的な復習を推奨します。</p>');
-    for (const w of res.weak_areas){
-      L.push('<div class="rs-advice"><b>' + w.section + ' ' + w.code + ': ' + w.name
-        + ' (正解率 ' + w.percentage.toFixed(1) + '%%)</b>' + w.advice + '</div>');
-    }
-  } else {
-    L.push('<p>全セクションで高い正解率を維持できています。この調子で本試験に向けて'
-      + '実戦問題演習を継続しましょう。</p>');
-  }
-
-  L.push('<h2>4. 全設問解答チェック表</h2>');
+  L.push('<h2>3. 全設問解答チェック表</h2>');
   L.push('<div class="rs-check-tools">'
     + '<button type="button" class="ui-btn" id="rs-expand-btn" aria-expanded="false">'
     + 'すべての設問詳細を展開</button>'
@@ -909,6 +1061,55 @@ def inject_choukai(md: str, keys: list, premarks: dict | None = None):
     return "\n".join(out), used
 
 
+CHOUKAI_ITEM_RE = re.compile(r"^(例。|(\d+)番。)")
+CHOUKAI_SECTION_RE = re.compile(r"^問題(\d+)。$")
+
+
+def parse_choukai_scripts(script_path: Path) -> dict:
+    """Map each 聴解 item key (問1-1 … 問5-2-2) to its own block of
+    `聴解スクリプト.txt` — the narration/dialogue/options actually spoken for
+    that item. Self-contained (no `make_choukai_mp3.py` import): that module
+    requires `edge_tts`, a synthesis-only dependency this read-only display
+    feature must not force on anyone who only wants to view a built test.
+    Key numbering mirrors `grade_answers.parse_choukai_keys()` exactly — 例
+    blocks are practice items and carry no key, so they are skipped without
+    incrementing the ordinal.
+    """
+    if not script_path.is_file():
+        return {}
+    text = script_path.read_text(encoding="utf-8")
+    blocks = [b.strip() for b in re.split(r"\n\s*\n", text) if b.strip()]
+    scripts: dict[str, str] = {}
+    section = None
+    ordinal = 0
+    for block in blocks:
+        first = block.splitlines()[0].strip()
+        m = CHOUKAI_SECTION_RE.match(first)
+        if m:
+            section = int(m.group(1))
+            ordinal = 0
+            continue
+        if not (section and CHOUKAI_ITEM_RE.match(first)):
+            continue
+        if first.startswith("例。"):
+            continue  # practice item — not scored, no key to attach it to
+        ordinal += 1
+        if section == 5:
+            if ordinal == 1:
+                scripts["問5-1"] = block
+            elif ordinal == 2:
+                # 2番 carries 質問1 AND 質問2 in one block (see
+                # choukai-script-writing's "must be ONE block" rule) — both
+                # sub-keys share this exact text, which is also how the
+                # answer-sheet groups them into one shared script instead of
+                # showing it twice.
+                scripts["問5-2-1"] = block
+                scripts["問5-2-2"] = block
+        else:
+            scripts[f"問{section}-{ordinal}"] = block
+    return scripts
+
+
 def player_html(d: Path) -> str:
     """Audio player for the 聴解 section."""
     chapters = d / "聴解_チャプター.json"
@@ -933,7 +1134,8 @@ def player_html(d: Path) -> str:
         '</div>')
 
 
-def grading_data(gam, gids: list, ckeys: dict, combined_keys: dict):
+def grading_data(gam, gids: list, ckeys: dict, combined_keys: dict,
+                  choukai_scripts: dict | None = None):
     """Serialize grade_answers.py taxonomy/advice for in-page grading."""
     tax_gengo = [{"code": c, "name": s["name"], "section": s["section"],
                   "keys": [str(q) for q in range(s["range"][0], s["range"][1] + 1)]}
@@ -951,6 +1153,7 @@ def grading_data(gam, gids: list, ckeys: dict, combined_keys: dict):
         "answer_key": json.dumps({str(k): v for k, v in combined_keys.items()}, ensure_ascii=False),
         "taxonomy": json.dumps(combined_tax, ensure_ascii=False),
         "advice": json.dumps(gam.ADVICE_FOR, ensure_ascii=False),
+        "choukai_scripts": json.dumps(choukai_scripts or {}, ensure_ascii=False),
     }
 
 
@@ -1027,8 +1230,10 @@ def main():
     combined_keys = {**{str(k): v for k, v in gkeys.items()}, **ckeys}
     all_keys = gids + cused
 
+    choukai_scripts = parse_choukai_scripts(d / "聴解スクリプト.txt")
+
     out = d / "解答.html"
-    gdata = grading_data(gam, gids, ckeys, combined_keys)
+    gdata = grading_data(gam, gids, ckeys, combined_keys, choukai_scripts)
     render_combined(gmd, cmd, testid, all_keys, out, gdata, player=player_html(d))
 
     has_mp3 = (d / "聴解.mp3").is_file()

@@ -54,6 +54,15 @@ reads the whole assembled stream, so it cannot be split.
   different rates so she is distinguishable from the narrator.
 - 男1/男2 separated by rate (edge-tts free tier has only 2 ja-JP voices;
   `pitch` support varies by version — the script feature-detects it).
+- **Speech rate is verified, not just chosen for voice contrast.** The
+  per-speaker `rate` values in `SPEAKER_MAP` exist to make voices
+  distinguishable, but they also determine whether the exam underestimates N2
+  level — a correctly-paced recording of speech that's too slow is still an
+  easier exam. Verified against `official-audio-analysis` step 5: dialogue
+  lines (±0–6%) measure ~378 morae/min (natural/brisk N1-N2 range); narrator
+  (−10%) measures ~295 morae/min, which only affects unscored instructions.
+  **Any change to a rate value must be re-verified against that step** before
+  shipping — nothing else in the pipeline checks speech rate.
 
 ## Pacing table (from official Dec 2025 N2 audio — do not guess new values)
 

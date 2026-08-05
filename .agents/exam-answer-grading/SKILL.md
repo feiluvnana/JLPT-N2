@@ -159,8 +159,8 @@ two documents field for field, so this shape is a contract:
 }
 ```
 
-The result **screen** renders that document into the five familiar parts —
-総合判定, 得点サマリー, 大問別詳細分析, 弱点診断とアドバイス, 全設問解答チェック表.
+The result **screen** renders that document into the four familiar parts —
+総合判定, 得点サマリー, 大問別詳細分析, 全設問解答チェック表.
 Its 大問 ratings are exactly the labels both graders agree on: `優 (Strong)`
 (>=80%), `良 (Fair)` (60-79%), `要強化 (Weak)` (<60%). Plain text, no emoji —
 4cad944 removed emoji from the report symbols and both graders must stay in
