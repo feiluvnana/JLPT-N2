@@ -59,8 +59,10 @@ def classify_one(item: str, category: str | None = None) -> dict:
     evidence: list[str] = []
     pool_heads = load_pool_heads()
     h = head(item)
+    is_grammar = category in GRAMMAR_CATS or item.startswith("〜") or item.startswith("～")
+    norm = normalize_grammar(item) if is_grammar else item
 
-    if item in pool_heads or h in pool_heads:
+    if item in pool_heads or h in pool_heads or norm in pool_heads or head(norm) in pool_heads:
         return {
             "item": item,
             "category": category,
