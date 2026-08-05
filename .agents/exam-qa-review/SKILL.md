@@ -138,11 +138,13 @@ words, "がちだ" vs bare "がち", 読解 questions that only test N5 fact-loo
 - **問題8 / 問題9 length:** 問題8 assembled sentences should not read as
   three-word drills; 問題9 cloze body should land ~500–700 JP chars (official),
   not a 150–200 char stub.
-- **読解 apparatus vs official:** using `imported-n2-2025-07` (July 2025) as
+- **読解 apparatus & formatting:** using `imported-n2-2025-07` (July 2025) as
   the bar — fail (or hard-warn) a generated paper with fewer than ~15 `（注N）`
   across 問題10–13, with **no** `（中略）` anywhere in 中文/長文, or with 問題13
   under ~850 JP chars. Tests 1–4 shipped 0–2 notes and ~600–750 長文.
   **Fail any paper that glosses basic N3–N5 or standard N2 words** (such as 選択, 信号, 技術, 文化, 質, 準備, 手順, 設計, 現象, 経由, 偏り, 維持, 継続, 前提, 細部, バランス) or uses trivial circular definitions. Notes must strictly target N1+/rare/literary/specialized terms or contextual metaphors.
+  **Fail any paper containing `<ruby>` (furigana) in `言語知識・読解.md`** — test-takers read N2 kanji without furigana; over-the-level terms must use only `（注N）` notes.
+  **Fail any paper with mismatched passage numbered markers (`①**...**`, `②**...**`)** — every numbered marker in a passage must match 1-to-1 with a question stem in that question block (no orphaned/unused markers).
 - **問題11:** must be 4 passages × 2 questions with instruction `(1)から(4)`.
 - **問題5 言い換え:** swap the option into the stem; the sentence must survive
   (test 4: 「値段の比較的美味しい」 did not).
@@ -190,14 +192,23 @@ subject repeating the previous test; two 聴解 items running the same errand
 a decisive detail with a listening item; and check 問題12's A/B theme against
 the previous tests' 問題12 specifically (three papers in a row argued 働き方).
 
-### 6. Provenance audit
+### 6. Provenance & Spec Blueprint Audit
 
-`logs/test_spec.json` against the paper: every surface's topic is the spec's
-topic with the spec's origin; no duplicate entries; web share within 30–60% per
-surface. Then spot-check the harvest itself: pick 2–3 `logs/seeds.json` URLs
-and fetch them. Sequential or unresolvable URLs mean the "harvest" was invented,
-which silently breaks the no-two-tests-share-a-harvest rotation guarantee —
-report it even if the topics themselves are usable.
+Verify `logs/test_spec.json` against the authored paper end to end:
+
+1. **Target Item Match Audit (問題1–8 & 聴解 問題4):**
+   - Verify every item tested in `漢字読み` (問1), `表記` (問2), `語形成` (問3), `文脈指示語` (問4), `言い換え` (問5), `用法` (問6), `文法問題7` (問7), `文法問題8` (問8), and `即時応答` (聴解 問4) matches the EXACT target item specified in `test_spec.json["items"]`.
+   - Fail any paper where an author substituted a different target item during drafting — unrecorded substitutions corrupt the rotation ledger.
+2. **Answer Positions Compliance Audit:**
+   - Verify all 101 answer key positions (71 Gengo + 30 Choukai) match `test_spec.json["answer_positions"]` exactly.
+3. **Web Fact Consistency & Copyright Non-Reproduction:**
+   - For every web-derived surface (`origin: "web"` in `reading_topics`, `listening_scenarios`, `info_retrieval_texture`, `qr_situation_seeds`, `carrier_seeds`), verify the passage/dialogue incorporates the simplified fact in `test_spec.json` accurately without contradicting it.
+   - Verify copyright invariants: max 1 simplified fact per passage/dialogue, original phrasing, no reproduction of source article structure or verbatim sentences.
+4. **Web Blend Balance & Carrier Cap:**
+   - Verify web share sits within 30–60% per surface with pool ≥40%, and no single domain supplies >2 topic seeds.
+   - Verify carrier sentences in 問題1–8 use web texture on at most 1 in 3 stems per 問題.
+5. **Harvest URL Verification:**
+   - Spot-check 2–3 `logs/seeds.json` URLs by fetching them. Sequential or unresolvable URLs mean the harvest was invented — report it immediately.
 
 ### 7. Report (required format)
 
