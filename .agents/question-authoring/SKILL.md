@@ -168,19 +168,24 @@ matching where one tempting option fails exactly one condition.
   - 問題13 長文: ~900–1100 JP chars (July 2025 ≈1050). Tests 1–4 often
     shipped ~600–750 — too short for 主張理解.
   - 問題14: ~700–900 JP chars including table/conditions.
-- **Vocabulary Explanations & Furigana Rules for Dokkai (MANDATORY)**:
+- **Vocabulary Explanations for Dokkai (NO FURIGANA / MANDATORY)**:
+  - **NO FURIGANA IN DOKKAI**: Reading passages (問題9–14) and question stems/options in 言語知識・読解 contain **NO FURIGANA** (`<ruby>`). Test-takers are expected to read N2 kanji without furigana. Over-the-level, rare, or domain-specific words must ONLY be glossed using `（注1）`, `（注2）` notes at the bottom of the passage.
   - Official papers gloss freely: July 2025 carries **≈50+ `（注N）`** across
     読解. Generated tests with 0–2 notes are under-annotated. For every 中文/
     長文, plan **several** notes (typically 3–7 per medium/long passage) on
     N1/rare/specialized terms — not one decorative note per paper.
-  - Annotate in text as `（注1）`, `（注2）`… or HTML ruby
-    `<ruby>難解漢字<rt>なんかいかんじ</rt></ruby>`.
+  - **STRICT VOCABULARY BAND FOR NOTES (NON-NEGOTIABLE)**:
+    - 🚫 **STRICTLY BANNED**: Glossing N3–N5 words or standard N2 vocabulary (e.g., 選択, 信号, 技術, 文化, 質, 準備, 手順, 設計, 現象, 経由, 偏り, 維持, 継続, 前提, 細部, バランス) with trivial/circular definitions (`ここでは…`, `〜のこと`). Glossing basic words degrades test quality and is a QA failure.
+    - ✅ **TARGETS**: `（注N）` glosses are strictly reserved for:
+      - N1-level or rare/literary words (e.g., 委ねる, 雄弁, 死守する, 顧みる, 飼いならす, 抑圧, その場しのぎ)
+      - Onomatopoeic / colloquial expressions (e.g., むきむきの)
+      - Specialized / domain jargon (e.g., 大脳辺縁系, 起業, 機動性)
+      - Contextual / figurative metaphors (e.g., 余白のあるメディア, 思い出の扉)
+  - Annotate in text strictly as `（注1）`, `（注2）`… (never `<ruby>`).
   - Immediately following the passage (before question items), provide the
-    note block `（注1）語彙：簡潔な意味の説明` (one line per note).
+    note block `（注1）語彙：簡潔で自然な日本語の意味の説明` (one line per note).
   - Use `（中略）` at least once across 問題11–13 when cutting a longer
     exposition — official papers do; generated tests 1–4 never did.
-  - Furigana via `<ruby>` for non-standard readings, proper nouns, or rare
-    kanji above N2.
 
 **聴解 dialogues** — every wrong option must be MENTIONED then eliminated
 (already done / rejected / explicitly denied: 「それが理由ではありません」).
@@ -197,6 +202,7 @@ not merely outweighed.
 `make check` enforces the mechanical half of this list per test; the rest is on
 you. Run it before calling any authoring work done.
 
+- **Passage Numbered Markers Must Match Questions Exactly (1-to-1)**: Every numbered marker (`①**...**`, `②**...**`) placed in a reading passage MUST be referenced by a question stem in that passage's question set. Never leave orphaned/unused numbered markers in a passage (e.g. marking both ① and ② in a passage when questions only ask about ①).
 - **Four DIFFERENT options.** Never let the same string appear twice in one
   option set — that is a second correct answer. Test 2 shipped
   `1. 削減  2. 削減` and `1. ぶった … 3. ぶった`. When building near-miss kanji

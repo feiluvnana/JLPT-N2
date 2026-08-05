@@ -120,7 +120,8 @@ review):
 - 聴解 booklet: options stacked VERTICALLY, one per line with a leading space.
 - Question stems bold the tested word: **地域**, or show blanks as (　) / ＿＿.
 - 問題8 uses ＿＿ ＿＿ ★ ＿＿ with the answer = whichever option lands on ★.
-- **Dokkai Vocabulary Notes & Furigana**: Reading passages (問題9-14) containing uncommon vocabulary, domain-specific terminology, or rare kanji annotate inline terms using `（注1）`, `（注2）`... or `<ruby>漢字<rt>かんじ</rt></ruby>`. Structured note blocks `（注1） 語彙：説明` sit below the passage before questions.
+- **Dokkai Vocabulary Notes (No Furigana)**: Reading passages (問題9-14) containing uncommon vocabulary, domain-specific terminology, or rare kanji contain **NO FURIGANA** (`<ruby>`). Test-takers are expected to read N2 kanji without furigana. Over-the-level or rare terms must ONLY be annotated inline using `（注1）`, `（注2）`... with structured note blocks `（注1） 語彙：説明` sitting below the passage before questions.
+- **Passage Numbered Markers (1-to-1)**: Every numbered marker (`①**...**`, `②**...**`) in a reading passage MUST match 1-to-1 with a question stem. Do not place unused/orphaned markers in passages.
 
 ## Answer Key & Explanation Table Structure
 

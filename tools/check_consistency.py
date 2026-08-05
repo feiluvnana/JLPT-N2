@@ -601,6 +601,23 @@ def check_no_latin_prose(name: str, text: str):
           f"{bad} — write it in katakana or Japanese")
 
 
+def check_dokkai_numbered_markers(name: str, gt_prose: str):
+    blocks = re.split(r"(?:^##\s*問題(?:9|10|11|12|13|14)\b|^###\s*\(\d+\))", gt_prose, flags=re.M)
+    mismatches = []
+    for idx, block in enumerate(blocks[1:], 1):
+        if not re.search(r"\*\*\d+\*\*", block):
+            continue
+        parts = re.split(r"\n(?=\*\*\d+\*\*)", block, maxsplit=1)
+        passage = parts[0]
+        questions = parts[1] if len(parts) > 1 else ""
+        p_markers = set(re.findall(r"([①②③④⑤])\*\*", passage))
+        q_markers = set(re.findall(r"([①②③④⑤])\*\*", questions))
+        if p_markers != q_markers:
+            mismatches.append(f"section {idx}: passage has {sorted(p_markers)} vs questions have {sorted(q_markers)}")
+    check(f"{name}: passage numbered markers match questions 1-to-1", not mismatches,
+          "; ".join(mismatches) + " — every passage marker ①/② must be referenced by a question stem")
+
+
 # 解説 cells decide items, so a quote inside one is load-bearing. When it is
 # invented, the item it justifies is usually broken too and nothing shows:
 # test 2's 聴解 key quoted four lines of dialogue that were not in the script;
@@ -979,6 +996,13 @@ def check_tests():
             cut = bi.KEY_HEADING.search(body)
             check_no_latin_prose(f.name, body[: cut.start()] if cut else body)
 
+        gcut = bi.KEY_HEADING.search(gt)
+        gengo_prose = gt[: gcut.start()] if gcut else gt
+        gengo_rubies = re.findall(r"<ruby>.*?</ruby>", gengo_prose, re.S)
+        check(f"{gengo.name}: no furigana (<ruby>) in 言語知識・読解", not gengo_rubies,
+              f"found {len(gengo_rubies)} <ruby> tags in prose — Dokkai uses only （注N） notes for over-the-level words")
+        check_dokkai_numbered_markers(gengo.name, gengo_prose)
+
         # Only the 読解 key table quotes running text; the 文字・語彙 and 文法
         # tables put grammar glosses in 「」 by design, which is not a quote.
         gcut = bi.KEY_HEADING.search(gt)
@@ -995,6 +1019,13 @@ def check_tests():
                  f"(official July 2025 ≈50+; got {notes})",
                  notes >= 15,
                  "add glosses on N1/rare terms in 問題10–13 — see question-authoring")
+            easy_note_match = re.findall(
+                r"（注\d+）\s*(選択|信号|技術|文化|質|準備|手順|設計|現象|経由|偏り|維持|継続|前提|細部|バランス|指示|対応|理由|関係|方法)(?::|：)",
+                gt
+            )
+            warn(f"{d.name}: 読解 （注N） notes do not target easy/basic N3–N5 words",
+                 not easy_note_match,
+                 f"found glosses on easy/standard words: {set(easy_note_match)} — notes must target N1+/rare/specialized terms")
             warn(f"{d.name}: 読解 uses （中略） at least once",
                  "中略" in gt,
                  "official 中文/長文 cut with （中略）; generated tests shipped none")

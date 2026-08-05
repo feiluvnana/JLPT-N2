@@ -142,6 +142,7 @@ words, "がちだ" vs bare "がち", 読解 questions that only test N5 fact-loo
   the bar — fail (or hard-warn) a generated paper with fewer than ~15 `（注N）`
   across 問題10–13, with **no** `（中略）` anywhere in 中文/長文, or with 問題13
   under ~850 JP chars. Tests 1–4 shipped 0–2 notes and ~600–750 長文.
+  **Fail any paper that glosses basic N3–N5 or standard N2 words** (such as 選択, 信号, 技術, 文化, 質, 準備, 手順, 設計, 現象, 経由, 偏り, 維持, 継続, 前提, 細部, バランス) or uses trivial circular definitions. Notes must strictly target N1+/rare/literary/specialized terms or contextual metaphors.
 - **問題11:** must be 4 passages × 2 questions with instruction `(1)から(4)`.
 - **問題5 言い換え:** swap the option into the stem; the sentence must survive
   (test 4: 「値段の比較的美味しい」 did not).

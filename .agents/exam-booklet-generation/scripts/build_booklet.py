@@ -180,6 +180,36 @@ def fit_ruby(html: str) -> str:
 
 
 BLOCK = re.compile(r"<(p|li)>(.*?)</\1>", re.S)
+NOTE_ITEM = re.compile(r"（注\d+）[^（\n]*")
+
+
+def split_vocab_note_line(line: str) -> str:
+    """One （注N） gloss per line in vocabulary note blocks."""
+    stripped = line.strip().rstrip("\\")
+    if not stripped.startswith("（注"):
+        return line
+    items = NOTE_ITEM.findall(stripped)
+    if len(items) <= 1:
+        return line
+    prefix = line[: len(line) - len(line.lstrip())]
+    return "\n".join(prefix + item for item in items)
+
+
+def format_vocab_notes(md: str) -> str:
+    return "\n".join(split_vocab_note_line(l) for l in md.splitlines())
+
+
+def mark_vocab_notes(html: str) -> str:
+    """Tag gloss blocks so `.vocab-notes` styling applies."""
+
+    def sub(m: re.Match) -> str:
+        tag, inner = m.group(1), m.group(2)
+        text = TAGS.sub("", inner).strip()
+        if text.startswith("（注"):
+            return f'<{tag} class="vocab-notes">{inner}</{tag}>'
+        return m.group(0)
+
+    return BLOCK.sub(sub, html)
 
 
 def mark_furigana_blocks(html: str) -> str:
@@ -208,9 +238,10 @@ def build(src: Path) -> Path:
     if "聴解" in src.name or "choukai" in src.name.lower():
         md = add_choukai_furigana(md)
     md = "\n".join(widen(l) for l in md.splitlines())
+    md = format_vocab_notes(md)
     # nl2br is MANDATORY: keeps stacked answer options on separate lines.
     body = markdown.markdown(md, extensions=["tables", "nl2br"])
-    body = mark_furigana_blocks(fit_ruby(body))
+    body = mark_vocab_notes(mark_furigana_blocks(fit_ruby(body)))
     html_path = src.with_suffix(".html")
     html_path.write_text(
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
