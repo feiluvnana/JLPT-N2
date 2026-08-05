@@ -19,7 +19,7 @@ Verify every tested word/grammar point against reference books in `refs/Shinkanz
 ## Benchmark against Official Exams (`refs/JLPT/`)
 
 Maintain high consistency with the 5 recent official exams (07/2023, 12/2023, 12/2024, 07/2025, 12/2025):
-- **Dokkai Character Counts**: Short (~150-200 chars), Medium (~400-500 chars), Long (~700 chars), Flyer (1 table + 2 matching scenarios).
+- **Dokkai Character Counts**: Short (~200 chars), Medium (~500 chars), A/B combined (~600 chars), Long (~900 chars), Flyer (~700 chars; 1 table + 2 matching scenarios). These 目安 mirror the table in `jlpt-exam-structure`.
 - **Distractor Design**: Distractor options must replicate official confusion logic (e.g. 近義語 nuances, 誤用 collocations, condition disqualifications).
 - **Listening Spoken Choice Pacing**: Options spoken in 聴解 must follow official lengths (~10-15 chars per choice in 問題3/問題4).
 

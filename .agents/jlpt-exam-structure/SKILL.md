@@ -30,13 +30,38 @@ The official JLPT guidebook lists slightly higher 小問数 as 目安; **actual 
 | 7 | 文法形式判断 (grammar fill-in) | 12 | 31-42 |
 | 8 | 文の組み立て (scramble, ★ position) | 5 | 43-47 |
 | 9 | 文章の文法 (cloze passage, 4 blanks) | 4 | 48-51 |
-| 10 | 短文 (5 short passages × 1Q; include one business email and one notice/掲示) | 5 | 52-56 |
-| 11 | 中文 (3 passages, 8Q total — typically 2+2+4; ~400-500 chars each) | 8 | 57-64 |
-| 12 | 統合理解 (A/B compared texts, 2Q) | 2 | 65-66 |
-| 13 | 主張理解 (1 long essay ~700-900 chars, 3Q) | 3 | 67-69 |
-| 14 | 情報検索 (flyer/table + 2 condition-matching Q) | 2 | 70-71 |
+| 10 | 短文 (5 short passages ~200字 × 1Q; include one business email and one notice/掲示) | 5 | 52-56 |
+| 11 | 中文 (4 passages ~500字 × 2Q — see deviation note below) | 8 | 57-64 |
+| 12 | 統合理解 (A/B compared texts, ~600字 combined, 2Q) | 2 | 65-66 |
+| 13 | 主張理解 (1 long essay ~900字, 3Q) | 3 | 67-69 |
+| 14 | 情報検索 (flyer/table ~700字 + 2 condition-matching Q) | 2 | 70-71 |
 
 Question numbering is continuous 1-71 across the whole paper.
+
+**問題11 passage split — known pipeline deviation.** All five official papers
+in `refs/JLPT/` print 問題11 as **4 passages × 2 questions** (Q57-64; the
+Dec 2024 transcription's 「(1)から(3)」 instruction line is a typo — its body
+has four passages). This repo's sampler (`sample_items.py`:
+`"reading_topics": 11  # 5 short + 3 medium + …`) and tests 1-4 as shipped use
+3 passages split 3+3+2. Question count and numbering are unaffected, but new
+authoring should move to the official 4×2 shape once the sampler draws a 4th
+中文 topic; until then, state the deviation in the generation report.
+
+### 時間配分の目安 (105分)
+
+Per-part time budget (sums to the 105-min limit including a 2-min final
+review):
+
+| Part | 問題 | 目安 |
+|---|---|---|
+| 文字・語彙 | 問題1-6 | 15分 |
+| 文法 | 問題7-9 | 15分 |
+| 読解・短文 | 問題10 | 15分 |
+| 読解・中文 | 問題11 | 25分 |
+| 読解・統合理解 | 問題12 | 9分 |
+| 読解・主張理解 | 問題13 | 15分 |
+| 読解・情報検索 | 問題14 | 9分 |
+| 見直し | whole paper | 2分 |
 
 ## 聴解 — ~50 min, 30 answers
 

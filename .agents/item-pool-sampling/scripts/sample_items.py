@@ -41,7 +41,7 @@ DRAW = {
     "grammar_p8": 5,
     "quick_response": 11,
     "listening_scenarios": 19,   # 5+6+5 items + 例×3 + 統合2 (author maps them)
-    "reading_topics": 11,        # 5 short + 3 medium + 1 A/B + 1 long + 1 info
+    "reading_topics": 12,        # 5 short + 4 medium + 1 A/B + 1 long + 1 info
 }
 
 # answer-position plans: (section, count, positions)
