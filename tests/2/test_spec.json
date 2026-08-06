@@ -1,14 +1,14 @@
 {
- "seed": "20260804+reroll(listening_scenarios,202608041)+reroll(listening_scenarios,202608042)",
+ "seed": "20260804+reroll(listening_scenarios,202608041)+reroll(listening_scenarios,202608042)+reroll(kanji_reading,202608061)",
  "generated_at": "2026-08-06 15:00:54",
  "test_id": "2",
  "items": {
   "kanji_reading": [
-   "阻む(はばむ)",
-   "慎重(しんちょう)",
-   "将(まさ.に)",
-   "林立(りんりつ)",
-   "効(き.く)"
+   "並(な.み)",
+   "免れる(まぬがれる)",
+   "縮小(しゅくしょう)",
+   "漠然(ばくぜん)",
+   "療(リョウ)"
   ],
   "orthography": [
    "引分け",
@@ -217,8 +217,10 @@
     "source": "https://www.mhlw.go.jp/stf/newpage_45540.html"
    },
    {
-    "topic": "就寝前習慣と健康",
-    "origin": "pool"
+    "topic": "市民スポーツ大会の参加募集要項",
+    "origin": "pool",
+    "substituted_from": "就寝前習慣と健康",
+    "reason": "3 sleep topics in one draw (this + 短時間睡眠と作業能率 + 夜勤明けの休息確保); 問題12 keeps the drawn A/B pair, so 問題10(3) was moved off the subject. Replacement taken from pools.json reading_topics, unused in ledger history."
    },
    {
     "topic": "公民館の共食と社会的つながり",
