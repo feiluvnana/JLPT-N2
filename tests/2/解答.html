@@ -63,43 +63,48 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   :root { --gutter: 1.6em; }
   body { max-width: 60em; margin: 0 auto; padding: 2.5em var(--gutter) 6em;
          background: #fff; }
+  table { max-width: 100%; }
 }
 @media screen and (max-width: 48em) {
-  :root { --gutter: 1em; }
-  body { padding: 1.2em var(--gutter) 4em; }
+  :root { --gutter: 0.8em; }
+  body { padding: 1.2em var(--gutter) 4em; font-size: 10pt; }
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  blockquote { padding: 8px 10px; margin: 8px 0; }
+  h1 { font-size: 13.5pt; margin: 22px 0 10px; }
+  h2 { font-size: 11pt; padding: 4px 8px; margin: 18px 0 10px; }
 }
 
 :root{--ink:#0f172a;--line:#cbd5e1;--muted:#475569;--accent:#1d4ed8;
   --ui:"Hiragino Sans","Yu Gothic",sans-serif}
 /* The bar spans the full window on every screen, so the scrollbar sits ON its
    right edge — the horizontal padding has to clear it or it covers 採点する. */
-/* Fixed bar height on all three screens — exam controls must not wrap taller
-   than the list/result bars. */
 #bar{position:sticky;top:0;z-index:99;background:#111;color:#fff;
-  box-sizing:border-box;height:3.25em;min-height:3.25em;max-height:3.25em;
-  padding:0 1.8em;display:flex;flex-wrap:nowrap;gap:.45em 1em;align-items:center;
-  font-family:var(--ui);font-size:11pt;overflow:hidden}
+  box-sizing:border-box;min-height:3.25em;padding:0 1.8em;display:flex;
+  flex-wrap:nowrap;gap:.45em 1em;align-items:center;font-family:var(--ui);
+  font-size:11pt}
 #bar b{font-size:12pt;font-weight:700;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis;min-width:0;max-width:18em}
 #bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 #bar .grow{flex:1 1 auto;min-width:.5em}
 #bar-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:.45em;flex:0 0 auto}
-#bar button{font-size:10pt;padding:.2em .7em;cursor:pointer;border-radius:6px;
+#bar button{font-size:10pt;padding:.25em .75em;cursor:pointer;border-radius:6px;
   border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui);
-  white-space:nowrap;line-height:1.35}
+  white-space:nowrap;line-line:1.35;min-height:32px;display:inline-flex;align-items:center}
 #bar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);
   font-weight:700}
 #bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap;
-  flex:0 0 auto}
+  flex:0 0 auto;padding:.2em 0}
 #bar a.back:hover{color:#fff;text-decoration:underline}
-.ui-btn{display:inline-block;font-size:11pt;padding:.45em 1.1em;border-radius:6px;
-  text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--ink);
-  cursor:pointer;font-family:var(--ui)}
+.ui-btn{display:inline-flex;align-items:center;justify-content:center;
+  font-size:11pt;padding:.45em 1.1em;border-radius:6px;text-decoration:none;
+  border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+  font-family:var(--ui);box-sizing:border-box;min-height:38px}
 .ui-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
 .ui-btn.danger{background:#fff;border-color:#fca5a5;color:#991b1b}
 .ui-btn.danger:hover{background:#fef2f2}
 .ui-btn:hover{filter:brightness(.96)}
+.ui-table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4em 0}
 .ui-table{border-collapse:collapse;width:100%;font-size:10.5pt;margin:.4em 0;
   font-family:var(--ui)}
 .ui-table th,.ui-table td{border:1px solid var(--line);padding:.35em .6em;
@@ -108,14 +113,15 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 .ui-table td.n{text-align:right;font-variant-numeric:tabular-nums}
 .ui-table tr.weak td{background:#fff7ed}
 .badge{font-size:10pt;padding:.25em .7em;border-radius:99px;border:1px solid;
-  white-space:nowrap;font-variant-numeric:tabular-nums;font-family:var(--ui)}
+  white-space:nowrap;font-variant-numeric:tabular-nums;font-family:var(--ui);
+  display:inline-flex;align-items:center}
 .badge.pass{background:#f0fdf4;border-color:#16a34a;color:#166534}
 .badge.fail{background:#fef2f2;border-color:#dc2626;color:#991b1b}
 .badge.none{background:#f8fafc;border-color:var(--line);color:#64748b}
 .badge.warn{background:#fffbeb;border-color:#f59e0b;color:#92400e}
-.chip{display:inline-flex;align-items:baseline;gap:.35em;font-size:10pt;
-  padding:.18em .5em;border-radius:6px;border:1px solid;font-family:var(--ui);
-  font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:.35em;font-size:10pt;
+  padding:.22em .55em;border-radius:6px;border:1px solid;font-family:var(--ui);
+  font-variant-numeric:tabular-nums;min-height:30px}
 .chip i{font-style:normal;font-size:9pt;opacity:.75}
 .chip.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
 .chip.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
@@ -126,6 +132,18 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 .meter .fill.done{background:#16a34a}
 .meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;text-align:left;
   font-variant-numeric:tabular-nums;font-family:var(--ui)}
+@media screen and (max-width: 48em){
+  #bar{padding:.45em .9em;gap:.35em .7em;flex-wrap:wrap;font-size:10pt}
+  #bar b{max-width:11em;font-size:11pt}
+  #bar .sub{font-size:9pt}
+  #bar-controls{gap:.35em}
+  #bar button{font-size:9.5pt;padding:.3em .65em;min-height:34px}
+  .ui-btn{font-size:10pt;padding:.4em .85em;min-height:36px}
+}
+@media screen and (max-width: 32em){
+  #bar b{max-width:7.5em;font-size:10.5pt}
+  #where{display:none}
+}
 
 .qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
 .qa label{display:inline-flex;align-items:center;gap:.28em;cursor:pointer;
@@ -238,6 +256,25 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 }
 @media screen and (max-width:48em){
   #screen-exam,#screen-result{padding:1.2em var(--gutter) 4em}
+  .qa{margin:.3em 0 .8em .2em;gap:.4em .6em}
+  .qa label{padding:.35em .75em;font-size:11pt;min-height:40px;min-width:40px;
+    justify-content:center;box-sizing:border-box;font-weight:500}
+  .qa input{width:18px;height:18px}
+  #player{padding:.6em var(--gutter)}
+  .pctl{gap:.4em .6em;margin-top:.5em;font-size:9.5pt}
+  .pctl button,.pctl select,.pctl .pick{min-height:36px;padding:.3em .65em;
+    border-radius:6px}
+  .pctl select#chap{max-width:100%;flex:1 1 auto}
+  .rs-head{flex-direction:column;align-items:flex-start;gap:.4em;padding:.85em 1em}
+  .rs-score{margin-left:0;font-size:20pt}
+  .rs-verdict{font-size:16pt}
+  .rs-nav{flex-direction:column;align-items:stretch;gap:.6em}
+  .rs-nav .ui-btn{width:100%;text-align:center;justify-content:center}
+  .rs-grid{gap:.35em}
+  .rs-item,.rs-group{padding:.7em .85em}
+  .rs-detail-meta{gap:.3em .8em;font-size:10pt}
+  .rs-detail-body{padding:.6em .8em;font-size:10.5pt}
+  .section-title{font-size:14pt;padding:.35em .6em;margin:1.5em 0 .8em}
 }
 </style></head><body><div id="bar"><a class="back" href="/">← テスト一覧</a><b id="bar-title">テスト 2（受験）</b><span class="sub" id="where"></span><span class="grow"></span><span id="bar-controls"><span class="sub" id="done">解答済み 0 / 101</span> <button onclick="clearAll()">消去</button> <button onclick="save()" class="primary">採点する</button></span></div><div id="screen-exam"><div id="section-gengo"><h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1><!-- seed: 20260804+reroll(listening_scenarios,202608041)+reroll(listening_scenarios,202608042)+reroll(kanji_reading,202608061), test_id: 2 -->
 
@@ -1639,7 +1676,7 @@ function resultHtml(res, msg, saved){
   L.push('</div>');
 
   L.push('<h2>1. 得点サマリー (得点等化スケールスコア 換算)</h2>');
-  L.push('<table class="ui-table"><thead><tr><th>セクション</th><th>素点</th><th>換算得点</th>'
+  L.push('<div class="ui-table-wrap"><table class="ui-table"><thead><tr><th>セクション</th><th>素点</th><th>換算得点</th>'
     + '<th>基準点</th><th>判定</th></tr></thead><tbody>');
   for (const name in s.sections){
     const d = s.sections[name];
@@ -1653,10 +1690,10 @@ function resultHtml(res, msg, saved){
     + '<td class="n"><b>' + s.total_scaled_score + '</b> / 180</td>'
     + '<td class="n">90点</td><td><b>'
     + (s.passed ? '合格 (PASS)' : '不合格 (FAIL)') + '</b></td></tr>');
-  L.push('</tbody></table>');
+  L.push('</tbody></table></div>');
 
   L.push('<h2>2. 大問別（問題形式別）詳細分析</h2>');
-  L.push('<table class="ui-table"><thead><tr><th>分野</th><th>問題</th><th>大問名</th><th>正解率</th>'
+  L.push('<div class="ui-table-wrap"><table class="ui-table"><thead><tr><th>分野</th><th>問題</th><th>大問名</th><th>正解率</th>'
     + '<th>正解数 / 問題数</th><th>評価</th></tr></thead><tbody>');
   for (const code in res.taxonomy_stats){
     const t = res.taxonomy_stats[code];
@@ -1666,7 +1703,7 @@ function resultHtml(res, msg, saved){
       + '<td class="n">' + t.correct + ' / ' + t.total + '</td>'
       + '<td>' + rating(t.percentage) + '</td></tr>');
   }
-  L.push('</tbody></table>');
+  L.push('</tbody></table></div>');
 
   L.push('<h2>3. 全設問解答チェック表</h2>');
   L.push('<div class="rs-check-tools">'

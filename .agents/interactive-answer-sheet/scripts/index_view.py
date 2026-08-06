@@ -73,7 +73,24 @@ code{background:#f1f5f9;padding:.1em .4em;border-radius:4px;font-size:10pt}
 .tools{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;margin:0 0 1.4em}
 .tools .note{font-size:10pt;color:var(--muted)}
 .tools input[type=file]{display:none}
+@media screen and (max-width: 54em){
+  main{padding:1em .8em 3em}
+  .card{grid-template-columns:1fr auto;grid-template-rows:auto auto auto auto auto;
+    column-gap:.6em;row-gap:.4em;height:auto;min-height:auto;max-height:none;
+    padding:.85em 1em;overflow:visible}
+  .card h2{grid-column:1;grid-row:1;font-size:12pt;white-space:normal;overflow:visible}
+  .card .origin{grid-column:2;grid-row:1;justify-self:end}
+  .card .status{grid-column:1 / -1;grid-row:2;justify-self:start}
+  .card .meter .track{grid-column:1 / -1;grid-row:3}
+  .card .meter .lbl{grid-column:1 / -1;grid-row:4}
+  .acts{grid-column:1 / -1;grid-row:5;justify-self:start;flex-wrap:wrap;
+    margin-top:.2em;width:100%}
+  .acts .ui-btn{padding:.4em .85em;font-size:10pt;min-height:36px}
+  .tools{gap:.6em}
+  .tools .ui-btn{width:100%;justify-content:center}
+}
 """
+
 
 # --------------------------------------------------------------- the shared view
 INDEX_JS = """

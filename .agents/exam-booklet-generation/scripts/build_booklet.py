@@ -25,12 +25,18 @@ SCREEN_CSS = """
   :root { --gutter: 1.6em; }
   body { max-width: 60em; margin: 0 auto; padding: 2.5em var(--gutter) 6em;
          background: #fff; }
+  table { max-width: 100%; }
 }
 @media screen and (max-width: 48em) {
-  :root { --gutter: 1em; }
-  body { padding: 1.2em var(--gutter) 4em; }
+  :root { --gutter: 0.8em; }
+  body { padding: 1.2em var(--gutter) 4em; font-size: 10pt; }
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  blockquote { padding: 8px 10px; margin: 8px 0; }
+  h1 { font-size: 13.5pt; margin: 22px 0 10px; }
+  h2 { font-size: 11pt; padding: 4px 8px; margin: 18px 0 10px; }
 }
 """
+
 
 CSS = """
 @page { size: A4; margin: 18mm 16mm; }

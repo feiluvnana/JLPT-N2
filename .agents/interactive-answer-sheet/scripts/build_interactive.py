@@ -194,6 +194,25 @@ EXTRA_CSS = app_style.APP_CSS + """
 }
 @media screen and (max-width:48em){
   #screen-exam,#screen-result{padding:1.2em var(--gutter) 4em}
+  .qa{margin:.3em 0 .8em .2em;gap:.4em .6em}
+  .qa label{padding:.35em .75em;font-size:11pt;min-height:40px;min-width:40px;
+    justify-content:center;box-sizing:border-box;font-weight:500}
+  .qa input{width:18px;height:18px}
+  #player{padding:.6em var(--gutter)}
+  .pctl{gap:.4em .6em;margin-top:.5em;font-size:9.5pt}
+  .pctl button,.pctl select,.pctl .pick{min-height:36px;padding:.3em .65em;
+    border-radius:6px}
+  .pctl select#chap{max-width:100%;flex:1 1 auto}
+  .rs-head{flex-direction:column;align-items:flex-start;gap:.4em;padding:.85em 1em}
+  .rs-score{margin-left:0;font-size:20pt}
+  .rs-verdict{font-size:16pt}
+  .rs-nav{flex-direction:column;align-items:stretch;gap:.6em}
+  .rs-nav .ui-btn{width:100%;text-align:center;justify-content:center}
+  .rs-grid{gap:.35em}
+  .rs-item,.rs-group{padding:.7em .85em}
+  .rs-detail-meta{gap:.3em .8em;font-size:10pt}
+  .rs-detail-body{padding:.6em .8em;font-size:10.5pt}
+  .section-title{font-size:14pt;padding:.35em .6em;margin:1.5em 0 .8em}
 }
 """
 
@@ -789,7 +808,7 @@ function resultHtml(res, msg, saved){
   L.push('</div>');
 
   L.push('<h2>1. 得点サマリー (得点等化スケールスコア 換算)</h2>');
-  L.push('<table class="ui-table"><thead><tr><th>セクション</th><th>素点</th><th>換算得点</th>'
+  L.push('<div class="ui-table-wrap"><table class="ui-table"><thead><tr><th>セクション</th><th>素点</th><th>換算得点</th>'
     + '<th>基準点</th><th>判定</th></tr></thead><tbody>');
   for (const name in s.sections){
     const d = s.sections[name];
@@ -803,10 +822,10 @@ function resultHtml(res, msg, saved){
     + '<td class="n"><b>' + s.total_scaled_score + '</b> / 180</td>'
     + '<td class="n">90点</td><td><b>'
     + (s.passed ? '合格 (PASS)' : '不合格 (FAIL)') + '</b></td></tr>');
-  L.push('</tbody></table>');
+  L.push('</tbody></table></div>');
 
   L.push('<h2>2. 大問別（問題形式別）詳細分析</h2>');
-  L.push('<table class="ui-table"><thead><tr><th>分野</th><th>問題</th><th>大問名</th><th>正解率</th>'
+  L.push('<div class="ui-table-wrap"><table class="ui-table"><thead><tr><th>分野</th><th>問題</th><th>大問名</th><th>正解率</th>'
     + '<th>正解数 / 問題数</th><th>評価</th></tr></thead><tbody>');
   for (const code in res.taxonomy_stats){
     const t = res.taxonomy_stats[code];
@@ -816,7 +835,7 @@ function resultHtml(res, msg, saved){
       + '<td class="n">' + t.correct + ' / ' + t.total + '</td>'
       + '<td>' + rating(t.percentage) + '</td></tr>');
   }
-  L.push('</tbody></table>');
+  L.push('</tbody></table></div>');
 
   L.push('<h2>3. 全設問解答チェック表</h2>');
   L.push('<div class="rs-check-tools">'
