@@ -375,12 +375,9 @@ Non-official sites were not used for any number in this file.
 
 ---
 
-## 11. Recommendation: `AGENTS.md` §3 should describe the archive
+## 11. `AGENTS.md` §3 describes the archive (`refs/JLPT_N2_NEW/`)
 
-§3 currently lists only the 5 paths in `refs/JLPT/`, and `make check` asserts
-those paths exist. `refs/JLPT_N2_NEW/` now holds **31 sittings** and duplicates
-the 2023–2025 ones. Suggested replacement text (this pass did **not** edit
-`AGENTS.md`):
+`AGENTS.md` §3 describes `refs/JLPT_N2_NEW/` holding **31 sittings**, and `make check` asserts those paths exist:
 
 > - **Official Past Exam Archive (`refs/JLPT_N2_NEW/`) — 31 sittings, 7/2010 – 12/2025.**
 >   One directory per sitting, named `<n>. N2 <month>-<year>/`, each holding the
@@ -392,11 +389,3 @@ the 2023–2025 ones. Suggested replacement text (this pass did **not** edit
 >   against a single paper.** The current exam format (71 + 30 items, 問題11 in
 >   four passages) dates from **12/2022**; earlier sittings are a different
 >   blueprint and must not be averaged in for 読解 lengths.
-> - `refs/JLPT/` is a **legacy alias** holding five of the same sittings
->   (7/2023, 12/2023, 12/2024, 7/2025, 12/2025) plus the same answer-key PDF.
->   It is byte-identical where it overlaps — prefer `refs/JLPT_N2_NEW/` and do
->   not count a sitting twice.
-
-`make check`'s `refs/`-path assertion should then be extended to the archive
-directory (existence of the 31 folders and the key PDF), and the legacy five
-paths kept only as long as `refs/JLPT/` is on disk.

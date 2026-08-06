@@ -7,9 +7,9 @@ description: Single owner of official JLPT exam format facts — section layout,
 
 ## Deliverable File Mapping (`tests/<test_id>/`)
 
-All section layouts, question counts, and item specifications in this document are benchmarked against and aligned with the 5 official JLPT past exams in `refs/JLPT/` (07/2023, 12/2023, 12/2024, 07/2025, 12/2025).
+All section layouts, question counts, and item specifications in this document are benchmarked against and aligned with the official JLPT past exams in `refs/JLPT_N2_NEW/` (e.g. 07/2023, 12/2023, 12/2024, 07/2025, 12/2025).
 
-The 2009 概要版 guidebook lists 小問数 as a pre-launch 目安 (「実際の試験での出題数は多少異なることがあります」); **actual recent papers** (every exam in `refs/JLPT/`) use the counts below. Prefer the past-exam counts over the guidebook table — always.
+The 2009 概要版 guidebook lists 小問数 as a pre-launch 目安 (「実際の試験での出題数は多少異なることがあります」); **actual recent papers** (every exam in `refs/JLPT_N2_NEW/`) use the counts below. Prefer the past-exam counts over the guidebook table — always.
 
 That is not a formality: guidebook numbers have twice been copied into this repo
 as if measured. The rows where it disagrees with reality, so nobody "fixes" them
@@ -193,13 +193,13 @@ Two prohibitions follow, both of which a generated paper has broken:
 - 問題5 2番 options are printed only — do not speak them.
 - Exam closes: 「これで、聴解試験を終わります。」
 
-## 問題N instruction lines (canonical — transcribed from `refs/JLPT/`)
+## 問題N instruction lines (canonical — transcribed from `refs/JLPT_N2_NEW/`)
 
 These are the texts `choukai-script-writing` tells you to paste into BOTH
 `聴解.md` and `聴解スクリプト.txt`. Copy from here, never from a previous test:
 `make check` only proves the booklet and the script agree with **each other**, so
 a paper where both drift the same way passes green, and the tests on disk do
-drift. Transcribed from the July 2025 booklet (`refs/JLPT/16. N2 07-2025.pdf`).
+drift. Transcribed from the July 2025 booklet (`refs/JLPT_N2_NEW/16. N2 7-2025/16. N2 07-2025.pdf`).
 
 | Where | Text |
 |---|---|

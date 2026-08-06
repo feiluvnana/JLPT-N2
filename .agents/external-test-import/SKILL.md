@@ -32,15 +32,15 @@ numeric id like `tests/5/`.
 # scaffold + meta (does not author Markdown)
 python3 .agents/external-test-import/scripts/init_imported_test.py \
   --slug n2-2025-12 \
-  --booklet "refs/JLPT/17.N2 12-2025 _260603.pdf" \
-  --script "refs/JLPT/17 (script) N2 12-2025 _260410.pdf" \
-  --audio "refs/JLPT/JLPT N2 12.2025 Choukai.mp3"
+  --booklet "refs/JLPT_N2_NEW/17.N2 12-2025/17.N2 12-2025 _260603.pdf" \
+  --script "refs/JLPT_N2_NEW/17.N2 12-2025/17 (script) N2 12-2025 _260410.pdf" \
+  --audio "refs/JLPT_N2_NEW/17.N2 12-2025/JLPT N2 12.2025 Choukai.mp3"
 ```
 
 ## When to use this skill
 
 - User provides / points at a PDF (or Markdown dump) of a full or partial exam
-- User wants a past paper from `refs/JLPT/` playable via `make serve`
+- User wants a past paper from `refs/JLPT_N2_NEW/` playable via `make serve`
 - User says import / convert / ingest / load external test
 
 **Not** this skill: authoring a new mock → `jlpt-test-generation`.

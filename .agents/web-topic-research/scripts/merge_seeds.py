@@ -23,14 +23,28 @@ Surfaces touched in test_spec.json:
 - carrier_seeds               問題1-8 example/carrier sentences: texture only
 - qr_situation_seeds          問題4 即時応答: up to 3 situational settings
 
-PRE-FLIGHT (both abort before anything is blended):
+PRE-FLIGHT (all three abort before anything is blended):
 - validate_harvest()   harvest hygiene: no two seeds may cite the same source
                        URL, and the harvest must span >= MIN_HARVEST_DOMAINS
                        distinct netlocs. The domain count is printed either way.
 - check_topic_reuse()  cross-test topic hygiene: no seed may share a >=2-char
                        content token with a subject either of the previous two
-                       tests already used (logs/topics.json, absent = skipped).
+                       tests already used (logs/topics.json; a file that is
+                       genuinely absent is tolerated and loudly reported, a file
+                       that is present but unreadable is fatal).
                        This is a FLOOR, not the rule — see the function docstring.
+- ledger_entry()       the spec's test must already exist in logs/ledger.json,
+                       because the harvest_sha stamp written at the end has
+                       nowhere to land otherwise (see the function docstring).
+
+SIBLING FILES ARE RESOLVED FROM THE REPO ROOT, NOT FROM THE SPEC OR THE CWD.
+logs/ledger.json and logs/topics.json are repo-level state; specs moved from
+logs/test_spec.json to tests/<test_id>/test_spec.json (commit 383c83a) and the
+two `spec_path.parent / …` lookups left behind pointed at tests/<id>/ledger.json
+and tests/<id>/topics.json, which never exist. Both failures were silent: the
+harvest_sha stamp went nowhere (exactly the unrecorded-sha hole AGENTS.md §4
+now fails on) and the cross-test topic abort printed "no history yet" on every
+run in its life. ROOT comes from __file__ so it is also cwd-independent.
 
 ALLOCATION: a small texture cut (info/qr/carrier) is reserved FIRST so every
 surface receives seeds even with a thin harvest; the remaining seeds fund
@@ -63,6 +77,12 @@ from collections import Counter
 from pathlib import Path
 from urllib.parse import urlparse
 
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]            # .agents/web-topic-research/scripts -> repo root
+LOGS_DIR = ROOT / "logs"
+LEDGER = LOGS_DIR / "ledger.json"   # written by sample_items.py, stamped here
+TOPICS = LOGS_DIR / "topics.json"   # written by the build pass; see the SKILL
+
 MIN_WEB = 0.30
 MAX_WEB = 0.60
 MAX_PER_DOMAIN = 2
@@ -71,7 +91,6 @@ MIN_HARVEST_DOMAINS = 6   # web-topic-research Step 1: 2 x domains caps the blen
 QR_SEEDS = 3          # max situational seeds attached for 即時応答
 CARRIER_SEEDS = 6     # max texture seeds attached for 問題1-8 carrier sentences
 
-TOPICS = "topics.json"    # written by the build pass; see web-topic-research
 TOPIC_LOOKBACK = 2        # how many previous tests' subjects block a seed
 
 
@@ -167,19 +186,32 @@ def previous_subjects(topics_path: Path, lookback: int = TOPIC_LOOKBACK,
                       test_id=None) -> list[tuple[str, str, str]]:
     """[(test_id, surface, subject)] for the last `lookback` tests on record.
 
-    Tolerates a missing file: logs/topics.json is written by the build pass, so
-    the first test generated after this check landed has nothing to compare to.
+    Tolerates a file that is genuinely absent: logs/topics.json is written by
+    the build pass, so the first test generated after this check landed has
+    nothing to compare to. A file that IS there but cannot be read as history
+    is fatal instead — a guard that shrugs at a corrupt history file reports
+    "nothing to compare" and looks exactly like a pass.
     Accepts the canonical {"version":1,"history":[…]} container and the two
     obvious variants ({"tests":[…]} / a bare list) so a hand-written file still
     reads.
     """
-    if not topics_path.is_file():
+    if not topics_path.exists():
         return []
-    data = json.loads(topics_path.read_text(encoding="utf-8"))
+    try:
+        data = json.loads(topics_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"{topics_path} exists but could not be read as the "
+                         f"topic history ({exc}); the cross-test topic check "
+                         f"cannot run. Repair the file — do not delete it to "
+                         f"fall back on the tolerated-absent path.")
     if isinstance(data, dict):
         rows = data.get("history") or data.get("tests") or []
-    else:
+    elif isinstance(data, list):
         rows = data
+    else:
+        raise SystemExit(f"{topics_path} is not a topic history "
+                         f"({type(data).__name__}); expected "
+                         f'{{"version":1,"history":[…]}}')
     rows = [r for r in rows if isinstance(r, dict)
             and (test_id is None or str(r.get("test_id")) != str(test_id))]
     out = []
@@ -207,9 +239,18 @@ def check_topic_reuse(seeds: list[dict], topics_path: Path, test_id=None) -> Non
     """
     prev = previous_subjects(topics_path, test_id=test_id)
     if not prev:
-        print(f"  note: no {topics_path.name} history yet — cross-test topic "
-              f"check skipped (the human whole-paper topic table is the only "
-              f"guard this run)")
+        # Say WHICH of the two very different situations this is, and say it
+        # against the absolute path. The old message ("no topics.json history
+        # yet") was printed on every run for the life of this check, because
+        # the path it probed was tests/<id>/topics.json — a file that never
+        # exists. An operator read that as information; it was a broken guard.
+        why = ("the file does not exist" if not topics_path.exists() else
+               f"it records no subjects outside test {test_id}")
+        print(f"  WARNING: cross-test topic check SKIPPED — {topics_path}: "
+              f"{why}. Nothing blocks a repeat of the previous papers' "
+              f"subjects this run; the human whole-paper topic table "
+              f"(jlpt-test-generation §'One topic, one surface') is the only "
+              f"guard. Confirm in your report that you did it.")
         return
     tests = sorted({t for t, _, _ in prev})
     index = [(t, surf, subj, content_tokens(subj)) for t, surf, subj in prev]
@@ -265,7 +306,54 @@ def as_records(topics: list, key: str) -> list[dict]:
             for t in topics]
 
 
-def unblend(spec: dict, ledger_path: Path) -> None:
+def load_ledger(spec: dict) -> tuple[dict, dict]:
+    """(whole ledger, this test's history row) from logs/ledger.json — REQUIRED.
+
+    Every exit from this function that is not the row itself is fatal, on
+    purpose. The ledger is the only place the sampler's pool draw survives (so
+    unblend() can restore it) and the only place `make check` can read a
+    harvest_sha back from. The stamp used to be written under
+    `if ledger_path.is_file()` against `spec_path.parent / "ledger.json"` —
+    i.e. tests/<id>/ledger.json, which never exists — so the guard was always
+    false, nothing was ever stamped, and nothing said so. That is precisely the
+    unrecorded-`harvest_sha` hole AGENTS.md §4 describes: `None` is not evidence
+    of a different harvest, and tests 2 and 3 passed the rotation check for as
+    long as they did because of it.
+
+    A blend whose stamp cannot land must not happen at all, so this is checked
+    in pre-flight, before a single record is replaced.
+    """
+    test_id = spec.get("test_id")
+    if test_id is None:
+        raise SystemExit(
+            "test_spec.json has no test_id, so the harvest_sha stamp has no "
+            "logs/ledger.json row to land in. Re-run sample_items.py "
+            "--test-id <id> to produce a spec that can be blended.")
+    if not LEDGER.exists():
+        raise SystemExit(
+            f"{LEDGER} does not exist. merge_seeds.py must record which "
+            f"harvest this blend came from; without the ledger the rotation "
+            f"check in `make check` cannot tell a new harvest from a skipped "
+            f"step 3.5. Run sample_items.py first.")
+    try:
+        ledger = json.loads(LEDGER.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"{LEDGER} could not be read ({exc}); repair it "
+                         f"before blending.")
+    rows = [h for h in ledger.get("history", [])
+            if isinstance(h, dict) and str(h.get("test_id")) == str(test_id)]
+    if not rows:
+        known = [str(h.get("test_id")) for h in ledger.get("history", [])
+                 if isinstance(h, dict)]
+        raise SystemExit(
+            f"{LEDGER} has no history entry for test {test_id} "
+            f"(it records {known or 'nothing'}). The spec was not produced by "
+            f"this repo's sampler, or the ledger was rolled back. Re-run "
+            f"sample_items.py --test-id {test_id}, then merge_seeds.py once.")
+    return ledger, rows[-1]
+
+
+def unblend(spec: dict, entry: dict) -> None:
     """Restore the sampler's pool draw so a re-run blends from scratch.
 
     blend() replaces a budgeted share of the records it is HANDED. Run a second
@@ -279,8 +367,9 @@ def unblend(spec: dict, ledger_path: Path) -> None:
     every downstream gate reads the spec, and the spec looked full.
 
     The sampler's draw is recorded in logs/ledger.json, so it can be put back.
-    Without it there is nothing to restore from and re-running would silently
-    keep compounding, so refuse instead.
+    `entry` is that test's history row, already located (and required to exist)
+    by load_ledger() during pre-flight. Without a draw in it there is nothing to
+    restore from and re-running would silently keep compounding, so refuse.
     """
     fields = (("reading_topics", "topic"), ("listening_scenarios", "scenario"))
     already = [f for f, k in fields
@@ -288,21 +377,18 @@ def unblend(spec: dict, ledger_path: Path) -> None:
                       for e in spec.get("items", {}).get(f, []))]
     if not already:
         return
-    entry = None
-    if ledger_path.is_file():
-        for h in json.loads(ledger_path.read_text(encoding="utf-8")).get("history", []):
-            if str(h.get("test_id")) == str(spec.get("test_id")):
-                entry = h
-    if not entry:
-        raise SystemExit(
-            f"test_spec.json is already blended ({', '.join(already)}) and "
-            f"logs/ledger.json has no draw for test {spec.get('test_id')} to "
-            f"restore from. Re-run sample_items.py for a clean spec, then "
-            f"merge_seeds.py once.")
+    restored = []
     for field, key in fields:
-        pooled = entry.get("items", {}).get(field)
+        pooled = (entry.get("items") or {}).get(field)
         if pooled:
             spec["items"][field] = list(pooled)
+            restored.append(field)
+    if not restored:
+        raise SystemExit(
+            f"test_spec.json is already blended ({', '.join(already)}) and "
+            f"{LEDGER}'s entry for test {spec.get('test_id')} records no draw "
+            f"to restore from. Re-run sample_items.py for a clean spec, then "
+            f"merge_seeds.py once.")
     print(f"  note: spec was already blended ({', '.join(already)}) — restored "
           f"the pool draw from the ledger before re-blending")
 
@@ -352,16 +438,20 @@ def main():
                     help="target web fraction of listening scenarios (clamped 0.30-0.60)")
     args = ap.parse_args()
 
-    seeds = json.loads(Path(args.seeds).read_text(encoding="utf-8"))
+    seeds_path = Path(args.seeds)
+    seeds = json.loads(seeds_path.read_text(encoding="utf-8"))
     spec_path = Path(args.spec)
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
 
-    # Pre-flight, before anything is blended: a harvest that fails either of
-    # these cannot be repaired downstream (see the function docstrings).
+    # Pre-flight, before anything is blended: none of these can be repaired
+    # downstream (see the function docstrings). The two repo-level history
+    # files are resolved from ROOT, never from spec_path.parent — the spec
+    # moved to tests/<id>/ and the sibling lookups did not.
     validate_harvest(seeds)
-    check_topic_reuse(seeds, spec_path.parent / TOPICS, spec.get("test_id"))
+    check_topic_reuse(seeds, TOPICS, spec.get("test_id"))
+    ledger, entry = load_ledger(spec)   # fatal if the stamp has nowhere to land
 
-    unblend(spec, spec_path.parent / "ledger.json")   # make re-runs idempotent
+    unblend(spec, entry)                # make re-runs idempotent
 
     rng = random.Random(f"{spec.get('seed', 0)}-webmerge")
     rng.shuffle(seeds)
@@ -462,20 +552,27 @@ def main():
             raise SystemExit(f"{field} would carry duplicate entries {dups} — "
                              f"blend is broken; do not author from this spec")
 
-    harvest_sha = hashlib.sha1(
-        Path(args.seeds).read_bytes()).hexdigest()[:12]
+    harvest_sha = hashlib.sha1(seeds_path.read_bytes()).hexdigest()[:12]
     spec["harvest_sha"] = harvest_sha
     spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
                          encoding="utf-8")
 
-    ledger_path = spec_path.parent / "ledger.json"
-    if ledger_path.is_file() and spec.get("test_id") is not None:
-        ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
-        for entry in ledger.get("history", []):
-            if str(entry.get("test_id")) == str(spec["test_id"]):
-                entry["harvest_sha"] = harvest_sha
-        ledger_path.write_text(json.dumps(ledger, ensure_ascii=False, indent=1),
-                               encoding="utf-8")
+    # The stamp lands in BOTH places or the run fails. load_ledger() already
+    # proved the row exists, so a zero here means the ledger changed under us —
+    # which must not pass silently, because an unrecorded harvest_sha is
+    # indistinguishable from a skipped step 3.5 (AGENTS.md §4).
+    stamped = 0
+    for row in ledger.get("history", []):
+        if isinstance(row, dict) and str(row.get("test_id")) == str(spec["test_id"]):
+            row["harvest_sha"] = harvest_sha
+            stamped += 1
+    if not stamped:
+        raise SystemExit(f"{LEDGER} lost its entry for test {spec['test_id']} "
+                         f"mid-run; harvest_sha {harvest_sha} was not recorded")
+    LEDGER.write_text(json.dumps(ledger, ensure_ascii=False, indent=1),
+                      encoding="utf-8")
+    print(f"  harvest_sha {harvest_sha} stamped into {spec_path} and "
+          f"{LEDGER} ({stamped} entry)")
 
     # ---- balance report --------------------------------------------------
     def share(recs):

@@ -8,7 +8,7 @@ description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5
 ## Import vs generate
 
 If the user wants to **import** an existing external exam (PDF booklet, past
-paper under `refs/JLPT/`, script PDF, listening MP3) into project format → stop
+paper under `refs/JLPT_N2_NEW/`, script PDF, listening MP3) into project format → stop
 here and read `external-test-import/SKILL.md` instead. Those tests live under
 `tests/imported-<slug>/`. This file is only for **generating** new mocks.
 
@@ -32,7 +32,7 @@ All exam files follow a strict directory structure:
 
 - **Reference inputs**: `refs/` directory at workspace root.
   - Textbooks (`refs/Shinkanzen/`): `refs/Shinkanzen/Shin_Kanzen_Masuta_<level>-<section>.pdf` (e.g. `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Bunpou.pdf`).
-  - Official Past Exam Sets (`refs/JLPT/`): Booklets, listening scripts, and audio MP3s from the 5 nearest exams (e.g., `refs/JLPT/17.N2 12-2025 _260603.pdf`, `refs/JLPT/JLPT N2 12.2025 Choukai.mp3`).
+  - Official Past Exam Sets (`refs/JLPT_N2_NEW/`): Booklets, listening scripts, and audio MP3s from the 31 official sittings (e.g., `refs/JLPT_N2_NEW/17.N2 12-2025/17.N2 12-2025 _260603.pdf`, `refs/JLPT_N2_NEW/17.N2 12-2025/JLPT N2 12.2025 Choukai.mp3`).
   - Textbook Audio: `refs/Shinkanzen/Shin_Kanzen_Masuta_<level>-Choukai-CD/`.
 - **Test outputs**: `tests/<test_id>/` — generated ids have no special prefix
   (`tests/1/`); imported exams MUST use `tests/imported-<slug>/` (see
@@ -73,8 +73,8 @@ anything.
 1. **Load the format spec** → read `jlpt-exam-structure/SKILL.md`.
    Never write a single question before knowing section counts and booklet conventions.
 2. **Calibrate difficulty & benchmark consistency** → read `reference-book-reading/SKILL.md`.
-   Locate reference PDFs in `refs/Shinkanzen/` for vocabulary/grammar inventory, and benchmark passage length, distractor structure, and formatting against the 5 official past exams in `refs/JLPT/`.
-   Run `official-audio-analysis/SKILL.md` across `refs/JLPT/*.mp3` to ensure pacing parameters match official standards.
+   Locate reference PDFs in `refs/Shinkanzen/` for vocabulary/grammar inventory, and benchmark passage length, distractor structure, and formatting against the official past exams in `refs/JLPT_N2_NEW/`.
+   Run `official-audio-analysis/SKILL.md` across `refs/JLPT_N2_NEW/**/*.mp3` to ensure pacing parameters match official standards.
 3. **Sample item pool & answer key blueprint** → read `item-pool-sampling/SKILL.md`.
    Run: `python3 .agents/item-pool-sampling/scripts/sample_items.py --seed <seed> --test-id <id>`
    This outputs `tests/<test_id>/test_spec.json` and updates `logs/ledger.json`.
@@ -110,7 +110,7 @@ anything.
    defect — see `question-authoring` Benchmark section. `make check` enforces
    the floor.
    **読解 must match official apparatus** (calibrate against
-   `tests/imported-n2-2025-07` / `refs/JLPT/`): dozens of `（注N）`, at least
+   `tests/imported-n2-2025-07` / `refs/JLPT_N2_NEW/`): dozens of `（注N）`, at least
    one `（中略）` in 中文/長文, 問題11 as 4×2, 問題13 ~900–1100 JP chars,
    問題7 including dialogue/setting stems. Tests 1–4 under-shipped notes and
    長文 length even after grammar-stem lengthening.

@@ -1,6 +1,6 @@
 ---
 name: reference-book-reading
-description: Single owner of how to read JLPT reference PDFs (Shin Kanzen Master textbooks in refs/Shinkanzen/ and the official past-exam archive in refs/JLPT_N2_NEW/, aliased by refs/JLPT/) for difficulty calibration and structural consistency, and owner of the measured calibration bands in references/official_calibration.md. Use whenever reference PDFs are provided or mentioned, whenever the user asks to "check against N2 material", verify difficulty level, calibrate exam content, or compare with real JLPT exam booklets.
+description: Single owner of how to read JLPT reference PDFs (Shin Kanzen Master textbooks in refs/Shinkanzen/ and the official past-exam archive in refs/JLPT_N2_NEW/) for difficulty calibration and structural consistency, and owner of the measured calibration bands in references/official_calibration.md. Use whenever reference PDFs are provided or mentioned, whenever the user asks to "check against N2 material", verify difficulty level, calibrate exam content, or compare with real JLPT exam booklets.
 ---
 
 # Reference Book & Official Exam Reading (Calibration Strategy)
@@ -21,9 +21,6 @@ Standard naming patterns for Shin Kanzen Master PDFs:
 - `refs/JLPT_N2_NEW/` — the **archive: 31 official N2 sittings, 7/2010 – 12/2025**,
   one directory per sitting (booklet PDF + script PDF + MP3), plus the official
   answer keys for all 31 in `ĐÁP ÁN JLPT N2 (update 10.4.2026).pdf`.
-- `refs/JLPT/` — a **legacy alias** holding five of the same sittings
-  (7/2023, 12/2023, 12/2024, 7/2025, 12/2025) and a byte-identical copy of the
-  answer-key PDF. Prefer the archive; never count an overlapping sitting twice.
 
 **`AGENTS.md` section 3 is the single owner of these filenames** — read the paths
 from there rather than copying them here, so a renamed scan only has to be fixed
@@ -92,13 +89,13 @@ and it is NOT part of this repo's documented environment — on a machine withou
 it every command in this section fails, and the harness cannot rasterize PDF
 pages either. Check with `which pdfinfo`; install via `brew install poppler` /
 `apt-get install poppler-utils`. Without poppler you still have a text-layer
-path, which is enough for the booklet PDFs in `refs/JLPT/` (they have one):
+path, which is enough for the booklet PDFs in `refs/JLPT_N2_NEW/` (they have one):
 
 ```bash
 python3 .agents/external-test-import/scripts/extract_pdf_text.py \
-  "refs/JLPT/16. N2 07-2025.pdf" --pages 1-8 -o /tmp/booklet.txt
+  "refs/JLPT_N2_NEW/16. N2 7-2025/16. N2 07-2025.pdf" --pages 1-8 -o /tmp/booklet.txt
 python3 -c "import sys;from pdfminer.high_level import extract_text;print(extract_text(sys.argv[1])[:2000])" \
-  "refs/JLPT/16. N2 07-2025.pdf"
+  "refs/JLPT_N2_NEW/16. N2 7-2025/16. N2 07-2025.pdf"
 ```
 
 A third diagnosis the two commands above cannot make: a PDF with a real text

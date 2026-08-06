@@ -46,6 +46,7 @@ Read-only: it never writes to tests/ or logs/.
 """
 
 import argparse
+import collections
 from difflib import SequenceMatcher
 import hashlib
 import importlib.util
@@ -1567,6 +1568,144 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
          f"line really is not there, the ITEM is wrong, not the explanation")
 
 
+# ------------------------------------------------- one subject, one surface
+# R18. Two surfaces of one paper covering the same SUBJECT starves a 問題, and
+# the exact-duplicate check in check_spec_blend only sees byte-equal topics. The
+# fuzzy half is token overlap — but the first version of it compared EVERY
+# ≥2-char kanji/katakana run of every surface, and that is unusable:
+#
+#   MEASURED 2026-08-06, sampling pools.json exactly as sample_items.py draws
+#   (21 listening_scenarios + 12 reading_topics, 300 random draws):
+#       272/300 draws collided on the scenarios alone, 286/300 with the reading
+#       topics added — i.e. it FAILED 95% of legitimate draws.
+#
+# A gate that fails 95% of honest draws cannot be satisfied by re-drawing. It
+# trains the operator to re-seed until the gate goes green, which selects the
+# paper by gate-satisfaction instead of by quality — strictly worse than having
+# no check. Test 3's six collisions were every one of them naming vocabulary,
+# not subject: 確認, 説明, 注意, 会社.
+#
+# The cause is that a pool entry is NOT a subject string. `item-pool-sampling`
+# names the convention: a listening scenario is `場所:用件`
+# (`{"scenario": "会社:会議の準備"}`), so the token before the colon is the
+# SETTING and the token after it is drawn from a small errand vocabulary —
+# 案内 ×14, 相談 ×10, 手続 ×8, 説明 ×6, 確認 ×5 across 240 entries. Two items
+# set in a 会社, or two items where somebody 確認s something, are not one
+# subject; official papers do both in every sitting.
+#
+# So the fix is not to scope by origin. Scoping `token_map` to
+# `"origin": "web"` would clear test 3 (none of its six pairs is web×web), but
+# both skills forbid it in as many words — `item-pool-sampling` §"Topic themes":
+# 「Scoping it by origin instead would exempt an offline all-pool paper from the
+# theme rule entirely」, and `web-topic-research` §"How to comply": 「Scope by
+# surface, not by origin」. A pool-origin 問題13 beside a web-origin 問題9 on one
+# subject is exactly the defect, and test 3's own 注意 pair is web×pool.
+#
+# What IS decidable is DISTINCTIVENESS. Strip the setting prefix, drop the
+# errand vocabulary, and fail only on a token the pool does not itself reuse:
+#
+#   MEASURED on the same 300 draws: 0/300 false positives — a pool×pool
+#   collision on a token the pool uses once is impossible by construction, so
+#   this tier fires only on a blended or hand-edited spec.
+#   MEASURED against the five re-skin subjects this repo actually shipped:
+#   デジタルデトックス (pool freq 0), 屋上緑化 (0), フードドライブ (0),
+#   ハイブリッドワーク (0), 地域通貨 (1) — all five caught.
+#
+# WHAT THIS DELIBERATELY DOES NOT CATCH, so it is not "restored" later: the pool
+# contains genuine near-duplicate entries (確定申告 ×2, 音声ガイド ×2, 定期券 ×2,
+# 返却場所 ×2, 睡眠 ×4), and a draw hits one of those pairs ~26% of the time. A
+# tier for them was measured at 77–152/300 depending on the token floor, i.e.
+# noise a reader learns to scroll past, and it duplicates a layer that already
+# exists: `sample_items.py`'s `check_domain_collision()` / `check_theme_spread()`
+# warn on it after the draw, with `--reroll listening_scenarios` as the
+# documented remedy. And the renamed subject (「屋上緑化」 vs
+# 「グリーンパートナー制度」) shares zero tokens by construction —
+# `web-topic-research` §"The honest limit": 「Subject identity cannot be
+# mechanized.」 The mandatory whole-paper topic table pass is the real rule; this
+# is the floor under it.
+#
+# Tokenization matches `merge_seeds.content_tokens()` — kanji runs, katakana
+# runs and latin words as SEPARATE maximal runs. One combined kanji+katakana
+# class (what this check used to use) glues 「フードドライブ受付」 into a single
+# token, so it does not match 「フードドライブの持ち込み条件」; that is why two of
+# the five shipped defects above were missed before. Keep the two in sync.
+SETTING_PREFIX = re.compile(r"^[^:：]{1,12}[:：]")
+# The `用件` half of `場所:用件`, plus the generic abstractions essay-style
+# reading topics are titled with. Every entry here is an errand, a process or a
+# relation noun — never a subject noun, because dropping a subject noun is what
+# would make this check vacuous.
+ERRAND_TOKENS = {
+    "案内", "相談", "手続", "説明", "確認", "見直", "準備", "調整", "手配",
+    "依頼", "変更", "受付", "解説", "紹介", "予約", "見積", "注意", "注意事項",
+    "申込", "問合", "連絡", "対応", "報告", "検討", "利用", "参加", "募集",
+    "開催", "実施", "選択", "比較", "確保", "意義", "役割", "効用", "価値",
+    "効果", "影響", "変化", "課題", "問題", "方法", "仕組", "評価", "関係",
+    "時間", "仕上", "業者", "会議", "イベント", "セミナー", "講演会",
+    "スケジュール", "サービス", "ルール", "マナー", "トラブル", "キャンセル",
+}
+
+
+def subject_tokens(text: str) -> set[str]:
+    """The tokens of a surface string that name its SUBJECT.
+
+    Setting prefix removed, errand vocabulary removed, hiragana excluded (it
+    carries the grammar, not the subject). Runs are maximal and compared for
+    equality, so 「地域通貨」 matches 「地域通貨」 and not 「地域猫」.
+    """
+    t = SETTING_PREFIX.sub("", str(text))
+    toks = set(re.findall(r"[一-鿿]{2,}", t))
+    toks |= set(re.findall(r"[ァ-ヶー]{2,}", t))
+    toks |= {w.lower() for w in re.findall(r"[A-Za-z0-9]{2,}", t)
+             if not w.isdigit()}
+    return toks - ERRAND_TOKENS
+
+
+_pool_subject_freq: collections.Counter | None = None
+
+
+def pool_subject_freq() -> collections.Counter:
+    """How many pool entries each subject token appears in (memoized).
+
+    The distinctiveness ruler. A token the pool spells across several entries
+    is the pool's own vocabulary; a token it uses at most once is a subject.
+    """
+    global _pool_subject_freq
+    if _pool_subject_freq is not None:
+        return _pool_subject_freq
+    freq: collections.Counter = collections.Counter()
+    pools_path = AGENTS / "item-pool-sampling" / "references" / "pools.json"
+    if pools_path.is_file():
+        pools = json.loads(pools_path.read_text(encoding="utf-8"))
+        for cat in ("listening_scenarios", "reading_topics"):
+            for e in pools.get(cat, []):
+                for tok in subject_tokens(pool_entry_text(e)):
+                    freq[tok] += 1
+    _pool_subject_freq = freq
+    return freq
+
+
+def check_surface_subjects(token_map: dict[str, list[str]]):
+    name = "no two spec surfaces share a distinctive subject token"
+    freq = pool_subject_freq()
+    if not freq:
+        # With no pool there is no distinctiveness ruler, and every token would
+        # read as distinctive — which is the 95%-false-failure mode above.
+        return skip(name, "no pools.json to measure token distinctiveness against")
+    surfaces = [(s, subject_tokens(s)) for s in token_map]
+    collisions = []
+    for i in range(len(surfaces)):
+        for j in range(i + 1, len(surfaces)):
+            (s1, t1), (s2, t2) = surfaces[i], surfaces[j]
+            rare = sorted(t for t in t1 & t2 if freq[t] <= 1)
+            if rare:
+                collisions.append(f"「{s1}」 x 「{s2}」 share {rare}")
+    check(name, not collisions,
+          "; ".join(collisions) + " — one subject, one surface: two 問題 on the "
+          "same subject starve each other. Re-harvest the seed or "
+          "`--reroll` the category; never re-seed until the gate goes green "
+          "(web-topic-research 'One topic, one surface')")
+
+
 def check_spec_blend(spec: dict):
     """The blend contract the authoring step reads off tests/<id>/test_spec.json.
 
@@ -1591,7 +1730,10 @@ def check_spec_blend(spec: dict):
               f"web share {web}/{len(recs)} exceeds the MAX_WEB ceiling — "
               f"merge_seeds was re-run over an already-blended spec")
 
-    # Content token overlap check across blended spec surfaces
+    # Two surfaces of one paper on one SUBJECT starves a 問題 (AGENTS.md §5,
+    # web-topic-research §"One topic, one surface"). The exact-duplicate check
+    # above catches the easy half; this is the fuzzy half, and what makes it
+    # decidable is DISTINCTIVENESS, not origin — see check_surface_subjects.
     token_map: dict[str, list[str]] = {}
     for field, key in (("reading_topics", "topic"), ("listening_scenarios", "scenario")):
         for r in spec.get("items", {}).get(field, []):
@@ -1605,18 +1747,7 @@ def check_spec_blend(spec: dict):
             if t:
                 token_map.setdefault(t, []).append(field)
 
-    token_collisions = []
-    surfaces = list(token_map.keys())
-    for i in range(len(surfaces)):
-        for j in range(i + 1, len(surfaces)):
-            s1, s2 = surfaces[i], surfaces[j]
-            toks1 = set(re.findall(r"[\u4e00-\u9fff\u30a0-\u30ff]{2,}", s1))
-            toks2 = set(re.findall(r"[\u4e00-\u9fff\u30a0-\u30ff]{2,}", s2))
-            shared = toks1 & toks2
-            if shared:
-                token_collisions.append(f"「{s1}」 x 「{s2}」 share {sorted(shared)}")
-    check("no two blended spec surfaces share a >=2-char content token", not token_collisions,
-          "; ".join(token_collisions) + " — distinct topic per surface required")
+    check_surface_subjects(token_map)
 
 
 def check_pool_infrastructure():
@@ -2057,8 +2188,10 @@ def check_rotation_inputs():
 
     seeds_path = ROOT / "logs" / "seeds.json"
     harvest: set[str] = set()
+    harvest_on_disk = ""
     if seeds_path.is_file():
         harvest = {s["seed"] for s in json.loads(seeds_path.read_text(encoding="utf-8"))}
+        harvest_on_disk = hashlib.sha1(seeds_path.read_bytes()).hexdigest()[:12]
 
     specs: list[tuple[Path, dict]] = []
     tests_root = ROOT / "tests"
@@ -2094,11 +2227,49 @@ def check_rotation_inputs():
                 blended.append((field, e.get("detail") or e.get("topic", "")))
         if not blended:
             continue
+        # R19. Only the spec whose OWN harvest is the one on disk can be checked.
+        #
+        # This used to validate every spec against the single current
+        # logs/seeds.json, which put the gate in direct conflict with the
+        # pipeline it gates: `web-topic-research` §"Step 0" makes the harvest a
+        # per-test input — 「A harvest is an input to one test, not a file that
+        # lives in the repo. Re-harvest it, every time.」 — and leaving the
+        # previous harvest in place is precisely what turned test 3 into a
+        # re-skin of test 2. So performing step 3.5 correctly for test N
+        # NECESSARILY orphans every web entry of test N−1, and the gate failed
+        # the older test for the newer one having been generated properly. On
+        # 2026-08-06 test 2 failed all 13 of its blended entries for no reason
+        # but that.
+        #
+        # The property worth keeping is that a spec's web entries trace to a
+        # REAL harvest rather than being invented during authoring — and that is
+        # exactly when this check has evidence: while a test is being built, its
+        # harvest IS logs/seeds.json. Afterwards the harvest is gone by design
+        # and the honest answer is "cannot verify", which is a skip, not a pass
+        # and not a failure. The skip prints, so an unverifiable spec stays
+        # visible instead of going quiet.
+        #
+        # To verify the whole history instead, merge_seeds.py would have to
+        # archive each harvest it consumes (logs/harvests/<harvest_sha>.json)
+        # and this check would look the spec's own harvest_sha up there. That is
+        # a pipeline change, not a gate change; until it lands, this is the most
+        # the gate can honestly assert.
+        spec_sha = spec.get("harvest_sha")
+        trace = (f"{d.name}: every web entry in test_spec traces to "
+                 f"logs/seeds.json ({len(blended)} blended)")
+        if not harvest_on_disk or spec_sha != harvest_on_disk:
+            skip(trace,
+                 f"spec was blended from harvest {spec_sha or 'unrecorded'}, "
+                 f"logs/seeds.json is {harvest_on_disk or 'absent'} — a harvest "
+                 f"is a per-test input and is re-harvested for the next test "
+                 f"(web-topic-research Step 0), so this spec's seeds are no "
+                 f"longer on disk to check against")
+            continue
         orphans = [f"{f}:「{t}」" for f, t in blended if t not in harvest]
-        check(f"{d.name}: every web entry in test_spec traces to logs/seeds.json "
-              f"({len(blended)} blended)", not orphans,
-              "; ".join(orphans) + " — the spec was blended from a harvest that has "
-              "since been replaced; re-run merge_seeds")
+        check(trace, not orphans,
+              "; ".join(orphans) + " — logs/seeds.json IS this spec's own "
+              "harvest (sha matches), so a web entry missing from it was "
+              "invented rather than blended; re-run merge_seeds")
 
 
 def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):

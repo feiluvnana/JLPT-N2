@@ -26,24 +26,24 @@ KEYS are an automatic QA fail — see `exam-qa-review` §2.5 and
 
 Verify every tested word/grammar point against `refs/Shinkanzen/` (N2
 inventory) and benchmark sentence structure, distractor density, and passage
-length against the 5 official past exam sets in `refs/JLPT/` (see
+length against the official past exam sets in `refs/JLPT_N2_NEW/` (see
 `reference-book-reading`). Items drawn with `"origin": "adjunct"` in
 `tests/<test_id>/test_spec.json` passed `classify_level.py` — treat them like pool items;
 do not swap them for memory picks.
 
-## Benchmark against Official Exams (`refs/JLPT/`)
+## Benchmark against Official Exams (`refs/JLPT_N2_NEW/`)
 
-Maintain high consistency with the 5 recent official exams (07/2023, 12/2023, 12/2024, 07/2025, 12/2025):
+Maintain high consistency with the official exams in `refs/JLPT_N2_NEW/` (e.g. 07/2023, 12/2023, 12/2024, 07/2025, 12/2025):
 - **Dokkai character counts**: stated ONCE, in the 読解 length-band table under
   「問題10-14 (reading)」 below — that table is the single copy in this repo, and
   `tools/check_consistency.py`'s `check_dokkai_lengths()` is what enforces it.
   Do not restate a band here, in `jlpt-exam-structure`, or in a test's notes:
   three hand-synced copies is why all four papers shipped short 問題11 and
   問題14 while every gate stayed green (G8).
-- **Grammar stem lengths (問題7–9) — measured on all 5 papers in `refs/JLPT/`**:
+- **Grammar stem lengths (問題7–9) — measured on papers in `refs/JLPT_N2_NEW/`**:
   - **問題7**: official stems average **~43 JP chars** (median ~41; interquartile ~33–54). A paper whose 12 stems average under ~35, or that ships many under ~30, reads as textbook-drill short, not exam-length. Target: **each stem ≥30 JP chars**, **paper average ≥40**, with most items in the **35–55** band. Build length with scene-setting (職場・電話・掲示・インタビュー), a subordinate clause, or a short dialogue lead-in — not by padding the tested form. Official items often open with `(会社で)` / `(電話で)` / a named role before the blank.
-  - **問題8 (文の組み立て) — length is mostly in the OPTIONS**: measured on all 5
-    `refs/JLPT/` papers + the official 2018 sample (`jlpt.jp` N2G.pdf) and the
+  - **問題8 (文の組み立て) — length is mostly in the OPTIONS**: measured on
+    `refs/JLPT_N2_NEW/` papers + the official 2018 sample (`jlpt.jp` N2G.pdf) and the
     clean import `imported-n2-2025-07`:
     - **Sum of the four options** typically **16–29 JP chars** (July 2025 items
       sit ~16–29; sample 2018 has chunks like「山を下りて何日かすると」「二度と
@@ -449,7 +449,7 @@ not the grammar tag. A one-clause stem like
 when かねない is the correct key; rewrite toward
 「最近残業が続き休日もほとんど取れない。このまま働きすぎると、体を壊し(　)よ。」
 (scene + consequence). Same rule for 問題8 frames and 問題9 cloze prose.
-**Also match official stem *shape*:** every paper in `refs/JLPT/` includes
+**Also match official stem *shape*:** every paper in `refs/JLPT_N2_NEW/` includes
 several 問題7 items with dialogue turns or a setting label
 `（会社で）` / `（電話で）` / `（インタビューで）` / homepage notice. Generated
 tests 1–4 shipped zero dialogue stems — include **at least 2** (prefer 2–4)
@@ -769,6 +769,9 @@ option, in this shape:
 4 ✗「…」→ 明確に否定
 ```
 
+**聴解 問題5-2番 (printed options)** — Official papers print bare labels for the four choices in 問題5-2番 (e.g., 「夕日通り / にしがおか / さくら公園 / 東山」 or 「共用の大型ボックス / 各戸専用の小型ボックス / 冷蔵機能付きボックス / 管理人室」). DO NOT print full sentences or include the deciding attributes (e.g., 「東山（商店街の近くで便利）」 or 「東山を利用する」). The item exists to test whether the examinee can remember and match the attributes heard in the audio to the labels.
+
+
 An option with no quotable line is fabricated noise: delete it and take one
 from the script. This cell is what QA reads; if it is absent, the item is
 not shippable.
@@ -1079,7 +1082,7 @@ Must contain two main parts:
   - `## 問題1 課題理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番 quoting deciding phrase, **plus the option-grounding lines** (§0).
   - `## 問題2 ポイント理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–6番, **plus the option-grounding lines** (§0).
   - `## 問題3 概要理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番, **plus the option-grounding lines** (§0).
-  - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–11番 detailing honorifics/idiom points. **Eleven**, not twelve — 12 is the 2009 guidebook's 目安; every paper in `refs/JLPT/` speaks 11 items (measurable in the official audio as 11 × 8 s answer pauses), and `expected_choukai` / `answer_positions` both require 11.
+  - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–11番 detailing honorifics/idiom points. **Eleven**, not twelve — 12 is the 2009 guidebook's 目安; every paper in `refs/JLPT_N2_NEW/` speaks 11 items (measurable in the official audio as 11 × 8 s answer pauses), and `expected_choukai` / `answer_positions` both require 11.
   - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **3 rows** — 問題5 has 2 items but 3 answers. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2-1`, `問5-2-2`; it accepts either label style — `**1番**` / `**2番 質問1**` / `**2番 質問2**` (preferred) or `1` / `2-質問1` / `2-質問2`. The 2番 rows MUST carry `質問1`/`質問2`; the 1番 row must NOT.
   - `## 得点の目安`: Score range guidelines.
 

@@ -27,10 +27,10 @@ opening line → per-section instruction → 「では、練習しましょう�
 
 問題5 instead says 「この問題には練習はありません。」
 
-## Calibrating against Official Past Exam Scripts (`refs/JLPT/`)
+## Calibrating against Official Past Exam Scripts (`refs/JLPT_N2_NEW/`)
 
 Always cross-check dialogue tone, speaker turn length, announcer wording, and
-distractor flow against the 5 official listening script PDFs in `refs/JLPT/`.
+distractor flow against the official listening script PDFs in `refs/JLPT_N2_NEW/`.
 Their exact filenames live in **`AGENTS.md` section 3** (the single owner);
 `reference-book-reading` explains how to read the scans.
 
@@ -155,7 +155,7 @@ drifted in three places — 「どのような内容か」 for 「どんな内�
 「文章がやや長くなります」 for 「長めの話を聞きます」, and a 問題4 instruction
 missing 「まず…それから」 — so the examinee heard different wording than they
 read. Take the canonical text from **`jlpt-exam-structure` §"問題N instruction
-lines"** (transcribed from `refs/JLPT/`), paste it into both files, and let
+lines"** (transcribed from `refs/JLPT_N2_NEW/`), paste it into both files, and let
 `make check` confirm they match.
 
 `make check` compares the booklet against the SCRIPT, not against the official

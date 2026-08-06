@@ -127,12 +127,12 @@ All calibration inputs must be looked up in `refs/`:
   - Vocabulary: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Goi.pdf`
   - Kanji: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Kanji.pdf`
   - Textbook CDs: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/`
-- **Official Past Exam Sets (`refs/JLPT/`) — 5 Nearest Exams (Booklet PDF, Script PDF, Audio MP3)**:
-  - **July 2023**: Booklet `refs/JLPT/14. N2 7-2023.pdf`, Script `refs/JLPT/14. N2 7-2023 (script).pdf`, Audio `refs/JLPT/File nghe N2 7-2023.mp3`
-  - **Dec 2023**: Booklet `refs/JLPT/14.N2 12-2023.pdf`, Script `refs/JLPT/14. script N2 12-2023.pdf`, Audio `refs/JLPT/14. Nghe N2 T12-2023.mp3`
-  - **Dec 2024**: Booklet `refs/JLPT/15. N2 12.2024 (update 260625).pdf`, Script `refs/JLPT/15. script N2 12.2024.pdf`, Audio `refs/JLPT/Nghe N2 T12-2024.mp3`
-  - **July 2025**: Booklet `refs/JLPT/16. N2 07-2025.pdf`, Script `refs/JLPT/16. N2-7.2025 (script).pdf`, Audio `refs/JLPT/Nghe N2 T7-2025.mp3`
-  - **Dec 2025**: Booklet `refs/JLPT/17.N2 12-2025 _260603.pdf`, Script `refs/JLPT/17 (script) N2 12-2025 _260410.pdf`, Audio `refs/JLPT/JLPT N2 12.2025 Choukai.mp3`
+- **Official Past Exam Archive (`refs/JLPT_N2_NEW/`) — 31 Sittings (Booklet PDF, Script PDF, Audio MP3)**:
+  - **July 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023 (script).pdf`, Audio `refs/JLPT_N2_NEW/14. N2 7-2023/File nghe N2 7-2023.mp3`
+  - **Dec 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 12-2023/14.N2 12-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 12-2023/14. script N2 12-2023.pdf`, Audio `refs/JLPT_N2_NEW/14. N2 12-2023/14. Nghe N2 T12-2023.mp3`
+  - **Dec 2024**: Booklet `refs/JLPT_N2_NEW/15. N2 12-2024/15. N2 12.2024 (update 260625).pdf`, Script `refs/JLPT_N2_NEW/15. N2 12-2024/15. script N2 12.2024.pdf`, Audio `refs/JLPT_N2_NEW/15. N2 12-2024/Nghe N2 T12-2024.mp3`
+  - **July 2025**: Booklet `refs/JLPT_N2_NEW/16. N2 7-2025/16. N2 07-2025.pdf`, Script `refs/JLPT_N2_NEW/16. N2 7-2025/16. N2-7.2025 (script).pdf`, Audio `refs/JLPT_N2_NEW/16. N2 7-2025/Nghe N2 T7-2025.mp3`
+  - **Dec 2025**: Booklet `refs/JLPT_N2_NEW/17.N2 12-2025/17.N2 12-2025 _260603.pdf`, Script `refs/JLPT_N2_NEW/17.N2 12-2025/17 (script) N2 12-2025 _260410.pdf`, Audio `refs/JLPT_N2_NEW/17.N2 12-2025/JLPT N2 12.2025 Choukai.mp3`
 
 ---
 
