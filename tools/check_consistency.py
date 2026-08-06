@@ -171,6 +171,82 @@ def check_filename_contracts():
     check("no doc resurrects a retired filename", not offenders, "; ".join(offenders))
 
 
+# ---------------------------------------------- the two deployments of one app
+def check_deployments():
+    """`make serve` and GitHub Pages must stay ONE app with TWO storage backends.
+
+    The static build exists because Pages has no server and no disk. Everything
+    that makes the two deployments the same app is a shared module, and the one
+    thing that differs — where answers live — is chosen at build time. Both
+    halves of that are checkable, and both are exactly the kind of thing that
+    drifts silently: a second copy of the list markup nobody updates, or a
+    localStorage key the sheet writes and the list reads under another name.
+    """
+    print("\nserve ↔ GitHub Pages (one app, one storage backend per build)")
+    scripts = AGENTS / "interactive-answer-sheet" / "scripts"
+    src = {f.name: f.read_text(encoding="utf-8")
+           for f in scripts.glob("*.py")}
+
+    for name in ("index_view.py", "local_store.py", "build_pages.py"):
+        check(f"{name} present", name in src, "the static build needs it")
+    if not {"index_view.py", "local_store.py", "build_pages.py"} <= set(src):
+        return
+
+    # Screen 1 is rendered ONCE. serve_sheet.py used to hold its own copy of the
+    # cards and CSS; a second copy is how the two lists stop looking alike.
+    for name in ("serve_sheet.py", "build_pages.py"):
+        check(f"{name} imports the shared test list", "index_view" in src[name],
+              "render screen 1 through index_view, never a private copy")
+    owners = [n for n, t in src.items() if "INDEX_CSS = " in t]
+    check("only index_view.py defines the list stylesheet", owners == ["index_view.py"],
+          f"also defined in {[o for o in owners if o != 'index_view.py']}")
+
+    # The sheet writes these keys and the list reads them. One definition, in
+    # local_store.py; anything else spelling out the prefix is a second copy.
+    ls = load(".agents/interactive-answer-sheet/scripts/local_store.py")
+    hardcoded = [n for n, t in src.items()
+                 if n != "local_store.py" and ls.STORAGE_PREFIX in t]
+    check(f"localStorage keys defined once ({ls.STORAGE_PREFIX}/<id>/<file>)",
+          not hardcoded, f"prefix also hard-coded in {hardcoded}")
+    check("the store keys ARE the deliverable filenames",
+          (ls.ANSWERS_JSON, ls.RESULT_JSON) == ("ユーザー解答.json", "採点結果.json"),
+          f"got {ls.ANSWERS_JSON}, {ls.RESULT_JSON}")
+
+    # Exactly one backend may be live in a built sheet: a server build must not
+    # even carry the localStorage code, or a future edit could write both.
+    bi = load(".agents/interactive-answer-sheet/scripts/build_interactive.py")
+    check("build_interactive knows both backends and defaults to the server one",
+          set(bi.LIST_HREF) == {"server", "local"} and bi.LIST_HREF["server"] == "/",
+          f"LIST_HREF={bi.LIST_HREF}")
+    for d in sorted((ROOT / "tests").glob("*/解答.html")):
+        html = d.read_text(encoding="utf-8")
+        mode = re.search(r'const STORAGE = "(\w+)"', html)
+        check(f"{d.parent.name}: 解答.html is the server build",
+              bool(mode) and mode.group(1) == "server",
+              f"storage={mode.group(1) if mode else 'unstamped'} — "
+              f"run make sheet {d.parent.name} (make pages writes the local "
+              f"build into _site/, never into tests/)")
+        check(f"{d.parent.name}: the server sheet carries no localStorage store",
+              ls.STORAGE_PREFIX not in html,
+              "two live stores would desync the list and the sheet")
+
+    # Pages is a build artifact, never a committed deliverable.
+    gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    check("_site/ is gitignored", "_site/" in gitignore,
+          "the static site is rebuilt by CI from tests/, not committed")
+    check(".nojekyll is written into the site",
+          ".nojekyll" in src["build_pages.py"],
+          "Jekyll would otherwise drop paths starting with _ ")
+
+    mk = (ROOT / "Makefile").read_text(encoding="utf-8")
+    for target in ("pages:", "preview-pages:"):
+        check(f"Makefile has `make {target[:-1]}`", target in mk)
+    doc = (AGENTS / "interactive-answer-sheet" / "SKILL.md").read_text(encoding="utf-8")
+    check("interactive-answer-sheet documents the static build",
+          "make pages" in doc and "localStorage" in doc,
+          "the skill owns both deployments — document the second one")
+
+
 # ------------------------------------------------------------------ choukai pacing
 def check_pacing():
     print("\nchoukai pacing table ↔ make_choukai_mp3.py constants")
@@ -2067,6 +2143,7 @@ def main():
         check_refs()
         check_skills()
         check_filename_contracts()
+        check_deployments()
         check_pacing()
         check_item_counts()
         check_taxonomy()

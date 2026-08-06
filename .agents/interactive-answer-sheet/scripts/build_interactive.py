@@ -14,6 +14,7 @@ SAFETY: answer keys live at the end of the source Markdowns. Everything from the
 key heading onward is TRUNCATED out of the rendered document — keys are embedded
 only as JS data for offline in-page grading.
 """
+import argparse
 import importlib.util
 import json
 import re
@@ -21,6 +22,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
+
+# The localStorage backend (GitHub Pages) — one implementation, shared with the
+# static test list. See local_store.py for why the backend is chosen at BUILD
+# time rather than sniffed at runtime.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import local_store  # noqa: E402
 
 _spec = importlib.util.spec_from_file_location(
     "build_booklet",
@@ -226,9 +233,80 @@ const GENGO_KEYS = %(gengo_keys)s, CHOUKAI_KEYS = %(choukai_keys)s;
 const ANSWER_KEY = %(answer_key)s, TAXONOMY = %(taxonomy)s, ADVICE = %(advice)s;
 const CHOUKAI_SCRIPTS = %(choukai_scripts)s;
 
+// Where 「← テスト一覧」 and 「テスト一覧へ戻る」 go: the unified server's root, or
+// the static list two levels up on GitHub Pages (which is served from /<repo>/).
+const LIST_HREF = %(list_href)s;
+
+/* ---------------------------------------------------------------- the store
+   STORAGE is baked in at build time and exactly ONE backend is live per build —
+   never both, and never sniffed at runtime (see local_store.py). Two live
+   stores would let the test list and this sheet disagree about what you
+   answered, which is the whole reason the answers had a single home.
+
+     'server'  make serve — tests/<id>/ユーザー解答.json + 採点結果.json on disk
+     'local'   GitHub Pages / file:// — the same two documents in localStorage
+
+   Both backends expose the same four methods, so nothing below this block
+   knows which one it is talking to. */
+const STORAGE = "%(storage)s";
 // Routes on the unified server (serve_sheet.py, `make serve`). Opened over
 // file:// these fetches simply fail and grading falls back to a download.
 const API = '/api/tests/' + encodeURIComponent(TESTID) + '/';
+
+const StoreServer = {
+  async loadAnswers(){
+    try {
+      const r = await fetch('ユーザー解答.json', {cache: 'no-store'});
+      return r.ok ? await r.json() : null;
+    } catch(e){ return null; }
+  },
+  saveAnswers(payload){
+    return fetch(API + 'answers', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({answers: payload})
+    }).then(()=>{}, ()=>{ /* file:// or offline: grade download only */ });
+  },
+  async loadResult(){
+    try {
+      const r = await fetch('採点結果.json', {cache: 'no-store'});
+      return r.ok ? await r.json() : null;
+    } catch(e){ return null; }
+  },
+  async submit(payload, res){
+    try {
+      const r = await fetch(API + 'submit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({answers: payload, result: res})
+      });
+      const data = r.ok ? await r.json() : null;
+      if (data && data.success) return {saved: true, message: data.message};
+    } catch(e){}
+    return {saved: false, message: ''};
+  }
+};
+
+const StoreLocal = {
+  async loadAnswers(){ return window.JLPTStore.answers(TESTID); },
+  saveAnswers(payload){
+    window.JLPTStore.setAnswers(TESTID, payload);
+    return Promise.resolve();
+  },
+  async loadResult(){ return window.JLPTStore.result(TESTID); },
+  async submit(payload, res){
+    // A full localStorage (quota) returns false, and grading then falls back to
+    // the download exactly as it does with no server. Both writes are attempted
+    // before the verdict — && would skip the result on a failed answers write.
+    const wroteAnswers = window.JLPTStore.setAnswers(TESTID, payload);
+    const wroteResult = window.JLPTStore.setResult(TESTID, res);
+    return (wroteAnswers && wroteResult) ? {saved: true,
+                 message: 'このブラウザに保存しました（テスト一覧に反映されます）。'}
+              : {saved: false, message: ''};
+  }
+};
+
+const STORE = STORAGE === 'local' ? StoreLocal : StoreServer;
 // Section labels are the keys grade_answers.py uses in its own result JSON —
 // the two graders write the SAME 採点結果.json shape, and make check proves it.
 const SEC_GENGO = "言語知識（文字・語彙・文法）", SEC_DOKKAI = "読解", SEC_CHOUKAI = "聴解";
@@ -249,17 +327,12 @@ function answersPayload(ans){
 }
 let _saveTimer = null;
 function persistAnswers(ans){
-  // Single source of truth: tests/<id>/ユーザー解答.json via make serve. The
-  // server reads the same file back to show progress on the test list (screen 1).
-  // Over file:// the POST is a no-op; 「採点する」 still downloads the JSON.
+  // Single source of truth, whichever backend is live: tests/<id>/ユーザー解答.json
+  // under make serve, the matching localStorage key on GitHub Pages. Screen 1
+  // reads that same one place back to show progress — there is never a second
+  // copy. Debounced so rapid clicks do not thrash the disk.
   clearTimeout(_saveTimer);
-  _saveTimer = setTimeout(()=>{
-    fetch(API + 'answers', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({answers: answersPayload(ans)})
-    }).catch(()=>{ /* file:// or offline: no server — grade download only */ });
-  }, 250);
+  _saveTimer = setTimeout(()=>{ STORE.saveAnswers(answersPayload(ans)); }, 250);
 }
 function updateCounter(ans){
   let gCount = 0, cCount = 0;
@@ -297,11 +370,7 @@ function flattenSaved(data){
   return o;
 }
 async function restore(){
-  let o = {};
-  try {
-    const r = await fetch('ユーザー解答.json', {cache: 'no-store'});
-    if (r.ok) o = flattenSaved(await r.json());
-  } catch(e){}
+  const o = flattenSaved(await STORE.loadAnswers());
   applyAnswers(o);
   // Apply without re-POSTing: refresh() would persistAnswers and race the load.
   updateCounter(state());
@@ -756,14 +825,20 @@ function resultHtml(res, msg, saved){
   L.push('</div>');
   L.push('<div id="rs-all-detail" class="rs-all-detail" hidden></div>');
 
+  // On GitHub Pages the result only exists inside this browser, so the way to
+  // get 採点結果.json onto a disk has to be on the screen that shows it.
   L.push('<div class="rs-nav">'
     + '<button class="ui-btn primary" onclick="goList()">← テスト一覧へ戻る</button>'
-    + '<button class="ui-btn" onclick="showScreen(\\'exam\\')">解答に戻ってやり直す</button></div>');
+    + '<button class="ui-btn" onclick="showScreen(\\'exam\\')">解答に戻ってやり直す</button>'
+    + (STORAGE === 'local'
+        ? '<button class="ui-btn" onclick="downloadCurrent()">採点結果を保存（JSON）</button>'
+        : '')
+    + '</div>');
 
   return L.join('');
 }
 
-function goList(){ location.href = '/'; }
+function goList(){ location.href = LIST_HREF; }
 
 function showScreen(name){
   const exam = name === 'exam';
@@ -783,7 +858,10 @@ function showScreen(name){
   window.scrollTo(0, 0);
 }
 
+let LAST_RESULT = null;
+
 function showResult(res, msg, saved){
+  LAST_RESULT = res;
   document.getElementById('screen-result').innerHTML = resultHtml(res, msg, saved);
   bindResultExpand(res);
   showScreen('result');
@@ -797,19 +875,14 @@ async function save(){
   const res = computeResult(ans);
   res.graded_at = new Date().toISOString();
 
-  let msg = "", saved = false;
-  try {
-    const r = await fetch(API + 'submit', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({answers: answersPayload(ans), result: res})
-    });
-    const data = r.ok ? await r.json() : null;
-    if (data && data.success){ saved = true; msg = '✓ ' + data.message; }
-  } catch(e){}
+  const out = await STORE.submit(answersPayload(ans), res);
+  const msg = out.saved ? '✓ ' + out.message
+                        : '↓ ' + downloadResult(res, answersPayload(ans));
+  showResult(res, msg, out.saved);
+}
 
-  if (!saved) msg = '↓ ' + downloadResult(res, answersPayload(ans));
-  showResult(res, msg, saved);
+function downloadCurrent(){
+  if (LAST_RESULT) downloadResult(LAST_RESULT, answersPayload(state()));
 }
 
 function downloadResult(res, answers){
@@ -874,10 +947,8 @@ async function boot(){
   await restore();
   // The test list links here with ?screen=result to reopen a saved result.
   if (location.search.indexOf('screen=result') !== -1){
-    try {
-      const r = await fetch('採点結果.json', {cache: 'no-store'});
-      if (r.ok) showResult(await r.json(), '保存済みの採点結果です。', true);
-    } catch(e){}
+    const saved = await STORE.loadResult();
+    if (saved) showResult(saved, '保存済みの採点結果です。', true);
   }
 }
 
@@ -1157,20 +1228,31 @@ def grading_data(gam, gids: list, ckeys: dict, combined_keys: dict,
     }
 
 
+# Where the sheet's 「← テスト一覧」 points, per deployment. The unified server
+# serves the list at its root; GitHub Pages serves the whole site from /<repo>/,
+# where an absolute `/` would leave the site altogether, so the static build
+# links relatively out of tests/<id>/.
+LIST_HREF = {"server": "/", "local": "../../index.html"}
+
+
 def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
                     out_path: Path, gdata: dict, player: str = "",
-                    sources=()):
+                    sources=(), storage: str = "server"):
     gengo_md = "\n".join(booklet.widen(l) for l in gengo_md.splitlines())
     choukai_md = "\n".join(booklet.widen(l) for l in choukai_md.splitlines())
 
     gengo_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(gengo_md, extensions=["tables", "nl2br"])))
     choukai_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(choukai_md, extensions=["tables", "nl2br"])))
 
+    if storage not in LIST_HREF:
+        raise ValueError(f"unknown storage backend: {storage}")
+    list_href = LIST_HREF[storage]
+
     title = f"N2 模擬試験 解答用紙 ({testid})"
-    # The SAME bar as screen 1's, so the app reads as one thing. `/` is the
-    # unified server's test list; opened as a bare file that link is dead, which
-    # is the same trade-off as the /api/ POSTs.
-    bar = (f'<div id="bar"><a class="back" href="/">← テスト一覧</a>'
+    # The SAME bar as screen 1's, so the app reads as one thing. Opened as a bare
+    # file (no server, no Pages deployment) that link is dead, which is the same
+    # trade-off as the /api/ POSTs.
+    bar = (f'<div id="bar"><a class="back" href="{list_href}">← テスト一覧</a>'
            f'<b id="bar-title">テスト {testid}（受験）</b>'
            f'<span class="sub" id="where"></span>'
            f'<span class="grow"></span>'
@@ -1191,7 +1273,13 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
         f'</div>'
     )
 
-    js = SCRIPT % {"keys": json.dumps(keys, ensure_ascii=False), "testid": testid, **gdata}
+    js = SCRIPT % {"keys": json.dumps(keys, ensure_ascii=False), "testid": testid,
+                   "storage": storage,
+                   "list_href": json.dumps(list_href, ensure_ascii=False), **gdata}
+    # The localStorage backend is a shared snippet, included only where it is the
+    # live one — a server build must not even be able to write a second copy.
+    if storage == "local":
+        js = local_store.LOCAL_STORE_JS + js
     out_path.write_text(
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -1208,12 +1296,14 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
         encoding="utf-8")
 
 
-def main():
-    if len(sys.argv) < 2:
-        sys.exit("usage: build_interactive.py tests/<test_id>")
-    d = Path(sys.argv[1])
-    if not d.is_dir():
-        sys.exit(f"not a directory: {d}")
+def build(d: Path, storage: str = "server", out_dir: Path | None = None) -> Path:
+    """Build one test's 解答.html. Returns the path written.
+
+    ``storage='server'`` is the sheet solved under `make serve`; ``'local'`` is
+    the GitHub Pages build, which keeps the same two documents in localStorage.
+    ``out_dir`` writes the sheet somewhere other than the test folder (the Pages
+    build stages into _site/) — sources are always read from ``d``.
+    """
     testid = d.name
 
     gengo_src, choukai_src = d / "言語知識・読解.md", d / "聴解.md"
@@ -1239,16 +1329,39 @@ def main():
     script_src = d / "聴解スクリプト.txt"
     choukai_scripts = parse_choukai_scripts(script_src)
 
-    out = d / "解答.html"
+    dest = out_dir if out_dir is not None else d
+    dest.mkdir(parents=True, exist_ok=True)
+    out = dest / "解答.html"
     gdata = grading_data(gam, gids, ckeys, combined_keys, choukai_scripts)
     render_combined(gmd, cmd, testid, all_keys, out, gdata, player=player_html(d),
-                    sources=[gengo_src, choukai_src, script_src])
+                    sources=[gengo_src, choukai_src, script_src], storage=storage)
 
     has_mp3 = (d / "聴解.mp3").is_file()
     chap = d / "聴解_チャプター.json"
     note = "player" + ("" if has_mp3 else ", MP3 MISSING") + \
            (", chapters" if chap.is_file() else ", no chapters")
-    print(f"  {out}  ({len(all_keys)} items: 71 Gengo/Dokkai, 30 Choukai; {note})")
+    print(f"  {out}  ({len(all_keys)} items: 71 Gengo/Dokkai, 30 Choukai; "
+          f"{note}; storage={storage})")
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser(
+        description="Build the combined problem+answer sheet (解答.html) for one test.")
+    ap.add_argument("test_dir", help="tests/<test_id>")
+    ap.add_argument("--storage", choices=sorted(LIST_HREF), default="server",
+                    help="where answers and results are kept: 'server' writes "
+                         "ユーザー解答.json/採点結果.json into the test folder via "
+                         "make serve (default); 'local' keeps the same two "
+                         "documents in the browser's localStorage (GitHub Pages)")
+    ap.add_argument("--out", type=Path, default=None,
+                    help="write 解答.html here instead of into the test folder")
+    args = ap.parse_args()
+
+    d = Path(args.test_dir)
+    if not d.is_dir():
+        sys.exit(f"not a directory: {d}")
+    build(d, storage=args.storage, out_dir=args.out)
 
 
 if __name__ == "__main__":

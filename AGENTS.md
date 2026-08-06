@@ -74,7 +74,7 @@ not route around it silently.
   9. `item-pool-sampling`: Sampling non-repeating items from pool & balancing answer positions (`sample_items.py`).
   10. `web-topic-research`: Sourcing fresh real-world topic seeds, factual texture, and collocation checks from the web, then blending them across ALL exam surfaces (reading, listening, cloze, 問14 flyer, 即時応答 settings, carrier sentences) under enforced balance caps (`merge_seeds.py`).
   11. `exam-answer-grading`: Grading user responses against answer keys, calculating scaled scores (0-180), evaluating Pass/Fail thresholds, analyzing sub-question weak points, and writing the structured result document `採点結果.json` (`grade_answers.py`).
-  12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the complete booklet with radio bubbles beside every choice, an in-page audio player for 聴解, **in-page 180-point grading** that saves `採点結果.json` directly (`build_interactive.py`), and the one server that lists every test and runs them (`serve_sheet.py`).
+  12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the complete booklet with radio bubbles beside every choice, an in-page audio player for 聴解, **in-page 180-point grading** that saves `採点結果.json` directly (`build_interactive.py`), the one server that lists every test and runs them (`serve_sheet.py`), and the static GitHub Pages build of the same three screens, which keeps answers in the browser's localStorage instead of on disk (`build_pages.py`).
   13. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test). It also root-causes every finding back to the skill, script, or gate check that let it through (§6.5), so the next test does not reproduce it.
   14. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
 
@@ -89,6 +89,11 @@ not route around it silently.
 - `logs/`: Operational logs, item coverage ledger (`logs/ledger.json`), and web seed harvests (`logs/seeds.json`). Each generated test's blueprint lives at `tests/<test_id>/test_spec.json`.
 - `.agents/`: Internal skill definitions, guidelines, and execution scripts.
 - `tools/`: Repo-level tooling that is not a skill (`check_consistency.py`, run via `make check`).
+- `_site/`: **Build output only, gitignored.** The static GitHub Pages copy of
+  the exam app, rebuilt from `tests/` by `make pages` (and by
+  `.github/workflows/pages.yml` on push). Never edit or commit it — `tests/`
+  stays the single source, and the Pages sheets keep answers in the browser's
+  localStorage because a static host has no disk. See `interactive-answer-sheet`.
 
 `tests/` and `logs/` are committed to git (see §4) — the ledger in particular
 must persist, since item rotation depends on the history of past draws.
@@ -155,6 +160,8 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 | `make mp3 <test_id>`      | `make_choukai_mp3.py` on `聴解スクリプト.txt`       |
 | `make sheet <test_id>`    | `build_interactive.py` → `解答.html`               |
 | `make serve`              | `serve_sheet.py` — ONE server for every test (takes no test id) |
+| `make pages [<test_id>]`  | `build_pages.py` — the static GitHub Pages site into `_site/` |
+| `make preview-pages`      | serves `_site/` locally to check that build             |
 | `make grade <test_id>`    | `grade_answers.py --test-dir tests/<test_id>`      |
 | `make init-import SLUG=…` | `init_imported_test.py --slug <slug>` — **slug only**; pass `--booklet/--script/--audio` with the raw command below |
 | `make extract-pdf PDF=… OUT=…` | `extract_pdf_text.py` |
@@ -249,6 +256,26 @@ answer sheet is merged into the problem sheet. The per-test server is gone too �
 `make serve <id>` no longer exists, and so is the Markdown grading report, which
 is now the JSON document both graders write.
 
+### Static GitHub Pages Build (the same app, without a disk)
+
+```bash
+make pages            # every test → _site/    (make pages 1 for one test)
+make preview-pages    # python3 -m http.server -d _site 8766
+```
+
+Same three screens, one difference: a static host has no server to POST to and
+no disk to write, so the Pages sheets are rebuilt with `--storage local` and
+keep `ユーザー解答.json` / `採点結果.json` **in the browser's localStorage**.
+`.github/workflows/pages.yml` runs the build on push and deploys the artifact
+(repo setting: Settings → Pages → Source: GitHub Actions). `_site/` is a build
+output, gitignored, never committed.
+
+**Exactly one storage backend is live per build** — chosen at build time, never
+sniffed at runtime. `tests/<id>/解答.html` is always the server build and must
+carry no localStorage code; `make check` asserts both. Two live stores would let
+the test list and the sheet disagree about what you answered, which is why the
+answers had a single home in the first place. See `interactive-answer-sheet`.
+
 ---
 
 ### Consistency Gate (`make check`)
@@ -271,6 +298,12 @@ options supply**; the passages carry **no un-transliterated Latin words**; the
 spoken only for the 問題 whose booklet prints none (so 問題5-3番's printed
 options can't drift from the audio); and the script carries no ASCII `,`/`.`
 for edge-tts to mis-time.
+
+It checks that the app's **two deployments stay one app**: `make serve` and the
+GitHub Pages build share the test-list view (`index_view.py`), the localStorage
+key schema (`local_store.py`) and the sheet builder, none of them duplicated;
+every `tests/*/解答.html` is the server build and carries no store prefix; and
+`_site/` is gitignored with `.nojekyll` written into it.
 
 It also validates the **blend contract** the authoring step reads off
 `tests/<test_id>/test_spec.json`: every surface gets a distinct topic (a repeated entry

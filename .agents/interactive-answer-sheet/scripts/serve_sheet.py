@@ -19,8 +19,6 @@ Usage:
     # or: make serve
 """
 import argparse
-import html
-import importlib.util
 import json
 import re
 import socket
@@ -33,16 +31,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 TESTS = ROOT / "tests"
 
-# Screen 1's chrome is the SAME stylesheet 解答.html uses for screens 2 and 3.
-# Imported, never copied — see app_style.py.
-_style_spec = importlib.util.spec_from_file_location(
-    "app_style", Path(__file__).resolve().with_name("app_style.py"))
-app_style = importlib.util.module_from_spec(_style_spec)
-_style_spec.loader.exec_module(app_style)
+# Screen 1's markup, CSS and actions are the SAME ones the GitHub Pages build
+# uses — imported, never copied. See index_view.py (and app_style.py, which it
+# imports for the chrome shared with screens 2 and 3).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import index_view  # noqa: E402
 
 # 71 言語知識・読解 + 30 聴解. `make check` asserts 解答.html carries exactly this
 # many radio groups, so it is safe to use as the progress denominator.
-QUESTION_COUNT = 101
+QUESTION_COUNT = index_view.QUESTION_COUNT
 
 RANGE_RE = re.compile(r"^bytes=(\d*)-(\d*)$")
 # /api/tests/<id>/answers | /api/tests/<id>/submit | /api/tests/<id>/clear
@@ -124,142 +121,12 @@ def all_tests() -> list[dict]:
 
 
 # --------------------------------------------------------- screen 1: the list
-INDEX_CSS = """
-*{box-sizing:border-box}
-body{margin:0;background:#f8fafc;color:var(--ink);font-family:var(--ui)}
-/* Wider than exam/result (60em): cards with many action buttons need the room. */
-main{max-width:80em;margin:0 auto;padding:1.4em 1.2em 4em}
-.lede{margin:0 0 1.4em;font-size:10.5pt;color:var(--muted)}
-/* Equal card height. Meter uses display:contents so the track shares a row with
-   the status chip (left-aligned); the lbl sits on the row under the track —
-   flex + align-items:center was optically centering the whole meter block and
-   made the bar look offset from the chip. */
-.card{display:grid;grid-template-columns:20em auto minmax(12em,1fr) auto auto;
-  grid-template-rows:1fr auto;column-gap:1em;row-gap:.2em;align-items:center;
-  background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.55em 1.2em;
-  margin-bottom:.9em;box-sizing:border-box;height:5.1em;min-height:5.1em;
-  max-height:5.1em;overflow:hidden}
-.card h2{grid-column:1;grid-row:1/-1;margin:0;font-size:13pt;min-width:0;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;align-self:center}
-.card .origin{grid-column:2;grid-row:1/-1;align-self:center}
-.card .meter{display:contents}
-.card .meter .track{grid-column:3;grid-row:1;align-self:center;width:100%;min-width:0}
-.card .meter .lbl{grid-column:3;grid-row:2;text-align:left;margin:0;line-height:1.2;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card .status{grid-column:4;grid-row:1/-1;align-self:center}
-.acts{grid-column:5;grid-row:1/-1;display:flex;flex-wrap:nowrap;gap:.4em;
-  align-self:center}
-.acts .ui-btn{padding:.35em .75em;font-size:10.5pt;white-space:nowrap}
-.empty{background:#fff;border:1px dashed var(--line);border-radius:10px;padding:2em;
-  text-align:center;color:var(--muted)}
-code{background:#f1f5f9;padding:.1em .4em;border-radius:4px;font-size:10pt}
-.badge.origin-imp{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd}
-.badge.origin-gen{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
-"""
-
-
-def meter_html(t: dict) -> str:
-    answered, total = t["answered"], t["total"]
-    ratio = 0 if not total else min(100, round(answered / total * 100))
-    fill = "fill done" if answered >= total else "fill"
-    return (f'<div class="meter"><div class="track">'
-            f'<div class="{fill}" style="width:{ratio}%"></div></div>'
-            f'<div class="lbl">解答済み {answered} / {total}（{ratio}%）</div></div>')
-
-
-def origin_badge_html(t: dict) -> str:
-    if t.get("origin") == "imported":
-        return '<span class="badge origin-imp">imported</span>'
-    return '<span class="badge origin-gen">generated</span>'
-
-
-def badge_html(t: dict) -> str:
-    if not t["has_sheet"]:
-        return '<span class="badge warn">解答.html 未生成</span>'
-    r = t["result"]
-    if not r:
-        return '<span class="badge none">未採点</span>'
-    cls = "pass" if r["passed"] else "fail"
-    label = "合格" if r["passed"] else "不合格"
-    return (f'<span class="badge {cls}">{label} '
-            f'{r["total_scaled_score"]} / {r["max_scaled_score"]}</span>')
-
-
-def card_html(t: dict) -> str:
-    tid = html.escape(t["id"])
-    tid_js = html.escape(t["id"], quote=True)
-    base = "/tests/" + urllib.parse.quote(t["id"]) + "/" + urllib.parse.quote(SHEET)
-    if t["has_sheet"]:
-        if t["result"]:
-            # Already graded: the result view is the default destination, but the
-            # exam is one click away and keeps the saved answers, so it can be redone.
-            acts = [f'<a class="ui-btn primary" href="{base}?screen=result">結果を見る</a>',
-                    f'<a class="ui-btn" href="{base}">もう一度解く</a>']
-        else:
-            label = "続きから" if t["answered"] else "受験する"
-            acts = [f'<a class="ui-btn primary" href="{base}">{label}</a>']
-    else:
-        acts = [f'<a class="ui-btn" href="#" onclick="return false" '
-                f'title="make sheet {tid} を実行">受験する</a>']
-    # Clear progress whenever either file exists — graded or mid-exam.
-    if t["result"] or t["answered"]:
-        acts.append(
-            f'<button type="button" class="ui-btn danger" '
-            f'data-clear="{tid_js}">結果を削除</button>')
-    return (f'<div class="card"><h2 title="テスト {tid}">テスト {tid}</h2>'
-            f'<span class="origin">{origin_badge_html(t)}</span>'
-            f'{meter_html(t)}'
-            f'<span class="status">{badge_html(t)}</span>'
-            f'<div class="acts">{"".join(acts)}</div></div>')
-
-
-INDEX_JS = """
-async function clearTestProgress(id){
-  if (!confirm('テスト「' + id + '」の採点結果と保存済みの解答を削除しますか？\\n'
-             + 'この操作は元に戻せません。')) return;
-  try {
-    const r = await fetch('/api/tests/' + encodeURIComponent(id) + '/clear', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: '{}'
-    });
-    const data = await r.json();
-    if (!r.ok || !data.success){
-      alert((data && data.error) || '削除に失敗しました。');
-      return;
-    }
-    location.reload();
-  } catch (e){
-    alert('削除に失敗しました: ' + e);
-  }
-}
-document.addEventListener('click', (ev) => {
-  const btn = ev.target && ev.target.closest && ev.target.closest('[data-clear]');
-  if (btn) clearTestProgress(btn.getAttribute('data-clear'));
-});
-"""
-
-
+# The list's CSS, cards and actions live in index_view.py — the SAME view the
+# static GitHub Pages build renders. Here it is fed by GET /api/tests below
+# (the disk), there by localStorage; nothing else differs.
 def index_html() -> str:
-    tests = all_tests()
-    if tests:
-        body = "".join(card_html(t) for t in tests)
-    else:
-        body = ('<div class="empty">tests/ にテストがありません。'
-                '<code>make sheet &lt;test_id&gt;</code> で解答用紙を生成してください。</div>')
-    graded = sum(1 for t in tests if t["result"])
-    return (
-        '<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
-        '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        '<title>JLPT N2 模擬試験 — テスト一覧</title>'
-        f'<style>{app_style.APP_CSS}{INDEX_CSS}</style></head><body>'
-        # The same #bar as screens 2 and 3, from the same stylesheet.
-        '<div id="bar"><b>JLPT N2 模擬試験</b><span class="grow"></span>'
-        f'<span class="sub">テスト {len(tests)} 件 / 採点済み {graded} 件</span></div>'
-        '<main><p class="lede">受験するテストを選んでください。'
-        '解答は選択するたびに保存され、採点結果は 採点結果.json に残ります。'
-        '「結果を削除」で採点結果と解答の両方を消せます。</p>'
-        f'{body}</main><script>{INDEX_JS}</script></body></html>')
+    return index_view.index_html("server")
+
 
 # ------------------------------------------------------------------- handler
 class AnswerSheetHandler(SimpleHTTPRequestHandler):
@@ -404,6 +271,9 @@ class AnswerSheetHandler(SimpleHTTPRequestHandler):
         self.send_response(code)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
+        # Screen 1 is rendered from /api/tests now, so this is the read that must
+        # never be cached — progress and scores have to be live (see SKILL.md).
+        self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(body)
 

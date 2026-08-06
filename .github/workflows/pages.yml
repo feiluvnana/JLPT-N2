@@ -1,0 +1,71 @@
+# Deploy the exam app to GitHub Pages — the static twin of `make serve`.
+#
+# The site is BUILT here, never committed: `make pages` regenerates every
+# 解答.html with the localStorage backend and copies the 聴解 audio next to it,
+# so `_site/` stays a build artifact and `tests/` stays the single source.
+#
+# One-time setup in the repo: Settings → Pages → Build and deployment →
+# Source: "GitHub Actions". Nothing else; no gh-pages branch, no /docs folder.
+name: Deploy exam app to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'tests/**'
+      - '.agents/interactive-answer-sheet/**'
+      - '.agents/exam-booklet-generation/**'
+      - '.agents/exam-answer-grading/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it mid-upload; queued runs
+# collapse to the newest, so a burst of pushes deploys once.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true          # the 聴解.mp3 files, if this repo ever moves them to LFS
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # build_booklet.py's renderer; pykakasi supplies the furigana readings.
+      - run: pip install markdown pykakasi
+
+      # The same read-only gate every local change has to pass, --tests being
+      # the per-test contracts only. NON-BLOCKING on purpose: the gate also
+      # judges exam CONTENT (passage lengths, 例 reuse, sampled items), and a
+      # paper failing those is still a paper you may want to sit. Read the step's
+      # log; flip continue-on-error off once every test on disk is green, and it
+      # becomes a real deploy gate.
+      - run: make check-tests
+        continue-on-error: true
+
+      - run: make pages
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

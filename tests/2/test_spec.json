@@ -1,0 +1,514 @@
+{
+ "seed": "20260804+reroll(listening_scenarios,202608041)+reroll(listening_scenarios,202608042)",
+ "generated_at": "2026-08-06 15:00:54",
+ "test_id": "2",
+ "items": {
+  "kanji_reading": [
+   "阻む(はばむ)",
+   "慎重(しんちょう)",
+   "将(まさ.に)",
+   "林立(りんりつ)",
+   "効(き.く)"
+  ],
+  "orthography": [
+   "引分け",
+   "快い",
+   "診る(医師が)",
+   "一斉",
+   "提示"
+  ],
+  "word_formation": [
+   "〜向け(初心者向け)",
+   "〜済み(記入済み)",
+   "〜風(昭和風)"
+  ],
+  "context_words": [
+   "ギャング",
+   "サラリーマン",
+   "キャンパス",
+   "しゃぶる",
+   "ウール",
+   "大まか",
+   {
+    "item": "ワンピース",
+    "origin": "adjunct",
+    "level": "N2",
+    "evidence": [
+     "openjlpt vocab N2"
+    ]
+   }
+  ],
+  "paraphrase": [
+   "ゆとり",
+   "わずかに",
+   "キャンセル",
+   "お疲れ様でした",
+   "くたくただ"
+  ],
+  "usage": [
+   "めでたい",
+   "促進",
+   "ランニング",
+   "鮮やか",
+   "一概に"
+  ],
+  "grammar_p7": [
+   "〜といい〜といい",
+   "〜に即して",
+   "〜ずにはいられない",
+   "〜にあたって",
+   "〜ないことには",
+   "〜に応じて",
+   "〜てたまらない",
+   "〜がたい",
+   "〜に反して",
+   "〜にもかかわらず",
+   "〜っこない",
+   "〜からには"
+  ],
+  "grammar_p8": [
+   "〜として",
+   "結果推量(〜にちがいない)",
+   "目的達成(〜ように努力する)",
+   "目的表現(〜ように…する)",
+   "〜ほど〜はない"
+  ],
+  "quick_response": [
+   "火災報知器が作動しました。避難してください。",
+   "見合わせる",
+   "行かずじまい",
+   "課長、この件は私の力不足でした。申し訳ございません。",
+   "ペットの飼育は規約で禁止されています。",
+   "皆さんのおかげで無事に終えることができました。",
+   "部長、本日の会議、資料は何部ご用意いたしましょうか。",
+   "解約の場合、一か月前までにご連絡ください。",
+   "課長、新商品のサンプルが届きましたので、お持ちいたしました。",
+   "社長、本日の懇親会ですが、少し遅れて参加してもよろしいでしょうか。",
+   "こちらの席、予約が入っておりますので移動をお願いします。"
+  ],
+  "listening_scenarios": [
+   {
+    "scenario": "鉄道の日記念イベントと車両基地公開",
+    "origin": "web",
+    "facts": [
+     "10月14日は日本初の鉄道開通を記念する日",
+     "各地で洗車体験やグッズ販売が行われる"
+    ],
+    "source": "https://www.mlit.go.jp/tetudo/tetudo_tk1_000004.html"
+   },
+   {
+    "scenario": "専門学校:資料請求",
+    "origin": "pool"
+   },
+   {
+    "scenario": "工場見学の集合場所と注意事項",
+    "origin": "pool"
+   },
+   {
+    "scenario": "新入社員研修の宿泊施設手配",
+    "origin": "pool"
+   },
+   {
+    "scenario": "店舗の改装工事期間中の営業案内",
+    "origin": "pool"
+   },
+   {
+    "scenario": "フリーランスの社会保障と加入手続き",
+    "origin": "web",
+    "facts": [
+     "国民健康保険や国民年金の加入が必要",
+     "収入の波に備えた備えが課題"
+    ],
+    "source": "https://www.nenkin.go.jp/service/know/know/freelance/index.html"
+   },
+   {
+    "scenario": "倉庫見学の安全ルールと保護具",
+    "origin": "pool"
+   },
+   {
+    "scenario": "小学校:保護者会の連絡",
+    "origin": "pool"
+   },
+   {
+    "scenario": "電気工事:立ち会い日程の調整",
+    "origin": "pool"
+   },
+   {
+    "scenario": "総務:備品申請",
+    "origin": "pool"
+   },
+   {
+    "scenario": "クリーニング店:仕上がり日の相談",
+    "origin": "pool"
+   },
+   {
+    "scenario": "空港:搭乗手続きの案内",
+    "origin": "pool"
+   },
+   {
+    "scenario": "リサイクル市での出品条件と持ち込み品",
+    "origin": "web",
+    "facts": [
+     "動作品と非動作品で扱いが異なる",
+     "事前査定で出品可否が決まる"
+    ],
+    "source": "https://www.env.go.jp/recycle/3r/3r_fundamental/3r_kiso.html"
+   },
+   {
+    "scenario": "ジム:体験入会",
+    "origin": "pool"
+   },
+   {
+    "scenario": "保険契約内容の確認と更新時期",
+    "origin": "web",
+    "facts": [
+     "ライフステージの変化で必要な保障が変わる",
+     "更新前に内容を確認する"
+    ],
+    "source": "https://www.fsa.go.jp/policy/ninsyo/index.html"
+   },
+   {
+    "scenario": "職業訓練校:コース説明会",
+    "origin": "pool"
+   },
+   {
+    "scenario": "マンション:置き配ボックスの設置",
+    "origin": "pool"
+   },
+   {
+    "scenario": "スーパー:てまえどり運動の説明",
+    "origin": "pool"
+   },
+   {
+    "scenario": "列車座席の指定変更",
+    "origin": "pool"
+   },
+   {
+    "scenario": "町内イベントの企画立案",
+    "origin": "pool"
+   },
+   {
+    "scenario": "観光地の混雑対策と多言語案内",
+    "origin": "web",
+    "facts": [
+     "観光地の混雑対策が各地で進む",
+     "多言語案内の整備が求められる"
+    ],
+    "source": "https://www.mlit.go.jp/kankocho/siryou/toukei/inbound.html"
+   }
+  ],
+  "reading_topics": [
+   {
+    "topic": "グリーン志向の消費行動の促進",
+    "origin": "web",
+    "facts": [
+     "消費者庁が行動変容の視点を整理",
+     "環境配慮型の選択肢が増えている"
+    ],
+    "source": "https://www.caa.go.jp/policies/policy/consumer_partnerships/meeting_materials/assets/consumer_partnerships_cms201_0917_1.pdf"
+   },
+   {
+    "topic": "野菜摂取量の減少と食生活の改善",
+    "origin": "web",
+    "facts": [
+     "20歳以上の野菜摂取量は近年減少傾向",
+     "男性の平均歩数も直近10年で減っている"
+    ],
+    "source": "https://www.mhlw.go.jp/stf/newpage_45540.html"
+   },
+   {
+    "topic": "就寝前習慣と健康",
+    "origin": "pool"
+   },
+   {
+    "topic": "公民館の共食と社会的つながり",
+    "origin": "web",
+    "facts": [
+     "友人知人と共食する人は約6割",
+     "地域の人々とのつながりを強く感じる人は3割程度"
+    ],
+    "source": "https://www.mhlw.go.jp/toukei/saikin/hw/k-tyosa/k-tyosa25/dl/14.pdf"
+   },
+   {
+    "topic": "商店街の看板",
+    "origin": "pool"
+   },
+   {
+    "topic": "瀬戸内の観光列車とおもてなし",
+    "origin": "web",
+    "facts": [
+     "瀬戸内と太平洋を結ぶ路線で観光列車が運行",
+     "列車ごとに地域ならではの体験が用意される"
+    ],
+    "source": "https://www.skr.mlit.go.jp/kikaku/88-kei/scenery/88_shikoku.html"
+   },
+   {
+    "topic": "献血バスの巡回運行と市民の参加",
+    "origin": "web",
+    "facts": [
+     "16歳以上69歳までの健康な方が対象",
+     "各地の血液センターが運行計画を管理する"
+    ],
+    "source": "https://www.jrc.or.jp/donation/bus/"
+   },
+   {
+    "topic": "SNSと青少年",
+    "origin": "pool"
+   },
+   {
+    "topic": "海洋プラスチックごみの流出量推計",
+    "origin": "web",
+    "facts": [
+     "河川を経由して海へ流れるプラスチックの推計が進む",
+     "発生源・品目別のデータ整備が課題"
+    ],
+    "source": "https://www.env.go.jp/content/000320690.pdf"
+   },
+   {
+    "topic": "短時間睡眠と作業能率",
+    "origin": "pool"
+   },
+   {
+    "topic": "夜勤明けの休息確保",
+    "origin": "pool"
+   },
+   {
+    "topic": "中古車市場におけるEVのリセール価値",
+    "origin": "web",
+    "facts": [
+     "EVは中古下取り価格が従来車より低い傾向",
+     "ハイブリッド車の需要が高まっている"
+    ],
+    "source": "https://www.meti.go.jp/policy/mono_info_service/joho/conference/battery_strategy2/shiryo04.pdf"
+   }
+  ]
+ },
+ "answer_positions": {
+  "問題1_語彙": [
+   1,
+   2,
+   3,
+   1,
+   4
+  ],
+  "問題2_語彙": [
+   1,
+   4,
+   1,
+   2,
+   3
+  ],
+  "問題3_語彙": [
+   1,
+   3,
+   2
+  ],
+  "問題4_語彙": [
+   1,
+   3,
+   1,
+   2,
+   2,
+   3,
+   4
+  ],
+  "問題5_語彙": [
+   4,
+   2,
+   1,
+   1,
+   3
+  ],
+  "問題6_語彙": [
+   4,
+   1,
+   3,
+   2,
+   1
+  ],
+  "問題7": [
+   2,
+   3,
+   1,
+   4,
+   3,
+   1,
+   3,
+   2,
+   2,
+   4,
+   4,
+   1
+  ],
+  "問題8": [
+   1,
+   1,
+   4,
+   3,
+   2
+  ],
+  "問題9": [
+   4,
+   2,
+   3,
+   1
+  ],
+  "問題10": [
+   2,
+   4,
+   1,
+   3,
+   1
+  ],
+  "問題11": [
+   3,
+   2,
+   4,
+   1,
+   2,
+   3,
+   1,
+   4
+  ],
+  "問題12": [
+   1,
+   2
+  ],
+  "問題13": [
+   3,
+   1,
+   2
+  ],
+  "問題14": [
+   2,
+   1
+  ],
+  "聴解_問題1": [
+   1,
+   4,
+   1,
+   2,
+   3
+  ],
+  "聴解_問題2": [
+   1,
+   3,
+   1,
+   2,
+   2,
+   4
+  ],
+  "聴解_問題3": [
+   3,
+   2,
+   1,
+   4,
+   1
+  ],
+  "聴解_問題4": [
+   1,
+   1,
+   3,
+   2,
+   3,
+   2,
+   2,
+   1,
+   3,
+   2,
+   1
+  ],
+  "聴解_問題5": [
+   2,
+   1,
+   3
+  ]
+ },
+ "cloze_topic": {
+  "origin": "pool",
+  "note": "author picks any pool reading topic register"
+ },
+ "info_retrieval_texture": {
+  "detail": "消費者教育と契約に関する基礎知識",
+  "origin": "web",
+  "facts": [
+   "消費生活に関する知識の正答率は約4割",
+   "契約の成立時期を正しく理解する人は3割程度"
+  ],
+  "source": "https://www.caa.go.jp/notice/assets/consumer_research_cms201_260205_01.pdf"
+ },
+ "qr_situation_seeds": [
+  {
+   "detail": "職場におけるメンタルヘルス対策の重要性",
+   "origin": "web",
+   "source": "https://www.mhlw.go.jp/stf/newpage_31158.html"
+  },
+  {
+   "detail": "置き配ボックスの設置と受け取りルール",
+   "origin": "web",
+   "source": "https://www.caa.go.jp/policies/policy/consumer_safety/security/delivery/index.html"
+  },
+  {
+   "detail": "ラジオ番組での食生活と栄養バランス",
+   "origin": "web",
+   "source": "https://www.mhlw.go.jp/stf/newpage_32214.html"
+  }
+ ],
+ "carrier_seeds": [
+  {
+   "detail": "規格外農産物の加工品化と直売",
+   "origin": "web",
+   "facts": [
+    "出荷規格外の野菜を有効活用する動き",
+    "加工することで廃棄を減らせる"
+   ],
+   "source": "https://www.maff.go.jp/j/seisan/ryutu/engei/kikaku.html"
+  },
+  {
+   "detail": "発掘された日本列島展と埋蔵文化財の公開",
+   "origin": "web",
+   "facts": [
+    "全国で毎年約8000件の発掘調査が行われる",
+    "出土品の巡回展示で保存の意義を伝える"
+   ],
+   "source": "https://www.bunka.go.jp/gyoji/94205801.html"
+  },
+  {
+   "detail": "クリーンエネルギー自動車導入促進補助金の見直し",
+   "origin": "web",
+   "facts": [
+    "EVの補助上限額が130万円に引き上げられる",
+    "新車新規登録が対象で中古車は対象外"
+   ],
+   "source": "https://www.meti.go.jp/policy/mono_info_service/mono/automobile/cev/r6hosei_cev.html"
+  },
+  {
+   "detail": "海洋プラスチックごみの流出量推計",
+   "origin": "web",
+   "facts": [
+    "河川を経由して海へ流れるプラスチックの推計が進む",
+    "発生源・品目別のデータ整備が課題"
+   ],
+   "source": "https://www.env.go.jp/content/000320690.pdf"
+  },
+  {
+   "detail": "会議文化の効率化とアジェンダ設計",
+   "origin": "web",
+   "facts": [
+    "目的を事前に共有すると時間が短縮される",
+    "議事録の共有が意思決定を早める"
+   ],
+   "source": "https://www.meti.go.jp/policy/it_policy/jinzai/human_capital/index.html"
+  },
+  {
+   "detail": "SNS利用と青少年の情報リテラシー",
+   "origin": "web",
+   "facts": [
+    "情報の真偽を見分ける力が問われる",
+    "学校と家庭の連携が重要"
+   ],
+   "source": "https://www.mext.go.jp/a_menu/shotou/newcs/safety/index.htm"
+  }
+ ],
+ "harvest_sha": "bb837bcdcf74"
+}

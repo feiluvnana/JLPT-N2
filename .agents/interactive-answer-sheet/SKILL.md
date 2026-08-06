@@ -1,6 +1,6 @@
 ---
 name: interactive-answer-sheet
-description: Single owner of the MERGED problem+answer sheet — the complete exam booklet (言語知識・読解 and 聴解) rendered into a single HTML file (解答.html) with radio bubbles beside every choice and an embedded audio player for 聴解 — and of the one server that lists every test, runs them, and shows their results. Use whenever the user wants to take/answer/solve a test on screen, mentions the answer sheet, マークシート, 解答用紙, selecting answers, the test list, or playing the listening audio while answering. Grades the full 180-point exam in-page on button press and saves 採点結果.json and ユーザー解答.json directly.
+description: Single owner of the MERGED problem+answer sheet — the complete exam booklet (言語知識・読解 and 聴解) rendered into a single HTML file (解答.html) with radio bubbles beside every choice and an embedded audio player for 聴解 — and of the two ways it is served: the one local server that lists every test, and the static GitHub Pages build that keeps answers in localStorage. Use whenever the user wants to take/answer/solve a test on screen, mentions the answer sheet, マークシート, 解答用紙, selecting answers, the test list, playing the listening audio while answering, or publishing/hosting the exam on GitHub Pages. Grades the full 180-point exam in-page on button press and saves 採点結果.json and ユーザー解答.json directly.
 ---
 
 # Interactive Answer Sheet (問題用紙＝解答用紙)
@@ -12,7 +12,9 @@ The exam merges the problem booklet and interactive radio bubbles into a single 
 ## The three screens
 
 One server (`serve_sheet.py`) covers every test in `tests/`. There is no
-per-test server: `make serve` takes no test id.
+per-test server: `make serve` takes no test id. The same three screens also ship
+as a static site for GitHub Pages — see "Two deployments, one app" below; only
+where the answers are kept differs.
 
 | # | Screen | Where it lives | What it does |
 | - | ------ | -------------- | ------------ |
@@ -28,11 +30,15 @@ overwrites `採点結果.json`.
 
 ```bash
 python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id>
-# or: make sheet <test_id>
+# or: make sheet <test_id>   (--storage local / --out DIR are the Pages build's)
 
 # Serve every test — list, exam, and results — with direct saving into tests/<id>/:
 python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py
 # or: make serve            (options: --port 8765, --no-open)
+
+# The static twin for GitHub Pages — same screens, answers in localStorage:
+python3 .agents/interactive-answer-sheet/scripts/build_pages.py
+# or: make pages            (then: make preview-pages)
 ```
 
 Outputs into `tests/<test_id>/`:
@@ -51,7 +57,10 @@ Pressing the button:
 1. grades the full 101 questions immediately against embedded keys (Language Knowledge, Reading, Listening),
 2. evaluates section cutoffs ($\ge 19/60$) and total threshold ($\ge 90/180$),
 3. **switches to screen 3** and renders the result there, and
-4. **saves directly to `tests/<test_id>/`** (`採点結果.json` and `ユーザー解答.json`) if served via `make serve`, or downloads both JSON files if opened standalone.
+4. **saves to whichever store this build uses** (`採点結果.json` and
+   `ユーザー解答.json`): straight into `tests/<test_id>/` under `make serve`, into
+   localStorage on a GitHub Pages build, and — with no server and no store, e.g.
+   a bare `file://` — as browser downloads of the same two JSON files.
 
 If anything is unanswered the button asks for confirmation first, and
 unanswered items appear as 「未解答」 chips in the check grid rather than as wrong.
@@ -123,8 +132,10 @@ merged sheet covers the whole exam.
    `POST /api/tests/<id>/clear` (deletes `採点結果.json` + `ユーザー解答.json`
    from the list’s 「結果を削除」). Only paths under `tests/` are reachable.
 2. **Screen 1 reads the disk, never a cache.** Progress comes from
-   `ユーザー解答.json` and `採点結果.json` in each test dir, and the index is
-   sent `Cache-Control: no-store` — a stale list is worse than no list.
+   `ユーザー解答.json` and `採点結果.json` in each test dir. The page itself is
+   now the shared shell from `index_view.py` and the live read is
+   `GET /api/tests`, so that is what carries `Cache-Control: no-store` — a stale
+   list is worse than no list.
    Cards share one fixed height (long ids ellipsize); the sticky `#bar` is the
    same fixed height on all three screens (exam controls must not wrap taller).
 3. **Range requests.** `聴解.mp3` is ~30 MB and the `<audio>` element re-requests
@@ -142,10 +153,67 @@ merged sheet covers the whole exam.
    the 採点する submit behind whatever MP3 stream is in flight — the submit
    appeared to hang while the audio buffered.
 
+## Two deployments, one app — `make serve` and GitHub Pages
+
+The exam runs in two places, and they are **the same three screens with two
+storage backends**, never two apps:
+
+| | `make serve` (local) | GitHub Pages (`make pages`) |
+| - | - | - |
+| Screen 1 | `serve_sheet.py` renders the shell, `GET /api/tests` reads the disk | `_site/index.html`, same shell, progress read from localStorage |
+| Screens 2–3 | `tests/<id>/解答.html`, `--storage server` | `_site/tests/<id>/解答.html`, `--storage local` |
+| Answers | `tests/<id>/ユーザー解答.json` via `POST /api/…` | `localStorage[jlpt-mock/v1/<id>/ユーザー解答.json]` |
+| Result | `tests/<id>/採点結果.json` via `POST /api/…` | `localStorage[…/採点結果.json]` |
+| 「← テスト一覧」 | `/` | `../../index.html` (Pages serves from `/<repo>/`) |
+
+```bash
+make pages            # every test → _site/   (make pages 1 for one test)
+make preview-pages    # python3 -m http.server -d _site 8766
+```
+
+`.github/workflows/pages.yml` runs exactly that on push and deploys the
+artifact. `_site/` is **gitignored**: CI rebuilds it from `tests/`, so the site
+is never a committed deliverable and `tests/` stays the single source. The MP3s
+are copied in beside each sheet (~30 MB per test), which is what makes the
+build the slow part; `--no-audio` skips them for fast iteration. Pages' CDN
+answers `Range:` so seeking the audio is cheap there — `make preview-pages`
+uses `python3 -m http.server`, which does not, so a seek in the preview
+re-downloads the file. That is the preview's limitation, not the build's.
+
+**One store per build — the rule that has not changed.** The backend is chosen
+at BUILD time (`build_interactive.py --storage server|local`), never sniffed at
+runtime, and only the live one is emitted into the page: a server sheet does not
+even contain the localStorage code. Two live stores is the failure this rule
+exists to prevent — the list counting one set of answers while the sheet shows
+another. `make check` asserts every `tests/*/解答.html` is the **server** build
+and carries no store prefix; the local build belongs in `_site/` only.
+
+Three modules keep the two deployments from drifting, and none of them may be
+copied:
+
+- `local_store.py` — `window.JLPTStore`, the localStorage backend, and the only
+  place the key schema is written down. The keys deliberately spell out the
+  files they stand in for, so an exported key is obviously a `ユーザー解答.json`.
+- `index_view.py` — screen 1's CSS, cards and actions, in JS, fed the same test
+  objects by `/api/tests` (server) or by a baked manifest + localStorage
+  (Pages). `serve_sheet.py` used to hold its own copy of that markup; `make
+  check` now fails if `INDEX_CSS` is defined anywhere else.
+- `build_interactive.build()` — `build_pages.py` calls it rather than copying
+  `tests/<id>/解答.html`, which would ship a sheet POSTing to an API that does
+  not exist on Pages.
+
+**What Pages cannot do, and what stands in for it.** There is no disk, so
+nothing lands in `tests/<id>/` and `grade_answers.py` has nothing to read.
+Screen 3 therefore grows a 「採点結果を保存（JSON）」 button in local builds, and
+screen 1 grows 「バックアップを保存」/「バックアップを読み込む」 — one JSON holding
+every test's two documents, which is also how answers move between browsers.
+Say so on the page, because a browser that clears site data loses the lot: the
+Pages lede does.
+
 ## On-screen layout — one design across three screens
 
 `app_style.py` holds `APP_CSS`, the shared chrome, and **both** builders import
-it: `serve_sheet.py` for screen 1, `build_interactive.py` for screens 2 and 3.
+it: `index_view.py` for screen 1, `build_interactive.py` for screens 2 and 3.
 Two scripts producing "the same" design from two copies of the CSS is exactly
 how they drift, and no gate can see a drifted colour. Add chrome there, not in
 either script. `APP_CSS` must stay free of bare element selectors — 解答.html
@@ -170,12 +238,15 @@ never hard-code that offset, it depends on the font and on whether the bar wraps
 
 ## Answer capture
 
-- **Every radio click** writes progress to one place: `tests/<test_id>/ユーザー解答.json`
-  via `POST /api/tests/<id>/answers` when served with `make serve` (debounced
-  ~250 ms so rapid clicks do not thrash the disk). On reload the sheet loads that
-  same file with `fetch('ユーザー解答.json')` — no `localStorage`, no second
-  copy. Screen 1 counts that file too, which is why there must not be a second
-  copy: two stores would give the list and the sheet different answers.
+- **Every radio click** writes progress to one place — whichever place this build
+  uses. Under `make serve` that is `tests/<test_id>/ユーザー解答.json` via
+  `POST /api/tests/<id>/answers` (debounced ~250 ms so rapid clicks do not thrash
+  the disk), read back on reload with `fetch('ユーザー解答.json')`. On a Pages
+  build it is the matching localStorage key and nothing else. Screen 1 counts
+  that same one place, which is why there must never be two live at once: two
+  stores would give the list and the sheet different answers. Everything between
+  the radio and the store goes through `STORE`, so nothing in the page knows
+  which backend it is talking to.
 - 「採点する」 grades in-page and `POST /api/tests/<id>/submit` writes
   `採点結果.json` plus the same `ユーザー解答.json` shape `grade_answers.py`
   reads: `{"言語知識_読解": {"33": 2, …}, "聴解": {"問1-1": 2, …}}`. Over
@@ -225,6 +296,14 @@ key present; no group name shared by two questions; 4 options for each of the
 the report labels; and that the in-page grader and `grade_answers.py` produce an
 **identical `採点結果.json` document** (every field but the timestamp) on the
 same simulated answers.
+
+On the two deployments it asserts: `index_view.py`, `local_store.py` and
+`build_pages.py` all exist; `serve_sheet.py` and `build_pages.py` both render
+screen 1 through `index_view` and nobody else defines `INDEX_CSS`; the
+localStorage prefix is written down in exactly one module; every
+`tests/*/解答.html` is the **server** build and contains no store prefix (the
+local build belongs in `_site/`); `_site/` is gitignored and `.nojekyll` is
+written; and `make pages` / `make preview-pages` exist and are documented here.
 
 Two option-counting bugs it was written to prevent, both of which shipped in
 every earlier version of the sheet and made the exam partly unanswerable:

@@ -22,6 +22,11 @@ this repo has shipped came from skipping a rule that was already written.
 - Scripts always run from the workspace root; prefer the `make` targets
   documented in `AGENTS.md` §4 (`make sheet 1`, `make grade 1`). `make serve`
   is the exception — one server covers every test, so it takes no test id.
+- Two ways to run the exam app: `make serve` locally (answers saved into
+  `tests/<id>/`) and `make pages` → `_site/` for GitHub Pages (answers in the
+  browser's localStorage, since a static host has no disk). Same three screens,
+  one storage backend per build — see `interactive-answer-sheet`. `_site/` is a
+  gitignored build output; CI rebuilds it from `tests/` on push.
 - **Run `make check` before you report any pipeline change as done.** It is the
   read-only gate that catches docs drifting from the scripts and malformed
   answer sheets; see `AGENTS.md` §4.

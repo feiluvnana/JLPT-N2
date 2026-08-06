@@ -1,11 +1,12 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check check-tests grade sheet serve booklet mp3 sample merge-seeds init-import extract-pdf \
-       classify promote-adjunct fetch-openjlpt suggest-pool expand-pools
+.PHONY: help check check-tests grade sheet serve pages preview-pages booklet mp3 sample merge-seeds \
+       init-import extract-pdf classify promote-adjunct fetch-openjlpt suggest-pool expand-pools
 
 # Handle positional arguments for targets (e.g., "make grade 1", "make sheet 1", "make booklet 1", "make mp3 1").
 # `serve` is deliberately NOT here: one server covers every test, so it takes no id.
-TARGET_CMDS := grade sheet booklet mp3
+# `pages` builds every test by default; `make pages 1` narrows it to one.
+TARGET_CMDS := grade sheet booklet mp3 pages
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -19,6 +20,9 @@ endif
 TEST ?= $(if $(POS_ARG),$(POS_ARG),1)
 SEED ?= 20260803
 SLUG ?=
+# GitHub Pages build output. Gitignored: CI builds it, nothing commits it.
+SITE ?= _site
+PAGES_PORT ?= 8766
 
 help:
 	@echo "=========================================================================="
@@ -28,6 +32,9 @@ help:
 	@echo "  make grade TEST=2     Grade test 2"
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
 	@echo "  make serve            Serve ALL tests: list -> exam -> result (no test id)"
+	@echo "  make pages            Build the static GitHub Pages site into _site/ (all tests)"
+	@echo "  make pages 1          Same, only test 1"
+	@echo "  make preview-pages    Serve _site/ locally to check the Pages build"
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
 	@echo "  make mp3 1            Synthesize listening audio for test 1 (聴解.mp3)"
 	@echo "  make check            Verify docs/code/tests consistency (read-only)"
@@ -63,6 +70,18 @@ sheet-%:
 
 serve:
 	python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py
+
+# The static twin of `make serve`: same three screens, answers kept in the
+# browser's localStorage because GitHub Pages has no server and no disk.
+pages:
+	python3 .agents/interactive-answer-sheet/scripts/build_pages.py $(POS_ARG) --out $(SITE) $(PAGES_FLAGS)
+
+pages-%:
+	python3 .agents/interactive-answer-sheet/scripts/build_pages.py $* --out $(SITE) $(PAGES_FLAGS)
+
+preview-pages:
+	@test -d $(SITE) || (echo "no $(SITE)/ — run make pages first"; exit 1)
+	python3 -m http.server -d $(SITE) $(PAGES_PORT)
 
 booklet:
 	python3 .agents/exam-booklet-generation/scripts/build_booklet.py tests/$(TEST)/言語知識・読解.md tests/$(TEST)/聴解.md

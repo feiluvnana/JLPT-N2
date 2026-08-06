@@ -10,3 +10,7 @@ tests/*/segments/
 
 # PDF text dumps from external-test-import (working cache only)
 tests/*/_extract/
+
+# Static GitHub Pages build output (make pages). CI rebuilds it from tests/ on
+# every push, so it is a build artifact, never a committed deliverable.
+_site/

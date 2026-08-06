@@ -466,21 +466,54 @@ contain, in this order:
 2. **Blind-solve diff:** reviewer's answer vs key for every mismatch, each
    resolved as "reviewer error because …" (with the deciding quote) or filed
    as a finding.
-3. **Findings table:** one row per finding — item, class (from the automatic-
+3. **Per-question walkthrough — all 101 items, one row each, no exceptions.**
+   The findings table below summarises; this section *proves* the review
+   happened, because it is the only artefact that shows an item was looked at
+   and cleared. A report that jumps from the verdict to a findings table is
+   indistinguishable from a spot-check, and a spot-check is a skipped step
+   (§"No sampling"). One row per item, in paper order (1–71, then 聴解
+   例/1番…, 問題5 質問1/質問2), each carrying:
+
+   | Column | What goes in it |
+   |---|---|
+   | 項目 | item number and 大問 (`問題7-38`, `聴解問題2-4番`) |
+   | 鍵 | the key as shipped |
+   | 判定 | `OK` / `要修正` / `自動不合格` |
+   | **どこが問題か** | for a non-OK row: **file and line** (`言語知識・読解.md:149`) plus the exact string that is wrong — never "the key is off". For an `OK` row: the deciding line from the passage/script that proves the key, quoted |
+   | **どう直すか** | the concrete repair — the replacement option, the reordered slots, the sentence to rewrite, the target to send back for re-draw. A repair a fixing pass can apply without re-deriving it |
+
+   `OK` rows are not filler: the quoted deciding line is step 1's evidence for
+   that item, and an `OK` row with no quote means the item was not actually
+   checked. Write the walkthrough **before** the findings table — findings are
+   then extracted from it, so nothing can be summarised away.
+4. **Findings table:** one row per finding — item, class (from the automatic-
    fail list or "minor"), evidence quote, fix applied or reason left open.
-4. **Root-cause table (step 6.5):** one row per finding — finding id, root-cause
+5. **Root-cause table (step 6.5):** one row per finding — finding id, root-cause
    code, how many tests on disk show the class, owning file, and the concrete
    proposed edit. Group the rows that share a root cause: ten items failing on
    one missing rule is **one** skill defect, and reporting it ten times hides
    that. Findings coded `RULE-IGNORED` still get a row, marked as needing no
    skill change.
-5. **Coverage statement:** which steps ran on which files, the topic table
+6. **Coverage statement:** which steps ran on which files, the topic table
    itself (not a claim that you built it), the URLs fetched in step 6 and what
    they returned, and every WARN from `make check` with its resolution —
    including any WARN you determined to be a false positive, with the evidence,
    since that is a `GATE-WRONG` finding.
-6. **Skips:** anything not done, stated explicitly, with why. An unstated skip
+7. **Skips:** anything not done, stated explicitly, with why. An unstated skip
    is how defects ship (AGENTS.md §0.7).
+
+**Where the report goes.** Write it to `qa/qa-report-<test_id>.md` (create `qa/`
+if it does not exist), one file per test, overwritten on each re-review. Name
+the reviewed revision at the top — `sha1` of `言語知識・読解.md`,
+`聴解.md`, and `聴解スクリプト.txt`, plus the timestamp — because a report
+without it cannot be told apart from a report on the *previous* revision.
+
+**The sources must be still.** Do not review a test another context is
+mid-repair on: check the mtimes of the three sources before you start and again
+before you write the report, and abort if they moved. Every row of the
+walkthrough is a claim about a byte offset in a file; if the file is being
+rewritten underneath, the report is wrong on arrival, and the fixing pass will
+chase items that no longer exist.
 
 Only after a PASS report may the test be committed or served. A FAIL report
 goes back to the author (or the fixing pass) with the findings table as the
