@@ -33,7 +33,7 @@ help:
 	@echo "  make check            Verify docs/code/tests consistency (read-only)"
 	@echo "  make check-tests      Same gate, per-test contracts only (skips doc/code checks)"
 	@echo "  make sample           Sample question pool (item-pool-sampling)"
-	@echo "  make merge-seeds      Merge logs/seeds.json into logs/test_spec.json"
+	@echo "  make merge-seeds      Merge logs/seeds.json into tests/<id>/test_spec.json"
 	@echo "  make classify ITEM=x CATEGORY=y   Classify item level; optional STAGE=1"
 	@echo "  make promote-adjunct  Promote approved staging rows into pools.json"
 	@echo "  make fetch-openjlpt   Refresh OpenJLPT N1-N3 vocab/kanji slices"
@@ -77,7 +77,7 @@ mp3-%:
 	python3 .agents/choukai-mp3-generation/scripts/make_choukai_mp3.py tests/$*/聴解スクリプト.txt
 
 sample:
-	python3 .agents/item-pool-sampling/scripts/sample_items.py --seed $(SEED)
+	python3 .agents/item-pool-sampling/scripts/sample_items.py --seed $(SEED) --test-id $(TEST)
 
 classify:
 	@test -n "$(ITEM)" || (echo "usage: make classify ITEM=措置 CATEGORY=context_words [STAGE=1]"; exit 1)
@@ -98,7 +98,7 @@ expand-pools:
 	python3 .agents/item-pool-sampling/scripts/expand_pools.py
 
 merge-seeds:
-	python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json
+	python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json tests/$(TEST)/test_spec.json
 
 init-import:
 	@test -n "$(SLUG)" || (echo "usage: make init-import SLUG=n2-2025-12"; exit 1)

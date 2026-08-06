@@ -78,7 +78,7 @@ then name what let each defect through.
   not a real Japanese word** (test 4's 問題1 もてあそわる/まねわる/ひるがえわる);
   **a drawn target for which no rule-compliant option set exists** — file it
   against the draw, not the options (test 4's 労わる, step 2b); **a paper whose
-  `test_spec.json` carries no `answer_positions`** — the gate prints
+  `tests/<test_id>/test_spec.json` carries no `answer_positions`** — the gate prints
   "0 prescribed" and passes, so nothing verifies the 101 keys and all four papers
   on disk came out answer-1-heavy (38–53% on option 1); **a distractor eliminable on sight for
   a reason unrelated to the tested point** — wrong part of speech, wrong
@@ -117,7 +117,7 @@ then name what let each defect through.
   test is "mostly fine", the deadline is close, or the author already ran the
   gate. If a rule here seems wrong, propose the change in the report; apply the
   rule as written to this test.
-- **Imported Tests (`tests/imported-*`) Rule:** Do NOT update `logs/ledger.json`, `logs/seeds.json`, or `logs/test_spec.json` for an imported test. Imported tests do not sample from the item pool or web seeds. For imported tests, skip Step 5 (topic table against past generated tests) and Step 6 (provenance audit). Focus QA strictly on transcription fidelity against source PDFs/audio, booklet-script option sync, and solvability.
+- **Imported Tests (`tests/imported-*`) Rule:** Do NOT update `logs/ledger.json` or `logs/seeds.json` for an imported test. Imported tests do not sample from the item pool or web seeds. For imported tests, skip Step 5 (topic table against past generated tests) and Step 6 (provenance audit). Focus QA strictly on transcription fidelity against source PDFs/audio, booklet-script option sync, and solvability.
 
 
 ## The pass, in order
@@ -357,7 +357,7 @@ the previous tests' 問題12 specifically (three papers in a row argued 働き�
 
 ### 6. Provenance & Spec Blueprint Audit
 
-Verify `logs/test_spec.json` against the authored paper end to end:
+Verify `tests/<test_id>/test_spec.json` against the authored paper end to end:
 
 1. **Target Item Match Audit (問題1–8 & 聴解 問題4):**
    - Verify every item tested in `漢字読み` (問1), `表記` (問2), `語形成` (問3), `文脈規定` (問4), `言い換え類義` (問5), `用法` (問6), `文法問題7` (問7), `文法問題8` (問8), and `即時応答` (聴解 問4) matches the EXACT target item specified in `test_spec.json["items"]`.

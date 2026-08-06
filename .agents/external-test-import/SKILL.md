@@ -189,7 +189,7 @@ make check
 ```
 
 Read every `make check` line. `answer_positions` checks skip when
-`logs/test_spec.json` is not for this id (normal for imports). Fix format
+`tests/<test_id>/test_spec.json` is not for this id (normal for imports). Fix format
 failures in the Markdown/script; do not paper over them.
 
 ### 6. QA for imports (different from generated)
@@ -208,7 +208,7 @@ to the sheet's answer (see July 2025 問題5 質問1).
 
 - Put an imported exam in `tests/1/` (or any id without `imported-`).
 - Run `sample_items.py` / `merge_seeds.py` for an import, or append/update
-  `logs/ledger.json`, `logs/seeds.json`, or `logs/test_spec.json` during import or QA.
+  `logs/ledger.json` or `logs/seeds.json` during import or QA.
 - Run generation-style pool originality or cross-test topic rotation QA passes on imported tests.
 - Skip `聴解スクリプト.txt` because an external MP3 exists — the gate and
   booklet sync still need the script.

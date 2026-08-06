@@ -28,7 +28,7 @@ Verify every tested word/grammar point against `refs/Shinkanzen/` (N2
 inventory) and benchmark sentence structure, distractor density, and passage
 length against the 5 official past exam sets in `refs/JLPT/` (see
 `reference-book-reading`). Items drawn with `"origin": "adjunct"` in
-`logs/test_spec.json` passed `classify_level.py` — treat them like pool items;
+`tests/<test_id>/test_spec.json` passed `classify_level.py` — treat them like pool items;
 do not swap them for memory picks.
 
 ## Benchmark against Official Exams (`refs/JLPT/`)
@@ -200,7 +200,7 @@ rule). A distractor that fails the plausibility test and a distractor that
 creates a second answer are two ends of the same axis — aim for the narrow
 band between them.
 
-## Using web seeds from `logs/test_spec.json` (when present)
+## Using web seeds from `tests/<test_id>/test_spec.json` (when present)
 
 If `merge_seeds.py` ran, the spec carries web provenance — honor it in every
 section, under these caps (full rules: web-topic-research):
@@ -565,15 +565,15 @@ you. Run it before calling any authoring work done.
   `1. 削減  2. 削減` and `1. ぶった … 3. ぶった`. When building near-miss kanji
   distractors, read the four back to yourself before moving on.
 - **The key goes where `answer_positions` says — and if the spec has none, STOP.**
-  `logs/test_spec.json` prescribes the correct-option number for all 101 items so
+  `tests/<test_id>/test_spec.json` prescribes the correct-option number for all 101 items so
   no number is over-used. Write the item, then *order the options* so the correct
   one lands on the prescribed slot. Do not write the key you feel like and do not
   "fix" the imbalance later — `make check` compares all 101 against the spec.
   **The failure mode is the spec being silent, not wrong.** `make check` prints
-  `keys match logs/test_spec.json answer_positions (0 prescribed)` and passes
+  `keys match tests/<test_id>/test_spec.json answer_positions (0 prescribed)` and passes
   when the field is absent, so an author who never looked cannot tell. All four
   papers on disk were authored that way — none of their `test_spec.json` files has
-  the field, `logs/test_spec.json` is missing entirely, and the keys came out
+  the field, `tests/<test_id>/test_spec.json` is missing entirely, and the keys came out
   38–53% on option 1 (test 2: 53/25/11/13 of 101). `sample_items.py` does emit
   `answer_positions`, so a spec without it was not produced by the sampler: re-run
   `sample_items.py --seed <n> --test-id <id>` and author against its output rather

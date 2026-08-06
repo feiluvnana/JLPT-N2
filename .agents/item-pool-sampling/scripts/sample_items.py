@@ -3,15 +3,13 @@
 Sample a randomized test blueprint from the N2 item pools.
 
 Usage:
-    python sample_items.py                 # random seed
-    python sample_items.py --seed 20260803 # reproducible
-    python sample_items.py --reroll grammar_p7  # resample one category,
-                                                # keep the rest of test_spec.json
+    python sample_items.py --test-id 4 --seed 20260803
+    python sample_items.py --test-id 4 --reroll grammar_p7 --seed 99999
 
-Outputs test_spec.json (the authoring contract) and updates ledger.json
-(v2 LRU cooldown: an item drawn within the last COOLDOWN draws is ineligible;
-when a pool cannot fill a draw the cooldown relaxes one step at a time and
-says so — history is never reset).
+Outputs tests/<test_id>/test_spec.json (the authoring contract) and updates
+ledger.json (v2 LRU cooldown: an item drawn within the last COOLDOWN draws is
+ineligible; when a pool cannot fill a draw the cooldown relaxes one step at a
+time and says so — history is never reset).
 """
 
 import argparse
@@ -27,7 +25,6 @@ POOLS = HERE.parent / "references" / "pools.json"
 ROOT = HERE.parents[2]
 LOGS_DIR = ROOT / "logs"
 LEDGER = LOGS_DIR / "ledger.json"
-SPEC = LOGS_DIR / "test_spec.json"
 STAGING = LOGS_DIR / "adjunct_staging.json"
 
 ADJUNCT_CAP = 0.20  # max share of each category draw filled from staging
@@ -276,8 +273,9 @@ def main():
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--reroll", default=None,
                     help="resample only this category, keep the rest")
-    ap.add_argument("--test-id", default=None,
-                    help="record which test consumed this draw (ledger attribution)")
+    ap.add_argument("--test-id", required=True,
+                    help="test id; writes tests/<test_id>/test_spec.json and "
+                         "records ledger attribution")
     ap.add_argument("--no-adjunct", action="store_true",
                     help="pure pool draw; ignore logs/adjunct_staging.json")
     ap.add_argument("--check-depth", action="store_true",
@@ -292,6 +290,7 @@ def main():
 
     seed = args.seed if args.seed is not None else int(time.time())
     rng = random.Random(seed)
+    spec_path = ROOT / "tests" / str(args.test_id) / "test_spec.json"
 
     ledger = load_ledger()
     history = ledger["history"]
@@ -304,9 +303,9 @@ def main():
             sys.exit(f"unknown category '{cat}'. Valid: {', '.join(DRAW)}")
         if cat not in pools:
             sys.exit(f"category '{cat}' is in DRAW but missing from pools.json")
-        if not SPEC.exists():
-            sys.exit("--reroll needs an existing test_spec.json")
-        spec = json.loads(SPEC.read_text(encoding="utf-8"))
+        if not spec_path.is_file():
+            sys.exit(f"--reroll needs an existing {spec_path.relative_to(ROOT)}")
+        spec = json.loads(spec_path.read_text(encoding="utf-8"))
         # The current spec is the newest history entry; drop this category from
         # it so its own picks are not counted against the redraw, and exclude
         # everything the other categories already hold.
@@ -364,15 +363,12 @@ def main():
         sys.exit(f"same-test collision (a bug in draw()): {collisions}")
 
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
-    SPEC.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
-                    encoding="utf-8")
-    if args.test_id:
-        t_dir = ROOT / "tests" / str(args.test_id)
-        t_dir.mkdir(parents=True, exist_ok=True)
-        (t_dir / "test_spec.json").write_text(json.dumps(spec, ensure_ascii=False, indent=1), encoding="utf-8")
+    spec_path.parent.mkdir(parents=True, exist_ok=True)
+    spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
+                         encoding="utf-8")
     LEDGER.write_text(json.dumps(ledger, ensure_ascii=False, indent=1),
                       encoding="utf-8")
-    print(f"seed={spec['seed']} -> {SPEC.relative_to(ROOT)} written, "
+    print(f"seed={spec['seed']} -> {spec_path.relative_to(ROOT)} written, "
           f"ledger updated at {LEDGER.relative_to(ROOT)} "
           f"({len(history)} draw(s) recorded)")
     for cat, xs in spec["items"].items():

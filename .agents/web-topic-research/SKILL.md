@@ -262,7 +262,7 @@ N2 gate — apply to every seed before it enters `seeds.json`:
 ## Step 3 — Blend into the authoring contract
 
 ```bash
-python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json
+python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json tests/<test_id>/test_spec.json
 # or: make merge-seeds
 # optional tuning (both clamped to 0.30-0.60):
 #   --reading-ratio 0.5 --listening-ratio 0.4
@@ -320,7 +320,7 @@ skill entirely — the pipeline still works, just less fresh.
 When seeds run thin, force novelty combinatorially instead of asking the
 model to "be creative": scenario = random(place) × random(complication) ×
 random(constraint), e.g. 市役所 × 必要書類が足りない × 締め切りは今日中.
-Roll these with the RNG seed from `logs/test_spec.json`, not by model preference.
+Roll these with the RNG seed from `tests/<test_id>/test_spec.json`, not by model preference.
 
 ## Integration note
 

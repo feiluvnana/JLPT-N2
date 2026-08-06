@@ -4,8 +4,8 @@ Blend web-harvested topic seeds into test_spec.json — ACROSS THE WHOLE EXAM,
 with balance caps so neither the web nor the pool/Shin-Kanzen side dominates.
 
 Usage:
-    python merge_seeds.py logs/seeds.json logs/test_spec.json
-    python merge_seeds.py logs/seeds.json logs/test_spec.json --reading-ratio 0.5 --listening-ratio 0.4
+    python merge_seeds.py logs/seeds.json tests/<test_id>/test_spec.json
+    python merge_seeds.py logs/seeds.json tests/<test_id>/test_spec.json --reading-ratio 0.5 --listening-ratio 0.4
 
 seeds.json format (written by the agent after web research):
 [

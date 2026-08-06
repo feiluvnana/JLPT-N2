@@ -183,7 +183,7 @@ to compare them against.
 
 ## The 問題 decides the QUESTION TYPE, not just the topic
 
-`logs/test_spec.json` hands you a list of scenarios, not an assignment of
+`tests/<test_id>/test_spec.json` hands you a list of scenarios, not an assignment of
 scenarios to 問題. Placing one is your call, and the section's task type binds:
 
 | 問題 | Task | Question shape | Shape of the item |

@@ -20,9 +20,8 @@ acting in its area — re-read it, rather than working from memory of a previous
 session.
 
 Then run **every** numbered step below, in order. No step is optional because
-its output file already exists: `logs/seeds.json` and `logs/test_spec.json` are
-always on disk, which is precisely why skipping steps 3 and 3.5 leaves no
-trace. Test 3 skipped 3.5, inherited test 2's harvest and seed, and shipped as
+its output file already exists: `logs/seeds.json` and a prior test's
+`tests/<test_id>/test_spec.json` are easy to mistake for the current test's — Test 3 skipped 3.5, inherited test 2's harvest and seed, and shipped as
 a re-skin of test 2 with every automated gate green.
 
 `AGENTS.md` §0 states the full compliance rule and what to report at the end.
@@ -38,7 +37,7 @@ All exam files follow a strict directory structure:
 - **Test outputs**: `tests/<test_id>/` — generated ids have no special prefix
   (`tests/1/`); imported exams MUST use `tests/imported-<slug>/` (see
   `external-test-import`).
-- **Operational tracking**: `logs/` directory (`logs/ledger.json` for item history, `logs/test_spec.json` for current blueprint).
+- **Operational tracking**: `logs/` directory (`logs/ledger.json` for item history, `logs/seeds.json` for web harvests). Each generated test's blueprint is `tests/<test_id>/test_spec.json`.
 - **Internal execution scripts** (all are also wrapped by Makefile targets — see
   `make help`; every target takes the test id positionally, e.g. `make sheet 1`):
   - Item pool sampler: `.agents/item-pool-sampling/scripts/sample_items.py` (`make sample`)
@@ -78,7 +77,7 @@ anything.
    Run `official-audio-analysis/SKILL.md` across `refs/JLPT/*.mp3` to ensure pacing parameters match official standards.
 3. **Sample item pool & answer key blueprint** → read `item-pool-sampling/SKILL.md`.
    Run: `python3 .agents/item-pool-sampling/scripts/sample_items.py --seed <seed> --test-id <id>`
-   This outputs `logs/test_spec.json` and updates `logs/ledger.json`.
+   This outputs `tests/<test_id>/test_spec.json` and updates `logs/ledger.json`.
    Pool growth / one-off draws: `make classify ITEM=… CATEGORY=… STAGE=1`, then
    sample (≤20% adjunct per category) or `make promote-adjunct` — see
    `item-pool-sampling` **Adjunct staging**.
@@ -96,8 +95,8 @@ anything.
    Harvest 18-25 real-world topic seeds (**≥6 distinct source domains** — fewer
    cannot fund every surface's 30% floor at `MAX_PER_DOMAIN`=2) into
    `logs/seeds.json` and run:
-   `python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json`
-   (or `make merge-seeds`, which uses exactly those two paths)
+   `python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json tests/<test_id>/test_spec.json`
+   (or `make merge-seeds TEST=<id>`, which uses exactly those two paths)
    This blends web seeds across ALL surfaces (reading topics, listening scenarios,
    問題9 cloze topic, 問題14 flyer texture, 問題4 settings, 問題1-8 carrier-sentence
    texture) with enforced balance caps: web share 30-60% per surface, pool
@@ -105,7 +104,7 @@ anything.
    Tested items (grammar/vocab/kanji/idioms) always remain pool-sampled.
    Check the printed blend report before authoring.
 4. **Author the content** → read `question-authoring/SKILL.md`.
-   Write Markdown sources (`言語知識・読解.md`, `聴解.md`) in `tests/<test_id>/`. Author ONLY items specified in `logs/test_spec.json` and set answer keys according to `answer_positions`.
+   Write Markdown sources (`言語知識・読解.md`, `聴解.md`) in `tests/<test_id>/`. Author ONLY items specified in `tests/<test_id>/test_spec.json` and set answer keys according to `answer_positions`.
    **Grammar carriers must match official length** (問題7 avg ~43 JP chars /
    stem ≥30; 問題9 cloze ~500–700). Short one-clause stems are a known shipped
    defect — see `question-authoring` Benchmark section. `make check` enforces
@@ -213,7 +212,7 @@ Before running the gate, list every surface's topic in one place — 問題9, ea
   re-run it (it now restores the pool draw first) instead of inventing a topic
   for the starved surface. Test 4's 問題12 and 問題13 were authored off-contract
   for exactly this reason. `make check` now fails on a spec that repeats itself.
-- Each `logs/test_spec.json` topic/scenario seed feeds **exactly one** surface.
+- Each `tests/<test_id>/test_spec.json` topic/scenario seed feeds **exactly one** surface.
   There are more seeds than surfaces on purpose — if a topic looks used twice,
   an unused seed is sitting in the spec. `cloze_topic`'s `origin` is binding
   too: a `"pool"` cloze must not borrow a web reading seed.

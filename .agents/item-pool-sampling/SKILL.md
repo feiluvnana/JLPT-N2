@@ -204,17 +204,15 @@ python .agents/item-pool-sampling/scripts/sample_items.py --check-depth
 python .agents/item-pool-sampling/scripts/sample_items.py --reroll listening_scenarios --seed 99999
 ```
 
-`logs/test_spec.json` is the authoring contract. It contains, per section, the
+`tests/<test_id>/test_spec.json` is the authoring contract. It contains, per section, the
 exact items to test (e.g., `"grammar_p7": ["〜に反して", "〜どころか", …]`),
 the scenario list for listening, topics for reading, and the answer-position
 sequence per 問題.
 
 **It belongs to ONE test and may predate the current `DRAW`.** The spec on disk
-is whatever the last `sample_items.py` run produced, so after a format fix its
-cardinalities can differ from the code's. (The file in `logs/` right now is test
-3's and matches `DRAW` in all 11 categories — measured 2026-08-06 — but tests 2
-and 4 were sampled under the old values and their ledger entries still show it;
-see "A draw count that disagrees with `DRAW`" above.)
+is whatever the last `sample_items.py --test-id <id>` run wrote to
+`tests/<test_id>/test_spec.json`, so after a format fix its cardinalities can
+differ from the code's.
 `check_answer_positions` zips the prescribed positions against the questions that
 exist, so extra prescribed entries are silently ignored and the mismatch is
 invisible. Do not "reconcile" it by re-sampling for a test that is already

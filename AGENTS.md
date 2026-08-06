@@ -37,8 +37,9 @@ Code, and any other):
    the command skips the rules around it.
 4. **Execute every numbered step of the workflow, in order.** A step is not
    optional because its output looks like it is already there.
-   `logs/seeds.json` and `logs/test_spec.json` are always present — that is
-   what makes skipping steps 3 and 3.5 invisible. If a step genuinely does not
+   `logs/seeds.json` and a prior test's `tests/<test_id>/test_spec.json` are
+   easy to mistake for the current test's — that is what makes skipping steps 3
+   and 3.5 invisible. If a step genuinely does not
    apply (no web access for 3.5), say so explicitly in your final report.
 5. **Run `make check` and read every line of its output** before reporting any
    work as done. Green is the floor, not the goal: it cannot see topic reuse,
@@ -85,7 +86,7 @@ not route around it silently.
 
 - `refs/`: Reference input files (scanned PDFs and audio recordings).
 - `tests/<test_id>/`: Output folder for each exam. **Origin is encoded in the folder name:** ids starting with `imported-` are external imports (e.g. `tests/imported-n2-2025-12/`); any other id is **generated** (e.g. `tests/1/`, `tests/n2_mock_01/`). See `external-test-import`.
-- `logs/`: Operational logs, item coverage ledger (`logs/ledger.json`), test blueprints (`logs/test_spec.json`), and web seed harvests (`logs/seeds.json`).
+- `logs/`: Operational logs, item coverage ledger (`logs/ledger.json`), and web seed harvests (`logs/seeds.json`). Each generated test's blueprint lives at `tests/<test_id>/test_spec.json`.
 - `.agents/`: Internal skill definitions, guidelines, and execution scripts.
 - `tools/`: Repo-level tooling that is not a skill (`check_consistency.py`, run via `make check`).
 
@@ -149,7 +150,7 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 | `make expand-pools`       | `expand_pools.py` — OpenJLPT N2 + curated topic growth |
 | `make fetch-openjlpt`     | `fetch_openjlpt.py` — refresh vendored OpenJLPT slices |
 | `make suggest-pool`       | `suggest_pool_additions.py` — optional `WRITE_STAGING=1` |
-| `make merge-seeds`        | `merge_seeds.py logs/seeds.json logs/test_spec.json` |
+| `make merge-seeds`        | `merge_seeds.py logs/seeds.json tests/<test_id>/test_spec.json` |
 | `make booklet <test_id>`  | `build_booklet.py` on both Markdown sources        |
 | `make mp3 <test_id>`      | `make_choukai_mp3.py` on `聴解スクリプト.txt`       |
 | `make sheet <test_id>`    | `build_interactive.py` → `解答.html`               |
@@ -162,10 +163,9 @@ Every per-test target also has a `-<id>` form (`make sheet-1`, `make mp3-2`),
 which is what to use when the target is not the first goal on the command line —
 the positional form only works there.
 
-`make sample` reuses the same default seed on every run and has no way to pass
-`--test-id`. When generating a new test, either override the seed
-(`make sample SEED=<n>`) or call the sampler directly with
-`--seed <n> --test-id <id>` so the ledger records attribution — see
+`make sample` defaults to `TEST=1` and `SEED=20260803`. When generating a new
+test, pass the id (`make sample TEST=5 SEED=<n>`) or call the sampler directly
+with `--seed <n> --test-id <id>` so the ledger records attribution — see
 `item-pool-sampling/SKILL.md`.
 
 **`tests/` and `logs/` are tracked, on purpose** — they are the working folders
@@ -190,12 +190,12 @@ python3 .agents/item-pool-sampling/scripts/expand_pools.py
 Harvest 18–25 seeds across **≥6 distinct source domains** into `logs/seeds.json` (`MAX_PER_DOMAIN` is 2, so fewer domains cannot fund every surface's 30% floor — test 4's 聴解 landed at 20% web from a 5-domain harvest; see `web-topic-research/SKILL.md` for the arithmetic and N2-gate rules), then:
 
 ```bash
-python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json logs/test_spec.json
+python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json tests/<test_id>/test_spec.json
 # optional tuning (both clamped to 0.30–0.60):
 #   --reading-ratio 0.5 --listening-ratio 0.4
 ```
 
-The script blends seeds into every surface of `logs/test_spec.json` (reading topics, listening scenarios, `cloze_topic` for 問9, `info_retrieval_texture` for 問14, `qr_situation_seeds` for 問4, `carrier_seeds` for 問1–8) and prints a **blend report**. Check the report before authoring: web share must sit within 30–60% per surface with the pool side ≥40%, and no source domain may dominate (≤2 topic-level seeds each). Re-harvest and re-run if it warns.
+The script blends seeds into every surface of `tests/<test_id>/test_spec.json` (reading topics, listening scenarios, `cloze_topic` for 問9, `info_retrieval_texture` for 問14, `qr_situation_seeds` for 問4, `carrier_seeds` for 問1–8) and prints a **blend report**. Check the report before authoring: web share must sit within 30–60% per surface with the pool side ≥40%, and no source domain may dominate (≤2 topic-level seeds each). Re-harvest and re-run if it warns.
 
 ### External Test Import (PDF / past paper → project format)
 
@@ -263,7 +263,7 @@ validates, 71+30 keys parse, the sheet has 101 correctly-sized radio groups, and
 the in-page grader agrees with `grade_answers.py` on identical answers.
 
 It also checks item integrity, which no other gate can see: no question offers
-the same option twice; all 101 keys sit on the position `logs/test_spec.json`
+the same option twice; all 101 keys sit on the position `tests/<test_id>/test_spec.json`
 prescribed; 問題8 stems have four blanks with ★ third, their keys name the
 option that lands there, **and the stem does not already contain the words the
 options supply**; the passages carry **no un-transliterated Latin words**; the
@@ -273,7 +273,7 @@ options can't drift from the audio); and the script carries no ASCII `,`/`.`
 for edge-tts to mis-time.
 
 It also validates the **blend contract** the authoring step reads off
-`logs/test_spec.json`: every surface gets a distinct topic (a repeated entry
+`tests/<test_id>/test_spec.json`: every surface gets a distinct topic (a repeated entry
 silently starves one 問題, which then gets authored off-contract) and the pool
 side keeps ≥40% of every blended surface. Both broke in test 4 because
 `merge_seeds.py` had been run twice over its own output.
@@ -307,7 +307,7 @@ defect); narration saying `〈label〉の男/女の人` must agree with the voic
 puts its narration on the second line; `聴解_チャプター.json`'s `script_sha` must
 equal `sha1(聴解スクリプト.txt)[:12]`, so an MP3 built from a superseded script
 fails instead of shipping silently (skipped for `source: external` audio, which
-has no TTS timeline); and the 問題1/2/4 target items `logs/test_spec.json` drew
+has no TTS timeline); and the 問題1/2/4 target items `tests/<test_id>/test_spec.json` drew
 must actually appear in the paper.
 
 Outside the papers it checks the **inputs that decide them**: every
@@ -366,7 +366,7 @@ inconsistency shipped at least once.
 - **Automatic Segments Cleanup**: Temporary `segments/` files produced during audio generation are automatically removed once `聴解.mp3` is generated.
 - **Item Rotation via Ledger**: Always run `item-pool-sampling` before authoring a new test. Item usage is recorded in `logs/ledger.json` to exclude previously tested items from future draws.
 - **Web Decorates, Pools Test**: Tested linguistic items (grammar points, vocabulary, kanji, idioms/keigo) are ALWAYS the pool-sampled, Shin-Kanzen-calibrated ones. Web seeds supply only topics, settings, and simplified facts around them — this preserves N2 level regardless of topic freshness.
-- **Balanced Source Blend**: When web research runs, every touched surface stays a mix (30–60% web, ≥40% pool; ≤2 seeds per source domain). Provenance (`"origin": "web"|"pool"` + source URL) is recorded in `logs/test_spec.json` for every blended entry and must not be swapped during authoring. Carrier-sentence cap: at most 1 in 3 stems per 問題 may use web texture. Offline runs skip the blend entirely — the pure-pool pipeline remains valid.
+- **Balanced Source Blend**: When web research runs, every touched surface stays a mix (30–60% web, ≥40% pool; ≤2 seeds per source domain). Provenance (`"origin": "web"|"pool"` + source URL) is recorded in `tests/<test_id>/test_spec.json` for every blended entry and must not be swapped during authoring. Carrier-sentence cap: at most 1 in 3 stems per 問題 may use web texture. Offline runs skip the blend entirely — the pure-pool pipeline remains valid.
 - **No Copyright Infringement**: Reference books in `refs/` are for calibration only; questions must be original. Web sources give WHAT to write about, never the words — max one simplified fact per passage/dialogue, no reproduction of source sentences or article structure.
 
 ---
@@ -382,7 +382,7 @@ disk are its inputs and outputs), read each subagent's report, decide the next
 pass, and assemble the final report §0.7 requires from those reports.
 
 A "pass" is one such subagent: a fresh context that reads its inputs **from
-disk** at the start (`logs/test_spec.json`, `tests/<test_id>/…`, the relevant
+disk** at the start (`tests/<test_id>/test_spec.json`, `tests/<test_id>/…`, the relevant
 `SKILL.md`), does one bounded job, reports what it read, ran, and skipped, and
 hands off. State flows between passes only through files on disk — never
 through the orchestrator paraphrasing content into the next prompt, because a
@@ -401,7 +401,7 @@ modes are context problems:
 | # | Pass | Scope | Subagent rule |
 |---|------|-------|---------------|
 | 1 | Setup | Workflow steps 1–3.5: read the skills, sample the pool, harvest seeds, merge, verify the blend report | own subagent |
-| 2–5 | Authoring ×4 | One per section — 文字・語彙 (問1–6), 文法 (問7–9), 読解 (問10–14), 聴解 (booklet + script). Each re-reads `logs/test_spec.json` and the relevant SKILL.md at its start instead of trusting a long context's memory | one subagent each; only in the no-subagent fallback may sections share a context, and then the spec + skill re-read between sections is the minimum |
+| 2–5 | Authoring ×4 | One per section — 文字・語彙 (問1–6), 文法 (問7–9), 読解 (問10–14), 聴解 (booklet + script). Each re-reads `tests/<test_id>/test_spec.json` and the relevant SKILL.md at its start instead of trusting a long context's memory | one subagent each; only in the no-subagent fallback may sections share a context, and then the spec + skill re-read between sections is the minimum |
 | 6 | Build + gate | Steps 6–9: booklet HTML, MP3, `解答.html`, `make check` (read every line incl. WARN), whole-paper topic table | may share a subagent with pass 5 |
 | 7 | QA | `exam-qa-review` in full — blind-solve first, all 101 items, report with verdict **and a root-cause table (§6.5) naming the skill/gate defect behind each finding** | **own subagent — must NOT be any authoring context, and the orchestrator must not leak authoring detail into its prompt** |
 | 8+ | Fix → re-review | Repair findings in the sources, regenerate, re-gate; then the changed items and their whole 問題 re-reviewed | fix may reuse an authoring subagent; the re-review must again be fresh eyes |

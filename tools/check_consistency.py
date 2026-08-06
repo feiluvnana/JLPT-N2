@@ -539,7 +539,7 @@ def check_level_band_grammar(gt: str, keys: dict[int, int],
     # test 3's item 46 tested 〜ば〜ほど with the option reading 「触れるほど」 and the
     # loop above saw nothing. The spec names the grammar point it drew, so match
     # that instead — the only place 問題8's target is written down.
-    spec_path = ROOT / "logs" / "test_spec.json"
+    spec_path = ROOT / "tests" / test_id / "test_spec.json"
     if not spec_path.is_file():
         return
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
@@ -1051,7 +1051,7 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
 
 
 def check_spec_blend(spec: dict):
-    """The blend contract the authoring step reads off logs/test_spec.json.
+    """The blend contract the authoring step reads off tests/<id>/test_spec.json.
 
     Two invariants no other gate can see, both violated by test 4's spec:
     every surface needs a DISTINCT topic (a duplicate silently starves one
@@ -1325,45 +1325,62 @@ def check_rotation_inputs():
         check(f"each test blended its own web harvest ({len(shas)} recorded)",
               not dup, f"harvest_sha reused: {dup} — step 3.5 was skipped")
 
-    spec_path, seeds_path = ROOT / "logs" / "test_spec.json", ROOT / "logs" / "seeds.json"
-    if not (spec_path.is_file() and seeds_path.is_file()):
-        return skip("every web entry in test_spec traces to logs/seeds.json",
-                    "no test_spec.json or seeds.json")
-    spec = json.loads(spec_path.read_text(encoding="utf-8"))
-    check_spec_blend(spec)
-    check_spec_adjunct(spec)
-    harvest = {s["seed"] for s in json.loads(seeds_path.read_text(encoding="utf-8"))}
+    seeds_path = ROOT / "logs" / "seeds.json"
+    harvest: set[str] = set()
+    if seeds_path.is_file():
+        harvest = {s["seed"] for s in json.loads(seeds_path.read_text(encoding="utf-8"))}
 
-    blended: list[tuple[str, str]] = []
-    for key, field in (("topic", "reading_topics"), ("scenario", "listening_scenarios")):
-        for e in spec.get("items", {}).get(field, []):
+    generated_specs: list[tuple[Path, dict]] = []
+    tests_root = ROOT / "tests"
+    if tests_root.is_dir():
+        for d in sorted(tests_root.glob("*")):
+            if not d.is_dir() or d.name.startswith("imported-"):
+                continue
+            spec_path = d / "test_spec.json"
+            if spec_path.is_file():
+                generated_specs.append(
+                    (d, json.loads(spec_path.read_text(encoding="utf-8"))))
+
+    if not generated_specs:
+        return skip("test_spec blend contract", "no generated test_spec.json files")
+
+    for d, spec in generated_specs:
+        print(f"  {d.name}/test_spec.json")
+        check_spec_blend(spec)
+        check_spec_adjunct(spec)
+        if not harvest:
+            continue
+        blended: list[tuple[str, str]] = []
+        for key, field in (("topic", "reading_topics"), ("scenario", "listening_scenarios")):
+            for e in spec.get("items", {}).get(field, []):
+                if isinstance(e, dict) and e.get("origin") == "web":
+                    blended.append((field, e.get(key, "")))
+        for field in ("info_retrieval_texture", "cloze_topic"):
+            e = spec.get(field)
             if isinstance(e, dict) and e.get("origin") == "web":
-                blended.append((field, e.get(key, "")))
-    for field in ("info_retrieval_texture", "cloze_topic"):
-        e = spec.get(field)
-        if isinstance(e, dict) and e.get("origin") == "web":
-            blended.append((field, e.get("detail") or e.get("topic", "")))
-
-    orphans = [f"{f}:「{t}」" for f, t in blended if t not in harvest]
-    check(f"every web entry in test_spec traces to logs/seeds.json "
-          f"({len(blended)} blended)", not orphans,
-          "; ".join(orphans) + " — the spec was blended from a harvest that has "
-          "since been replaced; re-run merge_seeds")
+                blended.append((field, e.get("detail") or e.get("topic", "")))
+        if not blended:
+            continue
+        orphans = [f"{f}:「{t}」" for f, t in blended if t not in harvest]
+        check(f"{d.name}: every web entry in test_spec traces to logs/seeds.json "
+              f"({len(blended)} blended)", not orphans,
+              "; ".join(orphans) + " — the spec was blended from a harvest that has "
+              "since been replaced; re-run merge_seeds")
 
 
 def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
     """Keys must sit where sample_items.py put them (the balance contract).
 
-    logs/test_spec.json prescribes the answer position of every item so no
+    tests/<test_id>/test_spec.json prescribes the answer position of every item so no
     number is over-used; authoring is supposed to place the correct choice
     there. Only the test that spec belongs to can be checked.
     """
-    spec_path = d / "test_spec.json" if (d / "test_spec.json").is_file() else ROOT / "logs" / "test_spec.json"
+    spec_path = d / "test_spec.json"
     if not spec_path.is_file():
-        return skip("keys match logs/test_spec.json answer_positions", "no test_spec.json")
+        return skip("keys match test_spec.json answer_positions", "no test_spec.json")
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
     if str(spec.get("test_id")) != d.name:
-        return skip(f"keys match logs/test_spec.json answer_positions",
+        return skip("keys match test_spec.json answer_positions",
                     f"spec is for test {spec.get('test_id')}, not {d.name}")
     pos = spec.get("answer_positions") or {}
 
@@ -1385,7 +1402,7 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
 
     have = {str(q): a for q, a in keys.items()} | dict(ck)
     off = {q: (a, have.get(q)) for q, a in want.items() if have.get(q) != a}
-    check(f"keys match logs/test_spec.json answer_positions ({len(want)} prescribed)",
+    check(f"keys match test_spec.json answer_positions ({len(want)} prescribed)",
           not off, f"prescribed vs actual: {off}")
 
 
@@ -1399,7 +1416,7 @@ def check_spec_target_items(d, gt: str, st: str, bi):
     stems are decidable here; grammar_p7/context_words often are not, and stay
     with exam-qa-review §6.1.
     """
-    spec_path = d / "test_spec.json" if (d / "test_spec.json").is_file() else ROOT / "logs" / "test_spec.json"
+    spec_path = d / "test_spec.json"
     if not spec_path.is_file():
         return skip(f"{d.name}: 問題1/2/4 test the sampled items",
                     "no test_spec.json")
@@ -1433,7 +1450,7 @@ def check_spec_target_items(d, gt: str, st: str, bi):
                 probes.append(base.rstrip("。")[:-1])
             if not any(p and p in hay for p in probes):
                 missing.append(f"{cat}:「{item[:24]}」")
-    check(f"{d.name}: 問題1/2/4 test the items logs/test_spec.json drew "
+    check(f"{d.name}: 問題1/2/4 test the items test_spec.json drew "
           f"({sum(len(spec.get('items', {}).get(c, [])) for c in haystacks)} targets)",
           not missing,
           "; ".join(missing) + " — author only the sampled items, or re-sample; "
