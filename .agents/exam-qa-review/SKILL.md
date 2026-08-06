@@ -72,7 +72,15 @@ then name what let each defect through.
   Japanese anywhere in stems, options, passages, or script; narration
   contradicting the mapped voice; a spec/paper provenance mismatch; **an
   off-level KEY** (N1-hard or N3/N4/N5-easy — see step 2.5 /
-  `references/level_band_grammar.txt`); **a distractor eliminable on sight for
+  `references/level_band_grammar.txt`, which covers 問題7–9 GRAMMAR only, so
+  every 問題1–6 vocab key is on the reviewer: test 4 keyed 賢い/かしこい, an N3
+  headword in `openjlpt/vocab-n3.json`, and no gate looked); **an option that is
+  not a real Japanese word** (test 4's 問題1 もてあそわる/まねわる/ひるがえわる);
+  **a drawn target for which no rule-compliant option set exists** — file it
+  against the draw, not the options (test 4's 労わる, step 2b); **a paper whose
+  `test_spec.json` carries no `answer_positions`** — the gate prints
+  "0 prescribed" and passes, so nothing verifies the 101 keys and all four papers
+  on disk came out answer-1-heavy (38–53% on option 1); **a distractor eliminable on sight for
   a reason unrelated to the tested point** — wrong part of speech, wrong
   domain, wrong tone, or an unrelated functional category (see step 2b); **a
   聴解 distractor not grounded in anything said in the dialogue**; **a 問題9
@@ -165,10 +173,32 @@ ever engages that point?"* Evidence, not a feeling:
   physically discarding a computer, or 把握 personified onto a medicine, are
   domain violations, not collocation traps, and FAIL this step even though
   they are grammatically well-formed.
-- **問1 漢字読み:** confirm every distractor is a reading of the target's own
-  kanji or a visually/radically similar one. いたわる with ことわる/さわる/
-  かわる (readings of 断る/触る/代わる, unrelated kanji) fails — a reader
-  eliminates all three without ever considering 労.
+- **問1 漢字読み — TWO branches, and this file used to state only one.** A
+  distractor passes if it satisfies **either**: **(a)** it is a reading of the
+  target's own kanji or of a same-radical/visual-component kanji (措置: そち/
+  しょち/そうち; 険しい: けわしい/けんしい/かんしい), **or (b)** it is a real N2
+  word in the SAME semantic field and the same word form (official July 2025
+  問1-2 辛い → あまい/にがい/しぶい; 問1-5 収まった → さだまった/しずまった/
+  やすまった). What fails is a grab-bag across unrelated fields: いたわる with
+  ことわる/さわる/かわる (readings of 断る/触る/代わる — unrelated kanji AND
+  unrelated fields) satisfies neither branch, and a reader eliminates all three
+  without ever considering 労. This is `question-authoring`'s 問題1 「Same-kanji
+  OR same semantic field rule」 restated; if the two files ever disagree again,
+  `question-authoring` owns authoring and this bullet is the copy to fix.
+- **問1 — every option must be a REAL WORD, and if no compliant set exists the
+  TARGET is the defect.** Non-words are never distractors. Test 4 shipped
+  「労わる」 with もてあそわる/まねわる/ひるがえわる and a 解説 that invented
+  spellings for them (弄わる/招わる/翻わる) — a "repair" of the earlier
+  ことわる/さわる/かわる set, i.e. the item failed this rule twice in two
+  different directions. It was not fixable at the option level: the printed
+  okurigana locks the class to ～わる, 労 reads only ロウ/いたわ(る)/ねぎら(う),
+  no look-alike kanji yields a ～わる verb, and every real ～わる verb is an
+  unrelated kanji in an unrelated field — **both branches empty.** When that
+  happens, do not invent options and do not argue the set down: fail the item,
+  and send the TARGET back to `item-pool-sampling` to be re-drawn. Check the
+  same way round too — a target whose printed okurigana disagrees with its
+  `openjlpt` headword spelling (test 4's 労わる vs the corpus's 労る) is a pool
+  defect, not a typo to patch in the paper.
 - **聴解問題1-3:** for every wrong option, find the line in the script that
   raises it. If no line raises it, it is fabricated, not a distractor — FAIL.
   (This is the listening form of the same check; do it here as well as in
@@ -200,6 +230,21 @@ Procedure for every 問題7–9 key (and spot-check 問題1–6 / 即時応答):
 `references/level_band_grammar.txt` (TOO_HARD / TOO_EASY / ALLOW). This step
 still owns the judgment calls the gate cannot see (vocab keys, 問題5 hard
 words, "がちだ" vs bare "がち", 読解 questions that only test N5 fact-lookup).
+
+**The vocab half is entirely yours — do it as a lookup, not a feeling.** The
+band file holds grammar; no gate has ever checked a 問題1–6 key. So look every
+tested key up in `references/openjlpt/vocab-n1|n2|n3.json` and write the result
+into the report. A key that is an **N3 headword and absent from the N2 list is
+TOO_EASY** — that is how 賢い/かしこい shipped as a 問題1 key in test 4.
+
+**But the labels are a lookup, not a verdict — read this before filing.** That
+corpus is an aggregate word list: it labels 把握・転換・審査・じっくり・前もって・
+逃す・省みる as "N1" and 依頼・実施・克服・考慮・偶然・徐々に as "N3", and every
+one of those is ordinary N2 exam vocabulary that is correctly keyable. Use the
+lookup to *raise the question*, then answer it with step 2.5's two questions
+against Shin Kanzen N2 (`refs/Shinkanzen/`). Filing 把握 as off-level because a
+list said "N1" is the same mis-measurement this skill codes `GATE-WRONG`, and it
+sends the fixing pass off to break working items.
 
 ### 3. Mechanical reads
 

@@ -12,6 +12,28 @@ drills (〜によると, 〜ことができる, …) to `references/pools.json` 
 `exam-qa-review/references/level_band_grammar.txt` and `question-authoring`.
 `make check` fails generated papers whose 問題7–9 keys hit that list.
 
+**A `kanji_reading` entry must come with a writable distractor set, or it is not
+a pool entry.** `question-authoring`'s 問題1 rule requires three distractors that
+share the target's word form and conjugation class and satisfy one of two
+branches: a reading of the target's own kanji / a same-radical look-alike, or a
+real N2 word in the same semantic field. For some entries that intersection is
+**empty**, and an author who has already drawn the target invents non-words
+instead of rejecting it — test 4 shipped 「労わる」 with もてあそわる/まねわる/
+ひるがえわる (no such words), after an earlier round had shipped
+ことわる/さわる/かわる (unrelated kanji, unrelated field). Neither set was
+fixable, because 労 reads only ロウ/いたわ(る)/ねぎら(う), no look-alike kanji
+yields a ～わる verb, and every real ～わる verb is unrelated to "care for".
+So: before adding or keeping a `kanji_reading` entry, write its three
+distractors with their source kanji next to it; if you cannot, the entry does
+not belong in `references/pools.json`. Undrawable targets are a pool defect the
+moment they are committed, exactly like a banned grammar form.
+
+**A pool spelling must match its `references/openjlpt/vocab-n*.json` headword.**
+問題1 tests a reading off a printed spelling, so the okurigana is part of the
+item. `pools.json` carried `労わる` where the corpus heads `労る`; the paper
+printed the non-standard form, and the extra 「わ」 is what locked its options to
+the unsatisfiable ～わる class. Fix the pool, never just the paper.
+
 **The pool itself is checked now, not only the paper.** `grammar_p8` shipped
 `相対比較(〜ば〜ほど)` for four tests — `〜ば〜ほど` is on `level_band_grammar.txt`'s
 `## TOO_EASY` list *and* in `question-authoring`'s banned-too-easy list — and test

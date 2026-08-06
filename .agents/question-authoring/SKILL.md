@@ -127,12 +127,18 @@ in the SAME category as the key:
   (解消 applied to physically discarding a computer, 把握 personified onto a
   medicine, are sniff-test fails, not misuse traps).
 - **Kanji reading (問1):** see the existing 問題1 rules in "Item integrity"
-  below (same word form, conjugation lock) — this rule adds: distractors must
-  be readings of the SAME kanji or a kanji sharing a radical/visual component,
-  never readings of an entirely unrelated kanji that a reader can rule out
-  without ever considering the target kanji (いたわる's distractors must not be
-  ことわる/さわる/かわる — readings of 断る/触る/代わる, kanji sharing nothing
-  with 労).
+  below (same word form, conjugation lock) and the two-branch
+  「Same-kanji OR same semantic field rule」 in 「問題1 (漢字読み)」 below, which
+  is the single statement of this rule. This bullet adds nothing to it and must
+  not be read as narrower: a distractor may be a reading of the same/same-radical
+  kanji **or** a real N2 word in the same semantic field. What is forbidden is
+  the grab-bag that satisfies neither — いたわる's distractors must not be
+  ことわる/さわる/かわる (readings of 断る/触る/代わる: kanji sharing nothing with
+  労, fields sharing nothing with "care for"). This bullet said "never readings
+  of an entirely unrelated kanji" and so contradicted the section below, whose
+  own official examples (辛い → あまい/にがい/しぶい) are exactly that; an author
+  reading only this line is left with one branch, and when that branch is empty
+  for the drawn target the next step is inventing non-words. Test 4 took it.
 - **聴解 dialogues (問題1-3):** "every wrong option must be MENTIONED then
   eliminated" (below) is the plausibility rule for listening — an option
   nobody says in the dialogue is not a distractor, it is fabricated noise, and
@@ -169,14 +175,22 @@ exists or does not:
   grab-bag (「副詞」 over 案の定/とっくに/一段と is such a label; the honest ones
   are 予想副詞/時間副詞/程度副詞, which is three categories and a failed item).
 - **For 問題1, print the source of every distractor reading on the same line** —
-  `いたわる=労わる, ねぎらう=労う, ...`. Test 4's set was
+  `いたわる=労わる, ねぎらう=労う, ...`, and mark which branch each one satisfies
+  (`[同漢字]` or `[同分野]`). Test 4's set was
   `ことわる=断る, さわる=触る, かわる=代わる`: writing the sources out makes it
-  visible in one glance that none of those kanji shares anything with 労. **If
-  any source kanji shares no radical or visual component with the target,
-  replace that distractor.** `make check` WARNs when a distractor reading is not
-  a listed reading of the target kanji or of a same-radical kanji in
-  `openjlpt/kanji-n2.json` — WARN, not FAIL, because official papers use
-  paraphrase-level traps the file cannot see; the written line is the real check.
+  visible in one glance that none of those kanji shares anything with 労 **and**
+  that no branch label can be written for any of them. **A distractor with no
+  writable branch label must be replaced; a distractor that is not a real word
+  must never be written at all** — test 4's "repair" of that set was
+  もてあそわる/まねわる/ひるがえわる with invented spellings (弄わる/招わる/翻わる),
+  which is a worse failure than the set it replaced.
+  **NO GATE CHECKS THIS.** An earlier version of this bullet claimed
+  「`make check` WARNs when a distractor reading is not a listed reading of the
+  target kanji…」; it does not — `tools/check_consistency.py` touches
+  `openjlpt/kanji-n2.json` only to assert the file exists (and in one comment).
+  Three invented non-words shipped in test 4 without a single warning. Until that
+  check exists (it is on the QA work list as `GATE-BLIND`), the written
+  source-and-branch line **is** the check, and it is the author's, not the gate's.
 
 This is a construction-time discipline, not a post-hoc filter: when drafting
 four options, draft the key, then draft three competitors from the SAME
@@ -218,7 +232,40 @@ section, under these caps (full rules: web-topic-research):
   option must fit that conjugation — not a different verb class whose ending
   the print already rules out. Each option must also be a real word. See Item
   integrity below (test 1's 慌てて).
-- **Same-kanji OR same semantic field rule:** Every distractor must share the same word form and conjugation class AND be either (a) a reading of the target's OWN kanji or a same-radical/visual-component kanji (e.g. 措置: そち/しょち/そうち, 険しい: けんしい/けんみしい/かんしい/けわしい), OR (b) a real N2 word in the SAME semantic field (e.g. official July 2025 問1-2 辛い → あまい/にがい/しぶい; 問1-5 収まった → さだまった/しずまった/やすまった). A grab-bag of unrelated words across different semantic fields is forbidden.
+- **Same-kanji OR same semantic field rule:** Every distractor must share the same word form and conjugation class AND be either (a) a reading of the target's OWN kanji or a same-radical/visual-component kanji (e.g. 措置: そち/しょち/そうち, 険しい: けんしい/けんみしい/かんしい/けわしい), OR (b) a real N2 word in the SAME semantic field (e.g. official July 2025 問1-2 辛い → あまい/にがい/しぶい; 問1-5 収まった → さだまった/しずまった/やすまった). A grab-bag of unrelated words across different semantic fields is forbidden. This is the **only** statement of the rule; the 「Kanji reading (問1)」 bullet under "Distractor plausibility" defers to it.
+- **Build the set BEFORE you accept the target — and reject the target, never the
+  rule.** The three constraints (conjugation lock + real word + one of the two
+  branches) intersect to nothing for some pool entries, and when they do, the
+  target is undrawable, not negotiable. Procedure, in this order: (1) write the
+  target's okurigana and the word class it locks; (2) list the target kanji's
+  other readings and its same-radical look-alikes in that class → branch (a)
+  candidates; (3) if fewer than three, list real N2 words of the same class in
+  the target's semantic field → branch (b) candidates; (4) **if (a)+(b) still
+  yields fewer than three real words, STOP: report the target as undrawable and
+  ask `item-pool-sampling` to re-draw it.** Do not invent a word, do not widen
+  the field to "any ～わる verb", and do not ship three near-misses plus filler.
+  Worked example of the empty case — test 4's 「労わる」: okurigana locks ～わる;
+  労 reads only ロウ/いたわ(る)/ねぎら(う) and no look-alike (栄・営・学・券・努)
+  gives a ～わる verb, so (a) = {}; every real ～わる verb (ことわる・かわる・
+  くわわる・まじわる・さわる・たまわる・おわる・そなわる・おそわる) belongs to an
+  unrelated field, so (b) = {}. The paper shipped invented non-words instead, and
+  a *previous* fix round had already shipped the unrelated-kanji set — two
+  failures on one undrawable target.
+- **The target's spelling must match its `openjlpt` headword.** 問題1 tests a
+  reading off a printed spelling, so a non-standard okurigana changes the item.
+  Test 4 printed 「労わる」 (from `pools.json`) where
+  `references/openjlpt/vocab-n1.json` heads it as 「労る」 — and the extra 「わ」 is
+  what locked the option class in the first place. On a mismatch, fix
+  `pools.json`, then re-sample; re-spelling the stem alone leaves the pool to
+  re-draw the defect next test.
+- **The KEY must be N2, and no gate checks that for vocabulary.** The band gate
+  reads `references/level_band_grammar.txt`, which covers 問題7–9 grammar only.
+  Before shipping any 問題1–6 item, look the key up in
+  `references/openjlpt/vocab-n1|n2|n3.json`: a key that is an N3 headword and
+  absent from the N2 list is too easy — test 4 keyed 賢い/かしこい (N3). Treat the
+  lookup as a question, not a ruling: that corpus labels ordinary N2 words such
+  as 把握・転換・審査・じっくり "N1", so confirm the verdict against
+  `refs/Shinkanzen/` before replacing anything.
 
 **問題2 (表記)** — official items use a **2×2 component matrix**: take the
 correct 2-kanji compound and swap EACH kanji independently for a
@@ -517,11 +564,20 @@ you. Run it before calling any authoring work done.
   option set — that is a second correct answer. Test 2 shipped
   `1. 削減  2. 削減` and `1. ぶった … 3. ぶった`. When building near-miss kanji
   distractors, read the four back to yourself before moving on.
-- **The key goes where `answer_positions` says.** `logs/test_spec.json`
-  prescribes the correct-option number for all 101 items so no number is
-  over-used. Write the item, then *order the options* so the correct one lands
-  on the prescribed slot. Do not write the key you feel like and do not
+- **The key goes where `answer_positions` says — and if the spec has none, STOP.**
+  `logs/test_spec.json` prescribes the correct-option number for all 101 items so
+  no number is over-used. Write the item, then *order the options* so the correct
+  one lands on the prescribed slot. Do not write the key you feel like and do not
   "fix" the imbalance later — `make check` compares all 101 against the spec.
+  **The failure mode is the spec being silent, not wrong.** `make check` prints
+  `keys match logs/test_spec.json answer_positions (0 prescribed)` and passes
+  when the field is absent, so an author who never looked cannot tell. All four
+  papers on disk were authored that way — none of their `test_spec.json` files has
+  the field, `logs/test_spec.json` is missing entirely, and the keys came out
+  38–53% on option 1 (test 2: 53/25/11/13 of 101). `sample_items.py` does emit
+  `answer_positions`, so a spec without it was not produced by the sampler: re-run
+  `sample_items.py --seed <n> --test-id <id>` and author against its output rather
+  than starting from a spec that prescribes nothing.
 - **問題8: the answer is the option on ★, which is the 3rd of 4 blanks.**
   Assemble the full sentence first, confirm it is grammatical, number the
   positions, and only then read off which option sits third. Test 2 shipped
