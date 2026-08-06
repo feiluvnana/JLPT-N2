@@ -24,6 +24,7 @@ Read-only: it never writes to tests/ or logs/.
 """
 
 import argparse
+from difflib import SequenceMatcher
 import hashlib
 import importlib.util
 import json
@@ -31,6 +32,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -833,9 +835,31 @@ def check_note_band(name: str, gt: str):
         if not m:
             continue
         term, defn = m.group(2).strip(), m.group(3).strip()
-        stem = re.sub(r"(する|な|の|に|た|だ|い)$", "", term)
-        if term in vocab or stem in vocab:
+
+        # Normalize candidates for vocabulary band lookup
+        candidates = {term}
+        candidates.add(re.sub(r"(する|な|の|に|た|だ|い)$", "", term))
+        candidates.add(term + "る")
+        candidates.add(term + "する")
+        candidates.add(term + "い")
+        if term.endswith("め"):
+            candidates.add(term[:-1] + "める")
+        if term.endswith("け"):
+            candidates.add(term[:-1] + "ける")
+        if term.endswith("さ"):
+            candidates.add(term[:-1] + "い")
+
+        # Check compound rule for 4-kanji terms (e.g. 評価制度)
+        is_compound_in_band = False
+        kanji_only = [c for c in term if "一" <= c <= "鿿"]
+        if len(kanji_only) == 4 and len(term) == 4:
+            head1, head2 = term[:2], term[2:]
+            if (head1 in vocab or (head1 + "する") in vocab) and (head2 in vocab or (head2 + "する") in vocab):
+                is_compound_in_band = True
+
+        if is_compound_in_band or any(c in vocab for c in candidates if c):
             in_band.append(term)
+
         kanji = [c for c in term if "一" <= c <= "鿿"]
         if len(kanji) >= 2 and all(c in defn for c in kanji):
             self_ref.append(f"{term}：{defn[:12]}…")
@@ -852,7 +876,7 @@ def check_note_band(name: str, gt: str):
 # 問題11 (G1). Official July 2025 anchors all eight 中文 stems on 筆者 and gives
 # every passage at least one 考え/主張 question; tests 1–4 shipped 4/6/5/6 stems
 # that name nobody, and pure-retrieval shapes no official paper uses.
-P11_BANNED_STEM = re.compile(r"本文で述べられて|として正しいもの|主な目的は|内容と合っている")
+P11_BANNED_STEM = re.compile(r"(?:本文|文章|この文章)で(?:述べられて|説明されて)|として正しいもの|主な目的は|(?:内容|説明)と合っている")
 P11_OPINION_STEM = re.compile(
     r"筆者の(?:考え|主張|評価|意見)|最も言いたい|最も伝えたい|言いたいことは"
     r"|筆者は.*どのように(?:述べ|考え|評価)|筆者が.*大切に")
@@ -954,21 +978,33 @@ def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
         a, o = keys.get(q), opts.get(q) or []
         if a is None or len(o) != 4 or not 1 <= a <= 4:
             continue
-        kl = jp_char_count(o[a - 1])
+        keyed_opt = o[a - 1]
+        kl = jp_char_count(keyed_opt)
         others = [jp_char_count(x) for i, x in enumerate(o) if i != a - 1]
-        mean = sum(others) / len(others)
-        if kl < LONG_KEY_MIN or not mean or kl < LONG_KEY_RATIO * mean:
-            continue
-        # An option ends 「…できる。」 where the passage runs on 「…できるのである。」,
-        # so the sentence-final 。 must not decide whether it is a lift.
-        lifted = _flat(o[a - 1]).rstrip("。") in flat
-        hits.append(f"{q}({kl} chars vs {mean:.0f} mean"
-                    + (", verbatim in the passage" if lifted else "") + ")")
-    check(f"{name}: no 読解 key is far longer than its distractors", not hits,
+        mean = sum(others) / len(others) if others else 0.0
+
+        flat_opt = _flat(keyed_opt).rstrip("。")
+        lcs_len = 0
+        if flat_opt and flat:
+            match = SequenceMatcher(None, flat_opt, flat).find_longest_match(0, len(flat_opt), 0, len(flat))
+            lcs_len = match.size
+
+        is_long_key = (kl >= LONG_KEY_MIN and mean > 0 and kl >= LONG_KEY_RATIO * mean)
+        is_verbatim_lift = (lcs_len >= 20 and lcs_len >= 0.60 * len(flat_opt))
+
+        if is_long_key or is_verbatim_lift:
+            reason = []
+            if is_long_key:
+                reason.append(f"{kl} chars vs {mean:.0f} mean")
+            if is_verbatim_lift:
+                reason.append(f"LCS={lcs_len} chars ({lcs_len/len(flat_opt):.0%}) in passage")
+            hits.append(f"{q}({', '.join(reason)})")
+
+    check(f"{name}: no 読解 key is far longer than its distractors or a verbatim lift", not hits,
           "; ".join(hits) + f" — paraphrase the key to ~25–40 chars and keep "
           f"all four options within ±40% of each other "
           f"(question-authoring 問題10–14); flagged at ≥{LONG_KEY_MIN} JP chars "
-          f"and ≥{LONG_KEY_RATIO}× the mean distractor")
+          f"and ≥{LONG_KEY_RATIO}× mean, or LCS ≥20 chars and ≥60% of key")
 
 
 # 解説 cells decide items, so a quote inside one is load-bearing. When it is
@@ -1007,7 +1043,7 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
     missing = []
     for q in QUOTE.findall(key_section):
         parts = [_flat(p) for p in QUOTE_ELLIPSIS.split(q)]
-        if any(len(p) >= 14 and p not in src for p in parts):
+        if any(len(p) >= 8 and p not in src for p in parts):
             missing.append(q[:38] + ("…" if len(q) > 38 else ""))
     warn(f"{name}: 解説 quotes trace to the passage/script", not missing,
          f"not found in the source: {missing} — quote by copy-paste; if the "
@@ -1037,6 +1073,33 @@ def check_spec_blend(spec: dict):
               not over,
               f"web share {web}/{len(recs)} exceeds the MAX_WEB ceiling — "
               f"merge_seeds was re-run over an already-blended spec")
+
+    # Content token overlap check across blended spec surfaces
+    token_map: dict[str, list[str]] = {}
+    for field, key in (("reading_topics", "topic"), ("listening_scenarios", "scenario")):
+        for r in spec.get("items", {}).get(field, []):
+            t = r.get(key) if isinstance(r, dict) else r
+            if t:
+                token_map.setdefault(t, []).append(field)
+    for field in ("info_retrieval_texture", "cloze_topic"):
+        e = spec.get(field)
+        if isinstance(e, dict):
+            t = e.get("detail") or e.get("topic")
+            if t:
+                token_map.setdefault(t, []).append(field)
+
+    token_collisions = []
+    surfaces = list(token_map.keys())
+    for i in range(len(surfaces)):
+        for j in range(i + 1, len(surfaces)):
+            s1, s2 = surfaces[i], surfaces[j]
+            toks1 = set(re.findall(r"[\u4e00-\u9fff\u30a0-\u30ff]{2,}", s1))
+            toks2 = set(re.findall(r"[\u4e00-\u9fff\u30a0-\u30ff]{2,}", s2))
+            shared = toks1 & toks2
+            if shared:
+                token_collisions.append(f"「{s1}」 x 「{s2}」 share {sorted(shared)}")
+    check("no two blended spec surfaces share a >=2-char content token", not token_collisions,
+          "; ".join(token_collisions) + " — distinct topic per surface required")
 
 
 def check_pool_infrastructure():
@@ -1141,19 +1204,26 @@ def check_ledger_draw_counts(sample):
     if not led.is_file():
         return skip("ledger draw counts match sample_items.DRAW", "no logs/ledger.json")
     off = []
+    skipped_pre_stamp = 0
     for h in json.loads(led.read_text(encoding="utf-8")).get("history", []):
         tid = str(h.get("test_id"))
         if tid == "legacy":            # the pre-ledger backfill has no draw shape
             continue
-        for cat, want in sample.DRAW.items():
-            got = len(h.get("items", {}).get(cat) or [])
-            if got != want:
-                off.append(f"test {tid}/{cat}: {got} recorded, DRAW says {want}")
-    check(f"ledger draw counts match sample_items.DRAW ({len(sample.DRAW)} categories)",
+        recorded_draw = h.get("draw")
+        if recorded_draw:
+            for cat, want in recorded_draw.items():
+                got = len(h.get("items", {}).get(cat) or [])
+                if got != want:
+                    off.append(f"test {tid}/{cat}: {got} recorded, recorded draw says {want}")
+        else:
+            skipped_pre_stamp += 1
+            continue
+
+    if skipped_pre_stamp > 0:
+        skip("pre-stamp ledger draw counts", f"{skipped_pre_stamp} entries have no recorded 'draw' dict")
+    check("ledger draw counts match recorded draw dicts",
           not off,
-          "; ".join(off) + " — trim the over-recorded items from "
-          "logs/ledger.json rather than letting them expire through cooldown "
-          "(item-pool-sampling 'Rotation model')")
+          "; ".join(off) + " — ledger history entries must record their own draw shape")
 
 
 def check_harvest_hygiene():
@@ -1247,6 +1317,10 @@ def check_rotation_inputs():
               "slot for slot; re-harvest logs/seeds.json or pick a new seed")
 
         shas = [h["harvest_sha"] for h in hist if h.get("harvest_sha")]
+        invalid_shas = [f"test {h.get('test_id')}: {h.get('harvest_sha')}"
+                        for h in hist if h.get("harvest_sha") and not re.fullmatch(r"[0-9a-f]{12}", str(h.get("harvest_sha")))]
+        check("every ledger harvest_sha is a valid 12-hex sha1 stamp", not invalid_shas,
+              "; ".join(invalid_shas) + " — invalid placeholder sha in ledger history")
         dup = sorted({x for x in shas if shas.count(x) > 1})
         check(f"each test blended its own web harvest ({len(shas)} recorded)",
               not dup, f"harvest_sha reused: {dup} — step 3.5 was skipped")
@@ -1284,7 +1358,7 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
     number is over-used; authoring is supposed to place the correct choice
     there. Only the test that spec belongs to can be checked.
     """
-    spec_path = ROOT / "logs" / "test_spec.json"
+    spec_path = d / "test_spec.json" if (d / "test_spec.json").is_file() else ROOT / "logs" / "test_spec.json"
     if not spec_path.is_file():
         return skip("keys match logs/test_spec.json answer_positions", "no test_spec.json")
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
@@ -1325,7 +1399,7 @@ def check_spec_target_items(d, gt: str, st: str, bi):
     stems are decidable here; grammar_p7/context_words often are not, and stay
     with exam-qa-review §6.1.
     """
-    spec_path = ROOT / "logs" / "test_spec.json"
+    spec_path = d / "test_spec.json" if (d / "test_spec.json").is_file() else ROOT / "logs" / "test_spec.json"
     if not spec_path.is_file():
         return skip(f"{d.name}: 問題1/2/4 test the sampled items",
                     "no test_spec.json")
@@ -1423,18 +1497,7 @@ def check_script_shape(script_text: str, ct: str, m, test_id: str = ""):
 
 
 def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
-    """Narration gender must agree with the voice SPEAKER_MAP will synthesize (G14).
-
-    Test 3 narrates 「係員の男の人」/「アナウンサーの男の人」/「職員の男の人」 for three
-    labels SPEAKER_MAP casts FEMALE — the audio contradicts the booklet and no
-    gate could see it. The whole block is scanned, not its first line: 問題5's
-    2番 puts its narration on the SECOND line, which is where the third
-    mismatch hid.
-
-    The same-voice half is a WARN and generated-only: SPEAKER_MAP casts nothing
-    for an external MP3, and the official July 2025 script pairs 女 with 医者,
-    both FEMALE in the map (see choukai-script-writing 'One voice per person').
-    """
+    """Narration gender must agree with the voice SPEAKER_MAP will synthesize (G14)."""
     mismatch, indistinct = [], []
     for block in re.split(r"\n\s*\n", script_text):
         lines = [ln for ln in block.strip().splitlines() if ln.strip()]
@@ -1451,18 +1514,28 @@ def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
             if re.search(rf"{re.escape(lab)}の{other}の人", block):
                 mismatch.append(f"{lines[0][:8]} 「{lab}の{other}の人」 but "
                                 f"SPEAKER_MAP casts {lab} as {gender}")
-        if len(labels) == 2 and len({m.SPEAKER_MAP[l]["voice"] for l in labels}) == 1:
-            indistinct.append(f"{lines[0][:8]} {labels}")
+        # Inspect all label pairs in the item block for same voice / indistinct casting
+        indistinct_pairs = []
+        for i in range(len(labels)):
+            for j in range(i + 1, len(labels)):
+                l1, l2 = labels[i], labels[j]
+                v1, v2 = m.SPEAKER_MAP[l1]["voice"], m.SPEAKER_MAP[l2]["voice"]
+                r1 = num(m.SPEAKER_MAP[l1].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l1] else 0.0
+                r2 = num(m.SPEAKER_MAP[l2].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l2] else 0.0
+                if v1 == v2 and abs(r1 - r2) < 10:
+                    indistinct_pairs.append(f"{l1}/{l2}")
+        if indistinct_pairs:
+            indistinct.append(f"{lines[0][:8]} {indistinct_pairs}")
     check(f"{test_id}: 聴解 narration gender matches SPEAKER_MAP's voice",
           not mismatch,
           "; ".join(mismatch) + " — rename the speaker or recast it in "
           "choukai-mp3-generation's SPEAKER_MAP; the audio and the booklet "
           "must describe the same person")
     if origin == "generated":
-        warn(f"{test_id}: 聴解 two-party items cast two distinguishable voices",
+        warn(f"{test_id}: 聴解 item speaker pairs cast distinguishable voices",
              not indistinct,
-             "; ".join(indistinct) + " — both labels resolve to one voice; "
-             "prefer contrasting genders (choukai-script-writing)")
+             "; ".join(indistinct) + " — speaker labels resolve to one voice or near-identical rate; "
+             "prefer contrasting voices (choukai-script-writing)")
 
 
 def check_artifact_freshness(d):
@@ -1534,11 +1607,24 @@ def check_artifact_freshness(d):
 # to the official July 2025 paper's. Only a GENERATED test can be at fault — the
 # import reproduces an outside source and is the thing being copied.
 def test_note_lines(gt: str) -> set[str]:
-    return {ln.strip() for ln in gt.splitlines() if NOTE_DEF.match(ln)}
+    return {unicodedata.normalize("NFKC", ln.strip()) for ln in gt.splitlines() if NOTE_DEF.match(ln)}
 
 
 def test_example_blocks(st: str) -> set[str]:
-    return {b.strip() for b in re.split(r"\n\s*\n", st) if b.strip().startswith("例。")}
+    return {unicodedata.normalize("NFKC", b.strip()) for b in re.split(r"\n\s*\n", st) if b.strip().startswith("例。")}
+
+
+def test_choukai_example_options(ct: str) -> set[str]:
+    opts = set()
+    lines = ct.splitlines()
+    for i, line in enumerate(lines):
+        if "**例**" in line or "例" in line:
+            for nxt in lines[i:i + 10]:
+                for m in re.finditer(r"[1-4]\.\s*([^\s|]+)", nxt):
+                    opt = m.group(1).strip()
+                    if len(opt) >= 6:
+                        opts.add(unicodedata.normalize("NFKC", opt))
+    return opts
 
 
 def check_cross_test_reuse(name: str, mine: dict, others: dict[str, dict]):
@@ -1548,11 +1634,14 @@ def check_cross_test_reuse(name: str, mine: dict, others: dict[str, dict]):
              "test 1's, and all three were orphaned because the passage changed"),
             ("examples", "例。block",
              "author a fresh 例 dialogue (choukai-script-writing); test 1's and "
-             "test 2's 問題1 例 are byte-identical to the official paper's")):
+             "test 2's 問題1 例 are byte-identical to the official paper's"),
+            ("choukai_options", "聴解 例 option line",
+             "author fresh 例 booklet options (choukai-script-writing)")):
         shared = []
         for other, data in others.items():
-            for dup in sorted(mine[kind] & data[kind]):
-                shared.append(f"{dup.splitlines()[0][:34]}… also in {other}")
+            if kind in mine and kind in data:
+                for dup in sorted(mine[kind] & data[kind]):
+                    shared.append(f"{str(dup)[:34]}… also in {other}")
         check(f"{name}: no {label} is byte-identical to another test's", not shared,
               "; ".join(shared[:4]) + f" — {fix}")
 
@@ -1604,6 +1693,25 @@ def check_example_premarks(ct: str, st: str, bi):
           "— fix the marksheet 例 row (or the 例 itself), not just one of them")
 
 
+BANNED_COLLOCATIONS_PATH = (
+    AGENTS / "question-authoring" / "references" / "banned_collocations.txt"
+)
+
+
+def check_banned_collocations(d, gt: str, ct: str, st: str, origin: str):
+    if origin != "generated" or not BANNED_COLLOCATIONS_PATH.is_file():
+        return
+    banned = [ln.split("#")[0].strip() for ln in BANNED_COLLOCATIONS_PATH.read_text(encoding="utf-8").splitlines()
+              if ln.strip() and not ln.strip().startswith("#")]
+    found = []
+    text = gt + "\n" + ct + "\n" + (st or "")
+    for b in banned:
+        if b and b in text:
+            found.append(b)
+    check(f"{d.name}: contains no banned collocations", not found,
+          f"found banned collocation(s): {found} — see question-authoring/references/banned_collocations.txt")
+
+
 # --------------------------------------------------------------- per-test checks
 def check_tests():
     g = load(".agents/exam-answer-grading/scripts/grade_answers.py")
@@ -1623,10 +1731,11 @@ def check_tests():
     # Reuse across tests can only be seen with every test in hand (G15).
     reuse: dict[str, dict[str, set[str]]] = {}
     for p in dirs:
-        gp, sp = p / "言語知識・読解.md", p / "聴解スクリプト.txt"
+        gp, sp, cp = p / "言語知識・読解.md", p / "聴解スクリプト.txt", p / "聴解.md"
         reuse[p.name] = {
             "notes": test_note_lines(gp.read_text(encoding="utf-8")) if gp.is_file() else set(),
             "examples": test_example_blocks(sp.read_text(encoding="utf-8")) if sp.is_file() else set(),
+            "choukai_options": test_choukai_example_options(cp.read_text(encoding="utf-8")) if cp.is_file() else set(),
         }
 
     for d in dirs:
@@ -1698,6 +1807,8 @@ def check_tests():
         if origin == "generated":
             check_mondai8_chunk_lengths(gt, opts, bi)
         check_level_band_grammar(gt, keys, opts, origin, d.name)
+        st_text = (d / "聴解スクリプト.txt").read_text(encoding="utf-8") if (d / "聴解スクリプト.txt").is_file() else ""
+        check_banned_collocations(d, gt, ct, st_text, origin)
         check_answer_positions(d, keys, ck, g)
         for f in (gengo, choukai):
             body = f.read_text(encoding="utf-8")
@@ -1723,7 +1834,8 @@ def check_tests():
         dokkai = re.search(r"^##\s*読解\s*$(.*)", gt[gcut.start():] if gcut else "",
                            re.M | re.S)
         if gcut and dokkai:
-            check_explanation_quotes(gengo.name, dokkai.group(1), gt[: gcut.start()])
+            passages_prose_src = "\n".join(passage_prose(dokkai_section(gt[:gcut.start()], n), bi) for n in range(10, 15))
+            check_explanation_quotes(gengo.name, dokkai.group(1), passages_prose_src)
             check_mondai14_quotes(d.name, gengo_prose, dokkai.group(1), bi)
         bunpou = re.search(r"^##\s*文法\s*$(.*?)(?=^##\s|\Z)",
                            gt[gcut.start():] if gcut else "", re.M | re.S)

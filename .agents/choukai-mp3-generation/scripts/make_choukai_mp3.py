@@ -276,6 +276,8 @@ def validate_script(blocks):
         m = re.match(r"^(問題[1-5])。$", first)
         if m:
             section = m.group(1)
+            if len(lines) > 1:
+                errors.append(f"block {bi} — header 「{first}」 must be a single-line block (got {len(lines)} lines)")
         is_example = first.startswith("例。")
         if ITEM_RE.match(first) and section:
             items[section] += 1
@@ -349,8 +351,10 @@ def validate_script(blocks):
     # --- whole-file structure ---
     if OPENING not in text:
         errors.append(f"missing opening announcement 「{OPENING}…」")
-    if not text.rstrip().endswith(CLOSING):
-        errors.append(f"script must end with 「{CLOSING}」")
+    if blocks[-1].strip() != CLOSING:
+        errors.append(f"the last block of the script must be exactly 「{CLOSING}」 on its own line")
+    if "問題5。" in text and not any(b.strip().startswith("問題用紙に何も印刷されていません") for b in blocks):
+        errors.append("問題5: missing lead-in block starting with 「問題用紙に何も印刷されていません」")
 
     for sec, want in EXPECTED_ITEMS.items():
         if f"{sec}。" not in text:

@@ -218,32 +218,27 @@ section, under these caps (full rules: web-topic-research):
   option must fit that conjugation — not a different verb class whose ending
   the print already rules out. Each option must also be a real word. See Item
   integrity below (test 1's 慌てて).
-- **Same-kanji rule:** every distractor must be a reading of the target's OWN
-  kanji, or of a kanji sharing a radical/visual component with it — never a
-  reading of a wholly unrelated kanji (test 4's いたわる/ことわる/さわる/かわる
-  are readings of 断る/触る/代わる, which share nothing with 労). See
-  "Distractor plausibility" above.
+- **Same-kanji OR same semantic field rule:** Every distractor must share the same word form and conjugation class AND be either (a) a reading of the target's OWN kanji or a same-radical/visual-component kanji (e.g. 措置: そち/しょち/そうち, 険しい: けんしい/けんみしい/かんしい/けわしい), OR (b) a real N2 word in the SAME semantic field (e.g. official July 2025 問1-2 辛い → あまい/にがい/しぶい; 問1-5 収まった → さだまった/しずまった/やすまった). A grab-bag of unrelated words across different semantic fields is forbidden.
 
 **問題2 (表記)** — official items use a **2×2 component matrix**: take the
 correct 2-kanji compound and swap EACH kanji independently for a
 visually/structurally similar wrong one, so all four options share the same
-two-character skeleton (けいこう → 傾向/頃向/傾高/頃高; のうこう → 濃厚/農厚/
+two-character skeleton (かいこう → 開港/開向/回港/回向; のうこう → 濃厚/農厚/
 濃高/農高; かくじゅう → 拡張/拡充/各充/各張). Do not vary only one character
-position while holding the other fixed, and never let a "distractor" be a
-real, unrelated word (展開 next to 傾向 is not a matrix swap, it's a different
-word). For single-kanji or verb items, use phonetically-adjacent whole-word
-swaps sharing the conjugation instead (すくわれました vs 嫌われました/敬われ
-ました/疑われました).
+position while holding the other fixed. **Non-words and pseudo-compounds are
+normal and expected in 表記 distractors** (e.g., official July 2025 ships
+液って/温って/汗って and 支接/施接/支設). Distractors do NOT need to be real
+dictionary headwords, but must test orthographic component precision.
+⚠ **Worked examples in this file are patterns, never ship an example's target word or option set.**
 
 **問題3 (語形成)** — 諸〜, 〜化, 準〜, 〜済み, 〜制, 未〜, 〜性, and the four
 real negation prefixes 非〜/無〜/未〜/不〜 (there is no fifth — 迷〜 is not a
-negation prefix and is not a real word attached to most nouns; test 4 shipped
-it as a 問題3 distractor and it was eliminable as nonsense, not as a
-near-miss). All four options must be real, productive affixes that a reader
-would need the specific collocation to rule out — not just plausible affixes
-in the abstract, but affixes that could plausibly attach to THIS stem (伴い/
-同行/組み合わせ do not suffix onto 家族 the way a real 語形成 distractor must);
-only one collocates.
+real negation prefix and is listed in `references/banned_collocations.txt`).
+Distractors must be real N2 affixes of the same functional family. It is
+**not** required that all four distractors plausibly attach to the stem (official
+July 2025 問3-11 uses 教育 → 則/理/論/規, where only the key 教育観 attaches).
+However, all four affixes must be real, standard affixes—never invented
+morphemes like 迷〜.
 
 **問題4 (context)** — N2 nouns/adverbs: 難航, 発足(distractor: 成立),
 かろうじて, うんざり, てきぱき, 需要. Distractors share the semantic field.
@@ -473,8 +468,7 @@ matching where one tempting option fails exactly one condition.
   - Use `（中略）` at least once across 問題11–13 when cutting a longer
     exposition — official papers do; generated tests 1–4 never did.
 
-**聴解 dialogues** — every wrong option must be MENTIONED then eliminated
-(already done / rejected / explicitly denied: 「それが理由ではありません」).
+**聴解 dialogues** — for 問題1, 問題2, and 問題4/5, every wrong option must be MENTIONED then eliminated (already done / rejected / explicitly denied: 「それが理由ではありません」). For **問題3 (概要理解)** only, official distractors are topic-level summaries or general statements with key modifiers missing/altered, matching official paper structure.
 
 **Construction order is binding: write the dialogue FIRST, then harvest the
 options from it.** Never draft an option set before the script line exists.

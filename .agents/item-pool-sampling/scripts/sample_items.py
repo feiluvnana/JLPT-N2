@@ -351,7 +351,8 @@ def main():
             },
         }
         history.append({"test_id": args.test_id, "seed": seed,
-                        "generated_at": spec["generated_at"], "items": items})
+                        "generated_at": spec["generated_at"], "items": items,
+                        "draw": dict(DRAW)})
 
     # Invariant: no item may be tested by two different 問題 in the same paper.
     collisions = {}
@@ -365,6 +366,10 @@ def main():
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
     SPEC.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
                     encoding="utf-8")
+    if args.test_id:
+        t_dir = ROOT / "tests" / str(args.test_id)
+        t_dir.mkdir(parents=True, exist_ok=True)
+        (t_dir / "test_spec.json").write_text(json.dumps(spec, ensure_ascii=False, indent=1), encoding="utf-8")
     LEDGER.write_text(json.dumps(ledger, ensure_ascii=False, indent=1),
                       encoding="utf-8")
     print(f"seed={spec['seed']} -> {SPEC.relative_to(ROOT)} written, "

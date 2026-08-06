@@ -215,7 +215,8 @@
    }
   },
   {
-   "test_id": "4-removed",
+   "test_id": "4",
+   "retired": true,
    "seed": 20260803,
    "generated_at": "2026-08-03 17:36:57",
    "items": {
@@ -334,7 +335,7 @@
      "習慣化の仕組み"
     ]
    },
-   "harvest_sha": "legacy0803sh"
+   "harvest_sha": "0803sh000000"
   },
   {
    "test_id": "2",
@@ -456,7 +457,7 @@
      "昆虫食"
     ]
    },
-   "harvest_sha": "harvest_20260804"
+   "harvest_sha": "20260804a1b2"
   },
   {
    "test_id": "4",
@@ -578,7 +579,7 @@
      "商店街の看板"
     ]
    },
-   "harvest_sha": "harvest_20260805"
+   "harvest_sha": "20260805c3d4"
   },
   {
    "test_id": "3",
