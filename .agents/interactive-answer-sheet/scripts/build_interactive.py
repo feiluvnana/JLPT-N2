@@ -1158,7 +1158,8 @@ def grading_data(gam, gids: list, ckeys: dict, combined_keys: dict,
 
 
 def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
-                    out_path: Path, gdata: dict, player: str = ""):
+                    out_path: Path, gdata: dict, player: str = "",
+                    sources=()):
     gengo_md = "\n".join(booklet.widen(l) for l in gengo_md.splitlines())
     choukai_md = "\n".join(booklet.widen(l) for l in choukai_md.splitlines())
 
@@ -1195,6 +1196,11 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
         f'<title>{title}</title>'
+        # Staleness stamps for every source whose CONTENT is baked into this
+        # file — the two Markdowns and, because the 聴解 scripts are embedded
+        # for the result screen, 聴解スクリプト.txt. Same 12-hex sha1 convention
+        # as 聴解_チャプター.json's script_sha; see booklet.src_sha_comments.
+        f'{booklet.src_sha_comments(sources)}'
         f'<style>{booklet.CSS}{booklet.SCREEN_CSS}{EXTRA_CSS}</style></head>'
         f'<body>{bar}{body}<div id="screen-result"></div>'
         f'<script>{js}{PLAYER_JS if player else ""}</script>'
@@ -1230,11 +1236,13 @@ def main():
     combined_keys = {**{str(k): v for k, v in gkeys.items()}, **ckeys}
     all_keys = gids + cused
 
-    choukai_scripts = parse_choukai_scripts(d / "聴解スクリプト.txt")
+    script_src = d / "聴解スクリプト.txt"
+    choukai_scripts = parse_choukai_scripts(script_src)
 
     out = d / "解答.html"
     gdata = grading_data(gam, gids, ckeys, combined_keys, choukai_scripts)
-    render_combined(gmd, cmd, testid, all_keys, out, gdata, player=player_html(d))
+    render_combined(gmd, cmd, testid, all_keys, out, gdata, player=player_html(d),
+                    sources=[gengo_src, choukai_src, script_src])
 
     has_mp3 = (d / "聴解.mp3").is_file()
     chap = d / "聴解_チャプター.json"

@@ -34,7 +34,12 @@ do not swap them for memory picks.
 ## Benchmark against Official Exams (`refs/JLPT/`)
 
 Maintain high consistency with the 5 recent official exams (07/2023, 12/2023, 12/2024, 07/2025, 12/2025):
-- **Dokkai Character Counts**: Short (~200–280 chars), Medium (~400–550 chars), A/B combined (~600 chars), Long (~900–1100 chars), Flyer (~700–900 chars; 1 table + 2 matching scenarios). These 目安 mirror the table in `jlpt-exam-structure` and the per-section bands below — keep the three copies in step.
+- **Dokkai character counts**: stated ONCE, in the 読解 length-band table under
+  「問題10-14 (reading)」 below — that table is the single copy in this repo, and
+  `tools/check_consistency.py`'s `check_dokkai_lengths()` is what enforces it.
+  Do not restate a band here, in `jlpt-exam-structure`, or in a test's notes:
+  three hand-synced copies is why all four papers shipped short 問題11 and
+  問題14 while every gate stayed green (G8).
 - **Grammar stem lengths (問題7–9) — measured on all 5 papers in `refs/JLPT/`**:
   - **問題7**: official stems average **~43 JP chars** (median ~41; interquartile ~33–54). A paper whose 12 stems average under ~35, or that ships many under ~30, reads as textbook-drill short, not exam-length. Target: **each stem ≥30 JP chars**, **paper average ≥40**, with most items in the **35–55** band. Build length with scene-setting (職場・電話・掲示・インタビュー), a subordinate clause, or a short dialogue lead-in — not by padding the tested form. Official items often open with `(会社で)` / `(電話で)` / a named role before the blank.
   - **問題8 (文の組み立て) — length is mostly in the OPTIONS**: measured on all 5
@@ -68,6 +73,24 @@ Maintain high consistency with the 5 recent official exams (07/2023, 12/2023, 12
     shipped two connective blanks and two content-inference blanks (four
     slots, two categories); test 2 and test 3 each repeated one pair. Four
     slots, four categories — no exceptions.
+  - **問題9 — write each blank's category down; it is required output, not a
+    thought.** Category collision shipped in **4 / 4** papers (t1 48/51 both
+    副助詞・形式名詞; t2 49/50/51 all sentence-final predicate slots; t3 48/50;
+    t4 48/51 both 文末モーダル) *with the four-category rule above already on
+    this page*, because a blank's category was written down nowhere — so
+    neither author nor reviewer could check it without re-deriving all four.
+    Therefore: **each of the four 問題9 rows in the `## 文法` key table must open
+    its 解説 cell with the category tag in brackets** — `[論理接続]`
+    `[文末モーダル]` `[内容推論]` `[慣用・形式名詞]` — **and exactly one row must
+    carry `[内容推論]`.** Use these four strings verbatim: `make check` matches
+    them literally and FAILs when the four 問題9 解説 cells do not carry four
+    distinct tags including exactly one `[内容推論]`. Example cell:
+    `[文末モーダル] 前の文の「…はずだった」を受け、…`. Assign the four tags
+    *before* writing the blanks and write each blank to its tag; tagging
+    afterwards, to whatever you happened to write, is how t1/t2/t4 ended up
+    with two modal blanks. The `[内容推論]` blank is the one whose four options
+    are full predicates/clauses and cannot be chosen from the local sentence
+    alone (t3's blank 50 is the one shipped example that qualifies).
   - Count Japanese characters only (hiragana/katakana/kanji/JP punctuation); ignore spaces and the `(　)` / `＿＿` / `★` markers themselves when eyeballing, but do not strip scene-setting just to hit a number.
 - **Distractor Design**: Distractor options must replicate official confusion logic (e.g. 近義語 nuances, 誤用 collocations, condition disqualifications). See "Distractor plausibility" below — this is not optional polish.
 - **Listening Spoken Choice Pacing**: Options spoken in 聴解 must follow official lengths (~10-15 chars per choice in 問題3/問題4).
@@ -116,7 +139,44 @@ in the SAME category as the key:
   it lets the item be solved without tracking the conversation at all. Every
   wrong option must correspond to a real task/statement/fact from the audio
   that is reassigned, superseded, denied, or reinterpreted — never invented
-  from nothing.
+  from nothing. **The procedure and the required artifact are in 「聴解
+  dialogues」 below** (dialogue first, options harvested from it, one
+  `N ✗「line」→ reason` line per wrong option in the 解説 cell) — that is how
+  this bullet is complied with; re-reading the prohibition is not.
+
+### The functional-category line is mandatory OUTPUT, not a thought
+
+The rule above shipped in **4 / 4** papers anyway, because it asks the author to
+*ask themselves* a question: there is no artifact, so a skipped check and a
+passed check look identical on disk. The proof: the option set 問5-24 shipped in
+test 4 — key わりに against 案の定/とっくに/一段と — was **already named as a bad
+example in the skills** (`exam-qa-review` §2b, alongside this file's
+まして/あいにく/徐々に/たまたま twin) when test 4 shipped it again. A prohibition
+with an example is not enough. So the check becomes a line of text that either
+exists or does not:
+
+- **For every 問1–6 item, the `## 文字・語彙` key notes must print the category
+  of all four options on one line**, in this shape:
+
+  ```
+  24: 程度副詞 ×4 (比較的/非常に/たいして/一段と)
+  ```
+
+  One category label, `×4`, then the four options. **If you cannot write `×4`
+  after a single label — i.e. the four labels are not identical — the item is
+  not shippable**: replace the odd options with real competitors in the key's
+  category and rewrite the line. Do not invent a label broad enough to cover a
+  grab-bag (「副詞」 over 案の定/とっくに/一段と is such a label; the honest ones
+  are 予想副詞/時間副詞/程度副詞, which is three categories and a failed item).
+- **For 問題1, print the source of every distractor reading on the same line** —
+  `いたわる=労わる, ねぎらう=労う, ...`. Test 4's set was
+  `ことわる=断る, さわる=触る, かわる=代わる`: writing the sources out makes it
+  visible in one glance that none of those kanji shares anything with 労. **If
+  any source kanji shares no radical or visual component with the target,
+  replace that distractor.** `make check` WARNs when a distractor reading is not
+  a listed reading of the target kanji or of a same-radical kanji in
+  `openjlpt/kanji-n2.json` — WARN, not FAIL, because official papers use
+  paraphrase-level traps the file cannot see; the written line is the real check.
 
 This is a construction-time discipline, not a post-hoc filter: when drafting
 four options, draft the key, then draft three competitors from the SAME
@@ -192,11 +252,38 @@ only one collocates.
 ありふれた, くたくた, 重宝); options are simpler. Never the reverse.
 
 **問題6 (usage)** — 1 correct + 3 sentences that are grammatical but misuse
-the word's collocation/domain (妥協, 発揮, 解消, 募集, あふれる). Wrong
-sentences must be tempting, not absurd. Official July 2025 option sentences
-average ~27 JP chars — do not ship telegram-length misuse lines (~15–18 chars).
-Each of the four sentences needs a full situation (who/when/what), not a
-three-word fragment.
+the word's collocation/domain (妥協, 発揮, 解消, 募集, あふれる).
+
+"Wrong sentences must be tempting, not absurd" was on this page as a
+prohibition-with-examples, and **4 / 4** papers reproduced the defect anyway
+(t1 28 解消 — three 消す-domain sentences; t2 27 反発 + 28 おろそか; t3 26, 28,
+29, 30; t4 26 解消, plus the mirror failure — a distractor,「契約を解消」, that
+is a *real* collocation and therefore a second correct sentence). A prohibition
+does not tell you how to produce a compliant wrong sentence. This does.
+
+**Procedure for each of the three wrong sentences (do it in this order):**
+
+1. Write a sentence in which the KEY word is *correct*.
+2. Break exactly **one** thing **inside the word's own domain** — swap the
+   object for another the domain contains but the word does not take, or shift
+   register. Do not leave the domain: a sentence from a different domain is
+   eliminable without knowing the word.
+3. **Search the result.** If the collocation is attested, you have written a
+   second correct sentence, not a distractor — go back to step 2.
+
+Worked example for **解消**, spanning both failure edges and the target:
+
+| Sentence | Verdict |
+|---|---|
+| ✅『長年の誤解が解消した』 | the correct option |
+| ✗『部屋の電気を解消した』 | **domain violation — banned** (消す's domain, not 解消's; dies on sight) |
+| ✗『契約を解消した』 | **attested — banned** (a second correct answer) |
+| ✓『渋滞を解消に導いた』 | **the target band: right domain, wrong collocation** |
+
+**Length:** official option sentences average **~27 JP chars**; tests 1–4
+averaged **~19** (t1: 24/16/17/18 …). Each of the four needs a who/when/what —
+a telegram-length misuse line reads as a drill, and it also leaves no room for
+the situation that makes a wrong collocation tempting.
 
 **問題7-9 (grammar)** — only N2-list items (Shin Kanzen N2 文法 headed forms):
 〜かねない, 〜ざるを得ない, 〜わけにはいかない, 〜に先立って, 〜を契機に,
@@ -252,37 +339,129 @@ Passages: opinions with a turn (しかし/ところが), one business email, one
 notice with 3 false options contradicted by ※ fine print, one A/B pair
 (agree on one point, differ on conclusion), one flyer with two-condition
 matching where one tempting option fails exactly one condition.
-- **Length bands (official July 2025 / `imported-n2-2025-07`):**
-  - 問題10 短文: ~200–280 JP chars each (five passages). Test 1 shipped
-    several under ~180.
-  - 問題11 中文: **4 passages × 2Q**, each passage ~400–550 JP chars before
-    notes; use `（中略）` when a quoted source would otherwise run long. Each
-    passage's two questions must be ONE factual-comprehension question
-    ("背景/効果/理由は何か") plus ONE main-point/opinion question ("筆者の考え
-    に合うのはどれか" / "筆者は…についてどう述べているか") — never two factual
-    questions on the same passage (test 4 shipped a passage with both Qs
-    factual, no opinion question). Every `（注N）` gloss must annotate a word
-    that actually appears in that passage's body — an orphaned note (the
-    glossed term never occurs in the text) is a shipped defect (test 3
-    shipped this across all four 問題11 passages), not a stylistic slip.
-  - 問題13 長文: ~900–1100 JP chars (July 2025 ≈1050). Tests 1–4 often
-    shipped ~600–750 — too short for 主張理解.
-  - 問題14: ~700–900 JP chars including table/conditions. The correct answer
-    must always require combining **at least two** constraints from the table
-    (topic + date/time, or a category + a footnote exception) — never a
-    single-field lookup. Every constraint the QUESTION references (a role,
-    category, or condition) must actually be describable from the flyer/table
-    text as printed — do not invent a scenario detail (test 3 asked how
-    someone applies as "補助スタッフ" when the source flyer never described a
-    staff/volunteer role at all).
+- **Length bands — the single copy in this repo, and the gate enforces them.**
+  For three rounds these numbers lived in `question-authoring`,
+  `jlpt-exam-structure`, and `check_consistency.py` at once, hand-synced, with
+  only one of them (問題13) actually gated and only as a WARN. An author cannot
+  verify a band without measuring, so nobody did: **4 / 4** papers shipped
+  問題11 and 問題14 under band. So the bands are stated **here and nowhere
+  else** — `jlpt-exam-structure` now points at this table — and
+  `tools/check_consistency.py`'s `check_dokkai_lengths()` is the enforcer.
+  Columns: the official paper measured on `imported-n2-2025-07` (July 2025), the
+  gate floor, and what tests 1–4 actually shipped, JP chars per section.
+
+  | Section | official | gate floor | t1 | t2 | t3 | t4 |
+  |---|---|---|---|---|---|---|
+  | 問題10 短文 (5 passages) | 1328 | **≥1200** | 941 | 1084 | 1486 | 1092 |
+  | 問題11 中文 (4 passages) | 2569 | **≥2200** | 1881 | 1912 | 2110 | 1371 |
+  | 問題12 A/B | 617 | **≥600** | 422 | 551 | 647 | 487 |
+  | 問題13 長文 | 1055 | **≥900** | 1051 | 920 | 1260 | 881 |
+  | 問題14 情報検索 | 702 | **≥650** | 309 | 605 | 625 | 583 |
+
+  Per-passage floors on top of the section totals: **each** 問題10 passage
+  ≥200 JP chars, **each** 問題11 passage ≥400. Count JP chars only, and count
+  the passage body — the flyer's table and conditions count for 問題14. Do not
+  hit a floor by padding the note block or the question stems; the gate measures
+  the passage region. Use `（中略）` when a quoted source would otherwise run
+  long (official papers do; tests 1–4 never did).
+- **問題11 stems — every stem names 筆者.** The old rule here said each
+  passage's two questions must be "ONE factual-comprehension question plus ONE
+  main-point/opinion question". That is a judgement about a stem's *intent*, it
+  cannot be verified, and it mis-describes the official pattern — so **4 / 4**
+  papers shipped a 問題11 passage with two retrieval questions and no opinion
+  question (t1 passages (1),(3),(4); t2 (1),(2); t3 (3); t4 (1),(2)). The
+  measured rule instead:
+
+  > **Every one of a passage's two stems must name 筆者** (or be
+  > 「①…とあるが、どういうことか」 on a marked span) — measured on
+  > `imported-n2-2025-07`, all 8 official 問題11 stems do. **At least one of the
+  > two must be a 考え/主張 question** (「筆者の考えに合うのはどれか」/「筆者は…に
+  > ついてどう述べているか」/「筆者が最も言いたいことは何か」). These stem shapes
+  > are **banned in 問題11** because they are pure retrieval and no official
+  > paper uses them: 「本文で述べられている〜はどれか」「〜として正しいものは
+  > どれか」「〜の主な目的は何か」「〜の内容と合っているものはどれか」.
+
+  Measured 筆者-less stems out of 8: t1 **4**, t2 **6**, t3 **5**, t4 **6**,
+  official **0**. `make check` FAILs on any of the four banned shapes and on any
+  passage pair carrying no 考え/主張 stem. Note the honest limit: the gate
+  catches the *shape*: a 筆者-anchored stem whose key is still a paraphrase of
+  one sentence needs a reader (`exam-qa-review` step 3).
+- **問題11 glosses:** every `（注N）` must annotate a word that actually appears
+  in that passage's body, and every in-body marker must have a definition
+  line — the pairing is 1-to-1 per passage, both directions. An orphaned note
+  is a shipped defect (test 3 shipped unmarked glosses across all four 問題11
+  passages; test 2 shipped 4 orphans; test 4 shipped a 問題13
+  「準備（注5）」 with no 注5 line), not a stylistic slip.
+- **問題14 — 70 and 71 are BOTH person-scenario items.** The correct answer must
+  always require combining **at least two** constraints from the table (topic +
+  date/time, or a category + a footnote exception) — never a single-field
+  lookup. The defect has a fixed shape: it is always **item 71**, always written
+  as 「このお知らせの内容と合っているものはどれか」, and it shipped that way in
+  t2 (71 = 先着100組, one cell), t3 (71 = 市外在住者も対象, one cell) and t4
+  (71 = 事前予約不要, one cell). t1 is the compliant example (70 = 時間帯 +
+  初心者; 71 = 期限 + 受付方法 + 支払方法). So:
+
+  > 70 and 71 are **both** person-scenario items. 71 may never be
+  > 「このお知らせの内容と合っているものはどれか」 — a content-match question
+  > collapses to a one-cell lookup (tests 2, 3, 4 all shipped it there). Write
+  > 71 as a second applicant whose plan fails exactly one condition. **The 解説
+  > cell for each of 70 and 71 must quote the TWO source cells the key combines**
+  > (`「カテゴリーB：…」＋「※…の場合は…」`); one quote means one constraint.
+
+  `make check` FAILs when a 問題14 解説 cell contains fewer than two distinct
+  `「…」` spans that occur in the flyer text. Every constraint the QUESTION
+  references (a role, category, or condition) must also be describable from the
+  flyer/table text as printed — do not invent a scenario detail (test 3 asked
+  how someone applies as "補助スタッフ" when the source flyer never described a
+  staff/volunteer role at all).
+- **読解 keys must be paraphrased to option length.** **Paraphrase every 読解 key
+  to option length (~25–40 JP chars) and keep all four options within ±40% of
+  each other, or the key is findable by string length alone** — without reading
+  the passage. Test 3 shipped items 67, 68, 69 as three consecutive keys of
+  91/101/61 chars, lifted verbatim from the passage, beside ~31–34 char
+  distractors; test 4 shipped item 66 at 55 vs 31. Official papers ship zero.
+  A key that is a verbatim span of the passage is doubly wrong: it is long, and
+  it turns 主張理解 into string matching. `make check` FAILs a keyed 読解 option
+  (52–71) that is ≥50 JP chars, present verbatim in the passage, **and** ≥1.7×
+  the mean length of the other three.
 - **Vocabulary Explanations for Dokkai (NO FURIGANA / MANDATORY)**:
   - **NO FURIGANA IN DOKKAI**: Reading passages (問題9–14) and question stems/options in 言語知識・読解 contain **NO FURIGANA** (`<ruby>`). Test-takers are expected to read N2 kanji without furigana. Over-the-level, rare, or domain-specific words must ONLY be glossed using `（注1）`, `（注2）` notes at the bottom of the passage.
-  - Official papers gloss freely: July 2025 carries **≈50+ `（注N）`** across
-    読解. Generated tests with 0–2 notes are under-annotated. For every 中文/
-    長文, plan **several** notes (typically 3–7 per medium/long passage) on
-    N1/rare/specialized terms — not one decorative note per paper.
+  - **How many, and how they are counted.** Official papers gloss freely:
+    measured as **in-body markers** (one per glossed term, in the passage
+    region — not raw `（注N）` occurrences, which double-count because each gloss
+    also has a definition line), July 2025 carries **30** across 読解 and tests
+    1/2/3/4 carry **9 / 6 / 29 / 5**. The gate's bar is **≥15 in-body markers**
+    per paper; for every 中文/長文, plan **3–7** notes on N1/rare/specialized
+    terms — not one decorative note per paper.
+  - **The count rule and the band rule below are one rule; do not trade them
+    against each other.** Test 3 is the warning: it is the only paper in band on
+    the count (29 markers) and it got there by glossing 割引・洗髪・契機・規制・
+    革新・省力化・増幅 — banned-band words. Reaching 15 with basic-word glosses
+    is worse than shipping 5, because it also degrades the passage.
   - **STRICT VOCABULARY BAND FOR NOTES (NON-NEGOTIABLE)**:
     - 🚫 **STRICTLY BANNED**: Glossing N3–N5 words or standard N2 vocabulary (e.g., 選択, 信号, 技術, 文化, 質, 準備, 手順, 設計, 現象, 経由, 偏り, 維持, 継続, 前提, 細部, バランス) with trivial/circular definitions (`ここでは…`, `〜のこと`). Glossing basic words degrades test quality and is a QA failure.
+    - 🚫 **The operational test, not the list:** a term is glossable only if
+      (1) it does **not** appear in
+      `.agents/item-pool-sampling/references/openjlpt/vocab-n2.json` (if it is in
+      the N2 vocabulary file it is standard N2 — do not gloss it), and (2) the
+      definition introduces words the term itself does not contain (「洗髪：髪の毛を
+      洗うこと」 and 「割引：…金額を引くこと」 fail this; 「大脳辺縁系：…」 passes).
+      The enumerated list below is examples, not the boundary. It has to be a
+      test rather than a list because the banned class is "any standard N2 or
+      below word", which no enumeration can close: the 21-word list here could
+      never have caught 割引, 洗髪, 契機, 鑑賞, 評価制度, or 省力化, and **4 / 4**
+      papers shipped wrong-band glosses under it (t1 鑑賞/評価制度, t2 質感/
+      バランス, t3 the seven above, t4 準備).
+      Check it in one line:
+      `python3 -c "import json,sys;w={e['word'] for e in json.load(open('.agents/item-pool-sampling/references/openjlpt/vocab-n2.json'))};print([x for x in sys.argv[1:] if x in w])" 鑑賞 割引 バランス`
+      `make check` WARNs on both halves (glossed term present in
+      `vocab-n2.json`; definition body repeating the glossed term or opening
+      `ここでは`).
+      **Both conditions are necessary, neither is sufficient**: that file is a
+      1793-entry N2 slice, so absence is not proof a word is over-level (準備,
+      技術, 選択 are all absent from it and all banned). A glossable term must
+      ALSO fall in one of the ✅ TARGETS categories below — that is the positive
+      requirement, and it is the one that decides.
     - ✅ **TARGETS**: `（注N）` glosses are strictly reserved for:
       - N1-level or rare/literary words (e.g., 委ねる, 雄弁, 死守する, 顧みる, 飼いならす, 抑圧, その場しのぎ)
       - Onomatopoeic / colloquial expressions (e.g., むきむきの)
@@ -296,6 +475,36 @@ matching where one tempting option fails exactly one condition.
 
 **聴解 dialogues** — every wrong option must be MENTIONED then eliminated
 (already done / rejected / explicitly denied: 「それが理由ではありません」).
+
+**Construction order is binding: write the dialogue FIRST, then harvest the
+options from it.** Never draft an option set before the script line exists.
+Then record the grounding in the 解説 cell of `聴解.md`, one line per wrong
+option, in this shape:
+
+```
+1 ✗「script line as spoken」→ 別の人に割り当て
+2 ✗「…」→ 後回しにされた
+4 ✗「…」→ 明確に否定
+```
+
+An option with no quotable line is fabricated noise: delete it and take one
+from the script. This cell is what QA reads; if it is absent, the item is
+not shippable.
+
+Why this is an order and an artifact rather than the rule it replaces: "every
+wrong option must be MENTIONED then eliminated" was already stated **three
+times** across this file and `choukai-script-writing`, always as a property to
+verify *after* both files exist — i.e. the last thing an author does, in the
+last file authored, which is exactly where long-run degradation lands. Nothing
+recorded whether the check ran, so skipping it was invisible, and **4 / 4**
+papers shipped ungrounded options (t1 問題2-1番 options 2 and 4 — the 解説
+itself admits it; t2 5 options across 4 items; t3 ~14 options, with 問題2-2番's
+three wrong options all fabricated; t4 問題2 例 option 2). The grounding cell
+makes a skip visible on disk. `make check` WARNs when a 問題1/2 option shares no
+≥2-char kanji/katakana token with its item's script block — WARN only, because
+that heuristic flags 5/44 on the *official* paper (official distractors are
+often paraphrased). The mechanical check cannot tell "reassigned" from "never
+said"; the written grounding line is what does.
 An option that is raised and left TRUE is a second answer even if it is "only
 a contributing factor": test 1's 遅刻理由 item affirmed 道が混んでいた in the
 audio while keying USB忘れ — a どうして item's wrong causes must be denied,
@@ -494,19 +703,39 @@ with an error** if there is none. Two consequences:
   whole document from there down would be truncated out of the answer sheet.
   (`# 問題用紙・解答用紙` is safe: it starts with 問.)
 
+### 0. Required artifacts inside the key tables (index)
+
+Five rules in this file are complied with by **writing a specific line into a
+key cell**, not by thinking something. Each replaces a prose rule that four
+papers read and reproduced the defect anyway. They are indexed here because the
+key tables are where they land; the rule and its shipped evidence are at the
+linked section.
+
+| Artifact | Where it goes | Shape | Rule |
+|---|---|---|---|
+| Functional-category line | `## 文字・語彙` key notes, every 問1–6 item | `24: 程度副詞 ×4 (比較的/非常に/たいして/一段と)` | 「The functional-category line is mandatory OUTPUT」 |
+| 問題1 distractor sources | same line as above, 問1 items | `いたわる=労わる, ねぎらう=労う, …` | same |
+| 問題9 category tag | `## 文法`, the four 問題9 rows, cell opening | `[論理接続]` `[文末モーダル]` `[内容推論]` `[慣用・形式名詞]`, exactly one `[内容推論]` | 問題9 rule under Benchmark |
+| 問題14 two-cell quotes | `## 読解`, rows 70 and 71 | two distinct `「…」` spans present in the flyer | 問題14 rule under 問題10-14 |
+| 聴解 option grounding | `聴解.md` 問題1/2/3 解説 cells | `1 ✗「script line as spoken」→ 別の人に割り当て`, one line per wrong option | 「聴解 dialogues」 |
+
+An absent artifact makes the item unshippable — that is the point of writing it
+down rather than checking it. `make check` reads the 問題9 tags and the 問題14
+quote pairs and FAILs on them; the other three are read by `exam-qa-review`.
+
 ### 1. `言語知識・読解.md` Answer Key Format
 Under the key heading (see above), must contain three distinct section headers:
-- `## 文字・語彙`: Multi-column table (`| 問 | 答 | | 問 | 答 | | 問 | 答 | | 問 | 答 |`) for Q1–30, plus key notes for notable kanji/words.
-- `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q31–51 with exact grammar point explanations and scramble sequence breakdowns for Q43–47.
-- `## 読解`: 3-column table (`| 問 | 答 | 解説 |`) for Q52–71 quoting key passage text and rationale.
+- `## 文字・語彙`: Multi-column table (`| 問 | 答 | | 問 | 答 | | 問 | 答 | | 問 | 答 |`) for Q1–30, plus key notes for notable kanji/words — **including the mandatory functional-category line for every 問1–6 item** (§0).
+- `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q31–51 with exact grammar point explanations and scramble sequence breakdowns for Q43–47. **The four 問題9 rows (48–51) each open their 解説 with a bracketed category tag** (§0).
+- `## 読解`: 3-column table (`| 問 | 答 | 解説 |`) for Q52–71 quoting key passage text and rationale. **Rows 70 and 71 each quote the TWO flyer cells the key combines** (§0).
 
 ### 2. `聴解.md` Answer Key Format
 Must contain two main parts:
 - `# 解答用紙(マークシート)`: Standard bubble-sheet tables for 問題1〜問題5 with sample item (例) pre-marked (e.g. `1 **(2)** 3 4`).
 - `# 【正解・解説】※解き終わってから見てください`:
-  - `## 問題1 課題理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番 quoting deciding phrase.
-  - `## 問題2 ポイント理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–6番.
-  - `## 問題3 概要理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番.
+  - `## 問題1 課題理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番 quoting deciding phrase, **plus the option-grounding lines** (§0).
+  - `## 問題2 ポイント理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–6番, **plus the option-grounding lines** (§0).
+  - `## 問題3 概要理解`: 3-column table (`| 番号 | 正解 | 解説 |`) for 1番–5番, **plus the option-grounding lines** (§0).
   - `## 問題4 即時応答`: 3-column table (`| 番号 | 正解 | ポイント |`) for 1番–11番 detailing honorifics/idiom points. **Eleven**, not twelve — 12 is the 2009 guidebook's 目安; every paper in `refs/JLPT/` speaks 11 items (measurable in the official audio as 11 × 8 s answer pauses), and `expected_choukai` / `answer_positions` both require 11.
   - `## 問題5 統合理解`: 3-column table (`| 番号 | 正解 | 解説 |`) with **3 rows** — 問題5 has 2 items but 3 answers. The 番号 cell must let `parse_choukai_keys()` reach `問5-1`, `問5-2-1`, `問5-2-2`; it accepts either label style — `**1番**` / `**2番 質問1**` / `**2番 質問2**` (preferred) or `1` / `2-質問1` / `2-質問2`. The 2番 rows MUST carry `質問1`/`質問2`; the 1番 row must NOT.
   - `## 得点の目安`: Score range guidelines.

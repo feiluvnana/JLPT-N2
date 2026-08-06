@@ -222,6 +222,19 @@ Before running the gate, list every surface's topic in one place — 問題9, ea
 
 - Japanese file names must be used for all files in `tests/<test_id>/` (`言語知識・読解.md`/`.html`, `聴解.md`/`.html`, `聴解スクリプト.txt`, `聴解.mp3`, `解答.html`).
 - Markdown files in `tests/<test_id>/` are the editable source; regenerate the booklet HTML **and** `解答.html` after ANY content edit.
+- **Every source edit carries its rebuild in the same change.** Editing
+  `聴解スクリプト.txt` requires `make mp3 <id>`; editing either `.md` requires
+  `make booklet <id> && make sheet <id>`. **A commit that touches a source
+  without its artifact is a defect, not a to-do**: commit `4df5631` rewrote the
+  聴解 instructions in `聴解スクリプト.txt` for tests 1, 2, 3, 4 **and**
+  `imported-n2-2025-07`, and regenerated the MP3 for test 3 only — so four
+  shipped papers speak superseded 問題N instructions while their booklets print
+  the new ones. Nothing caught it for a whole QA round. The artifacts now carry
+  the sha1 of the bytes they were built from (`script_sha` in
+  `聴解_チャプター.json`, `<!-- src_sha: <name>=<sha> -->` in every generated
+  HTML) and `make check` compares them, so a missing rebuild is now a gate
+  failure — but the gate is the backstop, not the workflow: rebuild in the same
+  change. Never hand-edit a sha.
 - Answer keys live at the END of both Markdown sources (`言語知識・読解.md`, `聴解.md`), clearly separated, never inline. `build_interactive.py` aborts if it cannot find the key heading to truncate.
 - The booklet (`聴解.md`) and the script (`聴解スクリプト.txt`) must stay synchronized:
   printed 例 options ↔ spoken 例; any script item change requires a key check.

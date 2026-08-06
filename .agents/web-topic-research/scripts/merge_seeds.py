@@ -23,6 +23,15 @@ Surfaces touched in test_spec.json:
 - carrier_seeds               問題1-8 example/carrier sentences: texture only
 - qr_situation_seeds          問題4 即時応答: up to 3 situational settings
 
+PRE-FLIGHT (both abort before anything is blended):
+- validate_harvest()   harvest hygiene: no two seeds may cite the same source
+                       URL, and the harvest must span >= MIN_HARVEST_DOMAINS
+                       distinct netlocs. The domain count is printed either way.
+- check_topic_reuse()  cross-test topic hygiene: no seed may share a >=2-char
+                       content token with a subject either of the previous two
+                       tests already used (logs/topics.json, absent = skipped).
+                       This is a FLOOR, not the rule — see the function docstring.
+
 ALLOCATION: a small texture cut (info/qr/carrier) is reserved FIRST so every
 surface receives seeds even with a thin harvest; the remaining seeds fund
 reading/listening, scaled down proportionally if supply < demand. The skill's
@@ -49,6 +58,7 @@ import argparse
 import hashlib
 import json
 import random
+import re
 from collections import Counter
 from pathlib import Path
 from urllib.parse import urlparse
@@ -57,8 +67,12 @@ MIN_WEB = 0.30
 MAX_WEB = 0.60
 MAX_PER_DOMAIN = 2
 MIN_DOMAINS = 3
+MIN_HARVEST_DOMAINS = 6   # web-topic-research Step 1: 2 x domains caps the blend
 QR_SEEDS = 3          # max situational seeds attached for 即時応答
 CARRIER_SEEDS = 6     # max texture seeds attached for 問題1-8 carrier sentences
+
+TOPICS = "topics.json"    # written by the build pass; see web-topic-research
+TOPIC_LOOKBACK = 2        # how many previous tests' subjects block a seed
 
 
 def domain_of(seed: dict) -> str:
@@ -66,6 +80,168 @@ def domain_of(seed: dict) -> str:
         return urlparse(seed.get("source", "")).netloc or "unknown"
     except ValueError:
         return "unknown"
+
+
+def validate_harvest(seeds: list[dict]) -> None:
+    """Refuse a harvest that cannot honestly fund a blend.
+
+    Nothing used to look at seeds.json at all, so two failures were invisible:
+
+    1. **Two seeds from one document are one seed.** The harvest on disk when
+       this check was written (test 3's) had 22 seeds over 14 domains, but THREE
+       of them cited the identical URL (`www.env.go.jp/…/h23_lca_01.pdf`), and
+       two of the facts attributed to it are not in that document — mining one
+       PDF for three "topics" produces one subject wearing three hats plus
+       invented facts. Drop the weaker seeds; do not re-title them.
+    2. **Domains, not seed count, cap the blend.** MAX_PER_DOMAIN is 2 and that
+       budget is shared across every topic-level surface, so N domains fund at
+       most 2N picks. Six domains funds the 30% floor (12 picks) exactly; test 4
+       harvested 28 seeds from 5 domains and 聴解 finished at 20% web.
+
+    Both abort rather than warn: a bad harvest cannot be repaired downstream,
+    and every surface authored off a starved blend has to be rewritten.
+    """
+    sources = [s.get("source", "") for s in seeds]
+    domains = {domain_of(s) for s in seeds} - {"unknown"}
+    print(f"harvest: {len(seeds)} seed(s), domains={len(domains)} "
+          f"(minimum {MIN_HARVEST_DOMAINS})")
+
+    problems = []
+    dupes = sorted({u for u in sources if u and sources.count(u) > 1})
+    for url in dupes:
+        names = [s.get("seed", "?") for s in seeds if s.get("source") == url]
+        problems.append(f"{len(names)} seeds cite one URL {url} -> {names}; "
+                        f"two seeds from one document are one seed — keep the "
+                        f"strongest and re-harvest the rest")
+    missing = [s.get("seed", "?") for s in seeds if not s.get("source")]
+    if missing:
+        problems.append(f"seeds with no source URL: {missing}; every seed must "
+                        f"come from a page you actually fetched")
+    if len(domains) < MIN_HARVEST_DOMAINS:
+        problems.append(
+            f"only {len(domains)} distinct source domain(s) "
+            f"({', '.join(sorted(domains)) or 'none'}); "
+            f"MAX_PER_DOMAIN={MAX_PER_DOMAIN} means that funds at most "
+            f"{2 * len(domains)} topic-level picks, below the "
+            f"{MIN_HARVEST_DOMAINS}-domain / 12-pick 30% floor")
+    if problems:
+        raise SystemExit("harvest rejected (logs/seeds.json):\n  - "
+                         + "\n  - ".join(problems))
+
+    # Non-fatal: two seeds on adjacent subjects get blended onto two different
+    # surfaces and read as one topic tested twice (tests 2 and 3 both put
+    # フードドライブ in 聴解問題1 AND in the 問題14 fine print). Distinct URLs,
+    # so the duplicate-source check above cannot see it.
+    # Bar is >=3 chars here, not the >=2 of the cross-test abort: this pass is
+    # O(n^2) over one harvest and a 2-char compound (削減/活用/返却) matches
+    # anything, so it would bury the real hits (地域通貨, 熱中症予防) in noise.
+    for i, a in enumerate(seeds):
+        for b in seeds[i + 1:]:
+            shared = sorted(t for t in (content_tokens(a.get("seed", ""))
+                                        & content_tokens(b.get("seed", "")))
+                            if len(t) >= 3)
+            if shared:
+                print(f"  warning: near-duplicate subjects share {shared} — "
+                      f"「{a.get('seed')}」 / 「{b.get('seed')}」; each seed feeds "
+                      f"exactly ONE surface, so drop the weaker one")
+
+
+def content_tokens(text: str) -> set[str]:
+    """>=2-char content tokens: kanji runs, katakana runs, latin words.
+
+    Hiragana is deliberately excluded — it carries the grammar, not the subject.
+    Tokens are MAXIMAL runs, compared for equality, so 「地域通貨」 matches
+    「地域通貨」 and not 「地域猫」. That is the intended conservatism: this feeds a
+    hard abort, so it must not fire on two subjects that merely share 生活.
+    All-digit tokens are dropped (a shared 2024 is not a shared subject).
+    """
+    t = str(text)
+    toks = set(re.findall(r"[一-鿿]{2,}", t))
+    toks |= set(re.findall(r"[ァ-ヶー]{2,}", t))
+    toks |= {w.lower() for w in re.findall(r"[A-Za-z0-9]{2,}", t)
+             if not w.isdigit()}
+    return toks
+
+
+def previous_subjects(topics_path: Path, lookback: int = TOPIC_LOOKBACK,
+                      test_id=None) -> list[tuple[str, str, str]]:
+    """[(test_id, surface, subject)] for the last `lookback` tests on record.
+
+    Tolerates a missing file: logs/topics.json is written by the build pass, so
+    the first test generated after this check landed has nothing to compare to.
+    Accepts the canonical {"version":1,"history":[…]} container and the two
+    obvious variants ({"tests":[…]} / a bare list) so a hand-written file still
+    reads.
+    """
+    if not topics_path.is_file():
+        return []
+    data = json.loads(topics_path.read_text(encoding="utf-8"))
+    if isinstance(data, dict):
+        rows = data.get("history") or data.get("tests") or []
+    else:
+        rows = data
+    rows = [r for r in rows if isinstance(r, dict)
+            and (test_id is None or str(r.get("test_id")) != str(test_id))]
+    out = []
+    for row in rows[-lookback:]:
+        for surface, subject in (row.get("surfaces") or {}).items():
+            if subject:
+                out.append((str(row.get("test_id")), surface, str(subject)))
+    return out
+
+
+def check_topic_reuse(seeds: list[dict], topics_path: Path, test_id=None) -> None:
+    """Abort when a seed reuses a subject from either of the previous two tests.
+
+    `(--seed, harvest_sha)` uniqueness is NOT topic uniqueness, and that gap
+    shipped three re-skins through a green gate: test 2 repeated test 1's urban
+    greening in the same 問題11 slot, and tests 3/4 shared 8 surfaces including a
+    地域通貨 flyer that matched down to 20% / 2,000pt and the same ※ note.
+
+    HONEST LIMIT — read this before trusting it. Token overlap is a FLOOR, not
+    the rule. 「屋上緑化」 vs 「グリーンパートナー制度」 and 「みどりコイン」 vs
+    「さくらコイン」 are the same subject with ZERO shared tokens, and this
+    function passes both. Subject identity cannot be mechanized. The whole-paper
+    topic table done by a human (jlpt-test-generation §"One topic, one surface")
+    stays mandatory; this catches only the easy half — literal reuse.
+    """
+    prev = previous_subjects(topics_path, test_id=test_id)
+    if not prev:
+        print(f"  note: no {topics_path.name} history yet — cross-test topic "
+              f"check skipped (the human whole-paper topic table is the only "
+              f"guard this run)")
+        return
+    tests = sorted({t for t, _, _ in prev})
+    index = [(t, surf, subj, content_tokens(subj)) for t, surf, subj in prev]
+
+    hard, soft = [], []
+    for s in seeds:
+        stoks = content_tokens(s.get("seed", ""))
+        if not stoks:
+            continue
+        for t, surf, subj, ptoks in index:
+            shared = sorted(stoks & ptoks)
+            if shared:
+                hard.append(f"seed 「{s.get('seed')}」 shares {shared} with "
+                            f"test {t} {surf} 「{subj}」")
+                continue
+            near = sorted({f"{a}~{b}" for a in stoks for b in ptoks
+                           if a != b and (a in b or b in a)})
+            if near:
+                soft.append(f"seed 「{s.get('seed')}」 ~ test {t} {surf} "
+                            f"「{subj}」 ({', '.join(near)})")
+    for line in soft:
+        print(f"  warning: possible topic overlap — {line}")
+    if hard:
+        raise SystemExit(
+            "topic reuse against test(s) " + ", ".join(tests) + " "
+            f"(from {topics_path}):\n  - " + "\n  - ".join(hard)
+            + "\nRe-harvest the colliding seeds. Token overlap is only the "
+              "floor: also re-check the whole-paper topic table by hand — a "
+              "renamed subject (屋上緑化 -> グリーンパートナー制度) passes this "
+              "check and is still a re-skin.")
+    print(f"  topic check: {len(seeds)} seed(s) vs {len(prev)} subject(s) from "
+          f"test(s) {', '.join(tests)} — no shared content token")
 
 
 def fits(seed: dict, surface: str) -> bool:
@@ -179,6 +355,12 @@ def main():
     seeds = json.loads(Path(args.seeds).read_text(encoding="utf-8"))
     spec_path = Path(args.spec)
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
+
+    # Pre-flight, before anything is blended: a harvest that fails either of
+    # these cannot be repaired downstream (see the function docstrings).
+    validate_harvest(seeds)
+    check_topic_reuse(seeds, spec_path.parent / TOPICS, spec.get("test_id"))
+
     unblend(spec, spec_path.parent / "ledger.json")   # make re-runs idempotent
 
     rng = random.Random(f"{spec.get('seed', 0)}-webmerge")

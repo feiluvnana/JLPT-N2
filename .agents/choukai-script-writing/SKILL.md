@@ -118,6 +118,28 @@ uniform inside 問題5:
 | 5, 1番 | SPOKEN only |
 | 5, 2番 | **PRINTED** — the two-question item's options are in the booklet |
 
+- **問題5 2番 speaks its SITUATION and nothing else — no lead-in, no
+  instruction.** Because 2番's options are printed, its
+  「まず話を聞いてください。それから、二つの質問を聞いて、それぞれ問題用紙の1から4の
+  中から、最もよいものを一つ選んでください。」 is **booklet text**: the examinee
+  reads it, the announcer never says it. The model, from
+  `tests/imported-n2-2025-07/聴解スクリプト.txt` (official July 2025), is the
+  whole of 2番's narration:
+
+  ```
+  2番。ラジオを聞いて男の人と女の人が話しています。
+  ```
+
+  Then the dialogue starts, and the block ends with 質問1 and 質問2. Compare
+  1番, which **does** get the spoken lead-in (「問題用紙に何も印刷されていません。
+  …」) because nothing is printed for it — that asymmetry is the whole rule.
+  **All four generated papers speak the 2番 lead-in** (tests 1–4 each open the
+  block with 「2番。まず話を聞いてください。それから、二つの質問を聞いて…」), so the
+  examinee hears an instruction the official exam only prints, and `make check`
+  never saw it because its printed-options check split the script on that very
+  line — a gate written *around* a defect normalizes it. Write 2番 as
+  `2番。<situation>。` on its own first line.
+
 Speaking 問題5 2番's options is not a harmless extra: the printed and spoken
 lists then drift, and test 2 shipped a 2番 whose booklet printed 学食 proposals
 while the audio read out 「全自動モデル」「省エネモデル」「小型モデル」 —
@@ -178,7 +200,41 @@ position `answer_positions` prescribes for its new slot).
 
 ## The keyed option must be quotable, and every other option denied
 
-Two separate rules, both broken by test 4:
+**Construction order is binding: this file comes FIRST, then the option sets in
+`聴解.md` are harvested out of it.** Never write an option that has no line in
+the script yet — an option set drafted first is a set of guesses, and the
+dialogue then gets bent to fit three of them and not the fourth. This is not a
+preference; **all four papers shipped 聴解 options nobody says**: test 1
+(問題2-1番, options 2 and 4 — its own 解説 admits it), test 2 (5 options across
+4 items), test 3 (~14 options; 問題2-2番's three wrong options all fabricated),
+test 4 (問題2 例, option 2).
+
+So for every item, every one of the three wrong options must be **traceable to a
+line this file actually contains** — a candidate the dialogue *raises* and then
+**reassigns** to someone else, **supersedes** with a later decision, or
+**denies** outright. Merely never mentioning a plausible-sounding thing is not a
+distractor; it is noise, and an examinee who mishears one word cannot be
+distinguished from one who did not listen.
+
+Record the grounding where QA reads it — the 解説 cell of `聴解.md`, one line per
+wrong option, in exactly this shape (the same format `question-authoring`
+mandates; do not invent a second one):
+
+```
+1 ✗「script line as spoken」→ 別の人に割り当て
+2 ✗「…」→ 後回しにされた
+4 ✗「…」→ 明確に否定
+```
+
+If a wrong option has no quotable line, the fix is in THIS file: add the line
+that raises and kills it, or replace the option with one the dialogue already
+supplies. `make check`'s token-overlap check is a **WARN only** and cannot
+decide this — measured on `tests/imported-n2-2025-07`, it flags 5 of 44 official
+options (paraphrases), so it can never be promoted to a failure. The grounding
+lines above are the real check, and their absence means the item is not
+shippable.
+
+Then these three rules, all broken by test 4:
 
 - **Quotable.** 問題1-5番 keyed 「点検作業員に車移動の連絡をする」 while the
   script says 「事前に管理事務所へご連絡の上」 — the keyed action named the
@@ -214,6 +270,14 @@ up in the map before writing the narration, and prefer labels of contrasting
 gender over two same-gender voices separated only by a few percent of rate
 (問題1-4番 had 女 and 担当者 both on Nanami, 4% apart, in a two-person call).
 
+**A two-party item whose two labels resolve to the same voice is a defect, not a
+preference** — all four papers shipped at least one (test 1 three: 店員+女,
+職員+女, 店員+女). And a narration that states a gender 「〜の男の人」/「〜の女の人」
+must resolve to a voice of that gender: test 3 shipped 係員の男の人,
+アナウンサーの男の人 and 職員の男の人 on FEMALE-mapped labels. `make check` fails
+the gender contradiction and WARNs on the one-voice pair; the casting rules and
+how to resolve each are in `choukai-mp3-generation` §"Casting".
+
 ## Required structure — every element is mandatory
 
 A full N2 script is **exactly 33 item blocks** (`例。`/`N番。`) in the per-問題
@@ -238,7 +302,7 @@ matching, so they are yours to check:
 | 問題1〜5 headers | `問題N。` as its own block, all five. **(eye)** for own-block-ness and order — the code only tests that the substring 「問題N。」 occurs somewhere |
 | 問題1〜4 practice | each: instruction ending 「では、練習しましょう。」 → ONE `例。` item → ONE full confirmation line → items |
 | 問題5 practice | NONE. Instruction must contain 「この問題には練習はありません。」 and there must be no `例。` block |
-| 問題5 1番 lead-in | **(eye)** Its own block between the instruction and `1番。`: 「問題用紙に何も印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。では、始めます。」 — this covers **1番 only**. 2番's options are printed, so it gets no spoken lead-in; its 「まず話を聞いてください。それから、二つの質問を聞いて、それぞれ問題用紙の1から4の中から…」 is booklet text. Do **not** write a combined 「1番、2番。問題用紙に何も印刷されていません」 line: it would tell the examinee nothing is printed for 2番, where the options are printed (`jlpt-exam-structure`, 「Printed in booklet」 column), and no official paper has it |
+| 問題5 1番 lead-in | **(eye)** Its own block between the instruction and `1番。`: 「問題用紙に何も印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。では、始めます。」 — this covers **1番 only**. 2番's options are printed, so it gets no spoken lead-in; its 「まず話を聞いてください。それから、二つの質問を聞いて、それぞれ問題用紙の1から4の中から…」 is booklet text — the rule and the official 2番 line are spelled out under §"Spoken vs printed choices", because all four generated papers broke it. Do **not** write a combined 「1番、2番。問題用紙に何も印刷されていません」 line: it would tell the examinee nothing is printed for 2番, where the options are printed (`jlpt-exam-structure`, 「Printed in booklet」 column), and no official paper has it |
 | Item counts (incl. 例) | 問題1=6, 問題2=7, 問題3=6, 問題4=12, 問題5=2 |
 | Closing | file must END with 「これで、聴解試験を終わります。」 |
 | Answer reveals | 例 confirmations only — see the section above |

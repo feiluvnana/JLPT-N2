@@ -15,7 +15,37 @@ description: Single owner of synthesizing the choukai exam MP3 from the TTS scri
   concatenates (exact by construction; never recover these with
   `silencedetect` after the fact). Consumed by `interactive-answer-sheet` to
   drive the chapter dropdown in `解答.html`. Regenerate the MP3 to
-  refresh it.
+  refresh it. It also carries `"script_sha"` — see the next section.
+
+## `script_sha`: the MP3 says which script it was built from
+
+`聴解_チャプター.json` is written as
+`{"script_sha": …, "duration": …, "chapters": […]}`, where `script_sha` is the
+**first 12 hex digits of sha1 over the raw bytes of `聴解スクリプト.txt`**
+(`source_sha()` in the generator). `make check` recomputes it and fails when it
+disagrees, which is the only mechanical evidence that the audio on disk speaks
+the script on disk.
+
+It exists because that failure shipped four times at once: commit `4df5631`
+rewrote the 問題N instructions in `聴解スクリプト.txt` for tests 1, 2, 3, 4 **and**
+`imported-n2-2025-07`, and re-ran `make mp3` for **test 3 only**
+(`git log -1 -- tests/N/聴解.mp3`: t1 `99fdb9e`, t2 `99fdb9e`, t3 `4df5631`,
+t4 `99fdb9e`, import `d3beca8`). Four shipped papers played superseded
+instructions against booklets printing the new ones, through a green gate and a
+full QA round.
+
+- It is a **content** hash, deliberately not an mtime. Mtimes are
+  checkout-unstable: after that commit test 3's `聴解.mp3` looked older than its
+  script even though its audio was current, and its reviewer had to reconstruct
+  git history to clear it, while the three genuinely stale papers looked exactly
+  the same.
+- **Never hand-edit the sha.** The only way to make it agree is to rebuild:
+  `make mp3 <test_id>`. Editing the script without rebuilding in the same change
+  is a defect (`jlpt-test-generation`, Invariants).
+- The HTML deliverables use the same 12-hex convention as
+  `<!-- src_sha: <file name>=<sha> -->` stamps (`build_booklet.py`'s
+  `src_sha_comments()`, shared with `build_interactive.py`), so booklet and
+  answer-sheet staleness is detected the same way.
 
 ## Execution
 
@@ -63,6 +93,43 @@ reads the whole assembled stream, so it cannot be split.
   (−10%) measures ~295 morae/min, which only affects unscored instructions.
   **Any change to a rate value must be re-verified against that step** before
   shipping — nothing else in the pipeline checks speech rate.
+
+## Casting: the narration and `SPEAKER_MAP` are one decision, and two speakers need two voices
+
+`SPEAKER_MAP` decides which voice reads a `label:` line; the item's narration
+tells the examinee who is speaking. Nothing in the audio reconciles them, so
+both of these are **the author's** job at the moment the label is chosen — and
+both shipped broken:
+
+- **A narration that states a gender must resolve to a voice of that gender.**
+  If the block says 「係員の**男の人**」/「〜の男の人」, the label on those lines must
+  map to `MALE` (Keita); 「〜の女の人」 must map to `FEMALE` (Nanami). Test 3
+  shipped **three** items where it did not — 係員の男の人, アナウンサーの男の人,
+  職員の男の人, all three labels mapped FEMALE — so the announcer introduced a man
+  and a woman's voice spoke. Resolve it by rewording the narration or by picking
+  a label whose mapping already matches; **remapping an existing label is a
+  last resort**, because labels are shared across every test and a remap
+  silently changes the voice every other paper's already-built audio used —
+  and `script_sha` cannot see that, because the map is not part of the hashed
+  script. A remap means re-running `make mp3` for every affected test.
+- **A two-party item whose two labels resolve to the SAME voice is a defect.**
+  Same `voice` value separated only by a few percent of `rate` is not a
+  distinguishable second person: the examinee cannot tell who said the deciding
+  line, which is the whole task in 問題1/2/5. **All four papers shipped at
+  least one**: test 1 three items (店員+女, 職員+女, 店員+女 — all Nanami),
+  test 2 one (専門家+アナウンサー), test 3 one, test 4 one (教授+学生, both
+  Keita). Cast one male and one female label per two-party item; `男1`/`男2`
+  rate-splitting exists for the three-person conversation, where a third voice
+  does not exist, not as a general licence.
+- **Scan the WHOLE block for the narration, not its first line.** 問題5's 2番
+  puts the situation on the block's **second** line (the 例-less section's
+  item marker is its own line), which is exactly why a first-line-only pass
+  missed test 3's third mismatch.
+
+`make check` now checks both — the gender contradiction as a failure, the
+one-voice pair as a WARN — but the map lookup belongs in authoring: read the
+label out of `SPEAKER_MAP` before you write the narration around it, as
+`choukai-script-writing` §"One voice per person" also requires.
 
 ## Pacing table (from official Dec 2025 N2 audio — do not guess new values)
 

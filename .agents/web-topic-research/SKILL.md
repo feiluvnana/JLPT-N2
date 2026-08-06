@@ -59,6 +59,81 @@ nothing from the previous two tests.
 `make check` fails when two tests share both a seed and a harvest, or reuse a
 harvest at all. Do not hand-edit those fields to silence it.
 
+**But `(seed, harvest_sha)` uniqueness is NOT topic uniqueness**, and assuming it
+was is how three re-skins shipped through a green gate: test 2 repeated test 1's
+urban greening in the same 問題11 slot (and its 問題1 例 block was
+byte-identical); tests 3 and 4 share 8 surfaces, including a 問題14 地域通貨
+flyer that matched down to 20% / 2,000pt / the same ※ note, and 夜間のエアコン in
+聴解. A fresh harvest and a fresh seed can still land on the same subjects,
+because the *harvest* was on the same subjects. That is what `logs/topics.json`
+(below) and `merge_seeds.py`'s `check_topic_reuse()` exist for — and neither of
+them is sufficient. Read the honest limit.
+
+## `logs/topics.json` — the whole-paper topic table, as a file
+
+The whole-paper topic table (`jlpt-test-generation` §"One topic, one surface")
+was rebuilt from scratch, by eye, every round, so nothing accumulated across
+tests and nothing could consume it. It is now a file.
+
+**Who writes it:** the build pass (`jlpt-test-generation` step 6), from the
+finished sources on disk — one row appended per test, newest last, same shape as
+`logs/ledger.json`. It is a record of what the paper *actually* tests, not of
+what the spec asked for, so it must be written after authoring, never before.
+
+```json
+{
+  "version": 1,
+  "history": [
+    {
+      "test_id": "5",
+      "generated_at": "2026-08-06 12:00:00",
+      "surfaces": {
+        "問題9": "通勤時間の使い方",
+        "問題10(1)": "…", "問題10(2)": "…",
+        "問題11(1)": "…", "問題12(A)": "…", "問題12(B)": "…",
+        "問題13": "…", "問題14": "…",
+        "聴解問題1-例": "…", "聴解問題1-1番": "…", "聴解問題2-1番": "…",
+        "聴解問題3-1番": "…", "聴解問題4-1番": "…", "聴解問題5-1番": "…"
+      },
+      "shapes": {
+        "聴解問題1-1番": "reschedule call",
+        "聴解問題2-1番": "complaint at a counter"
+      }
+    }
+  ]
+}
+```
+
+- **`surfaces`** — one row per surface, keyed by 問題 (and passage/item where a
+  問題 has several): every 読解 passage, 問題9, 問題14, **and every 聴解 item
+  including the 例**. The value is the subject in one noun phrase, as a reader
+  would name it. Not the spec's seed string — what shipped.
+- **`shapes`** — the errand *shape* of each 聴解 item ("reschedule call",
+  "complaint at a counter", "choose between two options"). §"One topic, one
+  surface" already demands this column: two items can have different subjects
+  and run the identical errand, which reads as the same item twice.
+- Every surface must carry a **distinct** subject within the paper, and no
+  subject or shape may repeat against the **previous two** rows.
+
+`merge_seeds.py` reads the previous two rows before blending and **aborts** on
+any seed sharing a ≥2-char content token (kanji run, katakana run, or latin
+word) with a recorded subject, printing every collision. A missing
+`logs/topics.json` is tolerated — the check prints that it was skipped.
+
+### The honest limit — read this before trusting either mechanism
+
+**Token overlap is a floor, not the rule.** 「屋上緑化」 vs
+「グリーンパートナー制度」, and 「みどりコイン」 vs 「さくらコイン」, are the same
+subject with **zero shared tokens**, and both pass `check_topic_reuse()` and any
+gate check built on it. **Subject identity cannot be mechanized.**
+
+So `logs/topics.json` does not solve the re-skin problem; it makes the easy half
+of it catchable and gives the hard half a durable record to be read against. The
+**human whole-paper topic table pass stays mandatory** — reading the previous two
+rows and asking "is this the same subject in different clothes?" is the only
+check that catches a rename. Do not treat a green topic check as evidence that
+the paper is new.
+
 ## Step 1 — Harvest topic seeds (18-25 per test, across as many domains as you can)
 
 **Every seed must come from a page you actually fetched — no web, no harvest.**
@@ -84,6 +159,28 @@ constraint**: `MAX_PER_DOMAIN` is 2 and that budget is shared across all
 topic-level surfaces, so a harvest can fund at most `2 × domains` of them no
 matter how many seeds you collect.
 
+### `merge_seeds.py` now validates the harvest before it blends (two hard aborts)
+
+Nothing used to read `logs/seeds.json` for hygiene, so both of these were
+invisible until QA. `validate_harvest()` refuses the run:
+
+1. **One URL, one seed.** Two seeds citing the same `source` are one seed.
+   The harvest on disk when this check landed had 22 seeds over 14 domains and
+   **three of them cited the identical URL**
+   (`www.env.go.jp/…/h23_lca_01.pdf` — マイボトル持参 three times over), and two
+   of the three facts attributed to it are **not in that document**. Mining one
+   PDF for three "topics" produces one subject in three hats plus invented facts.
+   Keep the strongest and re-harvest the rest; never re-title a seed to dodge it.
+   A seed with no `source` at all is refused for the same reason.
+2. **`MIN_HARVEST_DOMAINS = 6` distinct netlocs.** Below that the blend cannot
+   reach the 30% floor on every surface, and the shortfall lands wherever the
+   allocation runs out last (test 4: 聴解 at 20% web, warning printed and
+   ignored). The domain count is printed on every run, pass or fail.
+
+It also **warns** (non-fatal) when two seeds in one harvest share a ≥3-char
+content token — distinct URLs, adjacent subjects. Act on those warnings: see the
+near-duplicate paragraph below.
+
 The sampler draws **12 reading topics** and **21 listening scenarios**, so:
 
 | Target | reading | listening | cloze | info | topic-level picks | domains needed |
@@ -98,8 +195,14 @@ more *domains*; adding seeds to the same domains does nothing. Test 4 harvested
 28 seeds from 5 domains: the cap allowed 10, reading and the texture surfaces
 took them first, and 聴解 finished at 4/20 = 20% web — below the floor, with the
 warning printed and ignored. Below `MIN_DOMAINS` (3) the script also shrinks the
-whole web share. (`qr_situation_seeds` and `carrier_seeds` come from leftovers
-and are not domain-capped.)
+whole web share.
+
+`qr_situation_seeds` and `carrier_seeds` are taken from the leftovers and are
+**deliberately not domain-capped** — `MAX_PER_DOMAIN` governs the *topic-level*
+surfaces (reading / listening / cloze / info), the ones where a dominant source
+would show. A test-3 review filed the uncapped leftover picks as a
+`MAX_PER_DOMAIN` bypass in `merge_seeds.py`; that is a **false positive** against
+documented design (this paragraph and the script's docstring). Do not "fix" it.
 
 Good sources and query recipes (prefer Japanese-language results):
 
@@ -122,6 +225,11 @@ that stays possible: two seeds from the same source on adjacent subjects
 different surfaces and read as one topic tested twice — that is how test 2 and
 then test 3 both put フードドライブ in 聴解問題1 *and* in the 問題14 flyer's
 fine print. Treat near-duplicate subjects as one seed and drop the weaker.
+`merge_seeds.py` prints a `near-duplicate subjects share [...]` warning for each
+such pair it can see by token overlap (the harvest on disk trips it three times:
+熱中症予防 ×2, 地域通貨 ×2, シェアリング ×2). The same honest limit applies as for
+cross-test reuse — 傘シェアリング and シェアサイクル share no token and are one
+subject, so read your own seed list too.
 
 Record each seed as:
 `{"seed": "...", "facts": ["..."], "source": "url", "surfaces": ["reading"|"listening"|"carrier"|"info", ...]}`

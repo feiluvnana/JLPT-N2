@@ -39,25 +39,31 @@ only, so its histogram is 12 × 12 s (問題1+2), 17 × 8 s (問題3+4+問題5 1
 | 7 | 文の文法1・文法形式の判断 (grammar fill-in) | 12 | 31-42 |
 | 8 | 文の文法2・文の組み立て (scramble, ★ position) | 5 | 43-47 |
 | 9 | 文章の文法 (cloze passage, 4 blanks) | 4 | 48-51 |
-| 10 | 短文 (5 short passages ~200–280字 × 1Q; include one business email and one notice/掲示) | 5 | 52-56 |
-| 11 | 中文 (4 passages ~400–550字 × 2Q each) | 8 | 57-64 |
-| 12 | 統合理解 (A/B compared texts, ~600字 combined, 2Q) | 2 | 65-66 |
-| 13 | 主張理解 (1 long essay ~900–1100字, 3Q) | 3 | 67-69 |
-| 14 | 情報検索 (flyer/table ~700–900字 + 2 condition-matching Q) | 2 | 70-71 |
+| 10 | 短文 (5 short passages × 1Q; include one business email and one notice/掲示) | 5 | 52-56 |
+| 11 | 中文 (4 passages × 2Q each) | 8 | 57-64 |
+| 12 | 統合理解 (A/B compared texts, 2Q) | 2 | 65-66 |
+| 13 | 主張理解 (1 long essay, 3Q) | 3 | 67-69 |
+| 14 | 情報検索 (flyer/table + 2 condition-matching Q) | 2 | 70-71 |
 
 Question numbering is continuous 1-71 across the whole paper.
 
-**Grammar carrier length (official baseline, all 5 `refs/JLPT/` papers):** 問題7
-stems average ~43 JP chars (typical 33–54); 問題9 cloze body ~500–700 JP chars.
-Authoring rules and the consistency gate live in `question-authoring` /
-`tools/check_consistency.py` — length is part of the format bar, not just the
-grammar-point inventory.
+**Character counts are deliberately NOT in this table.** Passage and carrier
+length bands live in exactly one place — `question-authoring`'s 読解 length-band
+table (問題10–14) and its Benchmark section (問題7/8/9) — and
+`tools/check_consistency.py`'s `check_dokkai_lengths()` is what enforces them.
+They used to be restated here, in `question-authoring`, and in the gate at once,
+hand-synced; only one of the three numbers was gated, and all four generated
+papers shipped 問題11 and 問題14 under band while `make check` stayed green.
+A second copy of a number is a second thing to drift, so this file states the
+*shape* facts (how many passages, how many questions, what is printed) and
+nothing measured in characters.
 
 **読解 apparatus (official baseline — measured on `imported-n2-2025-07` =
-July 2025):** a real paper carries **dozens** of `（注N）` glosses across 問題10–13
-(July 2025 ≈50+), uses `（中略）` inside 中文/長文, and prints 問題13 near
-~1000 JP chars. Generated tests 1–4 shipped with 0–2 notes, no 中略, and 長文
-often ~600–750 — treat that as under-calibrated even when keys parse.
+July 2025):** a real paper glosses freely across 問題10–13 and uses `（中略）`
+inside 中文/長文. The gloss count, its metric (in-body markers), the vocabulary
+band a gloss may target, and the 問題13 length floor are all owned by
+`question-authoring`. Generated tests 1–4 shipped 5–9 glosses (t3 excepted) and
+no `（中略）` at all — treat that as under-calibrated even when keys parse.
 
 **問題11 shape:** all five official papers in `refs/JLPT/` are **4 passages × 2
 questions** (Q57–64). The instruction line sometimes still says `(1)から(3)`
@@ -66,6 +72,17 @@ and print `(1)から(4)` in the instruction. The sampler matches this: it draws
 `reading_topics: 12  # 5 short + 4 medium + 1 A/B + 1 long + 1 info`. A spec
 carrying only 11 reading topics was drawn before that fix and is one 中文 topic
 short.
+
+**問題11 stem shape (format fact, measured):** in `imported-n2-2025-07`, **all
+8** 問題11 stems name 筆者 (57「筆者はどのように述べているか」 … 64「筆者が医者と
+して大切にしていること」); **none** is a bare retrieval stem. Generated tests
+1/2/3/4 shipped **4/6/5/6** stems out of 8 that do not name 筆者. So the format
+requires: every stem names 筆者 (or is 「①…とあるが、どういうことか」 on a marked
+span), at least one of each passage's two stems is a 考え/主張 question, and the
+four pure-retrieval shapes 「本文で述べられている〜はどれか」「〜として正しいもの
+はどれか」「〜の主な目的は何か」「〜の内容と合っているものはどれか」 do not appear
+in 問題11 at all. Authoring procedure and the gate check: `question-authoring`
+問題11 stems / `tools/check_consistency.py`.
 
 ### 時間配分の目安 (105分)
 

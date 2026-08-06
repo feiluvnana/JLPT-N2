@@ -19,7 +19,7 @@ Run:
 
 Output (written next to the input script):
     聴解.mp3               (full exam)
-    聴解_チャプター.json    (per-問題/per-item offsets)
+    聴解_チャプター.json    (per-問題/per-item offsets + script_sha)
     segments/             (per-block mp3s for drilling single questions)
 
 Re-running is cheap: already-synthesized lines are skipped (delete the
@@ -109,6 +109,21 @@ SPEAKER_RE = re.compile(r"^([^:: ]{1,6})[::](.*)$")
 
 # edge-tts pitch support varies by version — only pass it if accepted.
 _PITCH_OK = "pitch" in inspect.signature(edge_tts.Communicate.__init__).parameters
+
+
+def source_sha(path: Path) -> str:
+    """First 12 hex digits of sha1 over the file's raw BYTES.
+
+    Stamped into 聴解_チャプター.json as `script_sha`, so an MP3 built from a
+    superseded script is detectable from content alone. Deliberately NOT an
+    mtime: mtimes are checkout-unstable — after commit 4df5631 test 3's
+    聴解.mp3 looked older than its script on disk although the audio was
+    current, and its reviewer had to reason from git history to clear it,
+    while tests 1, 2, 4 (whose audio really was superseded) looked identical.
+    `build_booklet.py` stamps the same 12-hex convention into its HTML as
+    `<!-- src_sha: <name>=<sha> -->`, and `make check` compares both.
+    """
+    return hashlib.sha1(path.read_bytes()).hexdigest()[:12]
 
 
 def run(cmd):
@@ -561,11 +576,20 @@ async def main():
     if full_wav.exists():
         full_wav.unlink()
 
+    # `script_sha` is the staleness stamp: it identifies the exact script bytes
+    # this MP3 was built from, so a later edit to 聴解スクリプト.txt without a
+    # rebuild becomes a `make check` failure instead of an invisible defect.
+    # Commit 4df5631 rewrote the script for tests 1-4 and imported-n2-2025-07
+    # but regenerated the audio for test 3 only — four shipped papers spoke
+    # superseded 問題N instructions and no gate could see it.
+    sha = source_sha(src)
     chapters_path = out_dir / "聴解_チャプター.json"
     chapters_path.write_text(
-        json.dumps({"duration": round(clock, 2), "chapters": chapters},
+        json.dumps({"script_sha": sha,
+                    "duration": round(clock, 2), "chapters": chapters},
                    ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"Chapters -> {chapters_path} ({len(chapters)} marks)")
+    print(f"Chapters -> {chapters_path} ({len(chapters)} marks, "
+          f"script_sha {sha})")
 
     # Cleanup temporary segments directory
     if not keep_segments and seg.exists():

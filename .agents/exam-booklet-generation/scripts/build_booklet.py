@@ -9,6 +9,7 @@ Requires: `pip install markdown pykakasi`, Noto CJK JP fonts installed.
 No PDF toolchain needed — the browser is the renderer.
 """
 
+import hashlib
 import re
 import sys
 
@@ -86,6 +87,33 @@ blockquote { border: 1px solid #999; background: #fafafa; margin: 10px 0;
 hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
 strong { font-family: "Noto Sans CJK JP", sans-serif; }
 """
+
+
+def source_sha(path: Path) -> str:
+    """First 12 hex digits of sha1 over the file's raw BYTES.
+
+    Same convention `make_choukai_mp3.py` stamps into \u8074\u89e3_\u30c1\u30e3\u30d7\u30bf\u30fc.json as
+    `script_sha`. NOT an mtime: mtimes are checkout-unstable, so they cannot
+    distinguish "rebuilt" from "merely re-checked-out".
+    """
+    return hashlib.sha1(path.read_bytes()).hexdigest()[:12]
+
+
+def src_sha_comments(sources) -> str:
+    """`<!-- src_sha: <file name>=<12-hex sha1> -->`, one comment per input.
+
+    Stamped into every generated HTML so an artifact built from a superseded
+    Markdown source is detectable by content, and `make check` can fail on it.
+    Commit 4df5631 is the precedent on the audio side: it rewrote five
+    \u8074\u89e3\u30b9\u30af\u30ea\u30d7\u30c8.txt files and rebuilt one MP3, and nothing could see the
+    other four. The HTML deliverables had exactly the same blind spot.
+    `build_interactive.py` calls this helper too, so both builders emit one
+    format. Each stamp gets its own line (the rest of the document is one long
+    line) so it is greppable and shows up as a one-line diff on a rebuild.
+    """
+    return "".join(f"\n<!-- src_sha: {p.name}={source_sha(p)} -->\n"
+                   for p in sources if p.is_file())
+
 
 WIDE = "\u3000\u3000\u3000"  # ideographic spaces survive HTML whitespace collapsing
 OPT = re.compile(r"[1-4]\.\s")
@@ -247,6 +275,7 @@ def build(src: Path) -> Path:
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
         f"<title>{src.stem}</title>"
+        f"{src_sha_comments([src])}"
         f"<style>{CSS}{SCREEN_CSS}</style></head><body>{body}</body></html>",
         encoding="utf-8",
     )

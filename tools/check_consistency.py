@@ -8,6 +8,15 @@ answer-key heading the sheet builder needs but no doc mentioned, two graders
 drifting apart. The docs are prose and cannot be executed, so this asserts the
 handful of facts they duplicate from the code.
 
+Hardening round 1 added the check classes that round-1 QA on tests 1–4 found the
+gate blind to, every threshold measured on `tests/imported-n2-2025-07` (a real
+July 2025 paper — a check that paper fails is a wrong check, not a finding):
+問題11 stem shape, （注N） band/pairing, the 問題5 2番 lead-in, artifact staleness
+stamps, 問題14 解説 grounding, 読解 passage length floors, ledger draw counts,
+harvest hygiene, 問題9 category tags, 聴解 voice casting, cross-test verbatim
+reuse, verbatim-lift keys, pool level-band drift, （中略） placement, and spec
+target-item substitution.
+
 Read-only: it never writes to tests/ or logs/.
 
     python3 tools/check_consistency.py            # everything
@@ -15,6 +24,7 @@ Read-only: it never writes to tests/ or logs/.
 """
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import re
@@ -478,7 +488,8 @@ def _level_band_hits(haystack: str, bans: list[str], allows: list[str]) -> list[
 
 
 def check_level_band_grammar(gt: str, keys: dict[int, int],
-                             opts: dict[int, list[str]], origin: str):
+                             opts: dict[int, list[str]], origin: str,
+                             test_id: str = ""):
     """Generated 問題7–9 keys must stay inside the N2 band.
 
     String-decidable half of exam-qa-review §2.5. Imported papers are skipped
@@ -521,6 +532,29 @@ def check_level_band_grammar(gt: str, keys: dict[int, int],
           "; ".join(hard) + " — see exam-qa-review/references/level_band_grammar.txt")
     check("問題7–9 keys are not N3–N5-easy (level band)", not easy,
           "; ".join(easy) + " — see exam-qa-review/references/level_band_grammar.txt")
+
+    # 問題8 keys are option STRIPS, so the banned form never appears whole in one:
+    # test 3's item 46 tested 〜ば〜ほど with the option reading 「触れるほど」 and the
+    # loop above saw nothing. The spec names the grammar point it drew, so match
+    # that instead — the only place 問題8's target is written down.
+    spec_path = ROOT / "logs" / "test_spec.json"
+    if not spec_path.is_file():
+        return
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    if str(spec.get("test_id")) != test_id:
+        return skip(f"{test_id}: 問題8 target grammar points stay inside the N2 band",
+                    f"spec is for test {spec.get('test_id')}, not {test_id}")
+    p8 = []
+    for entry in spec.get("items", {}).get("grammar_p8", []):
+        label = entry.get("item") if isinstance(entry, dict) else entry
+        probe = (label or "").replace("〜", "").replace("～", "")
+        for group in ("TOO_HARD", "TOO_EASY"):
+            for ban in _level_band_hits(probe, band[group], band["ALLOW"]):
+                p8.append(f"{label} ({group}: {ban})")
+    check(f"{test_id}: 問題8 target grammar points stay inside the N2 band "
+          f"({len(spec.get('items', {}).get('grammar_p8', []))} drawn)", not p8,
+          "; ".join(p8) + " — the pool handed the author a banned form; delete "
+          "it from pools.json and re-sample (item-pool-sampling)")
 
 
 def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str]]):
@@ -618,6 +652,325 @@ def check_dokkai_numbered_markers(name: str, gt_prose: str):
           "; ".join(mismatches) + " — every passage marker ①/② must be referenced by a question stem")
 
 
+# ------------------------------------------------------- 読解 passage anatomy
+# One splitter, four checks. （注N） numbering restarts per passage, passage
+# length is measured per passage, （中略） has to sit INSIDE one, and the same
+# regions feed the 問題11 stem check — so the scoping lives in one place.
+PASSAGE_MARKER = re.compile(r"^(?:###\s*|\*\*)\(\d+\)", re.M)
+NOTE_DEF = re.compile(r"^\s*[（(]注(\d*)[）)]\s*([^：:）)]{1,24})\s*[：:](.*)$")
+NOTE_MARK = re.compile(r"[（(]注(\d*)[）)]")
+
+
+def dokkai_section(body: str, n: int) -> str:
+    """The 問題N block of the passage prose (`body` already has keys cut off)."""
+    m = re.search(rf"^##\s*問題{n}\b.*?(?=^##\s*問題{n + 1}\b|\Z)", body, re.M | re.S)
+    return m.group(0) if m else ""
+
+
+def passage_scopes(sec: str, n: int) -> list[str]:
+    """One region per passage — the scope （注N） numbers restart in.
+
+    問題11 marks its passages `### (1)` / `**(1)**`; 問題10 has none, so each of
+    its five passages is the run up to the next stem (a passage's note block
+    sits with its own markers either way). 問題12–14 number their notes once
+    across the whole section (official July 2025 does the same), so they are a
+    single scope — splitting A/B there invented four orphans in test 1.
+    """
+    if n == 11:
+        parts = PASSAGE_MARKER.split(sec)
+        return parts[1:] or [sec]
+    if n == 10:
+        # No `\s*` after `^`: it lets the lookahead also succeed on the blank
+        # line above the stem, which doubles every split point.
+        parts = re.split(r"(?=^\*\*5[2-6]\*\*)", sec, flags=re.M)
+        if len(parts) > 2:      # fold the tail after **56** back into passage 5
+            parts = parts[:-2] + [parts[-2] + parts[-1]]
+        return parts
+    return [sec]
+
+
+def passage_prose(sec: str, bi) -> str:
+    """The passage text only: no instruction line, no stems, no option rows.
+
+    Keeps （注N） definition lines, which are part of the reading apparatus the
+    candidate has to process. Measured on tests/imported-n2-2025-07 this scores
+    問題10 1274 / 問題11 2503 / 問題12 572 / 問題13 1005 / 問題14 622 JP chars.
+    """
+    keep = []
+    for ln in sec.splitlines():
+        if re.match(r"^##\s*問題", ln) or re.match(r"^\s*\*\*\d+\*\*", ln):
+            continue
+        if bi.OPTION.match(ln) or bi.option_run(ln):
+            continue
+        keep.append(ln)
+    return "\n".join(keep)
+
+
+# Floors are ~90% of the official July 2025 measurement above. Tests 1–4 all
+# under-ran 問題11 and 問題14; nothing but 問題13 was gated, and only as a WARN.
+DOKKAI_FLOOR = {10: 1150, 11: 2250, 12: 510, 13: 900, 14: 560}
+# Per passage: official minima are 問題10 202 and 問題11 496 JP chars.
+DOKKAI_PASSAGE_FLOOR = {10: 200, 11: 400}
+
+
+def check_dokkai_lengths(name: str, body: str, bi):
+    """読解 passages must reach the official length band (G8).
+
+    The bands were documented in three prose places and gated in none, so an
+    author could not verify one without measuring and nobody did: every one of
+    tests 1–4 shipped a short 問題11 and a short 問題14.
+    """
+    short, thin = [], []
+    for n, floor in DOKKAI_FLOOR.items():
+        sec = dokkai_section(body, n)
+        if not sec:
+            continue
+        got = jp_char_count(passage_prose(sec, bi))
+        if got < floor:
+            short.append(f"問題{n}({got}<{floor})")
+        if n in DOKKAI_PASSAGE_FLOOR:
+            for i, sc in enumerate(passage_scopes(sec, n), 1):
+                got_p = jp_char_count(passage_prose(sc, bi))
+                if got_p < DOKKAI_PASSAGE_FLOOR[n]:
+                    thin.append(f"問題{n}({i}):{got_p}<{DOKKAI_PASSAGE_FLOOR[n]}")
+    check(f"{name}: 読解 sections reach the official length floor "
+          f"{DOKKAI_FLOOR}", not short,
+          "; ".join(short) + " — lengthen the passage prose, not the stems "
+          "(question-authoring 'Length bands'; official July 2025 measures "
+          "1274/2503/572/1005/622)")
+    check(f"{name}: every 問題10/11 passage reaches {DOKKAI_PASSAGE_FLOOR}", not thin,
+          "; ".join(thin) + " — official minima are 202 and 496 JP chars "
+          "(question-authoring 'Length bands')")
+
+
+NOTE_CHUU = re.compile(r"（中略）")
+
+
+def check_chuuryaku(name: str, body: str):
+    """（中略） has to cut a passage, not float under the instruction (G18).
+
+    Tests 2 and 4 each carry a bare `（中略）` line directly beneath the 問題11
+    instruction, attached to no passage — and that stray marker is exactly what
+    made the old `"中略" in gt` substring WARN pass.
+    """
+    stray, inside = [], 0
+    for n in (11, 12, 13):
+        sec = dokkai_section(body, n)
+        if not sec:
+            continue
+        whole = len(NOTE_CHUU.findall(sec))
+        within = sum(len(NOTE_CHUU.findall(re.sub(r"^##\s*問題\d+[^\n]*\n", "", sc)))
+                     for sc in passage_scopes(sec, n))
+        inside += within
+        if whole > within:
+            stray.append(f"問題{n}({whole - within} outside any passage)")
+    check(f"{name}: every （中略） sits inside a 問題11–13 passage", not stray,
+          "; ".join(stray) + " — a marker under the instruction line cuts "
+          "nothing; move it into the passage (question-authoring)")
+    check(f"{name}: 読解 cuts at least one passage with （中略） ({inside} in-passage)",
+          inside >= 1,
+          "official 中文/長文 cut with （中略）; generated tests shipped none")
+
+
+def check_note_pairing(name: str, body: str):
+    """（注N） markers and definitions pair 1-to-1 per passage (G2c).
+
+    An orphan either way is an automatic QA fail and both shipped: test 2
+    defined 格段/精神論/屋上緑化 for passages that no longer contain them, and
+    tests 2 and 4 print a 注5 marker in 問題13 with only four definitions.
+    """
+    bad = []
+    for n in (9, 10, 11, 12, 13, 14):
+        sec = dokkai_section(body, n)
+        if not sec:
+            continue
+        for i, sc in enumerate(passage_scopes(sec, n), 1):
+            marks, defs = set(), set()
+            for ln in sc.splitlines():
+                d = NOTE_DEF.match(ln)
+                if d:
+                    defs.add(d.group(1) or "1")
+                else:
+                    marks |= {m.group(1) or "1" for m in NOTE_MARK.finditer(ln)}
+            if marks != defs:
+                unmarked = sorted(defs - marks)
+                undefined = sorted(marks - defs)
+                bad.append(f"問題{n}({i}): "
+                           + (f"defined but never marked 注{unmarked} " if unmarked else "")
+                           + (f"marked but never defined 注{undefined}" if undefined else ""))
+    check(f"{name}: （注N） markers and definitions pair 1-to-1 per passage", not bad,
+          "; ".join(bad).strip() + " — a note the passage never marks (or a "
+          "marker with no note) is an automatic fail (exam-qa-review)")
+
+
+def openjlpt_vocab() -> set[str]:
+    """Every headword in the vendored OpenJLPT N2 vocabulary list."""
+    p = AGENTS / "item-pool-sampling" / "references" / "openjlpt" / "vocab-n2.json"
+    if not p.is_file():
+        return set()
+    words = {e.get("word", "") for e in json.loads(p.read_text(encoding="utf-8"))}
+    return {w for word in words for w in word.split("/") if w}
+
+
+def check_note_band(name: str, gt: str):
+    """（注N） may only gloss above-band words, and must actually define them (G2a).
+
+    The old check enumerated 21 banned words, which can never cover the class
+    ("any standard N2 or below word") — it missed 鑑賞, 割引, 便箋, 蘇る. The
+    operational test replaces the list: a term in the N2 vocabulary file is
+    standard N2 by definition, and a definition assembled from the term's own
+    kanji (洗髪：髪の毛を洗うこと) teaches nothing.
+
+    WARN, not FAIL: the vocabulary file is one inventory among several, so a
+    hit can be a legitimate specialised sense.
+    """
+    vocab = openjlpt_vocab()
+    if not vocab:
+        return skip(f"{name}: （注N） notes target above-band words", "no openjlpt/vocab-n2.json")
+    in_band, self_ref = [], []
+    for ln in gt.splitlines():
+        m = NOTE_DEF.match(ln)
+        if not m:
+            continue
+        term, defn = m.group(2).strip(), m.group(3).strip()
+        stem = re.sub(r"(する|な|の|に|た|だ|い)$", "", term)
+        if term in vocab or stem in vocab:
+            in_band.append(term)
+        kanji = [c for c in term if "一" <= c <= "鿿"]
+        if len(kanji) >= 2 and all(c in defn for c in kanji):
+            self_ref.append(f"{term}：{defn[:12]}…")
+    warn(f"{name}: （注N） notes target words above the N2 band", not in_band,
+         f"glossed but listed in openjlpt/vocab-n2.json: {sorted(set(in_band))} — "
+         f"gloss N1/rare/specialised terms only (question-authoring "
+         f"'STRICT VOCABULARY BAND FOR NOTES')")
+    warn(f"{name}: （注N） definitions introduce words the term does not contain",
+         not self_ref,
+         f"circular: {self_ref} — a definition built from the term's own kanji "
+         f"teaches nothing (question-authoring)")
+
+
+# 問題11 (G1). Official July 2025 anchors all eight 中文 stems on 筆者 and gives
+# every passage at least one 考え/主張 question; tests 1–4 shipped 4/6/5/6 stems
+# that name nobody, and pure-retrieval shapes no official paper uses.
+P11_BANNED_STEM = re.compile(r"本文で述べられて|として正しいもの|主な目的は|内容と合っている")
+P11_OPINION_STEM = re.compile(
+    r"筆者の(?:考え|主張|評価|意見)|最も言いたい|最も伝えたい|言いたいことは"
+    r"|筆者は.*どのように(?:述べ|考え|評価)|筆者が.*大切に")
+
+
+def check_mondai11_stems(name: str, body: str):
+    sec = dokkai_section(body, 11)
+    if not sec:
+        return
+    pairs = []
+    for sc in passage_scopes(sec, 11):
+        stems = [m.group(2).strip() for m in
+                 re.finditer(r"^\s*\*\*(5[7-9]|6[0-4])\*\*\s*(.+)$", sc, re.M)]
+        if stems:
+            pairs.append(stems)
+    banned = [s[:30] for p in pairs for s in p if P11_BANNED_STEM.search(s)]
+    flat = [f"({i})" for i, p in enumerate(pairs, 1)
+            if not any(P11_OPINION_STEM.search(s) for s in p)]
+    check(f"{name}: 問題11 uses no pure-retrieval stem shape", not banned,
+          f"{banned} — 「本文で述べられて…」「…として正しいもの」「…の主な目的は」"
+          f"「…の内容と合っている」 appear in no official 中文 stem "
+          f"(question-authoring 問題11)")
+    check(f"{name}: every 問題11 passage asks one 考え/主張 question "
+          f"({len(pairs)} passages)", not flat,
+          f"passages {flat} ask only retrieval — one of each pair must be "
+          f"「筆者の考えに合うのはどれか」/「筆者は…どのように述べているか」/"
+          f"「筆者が最も言いたいことは何か」 (question-authoring 問題11)")
+
+
+def check_mondai14_quotes(name: str, body: str, key_dokkai: str, bi):
+    """70 and 71 must each combine TWO flyer cells, and the 解説 must prove it (G7).
+
+    Tests 2, 3 and 4 all wrote 71 as 「このお知らせの内容と合っているものはどれか」,
+    which collapses to a one-cell lookup. One quote in the 解説 means one
+    constraint, so the artifact is the check.
+    """
+    # The flyer only — not the stems or the printed options, or a 解説 that
+    # quotes its own option would count as grounded.
+    flyer = _flat(passage_prose(dokkai_section(body, 14), bi))
+    if not flyer or not key_dokkai:
+        return
+    thin = []
+    for hit in re.finditer(r"^\|\s*(70|71)\s*\|\s*[1-4]\s*\|(.*)\|", key_dokkai, re.M):
+        spans = {_flat(s) for s in re.findall(r"「([^」]+)」", hit.group(2))}
+        grounded = {s for s in spans if s and s in flyer}
+        if len(grounded) < 2:
+            thin.append(f"{hit.group(1)}({len(grounded)} of {len(spans)} quotes "
+                        f"found in the flyer)")
+    check(f"{name}: 問題14 解説 quotes the two flyer cells its key combines",
+          not thin,
+          "; ".join(thin) + " — write 70 and 71 as person-scenarios failing "
+          "exactly one condition and quote BOTH source cells "
+          "(question-authoring 問題14)")
+
+
+# 問題9 (G13). Four blanks, four categories — but the category of a blank was
+# written down nowhere, so nobody could check it and every paper collided two.
+P9_TAGS = {"論理接続", "文末モーダル", "内容推論", "慣用・形式名詞"}
+
+
+def check_mondai9_tags(name: str, key_bunpou: str):
+    tags: dict[int, str | None] = {}
+    for q, expl in re.findall(r"\|\s*(4[89]|5[01])\s*\|\s*[1-4]\s*\|\s*([^|]+)\|",
+                              key_bunpou):
+        t = re.match(r"\s*\[([^\]]+)\]", expl)
+        tags[int(q)] = t.group(1) if t else None
+    present = [t for t in tags.values() if t]
+    ok = (len(tags) == 4 and len(present) == 4 and set(present) <= P9_TAGS
+          and len(set(present)) == 4 and present.count("内容推論") == 1)
+    check(f"{name}: 問題9 解説 cells carry four distinct category tags "
+          f"incl. one [内容推論]", ok,
+          f"got {tags} — open each 問題9 解説 with one of "
+          f"{sorted(P9_TAGS)}, all four distinct, exactly one [内容推論] "
+          f"(question-authoring 問題9)")
+
+
+# 読解 keys (G16). A key far longer than its three distractors is findable by
+# string length alone: test 3 shipped three in a row (67/68/69 — 94/107/63 JP
+# chars against 31–36 means) and test 4 one (66 — 55 vs 31). Measured silent on
+# tests 1, 2 and imported-n2-2025-07, so the length signal alone is safe.
+#
+# The verbatim-lift test is reported, not required: with the haystack restricted
+# to PASSAGE prose (it has to be — the options are printed in the same file, so
+# searching the whole section makes "verbatim" vacuously true) test 3's three
+# keys are verbatim lifts and test 4's 66 is a 統合理解 meta-statement
+# (「Aは…とし、Bは…と述べている」) that appears in no passage. Both are the same
+# defect for the candidate: the key is identifiable without reading.
+LONG_KEY_MIN = 50
+LONG_KEY_RATIO = 1.7
+
+
+def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
+                        opts: dict[int, list[str]], bi):
+    passages = "\n".join(passage_prose(dokkai_section(body, n), bi)
+                         for n in range(10, 15))
+    flat = _flat(re.sub(r"（注\d+）|\(注\d+\)", "", passages))
+    hits = []
+    for q in range(52, 72):
+        a, o = keys.get(q), opts.get(q) or []
+        if a is None or len(o) != 4 or not 1 <= a <= 4:
+            continue
+        kl = jp_char_count(o[a - 1])
+        others = [jp_char_count(x) for i, x in enumerate(o) if i != a - 1]
+        mean = sum(others) / len(others)
+        if kl < LONG_KEY_MIN or not mean or kl < LONG_KEY_RATIO * mean:
+            continue
+        # An option ends 「…できる。」 where the passage runs on 「…できるのである。」,
+        # so the sentence-final 。 must not decide whether it is a lift.
+        lifted = _flat(o[a - 1]).rstrip("。") in flat
+        hits.append(f"{q}({kl} chars vs {mean:.0f} mean"
+                    + (", verbatim in the passage" if lifted else "") + ")")
+    check(f"{name}: no 読解 key is far longer than its distractors", not hits,
+          "; ".join(hits) + f" — paraphrase the key to ~25–40 chars and keep "
+          f"all four options within ±40% of each other "
+          f"(question-authoring 問題10–14); flagged at ≥{LONG_KEY_MIN} JP chars "
+          f"and ≥{LONG_KEY_RATIO}× the mean distractor")
+
+
 # 解説 cells decide items, so a quote inside one is load-bearing. When it is
 # invented, the item it justifies is usually broken too and nothing shows:
 # test 2's 聴解 key quoted four lines of dialogue that were not in the script;
@@ -645,7 +998,12 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
     script never speaks. A quote nobody can find usually means the item was
     keyed against a draft that no longer exists.
     """
-    src = _flat(source)
+    # Strip inline （注N） markers from the source: a 解説 quotes the sentence
+    # without them, so 「…大脳辺縁系に直接伝達される」 failed to match a passage
+    # reading 「…大脳辺縁系（注3）に直接伝達される」. That produced five false
+    # positives in test 3 and buried the one real miss (問66's 「過去の情熱」
+    # against the passage's 「当時の情熱」) among them.
+    src = _flat(re.sub(r"（注\d+）|\(注\d+\)", "", source))
     missing = []
     for q in QUOTE.findall(key_section):
         parts = [_flat(p) for p in QUOTE_ELLIPSIS.split(q)]
@@ -700,6 +1058,121 @@ def check_pool_infrastructure():
                 bad.append(f"{e.get('item')}: level {e.get('level')!r}")
         check("adjunct staging rows are N2 with item+category", not bad,
               "; ".join(bad[:5]))
+
+
+# Kanji↔kana spellings of the same grammar tail. `grammar_p7` shipped both
+# 〜気味 and 〜ぎみだ and the sampler drew both into test 3, keying one grammar
+# point twice — and 〜がち/〜がちだ the same way. No reading source in refs/ or
+# references/ can bridge those: openjlpt/kanji-n2.json holds only the 367
+# N2-level kanji (気 and 味 are below it) and vocab-n2.json has no 気味 headword.
+# So this is a fold TABLE, not a boundary — extend it when a new pair appears,
+# and prefer deleting one spelling from pools.json over teaching the gate to
+# tolerate two. Longest key first, so 以上 folds before 上.
+KANA_FOLD = {"気味": "ぎみ", "次第": "しだい", "以上": "いじょう", "一方": "いっぽう",
+             "同時": "どうじ", "限り": "かぎり", "抜き": "ぬき", "反面": "はんめん",
+             "通り": "とおり", "際": "さい", "末": "すえ", "上": "うえ"}
+
+
+def pool_skeleton(entry: str) -> str:
+    """`〜次第(で)` → `しだい`: what two pool entries in one category must differ by.
+
+    Strips the 〜/～ placeholder and the parenthetical example gloss, folds the
+    kanji spellings above to kana, and drops a trailing だ/です. All three steps
+    are load-bearing: without the last two, `〜がち`/`〜がちだ` and
+    `〜気味`/`〜ぎみだ` — the exact pairs that shipped test 3's double-keyed
+    grammar point — compare as distinct entries.
+    """
+    e = re.sub(r"[（(][^）)]*[）)]", "", entry).replace("〜", "").replace("～", "").strip()
+    for kanji, kana in sorted(KANA_FOLD.items(), key=lambda kv: -len(kv[0])):
+        e = e.replace(kanji, kana)
+    return re.sub(r"(だ|です)$", "", e)
+
+
+def check_pool_grammar_band():
+    """pools.json grammar entries must sit inside the N2 band and be distinct (G17).
+
+    `grammar_p8` shipped `相対比較(〜ば〜ほど)` — `〜ば〜ほど` is TOO_EASY on
+    exam-qa-review's level-band list AND on question-authoring's banned list.
+    Test 3 keyed it at item 46 and the keyed-option check could not see it,
+    because the option string reads 「触れるほど」. Checking the DATA closes the
+    class permanently: the pool is what the sampler draws from.
+    """
+    print("\npools.json grammar entries ↔ level band")
+    pools_path = AGENTS / "item-pool-sampling" / "references" / "pools.json"
+    band = load_level_band()
+    if not pools_path.is_file() or not (band["TOO_HARD"] or band["TOO_EASY"]):
+        return skip("pools.json grammar entries stay inside the N2 band",
+                    "no pools.json or level_band_grammar.txt")
+    pools = json.loads(pools_path.read_text(encoding="utf-8"))
+    cats = [c for c in pools if "grammar" in c]
+    out_of_band, dupes = [], []
+    for cat in cats:
+        for entry in pools[cat]:
+            # The band list spells forms without the 〜 placeholder, so strip it
+            # before matching: 相対比較(〜ば〜ほど) only reads as `ばほど` that way.
+            probe = entry.replace("〜", "").replace("～", "")
+            for ban in _level_band_hits(probe, band["TOO_HARD"], band["ALLOW"]):
+                out_of_band.append(f"{cat}/{entry} (TOO_HARD: {ban})")
+            for ban in _level_band_hits(probe, band["TOO_EASY"], band["ALLOW"]):
+                out_of_band.append(f"{cat}/{entry} (TOO_EASY: {ban})")
+        groups: dict[str, list[str]] = {}
+        for entry in pools[cat]:
+            groups.setdefault(pool_skeleton(entry), []).append(entry)
+        dupes += [f"{cat}: {v}" for v in groups.values() if len(v) > 1]
+    check(f"pools.json grammar entries stay inside the N2 band "
+          f"({sum(len(pools[c]) for c in cats)} entries in {cats})",
+          not out_of_band,
+          "; ".join(out_of_band) + " — delete the entry; a banned form in the "
+          "pool ships as a key sooner or later (item-pool-sampling)")
+    check("no grammar category lists one point under two spellings", not dupes,
+          "; ".join(dupes) + " — keep one spelling per point, or the sampler "
+          "draws both and the test keys it twice (item-pool-sampling)")
+
+
+def check_ledger_draw_counts(sample):
+    """Every ledger entry must record exactly DRAW[cat] items (G11).
+
+    Entries `2`, `4` and `4-removed` record 語形成 5 / 即時応答 12 /
+    reading_topics 11 against today's DRAW of 3 / 11 / 12: items burning
+    rotation cooldown for questions the papers never asked. A count that
+    disagrees with DRAW is a ledger defect, not history.
+    """
+    led = ROOT / "logs" / "ledger.json"
+    if not led.is_file():
+        return skip("ledger draw counts match sample_items.DRAW", "no logs/ledger.json")
+    off = []
+    for h in json.loads(led.read_text(encoding="utf-8")).get("history", []):
+        tid = str(h.get("test_id"))
+        if tid == "legacy":            # the pre-ledger backfill has no draw shape
+            continue
+        for cat, want in sample.DRAW.items():
+            got = len(h.get("items", {}).get(cat) or [])
+            if got != want:
+                off.append(f"test {tid}/{cat}: {got} recorded, DRAW says {want}")
+    check(f"ledger draw counts match sample_items.DRAW ({len(sample.DRAW)} categories)",
+          not off,
+          "; ".join(off) + " — trim the over-recorded items from "
+          "logs/ledger.json rather than letting them expire through cooldown "
+          "(item-pool-sampling 'Rotation model')")
+
+
+def check_harvest_hygiene():
+    """Two seeds from one document are one seed (G12).
+
+    logs/seeds.json carries three seeds citing the identical env.go.jp PDF, and
+    two of the three facts drawn from it are not in that document. merge_seeds.py
+    now aborts on this; the gate keeps a stale bad harvest from sitting on disk.
+    """
+    seeds_path = ROOT / "logs" / "seeds.json"
+    if not seeds_path.is_file():
+        return skip("logs/seeds.json cites a distinct source per seed", "no seeds.json")
+    seeds = json.loads(seeds_path.read_text(encoding="utf-8"))
+    srcs = [s.get("source", "") for s in seeds if isinstance(s, dict)]
+    dup = sorted({u for u in srcs if u and srcs.count(u) > 1})
+    check(f"logs/seeds.json cites a distinct source per seed ({len(seeds)} seeds)",
+          not dup,
+          f"reused {len(dup)} URL(s): {dup} — two seeds from one document are "
+          f"one seed; drop the weaker and re-harvest (web-topic-research)")
 
 
 ADJUNCT_CAP = 0.20
@@ -842,7 +1315,58 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
           not off, f"prescribed vs actual: {off}")
 
 
-def check_script_shape(script_text: str, ct: str, m):
+def check_spec_target_items(d, gt: str, st: str, bi):
+    """The paper must test the items the spec drew (G19).
+
+    Test 3's 問題4 8番 tests 「本日は遠方からお越しいただき…」 while the spec drew
+    「こちらこそ、いつもお世話になっております。」 — an unrecorded substitution, so the
+    ledger burned an item the paper never asked and the substitute never
+    rotates. Only the three categories that are literal substrings of their own
+    stems are decidable here; grammar_p7/context_words often are not, and stay
+    with exam-qa-review §6.1.
+    """
+    spec_path = ROOT / "logs" / "test_spec.json"
+    if not spec_path.is_file():
+        return skip(f"{d.name}: 問題1/2/4 test the sampled items",
+                    "no test_spec.json")
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    if str(spec.get("test_id")) != d.name:
+        return skip(f"{d.name}: 問題1/2/4 test the sampled items",
+                    f"spec is for test {spec.get('test_id')}, not {d.name}")
+
+    cut = bi.KEY_HEADING.search(gt)
+    body = gt[: cut.start()] if cut else gt
+    p4 = re.split(r"^問題([1-5])。$", st, flags=re.M)
+    haystacks = {
+        "kanji_reading": dokkai_section(body, 1),
+        "orthography": dokkai_section(body, 2),
+        "quick_response": "".join(p4[i + 1] for i in range(1, len(p4), 2)
+                                  if p4[i] == "4"),
+    }
+    missing = []
+    for cat, hay in haystacks.items():
+        for entry in spec.get("items", {}).get(cat, []):
+            item = entry.get("item") if isinstance(entry, dict) else entry
+            if not item:
+                continue
+            # kanji_reading/orthography are written `軍(いくさ)` — the reading is
+            # an annotation, and 副(フク) prints its options in hiragana, so only
+            # the base form is decidable. Idiom entries inflect (顔が広い appears
+            # as 顔が広くて), so a one-character trim counts as found.
+            base = re.sub(r"\s*[（(][^）)]*[）)]\s*$", "", item).strip()
+            probes = [item, base, base.rstrip("。")]
+            if len(base) >= 4:
+                probes.append(base.rstrip("。")[:-1])
+            if not any(p and p in hay for p in probes):
+                missing.append(f"{cat}:「{item[:24]}」")
+    check(f"{d.name}: 問題1/2/4 test the items logs/test_spec.json drew "
+          f"({sum(len(spec.get('items', {}).get(c, [])) for c in haystacks)} targets)",
+          not missing,
+          "; ".join(missing) + " — author only the sampled items, or re-sample; "
+          "a silent substitution corrupts rotation (item-pool-sampling)")
+
+
+def check_script_shape(script_text: str, ct: str, m, test_id: str = ""):
     """聴解 script ↔ booklet: same instructions, options spoken only where the
     booklet prints none (jlpt-exam-structure's 'Printed in booklet' column)."""
     drift = [ln for ln in re.findall(r"^問題[1-5]では、.*$", ct, re.M)
@@ -872,16 +1396,165 @@ def check_script_shape(script_text: str, ct: str, m):
     check("options are spoken exactly where the booklet prints none",
           spoken == want, f"spoken option lines {spoken}, expected {want}")
 
-    if (tail := re.split(r"^2番。まず話を聞いてください。", script_text, flags=re.M)):
-        if len(tail) > 1 and re.search(r"^[1-4]、", tail[1], re.M):
-            check("問題5 2番 does not speak its printed options", False,
-                  "options for the two-question item are printed in the booklet only")
-        else:
-            check("問題5 2番 does not speak its printed options", True)
+    # 問題5's 2番 gets NO spoken lead-in: official July 2025 opens it with the
+    # situation alone (「2番。ラジオを聞いて男の人と女の人が話しています。」) because
+    # its instruction and its options are printed. All four generated scripts
+    # spoke 「2番。まず話を聞いてください。それから、二つの質問を…」, and the check
+    # below used to SPLIT on that literal — it assumed the defect was there and
+    # only complained about what followed it. A gate written around a defect
+    # normalizes it, so the anchor is now 「2番。」 alone.
+    check(f"{test_id}: 問題5 2番 lead-in is booklet-only "
+          f"(official speaks only the situation)",
+          not re.search(r"^2番。まず話を聞いてください。", script_text, re.M),
+          "delete the instruction from the script; 2番's options are printed "
+          "(jlpt-exam-structure) — see tests/imported-n2-2025-07/聴解スクリプト.txt")
+
+    p5 = re.split(r"^問題5。$", script_text, maxsplit=1, flags=re.M)
+    tail = re.split(r"^2番。", p5[-1], flags=re.M)
+    if len(tail) > 1 and re.search(r"^[1-4]、", tail[-1], re.M):
+        check("問題5 2番 does not speak its printed options", False,
+              "options for the two-question item are printed in the booklet only")
+    else:
+        check("問題5 2番 does not speak its printed options", True)
 
     ascii_punct = re.findall(r"(?<!\d)[,.](?!\d)", script_text)
     check("no ASCII , or . in the script (TTS mis-times them)", not ascii_punct,
           f"{len(ascii_punct)} found — use 、 and 。")
+
+
+def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
+    """Narration gender must agree with the voice SPEAKER_MAP will synthesize (G14).
+
+    Test 3 narrates 「係員の男の人」/「アナウンサーの男の人」/「職員の男の人」 for three
+    labels SPEAKER_MAP casts FEMALE — the audio contradicts the booklet and no
+    gate could see it. The whole block is scanned, not its first line: 問題5's
+    2番 puts its narration on the SECOND line, which is where the third
+    mismatch hid.
+
+    The same-voice half is a WARN and generated-only: SPEAKER_MAP casts nothing
+    for an external MP3, and the official July 2025 script pairs 女 with 医者,
+    both FEMALE in the map (see choukai-script-writing 'One voice per person').
+    """
+    mismatch, indistinct = [], []
+    for block in re.split(r"\n\s*\n", script_text):
+        lines = [ln for ln in block.strip().splitlines() if ln.strip()]
+        if not lines or not m.ITEM_RE.match(lines[0]):
+            continue
+        labels: list[str] = []
+        for ln in lines:
+            hit = m.SPEAKER_RE.match(ln)
+            if hit and hit.group(1) in m.SPEAKER_MAP and hit.group(1) not in labels:
+                labels.append(hit.group(1))
+        for lab in labels:
+            gender = "男" if m.SPEAKER_MAP[lab]["voice"] == m.MALE else "女"
+            other = "女" if gender == "男" else "男"
+            if re.search(rf"{re.escape(lab)}の{other}の人", block):
+                mismatch.append(f"{lines[0][:8]} 「{lab}の{other}の人」 but "
+                                f"SPEAKER_MAP casts {lab} as {gender}")
+        if len(labels) == 2 and len({m.SPEAKER_MAP[l]["voice"] for l in labels}) == 1:
+            indistinct.append(f"{lines[0][:8]} {labels}")
+    check(f"{test_id}: 聴解 narration gender matches SPEAKER_MAP's voice",
+          not mismatch,
+          "; ".join(mismatch) + " — rename the speaker or recast it in "
+          "choukai-mp3-generation's SPEAKER_MAP; the audio and the booklet "
+          "must describe the same person")
+    if origin == "generated":
+        warn(f"{test_id}: 聴解 two-party items cast two distinguishable voices",
+             not indistinct,
+             "; ".join(indistinct) + " — both labels resolve to one voice; "
+             "prefer contrasting genders (choukai-script-writing)")
+
+
+def check_artifact_freshness(d):
+    """Deliverables must carry the sha of the source they were built from (G4).
+
+    Commit 4df5631 rewrote 聴解スクリプト.txt for tests 1–4 and the import but
+    regenerated the MP3 for test 3 only: four shipped papers speak superseded
+    問題N instructions. mtimes cannot see this (they are checkout-unstable), so
+    make_choukai_mp3.py stamps `script_sha` into 聴解_チャプター.json and
+    build_booklet.py stamps `<!-- src_sha: <name>=<sha> -->` into every HTML.
+
+    An external MP3 has no TTS timeline to stamp (write_external_chapters.py
+    writes `source: external`), so the audio half is skipped for it — that is
+    the one exemption, and it is why the check passes imported-n2-2025-07.
+    """
+    script = d / "聴解スクリプト.txt"
+    chapters = d / "聴解_チャプター.json"
+    if script.is_file() and chapters.is_file():
+        try:
+            data = json.loads(chapters.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as e:
+            data = {}
+            check("聴解_チャプター.json parses", False, str(e))
+        want = hashlib.sha1(script.read_bytes()).hexdigest()[:12]
+        if data.get("source") == "external":
+            skip(f"{d.name}: 聴解.mp3 was built from today's 聴解スクリプト.txt",
+                 "external MP3 (no TTS timeline to stamp)")
+        else:
+            got = data.get("script_sha")
+            check(f"{d.name}: 聴解.mp3 was built from today's "
+                  f"聴解スクリプト.txt (script_sha {want})", got == want,
+                  f"聴解_チャプター.json records {got!r} — run `make mp3 {d.name}`; "
+                  f"the shipped audio speaks a superseded script "
+                  f"(jlpt-test-generation Invariants)")
+
+    # HTML: WARN on a missing stamp (no built HTML carries one yet — the rebuild
+    # belongs to the paper-repair pass), FAIL when a stamp is present and stale.
+    stale, unstamped = [], []
+    html_sources = {"言語知識・読解.html": ["言語知識・読解.md"],
+                    "聴解.html": ["聴解.md"],
+                    "解答.html": ["言語知識・読解.md", "聴解.md", "聴解スクリプト.txt"]}
+    for html_name, srcs in html_sources.items():
+        page = d / html_name
+        if not page.is_file():
+            continue
+        stamps = dict(re.findall(r"<!-- src_sha: (.+?)=([0-9a-f]{12}) -->",
+                                 page.read_text(encoding="utf-8")))
+        for src_name in srcs:
+            src = d / src_name
+            if not src.is_file():
+                continue
+            want = hashlib.sha1(src.read_bytes()).hexdigest()[:12]
+            if src_name not in stamps:
+                unstamped.append(f"{html_name}←{src_name}")
+            elif stamps[src_name] != want:
+                stale.append(f"{html_name} records {src_name}={stamps[src_name]}, "
+                             f"source is {want}")
+    check(f"{d.name}: built HTML matches the Markdown it stamps", not stale,
+          "; ".join(stale) + " — run `make booklet` and `make sheet`; the "
+          "Markdown is the single source of truth (AGENTS.md §5)")
+    warn(f"{d.name}: built HTML records its source sha", not unstamped,
+         f"{len(unstamped)} stamp(s) missing ({unstamped[:3]}…) — rebuild with "
+         f"`make booklet {d.name} && make sheet {d.name}` to stamp them "
+         f"(exam-booklet-generation)")
+
+
+# Cross-test reuse (G15). Apparatus and 例 dialogues carried over verbatim: test
+# 2's 問題1 例 block is byte-identical to test 1's, and both are byte-identical
+# to the official July 2025 paper's. Only a GENERATED test can be at fault — the
+# import reproduces an outside source and is the thing being copied.
+def test_note_lines(gt: str) -> set[str]:
+    return {ln.strip() for ln in gt.splitlines() if NOTE_DEF.match(ln)}
+
+
+def test_example_blocks(st: str) -> set[str]:
+    return {b.strip() for b in re.split(r"\n\s*\n", st) if b.strip().startswith("例。")}
+
+
+def check_cross_test_reuse(name: str, mine: dict, others: dict[str, dict]):
+    for kind, label, fix in (
+            ("notes", "（注N） definition line",
+             "rewrite the gloss for THIS passage — three of test 2's were "
+             "test 1's, and all three were orphaned because the passage changed"),
+            ("examples", "例。block",
+             "author a fresh 例 dialogue (choukai-script-writing); test 1's and "
+             "test 2's 問題1 例 are byte-identical to the official paper's")):
+        shared = []
+        for other, data in others.items():
+            for dup in sorted(mine[kind] & data[kind]):
+                shared.append(f"{dup.splitlines()[0][:34]}… also in {other}")
+        check(f"{name}: no {label} is byte-identical to another test's", not shared,
+              "; ".join(shared[:4]) + f" — {fix}")
 
 
 EXAMPLE_PREMARK = re.compile(r"\*\*[（(]([1-4])[)）]\*\*")
@@ -946,6 +1619,15 @@ def check_tests():
         print("\nper-test contracts")
         skip("tests/", "no test directories on disk")
         return
+
+    # Reuse across tests can only be seen with every test in hand (G15).
+    reuse: dict[str, dict[str, set[str]]] = {}
+    for p in dirs:
+        gp, sp = p / "言語知識・読解.md", p / "聴解スクリプト.txt"
+        reuse[p.name] = {
+            "notes": test_note_lines(gp.read_text(encoding="utf-8")) if gp.is_file() else set(),
+            "examples": test_example_blocks(sp.read_text(encoding="utf-8")) if sp.is_file() else set(),
+        }
 
     for d in dirs:
         print(f"\nper-test contracts: {d.relative_to(ROOT)}")
@@ -1015,7 +1697,7 @@ def check_tests():
         # is a generation failure mode — do not fail imported transcriptions.
         if origin == "generated":
             check_mondai8_chunk_lengths(gt, opts, bi)
-        check_level_band_grammar(gt, keys, opts, origin)
+        check_level_band_grammar(gt, keys, opts, origin, d.name)
         check_answer_positions(d, keys, ck, g)
         for f in (gengo, choukai):
             body = f.read_text(encoding="utf-8")
@@ -1028,6 +1710,12 @@ def check_tests():
         check(f"{gengo.name}: no furigana (<ruby>) in 言語知識・読解", not gengo_rubies,
               f"found {len(gengo_rubies)} <ruby> tags in prose — Dokkai uses only （注N） notes for over-the-level words")
         check_dokkai_numbered_markers(gengo.name, gengo_prose)
+        check_note_pairing(d.name, gengo_prose)
+        check_note_band(d.name, gt)
+        check_dokkai_lengths(d.name, gengo_prose, bi)
+        check_chuuryaku(d.name, gengo_prose)
+        check_mondai11_stems(d.name, gengo_prose)
+        check_verbatim_keys(d.name, gengo_prose, keys, opts, bi)
 
         # Only the 読解 key table quotes running text; the 文字・語彙 and 文法
         # tables put grammar glosses in 「」 by design, which is not a quote.
@@ -1036,33 +1724,48 @@ def check_tests():
                            re.M | re.S)
         if gcut and dokkai:
             check_explanation_quotes(gengo.name, dokkai.group(1), gt[: gcut.start()])
+            check_mondai14_quotes(d.name, gengo_prose, dokkai.group(1), bi)
+        bunpou = re.search(r"^##\s*文法\s*$(.*?)(?=^##\s|\Z)",
+                           gt[gcut.start():] if gcut else "", re.M | re.S)
+        if bunpou:
+            check_mondai9_tags(d.name, bunpou.group(1))
+        elif origin == "generated":
+            check(f"{d.name}: 問題9 解説 cells carry four distinct category "
+                  f"tags incl. one [内容推論]", False,
+                  "no `## 文法` answer-key table to read (question-authoring)")
+        if origin == "generated":
+            check_cross_test_reuse(d.name, reuse[d.name],
+                                   {k: v for k, v in reuse.items() if k != d.name})
+        else:
+            skip(f"{d.name}: no （注N）/例。block is byte-identical to another test's",
+                 "an imported paper is what others copy, not the copier")
 
         # Official July 2025 (~50+ 注, 中略 in 中文, 長文 ~1000) is the bar.
         # Generated tests 1–4 under-annotated; warn so authoring cannot ignore it.
         if origin == "generated":
-            notes = len(re.findall(r"（注\d+）|\(注\d+\)", gt))
+            # Count IN-BODY （注N） markers in the passage region: every gloss
+            # occurs at least twice (marker + definition line) and 解説
+            # back-references add more, so counting raw occurrences across the
+            # file roughly doubled the total — tests 1–3 cleared this bar on
+            # 6–9 real glosses and test 4's reported 10 was really 5. Counting
+            # definition lines instead is format-specific (the official July
+            # 2025 paper glosses in-body and measures 5 that way, not 30), and
+            # 注 numbers restart per passage so distinct numbers undercount.
+            # Markers-minus-definitions is the one metric that holds for both.
+            notes_body = gt[: gcut.start()] if gcut else gt
+            notes_prose = "\n".join(
+                ln for ln in notes_body.splitlines()
+                if not re.match(r"\s*[（(]注\d*[）)]\s*\S+?\s*(?::|：)", ln))
+            notes = len(re.findall(r"（注\d*）|\(注\d*\)", notes_prose))
             warn(f"{d.name}: 読解 has substantial （注N） glosses "
-                 f"(official July 2025 ≈50+; got {notes})",
+                 f"(official July 2025 = 30 in-body; got {notes})",
                  notes >= 15,
                  "add glosses on N1/rare terms in 問題10–13 — see question-authoring")
-            easy_note_match = re.findall(
-                r"（注\d+）\s*(選択|信号|技術|文化|質|準備|手順|設計|現象|経由|偏り|維持|継続|前提|細部|バランス|指示|対応|理由|関係|方法)(?::|：)",
-                gt
-            )
-            warn(f"{d.name}: 読解 （注N） notes do not target easy/basic N3–N5 words",
-                 not easy_note_match,
-                 f"found glosses on easy/standard words: {set(easy_note_match)} — notes must target N1+/rare/specialized terms")
-            warn(f"{d.name}: 読解 uses （中略） at least once",
-                 "中略" in gt,
-                 "official 中文/長文 cut with （中略）; generated tests shipped none")
-            m13 = re.search(r"^##\s*問題13\b.*?(?=^##\s*問題14\b)", gt, re.M | re.S)
-            if m13:
-                body13 = re.split(r"\*\*67\*\*", m13.group(0), maxsplit=1)[0]
-                n13 = jp_char_count(body13)
-                warn(f"{d.name}: 問題13 長文 ≥850 JP chars "
-                     f"(official ~900–1100; got {n13})",
-                     n13 >= 850,
-                     "主張理解 is under-length vs refs/JLPT")
+            # The gloss BAND is check_note_band (openjlpt membership + circular
+            # definitions) — the old 21-word alternation here could never cover
+            # the class and missed 鑑賞/割引/便箋/蘇る. （中略） placement is
+            # check_chuuryaku and the 問題13 length floor is check_dokkai_lengths,
+            # both of which run for every test.
             m7 = re.search(r"^##\s*問題7\b.*?(?=^##\s*問題8\b)", gt, re.M | re.S)
             if m7:
                 dialogueish = (
@@ -1086,14 +1789,17 @@ def check_tests():
                 check(f"聴解スクリプト.txt passes validate_script ({len(blocks)} blocks)", True)
             except SystemExit as e:
                 check("聴解スクリプト.txt passes validate_script", False, str(e).replace("\n", " ")[:300])
-            check_script_shape(st, ct, m)
+            check_script_shape(st, ct, m, d.name)
             check_example_premarks(ct, st, bi)
+            check_voice_casting(st, m, origin, d.name)
+            check_spec_target_items(d, gt, st, bi)
         else:
             check("聴解スクリプト.txt present", False, "canonical name required")
 
         if (d / "聴解.mp3").is_file():
             check("聴解_チャプター.json accompanies the MP3", (d / "聴解_チャプター.json").is_file(),
                   "re-run make mp3 to regenerate chapter marks")
+        check_artifact_freshness(d)
 
         sheet = d / "解答.html"
         if not sheet.is_file():
@@ -1236,8 +1942,11 @@ def main():
         check_item_counts()
         check_taxonomy()
         check_pool_infrastructure()
+        check_pool_grammar_band()
         print("\nrotation inputs (why a new test is actually new)")
         check_rotation_inputs()
+        check_ledger_draw_counts(load(".agents/item-pool-sampling/scripts/sample_items.py"))
+        check_harvest_hygiene()
     check_tests()
     check_grader_parity()
 

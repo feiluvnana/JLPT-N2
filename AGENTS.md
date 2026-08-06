@@ -74,7 +74,7 @@ not route around it silently.
   10. `web-topic-research`: Sourcing fresh real-world topic seeds, factual texture, and collocation checks from the web, then blending them across ALL exam surfaces (reading, listening, cloze, 問14 flyer, 即時応答 settings, carrier sentences) under enforced balance caps (`merge_seeds.py`).
   11. `exam-answer-grading`: Grading user responses against answer keys, calculating scaled scores (0-180), evaluating Pass/Fail thresholds, analyzing sub-question weak points, and writing the structured result document `採点結果.json` (`grade_answers.py`).
   12. `interactive-answer-sheet`: Rendering the merged problem+answer sheet — the complete booklet with radio bubbles beside every choice, an in-page audio player for 聴解, **in-page 180-point grading** that saves `採点結果.json` directly (`build_interactive.py`), and the one server that lists every test and runs them (`serve_sheet.py`).
-  13. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test).
+  13. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test). It also root-causes every finding back to the skill, script, or gate check that let it through (§6.5), so the next test does not reproduce it.
   14. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
 
 ---
@@ -278,14 +278,58 @@ silently starves one 問題, which then gets authored off-contract) and the pool
 side keeps ≥40% of every blended surface. Both broke in test 4 because
 `merge_seeds.py` had been run twice over its own output.
 
+It also checks the **reading apparatus and the passage bodies**, all measured on
+`tests/imported-n2-2025-07` (the July 2025 official paper is the reference bar —
+a check that paper fails is a wrong check): `（注N）` markers and definitions pair
+1-to-1 **per passage** (an orphan either way is an automatic QA fail, and tests
+2 and 4 shipped both directions); every `（中略）` sits inside a 問題11–13 passage
+rather than floating under an instruction line, and at least one passage is cut;
+every 読解 section clears its length floor — 問題10 ≥1150, 問題11 ≥2250, 問題12
+≥510, 問題13 ≥900, 問題14 ≥560 JP chars of passage prose, plus ≥200 per 問題10
+passage and ≥400 per 問題11 passage (official measures 1274/2503/572/1005/622,
+minima 222 and 554); no 問題11 stem uses a pure-retrieval shape
+(`本文で述べられて` / `として正しいもの` / `主な目的は` / `内容と合っている`, which
+appear in no official 中文 stem) and every 問題11 passage asks one 考え/主張
+question; each 問題14 解説 quotes the **two** flyer cells its key combines; the
+four 問題9 解説 cells carry four distinct category tags including exactly one
+`[内容推論]`; no keyed 読解 option is ≥50 JP chars **and** ≥1.7× the mean of its
+three distractors (a key findable by length alone — the message also says
+whether it is a verbatim passage lift); and no `（注N）` definition line or `例。`
+script block in a **generated** test is byte-identical to another test's (an
+imported paper is what others copy, not the copier, so it is exempt).
+
+On the 聴解 side it checks that **the audio and the booklet describe the same
+people and the same paper**: 問題5's 2番 must not speak the 「まず話を聞いて…」
+lead-in (official speaks only the situation, and the printed-options check is
+anchored on `2番。` alone so it survives the deletion — it used to split on the
+defect); narration saying `〈label〉の男/女の人` must agree with the voice
+`SPEAKER_MAP` casts for that label, scanning the whole block because 問題5's 2番
+puts its narration on the second line; `聴解_チャプター.json`'s `script_sha` must
+equal `sha1(聴解スクリプト.txt)[:12]`, so an MP3 built from a superseded script
+fails instead of shipping silently (skipped for `source: external` audio, which
+has no TTS timeline); and the 問題1/2/4 target items `logs/test_spec.json` drew
+must actually appear in the paper.
+
+Outside the papers it checks the **inputs that decide them**: every
+`pools.json` grammar entry stays inside the level band and no grammar category
+lists one point under two spellings (`〜がち`/`〜がちだ`, `〜気味`/`〜ぎみだ` —
+compared after folding kanji tails to kana and dropping a trailing だ); every
+`logs/ledger.json` history entry records exactly `sample_items.DRAW[cat]` items;
+and no two `logs/seeds.json` seeds cite the same source URL.
+
 Some rules cannot be decided by matching, so the gate **warns** instead of
-failing. There are six warn classes: a 解説 that quotes text found in neither
-the passage nor the script; too few `（注N）` glosses; notes glossing basic
-N3–N5/standard-N2 words; no `（中略）` anywhere; a 問題13 under ~850 JP chars; and
-a 問題7 set with no dialogue/setting-label stems. Warnings are part of the output
-you must read (§0.5): resolve each one, or state in your final report why it is a
-false positive. The quote warning is what surfaced test 4's five invented 聴解
-quotes, including a keyed option the audio never speaks.
+failing. There are seven warn classes: a 解説 that quotes text found in neither
+the passage nor the script; fewer than 15 in-body `（注N）` glosses (official
+July 2025 = 30); a gloss whose term is a headword in
+`openjlpt/vocab-n2.json` (i.e. standard N2 — this replaced a 21-word
+alternation that could never cover the class and missed 鑑賞/割引/便箋/蘇る); a
+`（注N）` definition assembled from the term's own kanji; a 問題7 set with no
+dialogue/setting-label stems; a two-party 聴解 item whose two labels resolve to
+one voice; and built HTML with no `<!-- src_sha: … -->` stamp (a *stale* stamp
+fails). Warnings are part of the output you must read (§0.5): resolve each one,
+or state in your final report why it is a false positive. The quote warning is
+what surfaced test 4's five invented 聴解 quotes, including a keyed option the
+audio never speaks.
 
 Finally it checks the **rotation inputs** — the two knobs that decide whether a
 new test is actually new. Pool items rotate through the ledger, but the web
@@ -359,13 +403,20 @@ modes are context problems:
 | 1 | Setup | Workflow steps 1–3.5: read the skills, sample the pool, harvest seeds, merge, verify the blend report | own subagent |
 | 2–5 | Authoring ×4 | One per section — 文字・語彙 (問1–6), 文法 (問7–9), 読解 (問10–14), 聴解 (booklet + script). Each re-reads `logs/test_spec.json` and the relevant SKILL.md at its start instead of trusting a long context's memory | one subagent each; only in the no-subagent fallback may sections share a context, and then the spec + skill re-read between sections is the minimum |
 | 6 | Build + gate | Steps 6–9: booklet HTML, MP3, `解答.html`, `make check` (read every line incl. WARN), whole-paper topic table | may share a subagent with pass 5 |
-| 7 | QA | `exam-qa-review` in full — blind-solve first, all 101 items, report with verdict | **own subagent — must NOT be any authoring context, and the orchestrator must not leak authoring detail into its prompt** |
+| 7 | QA | `exam-qa-review` in full — blind-solve first, all 101 items, report with verdict **and a root-cause table (§6.5) naming the skill/gate defect behind each finding** | **own subagent — must NOT be any authoring context, and the orchestrator must not leak authoring detail into its prompt** |
 | 8+ | Fix → re-review | Repair findings in the sources, regenerate, re-gate; then the changed items and their whole 問題 re-reviewed | fix may reuse an authoring subagent; the re-review must again be fresh eyes |
 
 **Floor: 7 passes** when QA finds nothing. Every QA finding adds a fix + re-
 review round (passes 8 and 9, then 10 and 11, …); the loop ends only at a
 `QA: PASS` report. Partial work scales the same way: "just fix the MP3" is
 still fix (one pass) + fresh-eyes re-review of the touched items (another).
+
+`QA: PASS` closes the *paper*, not the *generator*. QA's root-cause table
+(`exam-qa-review` §6.5) is a second work list, aimed at the skills and at
+`tools/check_consistency.py`, and an open entry on it **blocks the next
+generation run** — the review of tests 1–4 found seven defect classes present in
+all four papers, which is what carrying that list forward silently produces.
+Apply each entry or reject it with a reason before authoring a new test.
 
 **Fallbacks, in order.** If the harness cannot spawn subagents, the user acts
 as the orchestrator's scheduler: approximate the table with new sessions, one

@@ -9,7 +9,7 @@ description: Single owner of the adversarial QA pass that every generated test m
 
 Tests 2, 3, and 4 all shipped with `make check` green. The generator model
 optimizes what is checked; everything unchecked drifts. The drift has a shape —
-the same three failure modes every time:
+the same four failure modes every time:
 
 1. **No self-reconciliation.** The generator never re-reads its output against
    its own source. Test 4 keyed a 聴解 option naming 点検作業員 where the script
@@ -21,9 +21,20 @@ the same three failure modes every time:
 3. **Late-file degradation.** Defects cluster in whatever was generated last
    (test 4: the listening half). Long single-pass generation degrades; the
    review must weight the end of the paper at least as heavily as the start.
+4. **The skills themselves are defective.** Every paper is an output of the
+   skills in `.agents/`. A full review of tests 1–4 found seven defect classes
+   in **all four papers at once** — 問題11 passages with two factual questions
+   and no opinion question; 聴解 distractors nobody says; 5–29 `（注N）` glosses
+   against the official ~35; no 問題9 blank requiring whole-passage tracking;
+   問題6 domain-violation distractors; item 71 as a single-field lookup;
+   passages under band. Four independent authoring runs do not make the same
+   seven mistakes by coincidence. Repairing the four papers and stopping there
+   guarantees test 5 ships them again — so QA's output is **two** work lists:
+   the paper's findings, and the skill defects behind them (step 6.5).
 
 QA therefore has one job: **read the paper the way a hostile examinee would**,
-with the sources side by side, and refuse to pass anything it cannot prove.
+with the sources side by side, and refuse to pass anything it cannot prove —
+then name what let each defect through.
 
 ## Ground rules (strict by construction)
 
@@ -67,9 +78,26 @@ with the sources side by side, and refuse to pass anything it cannot prove.
   聴解 distractor not grounded in anything said in the dialogue**; **a 問題9
   blank testing the same grammatical/functional category as another blank in
   the same passage**; **an orphaned `（注N）` gloss whose term never appears in
-  the passage body**; **a 問題14 item answerable from a single constraint, or
-  referencing a scenario detail (a role, category) the source text never
-  describes**.
+  the passage body, or an in-body `（注N）` marker with no definition line**
+  (test 4 shipped 「準備（注5）」 with no 注5 at all); **a 問題14 item answerable
+  from a single constraint, or referencing a scenario detail (a role, category)
+  the source text never describes**; **an artifact older than the source it is
+  built from** — `聴解.mp3`/`聴解_チャプター.json` predating
+  `聴解スクリプト.txt`, or the HTML predating its Markdown; the audio then
+  speaks superseded text and no other gate can see it (tests 2 and 4 both
+  shipped this from one commit that rewrote the 問題 instructions); **apparatus
+  carried over verbatim from another test** — test 2's 問題11 `（注N）` notes were
+  a character-for-character copy of test 1's, in the same passage slots, and
+  three were orphaned because the passages around them had changed; **a 読解 key
+  identifiable without reading the passage**, because it is a verbatim 60–110
+  character lift of a passage sentence beside ~25 character distractors (test 3
+  shipped three in a row); **any passage, dialogue, 例, stem, or option copied
+  verbatim from `refs/` or from an `imported-*` paper** — AGENTS.md §5 allows
+  reference material for calibration only, and tests 1 and 2 shipped three 例
+  dialogues (236, 228 and 236 characters) byte-identical to the official July
+  2025 exam's. Check this against the imported papers directly, not just
+  test-against-test: the round that found it had filed the defect as test 2
+  copying test 1, and missed that BOTH had copied the official paper.
 - **Fix, regenerate, re-check, RE-REVIEW.** Findings are repaired in the
   Markdown/script sources, then booklet HTML + `解答.html` (+ MP3 if the script
   changed) are regenerated and `make check` re-run. Then the changed items AND
@@ -188,7 +216,14 @@ words, "がちだ" vs bare "がち", 読解 questions that only test N5 fact-loo
 - **読解 apparatus & formatting:** using `imported-n2-2025-07` (July 2025) as
   the bar — fail (or hard-warn) a generated paper with fewer than ~15 `（注N）`
   across 問題10–13, with **no** `（中略）` anywhere in 中文/長文, or with 問題13
-  under ~850 JP chars. Tests 1–4 shipped 0–2 notes and ~600–750 長文.
+  under ~850 JP chars. Count **in-body markers** (one per glossed term, in the
+  passage region), not raw `（注N）` occurrences: each gloss also has a
+  definition line and 解説 may back-reference it, so occurrence counting nearly
+  doubles the figure — that is precisely the `GATE-WRONG` bug that let tests 1–4
+  ship 5–9 glosses against a nominal 15 bar. Measured with the in-body metric,
+  July 2025 has **30** and tests 1/2/3/4 have 9/6/29/5. A gloss count that
+  exceeds the in-body count means orphaned definitions (test 2: 8 definitions,
+  6 markers) — check both directions.
   **Fail any paper that glosses basic N3–N5 or standard N2 words** (such as 選択, 信号, 技術, 文化, 質, 準備, 手順, 設計, 現象, 経由, 偏り, 維持, 継続, 前提, 細部, バランス) or uses trivial circular definitions. Notes must strictly target N1+/rare/literary/specialized terms or contextual metaphors.
   **Fail any paper containing `<ruby>` (furigana) in `言語知識・読解.md`** — test-takers read N2 kanji without furigana; over-the-level terms must use only `（注N）` notes.
   **Fail any paper with mismatched passage numbered markers (`①**...**`, `②**...**`)** — every numbered marker in a passage must match 1-to-1 with a question stem in that question block (no orphaned/unused markers).
@@ -293,6 +328,88 @@ Verify `logs/test_spec.json` against the authored paper end to end:
 5. **Harvest URL Verification:**
    - Spot-check 2–3 `logs/seeds.json` URLs by fetching them. Sequential or unresolvable URLs mean the harvest was invented — report it immediately.
 
+### 6.5. Root-cause every finding against the skills
+
+**The paper is not the defect; it is the symptom.** Every item in it was written
+by an agent following `.agents/*/SKILL.md`, sampled by a script, and cleared by
+`tools/check_consistency.py`. So after the findings table is closed, walk it
+once more and answer, per finding: *what would have had to be different in the
+skills or the gate for this to be impossible?* Fixing only the paper leaves the
+generator that produced it unchanged.
+
+**The recurrence test — apply it first, it is not a judgment call.** Count how
+many of the tests on disk show the finding's class. A class present in **two or
+more papers is systemic by definition**: stop calling it an authoring slip and
+root-cause it. Do this by reading the other tests' sources, not from memory. The
+review of tests 1–4 turned up, among others: two-factual 問題11 in all four
+papers; ungrounded 聴解 distractors in all four; the `問題14` single-field lookup
+landing on item 71 in three; the 問題5 2番 lead-in spoken aloud in all four
+though official papers keep it booklet-only; `SPEAKER_MAP` gender mismatches in
+two; a stale MP3 in two (same commit); and test 2's 問題11 notes being a
+verbatim copy of test 1's, in the same passage slots.
+
+Assign each finding exactly one root cause:
+
+| Code | Meaning | Fix goes to |
+|---|---|---|
+| `RULE-MISSING` | No skill forbids it. The author had no way to know. | the owning skill |
+| `RULE-UNENFORCEABLE` | A rule exists but as prose with no number, template, or procedure ("keep passages long enough"), so it cannot be complied with or verified | the owning skill — convert to a number or a construction procedure |
+| `RULE-IGNORED` | The rule exists, is specific, and was skipped | nothing to change; report it as a process failure per AGENTS.md §0 |
+| `GATE-BLIND` | String-decidable, and no check exists | `tools/check_consistency.py` |
+| `GATE-WRONG` | A check exists and **mis-measures**, so green was never evidence | `tools/check_consistency.py`, **plus re-verify every test that passed on it** |
+| `PIPELINE-GAP` | Sources are right; an artifact was not regenerated, or step ordering permits staleness | `jlpt-test-generation` workflow + the gate |
+
+`GATE-WRONG` is the most dangerous code and the easiest to miss, because the
+symptom is silence. Two live examples found this way: the `（注N）` counter
+matched both the in-body marker **and** its gloss-definition line, so 9 real
+glosses reported as 18 and every paper cleared a 15-gloss bar that was really
+7.5; and the 解説 quote matcher did not strip inline `（注N）` from the source,
+so five quotes that *are* in the passage were reported missing — burying the one
+that genuinely was not. A miscalibrated check is worse than no check: it
+converts an open question into false proof, and it trains the next reviewer to
+discount the warning.
+
+**Who owns what** — name the skill by file, not by area:
+
+| Symptom | Owning skill |
+|---|---|
+| 問題1–6 stems, options, distractor sets, 問題9 blank categories, 読解 apparatus (`（注N）`, `（中略）`, lengths), 問題14 constraint count | `question-authoring` |
+| Which item is tested, answer-position balance, rotation/ledger accounting | `item-pool-sampling` |
+| 問題-to-question-type mapping, 例 mechanics, what is printed vs spoken, section counts | `jlpt-exam-structure` |
+| Script block shape, spoken/booklet split, narration labels | `choukai-script-writing` |
+| `SPEAKER_MAP`, voice↔narration agreement, pacing, pauses | `choukai-mp3-generation` |
+| Topic freshness, cross-test/cross-surface repetition, blend caps, domain caps | `web-topic-research` + `merge_seeds.py` |
+| Pass ordering, regeneration steps, artifact staleness | `jlpt-test-generation` |
+| Booklet/sheet rendering, stem-line layout, furigana | `exam-booklet-generation`, `interactive-answer-sheet` |
+| Anything string-decidable, in any row above | also `tools/check_consistency.py` |
+
+**A root cause without a proposed edit is not a root cause.** For each one,
+write the target file, the section, and the actual sentence, number, table row,
+or check to add — enough that the fixing pass applies it without re-deriving it.
+Prefer, in this order: (1) a number or a template that replaces a judgment call,
+(2) a construction procedure at authoring time rather than a check at review
+time — a rule the author can only verify *after* writing the passage gets
+skipped,
+(3) a check in the gate when the rule is string-decidable. State when a rule
+genuinely cannot be mechanized and must stay a human judgment; that is a valid
+answer, and saying so keeps the next reviewer from assuming the gate has it.
+
+**Boundaries.** The reviewer *proposes* skill edits and does not apply them to
+generation skills mid-review — an author-adjacent context rewriting the rules it
+was just judged against is the same inversion this skill exists to prevent. The
+one file the reviewer may edit directly is **this one**: when a defect class
+found in the paper is absent from this skill, add it to the automatic-fail list
+or the relevant step immediately, in the same session, with the shipped example
+named. Rules only count when they execute or get read.
+
+**Effect on the loop.** A paper may reach `QA: PASS` with skill findings still
+open — the paper is fixed, and that is what PASS is about. But **an open
+`RULE-MISSING`, `RULE-UNENFORCEABLE`, `GATE-BLIND`, `GATE-WRONG`, or
+`PIPELINE-GAP` finding blocks the next generation run**, because the next test
+will reproduce it. Each must be applied, or explicitly rejected with a reason,
+before a new test is authored. Carrying one forward silently is how a defect
+becomes all four papers.
+
 ### 7. Report (required format)
 
 The report is the deliverable; without it the review did not happen. It must
@@ -306,15 +423,24 @@ contain, in this order:
    as a finding.
 3. **Findings table:** one row per finding — item, class (from the automatic-
    fail list or "minor"), evidence quote, fix applied or reason left open.
-4. **Coverage statement:** which steps ran on which files, the topic table
+4. **Root-cause table (step 6.5):** one row per finding — finding id, root-cause
+   code, how many tests on disk show the class, owning file, and the concrete
+   proposed edit. Group the rows that share a root cause: ten items failing on
+   one missing rule is **one** skill defect, and reporting it ten times hides
+   that. Findings coded `RULE-IGNORED` still get a row, marked as needing no
+   skill change.
+5. **Coverage statement:** which steps ran on which files, the topic table
    itself (not a claim that you built it), the URLs fetched in step 6 and what
-   they returned, and every WARN from `make check` with its resolution.
-5. **Skips:** anything not done, stated explicitly, with why. An unstated skip
+   they returned, and every WARN from `make check` with its resolution —
+   including any WARN you determined to be a false positive, with the evidence,
+   since that is a `GATE-WRONG` finding.
+6. **Skips:** anything not done, stated explicitly, with why. An unstated skip
    is how defects ship (AGENTS.md §0.7).
 
 Only after a PASS report may the test be committed or served. A FAIL report
 goes back to the author (or the fixing pass) with the findings table as the
-work list.
+work list — and the root-cause table goes to whoever touches the skills next,
+because the paper's fixes do not change the generator that produced it.
 
 ## Relationship to the other gates
 
@@ -322,6 +448,14 @@ work list.
 options distinct, script shape). This skill proves the CONTENT: one defensible
 answer, sources that support their keys, a paper that does not repeat itself.
 Neither substitutes for the other; the orchestrator runs them as steps 9 and
-9.5. When QA finds a defect class this file does not list, add it here AND, if
-it is string-decidable, to `tools/check_consistency.py` — rules only count when
-they execute or get read.
+9.5.
+
+It also proves the **generator**, via step 6.5. QA is the only pass that reads a
+finished paper against every rule that produced it, which makes it the only
+place the skills get audited at all — and the audit is not optional, because a
+defect class that survives here gets re-authored into the next test. So when QA
+finds a defect class this file does not list, add it here AND, if it is
+string-decidable, to `tools/check_consistency.py`; when it finds the *cause* in
+another skill, file it in the root-cause table with the concrete edit. Rules only
+count when they execute or get read — and a check that mis-measures counts for
+less than none, because it makes green look like proof.
