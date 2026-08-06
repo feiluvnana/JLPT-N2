@@ -50,13 +50,32 @@ then name what let each defect through.
   disk is still the author auditing its own intent — the setup every defective
   test shipped through. (This also keeps authoring contexts small: author, then
   hand off; don't interleave.)
-- **Blind-solve before reading the keys.** Take the paper first: answer every
-  文字・語彙/文法/読解 item and, from the script, every 聴解 item, WITHOUT
-  looking at the answer tables. Then diff against the keys. Every mismatch is a
-  finding — either the reviewer is wrong (fine, say why) or the item has a
-  second defensible answer or a mis-key. This one procedure would have caught
-  most of test 4's shipped defects on its own; do it before anything else so
-  the keys cannot anchor your reading.
+- **Blind-solve before reading the keys — from the keyless render, step 0.**
+  This is the first thing you do, before opening any file under `tests/<id>/`,
+  because a key you have seen cannot be un-seen and it anchors every judgment
+  after it. The procedure is executable; run it exactly:
+
+  1. `make keyless <test_id>` → `qa/<test_id>/keyless.md`. That is the whole
+     101-question paper plus `聴解スクリプト.txt`, with the key heading, the key
+     tables, the 解答用紙 grid and the 解説 column truncated away by the same
+     `strip_key()` that protects `解答.html` (see `interactive-answer-sheet`
+     §"Three build modes, one truncation"). The build aborts rather than emit a
+     render that still carries a key heading.
+  2. **Read that file and nothing else** — not `言語知識・読解.md`, not
+     `聴解.md`. Answer all 101 items from it and write the answer list into your
+     report draft. 聴解 is solvable from the embedded script; play `聴解.mp3`
+     too if you want, it carries no keys either.
+  3. Only then open the sourced Markdown and diff your list against the keys.
+
+  Every mismatch is a finding — either the reviewer is wrong (fine, say why,
+  with the deciding quote) or the item has a second defensible answer or a
+  mis-key. Copy the source `sha1`s from the render's header into the report
+  header, and rebuild the render when you finish: if the shas moved, a fixing
+  pass was editing underneath you and the review is void (see "The sources must
+  be still"). **Report which file you solved from.** If you solved from anything
+  but the keyless render, say so and say why — that is a skipped step under
+  AGENTS.md §0.7, not a style choice. This one procedure would have caught most
+  of test 4's shipped defects on its own.
 - **Entry condition:** `make check` green, and its WARN lines either resolved
   or individually justified. Do not start QA on a failing gate.
 - **Evidence or it didn't pass.** Every verdict below is backed by a quoted
@@ -85,7 +104,19 @@ then name what let each defect through.
   domain, wrong tone, or an unrelated functional category (see step 2b); **a
   聴解 distractor not grounded in anything said in the dialogue**; **a 問題9
   blank testing the same grammatical/functional category as another blank in
-  the same passage**; **an orphaned `（注N）` gloss whose term never appears in
+  the same passage**; **a 問題7 stem with no `（　）` at all, which prints its own
+  keyed answer** (test 2 shipped two: 「社内規定に即して」 and 「入学式にあたって」
+  in the stem, keys 3 and 4 — the stem-length check measured them happily);
+  **a 問題1 option set that is not the printed target's word form, or a 問題2 set
+  that is not the stem's inflected form** — the printed okurigana then selects
+  the key on sight (test 2's 効く with せき/こう/さく, and 問題2's こころよく with four
+  ～い options none of which substitutes into the stem); **a 読解 distractor
+  eliminable by an absolute quantifier or categorical denial** (すべて/まったく/
+  のみ/だけで十分/無関係/存在しない) — test 2 shipped 13 of 20 読解 items solvable
+  with the passage covered, e.g. 「誤情報はSNS以外には存在しない」 beside a real key;
+  **a 即時応答 prompt with no defined responder** — an announcement has no
+  addressee-reply, so the keyed "response" is just another announcement and a
+  staff-role option becomes defensible (test 2's 問題4 1番 火災報知器); **an orphaned `（注N）` gloss whose term never appears in
   the passage body, or an in-body `（注N）` marker with no definition line**
   (test 4 shipped 「準備（注5）」 with no 注5 at all); **a 問題14 item answerable
   from a single constraint, or referencing a scenario detail (a role, category)
@@ -94,7 +125,13 @@ then name what let each defect through.
   `聴解スクリプト.txt`, or the HTML predating its Markdown; the audio then
   speaks superseded text and no other gate can see it (tests 2 and 4 both
   shipped this from one commit that rewrote the 問題 instructions); **apparatus
-  carried over verbatim from another test** — test 2's 問題11 `（注N）` notes were
+  carried over verbatim OR near-verbatim from another test** — byte identity is
+  the gate's test, and a few edited characters evade it: test 2's 問題12
+  「（注2）睡眠衛生：質のよい睡眠のための生活習慣」 is test 4's 「…質のよい睡眠を保つ
+  ための生活習慣のこと。」 minus four characters, same 注 number, same term, and it
+  passed. Compare by similarity, not equality, and compare the passage sentences
+  around the gloss too — test 2's 問題12A is a rewrite of test 4's 問題13 sharing
+  the phrase 「就寝前の刺激を減らし」. Earlier, test 2's 問題11 `（注N）` notes were
   a character-for-character copy of test 1's, in the same passage slots, and
   three were orphaned because the passages around them had changed; **a 読解 key
   identifiable without reading the passage**, because it is a verbatim 60–110
@@ -106,6 +143,50 @@ then name what let each defect through.
   2025 exam's. Check this against the imported papers directly, not just
   test-against-test: the round that found it had filed the defect as test 2
   copying test 1, and missed that BOTH had copied the official paper.
+- **An option SET reused from an official paper, even when no line is
+  byte-identical.** Test 4's 聴解 問題5-2番 offered 夕日通り／西が丘／さくら公園／
+  東山 as four apartments; those are the exact four place names official July
+  2025 offers as sunset-viewing spots in its own 問題5-2番. Nothing matched
+  line-for-line, so every byte-identity check passed. Compare the *sets* of
+  proper nouns per 問題, against `tests/imported-*`, not just the sentences.
+- **問題5-2番 printing the deciding attribute beside each option name.** Official
+  prints bare labels (「夕日通り／にしがおか／さくら公園／東山」). Test 4 printed
+  「東山アパート（商店街の近くで買い物に便利）」 for all four, which hands over the
+  attribute the item exists to make the examinee remember, and it printed the
+  four in a DIFFERENT order for 質問1 and 質問2 to manufacture two answer
+  positions. Both fail.
+- **A 問題8 item whose keyed order is ungrammatical, or whose option set contains
+  a bare adverbial.** Test 4's item 45 keyed 4→3→1→2, which splices to
+  「新たな目標を掲げて**きっかけに**」 — a non-sentence, so the item is unanswerable
+  as printed; and items 43/44/46 each shipped a free adverb (お気軽に, 着実に,
+  着実に again) that reads naturally in two slots, i.e. two ★ answers. The
+  construction rule is the fix, not a review heuristic: no option may be an
+  adverb standing alone, and exactly one of the 24 orderings may be grammatical.
+- **A 問題11 pair with TWO opinion/main-point questions and no factual-
+  comprehension question.** This file already fails the two-factual direction;
+  the mirror shipped in test 4's passages (1) and (2), where 57/58 and 59/60 are
+  both 筆者の考え/強調点 shapes and 59 and 60 restate one proposition. The pair
+  must split one factual + one main-point, in either order.
+- **A 解説 cell that itself declares a distractor ungrounded** — test 4's
+  聴解 問題1-4番 explains two of its three wrong options as 「電話での変更は言及
+  なし」 and 「返却箱への返却は今回の話ではない」, i.e. the author documented the
+  fabrication in the answer key. Any 「言及なし」/「未言及」/「今回の話ではない」 in
+  a 問題1–3 解説 is a confession, not an explanation.
+- **`logs/ledger.json` disagreeing with `tests/<test_id>/test_spec.json`, or a
+  hand-written `harvest_sha`.** Test 4's ledger entry records four listening
+  scenarios and two reading topics the paper never tests (and omits four it
+  does), so rotation now believes items were used that were not — the next test
+  can redraw them. Its `harvest_sha` is `20260805c3d4`: twelve valid hex
+  characters that are the date plus four digits, matching no sha1 of anything,
+  while the spec carries no `harvest_sha` at all and not one `origin: "web"`
+  entry. `merge_seeds.py` was never run; the stamp was written to satisfy the
+  gate. Compare the two files field for field, and treat a date-shaped sha as
+  fabricated.
+- **An item redrawn from a test inside the rotation cooldown.** `sample_items.py`
+  keeps `COOLDOWN = 2` and the ledger has the data, but no gate compares draws
+  across tests: test 4 re-tested 解消・妥協 (test 1's 問題6), 〜ざるを得ない,
+  〜次第, 〜をはじめ and 〜ようがない. Intersect the ledger's last two entries
+  with this test's, after folding okurigana/kana tails, before trusting the draw.
 - **Fix, regenerate, re-check, RE-REVIEW.** Findings are repaired in the
   Markdown/script sources, then booklet HTML + `解答.html` (+ MP3 if the script
   changed) are regenerated and `make check` re-run. Then the changed items AND
@@ -121,6 +202,19 @@ then name what let each defect through.
 
 
 ## The pass, in order
+
+### 0. Blind solve, from `qa/<test_id>/keyless.md`
+
+Before any other step and before opening any file under `tests/<test_id>/`:
+
+```bash
+make keyless <test_id>      # → qa/<test_id>/keyless.md — the paper, no keys
+```
+
+Read that file only, answer all 101 items, write the list down. Then open the
+sourced Markdown and diff. Full procedure and reporting obligations in
+"Ground rules" → blind-solve; the diff is §7 item 2 of the report. Steps 1–6
+below all read the keys, so none of them can run first.
 
 ### 1. Key-by-key proof (all 101 items)
 
@@ -199,6 +293,20 @@ ever engages that point?"* Evidence, not a feeling:
   same way round too — a target whose printed okurigana disagrees with its
   `openjlpt` headword spelling (test 4's 労わる vs the corpus's 労る) is a pool
   defect, not a typo to patch in the paper.
+- **問1 — the (kanji, reading) PAIR must exist, and the underline must cover the
+  whole word.** Two more pool defects shipped in test 4's repaired 問題1, and
+  neither is an option-set problem: `領(えり)` and `線(すじ)` are 表外音訓 that
+  the kanji does not carry at any JLPT level, so the printed sentence is simply
+  the wrong kanji (襟のシャツ, この筋で) and the key names a reading the target
+  cannot have — in 線's case the *distractor* せん was the right answer. Check
+  every 問題1 target by looking the `(漢字, 読み)` pair up in
+  `references/openjlpt/vocab-n1|n2|n3.json`; a pair with no headword is a
+  **pool** defect — delete the entry and re-draw, never patch the sentence.
+  Separately, the underline/bold must cover the word **including its okurigana**
+  (official July 2025 prints 「**収まった**」, 「**辛い**」). Test 4 printed
+  「**爆**ぜる」, leaving ぜる outside, which both deviates from official layout
+  and makes option 3 (はぜる) the only verb-shaped candidate against three bare
+  on-readings — selectable on form alone.
 - **聴解問題1-3:** for every wrong option, find the line in the script that
   raises it. If no line raises it, it is fabricated, not a distractor — FAIL.
   (This is the listening form of the same check; do it here as well as in
@@ -362,6 +470,8 @@ Verify `tests/<test_id>/test_spec.json` against the authored paper end to end:
 1. **Target Item Match Audit (問題1–8 & 聴解 問題4):**
    - Verify every item tested in `漢字読み` (問1), `表記` (問2), `語形成` (問3), `文脈規定` (問4), `言い換え類義` (問5), `用法` (問6), `文法問題7` (問7), `文法問題8` (問8), and `即時応答` (聴解 問4) matches the EXACT target item specified in `test_spec.json["items"]`.
    - Fail any paper where an author substituted a different target item during drafting — unrecorded substitutions corrupt the rotation ledger.
+   - **Check the spec against the ledger and the pool, not only against the paper.** `tools/check_consistency.py` compares paper↔spec, so editing `test_spec.json` to match an authored substitution makes the gate green: test 2's 問題1-4 tests 林立(りんりつ) while `logs/ledger.json` and `pools.json` both record the drawn item as 林(はやし), which is not even in the pool. For every `items` entry, confirm it appears in `pools.json` (or carries `origin: adjunct` with evidence) AND matches the same test's `logs/ledger.json` history entry.
+   - **Extend the audit to `listening_scenarios`.** Map every 聴解 item's narration to a drawn scenario. An item with no matching scenario alongside a drawn scenario that went unused is a substitution: test 2's 問題2-1番 (家電量販店/冷蔵庫の配送) matches no entry while four drawn scenarios were never authored.
 2. **Answer Positions Compliance Audit:**
    - Verify all 101 answer key positions (71 Gengo + 30 Choukai) match `test_spec.json["answer_positions"]` exactly.
 3. **Web Fact Consistency & Copyright Non-Reproduction:**
@@ -461,11 +571,12 @@ The report is the deliverable; without it the review did not happen. It must
 contain, in this order:
 
 1. **Verdict line:** `QA: PASS` or `QA: FAIL (<n> findings, <m> automatic)`.
-   PASS is only writable when steps 1–6 all ran on all items and zero findings
+   PASS is only writable when steps 0–6 all ran on all items and zero findings
    remain open.
-2. **Blind-solve diff:** reviewer's answer vs key for every mismatch, each
-   resolved as "reviewer error because …" (with the deciding quote) or filed
-   as a finding.
+2. **Blind-solve diff:** name the file you solved from — `qa/<test_id>/keyless.md`
+   unless you state otherwise and why — then reviewer's answer vs key for every
+   mismatch, each resolved as "reviewer error because …" (with the deciding
+   quote) or filed as a finding.
 3. **Per-question walkthrough — all 101 items, one row each, no exceptions.**
    The findings table below summarises; this section *proves* the review
    happened, because it is the only artefact that shows an item was looked at

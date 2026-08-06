@@ -20,6 +20,44 @@ LEVEL_BAND = (
 
 LEVELS = ("N1", "N2", "N3", "N4", "N5", "unknown")
 
+# --- Themed pool categories (R13) ----------------------------------------
+# reading_topics and listening_scenarios are the only categories whose pool
+# entries are OBJECTS, not bare strings: {"topic"|"scenario": …, "theme": …}.
+# THEMES is a CLOSED vocabulary — adding a value here is a deliberate edit of
+# the taxonomy, not a per-entry decision. See item-pool-sampling/SKILL.md
+# §"Topic themes".
+THEMED_CATS = {"reading_topics": "topic", "listening_scenarios": "scenario"}
+
+THEMES = (
+    "睡眠・健康", "医療・福祉", "食", "環境", "防災", "交通", "住まい",
+    "働き方", "教育", "子育て・家族", "地域活性化", "デジタル化",
+    "消費・経済", "文化・伝統", "スポーツ・余暇", "人間関係",
+    "行政・手続き", "メディア・情報", "旅行・観光", "科学・技術",
+)
+
+
+def entry_text(entry) -> str:
+    """The testable/authorable string of a pool or spec entry.
+
+    Pool entries are bare strings everywhere except the two themed categories,
+    where they are {"topic"|"scenario": …, "theme": …}; spec entries add
+    {"item": …} for adjunct rows. Every reader must go through this instead of
+    str(entry), or a dict stringifies into `{'topic': …}` and silently poisons
+    dedupe/recency sets.
+    """
+    if isinstance(entry, dict):
+        for k in ("item", "topic", "scenario"):
+            v = entry.get(k)
+            if v:
+                return str(v)
+        return ""
+    return str(entry)
+
+
+def entry_theme(entry) -> str | None:
+    """The theme tag of a themed pool/spec entry, or None if it carries none."""
+    return entry.get("theme") if isinstance(entry, dict) else None
+
 
 def head(item: str) -> str:
     """Normalized identity ignoring disambiguating gloss."""
@@ -94,8 +132,9 @@ def load_pool_heads() -> set[str]:
         if not isinstance(xs, list):
             continue
         for item in xs:
-            heads.add(str(item))
-            heads.add(head(str(item)))
+            t = entry_text(item)
+            heads.add(t)
+            heads.add(head(t))
     return heads
 
 

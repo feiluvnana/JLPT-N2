@@ -20,6 +20,24 @@ reading a script: the official audio puts an answer pause after scored items
 only, so its histogram is 12 × 12 s (問題1+2), 17 × 8 s (問題3+4+問題5 1番),
 7 × 20 s (問題2 option-reading) — see `official-audio-analysis`.
 
+**The counts below are the CURRENT era's, and the exam has three.** Measured
+over all 31 sittings 7/2010–12/2025
+(`reference-book-reading/references/official_calibration.md` §1):
+
+| Era | sittings | 言語知識・読解 | 聴解 |
+|---|---|---|---|
+| 7/2010 – 7/2018 | 17 | **75** (5/5/5/7/5/5/12/5/5/5/9/2/3/2) | **32** (5/6/5/12/4) |
+| 12/2018 – 7/2021 | 6 | 72–73 (問3→3, 問9→4, 問11 9↔8) | 30 |
+| **12/2021 – 12/2025** | **9** | **71** (5/5/3/7/5/5/12/5/4/5/8/2/3/2) | **30** (5/6/5/11/3) |
+
+So the repo's **71 + 30 = 101 contract dates from 12/2021**, and 問題11's 4×2
+shape from **12/2022** (§"問題11 shape" below) — a pre-2022 paper looks different
+because it *is* different, not because it was misread. The 2009 guidebook's 目安
+is exactly the 2010–2018 column, which is why it keeps looking authoritative;
+the current 大問のねらい PDF has dropped the 小問数 column entirely. **Never
+average a 読解 length or a stem-shape frequency across eras** — for anything
+measured, the window is the 7 sittings 12/2022–12/2025.
+
 - **言語知識・読解**: Source `tests/<test_id>/言語知識・読解.md` → Booklet `tests/<test_id>/言語知識・読解.html`
 - **聴解 (Booklet)**: Source `tests/<test_id>/聴解.md` → Booklet `tests/<test_id>/聴解.html`
 - **聴解 (TTS Script)**: `tests/<test_id>/聴解スクリプト.txt` → Output MP3 `tests/<test_id>/聴解.mp3`
@@ -65,9 +83,14 @@ band a gloss may target, and the 問題13 length floor are all owned by
 `question-authoring`. Generated tests 1–4 shipped 5–9 glosses (t3 excepted) and
 no `（中略）` at all — treat that as under-calibrated even when keys parse.
 
-**問題11 shape:** all five official papers in `refs/JLPT/` are **4 passages × 2
-questions** (Q57–64). The instruction line sometimes still says `(1)から(3)`
-(print typo); the body has four passages. Generated mocks must author **4×2**
+**問題11 shape:** every paper in the current era is **4 passages × 2 questions**
+(Q57–64) — but that shape is **younger than the item counts**: 問題11 ran **3
+passages** (3/2/3 or 3/3/2 items) through 7/2022 and became 4×2 at **12/2022**,
+with its length jumping from 1778–2179 to 2449–2685 JP chars
+(`reference-book-reading/references/official_calibration.md` §1–2). The
+instruction line sometimes still says `(1)から(3)`; **count passage markers, never
+trust the instruction** — instruction lines are unreliable across the archive.
+Generated mocks must author **4×2**
 and print `(1)から(4)` in the instruction. The sampler matches this: it draws
 `reading_topics: 12  # 5 short + 4 medium + 1 A/B + 1 long + 1 info`. A spec
 carrying only 11 reading topics was drawn before that fix and is one 中文 topic
@@ -83,6 +106,24 @@ four pure-retrieval shapes 「本文で述べられている〜はどれか」�
 はどれか」「〜の主な目的は何か」「〜の内容と合っているものはどれか」 do not appear
 in 問題11 at all. Authoring procedure and the gate check: `question-authoring`
 問題11 stems / `tools/check_consistency.py`.
+
+**Correction — measured across the archive (12/2022–12/2025, n = 7 sittings /
+56 stems; `.agents/reference-book-reading/references/official_calibration.md`
+§4).** The paragraph above was derived from July 2025 alone and two of its
+claims do not survive:
+
+- **筆者 is not obligatory.** 82% of current-era 問題11 stems name 筆者; **18% do
+  not**, anchoring on a marked span instead (0–3 per paper). What no official
+  stem does is anchor on *neither* — that is the defect tests 1/2/3/4 shipped.
+- **"At least one 考え/主張 per passage" is a paper-level rule, not a pair-level
+  one.** Official pairs split 13 one-of-each / 13 two-事実 / 2 two-考え, so a
+  per-pair requirement rejects **6 of the 7** current papers. The format fact is:
+  the paper carries **at least one** 考え/主張 stem in 問題11 (spread 1–4 of the
+  8), the 事実把握 stem comes first in 26 of 28 pairs, and 問題13's item 69 is a
+  考え/主張 stem in 7 of 7.
+
+The four banned retrieval shapes are **corroborated at n = 15 sittings** — zero
+occurrences, and not in 問題10/12/13/14 either.
 
 ### 時間配分の目安 (105分)
 
@@ -111,6 +152,30 @@ review):
 | 5 | 統合理解 (long integrated) | 3 answers | nothing for 1番; printed options for 2番's two questions | NO practice (この問題には練習はありません) |
 
 問題5 shape (recent official papers): **2 item blocks, 3 answers** — `1番` (spoken choices) + `2番` (二つの質問, options printed). Keys are `問5-1`, `問5-2-1`, `問5-2-2`.
+
+**問題5 2番 — what the booklet prints (format fact, measured):** the four options
+are **names only**, and 質問1 and 質問2 print the **same four options in the same
+order**. Measured on `tests/imported-n2-2025-07/聴解.md` (July 2025), the page
+carries exactly this, twice — once under `**質問1**`, once under `**質問2**`:
+
+```
+ 1. 夕日通り
+ 2. にしがおか
+ 3. さくら公園
+ 4. 東山
+```
+
+Two prohibitions follow, both of which a generated paper has broken:
+
+- **No parenthesised decisive attribute beside a name** — no 家賃, 立地, 条件,
+  時間帯, 定員 in the printed option (`1. 夕日通り（海沿い・徒歩5分）`). 統合理解
+  measures holding four candidates' attributes from the audio and matching them
+  against two questions; printing the deciding attribute is the answer, and the
+  item stops measuring anything. The official page prints place names and nothing
+  else — the sea-front detail that decides 質問1 is spoken only.
+- **質問1 and 質問2 share one option list, in one order.** Two different lists (or
+  the same four re-ordered) turn one memory task into two and desynchronise the
+  booklet from the announcer, who reads no options here at all.
 
 ## Announcer / 例 mechanics (script + booklet must both honor these)
 
@@ -196,6 +261,10 @@ Two consequences the pipeline actually uses:
   (` 1. ◯◯  2. ◯◯  3. ◯◯  4. ◯◯`). Reading questions and 問題6 usage sentences are vertical.
 - 聴解 booklet: options stacked VERTICALLY, one per line with a leading space.
 - Question stems bold the tested word: **地域**, or show blanks as (　) / ＿＿.
+  The bold span is the booklet's underline, so it covers the **whole word,
+  okurigana included** (July 2025 問1 marks `**収まった**`, `**辛い**`) — never a
+  bare kanji with its tail outside the mark. Authoring rule and the shipped
+  counter-example: `question-authoring` 問題1.
 - 問題8 uses ＿＿ ＿＿ ★ ＿＿ with the answer = whichever option lands on ★.
 - **Dokkai Vocabulary Notes (No Furigana)**: Reading passages (問題9-14) containing uncommon vocabulary, domain-specific terminology, or rare kanji contain **NO FURIGANA** (`<ruby>`). Test-takers are expected to read N2 kanji without furigana. Over-the-level or rare terms must ONLY be annotated inline using `（注1）`, `（注2）`... with structured note blocks `（注1） 語彙：説明` sitting below the passage before questions.
 - **Passage Numbered Markers (1-to-1)**: Every numbered marker (`①**...**`, `②**...**`) in a reading passage MUST match 1-to-1 with a question stem. Do not place unused/orphaned markers in passages.

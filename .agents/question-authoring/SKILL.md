@@ -175,8 +175,12 @@ exists or does not:
   grab-bag (「副詞」 over 案の定/とっくに/一段と is such a label; the honest ones
   are 予想副詞/時間副詞/程度副詞, which is three categories and a failed item).
 - **For 問題1, print the source of every distractor reading on the same line** —
-  `いたわる=労わる, ねぎらう=労う, ...`, and mark which branch each one satisfies
-  (`[同漢字]` or `[同分野]`). Test 4's set was
+  `いたわる=労る[N1], ねぎらう=労[N3 kunyomi], ...`, and mark which branch each one
+  satisfies (`[同漢字]` or `[同分野]`). **The source is whatever the openjlpt
+  lookup returned** — run it, do not write the spelling from memory; the
+  procedure, the command, and the 音読み branch (where a non-word option is legal
+  if it is a 清濁/長短 derivation) are under 「All four readings must RESOLVE」 in
+  「問題1 (漢字読み)」 below. Test 4's set was
   `ことわる=断る, さわる=触る, かわる=代わる`: writing the sources out makes it
   visible in one glance that none of those kanji shares anything with 労 **and**
   that no branch label can be written for any of them. **A distractor with no
@@ -228,11 +232,30 @@ section, under these caps (full rules: web-topic-research):
 傾向, 効率, 険しい. Build distractors from REAL confusions:
 - reading traps: 措置(そち) vs しょち/そうち; homophone kanji sets:
   納める/収める/治める/修める, 敗れる/破れる; same-radical fakes: 険/検/剣/験.
+- **The underline covers the WHOLE word, okurigana included.** In the Markdown
+  the underline is the bold span, so write `**収まった**`, not `**収**まった`.
+  Official July 2025 (`tests/imported-n2-2025-07/言語知識・読解.md`, 問1) marks
+  `**才能**`, `**辛い**`, `**刑事**`, `**起床**`, `**収まった**` — the inflectional
+  tail is *inside* the mark in both okurigana items, and 問題2 does the same with
+  the kana span (`**しめって**`). Corroborated across the archive
+  (`reference-book-reading/references/official_calibration.md` §5, rasterised
+  7/2025 and 12/2025 read visually — with §0's caveat that the archive is a
+  Word-typeset reproduction, so this is the reproducer's typography, consistent
+  across sittings).
+
+  **The defect is splitting a word, not the character count.** Forbidden:
+  marking part of a word and leaving the rest outside — test 4 shipped
+  `**爆**ぜる`, which asks for the reading of a bare character rather than of a
+  word and lets `ばく`/`はつ` compete with `はぜる`. **Legitimate: a whole word
+  that happens to be one kanji.** Official draws them — 腕 (12/2023-1), 柱
+  (12/2025-1), 針 (12/2012) — and 柱's option set ゆか/かべ/たな is an ordinary
+  訓読み semantic-field set. A single-kanji *word* is a normal target; a
+  single-kanji *fragment* of a longer word is not.
 - **Conjugation lock (読み):** when the stem shows conjugated okurigana, every
   option must fit that conjugation — not a different verb class whose ending
   the print already rules out. Each option must also be a real word. See Item
   integrity below (test 1's 慌てて).
-- **Same-kanji OR same semantic field rule:** Every distractor must share the same word form and conjugation class AND be either (a) a reading of the target's OWN kanji or a same-radical/visual-component kanji (e.g. 措置: そち/しょち/そうち, 険しい: けんしい/けんみしい/かんしい/けわしい), OR (b) a real N2 word in the SAME semantic field (e.g. official July 2025 問1-2 辛い → あまい/にがい/しぶい; 問1-5 収まった → さだまった/しずまった/やすまった). A grab-bag of unrelated words across different semantic fields is forbidden. This is the **only** statement of the rule; the 「Kanji reading (問1)」 bullet under "Distractor plausibility" defers to it.
+- **Same-kanji OR same semantic field rule:** Every distractor must share the same word form and conjugation class AND be either (a) a reading of the target's OWN kanji or a same-radical/visual-component kanji (e.g. 措置: そち/しょち/そうち, 険しい: けんしい/けんみしい/かんしい/けわしい), OR (b) a real N2 word in the SAME semantic field (e.g. official July 2025 問1-2 辛い → あまい/にがい/しぶい; 問1-5 収まった → さだまった/しずまった/やすまった). A grab-bag of unrelated words across different semantic fields is forbidden. This is the **only** statement of the rule; the 「Kanji reading (問1)」 bullet under "Distractor plausibility" defers to it. **Scope: branch (b) is the 訓読み branch.** For a 音読み compound target (才能, 起床, 概要 — no okurigana printed) official distractors are 清濁/長短 derivations of the key's own on-reading and are *not* words; that branch and its verification are step 6 of 「All four readings must RESOLVE」 below.
 - **Build the set BEFORE you accept the target — and reject the target, never the
   rule.** The three constraints (conjugation lock + real word + one of the two
   branches) intersect to nothing for some pool entries, and when they do, the
@@ -251,6 +274,78 @@ section, under these caps (full rules: web-topic-research):
   unrelated field, so (b) = {}. The paper shipped invented non-words instead, and
   a *previous* fix round had already shipped the unrelated-kanji set — two
   failures on one undrawable target.
+- **All four readings must RESOLVE — look them up, do not judge them.** 「実在語
+  のみ」 was already written above and test 4 still shipped `がいり`, `そうじる`,
+  `うんじる` (items 1 and 2), because nothing said **where to look**. It is a
+  lookup, and it has two branches, because official papers treat 音読み and
+  訓読み targets differently. Measured over **all 35 current-era 問題1 items
+  (12/2022–12/2025, n = 7 sittings)** —
+  `.agents/reference-book-reading/references/official_calibration.md` §5, which
+  corroborates the split first read off July 2025 and refines it:
+
+  | Target | n | What the distractors are |
+  |---|---|---|
+  | **訓読み** (okurigana printed, **or a single-kanji word**) | 12 | **real words, every option, no exception.** Same word class and conjugation as the key (争って → four 五段 ～って), usually the same semantic field (柱 → ゆか/かべ/たな; 幼い → するどい/かしこい/しつこい; 7/2025 辛い → あまい/にがい/しぶい). They frequently do **not** share the target's kanji. |
+  | **音読み compound** | 23 | **predominantly non-words** — 清濁 (さいのう→ざいのう), 長短 (きしょう→きしょ), ん⇄う (のうやく→のんやく) derivations of the key's own on-reading. **But ~5 of the 23 mix in real homophone words** (握手→拍手, 討論→議論, 実践→実験, 刑事→検事/幹事, 衣装→以上), and one set is four real compounds (7/2024-2 分析 → 分解/分節/分割). |
+
+  So **both** blanket rules are wrong: "every option must be a dictionary word"
+  fails 23 of 35 items, and "音読み distractors must be non-words" fails ~6. The
+  invariant is **directional**:
+
+  > **A 訓読み set may never contain a non-word. A 音読み set may — but only as a
+  > derivation of the key's own reading (清濁 / 長短 / ん⇄う).**
+
+  Everything else in a 音読み set has to be a real word. The rule that operationalises
+  it:
+
+  1. **Reduce each option to dictionary form** (さだまった → さだまる; the
+     conjugation lock has already forced all four into one class).
+  2. **Run all four through the openjlpt indices** — the vocab files' `word` and
+     `reading` fields plus the kanji files' `kunyomi` (dots and leading `-`
+     stripped). One command, from the workspace root:
+
+     ```bash
+     python3 -c "
+     import json,sys;B='.agents/item-pool-sampling/references/openjlpt';V={};K={}
+     for lv in ('n1','n2','n3'):
+      for e in json.load(open(f'{B}/vocab-{lv}.json')):
+       for k in (e['word'],e['reading']):
+        if k: V.setdefault(k,set()).add(e['word']+'['+e['level']+']')
+      for e in json.load(open(f'{B}/kanji-{lv}.json')):
+       for r in e['kunyomi']: K.setdefault(r.replace('.','').lstrip('-'),set()).add(e['character']+'['+e['level']+']')
+     for a in sys.argv[1:]: print(a, sorted(V.get(a,())) or sorted(K.get(a,())) or 'MISS')
+     " さだまる しずまる おさまる やすまる
+     ```
+  3. **A HIT is the evidence**: write the headword it returned into the 問題1
+     source line (§0) — `さだまる=定まる[N1]`, `あまい=甘[N2 kunyomi]`.
+  4. **A MISS is not a verdict, it is a debt.** The slices hold 7,040 vocabulary
+     entries (3463 N1 + 1793 N2 + 1784 N3, ~790 of them with an empty
+     `reading`) and their kanji lists stop at N3, so real words miss: `やすまる`
+     (休まる — an *official* July 2025 distractor) and `こうじる` (講じる) both
+     return MISS. On a miss the author must write the option's **kanji spelling**
+     and confirm the reading in a second source — `refs/Shinkanzen/` or the
+     常用漢字表 音訓 — then record it as `やすまる=休まる[SK]`.
+  5. **If no spelling can be written, the reading is invented — delete the
+     option.** `がいり`, `そうじる`, `うんじる` all return MISS **and** have no
+     spelling: 概 reads ガイ/おおむ.ね and 要 reads ヨウ, so 「がいり」 is neither a
+     reading of the target nor a 清濁/長短 manipulation of がいよう; 損 reads ソン,
+     so 「うんじる」 is derivable from nothing. (`そうじる` is the one defensible
+     member of that set — ん→う is a real manipulation — and `こうじる`=講じる is a
+     real word; the set was still shipped with two fabrications in it.)
+  6. **音読み targets: every option is EITHER a real word OR a derivation.** A
+     real homophone/near-homophone compound is official practice (握手→拍手,
+     討論→議論, 実践→実験, 刑事→検事) — record its headword like any other HIT. A
+     non-word is legal only as a derivation of the key's own reading; write the
+     derivation next to it on the same line: 清音⇄濁音 (`さいのう→ざいのう`),
+     長音⇄短音 (`きしょう→きしょ`), ん⇄う (`のうやく→のんやく`), or another real
+     on-reading of the target's own kanji / a same-radical look-alike. **An option
+     with neither a headword nor a derivation is fabricated** — replace it. (In a
+     **訓読み** set this branch does not exist: every option is a real word, full
+     stop.)
+  7. **If the 解説 gives an etymology or names the trap** (「労う＝ねぎらう」), it
+     must quote the headword the lookup returned, not a form assembled while
+     writing the cell.
+
 - **The target's spelling must match its `openjlpt` headword.** 問題1 tests a
   reading off a printed spelling, so a non-standard okurigana changes the item.
   Test 4 printed 「労わる」 (from `pools.json`) where
@@ -322,9 +417,13 @@ Worked example for **解消**, spanning both failure edges and the target:
 | ✗『契約を解消した』 | **attested — banned** (a second correct answer) |
 | ✓『渋滞を解消に導いた』 | **the target band: right domain, wrong collocation** |
 
-**Length:** official option sentences average **~27 JP chars**; tests 1–4
-averaged **~19** (t1: 24/16/17/18 …). Each of the four needs a who/when/what —
-a telegram-length misuse line reads as a drill, and it also leaves no room for
+**Length:** official option sentences measure **mean 25.0, median 25, range
+9–35 JP chars** (current era, n=136; `official_calibration.md` §7 — the 「~27」
+this file used to state was a mild over-estimate). Tests 1–4 averaged **~19**
+(t1: 24/16/17/18 …), so the gap is real, but **the mean is not the rule and a
+9-char option sentence is official**: a single short line among four is fine,
+four short lines is the drill. Write each of the four with a who/when/what
+unless brevity is doing work — a telegram-length misuse line leaves no room for
 the situation that makes a wrong collocation tempting.
 
 **問題7-9 (grammar)** — only N2-list items (Shin Kanzen N2 文法 headed forms):
@@ -389,45 +488,125 @@ matching where one tempting option fails exactly one condition.
   問題11 and 問題14 under band. So the bands are stated **here and nowhere
   else** — `jlpt-exam-structure` now points at this table — and
   `tools/check_consistency.py`'s `check_dokkai_lengths()` is the enforcer.
-  Columns: the official paper measured on `imported-n2-2025-07` (July 2025), the
-  gate floor, and what tests 1–4 actually shipped, JP chars per section.
 
-  | Section | official | gate floor | t1 | t2 | t3 | t4 |
-  |---|---|---|---|---|---|---|
-  | 問題10 短文 (5 passages) | 1328 | **≥1200** | 941 | 1084 | 1486 | 1092 |
-  | 問題11 中文 (4 passages) | 2569 | **≥2200** | 1881 | 1912 | 2110 | 1371 |
-  | 問題12 A/B | 617 | **≥600** | 422 | 551 | 647 | 487 |
-  | 問題13 長文 | 1055 | **≥900** | 1051 | 920 | 1260 | 881 |
-  | 問題14 情報検索 | 702 | **≥650** | 309 | 605 | 625 | 583 |
+  **What these numbers count, stated once because three different figures for
+  one paper were in the repo at the same time** (this table said July 2025 =
+  1328/2569/617/1055/702, the gate docstring said 1274/2503/572/1005/622, the
+  archive measures 1249/2451/572/989/604): **JP characters only** — hiragana,
+  katakana, kanji and JP punctuation, the same character class
+  `check_dokkai_lengths()` uses — counting **passage prose only** (instruction
+  lines, question stems and option rows removed; `（注N）` definition lines kept).
+  Digits, Latin and spaces are **excluded**. Any number quoted without that
+  method is not comparable — say the method when you quote one.
+
+  **Calibrate to the era, not to a paper.** 問題11 became 4 passages × 2 items at
+  **12/2022**, and its length jumped with it, so the window is the **7 sittings
+  12/2022–12/2025** — not "the last five papers", which mixes eras. Band and
+  per-sitting figures: `reference-book-reading/references/official_calibration.md`
+  §2. Columns below: the current-era **min / median** (JP chars), the gate floor,
+  and what tests 1–4 shipped.
+
+  | Section | official min | official median | gate floor | t1 | t2 | t3 | t4 |
+  |---|---|---|---|---|---|---|---|
+  | 問題10 短文 (5 passages) | 1143 | 1225 | **≥1200** | 941 | 1084 | 1486 | 1092 |
+  | 問題11 中文 (4 passages) | 2449 | 2556 | **≥2200** | 1881 | 1912 | 2110 | 1371 |
+  | 問題12 A/B | 532 | 551 | **≥600** | 422 | 551 | 647 | 487 |
+  | 問題13 長文 | 814 | 904 | **≥900** | 1051 | 920 | 1260 | 881 |
+  | 問題14 情報検索 | 489 | 604 | **≥650** | 309 | 605 | 625 | 583 |
+
+  **Three gate floors now sit ABOVE the official minimum** — 問題12 (≥600 vs an
+  official 532), 問題13 (≥900 vs 814, failed by 12/2022 and 7/2024) and 問題14
+  (≥650 vs 489, failed by 12/2024 and 12/2025); 問題10's ≥1200 also clears
+  12/2023's 1143. A floor that rejects an official paper is a wrong floor
+  (`official_calibration.md` §9 recommends 1100 / 2250 / 510 / 800 / 450), and
+  `tools/` is another pass's file. **Author to the medians** — a paper at the
+  median clears both the real band and the current over-tight gate. **問題14 is
+  the one section where JP-char counting misleads**: the flyer is dates, prices
+  and times, so all-char (JEES-style) it measures 676–793, median 707, right on
+  the published 700字程度 while looking 25% short in JP chars.
 
   Per-passage floors on top of the section totals: **each** 問題10 passage
-  ≥200 JP chars, **each** 問題11 passage ≥400. Count JP chars only, and count
-  the passage body — the flyer's table and conditions count for 問題14. Do not
-  hit a floor by padding the note block or the question stems; the gate measures
-  the passage region. Use `（中略）` when a quoted source would otherwise run
-  long (official papers do; tests 1–4 never did).
-- **問題11 stems — every stem names 筆者.** The old rule here said each
-  passage's two questions must be "ONE factual-comprehension question plus ONE
-  main-point/opinion question". That is a judgement about a stem's *intent*, it
-  cannot be verified, and it mis-describes the official pattern — so **4 / 4**
-  papers shipped a 問題11 passage with two retrieval questions and no opinion
-  question (t1 passages (1),(3),(4); t2 (1),(2); t3 (3); t4 (1),(2)). The
-  measured rule instead:
+  ≥200 JP chars, **each** 問題11 passage ≥400 — the gate's numbers. The
+  current-era measurements are 問題10 **157 / 241 / 334** (min/median/max, n=35)
+  and 問題11 **507 / 655 / 763** (n=28), so the 問題10 floor is again above the
+  official minimum (12/2023's fifth 短文 is 157) while the 問題11 floor has
+  100+ chars of headroom. Author 問題10 passages to ~240 and 問題11 to ~650; an
+  official 短文 is *allowed* to be short, but a generated one that is short is
+  usually thin rather than deliberate. Count JP chars only, and count the
+  passage body — the flyer's table and conditions count for 問題14. Do not hit a
+  floor by padding the note block or the question stems; the gate measures the
+  passage region. Use `（中略）` when a quoted source would otherwise run long:
+  official ships **2–5 per paper in the current era, median 3, never zero**
+  (`official_calibration.md` §3) — tests 1–4 shipped none.
+- **問題11 stems — anchored, and at least one 考え/主張 per PAPER.** The oldest
+  rule here said each passage's two questions must be "ONE factual-comprehension
+  question plus ONE main-point/opinion question"; it was then sharpened to
+  "exactly one of each per pair". **Both are wrong, and the second one was
+  measured off a single sitting.** All numbers below come from
+  `.agents/reference-book-reading/references/official_calibration.md` §4 —
+  the current-era archive, **12/2022–12/2025, n = 7 sittings, 28 pairs, 56
+  stems** — and where it disagrees with July 2025, the archive wins.
 
-  > **Every one of a passage's two stems must name 筆者** (or be
-  > 「①…とあるが、どういうことか」 on a marked span) — measured on
-  > `imported-n2-2025-07`, all 8 official 問題11 stems do. **At least one of the
-  > two must be a 考え/主張 question** (「筆者の考えに合うのはどれか」/「筆者は…に
-  > ついてどう述べているか」/「筆者が最も言いたいことは何か」). These stem shapes
-  > are **banned in 問題11** because they are pure retrieval and no official
-  > paper uses them: 「本文で述べられている〜はどれか」「〜として正しいものは
-  > どれか」「〜の主な目的は何か」「〜の内容と合っているものはどれか」.
+  > **Anchoring.** Every stem is anchored either on **筆者** or on a **marked
+  > span** (「①…とあるが」/「〜とは何を指すか」). 82% of current-era stems name 筆者;
+  > **18% do not** and anchor on a span instead (0–3 per paper). A stem that
+  > names neither is the retrieval shape below — generated tests 1/2/3/4 shipped
+  > 4/6/5/6 of those out of 8.
+  > **Paper level: 問題11 carries at LEAST ONE 考え/主張 stem** — the official
+  > spread is **1–4 of the 8** (12/2023 and 12/2024 ship exactly 1; 7/2025 ships
+  > 4). Zero is the defect; two per pair is not.
+  > **Pair level: the 事実把握 stem comes FIRST** — 26 of 28 official pairs (the
+  > two exceptions are the two 考え/考え pairs).
+  > **Banned in 問題11** — the four pure-retrieval shapes
+  > 「本文で述べられている〜はどれか」「〜として正しいものはどれか」「〜の主な目的
+  > は何か」「〜の内容と合っているものはどれか」. **Corroborated at n = 15
+  > sittings: 0 occurrences, and not in 問題10/12/13/14 either.**
 
-  Measured 筆者-less stems out of 8: t1 **4**, t2 **6**, t3 **5**, t4 **6**,
-  official **0**. `make check` FAILs on any of the four banned shapes and on any
-  passage pair carrying no 考え/主張 stem. Note the honest limit: the gate
-  catches the *shape*: a 筆者-anchored stem whose key is still a paraphrase of
-  one sentence needs a reader (`exam-qa-review` step 3).
+  **Why "one 事実把握 + one 考え/主張 per pair" is NOT the rule.** July 2025 is the
+  only sitting in the whole 31-paper archive where all four pairs come out one of
+  each — the rule was calibrated to the outlier. The current era's 28 pairs:
+
+  | sitting | pair 1 | pair 2 | pair 3 | pair 4 |
+  |---|---|---|---|---|
+  | 12/2022 | 事/事 | 事/考 | 事/事 | 事/考 |
+  | 7/2023 | 事/事 | **考/考** | 事/事 | 事/事 |
+  | 12/2023 | 事/事 | 事/事 | 事/考 | 事/事 |
+  | 7/2024 | 事/考 | 事/考 | 事/考 | 事/事 |
+  | 12/2024 | 事/考 | 事/事 | 事/事 | 事/事 |
+  | 7/2025 | 事/考 | 事/考 | 事/考 | 事/考 |
+  | 12/2025 | 事/考 | 事/事 | 事/考 | **考/考** |
+
+  **13 one-of-each, 13 two-事実, 2 two-考え.** A per-pair rule rejects **6 of the
+  7** official papers, so it cannot be the bar. **What to author:** 2–3 考え/主張
+  stems among the eight (the archive median), at most one per pair, never zero,
+  and the 事実把握 stem first in every pair. **問題13 is the regular one — its item
+  69 is a 考え/主張 stem in 7 of 7 papers**; treat that slot as mandatory.
+
+  Classify each stem as you write it, by its shape, not by its intent — span
+  anchoring is tested FIRST, because 「売れた理由とあるが、筆者はなぜ売れたと考えて
+  いるか」 is 事実把握 despite containing 考えて:
+
+  - **事実把握** — anchored to a *specific* span, term, or sub-topic and answerable
+    from the sentences around it: 「①…とあるが、どういうことか」/「…とあるが、筆者は
+    なぜ…と考えているか」/「〜について、筆者はどのように述べているか」/「筆者に
+    よると、…はどうすればいいか」/「筆者によると、…とはどういうことか」.
+  - **考え/主張** — unanchored, answerable only from the passage as a whole:
+    「筆者の考えに合うのはどれか」/「筆者が最も言いたいことは何か」/「〜について、
+    筆者はどう考えているか」/「筆者が…として大切にしていることは何か」.
+
+  Write the eight labels down while drafting and count the 考え/主張 ones. If the
+  count is zero, rewrite the SECOND stem of one pair as an unanchored 考え
+  question — do not re-label a stem to make the tally look right.
+
+  **Two gate checks currently over-enforce this section** (`tools/` is another
+  pass's file, this is a pointer not a permission): `check_mondai11_stems()`
+  FAILs any pair that is not one-of-each — that is the July-2025 rule, and it
+  rejects 6 of 7 official papers — and it classifies a 筆者-less span-anchored
+  stem as 未分類 when 18% of official stems are exactly that. Both need rescoping
+  to the paper-level rule above. The banned-shape half of that function is
+  corroborated and should stay a FAIL. And the honest limit is unchanged: the
+  gate reads *shape*; a 筆者-anchored stem whose key is still a paraphrase of one
+  sentence needs a reader (`exam-qa-review` step 3).
 - **問題11 glosses:** every `（注N）` must annotate a word that actually appears
   in that passage's body, and every in-body marker must have a definition
   line — the pairing is 1-to-1 per passage, both directions. An orphaned note
@@ -450,6 +629,15 @@ matching where one tempting option fails exactly one condition.
   > cell for each of 70 and 71 must quote the TWO source cells the key combines**
   > (`「カテゴリーB：…」＋「※…の場合は…」`); one quote means one constraint.
 
+  **Corroborated across the archive** (`official_calibration.md` §6): 70 and 71
+  are both person-scenario items in **7 of 7** current papers, and **not one**
+  uses 「このお知らせの内容と合っているものはどれか」. The key always combines **≥2
+  cells and commonly 3** (7/2025-71 = 受付期間終了 + 開始3日前まで + 電話のみ;
+  12/2024-70 = room type + bath + 朝食付きプラン + Sunday rate). The two official
+  shapes to copy: a named person with 2–3 requirements → which option/course/room,
+  and a named person on a given date → what they must do to book, with a footnote
+  exception deciding it.
+
   `make check` FAILs when a 問題14 解説 cell contains fewer than two distinct
   `「…」` spans that occur in the flyer text. Every constraint the QUESTION
   references (a role, category, or condition) must also be describable from the
@@ -457,29 +645,82 @@ matching where one tempting option fails exactly one condition.
   how someone applies as "補助スタッフ" when the source flyer never described a
   staff/volunteer role at all).
 - **読解 keys must be paraphrased to option length.** **Paraphrase every 読解 key
-  to option length (~25–40 JP chars) and keep all four options within ±40% of
-  each other, or the key is findable by string length alone** — without reading
-  the passage. Test 3 shipped items 67, 68, 69 as three consecutive keys of
-  91/101/61 chars, lifted verbatim from the passage, beside ~31–34 char
-  distractors; test 4 shipped item 66 at 55 vs 31. Official papers ship zero.
-  A key that is a verbatim span of the passage is doubly wrong: it is long, and
-  it turns 主張理解 into string matching. `make check` FAILs a keyed 読解 option
-  (52–71) that is ≥50 JP chars, present verbatim in the passage, **and** ≥1.7×
-  the mean length of the other three.
+  to option length (~25–40 JP chars) and keep the four options close in length**,
+  or the key is findable by string length alone — without reading the passage.
+  Test 3 shipped items 67, 68, 69 as three consecutive keys of 91/101/61 chars,
+  lifted verbatim from the passage, beside ~31–34 char distractors; test 4
+  shipped item 66 at 55 vs 31.
+
+  **"Within ±40% of each other" is a target, not an invariant** — measured over
+  140 current-era items (`official_calibration.md` §9), **95% satisfy
+  max/min ≤ 1.8**, so that is the number to author to, but official ships items
+  at **2.10** (12/2025-66) and **2.09** (12/2023-65). Two things follow that the
+  older wording got wrong: an item at 1.9 is not automatically a defect, and
+  **the key being the longest of the four is not a defect either — 29% of
+  official keys are.** What is a defect is a key that is long **and** a verbatim
+  span of the passage: that is doubly wrong, because it turns 主張理解 into string
+  matching. `make check` FAILs a keyed 読解 option (52–71) that is ≥50 JP chars,
+  present verbatim in the passage, **and** ≥1.7× the mean of the other three —
+  measured against 138 official keyed options, the longest official key is 61
+  chars and the highest ratio 1.55, so **no official item trips the pair**. That
+  gate constant survives the archive; keep it.
 - **Vocabulary Explanations for Dokkai (NO FURIGANA / MANDATORY)**:
   - **NO FURIGANA IN DOKKAI**: Reading passages (問題9–14) and question stems/options in 言語知識・読解 contain **NO FURIGANA** (`<ruby>`). Test-takers are expected to read N2 kanji without furigana. Over-the-level, rare, or domain-specific words must ONLY be glossed using `（注1）`, `（注2）` notes at the bottom of the passage.
   - **How many, and how they are counted.** Official papers gloss freely:
     measured as **in-body markers** (one per glossed term, in the passage
     region — not raw `（注N）` occurrences, which double-count because each gloss
-    also has a definition line), July 2025 carries **30** across 読解 and tests
-    1/2/3/4 carry **9 / 6 / 29 / 5**. The gate's bar is **≥15 in-body markers**
-    per paper; for every 中文/長文, plan **3–7** notes on N1/rare/specialized
-    terms — not one decorative note per paper.
+    also has a definition line), and tests 1/2/3/4 carry **9 / 6 / 29 / 15**.
+    (July 2025 measures **27** in the archive's PDF extract and **30** in this
+    repo's `imported-n2-2025-07` markdown — a 3-marker extraction difference, not
+    a disagreement about the rule. Quote the archive's number.)
+
+    **The bar is ≥25 in-body markers across 問題10–13, and ≥3 in every 中文/長文
+    passage** (each of the four 問題11 passages, and 問題13). A floor of 15 was
+    "half of official" and let all four papers ship under-glossed; 25 is the
+    number to author to. `tools/check_consistency.py` currently WARNs below 15 —
+    that gate is the backstop, not the target, and a paper at 16 markers is off
+    -calibration even though it stays green.
+
+    **Corroborated by the archive** (`official_calibration.md` §3, current era
+    12/2022–12/2025, n=7): the per-paper band is **27–61 in-body markers, median
+    39** — so ≥25 is a floor *below* every current official paper, which is what
+    a floor should be. Per section, and this is the part a blanket per-問題 rule
+    would get wrong:
+
+    | | 問題10 | 問題11 | 問題12 | 問題13 | 問題14 | total |
+    |---|---|---|---|---|---|---|
+    | current-era range | 3–13 | 17–36 | **0** | 0–12 | **0** | 27–61 |
+    | median | 6 | 24 | **0** | 7 | **0** | 39 |
+    | July 2025 (one sitting) | 3 | 17 | 0 | 7 | 0 | 27 |
+
+    **問題12 and 問題14 get zero glosses in every current-era paper** — never
+    write a per-問題 floor that touches them. The count is earned in **問題11**
+    (per passage: min 2, median 5.5, max 13, n=28; 26 of 28 carry ≥3) and
+    **問題13** (0–12, median 7 — 12/2022 shipped a 長文 with none). Plan ~5 per
+    中文 and ~7 for the 長文 and the paper total takes care of itself; do not
+    spread a quota across 問題10 to reach a number.
+
+    One archive finding that touches the band rule below: official uses
+    「ここでは、…」 freely in definition lines (July 2025 glosses 像を結ぶ as
+    「ここでは、姿がわかる」), so **the repo's 「ここでは」 ban is about glossing a
+    basic word circularly, not about the phrase**. Do not rewrite a legitimate
+    gloss to avoid the string — `make check` WARNs on it, and a 「ここでは」 gloss
+    on an over-level term is a false positive to state as such in your report
+    (§0.5), not a defect to edit away.
   - **The count rule and the band rule below are one rule; do not trade them
     against each other.** Test 3 is the warning: it is the only paper in band on
     the count (29 markers) and it got there by glossing 割引・洗髪・契機・規制・
-    革新・省力化・増幅 — banned-band words. Reaching 15 with basic-word glosses
-    is worse than shipping 5, because it also degrades the passage.
+    革新・省力化・増幅 — banned-band words. Reaching the count with basic-word
+    glosses is worse than shipping 5, because it also degrades the passage.
+    The two rules only conflict when the passages are written first and glossed
+    afterwards — there are then only so many hard words on the page, and the
+    author starts glossing 準備. Reverse the order: **choose the notes while
+    drafting the passage.** A 中文 on a specialized subject (ゾウの進化,
+    医療の個別性, 起業 — July 2025's own) naturally carries five domain terms; a
+    passage written entirely in general vocabulary carries none and cannot be
+    rescued by annotation afterwards. If a drafted passage yields fewer than 3
+    glossable terms under the ✅ TARGETS list, its subject is too plain for 中文 —
+    deepen the subject, never gloss down to the floor.
   - **STRICT VOCABULARY BAND FOR NOTES (NON-NEGOTIABLE)**:
     - 🚫 **STRICTLY BANNED**: Glossing N3–N5 words or standard N2 vocabulary (e.g., 選択, 信号, 技術, 文化, 質, 準備, 手順, 設計, 現象, 経由, 偏り, 維持, 継続, 前提, 細部, バランス) with trivial/circular definitions (`ここでは…`, `〜のこと`). Glossing basic words degrades test quality and is a QA failure.
     - 🚫 **The operational test, not the list:** a term is glossable only if
@@ -611,15 +852,66 @@ you. Run it before calling any authoring work done.
   double-stacking the conditional). Read the fixed lead-in, then all four
   options in key order, then the fixed tail, as one unbroken sentence — the
   join points are exactly as much a failure surface as the internal order.
-- **問題8: exactly ONE ordering may be natural.** A floating adverb or adjunct
-  (ほとんど, 直接, 一度, 年々, 世界中で…) that reads equally well in two slots
-  gives the item two defensible ★ answers — QA failed one such item in each of
-  tests 2, 3, and 4 (「ほとんど自分の時間を/自分の時間をほとんど」,
-  「窓口に直接/直接窓口に」, 「一度原点に/原点に一度」). After assembling the
-  sentence, actively try to permute every option into every other slot; if any
-  alternative order is grammatical and natural, replace the floating word with
-  one that is position-locked (an object with its particle, a conjugation-bound
-  form) before shipping the item.
+- **問題8: exactly ONE of the 24 orderings may be grammatical — build for it,
+  then count it.** A floating adverb or adjunct (ほとんど, 直接, 一度, 年々,
+  世界中で…) that reads equally well in two slots gives the item two defensible ★
+  answers — QA failed one such item in each of tests 2, 3, and 4
+  (「ほとんど自分の時間を/自分の時間をほとんど」, 「窓口に直接/直接窓口に」,
+  「一度原点に/原点に一度」), and test 4's current version ships **four** items
+  with two valid ★ answers. The old rule here said "actively try to permute every
+  option into every other slot" — a review-time judgement with no artifact, which
+  is why it kept passing. It is now two construction rules and one count.
+
+  **The invariant is uniqueness — nothing else.** An earlier version of this
+  bullet banned bare adverbs outright (`着実に`, `お気軽に`, `ほとんど`, `直接`,
+  `年々`). **The archive contradicts that ban**
+  (`.agents/reference-book-reading/references/official_calibration.md` §7,
+  64 of 75 items over the last 15 sittings): a bare adverb or particle on a card
+  is **official practice** — 12/2023-47 「一度」, 12/2024-43 「もう」,
+  7/2025-43 「もちろん」, 7/2025-44 「珍しく」, plus bare particles and verbs
+  (12/2024-44 「だけ」「する」「して」). 4 of 29 current-era items (14%) carry one,
+  and **51% of all official options are under 5 JP chars**. So:
+
+  **Risk flag 1 — a bare adverb card makes the uniqueness check mandatory and
+  explicit.** An adverb constrains neither its left nor its right neighbour, so
+  it is the single commonest way to end up with two valid ★ answers (tests 2, 3
+  and 4 each failed QA on exactly that: ほとんど自分の時間を / 直接窓口に /
+  一度原点に). It is allowed — but if any card is one, you must run the link table
+  below and write its result down; you may not eyeball the item. If the table
+  yields more than one path, the fix is to attach the adverb to what it modifies
+  on the SAME card (`着実に成果を上げて`) or move it into the stem's fixed text.
+
+  **Risk flag 2 — an under-glued card.** A card that ends in something naming
+  what follows — a particle (`を`/`に`/`が`/`と`/`の`), a 接続形 (て形・連用中止・
+  条件形), or a 連体形 demanding a noun — can sit in only one slot, and a set
+  built that way usually has a unique ordering by construction. This is a way to
+  *reach* uniqueness, not a requirement in itself: official ships plenty of cards
+  that are glued at neither end.
+
+  **Add no further numeric limits here.** §9 of the calibration file measures
+  three of the gate's own 問題8 constants against the archive and they reject
+  **20% / 38% / 34%** of official items (`P8_OPT_SUM_MIN` 16 vs an official band
+  of 9–41; `P8_LONG_OPTS_MIN` 2 vs a band of 0–4; `P8_ASSEMBLED_MIN` 45 vs
+  30–78). Chunk-size intuitions do not survive contact with the archive —
+  uniqueness does.
+
+  **The count, written out.** 4! = 24 orderings; do not read 24 sentences, build
+  the link table instead:
+
+  1. Write the fixed lead-in **L** (stem text before the first blank) and the
+     fixed tail **T** (stem text after the last blank).
+  2. Fill a 4×4 table of ordered pairs: mark `○` in cell (i, j) only if option i's
+     ending can be immediately followed by option j's opening in grammatical
+     Japanese. 12 interior cells (the diagonal is unused).
+  3. Mark the 8 boundary cells the same way: `L→i` for each option, `i→T` for each
+     option — this is the both-ends glue check already required above.
+  4. **Count the complete paths `L→…→T` that visit all four cards.** Exactly one
+     may exist. Two or more = two defensible ★ answers, replace the floating card.
+     Zero = the item is unanswerable as printed.
+  5. Record the result in the same 解説 cell as the word order, appended after it:
+     `状況に(2)→おいて(4)→**価格競争が(1)**→続く限り(3)｜一意性: 24通り中1通り、裸の副詞なし`.
+     **Write no parenthesised single digit in that suffix** — `make check` reads
+     every `(1)`–`(4)` in the cell as the word order and will fail on a fifth.
 - **A cloze blank must not repeat what the stem already says.** `…からでも
   ( 54 )はいかがだろうか` with option `試してみてはいかがだろうか` ends the
   sentence twice. Read stem-plus-option aloud as one sentence for all four.
@@ -755,7 +1047,7 @@ with an error** if there is none. Two consequences:
 
 ### 0. Required artifacts inside the key tables (index)
 
-Five rules in this file are complied with by **writing a specific line into a
+Six rules in this file are complied with by **writing a specific line into a
 key cell**, not by thinking something. Each replaces a prose rule that four
 papers read and reproduced the defect anyway. They are indexed here because the
 key tables are where they land; the rule and its shipped evidence are at the
@@ -764,19 +1056,20 @@ linked section.
 | Artifact | Where it goes | Shape | Rule |
 |---|---|---|---|
 | Functional-category line | `## 文字・語彙` key notes, every 問1–6 item | `24: 程度副詞 ×4 (比較的/非常に/たいして/一段と)` | 「The functional-category line is mandatory OUTPUT」 |
-| 問題1 distractor sources | same line as above, 問1 items | `いたわる=労わる, ねぎらう=労う, …` | same |
+| 問題1 distractor sources | same line as above, 問1 items | `いたわる=労る[N1][同漢字], …` — every option's resolved headword AND its branch label, plus `[SK]` or a 清濁/長短 derivation where the lookup MISSes | same + 「All four readings must RESOLVE」 |
+| 問題8 uniqueness note | `## 文法`, rows 43–47, after the word order | `｜一意性: 24通り中1通り、裸の副詞なし` (no parenthesised single digit) | 「exactly ONE of the 24 orderings」 |
 | 問題9 category tag | `## 文法`, the four 問題9 rows, cell opening | `[論理接続]` `[文末モーダル]` `[内容推論]` `[慣用・形式名詞]`, exactly one `[内容推論]` | 問題9 rule under Benchmark |
 | 問題14 two-cell quotes | `## 読解`, rows 70 and 71 | two distinct `「…」` spans present in the flyer | 問題14 rule under 問題10-14 |
 | 聴解 option grounding | `聴解.md` 問題1/2/3 解説 cells | `1 ✗「script line as spoken」→ 別の人に割り当て`, one line per wrong option | 「聴解 dialogues」 |
 
 An absent artifact makes the item unshippable — that is the point of writing it
 down rather than checking it. `make check` reads the 問題9 tags and the 問題14
-quote pairs and FAILs on them; the other three are read by `exam-qa-review`.
+quote pairs and FAILs on them; the other four are read by `exam-qa-review`.
 
 ### 1. `言語知識・読解.md` Answer Key Format
 Under the key heading (see above), must contain three distinct section headers:
 - `## 文字・語彙`: Multi-column table (`| 問 | 答 | | 問 | 答 | | 問 | 答 | | 問 | 答 |`) for Q1–30, plus key notes for notable kanji/words — **including the mandatory functional-category line for every 問1–6 item** (§0).
-- `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q31–51 with exact grammar point explanations and scramble sequence breakdowns for Q43–47. **The four 問題9 rows (48–51) each open their 解説 with a bracketed category tag** (§0).
+- `## 文法`: 3-column table (`| 問 | 答 | 解説 |`) for Q31–51 with exact grammar point explanations and scramble sequence breakdowns for Q43–47 — **each Q43–47 cell closing with the uniqueness note** (§0). **The four 問題9 rows (48–51) each open their 解説 with a bracketed category tag** (§0).
 - `## 読解`: 3-column table (`| 問 | 答 | 解説 |`) for Q52–71 quoting key passage text and rationale. **Rows 70 and 71 each quote the TWO flyer cells the key combines** (§0).
 
 ### 2. `聴解.md` Answer Key Format

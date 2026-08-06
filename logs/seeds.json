@@ -1,140 +1,243 @@
 [
   {
-    "seed": "献血バスの巡回運行と市民の参加",
-    "facts": ["16歳以上69歳までの健康な方が対象", "各地の血液センターが運行計画を管理する"],
-    "source": "https://www.jrc.or.jp/donation/bus/",
-    "surfaces": ["reading"]
+    "seed": "学校の部活動を地域に広げる動き",
+    "facts": [
+      "休日の活動から順に、学校の外の団体が受け皿になる方向で進んでいる",
+      "少子化と教員の負担軽減が背景にある"
+    ],
+    "source": "https://www.mext.go.jp/sports/b_menu/sports/mcatetop01/list/1372413_00003.htm",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
   },
   {
-    "seed": "職場におけるメンタルヘルス対策の重要性",
-    "facts": ["長時間労働や人間関係がストレス要因になりやすい", "相談窓口の整備が早期対応につながる"],
-    "source": "https://www.mhlw.go.jp/stf/newpage_31158.html",
-    "surfaces": ["reading", "listening"]
+    "seed": "小中学校の一人一台端末とその更新",
+    "facts": [
+      "義務教育段階では1人1台の端末がほぼ行きわたった",
+      "使い方の調査が全国の自治体を対象に続けられている"
+    ],
+    "source": "https://www.mext.go.jp/a_menu/other/mext_00921.html",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
   },
   {
-    "seed": "発掘された日本列島展と埋蔵文化財の公開",
-    "facts": ["全国で毎年約8000件の発掘調査が行われる", "出土品の巡回展示で保存の意義を伝える"],
-    "source": "https://www.bunka.go.jp/gyoji/94205801.html",
-    "surfaces": ["reading"]
+    "seed": "就労の有無を問わない乳幼児の通園制度",
+    "facts": [
+      "月に一定の枠まで、時間単位で預けられる仕組みとして始まる",
+      "2026年度から全国の自治体で実施される予定"
+    ],
+    "source": "https://www.cfa.go.jp/policies/hoiku/daredemo-tsuen",
+    "surfaces": [
+      "reading",
+      "info"
+    ]
   },
   {
-    "seed": "野菜摂取量の減少と食生活の改善",
-    "facts": ["20歳以上の野菜摂取量は近年減少傾向", "男性の平均歩数も直近10年で減っている"],
-    "source": "https://www.mhlw.go.jp/stf/newpage_45540.html",
-    "surfaces": ["reading", "info"]
+    "seed": "夏の夜空に流れる星を数える楽しみ",
+    "facts": [
+      "8月13日の未明が最も見ごろで、1時間に約30個が期待できる",
+      "この日は新月にあたり、月明かりの影響を受けない"
+    ],
+    "source": "https://www.nao.ac.jp/astro/sky/2026/08-topics03.html",
+    "surfaces": [
+      "reading",
+      "carrier"
+    ]
   },
   {
-    "seed": "消費者教育と契約に関する基礎知識",
-    "facts": ["消費生活に関する知識の正答率は約4割", "契約の成立時期を正しく理解する人は3割程度"],
-    "source": "https://www.caa.go.jp/notice/assets/consumer_research_cms201_260205_01.pdf",
-    "surfaces": ["info", "reading"]
+    "seed": "充電池を積んだ製品の暑さによる事故",
+    "facts": [
+      "事故は気温が上がる春から夏に増え、8月が最も多い",
+      "5年間で約2000件が報告され、選び方・使い方・捨て方の3点が呼びかけられている"
+    ],
+    "source": "https://www.nite.go.jp/jiko/chuikanki/press/2026fy/prs260715.html",
+    "surfaces": [
+      "listening",
+      "info",
+      "carrier"
+    ]
   },
   {
-    "seed": "海洋プラスチックごみの流出量推計",
-    "facts": ["河川を経由して海へ流れるプラスチックの推計が進む", "発生源・品目別のデータ整備が課題"],
-    "source": "https://www.env.go.jp/content/000320690.pdf",
-    "surfaces": ["reading"]
+    "seed": "通信販売の定期購入をめぐる相談",
+    "facts": [
+      "全国の相談件数は年間で約9万件、前年より約1割増えた",
+      "初回だけ安い広告をきっかけに、解約が難しいという相談が多い"
+    ],
+    "source": "https://www.kokusen.go.jp/soudan_topics/data/subscription_traps.html",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
   },
   {
-    "seed": "瀬戸内の観光列車とおもてなし",
-    "facts": ["瀬戸内と太平洋を結ぶ路線で観光列車が運行", "列車ごとに地域ならではの体験が用意される"],
-    "source": "https://www.skr.mlit.go.jp/kikaku/88-kei/scenery/88_shikoku.html",
-    "surfaces": ["listening", "reading"]
+    "seed": "暑さ指数にもとづく注意の呼びかけ",
+    "facts": [
+      "4月下旬から10月下旬までの半年間、情報が出される",
+      "指数が33以上で注意、35以上でさらに強い呼びかけになる"
+    ],
+    "source": "https://www.env.go.jp/press/press_04076.html",
+    "surfaces": [
+      "info",
+      "listening"
+    ]
   },
   {
-    "seed": "鉄道の日記念イベントと車両基地公開",
-    "facts": ["10月14日は日本初の鉄道開通を記念する日", "各地で洗車体験やグッズ販売が行われる"],
-    "source": "https://www.mlit.go.jp/tetudo/tetudo_tk1_000004.html",
-    "surfaces": ["listening"]
+    "seed": "月面で自ら判断して動く小型ロボット",
+    "facts": [
+      "直径8センチほど、重さ200グラム余りの球形から変形して走る",
+      "地上からの操作に頼らず、撮影と通信を自分で行った"
+    ],
+    "source": "https://www.jaxa.jp/press/2026/06/20260618-1_j.html",
+    "surfaces": [
+      "reading"
+    ]
   },
   {
-    "seed": "クリーンエネルギー自動車導入促進補助金の見直し",
-    "facts": ["EVの補助上限額が130万円に引き上げられる", "新車新規登録が対象で中古車は対象外"],
-    "source": "https://www.meti.go.jp/policy/mono_info_service/mono/automobile/cev/r6hosei_cev.html",
-    "surfaces": ["reading"]
+    "seed": "画面越しの診察と薬の受け取り",
+    "facts": [
+      "パソコンやスマートフォンがあれば自宅から受けられる",
+      "文字のやり取りだけでは行えず、急ぐ症状は対面に切り替える決まりがある"
+    ],
+    "source": "https://www.mhlw.go.jp/stf/newpage_38226.html",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
   },
   {
-    "seed": "中古車市場におけるEVのリセール価値",
-    "facts": ["EVは中古下取り価格が従来車より低い傾向", "ハイブリッド車の需要が高まっている"],
-    "source": "https://www.meti.go.jp/policy/mono_info_service/joho/conference/battery_strategy2/shiryo04.pdf",
-    "surfaces": ["reading"]
+    "seed": "荷物を預けて身軽に歩ける観光の窓口",
+    "facts": [
+      "駅や店の窓口で大きな荷物を預かり、宿や空港へ届ける仕組み",
+      "共通の目印を掲げることで、外国語に対応する窓口だと分かるようにしている"
+    ],
+    "source": "https://www.mlit.go.jp/seisakutokatsu/freight/seisakutokatsu_freight_tk1_000069.html",
+    "surfaces": [
+      "listening",
+      "info"
+    ]
   },
   {
-    "seed": "グリーン志向の消費行動の促進",
-    "facts": ["消費者庁が行動変容の視点を整理", "環境配慮型の選択肢が増えている"],
-    "source": "https://www.caa.go.jp/policies/policy/consumer_partnerships/meeting_materials/assets/consumer_partnerships_cms201_0917_1.pdf",
-    "surfaces": ["reading", "carrier"]
+    "seed": "道路沿いの休憩施設が担う地元案内",
+    "facts": [
+      "全国で1200か所を超えるまで増えた",
+      "24時間使える無料の駐車場と手洗い、地元の産物や催しを知らせる場所を備えることが条件"
+    ],
+    "source": "https://www.mlit.go.jp/report/press/road01_hh_002029.html",
+    "surfaces": [
+      "reading",
+      "info",
+      "listening"
+    ]
   },
   {
-    "seed": "公民館の共食と社会的つながり",
-    "facts": ["友人知人と共食する人は約6割", "地域の人々とのつながりを強く感じる人は3割程度"],
-    "source": "https://www.mhlw.go.jp/toukei/saikin/hw/k-tyosa/k-tyosa25/dl/14.pdf",
-    "surfaces": ["reading"]
+    "seed": "給食に地元でとれた材料を使う工夫",
+    "facts": [
+      "全国12の地域の進んだ取り組みが冊子にまとめられている",
+      "地元の産業を学ぶ教材としても使われている"
+    ],
+    "source": "https://www.maff.go.jp/j/syokuiku/kyusyoku_guide.html",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
   },
   {
-    "seed": "フリーランスの社会保障と加入手続き",
-    "facts": ["国民健康保険や国民年金の加入が必要", "収入の波に備えた備えが課題"],
-    "source": "https://www.nenkin.go.jp/service/know/know/freelance/index.html",
-    "surfaces": ["reading", "listening"]
+    "seed": "農薬や肥料を減らす農業への転換",
+    "facts": [
+      "有機の栽培に力を入れる市町村が約150まで増えた",
+      "2030年をめどに集中して取り組む計画が示されている"
+    ],
+    "source": "https://www.maff.go.jp/j/kanbo/kankyo/seisaku/midori/",
+    "surfaces": [
+      "reading"
+    ]
   },
   {
-    "seed": "SNS利用と青少年の情報リテラシー",
-    "facts": ["情報の真偽を見分ける力が問われる", "学校と家庭の連携が重要"],
-    "source": "https://www.mext.go.jp/a_menu/shotou/newcs/safety/index.htm",
-    "surfaces": ["reading"]
+    "seed": "運転手が乗らないバスの定期運行",
+    "facts": [
+      "門前と駅を結ぶ約2キロの短い路線などで実際に走っている",
+      "研究施設や公園を回る循環路線でも導入が進む"
+    ],
+    "source": "https://www.road-to-the-l4.go.jp/case/",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
   },
   {
-    "seed": "会議文化の効率化とアジェンダ設計",
-    "facts": ["目的を事前に共有すると時間が短縮される", "議事録の共有が意思決定を早める"],
-    "source": "https://www.meti.go.jp/policy/it_policy/jinzai/human_capital/index.html",
-    "surfaces": ["reading"]
+    "seed": "ネット上の困りごとと相談のしかた",
+    "facts": [
+      "18歳以下の若者と保護者・教員の双方に向けた事例集が毎年出ている",
+      "約20の事例と、困ったときにまず何をするかがまとめられている"
+    ],
+    "source": "https://www.soumu.go.jp/use_the_internet_wisely/trouble/",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
   },
   {
-    "seed": "置き配ボックスの設置と受け取りルール",
-    "facts": ["不在時の荷物受け取りを可能にする", "管理組合の同意が必要な場合がある"],
-    "source": "https://www.caa.go.jp/policies/policy/consumer_safety/security/delivery/index.html",
-    "surfaces": ["listening", "carrier"]
+    "seed": "自転車に乗るときのヘルメット",
+    "facts": [
+      "全国の平均は約2割にとどまり、県による差が大きい",
+      "5万人余りを調べた結果、5割近い県がある一方で1割に満たない県もある"
+    ],
+    "source": "https://www.npa.go.jp/bureau/traffic/anzen/img/toubuhogo/R6jitenshaherumettochousa.pdf",
+    "surfaces": [
+      "reading",
+      "info",
+      "carrier"
+    ]
   },
   {
-    "seed": "リサイクル市での出品条件と持ち込み品",
-    "facts": ["動作品と非動作品で扱いが異なる", "事前査定で出品可否が決まる"],
-    "source": "https://www.env.go.jp/recycle/3r/3r_fundamental/3r_kiso.html",
-    "surfaces": ["listening"]
+    "seed": "プラスチックの分け方と再生利用",
+    "facts": [
+      "作る側には、長く使える設計と回収の仕組みづくりが求められている",
+      "使う側には「えらんで、減らして、分けて出す」が呼びかけられている"
+    ],
+    "source": "https://plastic-circulation.env.go.jp/",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
   },
   {
-    "seed": "観光地の混雑対策と多言語案内",
-    "facts": ["観光地の混雑対策が各地で進む", "多言語案内の整備が求められる"],
-    "source": "https://www.mlit.go.jp/kankocho/siryou/toukei/inbound.html",
-    "surfaces": ["reading", "listening"]
+    "seed": "天気予報がどれくらい当たるか",
+    "facts": [
+      "今日・明日の予報は1年平均で8割以上当たっている",
+      "当たりやすさは季節や地方によって差がある"
+    ],
+    "source": "https://www.jma.go.jp/jma/kids/kids/faq/a5_04.html",
+    "surfaces": [
+      "reading",
+      "carrier"
+    ]
   },
   {
-    "seed": "規格外農産物の加工品化と直売",
-    "facts": ["出荷規格外の野菜を有効活用する動き", "加工することで廃棄を減らせる"],
-    "source": "https://www.maff.go.jp/j/seisan/ryutu/engei/kikaku.html",
-    "surfaces": ["reading"]
+    "seed": "こうじを使う日本の伝統的な酒造りの技",
+    "facts": [
+      "原型は500年以上前に確立されたと言われる手作業の技",
+      "2024年12月に国際的な無形の遺産として登録された"
+    ],
+    "source": "https://www.nta.go.jp/traditional_sake_making/index.htm",
+    "surfaces": [
+      "reading"
+    ]
   },
   {
-    "seed": "専門学校の資料請求と説明会案内",
-    "facts": ["パンフレットはWebでも請求できる", "見学は予約制のところが多い"],
-    "source": "https://www.mext.go.jp/a_menu/kokusai/kaken/index.htm",
-    "surfaces": ["listening"]
-  },
-  {
-    "seed": "クリーニング店の仕上がり日と特急サービス",
-    "facts": ["通常は3日程度かかる", "特急は追加料金が必要"],
-    "source": "https://www.meti.go.jp/policy/safety_security/industrial_safety/index.html",
-    "surfaces": ["listening"]
-  },
-  {
-    "seed": "工場見学の安全ルールと集合場所",
-    "facts": ["保護具の着用が求められる", "撮影禁止区域が設けられる"],
-    "source": "https://www.meti.go.jp/policy/mono_info_service/mono/kankyo_sangyo/kankyo_sangyo.html",
-    "surfaces": ["listening", "carrier"]
-  },
-  {
-    "seed": "保険契約内容の確認と更新時期",
-    "facts": ["ライフステージの変化で必要な保障が変わる", "更新前に内容を確認する"],
-    "source": "https://www.fsa.go.jp/policy/ninsyo/index.html",
-    "surfaces": ["listening"]
+    "seed": "家庭の省エネと光熱費の見直し",
+    "facts": [
+      "照明を替えると年に約2700円、省エネ家電への買い替えでは年に約1万9000円の節約になる例が示されている",
+      "断熱や省エネ家電など、まず取り組みやすい行動が4つ挙げられている"
+    ],
+    "source": "https://ondankataisaku.env.go.jp/decokatsu/action/",
+    "surfaces": [
+      "info",
+      "listening",
+      "carrier"
+    ]
   }
 ]

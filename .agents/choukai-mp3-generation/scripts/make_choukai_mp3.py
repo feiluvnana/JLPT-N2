@@ -2,12 +2,16 @@
 """
 N2 choukai exam MP3 generator (v2) — official-style audio.
 
-Calibrated against official JLPT N2 exam audio (in refs/JLPT/):
+Calibrated against the official JLPT N2 exam audio archive in
+refs/JLPT_N2_NEW/ (31 sittings, 2010-07 .. 2025-12 — see
+official-audio-analysis/references/official_pacing.md):
   - Narrator/announcer: FEMALE voice (ja-JP-NanamiNeural), slightly slow,
-    like the official test announcer.
-  - ~1.3 s of air between utterances (measured from official exam audio).
+    like the official test announcer (measured F0 176-254 Hz, 31/31 female).
+  - ~0.9 s of air between utterances (official turn gaps: median 0.51 s,
+    p75 0.75 s, p90 1.08 s over 465 diarized turn boundaries).
   - Answer pauses: 12 s after each question (8 s for 問題4 quick response).
-  - Output loudness normalized to about -17 LUFS to match official exam levels.
+  - Output loudness normalized to about -15 LUFS, the median integrated
+    loudness of all 31 official recordings.
 
 Setup (one time):
     pip install edge-tts
@@ -77,8 +81,12 @@ SPEAKER_MAP = {
     "FP":     {"voice": MALE,   "rate": "+0%"},
 }
 
-# Pacing (seconds) — measured from the official Dec 2025 N2 exam audio.
-GAP_BETWEEN_LINES = 1.3        # ordinary gap between dialogue turns
+# Pacing (seconds) — measured across the 31-sitting official archive in
+# refs/JLPT_N2_NEW/ (2010-2025).  See
+# official-audio-analysis/references/official_pacing.md for the per-sitting
+# tables, sample counts and method.  Every value below sits inside the
+# measured band; do not guess new ones.
+GAP_BETWEEN_LINES = 0.9        # ordinary gap between dialogue turns
 GAP_AFTER_PRE_QUESTION = 3.0   # 問題1/2: after the question, before the talk
 GAP_OPTION_READING = 20.0      # 問題2 only: time to read printed options
 GAP_BETWEEN_SPOKEN_CHOICES = 3.0  # 問題3/5: between spoken choices 1〜4
@@ -162,7 +170,12 @@ def wav_duration(path: Path) -> float:
 def wav_to_mp3(src: Path, dst: Path, normalize=False):
     cmd = ["ffmpeg", "-y", "-i", str(src)]
     if normalize:
-        cmd += ["-af", "loudnorm=I=-17:TP=-1.0:LRA=11"]
+        # I: median integrated loudness of all 31 official recordings
+        # (-15.0 LUFS; p25 -15.5, p75 -14.3).  TP: official median is
+        # -0.86 dBTP and several sittings clip above 0, so we keep the safer
+        # -1.0.  LRA is a ceiling — official material measures 7.5-9.8, well
+        # under it, so it never engages.
+        cmd += ["-af", "loudnorm=I=-15:TP=-1.0:LRA=11"]
     cmd += ["-c:a", "libmp3lame", "-b:a", "96k", str(dst)]
     run(cmd)
 

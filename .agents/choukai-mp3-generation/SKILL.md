@@ -131,24 +131,49 @@ one-voice pair as a WARN — but the map lookup belongs in authoring: read the
 label out of `SPEAKER_MAP` before you write the narration around it, as
 `choukai-script-writing` §"One voice per person" also requires.
 
-## Pacing table (from official Dec 2025 N2 audio — do not guess new values)
+## Pacing table (measured across 31 official sittings — do not guess new values)
 
-| Constant | Value | Meaning |
-|---|---|---|
-| GAP_BETWEEN_LINES | 1.3 s | between dialogue turns |
-| GAP_AFTER_PRE_QUESTION | 3 s | 問1: question → conversation |
-| GAP_OPTION_READING | **20 s** | 問2 only: read printed options (most-missed pause) |
-| GAP_BETWEEN_SPOKEN_CHOICES | 3 s | 問3/問5 spoken choices |
-| GAP_AFTER_SHITSUMON1 | 10 s | 問5: between 質問1 and 質問2 |
-| ANSWER_PAUSE | 問1/2: 12 s, 問3/4: 8 s, 問5: 10 s | after each item block |
+Derived from the whole official archive in `refs/JLPT_N2_NEW/` (2010-07 ..
+2025-12), not from one recording. Per-sitting tables, sample counts and method
+are in `official-audio-analysis/references/official_pacing.md`; the "official"
+column below is the measured median with the band in brackets.
 
-To recalibrate against official recordings in `refs/JLPT/`, use `official-audio-analysis`
-and update ONLY these constants.
+| Constant | Value | Official (median [band]) | Meaning |
+|---|---|---|---|
+| GAP_BETWEEN_LINES | 0.9 s | 0.51 s [p75 0.75, p90 1.08], n=465 turns | between dialogue turns |
+| GAP_AFTER_PRE_QUESTION | 3 s | 2.80 s [2.5–4.6, bimodal ≈2.8 / ≈4.1], n=74 | 問1: question → conversation |
+| GAP_OPTION_READING | **20 s** | 20.22 s [20.19–20.81], n=139 | 問2 only: read printed options (most-missed pause) |
+| GAP_BETWEEN_SPOKEN_CHOICES | 3 s | 3.10 s [2.66–3.26], n=427 | 問3/問5 spoken choices |
+| GAP_AFTER_SHITSUMON1 | 10 s | 10.0 s [7.8–12.4], n=20 | 問5: between 質問1 and 質問2 |
+| ANSWER_PAUSE | 問1/2: 12 s, 問3/4: 8 s, 問5: 10 s | 12.2 s / 8.3 s / 8.3–12.3 s | after each item block |
+
+**Every value is inside the measured band, and the band has not moved in 15
+years** — correlation between sitting year and pause length is |r| ≤ 0.22 for
+all classes, so "recent practice" and "all practice" are the same target.
+
+Two notes where our build knowingly differs from the archive:
+
+- **問題5's three pauses are not one value.** Official gives 1番 ≈ 8.3 s (it has
+  spoken choices, like 問題3), 質問1 → 質問2 = 10.0 s, and the final 質問2
+  ≈ 11.2 s. `ANSWER_PAUSE` is one number per 問題, so 10 s stays as the
+  compromise — it is exact for the 質問1 gap and splits the other two.
+- **Official reads each spoken choice as 「1、」+ ~1.1 s + the option text**,
+  then waits ~3.1 s before the next number. We speak the whole choice line as
+  one utterance, so only the ~3 s inter-choice gap is reproduced.
+
+To recalibrate, use `official-audio-analysis` against `refs/JLPT_N2_NEW/` and
+update ONLY these constants — `make check` diffs this table against the code.
 
 ## Engineering rules (each fixed a real bug)
 
 - Synthesize per line → convert to 24 kHz mono WAV → concat WAVs → encode MP3
-  ONCE with `loudnorm=I=-17:TP=-1.0:LRA=11`. Never concat MP3 segments directly.
+  ONCE with `loudnorm=I=-15:TP=-1.0:LRA=11`. Never concat MP3 segments directly.
+  `I=-15` is the median integrated loudness of all 31 official recordings
+  (p25 −15.5, p75 −14.3); it replaced `I=-17`, which was set from a
+  `volumedetect` **mean_volume** reading (−17 to −18 dB) as though that were
+  LUFS. It is not: mean_volume is ungated flat RMS over the whole file,
+  silence included, so on the same recording it reads ~4 dB below the gated,
+  K-weighted figure `loudnorm` actually targets. See `official-audio-analysis`.
 - Retry synthesis (3×, backoff); cache segments in `tests/<test_id>/segments/`
   so re-runs skip finished lines. The cache key is a hash of
   **text + voice + rate**, not the line's position — keying on position alone
@@ -207,7 +232,11 @@ all valid; the difference is only how instruction and announcer text is split.
 So do not treat any total as a target: `validate_script()` enforces the 33 item
 blocks and their distribution and merely *prints* the total
 (`script OK: N blocks, …`).
-Estimated length ≈ 45 min with TTS at these rates — the four built tests
-measure **41.1–46.7 min** per their 聴解_チャプター.json (official ≈ 51.4 min;
-human actors speak slower, and the remaining gap is acceptable).
+Estimated length ≈ 40–45 min with TTS at these rates. Official runtime is
+**36.6–52.1 min, median 43.3** across the 31-sitting archive — it is not the
+"consistently ~50–52 min" this repo used to assume from one file, and it is
+**not a calibration target**: it varies with how much the actors say, which is
+content, not pacing. Match the pause table, not the clock. (Dropping
+`GAP_BETWEEN_LINES` from 1.3 s to 0.9 s takes roughly 1–1.5 min off a full
+paper; that is the correction landing, not a regression.)
 

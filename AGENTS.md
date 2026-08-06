@@ -165,6 +165,8 @@ variable (`make sheet TEST=1`); it defaults to `1`.
 | `make grade <test_id>`    | `grade_answers.py --test-dir tests/<test_id>`      |
 | `make init-import SLUG=…` | `init_imported_test.py --slug <slug>` — **slug only**; pass `--booklet/--script/--audio` with the raw command below |
 | `make extract-pdf PDF=… OUT=…` | `extract_pdf_text.py` |
+| `make extract-archive`    | `extract_jlpt_n2_new.py --all` — the past-paper archive → Markdown |
+| `make extract-keys`       | `extract_jlpt_n2_key.py` — the archive's answer-key PDF → `key.md` + JSON |
 
 Every per-test target also has a `-<id>` form (`make sheet-1`, `make mp3-2`),
 which is what to use when the target is not the first goal on the command line —
@@ -203,6 +205,41 @@ python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json tests/
 ```
 
 The script blends seeds into every surface of `tests/<test_id>/test_spec.json` (reading topics, listening scenarios, `cloze_topic` for 問9, `info_retrieval_texture` for 問14, `qr_situation_seeds` for 問4, `carrier_seeds` for 問1–8) and prints a **blend report**. Check the report before authoring: web share must sit within 30–60% per surface with the pool side ≥40%, and no source domain may dominate (≤2 topic-level seeds each). Re-harvest and re-run if it warns.
+
+### Past-Paper Archive (`refs/JLPT_N2_NEW/`) — reading the PDFs as Markdown
+
+Thirty-one official N2 papers, one folder each (booklet PDF + script PDF + MP3),
+plus one answer-key PDF at the archive root covering all of them. Two read-only
+scripts turn that into files an agent can read without opening a PDF:
+
+```bash
+make extract-archive   # every folder -> booklet.md, script.md, audio_inspection.md
+make extract-keys      # the key PDF  -> key.md per folder + refs/JLPT_N2_NEW/answer_keys.json
+# one folder only:
+python3 tools/extract_jlpt_n2_new.py "refs/JLPT_N2_NEW/17.N2 12-2025"
+```
+
+Both write **only** those `.md`/`.json` files; the PDFs and MP3s are never touched.
+Two facts about the output decide how far you may trust it:
+
+- **`booklet.md` and `key.md` are exact.** Every booklet PDF has a full text
+  layer. The key PDF draws answers in red and question numbers in black, so they
+  are paired by colour and position, then validated (言語知識・読解 must number
+  1..N with no gaps, each 聴解 大問 must restart at 1) — and independently
+  cross-checked against the `（正解:N）` the script PDFs print: **365/365 agree**.
+- **`script.md` is partly OCR.** 30 of the 31 script PDFs draw their dialogue as
+  1-bit stencil bitmaps, so no text extractor can reach it — only the 問題/N番
+  setup lines and `（正解:N）` are real text. The rest is filled in by macOS
+  Vision OCR and fenced `[OCR ▼]` … `[OCR ▲]`. Those runs are ~98%
+  character-accurate, **not exact** (errors cluster on kanji carrying furigana:
+  整理→軽理, 一応→一思). Read them for content; **verify against the PDF before
+  quoting one as official wording**, and never treat an OCR'd line as a
+  calibration measurement. Text outside the fences is exact.
+
+`audio_inspection.md` is the `official-audio-analysis` measurement set per file
+(duration, loudness, long-pause histogram, dialogue-gap median, pause timeline).
+Section labels in it are the skill's signatures, not measurements — attribute
+them yourself.
 
 ### External Test Import (PDF / past paper → project format)
 

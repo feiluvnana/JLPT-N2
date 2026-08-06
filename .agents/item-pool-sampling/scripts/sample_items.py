@@ -27,7 +27,24 @@ LOGS_DIR = ROOT / "logs"
 LEDGER = LOGS_DIR / "ledger.json"
 STAGING = LOGS_DIR / "adjunct_staging.json"
 
+sys.path.insert(0, str(HERE))
+from level_data import (  # noqa: E402
+    THEMED_CATS, THEMES, entry_text as item_text, entry_theme,
+)
+
 ADJUNCT_CAP = 0.20  # max share of each category draw filled from staging
+
+# R13: how many entries of one theme a single draw may hold before the mix is
+# too narrow to give every 問題 its own subject. Warn, don't fail: the author
+# maps scenarios to 問題, so only they can see whether two same-theme entries
+# actually collide.
+#
+# The caps are set ABOVE the expected count so the warning means "unusually
+# concentrated", not "the pool is uneven". The heaviest themes are 働き方
+# (23/200 reading -> 1.4 expected in a 12-draw; 44/240 listening -> 3.9 in a
+# 21-draw), so a cap of 3 on listening would fire on nearly every seed and be
+# ignored within two tests. Re-derive these if the pool balance changes.
+THEME_CAP = {"reading_topics": 2, "listening_scenarios": 5}
 
 # category -> items drawn per test (N2)
 DRAW = {
@@ -59,21 +76,92 @@ ANSWER_SECTIONS = [
 ]
 
 
-def balanced_positions(rng: random.Random, count: int, width: int) -> list[int]:
-    """Near-uniform distribution over 1..width, never 3 identical in a row."""
-    base = [(i % width) + 1 for i in range(count)]
-    if width < 2 and count >= 3:
+# R17: per-section evenness is not paper-level evenness. The old plan built
+# each section as [(i % width) + 1 ...], so every section's REMAINDER always
+# landed on the lowest positions: summed over the 18 four-choice sections that
+# is +15 on position 1, +7 on 2, +4 on 3, +0 on 4, and test 4 shipped 31 keys
+# on position 1 against 17 on position 4. The remainders are now allocated
+# across sections instead of inside them.
+#
+# PROVISIONAL BAND — retune, don't reinterpret. 90 four-choice items / 4 = 22.5,
+# and ±4 is the working tolerance until the measured spread of the official
+# papers (refs/JLPT_N2_NEW answer keys) replaces it. If that measurement
+# disagrees, change these two numbers; the algorithm does not care what they are.
+POSITION_BAND = (19, 27)
+
+
+def shuffle_no_triple(rng: random.Random, base: list[int], name: str) -> list[int]:
+    """Shuffle `base` until no position repeats three times in a row."""
+    base = list(base)
+    if len(set(base)) < 2 and len(base) >= 3:
         # No arrangement can satisfy the no-3-in-a-row rule; fail loudly rather
         # than spin forever in the shuffle loop.
-        sys.exit(f"balanced_positions: impossible constraint "
-                 f"(count={count}, width={width})")
+        sys.exit(f"shuffle_no_triple: impossible constraint for {name} "
+                 f"({len(base)} items over {len(set(base))} position(s))")
     for _ in range(10_000):
         rng.shuffle(base)
         if all(not (base[i] == base[i + 1] == base[i + 2])
                for i in range(len(base) - 2)):
             return base
-    sys.exit(f"balanced_positions: no valid arrangement after 10000 shuffles "
-             f"(count={count}, width={width})")
+    sys.exit(f"shuffle_no_triple: no valid arrangement after 10000 shuffles "
+             f"for {name} ({len(base)} items)")
+
+
+def balanced_positions(rng: random.Random, count: int, width: int) -> list[int]:
+    """Near-uniform distribution over 1..width, never 3 identical in a row.
+
+    Section-local: used for the width-3 section (聴解 問題4), which does not
+    take part in the cross-section balancing below.
+    """
+    return shuffle_no_triple(rng, [(i % width) + 1 for i in range(count)],
+                             f"{count}x{width}")
+
+
+def balanced_position_plan(rng: random.Random,
+                           sections: list[tuple[str, int, int]]
+                           ) -> tuple[dict[str, list[int]], dict[int, int]]:
+    """Answer positions for every section, balanced ACROSS the four-choice ones.
+
+    Each section still gets floor(count/4) of every position, so no section is
+    itself lopsided; only the leftover `count % 4` slots are contested, and they
+    go to whichever positions are furthest behind paper-wide. Returns the plan
+    and the realised per-position totals over the four-choice items.
+    """
+    quad = [s for s in sections if s[2] == 4]
+    total = sum(c for _, c, _ in quad)
+    lo, hi = POSITION_BAND
+    alloc: dict[str, list[int]] = {}
+    running: dict[int, int] = {}
+    for _ in range(200):
+        running = {p: 0 for p in (1, 2, 3, 4)}
+        alloc = {}
+        for name, count, _w in sorted(quad, key=lambda s: -s[1]):
+            base, rem = divmod(count, 4)
+            for p in running:
+                running[p] += base
+            # remainder -> the positions with the smallest running total,
+            # ties broken randomly so the plan is not the same every seed
+            extras = sorted((1, 2, 3, 4),
+                            key=lambda p: (running[p], rng.random()))[:rem]
+            for p in extras:
+                running[p] += 1
+            alloc[name] = [p for p in (1, 2, 3, 4)
+                           for _ in range(base + (1 if p in extras else 0))]
+        if all(lo <= running[p] <= hi for p in running):
+            break
+    else:
+        sys.exit(f"balanced_position_plan: cannot keep all four positions "
+                 f"inside {POSITION_BAND} over {total} four-choice items "
+                 f"(got {running}) — the section table changed; retune "
+                 f"POSITION_BAND or the section counts")
+
+    plan = {}
+    for name, count, width in sections:
+        base = alloc[name] if width == 4 else [(i % width) + 1
+                                               for i in range(count)]
+        assert len(base) == count, (name, len(base), count)
+        plan[name] = shuffle_no_triple(rng, base, name)
+    return plan, running
 
 
 # --- Ledger (v2): draw history, newest last ------------------------------
@@ -84,13 +172,6 @@ def balanced_positions(rng: random.Random, count: int, width: int) -> list[int]:
 # resetting, and so each item can be attributed to the test that used it.
 
 COOLDOWN = 2  # do not redraw an item used within this many previous draws
-
-
-def item_text(entry) -> str:
-    """Extract the testable string from a pool string or adjunct record."""
-    if isinstance(entry, dict):
-        return str(entry.get("item") or entry.get("topic") or entry.get("scenario") or "")
-    return str(entry)
 
 
 def load_staging_ready() -> dict[str, list[dict]]:
@@ -130,7 +211,7 @@ def apply_adjunct(rng: random.Random, cat: str, picked: list,
         it = e.get("item", "")
         if not it or it in taken or head(it) in {head(t) for t in taken}:
             continue
-        if ago(it) <= COOLDOWN:
+        if ago(it) < COOLDOWN:      # used within the last COOLDOWN draws
             continue
         eligible.append(e)
     if not eligible:
@@ -195,33 +276,45 @@ def recency_map(history: list) -> dict:
     return rec
 
 
-def draw(rng: random.Random, pool: list[str], recency: dict, n: int,
-         name: str, taken: set) -> list[str]:
-    """LRU draw: prefer items not used within COOLDOWN draws, never reusing an
-    item already taken by another category in THIS test."""
+def draw(rng: random.Random, pool: list, recency: dict, n: int,
+         name: str, taken: set) -> tuple[list, int]:
+    """LRU draw. Returns (picked, cooldown_actually_applied).
+
+    `cool` is a number of PREVIOUS DRAWS: at cool=COOLDOWN nothing used in the
+    last COOLDOWN ledger entries can be drawn (ago 0 .. COOLDOWN-1 excluded),
+    which is what the docstring, the SKILL and `rotation.cooldown` all promise.
+    The old test was `ago(x) > cool`, i.e. one draw stricter than documented —
+    harmless in itself, but it meant the number written into the spec was not
+    the number enforced, and a gate cannot check a promise nobody records.
+
+    Relaxation is not silent any more either. cool=0 is the old "last resort"
+    (no recency filter at all) and it is a value the caller RETURNS and records,
+    so a paper drawn without rotation says so in its own spec instead of only
+    in a console line nobody kept.
+    """
     if len(pool) < 2.5 * n:
         print(f"  warning: pool '{name}' is thin ({len(pool)} for draws of {n}) "
               f"— consider adding items from the reference books")
     inf = 10 ** 9
 
-    def ago(x: str) -> int:
-        return min(recency.get(x, inf), recency.get(head(x), inf))
+    def ago(x) -> int:
+        t = item_text(x)
+        return min(recency.get(t, inf), recency.get(head(t), inf))
 
     for cool in range(COOLDOWN, -1, -1):
-        eligible = [x for x in pool if x not in taken and ago(x) > cool]
+        eligible = [x for x in pool
+                    if item_text(x) not in taken and ago(x) >= cool]
         if len(eligible) >= n:
-            if cool < COOLDOWN:
+            if cool == 0:
+                print(f"  WARNING: pool '{name}' exhausted its rotation — "
+                      f"drawing with NO cooldown. Grow this pool.")
+            elif cool < COOLDOWN:
                 print(f"  note: pool '{name}' is tight — cooldown relaxed to "
                       f"{cool} draw(s); consider growing the pool")
-            return rng.sample(eligible, n)
-    # Last resort: ignore recency, still honour cross-category exclusion.
-    fallback = [x for x in pool if x not in taken]
-    if len(fallback) < n:
-        sys.exit(f"pool '{name}' cannot supply {n} distinct items "
-                 f"({len(fallback)} available after cross-category exclusion)")
-    print(f"  WARNING: pool '{name}' exhausted its rotation — drawing with "
-          f"no cooldown. Grow this pool.")
-    return rng.sample(fallback, n)
+            return rng.sample(eligible, n), cool
+    remaining = len([x for x in pool if item_text(x) not in taken])
+    sys.exit(f"pool '{name}' cannot supply {n} distinct items "
+             f"({remaining} available after cross-category exclusion)")
 
 
 COMMON_DOMAINS = [
@@ -258,6 +351,78 @@ def check_domain_collisions(scenarios: list) -> list[str]:
     return warnings
 
 
+def check_pool_themes(pools: dict) -> None:
+    """R13: every themed pool entry carries a theme from the CLOSED vocabulary.
+
+    Hard failure, not a warning. `expand_pools.py` and `promote_adjunct.py`
+    still append bare strings to these categories, so without this the theme
+    coverage silently rots the first time either runs, and the cross-test theme
+    comparison the tags exist for goes quiet instead of red.
+    """
+    bad = []
+    for cat, key in THEMED_CATS.items():
+        for e in pools.get(cat, []):
+            if not isinstance(e, dict) or not e.get(key):
+                bad.append(f"{cat}: {e!r} is not {{'{key}': …, 'theme': …}}")
+            elif e.get("theme") not in THEMES:
+                bad.append(f"{cat}: 「{e[key]}」 theme={e.get('theme')!r}")
+    if bad:
+        sys.exit("pools.json themed entries are broken:\n  " +
+                 "\n  ".join(bad) +
+                 f"\n  valid themes: {', '.join(THEMES)}"
+                 "\n  (item-pool-sampling/SKILL.md §'Topic themes' — tag the "
+                 "entry, never widen the vocabulary to fit it)")
+
+
+def check_theme_spread(picked: list, cat: str) -> list[str]:
+    """Warn when one theme takes too much of a themed draw.
+
+    Surface strings cannot see that 「交替制勤務と睡眠の質」 and 「就寝前の刺激と
+    生活習慣」 are one subject; the tags can. The sampler does not know which
+    entry the author will map to which 問題, so this warns rather than rerolls.
+    """
+    cap = THEME_CAP.get(cat)
+    if not cap:
+        return []
+    counts: dict[str, list[str]] = {}
+    for e in picked:
+        th = entry_theme(e)
+        if th:
+            counts.setdefault(th, []).append(item_text(e))
+    return [f"theme '{th}' x{len(xs)} (cap {cap}): {xs}"
+            for th, xs in counts.items() if len(xs) > cap]
+
+
+def assert_rotation(spec_items: dict, history: list, cooldown: int) -> None:
+    """R10 proof: nothing drawn may appear in the last `cooldown` ledger draws.
+
+    The filter lives in draw(); this is the independent re-check, in the same
+    spirit as the same-test collision assertion below. It compares on both the
+    raw text and head(), which is how recency_map keys them.
+    """
+    if cooldown <= 0 or not history:
+        return
+    recent: dict[str, str] = {}
+    for entry in history[-cooldown:]:
+        tid = str(entry.get("test_id"))
+        for xs in entry.get("items", {}).values():
+            for x in xs:
+                t = item_text(x)
+                recent.setdefault(t, tid)
+                recent.setdefault(head(t), tid)
+    clashes = []
+    for cat, xs in spec_items.items():
+        for x in xs:
+            t = item_text(x)
+            tid = recent.get(t) or recent.get(head(t))
+            if tid:
+                clashes.append(f"{cat}:「{t}」 (test {tid})")
+    if clashes:
+        sys.exit(f"rotation broken: {len(clashes)} item(s) drawn inside the "
+                 f"{cooldown}-draw cooldown: {'; '.join(clashes)} — this is a "
+                 f"bug in draw(), not a reason to lower COOLDOWN")
+
+
 def check_pool_depths(pools: dict) -> None:
     """Report pool sizes and headroom multipliers against draw requirements."""
     print("Pool Depth Health Check:")
@@ -283,6 +448,7 @@ def main():
     args = ap.parse_args()
 
     pools = json.loads(POOLS.read_text(encoding="utf-8"))
+    check_pool_themes(pools)
 
     if args.check_depth:
         check_pool_depths(pools)
@@ -317,41 +483,67 @@ def main():
         taken_text = {item_text(x) for c, xs in spec["items"].items()
                       if c != cat for x in xs}
         updated_recency = recency_map(history)
-        picked = draw(rng, pools[cat], updated_recency,
-                      DRAW[cat], cat, taken_text)
+        picked, cool = draw(rng, pools[cat], updated_recency,
+                            DRAW[cat], cat, taken_text)
         if staging_by_cat:
             picked = apply_adjunct(rng, cat, picked, staging_by_cat,
                                    taken_text, updated_recency)
         spec["items"][cat] = picked
         spec["seed"] = f"{spec.get('seed')}+reroll({cat},{seed})"
+        spec["rotation"] = {
+            "recency_source": "ledger",
+            "history_len": 0,          # filled in below, once this test's own
+                                       # entry can be told from the others
+            # a reroll can only make the paper's weakest cooldown weaker
+            "cooldown": min(cool, spec.get("rotation", {}).get("cooldown", cool)),
+        }
         if history:
             history[-1].setdefault("items", {})[cat] = picked
             history[-1]["seed"] = spec["seed"]
+        for w in check_theme_spread(picked, cat):
+            print(f"  WARNING: {cat} draw is theme-heavy — {w}")
     else:
         items = {}
         taken: set = set()          # cross-category: one item, one 問題 per test
+        theme_warns: list[str] = []
+        effective_cool = COOLDOWN
         for cat, n in DRAW.items():
             if cat not in pools:
                 sys.exit(f"category '{cat}' is in DRAW but missing from pools.json")
-            picked = draw(rng, pools[cat], recency, n, cat, taken)
+            picked, cool = draw(rng, pools[cat], recency, n, cat, taken)
+            effective_cool = min(effective_cool, cool)
             if staging_by_cat:
                 picked = apply_adjunct(rng, cat, picked, staging_by_cat,
                                        taken, recency)
             items[cat] = picked
             taken.update(item_text(x) for x in picked)
+            theme_warns += [f"{cat}: {w}" for w in check_theme_spread(picked, cat)]
+        positions, pos_totals = balanced_position_plan(rng, ANSWER_SECTIONS)
         spec = {
             "seed": seed,
             "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
             "test_id": args.test_id,
-            "items": items,
-            "answer_positions": {
-                name: balanced_positions(rng, count, width)
-                for name, count, width in ANSWER_SECTIONS
+            # R10: the rotation this draw actually enforced, so a gate can check
+            # the paper against logs/ledger.json instead of trusting a constant.
+            # cooldown is the WEAKEST level applied to any category (COOLDOWN
+            # unless a thin pool forced relaxation; 0 = no rotation at all).
+            "rotation": {
+                "recency_source": "ledger",
+                "history_len": len(history),
+                "cooldown": effective_cool,
             },
+            "items": items,
+            "answer_positions": positions,
         }
         history.append({"test_id": args.test_id, "seed": seed,
                         "generated_at": spec["generated_at"], "items": items,
                         "draw": dict(DRAW)})
+        print(f"  answer positions over the {sum(pos_totals.values())} "
+              f"four-choice items: " +
+              ", ".join(f"{p}x{pos_totals[p]}" for p in (1, 2, 3, 4)) +
+              f"  (band {POSITION_BAND[0]}-{POSITION_BAND[1]})")
+        for w in theme_warns:
+            print(f"  WARNING: theme-heavy draw — {w}")
 
     # Invariant: no item may be tested by two different 問題 in the same paper.
     collisions = {}
@@ -361,6 +553,14 @@ def main():
             collisions[f"{a} x {b}"] = sorted(both)
     if collisions:
         sys.exit(f"same-test collision (a bug in draw()): {collisions}")
+
+    # R10: prove the cooldown the spec claims, against the ledger it claims it
+    # from. In both paths `history[-1]` is THIS test's own entry, so the
+    # previous draws are everything before it.
+    prior_history = [h for h in history
+                     if str(h.get("test_id")) != str(args.test_id)]
+    spec["rotation"]["history_len"] = len(prior_history)
+    assert_rotation(spec["items"], prior_history, spec["rotation"]["cooldown"])
 
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
     spec_path.parent.mkdir(parents=True, exist_ok=True)

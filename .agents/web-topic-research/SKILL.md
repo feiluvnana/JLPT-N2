@@ -134,6 +134,100 @@ rows and asking "is this the same subject in different clothes?" is the only
 check that catches a rename. Do not treat a green topic check as evidence that
 the paper is new.
 
+## `theme` tags — the comparison surface strings cannot make
+
+Every `reading_topics` and `listening_scenarios` entry in
+`.agents/item-pool-sampling/references/pools.json` carries a **`theme` tag** drawn
+from a closed vocabulary of **twenty** values (睡眠・健康／地域活性化／デジタル化／
+防災 …). **The tag vocabulary is owned by `item-pool-sampling/SKILL.md`** — read
+the table there before tagging or reading a tag, never invent a value here, and
+never widen the list to make a seed fit.
+
+**Why the string comparison above is not enough.** `check_topic_reuse()` and the
+gate compare the *wording* of a topic, so 「交替制勤務と睡眠の質」 and
+「就寝前の刺激と生活習慣」 come out as two different topics: zero shared ≥2-char
+tokens, both pass, and the paper tests sleep twice — QA found exactly that pair
+across tests 2 and 4, and it is the same mechanism as the 「屋上緑化」/
+「グリーンパートナー制度」 pair in the honest-limit note above. Under theme tags
+both entries read `睡眠・健康`, and the collision is a lookup instead of a
+judgement. Tagging is a one-off mechanical job on the pool; after it, neither the
+author nor the reviewer has to re-derive the subject.
+
+### The four rules the tags enforce
+
+**Do the arithmetic before reading them.** A paper authors **12 reading topics +
+21 listening scenarios = 33 themed surfaces** against a **20**-value vocabulary,
+so "one surface per theme" across a whole paper is *impossible* and must never be
+written as a rule — an impossible rule teaches authors to skip the section it
+lives in. Uniqueness applies to the handful of surfaces a reader remembers the
+paper by; everything else gets a cap.
+
+> **The headline set** = `問題9` cloze, `問題12` A/B (**one** surface: A and B
+> argue about a single subject by design), `問題13` 長文, `問題14` flyer,
+> `聴解問題5` 統合理解. **Five surfaces.**
+>
+> 1. **Five headline surfaces, five DIFFERENT themes.** Five out of twenty —
+>    always satisfiable, and this is where the defect is visible: a reader who
+>    meets 睡眠・健康 in the 長文 and again in the flyer has read one paper about
+>    one thing.
+> 2. **A headline theme appears nowhere else in the 読解 half.** If 問題13 is
+>    `デジタル化`, no 問題10 or 問題11 passage may be `デジタル化`. Test 2 shipped
+>    デジタルデトックス as **both** 問題9 and 問題10(1) (`logs/topics.json`, test 2)
+>    — the headline echoed two screens later. Listening is governed by rule 3
+>    only; a 聴解 item sharing the 問題13 theme is not a defect.
+> 3. **Caps everywhere else: ≤2 reading surfaces and ≤5 listening scenarios per
+>    theme.** These are `THEME_CAP` in the sampler, whose `check_theme_spread()`
+>    WARNs above them after the draw. Treat a WARN as a re-draw or re-blend
+>    decision, not as noise — and treat a *third* reading surface on one theme as
+>    a defect even though nothing FAILs on it.
+> 4. **Cross-test: no theme may headline two consecutive papers, and across the
+>    previous two papers taken together at most ONE headline theme may repeat.**
+>    A repeat is therefore allowed only against the paper-before-last, and only
+>    once in the whole headline set.
+
+**Where the previous papers' headline themes come from.** The window is the **two
+most recent generated papers still on disk** (`tests/<id>/`, `imported-*`
+excluded — an official paper is the thing others copy, and reusing its subject is
+not staleness). Today that window is **tests 1 and 2**; tests 4 and
+imported-n2-2025-07 were removed by the repo owner, and the `logs/topics.json`
+rows for a removed test are history, not budget. Degrade sensibly: with one
+paper on disk, compare against that one; with none, rule 4 is vacuous — **say so
+in your report either way**, because a silently-skipped comparison and a passed
+one look identical.
+
+Tests 1 and 2 predate the tagging, so their specs carry no `theme`. Do not skip
+the comparison for that: read their `問題9 / 問題12 / 問題13 / 問題14 /
+聴解問題5-1番` rows out of `logs/topics.json` and tag those five subjects by hand
+from the `THEMES` table — ten lookups, once, and the next paper inherits tagged
+specs.
+
+**How to comply, in order:**
+
+1. After `merge_seeds.py` prints its blend report, write down the `theme` of
+   every surface — pool entries carry theirs from `pools.json`; a
+   `"origin": "web"` entry inherits the theme of the surface it displaced, or
+   takes the nearest existing tag when the seed changed the subject. **Scope by
+   surface, not by origin**: a pool-origin 問題13 and a web-origin 問題9 on one
+   theme is exactly the defect, so rules 1–2 bind blended and pool surfaces
+   alike.
+2. Check the five headline themes against each other (rule 1), then against the
+   読解 list (rule 2), then count the per-theme totals (rule 3).
+3. Tag the previous papers' headline sets and apply rule 4. Record the ten (or
+   five, or zero) prior themes and your repeat count in the final report.
+
+**The pools are lopsided, so a re-draw may not fix a cap breach.** `働き方` holds
+44 of 240 listening scenarios and `科学・技術` only 2 (audited 2026-08-06), so a
+21-scenario draw lands on 働き方 repeatedly by sheer availability, not by
+intent — that is why the listening cap is 5 rather than 2. When a cap keeps
+breaching on the same theme, the fix is growing the thin themes in the pool
+(`item-pool-sampling` owns that) or moving a surface's subject, never stretching
+a label to make the count come out.
+
+A theme tag is a floor in exactly the way token overlap is: it catches the
+renamed subject, not the *shape* repeat (`shapes` above) and not a subject the
+tagger put under a stretched label. The whole-paper topic table pass stays
+mandatory.
+
 ## Step 1 — Harvest topic seeds (18-25 per test, across as many domains as you can)
 
 **Every seed must come from a page you actually fetched — no web, no harvest.**

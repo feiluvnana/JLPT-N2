@@ -39,6 +39,10 @@ python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py
 # The static twin for GitHub Pages — same screens, answers in localStorage:
 python3 .agents/interactive-answer-sheet/scripts/build_pages.py
 # or: make pages            (then: make preview-pages)
+
+# The QA blind-solve render — the same paper, no keys, no sheet:
+python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id> --keyless
+# or: make keyless <test_id>   (→ qa/<test_id>/keyless.md)
 ```
 
 Outputs into `tests/<test_id>/`:
@@ -107,6 +111,45 @@ while you solve.
 booklets `言語知識・読解.html` / `聴解.html`, which `build_booklet.py` overwrites
 on every booklet build. There are no per-section `*_解答.html` files — one
 merged sheet covers the whole exam.
+
+## Three build modes, one truncation
+
+Everything this script emits comes out of the same `strip_key()`. That is the
+point: a key that could reach one output could reach all three, so there is one
+place to get it right and one place that aborts when the key heading is missing.
+
+| Mode | Command | Writes | Keys |
+| - | - | - | - |
+| server sheet (default) | `make sheet <id>` | `tests/<id>/解答.html` | embedded as JS data for in-page grading, never rendered |
+| Pages sheet | `make pages` → `build_pages.py` calls `build(storage='local')` | `_site/tests/<id>/解答.html` | same |
+| **keyless render** | `make keyless <id>` (`--keyless`) | `qa/<id>/keyless.md` | **none, anywhere in the file** |
+
+### `--keyless` — the QA blind-solve render
+
+`exam-qa-review`'s first ground rule is "blind-solve before reading the keys",
+and it was not executable: the keys live at the END of the same two Markdown
+files the paper lives in, so one read of a source returns the paper AND its
+keys. Every QA pass before this mode existed was half-blind at best, which is
+the test-4 report's root cause **R20**.
+
+`--keyless` emits the whole paper and nothing else: both booklets through
+`strip_key()` (so the key heading, the key tables, the 解答用紙 grid with its
+pre-marked 例 answers and the explanation column are all truncated away), plus
+`聴解スクリプト.txt` verbatim so 聴解 is solvable without the audio. Unlike the
+sheet, it embeds no key data at all — there is nothing to find in devtools
+because there is no JS and no key object. It then re-scans its own output with
+`KEY_HEADING` and refuses to write a render that still carries a key heading;
+a "keyless" file that leaks is worse than none, because the reviewer trusts it.
+
+The header carries the `sha1[:12]` of each source it was rendered from, which is
+exactly what `exam-qa-review`'s report header must name — solve the render, then
+rebuild it when you finish and check the shas have not moved.
+
+**It is not a deliverable.** `tests/<id>/` has a fixed file contract
+(`AGENTS.md` §2) and a build output has no business in it, so the render lands
+in `qa/<id>/keyless.md`, beside the QA report that consumes it, and is
+regenerated from `tests/<id>/` on demand. `make check` neither knows nor needs
+to know about it.
 
 ## Audio player (聴解 only)
 

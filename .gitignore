@@ -11,6 +11,9 @@ tests/*/segments/
 # PDF text dumps from external-test-import (working cache only)
 tests/*/_extract/
 
+# Compiled helper binaries (tools/vision_ocr.swift is rebuilt on first use)
+tools/.build/
+
 # Static GitHub Pages build output (make pages). CI rebuilds it from tests/ on
 # every push, so it is a build artifact, never a committed deliverable.
 _site/

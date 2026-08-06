@@ -1,12 +1,13 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check check-tests grade sheet serve pages preview-pages booklet mp3 sample merge-seeds \
-       init-import extract-pdf classify promote-adjunct fetch-openjlpt suggest-pool expand-pools
+.PHONY: help check check-tests grade sheet keyless serve pages preview-pages booklet mp3 sample merge-seeds \
+       init-import extract-pdf classify promote-adjunct fetch-openjlpt suggest-pool expand-pools \
+       extract-archive extract-keys
 
 # Handle positional arguments for targets (e.g., "make grade 1", "make sheet 1", "make booklet 1", "make mp3 1").
 # `serve` is deliberately NOT here: one server covers every test, so it takes no id.
 # `pages` builds every test by default; `make pages 1` narrows it to one.
-TARGET_CMDS := grade sheet booklet mp3 pages
+TARGET_CMDS := grade sheet keyless booklet mp3 pages
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -31,6 +32,7 @@ help:
 	@echo "  make grade 1          Grade test 1 (reads tests/1/ユーザー解答*.json)"
 	@echo "  make grade TEST=2     Grade test 2"
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
+	@echo "  make keyless 1        Blind-solve render for QA: qa/1/keyless.md (no keys)"
 	@echo "  make serve            Serve ALL tests: list -> exam -> result (no test id)"
 	@echo "  make pages            Build the static GitHub Pages site into _site/ (all tests)"
 	@echo "  make pages 1          Same, only test 1"
@@ -48,6 +50,8 @@ help:
 	@echo "  make expand-pools     Batch-expand pools from OpenJLPT + curated topics"
 	@echo "  make init-import SLUG=n2-2025-12   Scaffold tests/imported-<slug>/"
 	@echo "  make extract-pdf PDF=a.pdf OUT=tests/imported-x/_extract/a.txt"
+	@echo "  make extract-archive  refs/JLPT_N2_NEW/*/ -> booklet.md script.md audio_inspection.md"
+	@echo "  make extract-keys     Answer-key PDF -> per-exam key.md + answer_keys.json"
 	@echo "=========================================================================="
 
 check:
@@ -67,6 +71,14 @@ sheet:
 
 sheet-%:
 	python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/$*
+
+# The QA blind-solve render: the same paper with the keys truncated away, into
+# qa/<id>/keyless.md. Not a deliverable — tests/<id>/ has a fixed file contract.
+keyless:
+	python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/$(TEST) --keyless
+
+keyless-%:
+	python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/$* --keyless
 
 serve:
 	python3 .agents/interactive-answer-sheet/scripts/serve_sheet.py
@@ -126,5 +138,13 @@ init-import:
 extract-pdf:
 	@test -n "$(PDF)" && test -n "$(OUT)" || (echo "usage: make extract-pdf PDF=a.pdf OUT=out.txt"; exit 1)
 	python3 .agents/external-test-import/scripts/extract_pdf_text.py "$(PDF)" -o "$(OUT)"
+
+# Turn the refs/JLPT_N2_NEW/ past-paper archive into agent-readable Markdown.
+# Read-only with respect to the PDFs/MP3s; writes only the .md/.json beside them.
+extract-archive:
+	python3 tools/extract_jlpt_n2_new.py --all
+
+extract-keys:
+	python3 tools/extract_jlpt_n2_key.py
 
 
