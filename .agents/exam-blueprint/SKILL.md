@@ -262,10 +262,22 @@ sampler starts reporting exhausted categories.
 
 ## `scripts/sample_items.py` — usage
 
+**The seed must be an RNG output, never a number the agent writes down.**
+Agents left to "pick" a seed produce date-shaped, memorable values — tests 2
+and 3 both chose 20260804 in separate sessions, which is exactly the collision
+the seed exists to prevent. Generate it by running a command and use the
+printed value verbatim:
+
 ```bash
-python .agents/exam-blueprint/scripts/sample_items.py --seed 20260803 --test-id 4
+python3 -c "import secrets; print(secrets.randbelow(10**8))"   # any platform
+# PowerShell equivalent: Get-Random -Maximum 100000000
+```
+
+```bash
+SEED=$(python3 -c "import secrets; print(secrets.randbelow(10**8))")
+python .agents/exam-blueprint/scripts/sample_items.py --seed "$SEED" --test-id 4
 python .agents/exam-blueprint/scripts/sample_items.py --check-depth
-python .agents/exam-blueprint/scripts/sample_items.py --reroll listening_scenarios --seed 99999
+python .agents/exam-blueprint/scripts/sample_items.py --reroll listening_scenarios --seed "$SEED"
 ```
 
 `tests/<test_id>/test_spec.json` is the authoring contract: per section, the exact items

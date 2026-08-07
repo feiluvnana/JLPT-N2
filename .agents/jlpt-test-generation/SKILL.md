@@ -98,11 +98,14 @@ make sample <id> SEED=<n>          # -> tests/<id>/test_spec.json + ledger
 make merge-seeds <id>              # blend web seeds into every spec surface
 ```
 
-- **Use a seed no previous test used** (`logs/ledger.json` records them). The
-  blend is a pure function of `(seed, logs/seeds.json)`: reusing a seed replays
-  the previous test's web topics into the same slots. The gate only fails a
-  reused seed against the SAME harvest — a fresh seed is on you (tests 2 and 3
-  shipped sharing seed 20260804).
+- **The seed is an RNG output, never a number you write down** — run
+  `python3 -c "import secrets; print(secrets.randbelow(10**8))"` (or any
+  equivalent) and use the printed value verbatim. Agent-"picked" seeds are
+  date-shaped and collide across sessions: tests 2 and 3 both chose 20260804
+  independently. It must also be a seed no previous test used
+  (`logs/ledger.json` records them) — the blend is a pure function of
+  `(seed, logs/seeds.json)`, and the gate only fails a reused seed against
+  the SAME harvest, so a fresh seed is on you.
 - **Re-harvest `logs/seeds.json` for every test** — it is a per-test input, not
   a repo fixture. Test 3 inherited test 2's harvest and shipped as its re-skin.
 - Read the printed **blend report** before authoring: 30–60% web per surface,

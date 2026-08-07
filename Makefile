@@ -19,7 +19,10 @@ ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
 endif
 
 TEST ?= $(if $(POS_ARG),$(POS_ARG),1)
-SEED ?= 20260803
+# No default seed on purpose: the seed must be an RNG output passed explicitly
+# (SEED=$$(python3 -c "import secrets; print(secrets.randbelow(10**8))")),
+# never a hand-picked or remembered number — see exam-blueprint/SKILL.md.
+SEED ?=
 SLUG ?=
 # GitHub Pages build output. Gitignored: CI builds it, nothing commits it.
 SITE ?= _site
@@ -35,6 +38,7 @@ help:
 	@echo "  make check            Verify docs/code/tests consistency (read-only)"
 	@echo "  make check-tests      Same gate, per-test contracts only (skips doc/code checks)"
 	@echo "  make sample 5 SEED=n  Sample question pool -> tests/5/test_spec.json + ledger"
+	@echo "                        (SEED required, from an RNG: python3 -c 'import secrets; print(secrets.randbelow(10**8))')"
 	@echo "  make merge-seeds 5    Merge logs/seeds.json into tests/5/test_spec.json"
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
 	@echo "  make mp3 1            Synthesize listening audio for test 1 (聴解.mp3)"
@@ -59,6 +63,8 @@ check-tests:
 	python3 tools/check_consistency.py --tests
 
 sample:
+	@test -n "$(SEED)" || (echo 'usage: make sample <id> SEED=$$(python3 -c "import secrets; print(secrets.randbelow(10**8))")'; \
+	  echo 'the seed must be an RNG output, never a number an agent picked (exam-blueprint/SKILL.md)'; exit 1)
 	python3 .agents/exam-blueprint/scripts/sample_items.py --seed $(SEED) --test-id $(TEST)
 
 merge-seeds:
