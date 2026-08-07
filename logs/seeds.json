@@ -1,0 +1,256 @@
+[
+  {
+    "seed": "週1日以上の運動習慣",
+    "facts": [
+      "20歳以上の週1日以上実施率は約5割",
+      "1週間あたりの実施時間の中央値は約70分"
+    ],
+    "source": "https://www.mext.go.jp/sports/b_menu/houdou/jsa_00234.html",
+    "surfaces": [
+      "reading",
+      "listening",
+      "info"
+    ]
+  },
+  {
+    "seed": "都市鉄道の混雑率",
+    "facts": [
+      "東京圏の平均混雑率は約140％台",
+      "大阪圏・名古屋圏も100％超が続く"
+    ],
+    "source": "https://www.mlit.go.jp/report/press/tetsudo04_hh_000139.html",
+    "surfaces": [
+      "reading",
+      "listening",
+      "carrier"
+    ]
+  },
+  {
+    "seed": "プラスチック資源の一括回収",
+    "facts": [
+      "先進モデル事業で複数自治体が実証",
+      "移行後のコストとCO2を概算する手引きを改定"
+    ],
+    "source": "https://www.env.go.jp/press/press_00200.html",
+    "surfaces": [
+      "reading",
+      "listening",
+      "info"
+    ]
+  },
+  {
+    "seed": "熱中症警戒アラートの発表増",
+    "facts": [
+      "2025年の延べ発表回数は約1700回超",
+      "特別警戒アラートの発表はゼロ"
+    ],
+    "source": "https://www.wbgt.env.go.jp/pdf/report/R07_heatillness_report_24.pdf",
+    "surfaces": [
+      "listening",
+      "info",
+      "qr"
+    ]
+  },
+  {
+    "seed": "キャッシュレス決済の拡大",
+    "facts": [
+      "2025年の比率は約6割",
+      "コード払いの割合は約1割"
+    ],
+    "source": "https://www.meti.go.jp/press/2025/03/20260331006/20260331006.html",
+    "surfaces": [
+      "reading",
+      "info",
+      "listening"
+    ]
+  },
+  {
+    "seed": "放課後児童クラブの受け皿",
+    "facts": [
+      "登録児童は約157万人",
+      "待機児童は約1.6万人で前年より減少"
+    ],
+    "source": "https://manabi-mirai.mext.go.jp/upload/2026_0423_2.pdf",
+    "surfaces": [
+      "reading",
+      "listening",
+      "info"
+    ]
+  },
+  {
+    "seed": "ふるさと納税の受入拡大",
+    "facts": [
+      "令和6年度の受入額は約1.3兆円",
+      "受入件数は約5900万件"
+    ],
+    "source": "https://www.soumu.go.jp/main_content/001022811.pdf",
+    "surfaces": [
+      "reading",
+      "info",
+      "carrier"
+    ]
+  },
+  {
+    "seed": "自治会加入率の低下",
+    "facts": [
+      "把握団体の平均加入率は約7割",
+      "10年で約6ポイント低下した例がある"
+    ],
+    "source": "https://www.soumu.go.jp/main_content/000819371.pdf",
+    "surfaces": [
+      "reading",
+      "listening",
+      "qr"
+    ]
+  },
+  {
+    "seed": "カロリーベースの国産供給",
+    "facts": [
+      "食料自給率は約4割前後で低水準",
+      "生産額ベースは6割台で推移"
+    ],
+    "source": "https://www.maff.go.jp/j/zyukyu/zikyu_ritu/012.html",
+    "surfaces": [
+      "reading",
+      "info"
+    ]
+  },
+  {
+    "seed": "成人の平均歩数の減少",
+    "facts": [
+      "男性の平均は約6600歩",
+      "女性の平均は約5700歩で直近10年減少"
+    ],
+    "source": "https://www.mhlw.go.jp/stf/newpage_45540.html",
+    "surfaces": [
+      "reading",
+      "listening",
+      "carrier"
+    ]
+  },
+  {
+    "seed": "睡眠時間の不足感",
+    "facts": [
+      "睡眠が6時間未満の人は約4割",
+      "睡眠で休養がとれている人は約7割台"
+    ],
+    "source": "https://kennet.mhlw.go.jp/tools/wp/wp-content/themes/targis_mhlw/pdf/leaf-sleep.pdf",
+    "surfaces": [
+      "reading",
+      "listening",
+      "carrier"
+    ]
+  },
+  {
+    "seed": "国内旅行消費の回復",
+    "facts": [
+      "日本人国内旅行消費は約27兆円",
+      "国内全体の旅行消費は約38兆円"
+    ],
+    "source": "https://www.travelvoice.jp/20260430-159734",
+    "surfaces": [
+      "reading",
+      "info",
+      "listening"
+    ]
+  },
+  {
+    "seed": "家庭の防災備蓄の頭打ち",
+    "facts": [
+      "震災直後は備蓄実施率が大きく上昇",
+      "その後は取組実施率が伸び悩む傾向"
+    ],
+    "source": "https://www.bousai.go.jp/kaigirep/hakusho/r05/honbun/t1_2s_04_01.html",
+    "surfaces": [
+      "listening",
+      "qr",
+      "carrier"
+    ]
+  },
+  {
+    "seed": "住宅用火災警報器の普及状況",
+    "facts": [
+      "全国の設置率は約8割半ば",
+      "条例適合率は約7割弱"
+    ],
+    "source": "https://www.fdma.go.jp/publication/hakusho/r6/point/1/68745.html",
+    "surfaces": [
+      "listening",
+      "carrier",
+      "info"
+    ]
+  },
+  {
+    "seed": "文化財修理の原材料確保",
+    "facts": [
+      "用具・原材料の生産者減少が課題",
+      "安定供給のための調査と支援が進む"
+    ],
+    "source": "https://www.bunka.go.jp/takumi/sozai.html",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
+  },
+  {
+    "seed": "都市のみどり活用",
+    "facts": [
+      "緑の基本計画にグリーンインフラを位置づけ",
+      "官民連携の整備支援制度がある"
+    ],
+    "source": "https://www.mlit.go.jp/toshi/park/toshi_parkgreen_tk_000181.html",
+    "surfaces": [
+      "listening",
+      "carrier"
+    ]
+  },
+  {
+    "seed": "野菜摂取量の減少傾向",
+    "facts": [
+      "20歳以上の平均摂取は約260グラム",
+      "男女とも直近で減少傾向"
+    ],
+    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/r5-houkoku_00001.html",
+    "surfaces": [
+      "carrier",
+      "qr"
+    ]
+  },
+  {
+    "seed": "放送サービス接触の変化",
+    "facts": [
+      "リアルタイム接触は約86％",
+      "インターネット経由の接触は約4割"
+    ],
+    "source": "https://www.jstage.jst.go.jp/article/bunken/76/1-2/76_2/_article/-char/ja",
+    "surfaces": [
+      "listening",
+      "carrier",
+      "qr"
+    ]
+  },
+  {
+    "seed": "国民生活時間の最新調査",
+    "facts": [
+      "仕事・家事・メディア利用など1日の使い方を追う",
+      "定期調査で暮らしの変化を把握"
+    ],
+    "source": "https://prtimes.jp/main/html/rd/p/000000050.000160617.html",
+    "surfaces": [
+      "carrier",
+      "qr"
+    ]
+  },
+  {
+    "seed": "無料見逃し配信の広がり",
+    "facts": [
+      "TVerなど無料動画の利用が増える",
+      "録画再生からネット動画へ移る層がある"
+    ],
+    "source": "https://www.nhk.or.jp/bunken/d/_data/research/yoron/BUNA0000010760010002/files/20260105_01.pdf",
+    "surfaces": [
+      "carrier",
+      "qr"
+    ]
+  }
+]
