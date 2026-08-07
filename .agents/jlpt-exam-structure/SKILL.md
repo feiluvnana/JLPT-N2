@@ -76,8 +76,9 @@ A second copy of a number is a second thing to drift, so this file states the
 *shape* facts (how many passages, how many questions, what is printed) and
 nothing measured in characters.
 
-**読解 apparatus (official baseline — measured on `imported-n2-2025-07` =
-July 2025):** a real paper glosses freely across 問題10–13 and uses `（中略）`
+**読解 apparatus (official baseline — measured on July 2025,
+`refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`; the in-tree `imported-n2-2025-07`
+this used to cite was deleted):** a real paper glosses freely across 問題10–13 and uses `（中略）`
 inside 中文/長文. The gloss count, its metric (in-body markers), the vocabulary
 band a gloss may target, and the 問題13 length floor are all owned by
 `question-authoring`. Generated tests 1–4 shipped 5–9 glosses (t3 excepted) and
@@ -96,8 +97,8 @@ and print `(1)から(4)` in the instruction. The sampler matches this: it draws
 carrying only 11 reading topics was drawn before that fix and is one 中文 topic
 short.
 
-**問題11 stem shape (format fact, measured):** in `imported-n2-2025-07`, **all
-8** 問題11 stems name 筆者 (57「筆者はどのように述べているか」 … 64「筆者が医者と
+**問題11 stem shape (format fact, measured):** in July 2025
+(`refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`), **all 8** 問題11 stems name 筆者 (57「筆者はどのように述べているか」 … 64「筆者が医者と
 して大切にしていること」); **none** is a bare retrieval stem. Generated tests
 1/2/3/4 shipped **4/6/5/6** stems out of 8 that do not name 筆者. So the format
 requires: every stem names 筆者 (or is 「①…とあるが、どういうことか」 on a marked
@@ -155,8 +156,10 @@ review):
 
 **問題5 2番 — what the booklet prints (format fact, measured):** the four options
 are **names only**, and 質問1 and 質問2 print the **same four options in the same
-order**. Measured on `tests/imported-n2-2025-07/聴解.md` (July 2025), the page
-carries exactly this, twice — once under `**質問1**`, once under `**質問2**`:
+order**. Measured on the July 2025 official booklet — `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`,
+the exact text layer of the PDF (the in-tree import this used to cite,
+`tests/imported-n2-2025-07`, was deleted) — the page carries exactly this, twice
+— once under `**質問1**`, once under `**質問2**`:
 
 ```
  1. 夕日通り
@@ -176,6 +179,32 @@ Two prohibitions follow, both of which a generated paper has broken:
 - **質問1 and 質問2 share one option list, in one order.** Two different lists (or
   the same four re-ordered) turn one memory task into two and desynchronise the
   booklet from the announcer, who reads no options here at all.
+- **The printed order IS the order the audio introduces the candidates, and the
+  deciding line names a candidate — never an ordinal.** Both halves are
+  format facts, measured across the archive:
+  - **Order.** July 2025 speaks 1つ目 夕日通り / 2つ目 西が丘 / 3つ目 さくら公園 /
+    最後 東山 and prints `1 夕日通り / 2 にしがおか / 3 さくら公園 / 4 東山`.
+    Dec 2014 (four 方法, 1〜4つ目) and July 2019 (four 校舎, まず/2つ目/それから/
+    4つ目) do the same, and Dec 2025 enumerates by the printed number itself
+    (「1番の自転車は…」) — the same rule with the labels made explicit.
+  - **Decider.** The resolving line always names an ATTRIBUTE:
+    「鳥が見られる所？」「お寺の近くっていう所」 (7/2025),
+    「折りたためる自転車なら」「1番安定性が高いのにする」 (12/2025). In 31
+    sittings no 問題5 candidate item speaks a `Nつ目` back-reference after its
+    enumeration.
+
+  **Consequence, and it is the whole reason this is written down:** a mis-keyed
+  問題5 2番 is fixed in `聴解スクリプト.txt` — re-enumerate the candidates in the
+  printed order, then `make mp3 <test_id>` — **never by re-ordering the printed
+  list alone.** Re-ordering the booklet under an audio that still says
+  「3つ目の方法がぴったりですね」 silently re-keys the item: the ordinal points at
+  a printed SLOT, so the paper then has two defensible answers, the ordinal's
+  and the key's. That is exactly what one repair pass did to `tests/3` (spoken
+  個別面談/模擬面接/AI/座談会, printed AI/模擬面接/個別面談/座談会, deciding line
+  「3つ目」, key on printed slot 1). `tools/check_consistency.py` now fails both
+  halves — `check_mondai5_enumeration()` — wherever the script uses ordinal
+  labels at all; a paper that enumerates by name resolves nothing there and is
+  left to `exam-qa-review` step 4.
 
 ## Announcer / 例 mechanics (script + booklet must both honor these)
 

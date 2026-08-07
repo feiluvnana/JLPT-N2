@@ -472,14 +472,20 @@ def main():
         if not spec_path.is_file():
             sys.exit(f"--reroll needs an existing {spec_path.relative_to(ROOT)}")
         spec = json.loads(spec_path.read_text(encoding="utf-8"))
-        # The current spec is the newest history entry; drop this category from
-        # it so its own picks are not counted against the redraw, and exclude
-        # everything the other categories already hold.
-        if history:
-            last_entry = history[-1]
-            if (str(last_entry.get("seed")) == str(spec.get("seed")) or
-                    last_entry.get("test_id") == spec.get("test_id")):
-                last_entry.setdefault("items", {}).pop(cat, None)
+        # Find THIS test's ledger entry by id — it is not necessarily the newest
+        # one. Test 2 was rerolled while test 3 already existed, and writing to
+        # history[-1] put test 2's picks into test 3's entry, which then failed
+        # assert_rotation against them. Drop this category from the entry so its
+        # own picks are not counted against the redraw, and exclude everything
+        # the other categories already hold.
+        own_entry = None
+        for e in reversed(history):
+            if (str(e.get("test_id")) == str(spec.get("test_id")) or
+                    str(e.get("seed")) == str(spec.get("seed"))):
+                own_entry = e
+                break
+        if own_entry is not None:
+            own_entry.setdefault("items", {}).pop(cat, None)
         taken_text = {item_text(x) for c, xs in spec["items"].items()
                       if c != cat for x in xs}
         updated_recency = recency_map(history)
@@ -497,9 +503,9 @@ def main():
             # a reroll can only make the paper's weakest cooldown weaker
             "cooldown": min(cool, spec.get("rotation", {}).get("cooldown", cool)),
         }
-        if history:
-            history[-1].setdefault("items", {})[cat] = picked
-            history[-1]["seed"] = spec["seed"]
+        if own_entry is not None:
+            own_entry.setdefault("items", {})[cat] = picked
+            own_entry["seed"] = spec["seed"]
         for w in check_theme_spread(picked, cat):
             print(f"  WARNING: {cat} draw is theme-heavy — {w}")
     else:
@@ -555,8 +561,9 @@ def main():
         sys.exit(f"same-test collision (a bug in draw()): {collisions}")
 
     # R10: prove the cooldown the spec claims, against the ledger it claims it
-    # from. In both paths `history[-1]` is THIS test's own entry, so the
-    # previous draws are everything before it.
+    # from — everything recorded under a DIFFERENT test id. Do not reach for
+    # history[-1] here: on the reroll path this test's entry can sit anywhere
+    # in the list.
     prior_history = [h for h in history
                      if str(h.get("test_id")) != str(args.test_id)]
     spec["rotation"]["history_len"] = len(prior_history)

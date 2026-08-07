@@ -9,8 +9,10 @@ drifting apart. The docs are prose and cannot be executed, so this asserts the
 handful of facts they duplicate from the code.
 
 Hardening round 1 added the check classes that round-1 QA on tests 1–4 found the
-gate blind to, every threshold measured on `tests/imported-n2-2025-07` (a real
-July 2025 paper — a check that paper fails is a wrong check, not a finding):
+gate blind to, every threshold measured on the July 2025 official paper (a
+check a real paper fails is a wrong check, not a finding). It was measured from
+an in-tree import that has since been deleted; the live copy is the archive
+extract `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`:
 問題11 stem shape, （注N） band/pairing, the 問題5 2番 lead-in, artifact staleness
 stamps, 問題14 解説 grounding, 読解 passage length floors, ledger draw counts,
 harvest hygiene, 問題9 category tags, 聴解 voice casting, cross-test verbatim
@@ -32,12 +34,17 @@ official exams: 読解 floors for 問題10/13/14, the 問題10 per-passage floor
 6 of the 7 current official papers fail. A sample of one cannot tell a rule
 from a coincidence; every surviving constant now carries its measured band.
 
-CAVEAT — the in-tree calibration anchor is gone. `tests/imported-n2-2025-07`
-was deleted, so the checks that compared a generated test against it (cross-test
-verbatim reuse; the imported-only exemptions) now have nothing to compare with
-and pass vacuously. The archive replaces it for NUMBERS but not for text
-comparison: re-anchoring that needs a pre-extracted fixture, because this gate
-must never open a PDF — it stays read-only and finishes in seconds.
+CAVEAT — the in-tree calibration anchor is gone. The `tests/imported-n2-2025-07`
+folder every threshold below was measured on was deleted, so the checks that
+compared a generated test against it (cross-test verbatim reuse; the
+imported-only exemptions) now have nothing to compare with and pass vacuously.
+The archive extracts replace it as the READING anchor —
+`refs/JLPT_N2_NEW/<sitting>/booklet.md` and `key.md` are exact text, and
+`script.md`'s fenced [OCR ▼]…[OCR ▲] dialogue is ~98% character-accurate, so it
+is evidence for order and shape but never for official wording or a calibration
+measurement. Re-anchoring the text-comparison checks needs a pre-extracted
+fixture, because this gate must never open a PDF — it stays read-only and
+finishes in seconds.
 
 Read-only: it never writes to tests/ or logs/.
 
@@ -110,7 +117,10 @@ def docs() -> dict[Path, str]:
 
 
 def num(s: str) -> float:
-    return float(re.search(r"[\d.]+", s).group())
+    # The sign is load-bearing: SPEAKER_MAP rates read "+4%" / "-8%", and
+    # dropping the minus collapsed 男1(+4)/男2(-8) — the skill's own sanctioned
+    # three-person split, 12 points apart — into a 4-point gap that warned.
+    return float(re.search(r"[+-]?[\d.]+", s).group())
 
 
 # ---------------------------------------------------------------- refs on disk
@@ -1328,6 +1338,37 @@ def check_mondai13_closer(name: str, body: str):
          f"(official_calibration §4)")
 
 
+# G4. A quotable flyer span has to CARRY A CONDITION. The first version of this
+# check searched the whole flattened flyer, so a 【…】 block title or an ■ section
+# header satisfied "two distinct 「…」 spans present in the flyer" while
+# constraining nothing: tests/3's item 70 quotes one real 区分B row plus
+# 「回収対象と出し方」, which is the header above it, and reads green as a
+# two-constraint item while being a single-constraint lookup.
+#
+# The condition-bearing rows are the ones a candidate has to cross-reference:
+# table rows, `・`/`-`/`*` bullets, `※` footnotes, numbered rules and 区分A/B-style
+# labelled rows. Headers are the opposite of a constraint — they name where the
+# conditions live. Measured on tests/1 and tests/2, whose 問題14 解説 quote table
+# cells (「18歳以上・初心者」「10月15日（火）19:00〜20:30」) and bullet rules
+# (「料金は9月30日までに銀行振込でお支払いください」), both still ground 2+ spans.
+FLYER_HEADER = re.compile(r"^\s*(?:#{1,6}\s|■|□|◆|▼|【[^】]*】\s*$|\*\*[^*]+\*\*\s*$)")
+FLYER_CONDITION = re.compile(r"^\s*(?:\||[・･\-*＊]|※|\(?\d+[.．、)）]|"
+                             r"区分\s*[A-Za-zＡ-Ｚａ-ｚ])")
+
+
+def flyer_condition_text(sec: str, bi) -> str:
+    """The 問題14 flyer's condition-bearing rows only — no titles, no headers."""
+    rows = []
+    for ln in passage_prose(sec, bi).splitlines():
+        stripped = ln.strip()
+        if not stripped or set(stripped) <= set("|-: `"):
+            continue
+        if FLYER_HEADER.match(ln) or not FLYER_CONDITION.match(ln):
+            continue
+        rows.append(stripped)
+    return "\n".join(rows)
+
+
 def check_mondai14_quotes(name: str, body: str, key_dokkai: str, bi):
     """70 and 71 must each combine TWO flyer cells, and the 解説 must prove it (G7).
 
@@ -1335,23 +1376,27 @@ def check_mondai14_quotes(name: str, body: str, key_dokkai: str, bi):
     which collapses to a one-cell lookup. One quote in the 解説 means one
     constraint, so the artifact is the check.
     """
-    # The flyer only — not the stems or the printed options, or a 解説 that
-    # quotes its own option would count as grounded.
-    flyer = _flat(passage_prose(dokkai_section(body, 14), bi))
-    if not flyer or not key_dokkai:
+    # The flyer's conditions only — not the stems, the printed options, or the
+    # section headers, or a 解説 that quotes its own option (or the title of the
+    # block its one condition sits in) would count as grounded.
+    sec = dokkai_section(body, 14)
+    conditions = _flat(flyer_condition_text(sec, bi))
+    if not conditions or not key_dokkai:
         return
     thin = []
     for hit in re.finditer(r"^\|\s*(70|71)\s*\|\s*[1-4]\s*\|(.*)\|", key_dokkai, re.M):
         spans = {_flat(s) for s in re.findall(r"「([^」]+)」", hit.group(2))}
-        grounded = {s for s in spans if s and s in flyer}
+        grounded = {s for s in spans if s and s in conditions}
         if len(grounded) < 2:
             thin.append(f"{hit.group(1)}({len(grounded)} of {len(spans)} quotes "
-                        f"found in the flyer)")
+                        f"land on a condition-bearing flyer row)")
     check(f"{name}: 問題14 解説 quotes the two flyer cells its key combines",
           not thin,
           "; ".join(thin) + " — write 70 and 71 as person-scenarios failing "
-          "exactly one condition and quote BOTH source cells "
-          "(question-authoring 問題14)")
+          "exactly one condition and quote BOTH source cells. A 【…】 block "
+          "title or an ■ section header is not a constraint and no longer "
+          "counts: quote the table row, bullet, ※ footnote or 区分 row that "
+          "actually decides the item (question-authoring 問題14)")
 
 
 # 問題9 (G13). Four blanks, four categories — but the category of a blank was
@@ -1412,7 +1457,8 @@ def check_mondai9_tags(name: str, key_bunpou: str):
 # 読解 keys (G16). A key far longer than its three distractors is findable by
 # string length alone: test 3 shipped three in a row (67/68/69 — 94/107/63 JP
 # chars against 31–36 means) and test 4 one (66 — 55 vs 31). Measured silent on
-# tests 1, 2 and imported-n2-2025-07, so the length signal alone is safe.
+# tests 1, 2 and the July 2025 official paper, so the length signal alone is
+# safe.
 #
 # The verbatim-lift test is reported, not required: with the haystack restricted
 # to PASSAGE prose (it has to be — the options are printed in the same file, so
@@ -1530,6 +1576,83 @@ def check_fabricated_distractors(name: str, key_section: str):
           "distractor: replace it with a real statement from the source that "
           "is reassigned/superseded/denied (question-authoring "
           "'聴解 dialogues' and 'Distractor plausibility')")
+
+
+# G1. A 聴解 問題1–3 解説 cell carries one grounding line per option, in the
+# shape choukai-script-writing mandates — `N ✗「script line」→ 理由` — and marks
+# the one that is right, either with a circle (`3 ○「…」`) or by tagging its own
+# line （正解）. That annotation is the author writing the correct answer into
+# the paper in a machine-readable place, so a cell whose （正解） sits on a
+# different digit than the 正解 column is a MIS-KEY stated twice in one row.
+#
+# tests/3 問題1-1番 ships exactly that: the key column says 4, and the 解説 tags
+# option 3 「発券機に行こう」→ 決定された行動（正解）. Nothing saw it —
+# check_answer_positions proved only that a 4 sits where the spec wanted a 4
+# (see its label), and the quote WARN found the quote in the script because the
+# quote is real; it is the KEY that is wrong.
+#
+# Silent by construction where the convention is not used: a cell with no
+# digit-plus-mark grounding lines (tests/1's prose cells, every 問題4 cell) is
+# skipped rather than demanded, so this can only ever fire on a contradiction
+# the author already wrote down. The convention does NOT hold in
+# 言語知識・読解 — zero ○/（正解） annotations across tests 1/2/3's 文字・語彙,
+# 文法 and 読解 key tables, which state the key in prose (「…から3」) — so this
+# check is 聴解-only until that changes.
+GROUNDING_MARK = re.compile(r"([1-4])\s*([✗×✕✖☓○◯〇])")
+CORRECT_TAG = re.compile(r"[（(]正解[)）]")
+CIRCLE_MARKS = "○◯〇"
+
+
+def declared_correct_options(cell: str) -> tuple[set[int], int]:
+    """{option numbers the cell declares correct}, and how many it annotates.
+
+    A grounding line runs from its own `N ✗`/`N ○` mark to the next one (or the
+    end of the cell), which is the only split that works for both layouts in
+    use: `<br>`-separated lines (tests/3) and lines run together inside one
+    cell (tests/2, separated by 。 alone).
+    """
+    hits = list(GROUNDING_MARK.finditer(cell))
+    declared: set[int] = set()
+    for i, h in enumerate(hits):
+        end = hits[i + 1].start() if i + 1 < len(hits) else len(cell)
+        if h.group(2) in CIRCLE_MARKS or CORRECT_TAG.search(cell[h.end():end]):
+            declared.add(int(h.group(1)))
+    return declared, len(hits)
+
+
+def check_choukai_kaisetsu_keys(name: str, ct: str, bi):
+    cut = bi.KEY_HEADING.search(ct)
+    if not cut:
+        return
+    section, bad, annotated = None, [], 0
+    for line in ct[cut.start():].splitlines():
+        head = re.match(r"^#+\s*問題([1-5])", line)
+        if head:
+            section = int(head.group(1))
+            continue
+        if section not in (1, 2, 3) or not line.lstrip().startswith("|"):
+            continue
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cells) < 3 or not (cells[0] == "例" or cells[0].isdigit()):
+            continue
+        keyed = re.fullmatch(r"\**\s*([1-4])\s*\**", cells[1])
+        if not keyed:
+            continue
+        declared, _ = declared_correct_options(cells[2])
+        if not declared:
+            continue
+        annotated += 1
+        if declared != {int(keyed.group(1))}:
+            label = cells[0] if cells[0] == "例" else f"{cells[0]}番"
+            bad.append(f"問題{section}-{label}: 正解欄 {keyed.group(1)}, "
+                       f"解説 marks {sorted(declared)} as （正解）")
+    check(f"{name}: every 聴解 解説 marks the option the key column names "
+          f"({annotated} annotated cells)", not bad,
+          "; ".join(bad) + " — the paper states two different answers for one "
+          "item. Re-solve it from 聴解スクリプト.txt and fix whichever is wrong; "
+          "do NOT just renumber the 解説 (choukai-script-writing 'The keyed "
+          "option must be quotable'). keys-match-answer_positions cannot see "
+          "this: it proves slot agreement only")
 
 
 def check_explanation_quotes(name: str, key_section: str, source: str):
@@ -1940,6 +2063,104 @@ def generated_specs() -> list[tuple[Path, dict]]:
     return out
 
 
+# G9 (GATE-WRONG). check_ledger_spec_agreement() below enforces ledger == spec
+# and neither side against the pool, so ALIGNING the two on a string the
+# rotation matcher cannot resolve turns it green *while breaking rotation* —
+# which is what a repair pass did to tests/2. Two shapes, both green today:
+#
+#   (a) an INFLECTED surface form. The pool entry is 「〜ずじまい」; the paper
+#       realizes it as 「行かずじまい」; ledger and spec were both edited to say
+#       「行かずじまい」. sample_items.recency_map() keys on the raw string and on
+#       head(), neither of which normalizes the tilde, so 「〜ずじまい」 never
+#       enters the recency map, is permanently un-cooled, and is redrawable one
+#       test after it was asked (quick_response draws 11 of 196 ≈ 5.6%/draw).
+#       All ~115 other bound-form entries kept their tilde: the convention was
+#       inverted for exactly one item.
+#   (b) an item in NO pool category and no adjunct staging row (tests/2 records
+#       キャンセル and お疲れ様でした under paraphrase; the draw was テニスコート
+#       and はじめまして). An off-pool item can never rotate, because no future
+#       draw can hit it.
+#
+# The fix is to anchor BOTH files on the pool, which is the only string the
+# sampler will ever compare against. Comparison is raw, then tilde-stripped,
+# then head()-folded — the same three forms recency_map() and head() can see.
+def _pool_forms(text: str) -> set[str]:
+    t = str(text).strip()
+    bare = t.lstrip("〜～")
+    return {t, bare, t.split("(")[0].split("（")[0].strip(),
+            bare.split("(")[0].split("（")[0].strip()} - {""}
+
+
+def check_draw_provenance():
+    """Every recorded draw must name a POOL entry, not the paper's surface form."""
+    print("\ndraw provenance (a recorded item must be redrawable)")
+    pools_path = AGENTS / "item-pool-sampling" / "references" / "pools.json"
+    if not pools_path.is_file():
+        return skip("recorded draws resolve to pools.json", "no pools.json")
+    pools = json.loads(pools_path.read_text(encoding="utf-8"))
+    known = {cat: {f for e in entries for f in _pool_forms(pool_entry_text(e))}
+             for cat, entries in pools.items() if isinstance(entries, list)}
+
+    staging = ROOT / "logs" / "adjunct_staging.json"
+    staged: set[str] = set()
+    if staging.is_file():
+        for e in json.loads(staging.read_text(encoding="utf-8")).get("entries", []):
+            staged |= _pool_forms(e.get("item", ""))
+
+    specs = {d.name: spec for d, spec in generated_specs()}
+    sources: dict[str, list[tuple[str, dict]]] = {}
+    for h in ledger_history():
+        tid = str(h.get("test_id"))
+        if tid != "legacy" and h.get("items"):
+            sources.setdefault(tid, []).append(("logs/ledger.json", h["items"]))
+    for tid, spec in specs.items():
+        if spec.get("items"):
+            sources.setdefault(tid, []).append(
+                (f"tests/{tid}/test_spec.json", spec["items"]))
+
+    for tid in sorted(sources):
+        # merge_seeds.py blends web topics into the SPEC's reading_topics and
+        # listening_scenarios, and the ledger keeps a copy with no origin field.
+        # Those are traced by check_harvest_provenance (they must resolve to a
+        # seed still in logs/seeds.json), not by the pool — so exempt exactly
+        # the strings the spec marks `origin: web`, and nothing else.
+        web_texts = {pool_entry_text(e)
+                     for cat in (specs.get(tid, {}).get("items") or {}).values()
+                     for e in cat
+                     if isinstance(e, dict) and e.get("origin") == "web"}
+        orphans = []
+        for where, items in sources[tid]:
+            for cat, entries in items.items():
+                if cat not in known:
+                    continue                # not a sampled category
+                for entry in entries or []:
+                    if isinstance(entry, dict) and entry.get("origin") == "web":
+                        continue            # merge_seeds blend; check_harvest_provenance owns it
+                    if isinstance(entry, dict) and entry.get("origin") == "adjunct":
+                        ok = (bool(entry.get("item")) and entry.get("level") == "N2"
+                              and isinstance(entry.get("evidence"), list))
+                        if not ok:
+                            orphans.append(f"{where} {cat}:「{entry.get('item')}」"
+                                           f"(adjunct row missing item/level/evidence)")
+                        continue
+                    text = pool_entry_text(entry)
+                    if (not text or text in web_texts
+                            or _pool_forms(text) & (known[cat] | staged)):
+                        continue
+                    orphans.append(f"{where} {cat}:「{text[:20]}」")
+        uniq = sorted(set(orphans))
+        check(f"test {tid}: every recorded draw resolves to a pools.json entry "
+              f"({sum(len(i) for _, i in sources[tid])} items)", not uniq,
+              f"{len(uniq)} unresolvable: " + "; ".join(uniq[:10])
+              + (" …" if len(uniq) > 10 else "") + " — record the POOL "
+              "entry-string, never the paper's inflected surface form "
+              "(「〜ずじまい」, not 「行かずじまい」) and never a substitute that "
+              "is in no pool: sample_items.recency_map() keys on the pool "
+              "string, so an unresolvable entry is permanently un-cooled and "
+              "redrawable next test. Re-sample; do NOT reconcile by hand "
+              "(item-pool-sampling 'Rotation model')")
+
+
 def check_ledger_spec_agreement():
     """R11: a ledger entry and its spec must record the SAME draw.
 
@@ -1993,7 +2214,12 @@ def check_ledger_spec_agreement():
               "; ".join(off) + " — one side was edited after sampling; the "
               "ledger burns cooldown on items the paper never asked and the "
               "substitutes never rotate. Re-sample rather than reconciling by "
-              "hand (item-pool-sampling 'Rotation model')")
+              "hand (item-pool-sampling 'Rotation model'). Equality here is "
+              "NOT enough on its own: record the POOL entry-string, never the "
+              "paper's inflected surface form — aligning both files on a "
+              "string the sampler cannot resolve satisfies this check while "
+              "breaking rotation, which is what check_draw_provenance() above "
+              "exists to catch")
 
 
 def check_harvest_provenance():
@@ -2074,7 +2300,7 @@ def check_harvest_provenance():
 # every future test too. Any id not in this set MUST carry the key. Delete an
 # entry the moment that test is re-sampled; the exemption prints as a `skip`
 # line, so it stays visible in the output rather than passing silently.
-ROTATION_GRANDFATHERED = {"1", "2"}
+ROTATION_GRANDFATHERED = {"1"}
 
 
 def check_spec_rotation(d, spec: dict, sample):
@@ -2278,13 +2504,23 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
     tests/<test_id>/test_spec.json prescribes the answer position of every item so no
     number is over-used; authoring is supposed to place the correct choice
     there. Only the test that spec belongs to can be checked.
+
+    SLOT AGREEMENT ONLY — and the label says so, because green here was read as
+    evidence about the keys themselves and it never was. This compares two
+    numbers: the digit in the 正解 column and the digit the spec reserved. A key
+    written to satisfy the spec rather than the passage agrees with it perfectly,
+    which is exactly how tests/3's 聴解 問題1-1番 (key 4, 解説 tagging option 3
+    （正解）) stayed green. Content correctness is exam-qa-review step 1, and its
+    one string-decidable corner is check_choukai_kaisetsu_keys.
     """
+    label_tail = " (slot agreement only — content correctness is exam-qa-review step 1)"
     spec_path = d / "test_spec.json"
     if not spec_path.is_file():
-        return skip("keys match test_spec.json answer_positions", "no test_spec.json")
+        return skip("keys match test_spec.json answer_positions" + label_tail,
+                    "no test_spec.json")
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
     if str(spec.get("test_id")) != d.name:
-        return skip("keys match test_spec.json answer_positions",
+        return skip("keys match test_spec.json answer_positions" + label_tail,
                     f"spec is for test {spec.get('test_id')}, not {d.name}")
     pos = spec.get("answer_positions") or {}
 
@@ -2306,8 +2542,101 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
 
     have = {str(q): a for q, a in keys.items()} | dict(ck)
     off = {q: (a, have.get(q)) for q, a in want.items() if have.get(q) != a}
-    check(f"keys match test_spec.json answer_positions ({len(want)} prescribed)",
-          not off, f"prescribed vs actual: {off}")
+    check(f"keys match test_spec.json answer_positions ({len(want)} prescribed)"
+          + label_tail, not off, f"prescribed vs actual: {off}")
+
+
+# G7. Nothing in this gate has ever read a 問題1–6 KEY's level: the band file is
+# grammar-only (check_level_band_grammar covers 問題7–9). This closes the one
+# corner of that hole which IS string-decidable — a 問題1 target whose spelling
+# carries two attested readings.
+#
+# tests/2 問題1-4 prints 潜る, keys くぐる, and offers もぐる in the same row. The
+# corpus heads the word twice — 潜る(くぐる) at N1, 潜る(もぐる) at N2 — so the
+# paper keys the N1 member and asks the examinee to reject the N2 member.
+#
+# MEASURED against the archive before writing this: all 35 問題1 items of the 7
+# current-era sittings (12/2022–12/2025), of which 14 are 訓読み targets. In
+# ZERO of them does an option repeat another attested reading of the target's
+# own spelling — the decisive case is 7/2025-2, where 辛い carries both からい
+# and つらい and official offered あまい/にがい/しぶい; 12/2025-1 柱 likewise
+# offers ゆか/かべ/たな. So neither half of this check can reject a real paper.
+#
+# The level half compares only readings the corpus actually attests. 7/2025-2
+# keys からい, which the corpus does NOT head for 辛い (it heads 辛い(つらい) at
+# N3 alone), and an unattested key is unrankable — it must SKIP, not fail, or
+# the check would reject the reference item it was measured on. Corpus levels
+# raise the question; item-pool-sampling documents that they are not a verdict
+# on their own (把握 is labelled N1), which is why the FAIL is narrowed to one
+# headword's own two readings rather than to any key with an N1 label.
+LEVEL_HARDNESS = {"N3": 1, "N2": 2, "N1": 3}
+
+
+def openjlpt_readings() -> dict[str, dict[str, str]]:
+    """{headword: {reading: level}} across the three vendored OpenJLPT slices."""
+    out: dict[str, dict[str, str]] = {}
+    base = AGENTS / "item-pool-sampling" / "references" / "openjlpt"
+    for lv in ("n1", "n2", "n3"):
+        p = base / f"vocab-{lv}.json"
+        if not p.is_file():
+            continue
+        for e in json.loads(p.read_text(encoding="utf-8")):
+            reading = str(e.get("reading") or "").strip()
+            if not reading:
+                continue
+            for w in str(e.get("word", "")).split("/"):
+                w = w.strip()
+                if w:
+                    out.setdefault(w, {}).setdefault(reading, lv.upper())
+    return out
+
+
+def check_mondai1_key_band(name: str, spec: dict, opts: dict[int, list[str]]):
+    entries = (spec.get("items") or {}).get("kanji_reading") or []
+    if not entries:
+        return
+    readings = openjlpt_readings()
+    if not readings:
+        return skip(f"{name}: 問題1 keys the easier of a headword's two readings",
+                    "no openjlpt vocab slices on disk")
+    harder, in_options = [], []
+    for entry in entries:
+        raw = pool_entry_text(entry)
+        m = KANJI_READING_ENTRY.match(raw.strip())
+        if not m:
+            continue
+        word, key_yomi = m.group("word").strip(), m.group("yomi").strip()
+        attested = readings.get(word) or {}
+        others = {r: lv for r, lv in attested.items() if r != key_yomi}
+        if not others:
+            continue
+        if key_yomi in attested:
+            keyed_lv = attested[key_yomi]
+            easier = [f"{r}({lv})" for r, lv in others.items()
+                      if LEVEL_HARDNESS.get(lv, 2) < LEVEL_HARDNESS.get(keyed_lv, 2)]
+            if easier:
+                harder.append(f"{word}: keys {key_yomi}({keyed_lv}) over "
+                              f"{', '.join(easier)}")
+        row = next((v for v in opts.values() if key_yomi in v), None)
+        if row:
+            clash = [r for r in others if r in row]
+            if clash:
+                in_options.append(f"{word}({key_yomi}) vs option(s) "
+                                  f"{clash} = the same word's other reading")
+    check(f"{name}: 問題1 keys the easier of a headword's two readings",
+          not harder,
+          "; ".join(harder) + " — when a spelling carries more than one 訓読み, "
+          "key the reading the corpus grades LOWER and send the harder one "
+          "back to item-pool-sampling; the pool entry is the defect, not the "
+          "option set (question-authoring 問題1; item-pool-sampling "
+          "'kanji_reading validity rule' 2b)")
+    check(f"{name}: no 問題1 option is another reading of its own target",
+          not in_options,
+          "; ".join(in_options) + " — 0 of the 14 current-era official 訓読み "
+          "items do this (7/2025-2 keys 辛い=からい and offers あまい/にがい/"
+          "しぶい, never つらい): the item stops testing the kanji and starts "
+          "testing which of two real readings the examiner meant "
+          "(question-authoring 問題1)")
 
 
 def check_spec_target_items(d, gt: str, st: str, bi):
@@ -2348,12 +2677,40 @@ def check_spec_target_items(d, gt: str, st: str, bi):
             # an annotation, and 副(フク) prints its options in hiragana, so only
             # the base form is decidable. Idiom entries inflect (顔が広い appears
             # as 顔が広くて), so a one-character trim counts as found.
-            base = re.sub(r"\s*[（(][^）)]*[）)]\s*$", "", item).strip()
+            # A leading 〜 is pool NOTATION for a bound form, never printable
+            # text: pools.json stores 「〜かと思いきや」-style entries (7 in
+            # quick_response, 108 of 112 in grammar_p7) and the paper spells
+            # them 「大人しいかと思いきや」. Probing with the tilde attached can
+            # never match, so a correctly authored item read as missing.
+            base = re.sub(r"\s*[（(][^）)]*[）)]\s*$", "", item).strip().lstrip("〜～")
             probes = [item, base, base.rstrip("。")]
             if len(base) >= 4:
                 probes.append(base.rstrip("。")[:-1])
-            if not any(p and p in hay for p in probes):
-                missing.append(f"{cat}:「{item[:24]}」")
+            if any(p and p in hay for p in probes):
+                continue
+            # G6. 問題1/2 print the target CONJUGATED — 慌てる as 「**慌てて**」,
+            # 潔い as 「**潔く**」 — which official papers do freely (7/2025 marks
+            # 「**収まった**」, 「**辛い**」). A dictionary-form probe can never
+            # match one of those, and the one-character trim above is gated on
+            # `len(base) >= 4`, which a 3-char 慌てる and a 2-char 潔い never
+            # reach. tests/1 read as three unrecorded substitutions for items it
+            # tests correctly.
+            #
+            # The repair is a KANJI-STEM probe, deliberately narrowed twice so a
+            # single kanji cannot false-pass on an unrelated word: it applies
+            # only to entries whose base ends in kana (an inflecting word — 交渉
+            # and 措置 keep the strict probe), and it must land on a **bold**
+            # span that STARTS with the stem, i.e. on the marked target itself,
+            # not on running prose. Lowering the `>= 4` threshold instead would
+            # buy nothing (trimming a 2-char base yields the same lone kanji)
+            # while weakening the compound entries.
+            if cat in ("kanji_reading", "orthography"):
+                stem = re.sub(r"[ぁ-ゖ]+$", "", base.rstrip("。"))
+                if stem and stem != base.rstrip("。") and re.search(r"[一-鿿]", stem):
+                    marked = re.findall(r"\*\*([^*\n]+)\*\*", hay)
+                    if any(sp.startswith(stem) for sp in marked):
+                        continue
+            missing.append(f"{cat}:「{item[:24]}」")
     check(f"{d.name}: 問題1/2/4 test the items test_spec.json drew "
           f"({sum(len(spec.get('items', {}).get(c, [])) for c in haystacks)} targets)",
           not missing,
@@ -2402,7 +2759,9 @@ def check_script_shape(script_text: str, ct: str, m, test_id: str = ""):
           f"(official speaks only the situation)",
           not re.search(r"^2番。まず話を聞いてください。", script_text, re.M),
           "delete the instruction from the script; 2番's options are printed "
-          "(jlpt-exam-structure) — see tests/imported-n2-2025-07/聴解スクリプト.txt")
+          "(jlpt-exam-structure) — official July 2025 opens the block "
+          "「2番 ラジオを聞いて男の人と女の人が話しています。」 and nothing else "
+          "(refs/JLPT_N2_NEW/16. N2 7-2025/script.md)")
 
     p5 = re.split(r"^問題5。$", script_text, maxsplit=1, flags=re.M)
     tail = re.split(r"^2番。", p5[-1], flags=re.M)
@@ -2415,6 +2774,115 @@ def check_script_shape(script_text: str, ct: str, m, test_id: str = ""):
     ascii_punct = re.findall(r"(?<!\d)[,.](?!\d)", script_text)
     check("no ASCII , or . in the script (TTS mis-times them)", not ascii_punct,
           f"{len(ascii_punct)} found — use 、 and 。")
+
+
+# G3. 問題5 2番 enumerates four candidates aloud and prints them as a numbered
+# list. Two facts about official papers make that pair checkable, both measured
+# on the archive extracts (`refs/JLPT_N2_NEW/*/script.md` + `booklet.md`; the
+# dialogue there is OCR, good enough for ORDER and SHAPE, never for wording):
+#
+#   ORDER — the printed list is the enumeration order. July 2025 speaks
+#   1つ目 夕日通り / 2つ目 西が丘 / 3つ目 さくら公園 / 最後 東山 and prints
+#   1 夕日通り / 2 にしがおか / 3 さくら公園 / 4 東山. Dec 2014 (1〜4つ目, 4 方法)
+#   and July 2019 (まず/2つ目/それから/4つ目, 4 校舎) do the same. Dec 2025
+#   enumerates by the printed number itself (「1番の自転車は…」), which is the
+#   same rule with the labels made explicit.
+#
+#   DECIDER — the line that resolves each question names an ATTRIBUTE of a
+#   candidate, never its ordinal: 「鳥が見られる所？」「お寺の近くっていう所」
+#   (7/2025), 「1番安定性が高いのにする」「折りたためる自転車なら」 (12/2025),
+#   「僕はCDだな」 (12/2014). In 31 sittings no 問題5 candidate item speaks a
+#   `Nつ目` back-reference after its enumeration.
+#
+# Both broke in one repair of tests/3: the printed list was re-ordered to move
+# the key (spoken 個別面談/模擬面接/AI/座談会, printed AI/模擬面接/個別面談/座談会)
+# while the audio still resolved 質問1 with 「それなら、3つ目の方法がぴったりです
+# ね」 — an ordinal pointing at printed slot 3 while the key sat at slot 1, i.e.
+# two defensible answers manufactured by editing the booklet alone.
+#
+# Decidable only where the script actually uses ordinal labels; papers that
+# enumerate by name or by 「N番の」 resolve nothing here and are left to
+# exam-qa-review step 4.
+P5_ORDINAL = re.compile(r"([1-4１-４一二三四])つ目|(最後)")
+_KANJI_DIGIT = {"一": 1, "二": 2, "三": 3, "四": 4}
+
+
+def _ordinal_value(m: re.Match) -> int:
+    if m.group(2):
+        return 99                       # 最後 — terminal, closes the run
+    tok = unicodedata.normalize("NFKC", m.group(1))
+    return _KANJI_DIGIT.get(tok, 0) or int(tok)
+
+
+def choukai_p5_2ban_options(ct: str, bi) -> list[str]:
+    """The four names printed under 問題5 2番's 質問1, in printed order."""
+    cut = bi.KEY_HEADING.search(ct)
+    body = ct[: cut.start()] if cut else ct
+    sec = re.search(r"^##\s*問題5\b.*", body, re.M | re.S)
+    if not sec:
+        return []
+    q1 = re.search(r"\*\*質問1\*\*(.*?)(?=\*\*質問2\*\*|^---|\Z)",
+                   sec.group(0), re.M | re.S)
+    if not q1:
+        return []
+    return [o.strip() for _, o in
+            re.findall(r"^\s*([1-4])\.\s*(.+)$", q1.group(1), re.M)]
+
+
+def check_mondai5_enumeration(name: str, script_text: str, ct: str, bi):
+    p5 = re.split(r"^問題5。$", script_text, maxsplit=1, flags=re.M)
+    tail = re.split(r"^2番。", p5[-1], flags=re.M)
+    if len(tail) < 2:
+        return
+    block = tail[-1].split("\n\n")[0]
+    marks = list(P5_ORDINAL.finditer(block))
+    if not marks:
+        return skip(f"{name}: 問題5 2番 printed order = spoken enumeration order",
+                    "the script enumerates without Nつ目/最後 labels — "
+                    "exam-qa-review step 4 owns it")
+
+    # (a) A `Nつ目` that does not continue the ascending run is a back-reference
+    #     to an already-introduced candidate, i.e. the ordinal deciding the item.
+    back, highest = [], 0
+    for hit in marks:
+        val = _ordinal_value(hit)
+        if val > highest:
+            highest = val
+        elif not hit.group(2):
+            back.append(hit.group(0))
+    check(f"{name}: 問題5 2番 decides by attribute, not by ordinal", not back,
+          f"{back} spoken after the enumeration closed — official resolves with "
+          f"「鳥が見られる所？」/「折りたためる自転車なら」, never 「Nつ目のに"
+          f"します」. An ordinal decider ties the answer to a printed SLOT, so "
+          f"re-ordering the booklet silently re-keys the item: name the "
+          f"candidate instead (choukai-script-writing 問題5 2番)")
+
+    # (b) Candidate n of the enumeration must be printed option n.
+    opts = choukai_p5_2ban_options(ct, bi)
+    if len(opts) != 4:
+        return
+    flat_opts = [_flat(o) for o in opts]
+    seen, unresolved = [], 0
+    for i, hit in enumerate(marks):
+        end = marks[i + 1].start() if i + 1 < len(marks) else len(block)
+        span = _flat(block[hit.start():end])
+        found = [n for n, o in enumerate(flat_opts, 1) if o and o in span]
+        if len(found) == 1:
+            seen.append(found[0])
+        else:
+            unresolved += 1
+    if len(seen) < 2:
+        return skip(f"{name}: 問題5 2番 printed order = spoken enumeration order",
+                    f"only {len(seen)} of {len(marks)} spoken candidates match a "
+                    f"printed option by name")
+    check(f"{name}: 問題5 2番 printed order = spoken enumeration order "
+          f"({len(seen)} of {len(marks)} candidates resolved)",
+          seen == sorted(seen),
+          f"spoken candidates land on printed slots {seen} — official prints "
+          f"the four in the order the audio introduces them (7/2025, 12/2014, "
+          f"7/2019). Fix it in 聴解スクリプト.txt by re-enumerating, then "
+          f"`make mp3 {name}`; re-ordering the printed list alone re-keys the "
+          f"item (jlpt-exam-structure 問題5 2番)")
 
 
 def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
@@ -2435,16 +2903,19 @@ def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
             if re.search(rf"{re.escape(lab)}の{other}の人", block):
                 mismatch.append(f"{lines[0][:8]} 「{lab}の{other}の人」 but "
                                 f"SPEAKER_MAP casts {lab} as {gender}")
-        # Inspect all label pairs in the item block for same voice / indistinct casting
+        # Same voice at a near-identical rate makes two speakers one person to
+        # the ear. Only TWO-PARTY items are decidable here: edge-tts ships two
+        # ja-JP voices, so a three-speaker item (問題5's 夫/妻/店員) MUST reuse
+        # one, and official 問題5 casts same-gender pairs too — flagging those
+        # would reject the reference paper.
         indistinct_pairs = []
-        for i in range(len(labels)):
-            for j in range(i + 1, len(labels)):
-                l1, l2 = labels[i], labels[j]
-                v1, v2 = m.SPEAKER_MAP[l1]["voice"], m.SPEAKER_MAP[l2]["voice"]
-                r1 = num(m.SPEAKER_MAP[l1].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l1] else 0.0
-                r2 = num(m.SPEAKER_MAP[l2].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l2] else 0.0
-                if v1 == v2 and abs(r1 - r2) < 10:
-                    indistinct_pairs.append(f"{l1}/{l2}")
+        if len(labels) == 2:
+            l1, l2 = labels
+            v1, v2 = m.SPEAKER_MAP[l1]["voice"], m.SPEAKER_MAP[l2]["voice"]
+            r1 = num(m.SPEAKER_MAP[l1].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l1] else 0.0
+            r2 = num(m.SPEAKER_MAP[l2].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l2] else 0.0
+            if v1 == v2 and abs(r1 - r2) < 10:
+                indistinct_pairs.append(f"{l1}/{l2}")
         if indistinct_pairs:
             indistinct.append(f"{lines[0][:8]} {indistinct_pairs}")
     check(f"{test_id}: 聴解 narration gender matches SPEAKER_MAP's voice",
@@ -2470,7 +2941,8 @@ def check_artifact_freshness(d):
 
     An external MP3 has no TTS timeline to stamp (write_external_chapters.py
     writes `source: external`), so the audio half is skipped for it — that is
-    the one exemption, and it is why the check passes imported-n2-2025-07.
+    the one exemption, and it is why the check passes an imported paper whose
+    MP3 came from the source sitting rather than from edge-tts.
     """
     script = d / "聴解スクリプト.txt"
     chapters = d / "聴解_チャプター.json"
@@ -2729,6 +3201,11 @@ def check_tests():
             check_mondai8_chunk_lengths(gt, opts, bi)
             check_mondai8_bare_adverbs(d.name, opts)
         check_level_band_grammar(gt, keys, opts, origin, d.name)
+        spec_path = d / "test_spec.json"
+        if spec_path.is_file():
+            _spec = json.loads(spec_path.read_text(encoding="utf-8"))
+            if str(_spec.get("test_id")) == d.name:
+                check_mondai1_key_band(d.name, _spec, opts)
         st_text = (d / "聴解スクリプト.txt").read_text(encoding="utf-8") if (d / "聴解スクリプト.txt").is_file() else ""
         check_banned_collocations(d, gt, ct, st_text, origin)
         check_answer_positions(d, keys, ck, g)
@@ -2832,6 +3309,7 @@ def check_tests():
                 check_explanation_quotes(choukai.name, ct[ccut.start():],
                                          st + ct[: ccut.start()])
                 check_fabricated_distractors(choukai.name, ct[ccut.start():])
+                check_choukai_kaisetsu_keys(d.name, ct, bi)
             blocks = [b.strip() for b in re.split(r"\n\s*\n", st) if b.strip()]
             try:
                 m.validate_script(blocks)
@@ -2839,6 +3317,7 @@ def check_tests():
             except SystemExit as e:
                 check("聴解スクリプト.txt passes validate_script", False, str(e).replace("\n", " ")[:300])
             check_script_shape(st, ct, m, d.name)
+            check_mondai5_enumeration(d.name, st, ct, bi)
             check_example_premarks(ct, st, bi)
             check_voice_casting(st, m, origin, d.name)
             check_spec_target_items(d, gt, st, bi)
@@ -3000,6 +3479,7 @@ def main():
         check_ledger_spec_agreement()
         check_harvest_hygiene()
         check_harvest_provenance()
+        check_draw_provenance()
     check_tests()
     check_grader_parity()
 

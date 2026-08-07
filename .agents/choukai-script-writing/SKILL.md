@@ -122,9 +122,9 @@ uniform inside 問題5:
   instruction.** Because 2番's options are printed, its
   「まず話を聞いてください。それから、二つの質問を聞いて、それぞれ問題用紙の1から4の
   中から、最もよいものを一つ選んでください。」 is **booklet text**: the examinee
-  reads it, the announcer never says it. The model, from
-  `tests/imported-n2-2025-07/聴解スクリプト.txt` (official July 2025), is the
-  whole of 2番's narration:
+  reads it, the announcer never says it. The model, from official July 2025
+  (`refs/JLPT_N2_NEW/16. N2 7-2025/script.md` — the setup line is real text
+  outside the `[OCR ▼]` fences, so it is exact), is the whole of 2番's narration:
 
   ```
   2番。ラジオを聞いて男の人と女の人が話しています。
@@ -139,6 +139,41 @@ uniform inside 問題5:
   never saw it because its printed-options check split the script on that very
   line — a gate written *around* a defect normalizes it. Write 2番 as
   `2番。<situation>。` on its own first line.
+
+### 問題5 2番: enumerate in the printed order, and decide by NAME, not by ordinal
+
+Two rules, both format facts measured across the archive (the full evidence and
+the official examples are in `jlpt-exam-structure` §"問題5 2番", which owns the
+format; this is the authoring procedure):
+
+1. **Candidate *n* of your spoken enumeration must be printed option *n*.**
+   Write the four candidates into this file first, in the order the announcer
+   or monologue introduces them, then harvest `聴解.md`'s numbered list out of
+   that order — never the other way round. Official July 2025 speaks
+   1つ目 夕日通り / 2つ目 西が丘 / 3つ目 さくら公園 / 最後 東山 and prints them
+   `1 / 2 / 3 / 4` in that order; Dec 2014, July 2019 and Dec 2025 all do the
+   same.
+2. **The deciding line names a candidate attribute — never `Nつ目` / `N番目`.**
+   Official resolves with 「鳥が見られる所？」「お寺の近くっていう所」 (7/2025) and
+   「折りたためる自転車なら」 (12/2025). In 31 sittings no 問題5 candidate item
+   speaks an ordinal back-reference after its enumeration.
+
+**Why this is a rule and not a style note.** An ordinal decider ties the answer
+to a printed SLOT instead of to a thing said, so the booklet and the audio stop
+being independent: re-order the printed list and you have silently re-keyed the
+item, and the paper now has two defensible answers — the ordinal's slot and the
+key. `tests/3` shipped exactly that after a repair pass re-ordered its printed
+list (spoken 個別面談/模擬面接ワークショップ/AI面接アプリ/座談会, printed
+AI面接アプリ/模擬面接ワークショップ/個別面談/座談会) while the audio still said
+「それなら、3つ目の方法がぴったりですね」.
+
+**So a mis-keyed 問題5 2番 is fixed HERE, in `聴解スクリプト.txt`** — re-enumerate
+the candidates so the spoken order matches the printed one, replace any ordinal
+decider with the candidate's name, then `make mp3 <test_id>` to rebuild the audio
+and the chapter marks. **Never repair it by re-ordering the printed list alone**:
+that leaves an MP3 speaking the old order, and `check_artifact_freshness()` will
+not see it because the script did not change. `tools/check_consistency.py`
+fails both rules in `check_mondai5_enumeration()`.
 
 Speaking 問題5 2番's options is not a harmless extra: the printed and spoken
 lists then drift, and test 2 shipped a 2番 whose booklet printed 学食 proposals
@@ -229,8 +264,8 @@ mandates; do not invent a second one):
 If a wrong option has no quotable line, the fix is in THIS file: add the line
 that raises and kills it, or replace the option with one the dialogue already
 supplies. `make check`'s token-overlap check is a **WARN only** and cannot
-decide this — measured on `tests/imported-n2-2025-07`, it flags 5 of 44 official
-options (paraphrases), so it can never be promoted to a failure. The grounding
+decide this — measured on the July 2025 official paper, it flags 5 of 44
+official options (paraphrases), so it can never be promoted to a failure. The grounding
 lines above are the real check, and their absence means the item is not
 shippable.
 
@@ -283,7 +318,8 @@ how to resolve each are in `choukai-mp3-generation` §"Casting".
 A full N2 script is **exactly 33 item blocks** (`例。`/`N番。`) in the per-問題
 counts below, plus the 問題 headers, instructions, announcer lines and 例
 confirmations. **The TOTAL block count is not fixed** — the scripts on disk run
-43–46 blocks (tests 1–4: 46, 44, 43, 43; `imported-n2-2025-07`: 46) and the
+43–46 blocks (tests 1–4: 46, 44, 43, 43; the July 2025 import, since deleted:
+46) and the
 first, since-removed test 4 (removed in 9a794d5, last at b9b90de) was 56, all
 valid; the difference is
 only how instruction and announcer text is split. So do not treat any total as a target: `validate_script()`

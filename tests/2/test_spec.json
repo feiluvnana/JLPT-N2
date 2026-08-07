@@ -1,14 +1,14 @@
 {
- "seed": "20260804+reroll(listening_scenarios,202608041)+reroll(listening_scenarios,202608042)+reroll(kanji_reading,202608061)",
+ "seed": "20260804+reroll(listening_scenarios,202608041)+reroll(listening_scenarios,202608042)+reroll(kanji_reading,202608061)+reroll(kanji_reading,202608072)",
  "generated_at": "2026-08-06 15:00:54",
  "test_id": "2",
  "items": {
   "kanji_reading": [
-   "並(な.み)",
-   "免れる(まぬがれる)",
-   "縮小(しゅくしょう)",
-   "漠然(ばくぜん)",
-   "療(リョウ)"
+   "試す(ためす)",
+   "促す(うながす)",
+   "幅(はば)",
+   "潜る(もぐる)",
+   "訴える(うったえる)"
   ],
   "orthography": [
    "引分け",
@@ -41,8 +41,8 @@
   "paraphrase": [
    "ゆとり",
    "わずかに",
-   "キャンセル",
-   "お疲れ様でした",
+   "テニスコート",
+   "はじめまして",
    "くたくただ"
   ],
   "usage": [
@@ -76,7 +76,7 @@
   "quick_response": [
    "火災報知器が作動しました。避難してください。",
    "見合わせる",
-   "行かずじまい",
+   "〜ずじまい",
    "課長、この件は私の力不足でした。申し訳ございません。",
    "ペットの飼育は規約で禁止されています。",
    "皆さんのおかげで無事に終えることができました。",
@@ -512,5 +512,10 @@
    "source": "https://www.mext.go.jp/a_menu/shotou/newcs/safety/index.htm"
   }
  ],
- "harvest_sha": "bb837bcdcf74"
+ "harvest_sha": "bb837bcdcf74",
+ "rotation": {
+  "recency_source": "ledger",
+  "history_len": 2,
+  "cooldown": 2
+ }
 }

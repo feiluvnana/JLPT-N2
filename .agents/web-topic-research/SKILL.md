@@ -189,7 +189,7 @@ paper by; everything else gets a cap.
 most recent generated papers still on disk** (`tests/<id>/`, `imported-*`
 excluded — an official paper is the thing others copy, and reusing its subject is
 not staleness). Today that window is **tests 1 and 2**; tests 4 and
-imported-n2-2025-07 were removed by the repo owner, and the `logs/topics.json`
+the July 2025 import (`tests/imported-n2-2025-07`) were removed by the repo owner — read July 2025 from `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md` instead — and the `logs/topics.json`
 rows for a removed test are history, not budget. Degrade sensibly: with one
 paper on disk, compare against that one; with none, rule 4 is vacuous — **say so
 in your report either way**, because a silently-skipped comparison and a passed

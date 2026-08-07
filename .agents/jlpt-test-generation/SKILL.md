@@ -110,7 +110,7 @@ anything.
    defect — see `question-authoring` Benchmark section. `make check` enforces
    the floor.
    **読解 must match official apparatus** (calibrate against
-   `tests/imported-n2-2025-07` / `refs/JLPT_N2_NEW/`): dozens of `（注N）`, at least
+   `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`): dozens of `（注N）`, at least
    one `（中略）` in 中文/長文, 問題11 as 4×2, 問題13 ~900–1100 JP chars,
    問題7 including dialogue/setting stems. Tests 1–4 under-shipped notes and
    長文 length even after grammar-stem lengthening.
@@ -226,7 +226,7 @@ Before running the gate, list every surface's topic in one place — 問題9, ea
   `make booklet <id> && make sheet <id>`. **A commit that touches a source
   without its artifact is a defect, not a to-do**: commit `4df5631` rewrote the
   聴解 instructions in `聴解スクリプト.txt` for tests 1, 2, 3, 4 **and**
-  `imported-n2-2025-07`, and regenerated the MP3 for test 3 only — so four
+  the since-deleted July 2025 import, and regenerated the MP3 for test 3 only — so four
   shipped papers speak superseded 問題N instructions while their booklets print
   the new ones. Nothing caught it for a whole QA round. The artifacts now carry
   the sha1 of the bytes they were built from (`script_sha` in

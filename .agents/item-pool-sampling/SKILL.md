@@ -52,6 +52,27 @@ the keyed reading. The sentences were simply the wrong kanji (襟のシャツ,
    **single-kanji** entries, which have no fallback: `針(はり)` is a headword
    and is legitimate (official Dec 2012 問題1 tests exactly it); `領(えり)`,
    `線(すじ)`, `団(かたまり)`, `脳(のうずる)` are not headwords and are out.
+2b. **One 語, two 訓読み → the entry names the LOWER-graded reading.** Rule 2
+   treats "attested as a headword + reading pair" as decisive, and that is
+   exactly what let `潜る(くぐる)` into the pool: it *is* attested — at **N1**,
+   beside the same spelling's **N2** `潜る(もぐる)`. The corpus heads ~110
+   spellings twice this way. Drawing the harder member hands the author an item
+   whose real question is "which of this word's two readings did the examiner
+   mean", and `tests/2` 問題1-4 duly shipped it with もぐる printed as a
+   distractor. So attestation alone is not enough: **when the corpus heads one
+   `語` under more than one reading, index all of them and keep the entry that
+   names the lowest-graded one; delete the others.** `question-authoring`
+   (問題1, 「A spelling with TWO 訓読み」) carries the paper-side half of this,
+   and `tools/check_consistency.py` `check_mondai1_key_band()` fails a paper
+   that keys the harder member or prints the other reading as an option — but
+   the pool entry is the defect, so the repair belongs here.
+
+   **The `kanji-n*.json` corollary.** A KANJIDIC-derived kunyomi listing is not
+   evidence for either half. `潜`'s kunyomi list there includes 表外 readings, so
+   "the kanji has this reading" cannot rank two readings by level and cannot
+   attest one at all — the same trap that produced the `領(えり)` / `線(すじ)`
+   entries the 2026-08-06 audit removed. Rank with `vocab-n1|n2|n3.json` levels
+   only.
 3. **In band, if the corpus misses it.** A **multi-character** word absent from
    the corpus may be kept only when its reading is the ordinary dictionary
    reading on 常用 音訓 *and* the word is corroborated by the official archive
@@ -335,6 +356,30 @@ synthetic oldest draw).
 - **Cooldown is by WORD, across categories.** Recency is tracked across categories by both raw string and `head()` identity so a word tested in one section cannot immediately reappear in another section in the next exam.
 - **Attribution.** Pass `--test-id <id>` so each draw records which test
   consumed it.
+- **What gets RECORDED is the pool entry-string — never the paper's surface
+  form, never a substitute.** `recency_map()` keys on the raw entry string and
+  on `head()`, and neither strips the leading `〜` or undoes an inflection, so a
+  ledger/spec row that does not equal a pool string **cools nothing**. Two
+  shapes have shipped, both of which kept `make check` green because the old
+  check only compared the ledger against the spec:
+  - **An inflected realization.** The pool entry is `〜ずじまい`; `tests/2`
+    realizes it as 「行かずじまい」 and a repair pass wrote 「行かずじまい」 into
+    *both* files. `〜ずじまい` therefore never entered the recency map, is
+    permanently un-cooled, and is redrawable one test after it was asked
+    (`quick_response` draws 11 of 196 ≈ 5.6% per draw). All ~115 other
+    bound-form entries kept their tilde.
+  - **An off-pool substitute.** `tests/2` records `キャンセル` and
+    `お疲れ様でした` under `paraphrase`; the draw was `テニスコート` and
+    `はじめまして`, and neither substitute is in any pool category or in
+    `logs/adjunct_staging.json`. An off-pool item can never rotate at all,
+    because no future draw can hit it.
+
+  So an authoring substitution is repaired by **re-sampling**, not by editing
+  either file to match the paper. `tools/check_consistency.py`
+  `check_draw_provenance()` now fails any recorded item that does not resolve to
+  a `pools.json` entry (raw, tilde-stripped, or `head()`-folded) or to an
+  `origin: adjunct` row carrying `item` + `level: N2` + `evidence`; `origin: web`
+  rows are exempt and traced by `check_harvest_provenance()` instead.
 
 Keep every pool ≥ 2.5× the per-test draw; inspect headroom with `sample_items.py --check-depth`.
 

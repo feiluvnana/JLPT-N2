@@ -328,7 +328,11 @@ the in-page grader agrees with `grade_answers.py` on identical answers.
 
 It also checks item integrity, which no other gate can see: no question offers
 the same option twice; all 101 keys sit on the position `tests/<test_id>/test_spec.json`
-prescribed; 問題8 stems have four blanks with ★ third, their keys name the
+prescribed — **and that line's label now says what it proves, `(slot agreement
+only — content correctness is exam-qa-review step 1)`, because green on it was
+read as evidence about the keys and never was: a key written to match the spec
+rather than the passage agrees with it by construction, which is how test 3's
+聴解 問題1-1番 mis-key stayed green**; 問題8 stems have four blanks with ★ third, their keys name the
 option that lands there, **and the stem does not already contain the words the
 options supply**; the passages carry **no un-transliterated Latin words**; the
 聴解 script's 問題N instructions match the booklet's verbatim; choices are
@@ -348,9 +352,39 @@ silently starves one 問題, which then gets authored off-contract) and the pool
 side keeps ≥40% of every blended surface. Both broke in test 4 because
 `merge_seeds.py` had been run twice over its own output.
 
+The gate has exactly **one** check that says anything about which option is
+CORRECT, and it is narrow on purpose: a 聴解 問題1–3 解説 cell that carries the
+per-option grounding lines `choukai-script-writing` mandates
+(`3 ✗「script line」→ 理由`) and marks one of them `○` or （正解） must mark the
+digit the 正解 column names. That is the author writing the right answer into
+the paper in a machine-readable place, so a cell tagging option 3 beside a key
+of 4 is a mis-key stated twice in one row — test 3 shipped exactly that. It is
+silent wherever the convention is not used (prose cells, 問題4, and all of
+言語知識・読解, whose key tables state the key in prose and carry no ○/（正解）
+annotation at all), so its silence proves nothing.
+
+It also reads the only string-decidable corner of a **問題1–6 key's level**,
+which nothing else in the gate looks at (`level_band_grammar.txt` is 問題7–9
+grammar): when a `kanji_reading` target's spelling is headed twice by
+`openjlpt/vocab-n1|n2|n3.json` under different readings, the key must be the
+lower-graded one, and the other reading may not appear among that item's
+printed options. Test 2 keys 潜る=くぐる (N1) and prints もぐる (N2) beside it;
+zero of the 35 current-era official 問題1 items do either.
+
+On 問題5 2番 it checks that the **printed option list is the order the audio
+introduces the candidates**, and that the item is decided by naming a candidate
+rather than by an ordinal — a `Nつ目` spoken after the enumeration closes fails.
+Both were measured across the archive (July 2025, Dec 2014, July 2019 all print
+in enumeration order; no sitting in 31 speaks an ordinal back-reference), and
+both broke at once when a repair pass re-ordered test 3's printed list under an
+audio still saying 「3つ目の方法がぴったりですね」. Papers that enumerate by name
+resolve nothing here and skip.
+
 It also checks the **reading apparatus and the passage bodies**, all measured on
-`tests/imported-n2-2025-07` (the July 2025 official paper is the reference bar —
-a check that paper fails is a wrong check): `（注N）` markers and definitions pair
+the July 2025 official paper — read it from
+`refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`, since the in-tree
+`tests/imported-n2-2025-07` import those numbers were taken from has been
+deleted (a check the reference paper fails is a wrong check): `（注N）` markers and definitions pair
 1-to-1 **per passage** (an orphan either way is an automatic QA fail, and tests
 2 and 4 shipped both directions); every `（中略）` sits inside a 問題11–13 passage
 rather than floating under an instruction line, and at least one passage is cut;
@@ -360,7 +394,11 @@ passage and ≥400 per 問題11 passage (official measures 1274/2503/572/1005/62
 minima 222 and 554); no 問題11 stem uses a pure-retrieval shape
 (`本文で述べられて` / `として正しいもの` / `主な目的は` / `内容と合っている`, which
 appear in no official 中文 stem) and every 問題11 passage asks one 考え/主張
-question; each 問題14 解説 quotes the **two** flyer cells its key combines; the
+question; each 問題14 解説 quotes the **two** flyer cells its key combines, counting only
+spans that land on a **condition-bearing** flyer row (a table row, a
+`・`/`-`/`※` bullet, a numbered rule, a `区分A`-style label) — a `【…】` block
+title or an `■` section header carries no constraint and no longer satisfies
+it, which is how test 3's single-constraint item 70 read green; the
 four 問題9 解説 cells carry four distinct category tags including exactly one
 `[内容推論]`; no keyed 読解 option is ≥50 JP chars **and** ≥1.7× the mean of its
 three distractors (a key findable by length alone — the message also says
@@ -378,7 +416,11 @@ puts its narration on the second line; `聴解_チャプター.json`'s `script_s
 equal `sha1(聴解スクリプト.txt)[:12]`, so an MP3 built from a superseded script
 fails instead of shipping silently (skipped for `source: external` audio, which
 has no TTS timeline); and the 問題1/2/4 target items `tests/<test_id>/test_spec.json` drew
-must actually appear in the paper.
+must actually appear in the paper — matched on the dictionary form, on a
+one-character trim, and, for an inflecting `kanji_reading`/`orthography` entry,
+on the **bolded** target's kanji stem, because 問題1 prints its target
+conjugated (慌てる as 「**慌てて**」, 潔い as 「**潔く**」) exactly as official
+July 2025 does (「**収まった**」, 「**辛い**」).
 
 Outside the papers it checks the **inputs that decide them**: every
 `pools.json` grammar entry stays inside the level band and no grammar category
@@ -386,6 +428,19 @@ lists one point under two spellings (`〜がち`/`〜がちだ`, `〜気味`/`�
 compared after folding kanji tails to kana and dropping a trailing だ); every
 `logs/ledger.json` history entry records exactly `sample_items.DRAW[cat]` items;
 and no two `logs/seeds.json` seeds cite the same source URL.
+
+**Every recorded draw must also resolve to a `pools.json` entry-string** — in
+the ledger AND in the spec, compared raw, tilde-stripped and `head()`-folded,
+with `origin: adjunct` rows accepted on `item` + `level: N2` + `evidence` and
+`origin: web` rows left to the harvest check. The ledger↔spec equality check
+below is not enough on its own and was `GATE-WRONG` for exactly that reason:
+aligning both files on a string the sampler cannot resolve turns it green
+*while breaking rotation*, because `sample_items.recency_map()` keys on the pool
+string. Two shapes shipped — an inflected surface form (`行かずじまい` written
+over the pool's `〜ずじまい`, which then never cools) and an off-pool substitute
+(`キャンセル`, `お疲れ様でした`, in no pool category and no staging row, which can
+never rotate at all). Record the POOL string; repair a substitution by
+re-sampling, never by editing either file to match the paper.
 
 Some rules cannot be decided by matching, so the gate **warns** instead of
 failing. There are seven warn classes: a 解説 that quotes text found in neither
@@ -400,6 +455,24 @@ fails). Warnings are part of the output you must read (§0.5): resolve each one,
 or state in your final report why it is a false positive. The quote warning is
 what surfaced test 4's five invented 聴解 quotes, including a keyed option the
 audio never speaks.
+
+**Known unchecked rules — real, binding, and NOT gated.** `question-authoring`
+§0 lists six artifacts an author must write into the key tables. The gate reads
+two of them (the 問題9 category tags and the 問題14 two-cell quotes) and FAILs;
+the other four are read only by `exam-qa-review`, and §0 says so itself:
+
+- the **functional-category line** for every 問1–6 item
+  (`24: 程度副詞 ×4 (比較的/非常に/たいして/一段と)`),
+- the **問題1 distractor-source line** (every option's resolved headword, its
+  branch label, and — when the target spelling has two 訓読み — both readings
+  with both levels and which is keyed),
+- the **問題8 uniqueness note** (`｜一意性: 24通り中1通り、裸の副詞なし`),
+- the **聴解 問題1/2/3 option-grounding lines** (`1 ✗「script line」→ 別の人に割り当て`).
+
+They are real rules, not stale ones — do not skip one because `make check` is
+green. As of 2026-08-07 tests 2 and 3 carry all four; test 1 carries none of
+them. The listening one is the input the single content check above reads, so
+an item without it is also an item the gate cannot check.
 
 Finally it checks the **rotation inputs** — the two knobs that decide whether a
 new test is actually new. Pool items rotate through the ledger, but the web

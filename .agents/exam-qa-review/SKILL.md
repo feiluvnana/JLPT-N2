@@ -366,8 +366,9 @@ sends the fixing pass off to break working items.
 - **問題8 / 問題9 length:** 問題8 assembled sentences should not read as
   three-word drills; 問題9 cloze body should land ~500–700 JP chars (official),
   not a 150–200 char stub.
-- **読解 apparatus & formatting:** using `imported-n2-2025-07` (July 2025) as
-  the bar — fail (or hard-warn) a generated paper with fewer than ~15 `（注N）`
+- **読解 apparatus & formatting:** using July 2025 as the bar — read it from
+  `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`, the exact PDF text layer, since
+  the in-tree `imported-n2-2025-07` import was deleted — fail (or hard-warn) a generated paper with fewer than ~15 `（注N）`
   across 問題10–13, with **no** `（中略）` anywhere in 中文/長文, or with 問題13
   under ~850 JP chars. Count **in-body markers** (one per glossed term, in the
   passage region), not raw `（注N）` occurrences: each gloss also has a
@@ -638,6 +639,29 @@ options distinct, script shape). This skill proves the CONTENT: one defensible
 answer, sources that support their keys, a paper that does not repeat itself.
 Neither substitutes for the other; the orchestrator runs them as steps 9 and
 9.5.
+
+**A green `keys match test_spec.json answer_positions` line is ZERO evidence
+about which option is actually correct.** Read its label — it now ends
+`(slot agreement only — content correctness is exam-qa-review step 1)` — and
+read it as the whole of what it claims. The check compares two numbers: the
+digit printed in the 正解 column and the digit `sample_items.py` reserved for
+that slot. A key written to satisfy the spec rather than to satisfy the passage
+agrees with it perfectly, so the line goes green on a mis-key **by
+construction**: `tests/3`'s 聴解 問題1-1番 keyed 4 while its own 解説 tagged
+option 3 「発券機に行こう」→ 決定された行動（正解）, and every position check
+passed. Nothing in the gate reads a 問題1–6 vocabulary key's level either
+(`level_band_grammar.txt` covers 問題7–9 grammar only), and its one
+string-decidable corner — a 問題1 target whose spelling carries two graded
+readings — is `check_mondai1_key_band()`, not a general answer check. Step 1's
+key-by-key proof and step 0's blind solve are the only things that establish a
+key at all; do not let a green positions line shorten either of them.
+
+The gate does have **one** thing to say about correctness, and it is worth
+reading before step 1: `check_choukai_kaisetsu_keys()` fails a 聴解 問題1–3 row
+whose 解説 marks a different option `○`/（正解） than the 正解 column names. It
+is silent wherever the author did not write the per-option grounding lines, so
+its silence proves nothing — but when it speaks, the paper has stated two
+different answers for one item and step 1 should start there.
 
 It also proves the **generator**, via step 6.5. QA is the only pass that reads a
 finished paper against every rule that produced it, which makes it the only

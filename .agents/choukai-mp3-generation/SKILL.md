@@ -28,7 +28,7 @@ the script on disk.
 
 It exists because that failure shipped four times at once: commit `4df5631`
 rewrote the 問題N instructions in `聴解スクリプト.txt` for tests 1, 2, 3, 4 **and**
-`imported-n2-2025-07`, and re-ran `make mp3` for **test 3 only**
+the since-deleted July 2025 import, and re-ran `make mp3` for **test 3 only**
 (`git log -1 -- tests/N/聴解.mp3`: t1 `99fdb9e`, t2 `99fdb9e`, t3 `4df5631`,
 t4 `99fdb9e`, import `d3beca8`). Four shipped papers played superseded
 instructions against booklets printing the new ones, through a green gate and a
@@ -226,7 +226,7 @@ it toward the official histogram — change `pause_after()` first if the
 deviation is ever worth closing.
 
 The 33 item blocks are fixed; the TOTAL block count is not — the scripts on disk
-run **43–46 blocks** (tests 1–4: 46, 44, 43, 43; `imported-n2-2025-07`: 46), and
+run **43–46 blocks** (tests 1–4: 46, 44, 43, 43; the since-deleted July 2025 import: 46), and
 the first, since-removed test 4 (removed in 9a794d5, last at b9b90de) was 56 —
 all valid; the difference is only how instruction and announcer text is split.
 So do not treat any total as a target: `validate_script()` enforces the 33 item

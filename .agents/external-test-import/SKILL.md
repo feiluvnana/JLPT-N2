@@ -115,7 +115,7 @@ tables. Defer format facts to `jlpt-exam-structure`. Defer script block rules to
 - 問題8: four blanks, ★ third; key = option that lands on ★ (same integrity
   rules as generated tests — `make check` enforces them).
 
-**Answer-key reconciliation (NON-NEGOTIABLE — `imported-n2-2025-07` shipped
+**Answer-key reconciliation (NON-NEGOTIABLE — the since-deleted July 2025 import shipped
 one wrong 聴解 key by spot-check alone)**
 
 When an answer-key PDF/sheet is available (`import_meta.json` → `answer_key`):

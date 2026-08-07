@@ -21,10 +21,12 @@ one file, which is how three wrong numbers got into this skill (see below).
   also holding the booklet PDF and the script PDF. This is the calibration
   corpus. Paths contain spaces and dots — always quote them, and find them with
   `find refs/JLPT_N2_NEW -name '*.mp3'` rather than typing them.
-- **`refs/JLPT/`** holds five MP3s that are **byte-identical duplicates**
-  (sha1-verified) of the archive's 2023-07 / 2023-12 / 2024-12 / 2025-07 /
-  2025-12 entries. Never count both — a "five-recording" measurement over
-  `refs/JLPT/` plus the archive double-weights the last three years.
+- **There is no second audio folder, and adding one is a defect.** A sibling
+  folder under `refs/` once held five MP3s that were **byte-identical
+  duplicates** (sha1-verified) of the archive's 2023-07 / 2023-12 / 2024-12 /
+  2025-07 / 2025-12 entries. It has been deleted: a "five-recording"
+  measurement over it plus the archive double-weighted the last three years.
+  `refs/JLPT_N2_NEW/` is the whole calibration corpus — never re-add a copy.
 - **`.rar` files** sit beside some MP3s (2019-07, 2022-07, 2025-12). Ignore
   them; the MP3 is already extracted.
 - **Script PDFs are SCANS.** Text extraction yields only the typed

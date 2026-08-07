@@ -44,7 +44,9 @@ Maintain high consistency with the official exams in `refs/JLPT_N2_NEW/` (e.g. 0
   - **問題7**: official stems average **~43 JP chars** (median ~41; interquartile ~33–54). A paper whose 12 stems average under ~35, or that ships many under ~30, reads as textbook-drill short, not exam-length. Target: **each stem ≥30 JP chars**, **paper average ≥40**, with most items in the **35–55** band. Build length with scene-setting (職場・電話・掲示・インタビュー), a subordinate clause, or a short dialogue lead-in — not by padding the tested form. Official items often open with `(会社で)` / `(電話で)` / a named role before the blank.
   - **問題8 (文の組み立て) — length is mostly in the OPTIONS**: measured on
     `refs/JLPT_N2_NEW/` papers + the official 2018 sample (`jlpt.jp` N2G.pdf) and the
-    clean import `imported-n2-2025-07`:
+    the July 2025 official booklet
+    (`refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`; the in-tree import this used
+    to cite, `imported-n2-2025-07`, was deleted):
     - **Sum of the four options** typically **16–29 JP chars** (July 2025 items
       sit ~16–29; sample 2018 has chunks like「山を下りて何日かすると」「二度と
       したくないと」).
@@ -234,7 +236,7 @@ section, under these caps (full rules: web-topic-research):
   納める/収める/治める/修める, 敗れる/破れる; same-radical fakes: 険/検/剣/験.
 - **The underline covers the WHOLE word, okurigana included.** In the Markdown
   the underline is the bold span, so write `**収まった**`, not `**収**まった`.
-  Official July 2025 (`tests/imported-n2-2025-07/言語知識・読解.md`, 問1) marks
+  Official July 2025 (`refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`, 問1) marks
   `**才能**`, `**辛い**`, `**刑事**`, `**起床**`, `**収まった**` — the inflectional
   tail is *inside* the mark in both okurigana items, and 問題2 does the same with
   the kana span (`**しめって**`). Corroborated across the archive
@@ -256,6 +258,35 @@ section, under these caps (full rules: web-topic-research):
   the print already rules out. Each option must also be a real word. See Item
   integrity below (test 1's 慌てて).
 - **Same-kanji OR same semantic field rule:** Every distractor must share the same word form and conjugation class AND be either (a) a reading of the target's OWN kanji or a same-radical/visual-component kanji (e.g. 措置: そち/しょち/そうち, 険しい: けんしい/けんみしい/かんしい/けわしい), OR (b) a real N2 word in the SAME semantic field (e.g. official July 2025 問1-2 辛い → あまい/にがい/しぶい; 問1-5 収まった → さだまった/しずまった/やすまった). A grab-bag of unrelated words across different semantic fields is forbidden. This is the **only** statement of the rule; the 「Kanji reading (問1)」 bullet under "Distractor plausibility" defers to it. **Scope: branch (b) is the 訓読み branch.** For a 音読み compound target (才能, 起床, 概要 — no okurigana printed) official distractors are 清濁/長短 derivations of the key's own on-reading and are *not* words; that branch and its verification are step 6 of 「All four readings must RESOLVE」 below.
+- **A spelling with TWO 訓読み: key the LOWER-graded one, and never print the
+  other among the options.** Some headwords are graded twice by the corpus under
+  one spelling — `潜る(くぐる)` at N1 beside `潜る(もぐる)` at N2, and ~110 other
+  entries across the three slices. Two consequences, both binding:
+  1. **The key must be the reading the corpus grades lower.** Keying the harder
+     member makes the item's real question "which of this word's two readings did
+     the examiner mean", which is an N1 discrimination wearing an N2 target.
+  2. **The other reading may not appear in the option set at all** — not as the
+     「同漢字」 branch-(a) distractor it superficially looks like. Branch (a) wants
+     a reading of the target's kanji *in another word*; the target's OWN second
+     reading is a second correct pronunciation of the printed string, so the
+     examinee is being asked to guess intent, not to read.
+
+  **Measured before this rule was written: all 35 current-era 問題1 items
+  (12/2022–12/2025, 14 of them 訓読み) — ZERO put a target's alternative reading
+  in its own option set.** The decisive case is 7/2025-2, where 辛い carries both
+  からい and つらい and official offered あまい/にがい/しぶい; 12/2025-1 柱 likewise
+  offers ゆか/かべ/たな.
+
+  **Procedure:** look the spelling up in
+  `references/openjlpt/vocab-n1|n2|n3.json` before writing the options, and
+  record **both** readings and **both** levels on the 問題1 source line (§0), e.g.
+  `くぐる=潜る[N1] / もぐる=潜る[N2] → key もぐる`. A pool entry that names the
+  harder reading is a **pool** defect: send it back to `item-pool-sampling`
+  (§"kanji_reading validity rule" 2b) rather than repairing the option set.
+  Shipped counter-example: `tests/2` 問題1-4 prints 潜る, keys くぐる, and offers
+  もぐる — and its own key note documented the trap as if it were a feature
+  (「「潜る」自体がくぐる／もぐるの二訓をもつため2が同漢字の罠」).
+  `tools/check_consistency.py` `check_mondai1_key_band()` fails both halves.
 - **Build the set BEFORE you accept the target — and reject the target, never the
   rule.** The three constraints (conjugation lock + real word + one of the two
   branches) intersect to nothing for some pool entries, and when they do, the
@@ -670,9 +701,11 @@ matching where one tempting option fails exactly one condition.
     measured as **in-body markers** (one per glossed term, in the passage
     region — not raw `（注N）` occurrences, which double-count because each gloss
     also has a definition line), and tests 1/2/3/4 carry **9 / 6 / 29 / 15**.
-    (July 2025 measures **27** in the archive's PDF extract and **30** in this
-    repo's `imported-n2-2025-07` markdown — a 3-marker extraction difference, not
-    a disagreement about the rule. Quote the archive's number.)
+    (July 2025 measures **27** in the archive's PDF extract
+    — `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md` — and **30** in the in-tree
+    `imported-n2-2025-07` markdown that has since been deleted: a 3-marker
+    extraction difference, not a disagreement about the rule. Quote the
+    archive's number; it is the only one still on disk.)
 
     **The bar is ≥25 in-body markers across 問題10–13, and ≥3 in every 中文/長文
     passage** (each of the four 問題11 passages, and 問題13). A floor of 15 was
@@ -1059,7 +1092,7 @@ linked section.
 | Artifact | Where it goes | Shape | Rule |
 |---|---|---|---|
 | Functional-category line | `## 文字・語彙` key notes, every 問1–6 item | `24: 程度副詞 ×4 (比較的/非常に/たいして/一段と)` | 「The functional-category line is mandatory OUTPUT」 |
-| 問題1 distractor sources | same line as above, 問1 items | `いたわる=労る[N1][同漢字], …` — every option's resolved headword AND its branch label, plus `[SK]` or a 清濁/長短 derivation where the lookup MISSes | same + 「All four readings must RESOLVE」 |
+| 問題1 distractor sources | same line as above, 問1 items | `いたわる=労る[N1][同漢字], …` — every option's resolved headword AND its branch label, plus `[SK]` or a 清濁/長短 derivation where the lookup MISSes. When the TARGET spelling has a second 訓読み, print both readings with both levels and which one is keyed (`くぐる=潜る[N1] / もぐる=潜る[N2] → key もぐる`) | same + 「All four readings must RESOLVE」 + 「A spelling with TWO 訓読み」 |
 | 問題8 uniqueness note | `## 文法`, rows 43–47, after the word order | `｜一意性: 24通り中1通り、裸の副詞なし` (no parenthesised single digit) | 「exactly ONE of the 24 orderings」 |
 | 問題9 category tag | `## 文法`, the four 問題9 rows, cell opening | `[論理接続]` `[文末モーダル]` `[内容推論]` `[慣用・形式名詞]`, exactly one `[内容推論]` | 問題9 rule under Benchmark |
 | 問題14 two-cell quotes | `## 読解`, rows 70 and 71 | two distinct `「…」` spans present in the flyer | 問題14 rule under 問題10-14 |

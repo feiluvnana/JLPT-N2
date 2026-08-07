@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>聴解</title>
-<!-- src_sha: 聴解.md=01fa5a88f52c -->
+<!-- src_sha: 聴解.md=a35bdcf1036c -->
 <style>
 @page { size: A4; margin: 18mm 16mm; }
 body { font-family: "Noto Serif CJK JP", serif; font-size: 10.5pt;
@@ -59,10 +59,15 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
   :root { --gutter: 1.6em; }
   body { max-width: 60em; margin: 0 auto; padding: 2.5em var(--gutter) 6em;
          background: #fff; }
+  table { max-width: 100%; }
 }
 @media screen and (max-width: 48em) {
-  :root { --gutter: 1em; }
-  body { padding: 1.2em var(--gutter) 4em; }
+  :root { --gutter: 0.8em; }
+  body { padding: 1.2em var(--gutter) 4em; font-size: 10pt; }
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  blockquote { padding: 8px 10px; margin: 8px 0; }
+  h1 { font-size: 13.5pt; margin: 22px 0 10px; }
+  h2 { font-size: 11pt; padding: 4px 8px; margin: 18px 0 10px; }
 }
 </style></head><body><!-- seed: 20260901+reroll(reading_topics,20260902), test_id: 3 -->
 
@@ -77,8 +82,8 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
  1. <ruby>飲み物<rt>のみもの</rt></ruby>を<ruby>買<rt>か</rt></ruby>う<br />
  2. グッズ<ruby>売り場<rt>うりば</rt></ruby>に<ruby>行<rt>い</rt></ruby>く<br />
- 3. <ruby>発券<rt>はっけん</rt></ruby><ruby>機<rt>き</rt></ruby>で<ruby>紙<rt>かみ</rt></ruby>のチケットを<ruby>発行<rt>はっこう</rt></ruby>する<br />
- 4. スクリーン<ruby>前<rt>まえ</rt></ruby>に<ruby>向<rt>む</rt></ruby>かう</p>
+ 3. <ruby style="min-width:3.00em">入場<rt>にゅうじょう</rt></ruby>して<ruby>座席<rt>ざせき</rt></ruby>に<ruby>向<rt>む</rt></ruby>かう<br />
+ 4. <ruby>発券<rt>はっけん</rt></ruby><ruby>機<rt>き</rt></ruby>で<ruby>紙<rt>かみ</rt></ruby>のチケットを<ruby>発行<rt>はっこう</rt></ruby>する</p>
 <p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
  1. <ruby style="min-width:2.50em">宿泊<rt>しゅくはく</rt></ruby>ホテルの<ruby>確認電話<rt>かくにんでんわ</rt></ruby>をする<br />
  2. <ruby>専用<rt>せんよう</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>にお<ruby>名前<rt>なまえ</rt></ruby>と<ruby style="min-width:3.50em">宿泊先<rt>しゅくはくさき</rt></ruby>を<ruby>記入<rt>きにゅう</rt></ruby>する<br />
@@ -167,14 +172,14 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
 <p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
 <strong><ruby>質問<rt>しつもん</rt></ruby>1</strong><br />
- 1. <ruby>個別<rt>こべつ</rt></ruby><ruby>面談<rt>めんだん</rt></ruby><br />
+ 1. AI<ruby>面接<rt>めんせつ</rt></ruby>アプリ<br />
  2. <ruby>模擬<rt>もぎ</rt></ruby><ruby>面接<rt>めんせつ</rt></ruby>ワークショップ<br />
- 3. AI<ruby>面接<rt>めんせつ</rt></ruby>アプリ<br />
+ 3. <ruby>個別<rt>こべつ</rt></ruby><ruby>面談<rt>めんだん</rt></ruby><br />
  4. <ruby>先輩<rt>せんぱい</rt></ruby>との<ruby>座談会<rt>ざだんかい</rt></ruby></p>
 <p class="furi"><strong><ruby>質問<rt>しつもん</rt></ruby>2</strong><br />
- 1. <ruby>個別<rt>こべつ</rt></ruby><ruby>面談<rt>めんだん</rt></ruby><br />
+ 1. AI<ruby>面接<rt>めんせつ</rt></ruby>アプリ<br />
  2. <ruby>模擬<rt>もぎ</rt></ruby><ruby>面接<rt>めんせつ</rt></ruby>ワークショップ<br />
- 3. AI<ruby>面接<rt>めんせつ</rt></ruby>アプリ<br />
+ 3. <ruby>個別<rt>こべつ</rt></ruby><ruby>面談<rt>めんだん</rt></ruby><br />
  4. <ruby>先輩<rt>せんぱい</rt></ruby>との<ruby>座談会<rt>ざだんかい</rt></ruby></p>
 <hr />
 <h1>解答用紙(マークシート)</h1>
@@ -389,7 +394,7 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <tr>
 <td>1</td>
 <td>4</td>
-<td>1 ✗「飲み物を買うのはそのあと」→ 後回し<br>2 ✗「グッズ売り場をのぞいてみようか」→ 発券が先<br>3 ✗「発券機に行こう」→ 決定された行動（正解）<br>4 ✗「発券機に向かう」→ スクリーンに向かうのは発券後</td>
+<td>4 ○「うん、じゃあ発券機に行こう」→ 二人が決定した最初の行動（正解）<br>1 ✗「飲み物を買うのはそのあとでいいよ」→ 発券のあとに後回し<br>2 ✗「グッズ売り場をのぞいてみようか」→ 「混み合う前に発券を済ませておいたほうが安心だね」で発券が先になった<br>3 ✗「入場の前に発券機で紙のチケットを発行しておかないと入れないみたいだよ」→ 発券前に入場することはできない</td>
 </tr>
 <tr>
 <td>2</td>
@@ -488,7 +493,7 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <tr>
 <td>3</td>
 <td>3</td>
-<td>1 ✗「新入社員の研修」→ 全社制度の説明であり誤り<br>2 ✗「交通費手当」→ 出社日設定に伴う制度見直しの説明<br>3 ✗「全社的に在宅勤務制度の導入…課題も浮き彫り…出社日を設ける見直し」と運用変更を説明（正解）<br>4 ✗「オフィス移転」→ 働き方の制度見直しであり誤り</td>
+<td>3 ○「全社的に在宅勤務制度の導入を進めてまいりました」「来月からは週二日を出社日とし…ハイブリッド型運用へ見直すことといたしました」と制度の見直しと運用変更を説明（正解）<br>1 ✗「新入社員の研修計画」→ 全社員に向けた制度の説明で、研修の計画には触れていない<br>2 ✗「在宅勤務の交通費手当」→ 手当の話は出ず、出社日の設定を説明している<br>4 ✗「オフィス移転のスケジュール」→ 移転ではなく働き方の制度変更の話</td>
 </tr>
 <tr>
 <td>4</td>
@@ -520,7 +525,7 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <tr>
 <td>1</td>
 <td>3</td>
-<td>「気が置けない」は「気遣いをする必要がなく気安く付き合える」の意。3が正解。</td>
+<td>「気が置けない」は遠慮や気づかいが要らず気楽に付き合えるという意味なので、「ええ、一緒にいてとても楽な方ですね」と応じる3が正解。1・2は逆に気をつかう相手だと受け取った応答で誤り。</td>
 </tr>
 <tr>
 <td>2</td>
@@ -545,7 +550,7 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <tr>
 <td>6</td>
 <td>2</td>
-<td>相手（上司）からの確認に対し「確認しておいたよ」と答える2が正解。3の「ご覧になりましたよ」は上司に対する敬語の向きが誤り。</td>
+<td>部下からの「ご覧いただけたでしょうか」という確認に対し、課長が「確認しておいたよ」と答える2が正解。1は「ええ」と肯定しながら「まだ見ていない」と続き、応答が矛盾する。3は自分の行為に尊敬語「ご覧になる」を使っており敬語の向きが誤り。</td>
 </tr>
 <tr>
 <td>7</td>
@@ -592,7 +597,7 @@ strong { font-family: "Noto Sans CJK JP", sans-serif; }
 <tr>
 <td>2-質問1</td>
 <td>1</td>
-<td>学生が「自分の弱点について一対一で専門のアドバイザーと深く相談したい…まずは個別面談から始めます」と述べており、選択肢1「個別面談」が正解。</td>
+<td>学生が「僕は自分の話し方の癖や内容を客観的に分析して直したいです。一人で何度も練習できるのもいいですね」と述べ、職員が「それなら、表情や話すスピードを数値で分析してくれるアプリを使ったセルフ練習がぴったりですね」と答えている。「表情や話すスピードを数値で分析してくれます」と紹介されたのは「最新のAI面接アプリを活用したセルフ練習」なので、選択肢1「AI面接アプリ」が正解。</td>
 </tr>
 <tr>
 <td>2-質問2</td>
