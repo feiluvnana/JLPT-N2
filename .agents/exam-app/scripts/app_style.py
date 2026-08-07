@@ -31,7 +31,7 @@ APP_CSS = """
 #bar-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:.45em;flex:0 0 auto}
 #bar button{font-size:10pt;padding:.25em .75em;cursor:pointer;border-radius:6px;
   border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui);
-  white-space:nowrap;line-line:1.35;min-height:32px;display:inline-flex;align-items:center}
+  white-space:nowrap;line-height:1.35;min-height:32px;display:inline-flex;align-items:center}
 #bar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);
   font-weight:700}
 #bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap;

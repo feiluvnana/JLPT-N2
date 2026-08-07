@@ -135,6 +135,11 @@ Always run from the workspace root. Each command's rules and options live in
 its owner skill — this table is the router, not the manual. Per-test targets
 take the id positionally (`make sheet 1`) or as `TEST=1`; default `TEST=1`.
 
+**Environment prerequisites and per-OS setup (macOS, Windows/WSL2) are owned by
+`README.md`** — the interpreter and package versions, the external binaries
+these commands shell out to, and the Git LFS/symlink/CRLF requirements. Do not
+restate them here or in a skill; fix them there.
+
 | Command | Runs | Owner skill |
 | ------------------------- | ------------------------------------ | ----------- |
 | `make check`              | `tools/check_consistency.py` — the read-only gate | (below) |
