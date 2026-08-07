@@ -74,7 +74,7 @@ MONDAI_HEADING = re.compile(r"^(問題\s*\d{1,2})\b")  # promoted to a heading f
 SILENCE_END = re.compile(r"silence_end:\s*([0-9.]+)\s*\|\s*silence_duration:\s*([0-9.]+)")
 VOLUME = re.compile(r"(mean_volume|max_volume):\s*(-?[0-9.]+) dB")
 
-# Buckets from official-audio-analysis §2: structural gap / 問3・問4 answer time /
+# Buckets from choukai-audio (audio-analysis) §2: structural gap / 問3・問4 answer time /
 # 問5 answer time / 問1・問2 answer time / 問題2 option-reading time.
 PAUSE_BUCKETS = (
     (2.5, 5.0, "~3 s", "structural gap"),
@@ -357,7 +357,7 @@ def build_script(folder: Path, src: Path, use_ocr: bool) -> tuple[str, dict]:
 
 
 # ---------------------------------------------------------------------------
-# audio_inspection.md — the measurements official-audio-analysis calls for
+# audio_inspection.md — the measurements choukai-audio's audio-analysis method calls for
 # ---------------------------------------------------------------------------
 
 def probe(mp3: Path) -> dict:
@@ -393,7 +393,7 @@ def build_audio(folder: Path, mp3: Path) -> str:
 
     lines = [f"# {exam_label(folder)} — 聴解音声 inspection", ""]
     lines += provenance("ffprobe + ffmpeg", [mp3], [
-        "Measured per `.agents/official-audio-analysis/SKILL.md` "
+        "Measured per `.agents/choukai-audio/SKILL.md` "
         "(`silencedetect=noise=-35dB`, one pass at `d=0.4`).",
     ]) + [""]
 
@@ -431,7 +431,7 @@ def build_audio(folder: Path, mp3: Path) -> str:
     lines += [
         "## Long-pause timeline", "",
         "Ordered `(start, duration)`. Attribute sections from the signatures in "
-        "`official-audio-analysis` §3 — a `20 s → talk → 12 s` cycle is 問題2, "
+        "`choukai-audio` audio-analysis method — a `20 s → talk → 12 s` cycle is 問題2, "
         "`3 s ×3 → 8 s` is 問題3/問題5's spoken choices, a dense run of lone 8 s "
         "pauses is 問題4. Counts are measured, section labels are not.", "",
         "| # | start | duration |",

@@ -1,6 +1,6 @@
 ---
 name: jlpt-test-generation
-description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5, primarily N2). Use this skill whenever the user asks to create, generate, or build a JLPT test, mock exam, 模擬試験, practice test, or any subset of one (言語知識, 文字・語彙, 文法, 読解, 聴解/choukai), or asks to regenerate/fix exam deliverables. This is the entry-point skill for generation — it routes to the specialized skills for each step. Consult it FIRST before any generated exam work, even for partial requests like "make a listening section" or "create N2 grammar questions". For importing an external PDF/past paper, use external-test-import instead.
+description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5, primarily N2). Use this skill whenever the user asks to create, generate, or build a JLPT test, mock exam, 模擬試験, practice test, or any subset of one (言語知識, 文字・語彙, 文法, 読解, 聴解/choukai), or asks to regenerate/fix exam deliverables. This is the entry-point skill for generation — it owns the 4-stage pass structure and the per-stage reading map, and routes to the specialized skills. Consult it FIRST before any generated exam work, even for partial requests like "make a listening section" or "create N2 grammar questions". For importing an external PDF/past paper, use external-test-import instead.
 ---
 
 # JLPT Test Generation (Orchestrator)
@@ -8,239 +8,191 @@ description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5
 ## Import vs generate
 
 If the user wants to **import** an existing external exam (PDF booklet, past
-paper under `refs/JLPT_N2_NEW/`, script PDF, listening MP3) into project format → stop
-here and read `external-test-import/SKILL.md` instead. Those tests live under
-`tests/imported-<slug>/`. This file is only for **generating** new mocks.
+paper under `refs/JLPT_N2_NEW/`, script PDF, listening MP3) into project format
+→ stop here and read `external-test-import/SKILL.md` instead. Those tests live
+under `tests/imported-<slug>/`. This file is only for **generating** new mocks.
 
 ## Read this file to the end before your first tool call
 
 This is the entry point for **all generated** exam work, including partial
-requests. Read it through, then read each specialist `SKILL.md` in full before
-acting in its area — re-read it, rather than working from memory of a previous
-session.
+requests. `AGENTS.md` §0 states the compliance rule and what to report at the
+end. Layout, deliverable filenames, and `refs/` paths: `AGENTS.md` §2–3.
 
-Then run **every** numbered step below, in order. No step is optional because
-its output file already exists: `logs/seeds.json` and a prior test's
-`tests/<test_id>/test_spec.json` are easy to mistake for the current test's — Test 3 skipped 3.5, inherited test 2's harvest and seed, and shipped as
-a re-skin of test 2 with every automated gate green.
+## The 4-stage pipeline
 
-`AGENTS.md` §0 states the full compliance rule and what to report at the end.
+**Run it as an orchestrator, not as a worker.** The context that owns the
+request spawns subagents per the table below and does none of the content work
+itself — no sampling, no authoring, no QA. State flows between stages only
+through files on disk (`tests/<test_id>/test_spec.json`, the Markdown sources,
+this repo's skills) — never through the orchestrator paraphrasing content into
+a prompt, because a paraphrase is exactly the "memory of what I meant" that
+shipped every historical mis-key.
 
-## Directory Structure & File Naming
+Two context-isolation rules are non-negotiable, because both shipped failure
+modes are context problems: (a) **no long single-run authoring** — defects
+cluster in whatever one context writes last (test 4's entire listening half:
+swapped 問題 types, an unanswerable 例, five phantom 解説 quotes); (b) **QA is
+a context that authored nothing** — an author cannot audit its own intent, and
+every shipped mis-key survived exactly that self-review.
 
-All exam files follow a strict directory structure:
+| Stage | Job | Contexts |
+|-------|-----|----------|
+| 1. Blueprint | Sample the pool, harvest web seeds, merge, verify the blend report | 1 subagent |
+| 2. Author | 文字・語彙 (問1–6) \| 文法 (問7–9) \| 読解 (問10–14) \| 聴解 (booklet §聴解 + script) | 4 subagents, **in parallel** |
+| 3. Build + gate | Booklet HTML, MP3, 解答.html, `make check`, whole-paper topic table (below) | 1 subagent |
+| 4. QA | `exam-qa-review` in full — blind-solve first, all 101 items, root-cause table | 1 **fresh** subagent |
 
-- **Reference inputs**: `refs/` directory at workspace root.
-  - Textbooks (`refs/Shinkanzen/`): `refs/Shinkanzen/Shin_Kanzen_Masuta_<level>-<section>.pdf` (e.g. `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Bunpou.pdf`).
-  - Official Past Exam Sets (`refs/JLPT_N2_NEW/`): Booklets, listening scripts, and audio MP3s from the 31 official sittings (e.g., `refs/JLPT_N2_NEW/17.N2 12-2025/17.N2 12-2025 _260603.pdf`, `refs/JLPT_N2_NEW/17.N2 12-2025/JLPT N2 12.2025 Choukai.mp3`).
-  - Textbook Audio: `refs/Shinkanzen/Shin_Kanzen_Masuta_<level>-Choukai-CD/`.
-- **Test outputs**: `tests/<test_id>/` — generated ids have no special prefix
-  (`tests/1/`); imported exams MUST use `tests/imported-<slug>/` (see
-  `external-test-import`).
-- **Operational tracking**: `logs/` directory (`logs/ledger.json` for item history, `logs/seeds.json` for web harvests). Each generated test's blueprint is `tests/<test_id>/test_spec.json`.
-- **Internal execution scripts** (all are also wrapped by Makefile targets — see
-  `make help`; every target takes the test id positionally, e.g. `make sheet 1`):
-  - Item pool sampler: `.agents/item-pool-sampling/scripts/sample_items.py` (`make sample`)
-  - Web seed blender: `.agents/web-topic-research/scripts/merge_seeds.py` (`make merge-seeds`)
-  - Booklet HTML builder: `.agents/exam-booklet-generation/scripts/build_booklet.py` (`make booklet`)
-  - Audio generator: `.agents/choukai-mp3-generation/scripts/make_choukai_mp3.py` (`make mp3`)
-  - Answer-sheet builder: `.agents/interactive-answer-sheet/scripts/build_interactive.py` (`make sheet`)
-  - Exam server (ALL tests, no test id): `.agents/interactive-answer-sheet/scripts/serve_sheet.py` (`make serve`)
-  - Grader: `.agents/exam-answer-grading/scripts/grade_answers.py` (`make grade`)
+Every QA finding adds a fix + re-review round: the fix may reuse an authoring
+context; the re-review of the touched items must again be fresh eyes. The loop
+ends only at `QA: PASS` — and PASS closes the *paper*, not the *generator*: an
+open entry in QA's root-cause table blocks the next generation run until
+applied or rejected with a reason.
 
-### Standard Deliverables in `tests/<test_id>/` (Japanese File Names Mandatory)
+**Fallback with no subagents:** approximate the table with new sessions, one
+stage per session, handing off through disk. The one split that survives every
+fallback: **authoring and QA in different contexts.**
 
-| # | File Name | Description / Source |
-|---|-----------|----------------------|
-| 1 | `言語知識・読解.html` | Booklet rendered from Markdown source `tests/<test_id>/言語知識・読解.md` (no PDF) |
-| 2 | `聴解.html` | Booklet rendered from Markdown source `tests/<test_id>/聴解.md` (no PDF) |
-| 3 | `聴解スクリプト.txt` | Pure official-style narration text |
-| 4 | `聴解.mp3` | Listening audio generated from file 3 |
-| 5 | `聴解_チャプター.json` | Per-問題/item offsets in the MP3 (written with it) |
-| 6 | `解答.html` | The ONE merged problem+answer sheet — full 101-question exam with radio bubbles, audio player, in-page 180pt grading (`build_interactive.py`) |
-| 7 | `採点結果.json`, `ユーザー解答.json` | Written on 「採点する」 from `解答.html`, or by `grade_answers.py`. Both are results of taking the exam, not of generating it |
+## Per-stage reading map
 
-## Workflow (follow in order)
+Each subagent reads exactly these files at the START of its stage (from disk,
+never from the orchestrator's summary), and nothing else:
 
-The steps below are distributed over **at least seven passes** — fresh contexts
-with one bounded job each. **Run them as an orchestrator**: the context that
-owns the request spawns one subagent per pass and does none of the passes'
-content work itself; state flows between passes only through files on disk. See
-`AGENTS.md` §6 for the pass table and orchestrator rules. The split that is
-never optional: the QA pass (step 9.5) must not be a context that authored
-anything.
+| Stage | Reads | Writes |
+|-------|-------|--------|
+| 1 Blueprint | `exam-blueprint/SKILL.md` | `tests/<id>/test_spec.json`, `logs/ledger.json`, `logs/seeds.json` |
+| 2 文字・語彙 | `test_spec.json` + `question-authoring/SKILL.md` + its `references/moji-goi.md` + `jlpt-exam-structure/SKILL.md` | 問1–6 fragment of `言語知識・読解.md` |
+| 2 文法 | same, with `references/bunpou.md` | 問7–9 fragment |
+| 2 読解 | same, with `references/dokkai.md` | 問10–14 fragment |
+| 2 聴解 | `test_spec.json` + `question-authoring/SKILL.md` + `references/choukai-items.md` + `choukai-audio/SKILL.md` + `jlpt-exam-structure/SKILL.md` | `聴解.md`, `聴解スクリプト.txt` |
+| 3 Build+gate | `exam-app/SKILL.md`, `choukai-audio/SKILL.md` (synthesis §), this file's topic-table § | `言語知識・読解.md` (merged), the HTML/MP3 artifacts, `logs/topics.json` row, gate report |
+| 4 QA | `exam-qa-review/SKILL.md` (which routes to what it needs) | `qa/qa-report-<id>.md` |
 
-1. **Load the format spec** → read `jlpt-exam-structure/SKILL.md`.
-   Never write a single question before knowing section counts and booklet conventions.
-2. **Calibrate difficulty & benchmark consistency** → read `reference-book-reading/SKILL.md`.
-   Locate reference PDFs in `refs/Shinkanzen/` for vocabulary/grammar inventory, and benchmark passage length, distractor structure, and formatting against the official past exams in `refs/JLPT_N2_NEW/`.
-   Run `official-audio-analysis/SKILL.md` across `refs/JLPT_N2_NEW/**/*.mp3` to ensure pacing parameters match official standards.
-3. **Sample item pool & answer key blueprint** → read `item-pool-sampling/SKILL.md`.
-   Run: `python3 .agents/item-pool-sampling/scripts/sample_items.py --seed <seed> --test-id <id>`
-   This outputs `tests/<test_id>/test_spec.json` and updates `logs/ledger.json`.
-   Pool growth / one-off draws: `make classify ITEM=… CATEGORY=… STAGE=1`, then
-   sample (≤20% adjunct per category) or `make promote-adjunct` — see
-   `item-pool-sampling` **Adjunct staging**.
-   **Use a seed no previous test used** (`logs/ledger.json` records them). The
-   ledger keeps pool items from repeating whatever seed you pass, but step 3.5's
-   blend is a pure function of the seed, so reusing one replays the previous
-   test's web topics into the same slots. `make check` fails only when a seed is
-   reused against the SAME harvest (and on any harvest reuse) — a repeated seed
-   with a fresh harvest passes green, so picking a fresh seed is on you; tests 2
-   and 3 shipped sharing seed 20260804 that way.
-3.5. **Research fresh topics (Optional / Web available)** → read `web-topic-research/SKILL.md`.
-   **Re-harvest `logs/seeds.json` for every test** — it is a per-test input, not
-   a repo fixture. Leaving test N-1's harvest in place is what turned test 3
-   into a re-skin of test 2.
-   Harvest 18-25 real-world topic seeds (**≥6 distinct source domains** — fewer
-   cannot fund every surface's 30% floor at `MAX_PER_DOMAIN`=2) into
-   `logs/seeds.json` and run:
-   `python3 .agents/web-topic-research/scripts/merge_seeds.py logs/seeds.json tests/<test_id>/test_spec.json`
-   (or `make merge-seeds TEST=<id>`, which uses exactly those two paths)
-   This blends web seeds across ALL surfaces (reading topics, listening scenarios,
-   問題9 cloze topic, 問題14 flyer texture, 問題4 settings, 問題1-8 carrier-sentence
-   texture) with enforced balance caps: web share 30-60% per surface, pool
-   (Shin-Kanzen-calibrated) side always ≥40%, ≤2 seeds per source domain.
-   Tested items (grammar/vocab/kanji/idioms) always remain pool-sampled.
-   Check the printed blend report before authoring.
-4. **Author the content** → read `question-authoring/SKILL.md`.
-   Write Markdown sources (`言語知識・読解.md`, `聴解.md`) in `tests/<test_id>/`. Author ONLY items specified in `tests/<test_id>/test_spec.json` and set answer keys according to `answer_positions`.
-   **Grammar carriers must match official length** (問題7 avg ~43 JP chars /
-   stem ≥30; 問題9 cloze ~500–700). Short one-clause stems are a known shipped
-   defect — see `question-authoring` Benchmark section. `make check` enforces
-   the floor.
-   **読解 must match official apparatus** (calibrate against
-   `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`): dozens of `（注N）`, at least
-   one `（中略）` in 中文/長文, 問題11 as 4×2, 問題13 ~900–1100 JP chars,
-   問題7 including dialogue/setting stems. Tests 1–4 under-shipped notes and
-   長文 length even after grammar-stem lengthening.
-   **Every distractor must be a plausible near-miss, not a sniff-test fail**
-   (`question-authoring` "Distractor plausibility") — same functional/domain/
-   tone category as the key, never eliminable on sight for an unrelated
-   reason. This governs 問1-6 and every 聴解 dialogue equally.
-   **問題9's four blanks must each test a different grammatical/functional
-   category** (connective / modal / content-inference / idiom — see
-   `question-authoring`'s 問題9 rule); at least one blank must require the
-   whole passage's logic. **問題11** splits its two questions per passage into
-   one factual + one opinion question, and every `（注N）` gloss must annotate
-   a word that appears in that passage. **問題14** always needs ≥2 constraints
-   combined, grounded in the source text as printed.
-   **Author in section-sized passes, not one long run.** Defects cluster in
-   whatever is generated last (test 4: the entire listening half — swapped
-   問題 types, an unanswerable 例, five phantom 解説 quotes). Finish 文字・語彙,
-   then 文法, then 読解, then 聴解, re-reading the spec and the relevant skill
-   section at the start of each pass instead of trusting a long context's
-   memory of them. With subagents available, one per section is the rule
-   (AGENTS.md §6); sections may share a context only in the no-subagent
-   fallback.
-5. **Write the listening script** → read `choukai-script-writing/SKILL.md`.
-   Create `tests/<test_id>/聴解スクリプト.txt`. It must contain ONLY spoken exam text.
-6. **Render the booklet HTML (no PDF)** → read `exam-booklet-generation/SKILL.md`.
-   Run: `python3 .agents/exam-booklet-generation/scripts/build_booklet.py tests/<test_id>/言語知識・読解.md tests/<test_id>/聴解.md`
-   (or `make booklet <test_id>`). The browser's Cmd-P is the only renderer — do
-   not reintroduce weasyprint/wkhtmltopdf.
-7. **Generate MP3 Audio** → read `choukai-mp3-generation/SKILL.md`.
-   Run: `python3 .agents/choukai-mp3-generation/scripts/make_choukai_mp3.py tests/<test_id>/聴解スクリプト.txt`
-   Also writes `聴解_チャプター.json` (per-item offsets) for the answer sheet.
-8. **Build the interactive answer sheet** → read `interactive-answer-sheet/SKILL.md`.
-   Run: `python3 .agents/interactive-answer-sheet/scripts/build_interactive.py tests/<test_id>`
-   (or `make sheet <test_id>`). Produces the single merged `解答.html` — the whole
-   booklet with a radio bubble per choice, an audio player for 聴解, and in-page
-   180-point grading. Re-run after ANY Markdown edit, like the booklet HTML.
-9. **Gate the test** → run `make check`.
-   It validates every test on disk: answer keys parse, keys sit where
-   `answer_positions` put them, no question repeats an option, 問題8 keys name
-   the option on ★, the script's instructions match the booklet's, options are
-   spoken only where the booklet prints none, and both graders agree. Fix
-   failures before step 9.5 — a mis-keyed item is invisible once the MP3 is
-   built. WARN lines are part of the output: resolve each or justify it.
-9.5. **Adversarial content QA** → read `exam-qa-review/SKILL.md`. NOT optional:
-   tests 2, 3, and 4 all shipped content defects through a green gate. Run it
-   with fresh eyes — a subagent or new session that did not author the test and
-   reads the files from disk. Fix findings in the sources, regenerate (steps
-   6-8), re-run `make check`, and only then move on. A test that has not
-   survived this pass is not done, whatever the gate says.
-10. **Take the exam & grade** → read `exam-answer-grading/SKILL.md`.
-   Start the server with `make serve` — it takes no test id; one server lists
-   every test in `tests/` with its progress. Pick this test, answer, and press
-   「採点する」: the page switches to its result screen and saves `採点結果.json`
-   + `ユーザー解答.json` into `tests/<test_id>/`. CLI grading stays available for
-   offline/batch runs: `make grade <test_id>`
-   (= `grade_answers.py --test-dir tests/<test_id>`).
+Stage-2 authors write **section fragments** to separate files
+(`tests/<id>/_sections/<問題range>.md`). Each fragment is two parts: the
+booklet body for its 問題 range, then its answer-key/解説 table rows under a
+literal marker line `<!-- KEY -->`. Stage 3 merges mechanically, no judgment:
+all bodies in booklet order (問1→問14), then ONE key heading
+(`jlpt-exam-structure` owns its format) at the END of `言語知識・読解.md`,
+followed by the key tables in the same order — the sheet builder's
+`strip_key()` truncates at that single heading, so a fragment must never carry
+its own key heading. Parallel authors never write to the same file. The 聴解
+author owns both `聴解.md` and `聴解スクリプト.txt` complete (body + keys at
+end; they must stay synchronized — `choukai-audio`).
 
-## One topic, one surface (whole-paper pass before step 9)
+### Subagent prompt template (all stages)
 
-`make check` cannot see this, and it is the failure mode that survives every
-other gate: the same content appearing on two surfaces of one paper. Reading the
-問題14 flyer must not hand the examinee a 聴解 answer, and no topic may be tested
-twice. Test 2 shipped with a フードドライブ listening item whose keyed first
-action was spelled out verbatim in the 問題14 flyer's fine print, and with the
-same デジタルデトックス essay used for both the 問題9 cloze and 問題10(1).
+> Read, in full, from disk: [stage's reading-map row]. Your inputs are
+> [files]; your only outputs are [files]. Author ONLY what
+> `tests/<id>/test_spec.json` prescribes — items, topics, and
+> `answer_positions` are the contract; do not substitute, and treat every
+> `origin` field as binding. Report at the end: what you read, what you ran,
+> what you wrote, and anything you skipped and why.
 
-Before running the gate, list every surface's topic in one place — 問題9, each
-問題10-13 passage, the 問題14 flyer, each 聴解 item — and check:
+## Stage 1 — blueprint rules
 
-- **No topic appears twice**, even in a different register (an essay and a
-  monologue on the same subject are still a repeat).
-- **No topic repeats the PREVIOUS test either.** Same table, one column per
-  test. Test 3 duplicated ten of test 2's eleven web topics — including the
-  同一 slot for four 聴解 items — because the harvest was never refreshed
-  (see `web-topic-research` step 0). Cross-test repeats are invisible to every
-  automated check; this table is the only place they surface.
-- **No condition, number, or rule is shared** between the flyer and a listening
-  item. Shared *setting* is tolerable; shared *decisive detail* is not.
-- **Two 聴解 items may not run the same errand.** The 聴解 half is its own
-  paper: test 4 put a 不動産屋 call about a flat near the university under a
-  6万円 budget in 問題1-4番, and choosing a flat by 大学に近い/家賃 in 問題5-3番.
-  Same table, one row per 聴解 item, same rule.
-- **Errand ARCHETYPES repeat across tests even when subjects differ — check
-  them two tests back.** A "phone call to reschedule an appointment" ran in
-  tests 1, 2, AND 3 (訪問/内見/チェックイン); "choose a model at the store"
-  ran in tests 1 and 2 (炊飯器/空気清浄機); municipal 防災 and store-format
-  reinvention each ran three papers straight; the fictional みどり市 headlined
-  three consecutive 問題14/掲示 surfaces. Add a row-shape column to the table:
-  the errand's shape (reschedule call, model choice, campaign flyer…), not just
-  its subject, and reject a shape that appeared in either of the two previous
-  tests.
-- **The A/B slot (問題12) needs its own cross-test column.** It is one topic per
-  paper and the easiest to repeat: test 3 argued 労働時間, test 4 arrived with
-  リモートワーク vs 出社 — the third paper in a row on 働き方 — while 問題11(1)
-  was already built on テレワーク. Check 問題12 against the previous test's 問題12
-  specifically, not just against the pile.
-- **A duplicated seed in the spec is a defect, not a spare.** If two spec
-  entries name the same topic, `merge_seeds.py` was re-run over its own output;
-  re-run it (it now restores the pool draw first) instead of inventing a topic
-  for the starved surface. Test 4's 問題12 and 問題13 were authored off-contract
-  for exactly this reason. `make check` now fails on a spec that repeats itself.
-- Each `tests/<test_id>/test_spec.json` topic/scenario seed feeds **exactly one** surface.
-  There are more seeds than surfaces on purpose — if a topic looks used twice,
-  an unused seed is sitting in the spec. `cloze_topic`'s `origin` is binding
-  too: a `"pool"` cloze must not borrow a web reading seed.
+Commands (details in `exam-blueprint/SKILL.md`):
 
-## Invariants (apply to every run)
+```bash
+make sample <id> SEED=<n>          # -> tests/<id>/test_spec.json + ledger
+# re-harvest logs/seeds.json (web research), then:
+make merge-seeds <id>              # blend web seeds into every spec surface
+```
 
-- Japanese file names must be used for all files in `tests/<test_id>/` (`言語知識・読解.md`/`.html`, `聴解.md`/`.html`, `聴解スクリプト.txt`, `聴解.mp3`, `解答.html`).
-- Markdown files in `tests/<test_id>/` are the editable source; regenerate the booklet HTML **and** `解答.html` after ANY content edit.
-- **Every source edit carries its rebuild in the same change.** Editing
-  `聴解スクリプト.txt` requires `make mp3 <id>`; editing either `.md` requires
-  `make booklet <id> && make sheet <id>`. **A commit that touches a source
-  without its artifact is a defect, not a to-do**: commit `4df5631` rewrote the
-  聴解 instructions in `聴解スクリプト.txt` for tests 1, 2, 3, 4 **and**
-  the since-deleted July 2025 import, and regenerated the MP3 for test 3 only — so four
-  shipped papers speak superseded 問題N instructions while their booklets print
-  the new ones. Nothing caught it for a whole QA round. The artifacts now carry
-  the sha1 of the bytes they were built from (`script_sha` in
-  `聴解_チャプター.json`, `<!-- src_sha: <name>=<sha> -->` in every generated
-  HTML) and `make check` compares them, so a missing rebuild is now a gate
-  failure — but the gate is the backstop, not the workflow: rebuild in the same
-  change. Never hand-edit a sha.
-- Answer keys live at the END of both Markdown sources (`言語知識・読解.md`, `聴解.md`), clearly separated, never inline. `build_interactive.py` aborts if it cannot find the key heading to truncate.
-- The booklet (`聴解.md`) and the script (`聴解スクリプト.txt`) must stay synchronized:
-  printed 例 options ↔ spoken 例; any script item change requires a key check.
-- After edits, always re-run the dry-run validators described in
-  `choukai-script-writing` and `choukai-mp3-generation` (block count, speaker
-  map coverage, pause distribution) before shipping.
-- Never copy questions from copyrighted textbooks in `refs/`. They are
-  calibration references only; all items must be original.
+- **Use a seed no previous test used** (`logs/ledger.json` records them). The
+  blend is a pure function of `(seed, logs/seeds.json)`: reusing a seed replays
+  the previous test's web topics into the same slots. The gate only fails a
+  reused seed against the SAME harvest — a fresh seed is on you (tests 2 and 3
+  shipped sharing seed 20260804).
+- **Re-harvest `logs/seeds.json` for every test** — it is a per-test input, not
+  a repo fixture. Test 3 inherited test 2's harvest and shipped as its re-skin.
+- Read the printed **blend report** before authoring: 30–60% web per surface,
+  pool side ≥40%, ≤2 seeds per domain. Re-harvest and re-run if it warns.
+- Offline: skip harvest/merge; the pure-pool spec is valid. Say so in the
+  final report.
 
+## Stage 2 — authoring rules
 
+The construction rules live in `question-authoring` (core + the per-section
+reference file from the reading map). Binding here:
+
+- Author ONLY items in `test_spec.json`; keys go where `answer_positions` says.
+- Tested items (grammar/vocab/kanji) are ALWAYS the pool-sampled ones; web
+  seeds supply only topics, settings, and facts (`exam-blueprint`).
+- Answer keys go at the END of each Markdown source, never inline
+  (`jlpt-exam-structure` owns the key-table format).
+
+## Stage 3 — build + gate
+
+```bash
+make booklet <id> && make mp3 <id> && make sheet <id> && make check
+```
+
+- `make check` validates every test on disk; **read every line, including
+  WARN** — resolve each warning or justify it in the report. Fix failures
+  before stage 4: a mis-keyed item is invisible once the MP3 is built.
+- Then do the **whole-paper topic pass** (next section) — no script sees it —
+  and **append this test's row to `logs/topics.json`** from the finished
+  sources: `surfaces` (each 読解 passage, 問題9, 問題14, every 聴解 item incl.
+  例, as one noun phrase each) and `shapes` (each 聴解 item's errand shape).
+  Row format and why the file exists: `exam-blueprint` §"logs/topics.json" —
+  the next test's `merge_seeds.py` reads it to refuse repeated subjects.
+
+## One topic, one surface (whole-paper pass, stage 3)
+
+The failure mode that survives every automated gate: the same content on two
+surfaces of one paper, or recycled from recent papers. List every surface's
+topic in ONE table — 問題9 cloze, each 問題10–13 passage, the 問題14 flyer,
+each 聴解 item — with one column per test (this one and the two before it),
+and check:
+
+- **No topic appears twice in this paper**, even in a different register (an
+  essay and a monologue on one subject are still a repeat). Test 2 shipped the
+  問題14 flyer spelling out a 聴解 item's keyed answer in its fine print, and
+  one デジタルデトックス essay serving both 問題9 and 問題10(1).
+- **No topic repeats the previous test.** Test 3 duplicated ten of test 2's
+  eleven web topics, four in the same 聴解 slots.
+- **No condition, number, or rule shared** between the 問題14 flyer and any
+  聴解 item. Shared setting is tolerable; shared decisive detail is not.
+- **Two 聴解 items may not run the same errand**, and errand **archetypes**
+  (reschedule call, model choice at a store, campaign flyer…) must not repeat
+  within the last two tests — add a shape column, not just a subject column
+  (a reschedule-an-appointment call ran in tests 1, 2, AND 3).
+- **問題12 (A/B) gets its own cross-test column** — it is one topic per paper
+  and repeated three papers running (働き方) once already.
+- **A duplicated seed in the spec is a defect**: it means `merge_seeds.py` ran
+  over its own output. Re-run it; never invent a topic for a starved surface.
+  Each spec seed feeds exactly one surface, and `origin` is binding (a
+  `"pool"` cloze must not borrow a web reading seed).
+
+## Stage 4 — QA
+
+Read `exam-qa-review/SKILL.md` in full and run it with fresh eyes. NOT
+optional: tests 2, 3, and 4 all shipped content defects through a green gate.
+A test that has not survived this pass is not done, whatever the gate says.
+
+## Taking the exam (after QA)
+
+`make serve` (no test id — one server lists every test), answer, press
+「採点する」: the page saves `採点結果.json` + `ユーザー解答.json` into
+`tests/<id>/`. CLI: `make grade <id>`. See `exam-app`.
+
+## Invariants (every run)
+
+- Japanese file names for all deliverables in `tests/<test_id>/`
+  (table: `AGENTS.md` §2).
+- Markdown is the single editable source. **Every source edit carries its
+  rebuild in the same change**: `聴解スクリプト.txt` → `make mp3 <id>`; either
+  `.md` → `make booklet <id> && make sheet <id>`. The artifacts carry the sha
+  of the bytes they were built from (`script_sha`, `<!-- src_sha -->`) and the
+  gate compares them — but the gate is the backstop, not the workflow. Never
+  hand-edit a sha. (Commit `4df5631` rewrote the script for five papers and
+  rebuilt one MP3; four shipped speaking superseded instructions.)
+- `聴解.md` and `聴解スクリプト.txt` stay synchronized: printed 例 options ↔
+  spoken 例; any script item change requires a key check.
+- After script/audio edits, re-run the dry-run validators in `choukai-audio`
+  (block count, speaker-map coverage, pause distribution).
+- Never copy questions from the copyrighted textbooks in `refs/` — calibration
+  only; all items original. Web sources give WHAT to write about, never the
+  words.
+- Commit `tests/<test_id>/` and the updated `logs/` together with the pipeline
+  changes that produced them.

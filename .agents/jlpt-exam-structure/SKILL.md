@@ -18,11 +18,11 @@ i.e. 4 passages × 2), 即時応答 12 (**11**), 聴解 統合理解 4 (**3** an
 2 items), totals 75+32 (**71+30**). The 聴解 counts are checkable without
 reading a script: the official audio puts an answer pause after scored items
 only, so its histogram is 12 × 12 s (問題1+2), 17 × 8 s (問題3+4+問題5 1番),
-7 × 20 s (問題2 option-reading) — see `official-audio-analysis`.
+7 × 20 s (問題2 option-reading) — see `choukai-audio`.
 
 **The counts below are the CURRENT era's, and the exam has three.** Measured
 over all 31 sittings 7/2010–12/2025
-(`reference-book-reading/references/official_calibration.md` §1):
+(`question-authoring/references/official_calibration.md` §1):
 
 | Era | sittings | 言語知識・読解 | 聴解 |
 |---|---|---|---|
@@ -38,10 +38,9 @@ the current 大問のねらい PDF has dropped the 小問数 column entirely. **
 average a 読解 length or a stem-shape frequency across eras** — for anything
 measured, the window is the 7 sittings 12/2022–12/2025.
 
-- **言語知識・読解**: Source `tests/<test_id>/言語知識・読解.md` → Booklet `tests/<test_id>/言語知識・読解.html`
-- **聴解 (Booklet)**: Source `tests/<test_id>/聴解.md` → Booklet `tests/<test_id>/聴解.html`
-- **聴解 (TTS Script)**: `tests/<test_id>/聴解スクリプト.txt` → Output MP3 `tests/<test_id>/聴解.mp3`
-- **Answer sheet**: both Markdown sources → the ONE merged `tests/<test_id>/解答.html` (there are no per-section `*_解答.html` files)
+The deliverable file names and their sources live in **AGENTS.md §2**
+(Deliverables Naming Convention) — the single copy; this file no longer
+restates the table.
 
 ## 言語知識(文字・語彙・文法)・読解 — 105 min, 71 questions
 
@@ -88,7 +87,7 @@ no `（中略）` at all — treat that as under-calibrated even when keys parse
 (Q57–64) — but that shape is **younger than the item counts**: 問題11 ran **3
 passages** (3/2/3 or 3/3/2 items) through 7/2022 and became 4×2 at **12/2022**,
 with its length jumping from 1778–2179 to 2449–2685 JP chars
-(`reference-book-reading/references/official_calibration.md` §1–2). The
+(`question-authoring/references/official_calibration.md` §1–2). The
 instruction line sometimes still says `(1)から(3)`; **count passage markers, never
 trust the instruction** — instruction lines are unreliable across the archive.
 Generated mocks must author **4×2**
@@ -109,7 +108,7 @@ in 問題11 at all. Authoring procedure and the gate check: `question-authoring`
 問題11 stems / `tools/check_consistency.py`.
 
 **Correction — measured across the archive (12/2022–12/2025, n = 7 sittings /
-56 stems; `.agents/reference-book-reading/references/official_calibration.md`
+56 stems; `.agents/question-authoring/references/official_calibration.md`
 §4).** The paragraph above was derived from July 2025 alone and two of its
 claims do not survive:
 
@@ -217,14 +216,14 @@ Two prohibitions follow, both of which a generated paper has broken:
   **Spoken ≠ same pacing**: measured on the official Dec 2025 audio, 問題3 and
   問題5 leave ~3.0 s between choices, while 問題4's three choices are read
   continuously (1.0–2.0 s apart, i.e. ordinary dialogue spacing). That is why
-  `GAP_BETWEEN_SPOKEN_CHOICES` in `choukai-mp3-generation` applies to 問題3/問題5
+  `GAP_BETWEEN_SPOKEN_CHOICES` in `choukai-audio` applies to 問題3/問題5
   only — not an oversight; do not "fix" it.
 - 問題5 2番 options are printed only — do not speak them.
 - Exam closes: 「これで、聴解試験を終わります。」
 
 ## 問題N instruction lines (canonical — transcribed from `refs/JLPT_N2_NEW/`)
 
-These are the texts `choukai-script-writing` tells you to paste into BOTH
+These are the texts `choukai-audio` tells you to paste into BOTH
 `聴解.md` and `聴解スクリプト.txt`. Copy from here, never from a previous test:
 `make check` only proves the booklet and the script agree with **each other**, so
 a paper where both drift the same way passes green, and the tests on disk do
@@ -270,7 +269,7 @@ Two consequences the pipeline actually uses:
   抽象度の高い文章. A 問題13 that reads as dense abstraction is off-level even at
   the right character count.
 - 聴解 dialogue is **自然に近い** speed, not N1's 自然な speed — see
-  `official-audio-analysis` step 5 before touching any `SPEAKER_MAP` rate.
+  `choukai-audio`'s audio-analysis step before touching any `SPEAKER_MAP` rate.
 - Answer grids include an 例 column with the sample answer pre-marked — and the
   pre-marked number MUST equal the number the announcer declares
   (「最もよいものは◯番です」): the grid and the announcement are one
@@ -299,6 +298,9 @@ Two consequences the pipeline actually uses:
 - **Passage Numbered Markers (1-to-1)**: Every numbered marker (`①**...**`, `②**...**`) in a reading passage MUST match 1-to-1 with a question stem. Do not place unused/orphaned markers in passages.
 
 ## Answer Key & Explanation Table Structure
+
+This section is the **single copy** of the answer-key table format —
+`question-authoring` points here rather than restating it.
 
 Both booklets must conclude with structured table-formatted answer keys and
 explanations, opened by a **heading whose text starts with `解答` or `正解`**

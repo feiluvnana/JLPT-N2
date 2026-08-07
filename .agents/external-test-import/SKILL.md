@@ -100,11 +100,11 @@ Write the standard deliverable sources (same shapes as generated tests):
 |------|------|
 | `言語知識・読解.md` | 問題1–14, 71 keys at end under `# 解答…` |
 | `聴解.md` | Booklet options + marksheet 例 + `# 【正解・解説】` (30 keys) |
-| `聴解スクリプト.txt` | Spoken-only script (`choukai-script-writing` block rules) |
+| `聴解スクリプト.txt` | Spoken-only script (`choukai-audio` block rules) |
 
 Mirror an existing test (e.g. `tests/1/`) for headings, option layout, and key
 tables. Defer format facts to `jlpt-exam-structure`. Defer script block rules to
-`choukai-script-writing`.
+`choukai-audio`.
 
 **Fidelity rules**
 
@@ -219,10 +219,10 @@ to the sheet's answer (see July 2025 問題5 質問1).
 
 | Step | Skill / command |
 |------|-----------------|
-| Script shape | `choukai-script-writing` |
-| Booklet HTML | `exam-booklet-generation` / `make booklet <id>` |
-| TTS MP3 (if no external audio) | `choukai-mp3-generation` / `make mp3 <id>` |
-| Answer sheet | `interactive-answer-sheet` / `make sheet <id>` |
+| Script shape | `choukai-audio` |
+| Booklet HTML | `exam-app` / `make booklet <id>` |
+| TTS MP3 (if no external audio) | `choukai-audio` / `make mp3 <id>` |
+| Answer sheet | `exam-app` / `make sheet <id>` |
 | Gate | `make check` |
 | Transcription QA | `exam-qa-review` (fidelity + solvability, not pool originality) |
 

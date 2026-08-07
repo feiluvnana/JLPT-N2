@@ -1,0 +1,450 @@
+---
+name: exam-blueprint
+description: Single owner of WHAT each exam tests — RANDOM, non-repeating pool sampling of grammar points, vocabulary, kanji, listening scenarios, and reading topics, answer-position balance, AND the web topic harvest & blend that keeps papers fresh. Use BEFORE authoring any questions, whenever generating a new test, whenever the user asks for "another test", "random questions", "different questions", or says tests repeat, feel stale, or feel textbook-bound. Never let the language model choose items from memory — model choices are heavily biased toward the same famous items and are NOT random; selection must come from scripts/sample_items.py, and web freshness from scripts/merge_seeds.py under hard balance caps.
+---
+
+# Exam Blueprint — pool sampling + web topic blend
+
+## Why this skill exists, and the invariant it owns
+
+A model asked to "pick 12 N2 grammar points" picks nearly the same 12 every time, reuses
+the same scenarios, and biases keys toward positions 2-3 — determinism wearing a
+randomness costume. And pools alone guarantee rotation, not creativity. Hence five
+mechanisms: **explicit pools** (`references/pools.json`), **seeded RNG sampling**
+(`scripts/sample_items.py` — code, not vibes), an **LRU coverage ledger**
+(`logs/ledger.json`), **answer-position balancing**, and the **web blend**
+(`scripts/merge_seeds.py`).
+
+**Web decorates, pools test — this skill owns that invariant.** Tested linguistic items
+(grammar, vocabulary, kanji, idioms/keigo) ALWAYS come from `pools.json`, calibrated
+against the Shin Kanzen Master inventories; the web supplies only topics, settings, and
+simplified facts around them — how N2 level survives any topic. Every touched surface
+stays a **balanced blend**: 30-60% web (pool ≥40%), ≤2 topic-level seeds per source
+domain — enforced by `merge_seeds.py`, not by judgment. Where this sits in the generation
+workflow is owned by `jlpt-test-generation` (pass table).
+
+---
+
+# Part I — The pool and the draw
+
+## Pool entries stay inside the N2 band
+
+Do not add N1-only forms or N3–N5 drills to `references/pools.json` — the banned lists
+live in `question-authoring/references/level_band_grammar.txt`. `make check` fails papers
+whose 問題7–9 keys hit that list **and checks the pool itself**: a `TOO_EASY` form
+(`〜ば〜ほど`) sat in `grammar_p8` for four tests because the paper check only matches the
+keyed *option string*. A banned pool form is a defect when committed, not when drawn.
+
+**A `kanji_reading` entry must come with a writable distractor set, or it is not a pool
+entry.** The 問題1 two-branch distractor rule is owned by `question-authoring`; for some
+entries its intersection is **empty**, and an author who has already drawn the target
+invents non-words instead of rejecting it (test 4's 「労わる」). Before adding or keeping
+an entry, write its three distractors with their source kanji; if you cannot, it is out.
+
+**A pool spelling must match its `references/openjlpt/vocab-n*.json` headword.** 問題1
+tests a reading off a printed spelling, so okurigana is part of the item (`労わる` vs the
+corpus's `労る`). Fix the pool, never just the paper.
+
+### The `kanji_reading` validity rule (audited 2026-08-06)
+
+Test 4 shipped three unanswerable 問題1 items (`領(えり)`, `線(すじ)`, `爆(は.ぜる)`)
+because nothing checked the printed kanji actually *has* the keyed reading. Every entry
+must satisfy all four:
+
+1. **Shape.** `語(よみ)`: `語` contains a kanji; `よみ` is hiragana, **no `.` and no
+   katakana** (a dot is a raw KANJIDIC kunyomi with okurigana detached; katakana is a
+   bound-morpheme on-reading dump — neither is a printable word).
+2. **Attested.** `(語, よみ)` is a headword + `reading` pair in
+   `references/openjlpt/vocab-n1|n2|n3.json` — decisive for **single-kanji** entries,
+   which have no fallback (`針(はり)` is a headword and legitimate; `領(えり)` is not).
+2b. **One 語, two 訓読み → keep the LOWER-graded reading.** `潜る(くぐる)` is attested —
+   at N1, beside N2 `潜る(もぐる)`; the harder member turns the item into "which reading
+   did the examiner mean". Keep the lowest-graded entry, delete the others; rank with
+   `vocab-n1|n2|n3.json` levels only. `question-authoring` carries the paper-side half,
+   but the pool entry is the defect — repair it here.
+3. **In band, if the corpus misses it.** A **multi-character** word absent from the
+   corpus stays only when its reading is the ordinary dictionary reading on 常用 音訓
+   *and* the word is corroborated by the official archive under `refs/JLPT_N2_NEW/`.
+   Corpus absence is often a gap (概要, 潜む); zero hits in **both** sources is the
+   removal signal.
+4. **Drawable.** Three distractors writable (see `question-authoring`).
+
+**Never use `references/openjlpt/kanji-n*.json` as the 音訓 authority** — it is
+KANJIDIC-derived, carries 表外 readings (the source of `領: えり`), and can refute an
+okurigana shape but never *confirm* an entry. To verify a candidate, index
+`word → readings` over `vocab-n1|n2|n3.json` and require a hit; for a corpus miss, grep
+the archive PDFs via `pdftotext` — calibration only, never copy an official item.
+
+The 2026-08-06 audit removed **103** of 218 entries and repaired `免れる(まぬがれる)` →
+`免れる(まぬかれる)`; 112 remain, 22× headroom over `DRAW` of 5. **`kanji_reading` is the
+only category whose parenthetical is a reading** — `納める(税金)` is context,
+`詫びる(謝る)` a synonym, `諸〜(諸問題)` an example; the rule does not apply to them.
+
+## One grammar point, one pool entry (no spelling variants)
+
+The sampler's cross-category `taken` guard compares **raw strings**, so two spellings of
+one point are two items to the code: `grammar_p7` carried `〜気味` + `〜ぎみだ` and test 3
+keyed one point twice in one 問題7.
+
+- **One spelling per point.** Not kanji *and* kana (`〜に伴って` / `〜にともなって`), not
+  with *and* without an optional tail (`〜つつも` / `〜つつ(も)`), not two conjugations of
+  one verb (`〜に沿って` / `〜に沿う`).
+- **Cross-category overlap must be spelled identically** — overlap is legal, and `taken`
+  keeps an item to one 問題 per test, but only byte-identical entries count
+  (`〜わりに(は)` beside `〜わりに` defeated it).
+- **A parenthetical is a disambiguating gloss, never a variant.** `〜次第だ` (depends on)
+  in `grammar_p7`, bare `〜次第` (as soon as) in `grammar_p8`.
+
+`make check` fails a grammar entry hitting `TOO_HARD`/`TOO_EASY` without an `ALLOW`, and
+two same-category entries whose skeletons match after stripping `〜`/`～` and
+parentheticals. **The skeleton rule is a floor** — it misses `〜がち`/`〜がちだ` and
+`〜気味`/`〜ぎみだ`, the pairs that shipped; read new entries against the rules above.
+
+Known residue, left deliberately (audited 2026-08-06): five `grammar_p7` × `grammar_p8`
+pairs where p8's labelled pattern contains p7's bare form — do not add more, and
+`--reroll grammar_p8` if a drawn 問題8 pattern repeats a 問題7 point; `taken` is
+raw-string (`head()` is recency-only), so `交渉(こうしょう)` and `交渉` can both land in
+one paper — the fix belongs in `sample_items.py`, still open; `〜に過言ではない` in
+`grammar_p7` is malformed (`〜と言っても過言ではない`) — do not author from it;
+`〜ずくめ(黒ずくめ)` matches `TOO_HARD` `ずくめ` but is a 問題3 affix — the band check
+stays scoped to the grammar categories (elsewhere it produces false hits).
+
+## Topic themes — the closed vocabulary (this skill owns it)
+
+`reading_topics` and `listening_scenarios` entries are **objects, not bare strings** —
+`{"topic": "在宅勤務と切り替え", "theme": "働き方"}` — and `theme` comes from a **CLOSED**
+list of twenty values, defined once in `scripts/level_data.py` as `THEMES`:
+
+| | | | |
+|---|---|---|---|
+| 睡眠・健康 | 医療・福祉 | 食 | 環境 |
+| 防災 | 交通 | 住まい | 働き方 |
+| 教育 | 子育て・家族 | 地域活性化 | デジタル化 |
+| 消費・経済 | 文化・伝統 | スポーツ・余暇 | 人間関係 |
+| 行政・手続き | メディア・情報 | 旅行・観光 | 科学・技術 |
+
+**Never widen the list to make an entry or seed fit** — a stretched label looks like
+agreement and is worse than a wrong one. Pick the nearest value, or say the entry does not
+belong. Adding a value is a deliberate taxonomy edit: change `THEMES`, retag every entry
+the new value should own, report it. The tags exist because string checks compare
+*wording*: 「交替制勤務と睡眠の質」 and 「就寝前の刺激と生活習慣」 pass as two subjects
+and the paper tests sleep twice (tests 2 and 4 shipped that pair) — under the tags both
+read `睡眠・健康`, a lookup instead of a judgement.
+
+**What the sampler enforces.** `check_pool_themes()` **fails** on any themed entry that is
+a bare string, lacks a `theme`, or carries an off-list value. After the draw,
+`check_theme_spread()` **warns** when one theme exceeds `THEME_CAP` (reading 2, listening
+5) — a re-draw/re-blend decision, not noise. `THEME_CAP` and rule 3 below are one decision
+in two places: change either, change the other in the same pass. The WARN-vs-defect
+**asymmetry is deliberate** — the sampler cannot see which entry maps to which 問題; do
+not harden the WARN or soften the prose.
+
+### The four theme rules
+
+**Do the arithmetic first.** A paper authors 12 reading + 21 listening = 33 themed
+surfaces against a 20-value vocabulary, so "one surface per theme" is *impossible* and
+must never be written as a rule; uniqueness applies to the headline surfaces, the rest
+get caps.
+
+> **The headline set** = `問題9` cloze, `問題12` A/B (**one** surface), `問題13` 長文,
+> `問題14` flyer, `聴解問題5` 統合理解. Five surfaces.
+>
+> 1. **Five headline surfaces, five DIFFERENT themes.**
+> 2. **A headline theme appears nowhere else in the 読解 half** (test 2 shipped
+>    デジタルデトックス as both 問題9 and 問題10(1)). Listening is governed by rule 3 only.
+> 3. **Caps everywhere else: ≤2 reading surfaces, ≤5 listening scenarios per theme**
+>    (`THEME_CAP`); a *third* reading surface on one theme is a defect even with no FAIL.
+> 4. **Cross-test: no theme headlines two consecutive papers, and across the previous two
+>    papers together at most ONE headline theme may repeat** (only against the
+>    paper-before-last, only once in the set).
+
+**These rules bind pool-origin and web-origin surfaces alike** — scope by surface, never
+by origin; an offline all-pool paper is not exempt. The pools are lopsided (`働き方` holds
+44 of 240 listening scenarios, `科学・技術` only 2 — hence the listening cap of 5): when a
+cap keeps breaching, grow the thin themes in the pool or move a surface's subject; never
+stretch a label or raise `THEME_CAP`.
+
+**Previous papers' headline themes** come from the two most recent **generated** papers
+still on disk (`imported-*` excluded — an official paper is what others copy; a removed
+test's `logs/topics.json` rows are history, not budget). One paper on disk → compare
+against it; none → rule 4 is vacuous — **say so in your report either way**. Papers
+predating the tagging carry no `theme`: tag their five headline subjects by hand from
+their `logs/topics.json` rows.
+
+**How to comply:** after the blend report, write down every surface's theme (pool entries
+carry theirs; an `"origin": "web"` entry inherits the theme of the surface it displaced,
+or the nearest existing tag); check the five headline themes against each other, then the
+読解 list, then the per-theme totals; apply rule 4 and record the prior themes and repeat
+count in your final report. A theme tag is a floor exactly as token overlap is: it catches
+the renamed subject, not a *shape* repeat or a stretched label — the whole-paper topic
+table pass (`jlpt-test-generation` §"One topic, one surface") stays mandatory.
+
+## Rotation model (ledger v2 — LRU, not reset)
+
+`logs/ledger.json` is `{"version": 2, "history": [ {test_id, seed, generated_at,
+items{...}}, … ]}` — one entry per draw, newest last. A v1 flat ledger migrates
+automatically into one synthetic oldest draw.
+
+- **Cooldown, not exhaustion.** An item used within the last `COOLDOWN` (=2) draws is
+  ineligible (`ago(x) >= cool`; `apply_adjunct` uses the same test). A pool that cannot
+  fill a draw relaxes the cooldown one step at a time, says so, and **the level it
+  settled on is written into the spec** — the old v1 sampler cleared a category's whole
+  history instead, which is how test 4 redrew six of test 1's items.
+- **One item, one 問題 per test** — categories draw against a shared `taken` set; a
+  post-draw assertion aborts on any collision.
+- **Cooldown is by WORD, across categories** — recency tracks both raw string and
+  `head()` identity.
+- **Attribution** — pass `--test-id <id>` so each draw records its consumer.
+- **What gets RECORDED is the pool entry-string — never the paper's surface form, never a
+  substitute.** `recency_map()` keys on the raw string and `head()`; neither strips a
+  leading `〜` nor undoes an inflection, so a ledger/spec row that does not equal a pool
+  string **cools nothing** — an inflected realization (「行かずじまい」 left `〜ずじまい`
+  permanently un-cooled) or an off-pool substitute (`キャンセル` for `テニスコート`),
+  which can never rotate. Repair by **re-sampling**, never by editing either file to
+  match the paper. `check_draw_provenance()` fails any recorded item resolving to neither
+  a `pools.json` entry (raw, tilde-stripped, or `head()`-folded) nor an adjunct row with
+  `item` + `level: N2` + `evidence`; `origin: web` rows are traced by
+  `check_harvest_provenance()` instead.
+
+Every `tests/<test_id>/test_spec.json` therefore carries
+`"rotation": {"recency_source": "ledger", "history_len": 2, "cooldown": 2}` —
+`recency_source` is always `"ledger"` (a spec without the key predates rotation);
+`history_len` is how many **other tests'** draws the recency map covered (`0` means the
+draw proves nothing); `cooldown` is the **weakest** level actually applied to any category
+(`COOLDOWN` normally, lower under relaxation, `0` when exhausted), read as "no item here
+appears in the last `cooldown` ledger entries".
+
+`assert_rotation()` re-checks that claim against the ledger before the spec is written, on
+both raw string and `head()`. **A red line there means `draw()` is broken — never lower
+`COOLDOWN` to make it green.** Keep every pool ≥ 2.5× the per-test draw; inspect with
+`sample_items.py --check-depth`.
+
+**A draw count that disagrees with `DRAW` is a ledger defect, not history.** A recorded
+item burns cooldown whether or not the paper asked about it; entries written under
+superseded `DRAW` values over-record items no question used. **Trim over-recorded items;
+do not let them expire through cooldown.** Shortfalls are not trimmable: record what the
+paper actually used. `make check` asserts every history entry except `legacy` matches
+`sample_items.DRAW`; a red line means repair the ledger, never widen the check. (Ledger
+repair is paper-repair work, not pool work.)
+
+## Answer positions are balanced across sections, not only inside them
+
+Per-section `[(i % width) + 1 …]` filling is even *within* a section but hands every
+`count % 4` remainder to the lowest positions — a structural +15/+7/+4/+0 on positions
+1/2/3/4 over the 18 four-choice sections (test 4: 31 keys on position 1).
+`balanced_position_plan()` keeps the per-section floor allocation and gives each remainder
+to whichever positions are furthest behind **paper-wide** (realised 22/23/23/22). Never 3+
+identical positions in a row; 即時応答 keys are uniform over 1-3.
+
+`POSITION_BAND = (19, 27)` — each of positions 1-4, over the 90 four-choice items. **The
+band is PROVISIONAL** (90/4 = 22.5 ± a working tolerance). If measurement of the official
+archive disagrees, **change the two numbers** — never reinterpret the band to fit a draw.
+The sampler exits rather than emit a plan outside it. 聴解 問題4 (3-choice) is balanced
+section-locally and is not part of the 90.
+
+## Adjunct one-shots (non-pool items — staging stays live)
+
+Nothing enters a test without N2 evidence. `sample_items.py` may replace up to **20%** of
+each category's draw with `status=ready` rows from `logs/adjunct_staging.json`
+(`--no-adjunct` for pure pool). Adjunct records in `test_spec.json` look like
+`{"item": "…", "origin": "adjunct", "level": "N2", "evidence": [...]}`; author them like
+pool items — `make check` enforces the cap and provenance. **The staging file is live; the
+growth tooling is archived** (below). Never inline an unclassified string into a test,
+`pools.json`, or the staging file.
+
+## Archived growth tooling
+
+`archive/` holds the five pool-growth scripts (`classify_level.py`, `promote_adjunct.py`,
+`expand_pools.py`, `suggest_pool_additions.py`, `fetch_openjlpt.py`). Pool growth is
+paused; they have **no Makefile targets** and must be moved back into `scripts/` to run
+(they import `level_data.py` as a sibling) — see `archive/README.md`. Restore them if the
+sampler starts reporting exhausted categories.
+
+## `scripts/sample_items.py` — usage
+
+```bash
+python .agents/exam-blueprint/scripts/sample_items.py --seed 20260803 --test-id 4
+python .agents/exam-blueprint/scripts/sample_items.py --check-depth
+python .agents/exam-blueprint/scripts/sample_items.py --reroll listening_scenarios --seed 99999
+```
+
+`tests/<test_id>/test_spec.json` is the authoring contract: per section, the exact items
+to test, the scenario/topic lists, and the answer-position sequence per 問題. **It belongs
+to ONE test and may predate the current `DRAW`.** Do not "reconcile" an already-authored
+test by re-sampling — that rewrites the contract its 101 keys were placed against.
+Re-sample when you start the NEXT test, and read the printed draw counts then.
+
+Binding rules for the authoring step: author questions ONLY for the sampled items — if one
+is genuinely unusable, `--reroll <category>`, never substitute from memory; when the
+sampler warns that sampled `listening_scenarios` share a domain prefix and they run the
+same errand, `--reroll listening_scenarios` before writing anything; place each correct
+answer at the position the spec dictates and design distractors around it, not the other
+way; record the seed in the exam's source file header (comment); new items learned from
+reference books go through staging via the archived tooling, never inlined ad hoc.
+
+`pools.json` categories: kanji_reading, orthography, word_formation, context_words,
+paraphrase, usage, grammar_p7, grammar_p8, quick_response, listening_scenarios,
+reading_topics. Pools may legitimately overlap (the sampler keeps overlaps apart within a
+test); what matters is depth.
+
+---
+
+# Part II — Web topic harvest & blend
+
+## Step 0 — `logs/seeds.json` is per-test. Re-harvest it, every time.
+
+**A harvest is an input to one test, not a file that lives in the repo.** The blend is a
+pure function of `(spec seed, seeds.json)`: `merge_seeds.py` seeds its RNG from the spec's
+own seed, so the same `--seed` against an unchanged harvest reproduces the previous test's
+blend **slot for slot** — exactly how test 3 shipped as a re-skin of test 2, while pool
+items rotated correctly (the ledger only remembers what the *sampler* drew).
+
+Before harvesting, list what is already spent (the ledger's
+`reading_topics`/`listening_scenarios` per test, plus
+`grep -h '^\*\*\|^以下は\|^件名' tests/*/言語知識・読解.md`) and reject any seed whose
+subject already appears there, **in any register** — an essay and a monologue on one
+subject are the same topic. Aim to reuse nothing from the previous two tests.
+
+`merge_seeds.py` stamps a `harvest_sha` into the spec and the ledger entry, and `make
+check` fails when two tests share both a seed and a harvest, or reuse a harvest at all.
+Never hand-edit those fields to silence it. **But `(seed, harvest_sha)` uniqueness is NOT
+topic uniqueness** — a fresh harvest and seed can still land on the same subjects, because
+the *harvest* was on the same subjects (tests 3 and 4 shared 8 surfaces this way).
+
+**`logs/topics.json` — the whole-paper topic table, as a file.** One row per test, written
+by the **build pass** from the finished sources (`jlpt-test-generation` stage 3) — what the
+paper *actually* tests, never what the spec asked for. Each row carries `surfaces` (every
+読解 passage, 問題9, 問題14, and every 聴解 item incl. the 例 — the shipped subject as one
+noun phrase) and `shapes` (each 聴解 item's errand shape, e.g. "reschedule call" — two
+subjects can run the identical errand). No subject or shape may repeat within the paper
+or against the previous two rows. `merge_seeds.py` reads those rows
+before blending and **aborts** on any seed sharing a ≥2-char content token (kanji,
+katakana, or latin run) with a recorded subject; a missing file is tolerated and loudly
+reported.
+
+**The honest limit.** Token overlap is a floor: 「屋上緑化」 vs
+「グリーンパートナー制度」 are one subject with zero shared tokens, and both pass every
+mechanized check. **Subject identity cannot be mechanized** — the human whole-paper topic
+table pass stays mandatory; a green topic check is not evidence the paper is new.
+
+## Step 1 — Harvest topic seeds (18-25 per test, ≥6 distinct domains)
+
+**Every seed must come from a page you actually fetched — no web, no harvest.** If web
+access is unavailable, SKIP the blend entirely (the pure-pool pipeline is the documented
+offline mode); never fabricate plausible seeds, URLs, or facts — test 4 shipped an
+invented harvest (made-up IDs that 404), silently voiding the no-shared-harvest
+guarantee. QA fetches sample URLs and reports an invented harvest as a major finding.
+
+**Run `merge_seeds.py` exactly once per test, on a spec straight from the sampler.** It
+restores the sampler's draw from the ledger first (re-running used to compound its own
+output) and aborts if the ledger cannot supply it; never hand-edit the blended spec.
+
+**Domains, not seed count, are the binding constraint**: `MAX_PER_DOMAIN` is 2 and that
+budget is shared across all topic-level surfaces, so a harvest funds at most
+`2 × domains` of them no matter how many seeds you collect. The sampler draws 12 reading
+topics and 21 listening scenarios, so:
+
+| Target | reading | listening | cloze | info | topic-level picks | domains needed |
+|---|---|---|---|---|---|---|
+| 30% floor | 4 | 6 | 1 | 1 | 12 | **6** |
+| default (0.5 / 0.4) | 6 | 8 | 1 | 1 | 16 | 8 |
+| full 60% | 7 | 13 | 1 | 1 | 22 | 11 |
+
+So 6 domains funds the floor exactly and nothing more — 22 seeds from 6 domains still
+caps at 12 picks; add *domains*, not seeds (test 4's 28 seeds from 5 domains left 聴解 at
+4/20 = 20% web, below the floor, warning ignored). Below `MIN_DOMAINS` (3) the script
+also shrinks the whole web share.
+
+`validate_harvest()` refuses the run on two hard aborts:
+
+1. **One URL, one seed.** Two seeds citing the same `source` are one subject in two hats
+   (one past harvest mined a single PDF for three "topics", two with invented facts).
+   Keep the strongest, re-harvest the rest; never re-title a seed to dodge it. A seed
+   with no `source` is refused too.
+2. **`MIN_HARVEST_DOMAINS = 6` distinct netlocs** — below that the blend cannot reach the
+   30% floor everywhere (arithmetic above). The domain count is printed on every run.
+
+It also **warns** on two seeds sharing a ≥3-char content token — distinct URLs, adjacent
+subjects. Act on those: each seed feeds **exactly one** surface, and near-duplicates
+blended onto two surfaces read as one topic tested twice (tests 2 and 3 both put
+フードドライブ in 聴解問題1 *and* the 問題14 flyer) — treat them as one seed and drop the
+weaker, and read your own list too (傘シェアリング and シェアサイクル share no token and
+are one subject).
+
+`qr_situation_seeds` and `carrier_seeds` come from the leftovers and are **deliberately
+not domain-capped** — `MAX_PER_DOMAIN` governs the topic-level surfaces, where a dominant
+source would show; filing the uncapped leftovers as a bypass is a false positive.
+
+Good sources (prefer Japanese-language results): NHK NEWS WEB EASY (pre-simplified; must
+not be the majority of seeds), news/life columns (`暮らし コラム`, `働き方 調査 結果`),
+survey/statistics releases (numbers make excellent 問題14 flyers), 2-3 seasonal anchors
+for the generation date (12月→忘年会/大掃除; 6月→梅雨/衣替え), and trend checks for
+scenario texture (無人店舗, 置き配, キャッシュレス食券…). Record each seed as
+`{"seed": "...", "facts": ["..."], "source": "url", "surfaces": [...]}` in
+`logs/seeds.json` (the path `make merge-seeds` uses); `surfaces` is an optional placement
+hint (`["reading","info"]` for a survey with percentages), and facts are short
+paraphrased data points, never sentences copied from the page.
+
+## Step 2 — Filter for exam suitability AND N2 level
+
+JLPT content is deliberately neutral. REJECT seeds involving politics and elections,
+religion, war/crime/accidents with victims, discrimination debates, celebrity gossip, or
+anything distressing. PREFER daily life, work customs, technology in daily use, food,
+travel, education, environment, community, health habits (non-medical).
+
+N2 gate — apply to every seed before it enters `seeds.json`: **expressibility** (mentally
+draft one sentence introducing the topic using only N2-and-below vocabulary; if it needs
+N1 jargon, drop or generalize — 生成AIの著作権問題 → 新しい技術と仕事の変化);
+**inventory check** for doubtful words against the Shin Kanzen TOC inventories via
+`question-authoring` before keeping; **fact simplification** (round numbers to
+N2-friendly forms at harvest time, `38.6%` → `約4割`, so no raw figure leaks into a
+passage later).
+
+## Step 3 — Blend into the authoring contract
+
+```bash
+python3 .agents/exam-blueprint/scripts/merge_seeds.py logs/seeds.json tests/<test_id>/test_spec.json
+# or: make merge-seeds
+# optional tuning (both clamped to 0.30-0.60):
+#   --reading-ratio 0.5 --listening-ratio 0.4
+```
+
+The script touches the whole spec, recording provenance (`"origin": "web"` vs `"pool"`) on
+every blended entry so any test can be audited:
+
+| Spec field | Exam surface | Blend rule |
+|---|---|---|
+| `items.reading_topics` | 問題10-13 passages | ~50% replaced by web seeds (clamped 30-60%) |
+| `items.listening_scenarios` | 聴解 問題1/2/3/5 | ~40% of settings replaced (clamped 30-60%) |
+| `cloze_topic` | 問題9 cloze passage | web or pool, 50/50 by seeded RNG |
+| `info_retrieval_texture` | 問題14 flyer | one numeric-fact seed, if any seed has numbers |
+| `qr_situation_seeds` | 問題4 即時応答 | ≤3 situational settings (tested idiom/keigo stays pool-sampled) |
+| `carrier_seeds` | 問題1-8 carrier sentences | ≤6 texture seeds; **binding cap: at most 1 in 3 stems per 問題** |
+
+It prints a **blend report** (web/pool share per surface + domain histogram). Read it
+before authoring: any surface at 0% web with seeds available, any surface outside 30-60%
+web / pool <40%, or a single-domain histogram means fix the harvest and re-run. Pool
+topics remain the offline fallback: with no web access, skip the blend entirely — the
+pipeline still works, just less fresh.
+
+**Creative recombination (works offline too).** When seeds run thin, force novelty
+combinatorially: scenario = random(place) × random(complication) × random(constraint),
+e.g. 市役所 × 必要書類が足りない × 締め切りは今日中 — rolled with the RNG seed from
+`tests/<test_id>/test_spec.json`, not by model preference.
+
+## Step 4 — Use during authoring (binding rules)
+
+- Web sources give WHAT to write about, never the words. Compose passages from scratch;
+  do not paraphrase a source article's structure.
+- Honor provenance: an `"origin": "web"` entry is written around that seed, an
+  `"origin": "pool"` entry from the pool topic. Do not swap origins to taste.
+- One borrowed FACT per passage/dialogue is plenty (「ある調査によると、約4割が…」),
+  always in the Step-2 simplified form.
+- **Listening**: a web scenario entry is a SETTING seed — frame it into the standard
+  場所×出来事 shape yourself; dialogue mechanics come from `question-authoring` unchanged.
+- **Carrier sentences (問題1-8)**: at most 1 in 3 stems per 問題 may draw on
+  `carrier_seeds`. **即時応答**: `qr_situation_seeds` may set the scene. In both, the
+  TESTED word, grammar point, or idiom/keigo is always the pool-sampled item.
+- Collocation check: for a sampled word you are unsure of, search `"<word>" 例文` /
+  `"<word>" 使い方` and confirm the collocation exists (交渉が難航する ✓). Good seeds
+  that fit the pools should be proposed as pool additions via the staging gate.

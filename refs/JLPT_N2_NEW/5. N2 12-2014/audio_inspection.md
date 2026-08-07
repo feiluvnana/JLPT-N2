@@ -2,7 +2,7 @@
 
 > Machine-extracted by `tools/extract_jlpt_n2_new.py` (ffprobe + ffmpeg) from:
 > - `refs/JLPT_N2_NEW/5. N2 12-2014/5. Nghe N2 12-2014.mp3` (sha1 `74f74ce28754`)
-> Measured per `.agents/official-audio-analysis/SKILL.md` (`silencedetect=noise=-35dB`, one pass at `d=0.4`).
+> Measured per `.agents/choukai-audio/SKILL.md` (`silencedetect=noise=-35dB`, one pass at `d=0.4`).
 > Regenerate rather than hand-edit.
 
 ## Basics
@@ -32,7 +32,7 @@
 
 ## Long-pause timeline
 
-Ordered `(start, duration)`. Attribute sections from the signatures in `official-audio-analysis` §3 — a `20 s → talk → 12 s` cycle is 問題2, `3 s ×3 → 8 s` is 問題3/問題5's spoken choices, a dense run of lone 8 s pauses is 問題4. Counts are measured, section labels are not.
+Ordered `(start, duration)`. Attribute sections from the signatures in `choukai-audio` §3 — a `20 s → talk → 12 s` cycle is 問題2, `3 s ×3 → 8 s` is 問題3/問題5's spoken choices, a dense run of lone 8 s pauses is 問題4. Counts are measured, section labels are not.
 
 | # | start | duration |
 | --- | --- | --- |

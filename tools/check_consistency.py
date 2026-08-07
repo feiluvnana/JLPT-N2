@@ -25,7 +25,7 @@ draw equality, harvest_sha provenance, the sampler's `rotation` block, 問題11
 opinion-stem coverage, 問題13's closing stem, and 問題7 解説 option numbering.
 
 Round 2 also RE-CALIBRATED every length/count threshold against the 31-sitting
-archive — `.agents/reference-book-reading/references/official_calibration.md`,
+archive — `.agents/question-authoring/references/official_calibration.md`,
 which is now the evidence of record. Read §9 before touching a constant. Eight
 of them had been derived from ONE paper (July 2025) and were failing real
 official exams: 読解 floors for 問題10/13/14, the 問題10 per-passage floor, the
@@ -37,7 +37,9 @@ from a coincidence; every surviving constant now carries its measured band.
 CAVEAT — the in-tree calibration anchor is gone. The `tests/imported-n2-2025-07`
 folder every threshold below was measured on was deleted, so the checks that
 compared a generated test against it (cross-test verbatim reuse; the
-imported-only exemptions) now have nothing to compare with and pass vacuously.
+imported-only exemptions) lost their strongest comparison; check_tests now
+prints an explicit `skip` for that half instead of letting it pass silently
+(the generated↔generated comparison still runs).
 The archive extracts replace it as the READING anchor —
 `refs/JLPT_N2_NEW/<sitting>/booklet.md` and `key.md` are exact text, and
 `script.md`'s fenced [OCR ▼]…[OCR ▲] dialogue is ~98% character-accurate, so it
@@ -81,6 +83,10 @@ def load(rel: str):
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+
+
+# The imported-/generated folder-name flag, owned by external-test-import.
+ORIGIN = load(".agents/external-test-import/scripts/origin.py")
 
 
 def check(name: str, ok: bool, detail: str = "") -> bool:
@@ -167,16 +173,16 @@ def check_skills():
 def check_filename_contracts():
     print("\ndocumented deliverable names appear in the script that writes them")
     contracts = [
-        ("解答.html", ".agents/interactive-answer-sheet/scripts/build_interactive.py"),
-        ("採点結果.json", ".agents/interactive-answer-sheet/scripts/build_interactive.py"),
-        ("採点結果.json", ".agents/exam-answer-grading/scripts/grade_answers.py"),
-        ("ユーザー解答.json", ".agents/interactive-answer-sheet/scripts/build_interactive.py"),
-        ("ユーザー解答.json", ".agents/interactive-answer-sheet/scripts/serve_sheet.py"),
-        ("聴解.mp3", ".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py"),
-        ("聴解_チャプター.json", ".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py"),
-        ("ledger.json", ".agents/item-pool-sampling/scripts/sample_items.py"),
-        ("test_spec.json", ".agents/item-pool-sampling/scripts/sample_items.py"),
-        ("adjunct_staging.json", ".agents/item-pool-sampling/scripts/classify_level.py"),
+        ("解答.html", ".agents/exam-app/scripts/build_interactive.py"),
+        ("採点結果.json", ".agents/exam-app/scripts/build_interactive.py"),
+        ("採点結果.json", ".agents/exam-app/scripts/grade_answers.py"),
+        ("ユーザー解答.json", ".agents/exam-app/scripts/build_interactive.py"),
+        ("ユーザー解答.json", ".agents/exam-app/scripts/serve_sheet.py"),
+        ("聴解.mp3", ".agents/choukai-audio/scripts/make_choukai_mp3.py"),
+        ("聴解_チャプター.json", ".agents/choukai-audio/scripts/make_choukai_mp3.py"),
+        ("ledger.json", ".agents/exam-blueprint/scripts/sample_items.py"),
+        ("test_spec.json", ".agents/exam-blueprint/scripts/sample_items.py"),
+        ("adjunct_staging.json", ".agents/exam-blueprint/archive/classify_level.py"),
         ("import_meta.json", ".agents/external-test-import/scripts/init_imported_test.py"),
     ]
     for literal, script in contracts:
@@ -216,7 +222,7 @@ def check_deployments():
     localStorage key the sheet writes and the list reads under another name.
     """
     print("\nserve ↔ GitHub Pages (one app, one storage backend per build)")
-    scripts = AGENTS / "interactive-answer-sheet" / "scripts"
+    scripts = AGENTS / "exam-app" / "scripts"
     src = {f.name: f.read_text(encoding="utf-8")
            for f in scripts.glob("*.py")}
 
@@ -236,7 +242,7 @@ def check_deployments():
 
     # The sheet writes these keys and the list reads them. One definition, in
     # local_store.py; anything else spelling out the prefix is a second copy.
-    ls = load(".agents/interactive-answer-sheet/scripts/local_store.py")
+    ls = load(".agents/exam-app/scripts/local_store.py")
     hardcoded = [n for n, t in src.items()
                  if n != "local_store.py" and ls.STORAGE_PREFIX in t]
     check(f"localStorage keys defined once ({ls.STORAGE_PREFIX}/<id>/<file>)",
@@ -247,7 +253,7 @@ def check_deployments():
 
     # Exactly one backend may be live in a built sheet: a server build must not
     # even carry the localStorage code, or a future edit could write both.
-    bi = load(".agents/interactive-answer-sheet/scripts/build_interactive.py")
+    bi = load(".agents/exam-app/scripts/build_interactive.py")
     check("build_interactive knows both backends and defaults to the server one",
           set(bi.LIST_HREF) == {"server", "local"} and bi.LIST_HREF["server"] == "/",
           f"LIST_HREF={bi.LIST_HREF}")
@@ -274,17 +280,38 @@ def check_deployments():
     mk = (ROOT / "Makefile").read_text(encoding="utf-8")
     for target in ("pages:", "preview-pages:"):
         check(f"Makefile has `make {target[:-1]}`", target in mk)
-    doc = (AGENTS / "interactive-answer-sheet" / "SKILL.md").read_text(encoding="utf-8")
-    check("interactive-answer-sheet documents the static build",
+    doc = (AGENTS / "exam-app" / "SKILL.md").read_text(encoding="utf-8")
+    check("exam-app documents the static build",
           "make pages" in doc and "localStorage" in doc,
           "the skill owns both deployments — document the second one")
+
+    # A builder property, not a paper property (it used to be checked per test):
+    # 4cad944 removed the traffic-light emoji from the report labels.
+    check("build_interactive.py writes no emoji into the report labels",
+          not re.search("[🟢🟡🔴]", src["build_interactive.py"]),
+          "4cad944 removed them")
+
+
+def check_makefile_help():
+    """`make help` is hand-written; nothing else stops it drifting from the
+    target list, while the SKILL.md files get exactly this class of drift
+    checked by check_filename_contracts."""
+    print("\nMakefile help ↔ .PHONY targets")
+    mk = (ROOT / "Makefile").read_text(encoding="utf-8")
+    phony: set[str] = set()
+    for m in re.finditer(r"^\.PHONY:((?:.*\\\n)*.*)", mk, re.M):
+        phony |= set(m.group(1).replace("\\\n", " ").split())
+    missing = [t for t in sorted(phony)
+               if t != "help" and f"make {t}" not in mk]
+    check(f"every .PHONY target appears in `make help` ({len(phony)} targets)",
+          not missing, f"undocumented: {missing}")
 
 
 # ------------------------------------------------------------------ choukai pacing
 def check_pacing():
     print("\nchoukai pacing table ↔ make_choukai_mp3.py constants")
-    m = load(".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py")
-    doc = (AGENTS / "choukai-mp3-generation" / "SKILL.md").read_text(encoding="utf-8")
+    m = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
+    doc = (AGENTS / "choukai-audio" / "SKILL.md").read_text(encoding="utf-8")
 
     for const in ("GAP_BETWEEN_LINES", "GAP_AFTER_PRE_QUESTION", "GAP_OPTION_READING",
                   "GAP_BETWEEN_SPOKEN_CHOICES", "GAP_AFTER_SHITSUMON1"):
@@ -322,12 +349,12 @@ def check_pacing():
 # ------------------------------------------------------------------- item counts
 def check_item_counts():
     print("\n聴解 item counts ↔ EXPECTED_ITEMS ↔ jlpt-exam-structure")
-    m = load(".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py")
+    m = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
 
-    sw = (AGENTS / "choukai-script-writing" / "SKILL.md").read_text(encoding="utf-8")
+    sw = (AGENTS / "choukai-audio" / "SKILL.md").read_text(encoding="utf-8")
     row = re.search(r"Item counts \(incl\. 例\)\s*\|([^|]+)\|", sw)
     documented = {f"問題{n}": int(v) for n, v in re.findall(r"問題(\d)=(\d+)", row.group(1))} if row else {}
-    check("choukai-script-writing item counts", documented == m.EXPECTED_ITEMS,
+    check("choukai-audio item counts", documented == m.EXPECTED_ITEMS,
           f"doc {documented} vs code {m.EXPECTED_ITEMS}")
 
     struct = (AGENTS / "jlpt-exam-structure" / "SKILL.md").read_text(encoding="utf-8")
@@ -352,7 +379,7 @@ def check_item_counts():
 # --------------------------------------------------------------------- taxonomy
 def check_taxonomy():
     print("\ngengo taxonomy ↔ jlpt-exam-structure ↔ section scaling")
-    g = load(".agents/exam-answer-grading/scripts/grade_answers.py")   # asserts tiling at import
+    g = load(".agents/exam-app/scripts/grade_answers.py")   # asserts tiling at import
     struct = (AGENTS / "jlpt-exam-structure" / "SKILL.md").read_text(encoding="utf-8")
     block = struct.split("## 言語知識")[1].split("## 聴解")[0]
 
@@ -375,10 +402,10 @@ def check_taxonomy():
     sect = {}
     for s in g.GENGO_QUESTION_TAXONOMY.values():
         sect[s["section"]] = sect.get(s["section"], 0) + s["total"]
-    grading_doc = (AGENTS / "exam-answer-grading" / "SKILL.md").read_text(encoding="utf-8")
+    grading_doc = (AGENTS / "exam-app" / "SKILL.md").read_text(encoding="utf-8")
     for label, key, want in (("言語知識", "言語知識", 51), ("読解", "読解", 20)):
         check(f"{label} = {want} items", sect.get(key) == want, f"taxonomy gives {sect.get(key)}")
-        check(f"{label} {want} documented in exam-answer-grading",
+        check(f"{label} {want} documented in exam-app",
               re.search(rf"{want} questions max|{want} items", grading_doc) is not None)
 
 
@@ -424,7 +451,7 @@ def gengo_option_sets(md: str, bi) -> dict[int, list[str]]:
 BLANK_RUN = re.compile(r"(?:[＿_]+★?[＿_]*|★)(?:\s*(?:[＿_]+★?[＿_]*|★))+")
 JP_CHAR = re.compile(r"[\u3040-\u30ff\u4e00-\u9fffー。、！？（）「」『』…・]")
 # 文法 constants, RE-MEASURED on the 31-sitting archive
-# (.agents/reference-book-reading/references/official_calibration.md §7/§9).
+# (.agents/question-authoring/references/official_calibration.md §7/§9).
 # Every one of these was derived from a single paper (July 2025) and three of
 # the four failed real official papers — the gate was enforcing standards no N2
 # exam meets, which is the same defect class as a wrong key.
@@ -650,7 +677,7 @@ def check_mondai8_bare_adverbs(name: str, opts: dict[int, list[str]]):
 
 
 LEVEL_BAND_PATH = (
-    AGENTS / "exam-qa-review" / "references" / "level_band_grammar.txt"
+    AGENTS / "question-authoring" / "references" / "level_band_grammar.txt"
 )
 
 
@@ -729,9 +756,9 @@ def check_level_band_grammar(gt: str, keys: dict[int, int],
             easy.append(f"{q}:{keyed_s or gm and gm.group(1) or '?'}({ban})")
 
     check("問題7–9 keys are not N1-hard (level band)", not hard,
-          "; ".join(hard) + " — see exam-qa-review/references/level_band_grammar.txt")
+          "; ".join(hard) + " — see question-authoring/references/level_band_grammar.txt")
     check("問題7–9 keys are not N3–N5-easy (level band)", not easy,
-          "; ".join(easy) + " — see exam-qa-review/references/level_band_grammar.txt")
+          "; ".join(easy) + " — see question-authoring/references/level_band_grammar.txt")
 
     # 問題8 keys are option STRIPS, so the banned form never appears whole in one:
     # test 3's item 46 tested 〜ば〜ほど with the option reading 「触れるほど」 and the
@@ -754,7 +781,7 @@ def check_level_band_grammar(gt: str, keys: dict[int, int],
     check(f"{test_id}: 問題8 target grammar points stay inside the N2 band "
           f"({len(spec.get('items', {}).get('grammar_p8', []))} drawn)", not p8,
           "; ".join(p8) + " — the pool handed the author a banned form; delete "
-          "it from pools.json and re-sample (item-pool-sampling)")
+          "it from pools.json and re-sample (exam-blueprint)")
 
 
 def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str]]):
@@ -1033,7 +1060,7 @@ def check_note_pairing(name: str, body: str):
 
 def openjlpt_vocab() -> set[str]:
     """Every headword in the vendored OpenJLPT N2 vocabulary list."""
-    p = AGENTS / "item-pool-sampling" / "references" / "openjlpt" / "vocab-n2.json"
+    p = AGENTS / "exam-blueprint" / "references" / "openjlpt" / "vocab-n2.json"
     if not p.is_file():
         return set()
     words = {e.get("word", "") for e in json.loads(p.read_text(encoding="utf-8"))}
@@ -1045,11 +1072,11 @@ def openjlpt_headwords() -> set[str]:
 
     Wider than openjlpt_vocab() on purpose: used to ask "is this string a
     LEXICAL item at all", not "is it N2". Never use it as a level ruling —
-    item-pool-sampling documents that the slices both miss real N2 words and
+    exam-blueprint documents that the slices both miss real N2 words and
     label ordinary N2 words N1.
     """
     out: set[str] = set()
-    base = AGENTS / "item-pool-sampling" / "references" / "openjlpt"
+    base = AGENTS / "exam-blueprint" / "references" / "openjlpt"
     for lv in ("n1", "n2", "n3"):
         p = base / f"vocab-{lv}.json"
         if not p.is_file():
@@ -1067,7 +1094,7 @@ def pool_entry_text(entry) -> str:
     `reading_topics` and `listening_scenarios` are the two categories whose
     entries are OBJECTS — `{"topic": …, "theme": …}` /
     `{"scenario": …, "theme": …}` — under the closed `THEMES` vocabulary that
-    `item-pool-sampling` owns; every other category is a bare string. Anything
+    `exam-blueprint` owns; every other category is a bare string. Anything
     in this file that touches a pool must go through here, or it will start
     comparing dicts the day a category grows a tag.
     """
@@ -1091,7 +1118,7 @@ def pool_entry_text(entry) -> str:
 # NOT anchored on `openjlpt/kanji-n*.json`: that file is KANJIDIC-derived and
 # lists 表外 readings (`領: ['えり']`, `線: ['すじ']` are IN it), so a
 # (kanji, reading) check built on it passes the exact defects it targets.
-# item-pool-sampling says this in as many words — the pool is the authority.
+# exam-blueprint says this in as many words — the pool is the authority.
 KANJI_READING_ENTRY = re.compile(r"^(?P<word>[^（()）]+)[（(](?P<yomi>[^）)]+)[）)]$")
 KANA_YOMI = re.compile(r"^[ぁ-ゖゝゞー]+$")
 HAS_KANJI = re.compile(r"[一-鿿]")
@@ -1100,7 +1127,7 @@ HAS_KANJI = re.compile(r"[一-鿿]")
 def check_pool_kanji_reading_shape():
     """pools.json `kanji_reading` entries must be printable words (G-R2).
 
-    Rule 1 of item-pool-sampling's 「kanji_reading validity rule」: the entry
+    Rule 1 of exam-blueprint's 「kanji_reading validity rule」: the entry
     reads `語(よみ)`, `語` carries at least one kanji, and `よみ` is hiragana
     with no `.` and no katakana. A dot (`爆(は.ぜる)`) is a raw KANJIDIC kunyomi
     — a single kanji with its okurigana detached, which cannot be underlined as
@@ -1109,7 +1136,7 @@ def check_pool_kanji_reading_shape():
     nothing to stop `expand_pools.py` putting them back.
     """
     print("\npools.json kanji_reading entries are printable 語(よみ) words")
-    pools_path = AGENTS / "item-pool-sampling" / "references" / "pools.json"
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
     if not pools_path.is_file():
         return skip("pools.json kanji_reading entry shape", "no pools.json")
     pools = json.loads(pools_path.read_text(encoding="utf-8"))
@@ -1128,13 +1155,13 @@ def check_pool_kanji_reading_shape():
     check(f"pools.json kanji_reading entries are shaped 語(よみ) "
           f"({len(entries)} entries)", not bad,
           "; ".join(bad[:6]) + " — a dotted kunyomi or a katakana on-reading is "
-          "not a printable word; delete the entry (item-pool-sampling "
+          "not a printable word; delete the entry (exam-blueprint "
           "'The kanji_reading validity rule')")
 
 
 def check_spec_pool_kanji_reading(d, spec: dict):
     """Every 問題1 target the spec drew must still be a pool entry (R2)."""
-    pools_path = AGENTS / "item-pool-sampling" / "references" / "pools.json"
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
     if not pools_path.is_file():
         return skip(f"{d.name}: 問題1 targets come from pools.json", "no pools.json")
     pool = {pool_entry_text(e) for e in
@@ -1155,7 +1182,7 @@ def check_spec_pool_kanji_reading(d, spec: dict):
           f"not in the pool: {orphan} — either the sampler did not draw them "
           f"(a hand-edited spec) or the 2026-08-06 audit removed them as "
           f"undrawable; re-sample rather than authoring an off-pool target "
-          f"(item-pool-sampling)")
+          f"(exam-blueprint)")
 
 
 def check_note_band(name: str, gt: str):
@@ -1579,7 +1606,7 @@ def check_fabricated_distractors(name: str, key_section: str):
 
 
 # G1. A 聴解 問題1–3 解説 cell carries one grounding line per option, in the
-# shape choukai-script-writing mandates — `N ✗「script line」→ 理由` — and marks
+# shape choukai-audio mandates — `N ✗「script line」→ 理由` — and marks
 # the one that is right, either with a circle (`3 ○「…」`) or by tagging its own
 # line （正解）. That annotation is the author writing the correct answer into
 # the paper in a machine-readable place, so a cell whose （正解） sits on a
@@ -1650,7 +1677,7 @@ def check_choukai_kaisetsu_keys(name: str, ct: str, bi):
           f"({annotated} annotated cells)", not bad,
           "; ".join(bad) + " — the paper states two different answers for one "
           "item. Re-solve it from 聴解スクリプト.txt and fix whichever is wrong; "
-          "do NOT just renumber the 解説 (choukai-script-writing 'The keyed "
+          "do NOT just renumber the 解説 (choukai-audio 'The keyed "
           "option must be quotable'). keys-match-answer_positions cannot see "
           "this: it proves slot agreement only")
 
@@ -1708,7 +1735,7 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
 # no check. Test 3's six collisions were every one of them naming vocabulary,
 # not subject: 確認, 説明, 注意, 会社.
 #
-# The cause is that a pool entry is NOT a subject string. `item-pool-sampling`
+# The cause is that a pool entry is NOT a subject string. `exam-blueprint`
 # names the convention: a listening scenario is `場所:用件`
 # (`{"scenario": "会社:会議の準備"}`), so the token before the colon is the
 # SETTING and the token after it is drawn from a small errand vocabulary —
@@ -1718,9 +1745,9 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
 #
 # So the fix is not to scope by origin. Scoping `token_map` to
 # `"origin": "web"` would clear test 3 (none of its six pairs is web×web), but
-# both skills forbid it in as many words — `item-pool-sampling` §"Topic themes":
+# both skills forbid it in as many words — `exam-blueprint` §"Topic themes":
 # 「Scoping it by origin instead would exempt an offline all-pool paper from the
-# theme rule entirely」, and `web-topic-research` §"How to comply": 「Scope by
+# theme rule entirely」, and `exam-blueprint` §"How to comply": 「Scope by
 # surface, not by origin」. A pool-origin 問題13 beside a web-origin 問題9 on one
 # subject is exactly the defect, and test 3's own 注意 pair is web×pool.
 #
@@ -1743,7 +1770,7 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
 # warn on it after the draw, with `--reroll listening_scenarios` as the
 # documented remedy. And the renamed subject (「屋上緑化」 vs
 # 「グリーンパートナー制度」) shares zero tokens by construction —
-# `web-topic-research` §"The honest limit": 「Subject identity cannot be
+# `exam-blueprint` §"The honest limit": 「Subject identity cannot be
 # mechanized.」 The mandatory whole-paper topic table pass is the real rule; this
 # is the floor under it.
 #
@@ -1796,7 +1823,7 @@ def pool_subject_freq() -> collections.Counter:
     if _pool_subject_freq is not None:
         return _pool_subject_freq
     freq: collections.Counter = collections.Counter()
-    pools_path = AGENTS / "item-pool-sampling" / "references" / "pools.json"
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
     if pools_path.is_file():
         pools = json.loads(pools_path.read_text(encoding="utf-8"))
         for cat in ("listening_scenarios", "reading_topics"):
@@ -1826,7 +1853,7 @@ def check_surface_subjects(token_map: dict[str, list[str]]):
           "; ".join(collisions) + " — one subject, one surface: two 問題 on the "
           "same subject starve each other. Re-harvest the seed or "
           "`--reroll` the category; never re-seed until the gate goes green "
-          "(web-topic-research 'One topic, one surface')")
+          "(exam-blueprint 'One topic, one surface')")
 
 
 def check_spec_blend(spec: dict):
@@ -1835,7 +1862,7 @@ def check_spec_blend(spec: dict):
     Two invariants no other gate can see, both violated by test 4's spec:
     every surface needs a DISTINCT topic (a duplicate silently starves one
     問題, which then gets authored off-contract), and the pool side keeps >=40%
-    of every blended surface (AGENTS.md §5). merge_seeds.py compounds both when
+    of every blended surface (exam-blueprint 'Balanced blend'). merge_seeds.py compounds both when
     it is re-run over its own output.
     """
     for field, key in (("reading_topics", "topic"),
@@ -1853,8 +1880,8 @@ def check_spec_blend(spec: dict):
               f"web share {web}/{len(recs)} exceeds the MAX_WEB ceiling — "
               f"merge_seeds was re-run over an already-blended spec")
 
-    # Two surfaces of one paper on one SUBJECT starves a 問題 (AGENTS.md §5,
-    # web-topic-research §"One topic, one surface"). The exact-duplicate check
+    # Two surfaces of one paper on one SUBJECT starves a 問題 (jlpt-test-generation 'One topic, one surface',
+    # exam-blueprint §"One topic, one surface"). The exact-duplicate check
     # above catches the easy half; this is the fuzzy half, and what makes it
     # decidable is DISTINCTIVENESS, not origin — see check_surface_subjects.
     token_map: dict[str, list[str]] = {}
@@ -1875,7 +1902,7 @@ def check_spec_blend(spec: dict):
 
 def check_pool_infrastructure():
     print("\npool expansion / adjunct staging")
-    oj = AGENTS / "item-pool-sampling" / "references" / "openjlpt"
+    oj = AGENTS / "exam-blueprint" / "references" / "openjlpt"
     for name in ("vocab-n2.json", "kanji-n2.json", "NOTICE.md"):
         check(f"openjlpt/{name} exists", (oj / name).is_file())
     staging = ROOT / "logs" / "adjunct_staging.json"
@@ -1932,7 +1959,7 @@ def check_pool_grammar_band():
     class permanently: the pool is what the sampler draws from.
     """
     print("\npools.json grammar entries ↔ level band")
-    pools_path = AGENTS / "item-pool-sampling" / "references" / "pools.json"
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
     band = load_level_band()
     if not pools_path.is_file() or not (band["TOO_HARD"] or band["TOO_EASY"]):
         return skip("pools.json grammar entries stay inside the N2 band",
@@ -1957,10 +1984,10 @@ def check_pool_grammar_band():
           f"({sum(len(pools[c]) for c in cats)} entries in {cats})",
           not out_of_band,
           "; ".join(out_of_band) + " — delete the entry; a banned form in the "
-          "pool ships as a key sooner or later (item-pool-sampling)")
+          "pool ships as a key sooner or later (exam-blueprint)")
     check("no grammar category lists one point under two spellings", not dupes,
           "; ".join(dupes) + " — keep one spelling per point, or the sampler "
-          "draws both and the test keys it twice (item-pool-sampling)")
+          "draws both and the test keys it twice (exam-blueprint)")
 
 
 def check_ledger_draw_counts(sample):
@@ -2013,7 +2040,7 @@ def check_harvest_hygiene():
     check(f"logs/seeds.json cites a distinct source per seed ({len(seeds)} seeds)",
           not dup,
           f"reused {len(dup)} URL(s): {dup} — two seeds from one document are "
-          f"one seed; drop the weaker and re-harvest (web-topic-research)")
+          f"one seed; drop the weaker and re-harvest (exam-blueprint)")
 
 
 ADJUNCT_CAP = 0.20
@@ -2052,7 +2079,7 @@ def generated_specs() -> list[tuple[Path, dict]]:
     if not tests_root.is_dir():
         return out
     for d in sorted(tests_root.glob("*")):
-        if not d.is_dir() or d.name.startswith("imported-"):
+        if not d.is_dir() or ORIGIN.is_imported(d.name):
             continue
         p = d / "test_spec.json"
         if not p.is_file():
@@ -2094,7 +2121,7 @@ def _pool_forms(text: str) -> set[str]:
 def check_draw_provenance():
     """Every recorded draw must name a POOL entry, not the paper's surface form."""
     print("\ndraw provenance (a recorded item must be redrawable)")
-    pools_path = AGENTS / "item-pool-sampling" / "references" / "pools.json"
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
     if not pools_path.is_file():
         return skip("recorded draws resolve to pools.json", "no pools.json")
     pools = json.loads(pools_path.read_text(encoding="utf-8"))
@@ -2158,7 +2185,7 @@ def check_draw_provenance():
               "is in no pool: sample_items.recency_map() keys on the pool "
               "string, so an unresolvable entry is permanently un-cooled and "
               "redrawable next test. Re-sample; do NOT reconcile by hand "
-              "(item-pool-sampling 'Rotation model')")
+              "(exam-blueprint 'Rotation model')")
 
 
 def check_ledger_spec_agreement():
@@ -2214,7 +2241,7 @@ def check_ledger_spec_agreement():
               "; ".join(off) + " — one side was edited after sampling; the "
               "ledger burns cooldown on items the paper never asked and the "
               "substitutes never rotate. Re-sample rather than reconciling by "
-              "hand (item-pool-sampling 'Rotation model'). Equality here is "
+              "hand (exam-blueprint 'Rotation model'). Equality here is "
               "NOT enough on its own: record the POOL entry-string, never the "
               "paper's inflected surface form — aligning both files on a "
               "string the sampler cannot resolve satisfies this check while "
@@ -2263,11 +2290,11 @@ def check_harvest_provenance():
             unblended.append(f"{d.name}: harvest_sha {spec_sha} but 0 web entries")
     check("spec and ledger record the same harvest_sha", not disagree,
           "; ".join(disagree) + " — merge_seeds.py writes both in one run; a "
-          "difference means one was edited by hand (web-topic-research)")
+          "difference means one was edited by hand (exam-blueprint)")
     check("only a blended spec carries a harvest_sha", not unblended,
           "; ".join(unblended) + " — an unblended pure-pool run must record no "
           "harvest at all; a stamp with no web entry to explain it is the "
-          "forgery shape the 12-hex regex cannot see (web-topic-research)")
+          "forgery shape the 12-hex regex cannot see (exam-blueprint)")
 
     seeds_path = ROOT / "logs" / "seeds.json"
     recorded = {s for s in led_sha.values() if s}
@@ -2282,7 +2309,7 @@ def check_harvest_provenance():
          f"exists, so the no-two-tests-share-a-harvest check is comparing "
          f"ghosts) or step 3.5 has re-harvested for the next test and "
          f"merge_seeds has not run yet. Say which in your report "
-         f"(web-topic-research)")
+         f"(exam-blueprint)")
 
 
 # R10/R17. `sample_items.py` writes the rotation it actually enforced into the
@@ -2293,7 +2320,7 @@ def check_harvest_provenance():
 # GRANDFATHER SCOPE, stated exactly: the two specs on disk on 2026-08-06
 # (tests/1 and tests/2) were written before `sample_items.py` emitted the key,
 # so they cannot carry it and re-sampling them would rewrite the contract their
-# 101 keys were placed against (item-pool-sampling §"Workflow & Scripts"). They
+# 101 keys were placed against (exam-blueprint §"Workflow & Scripts"). They
 # are exempted BY NAME, not by a date rule and not by "the key is absent" —
 # a timestamp cannot separate them (test 2's spec is stamped today, from a
 # reroll that predates the emission by hours) and an absence rule would exempt
@@ -2315,11 +2342,11 @@ def check_spec_rotation(d, spec: dict, sample):
                      "rotation-less sampler, so nothing proves this paper does "
                      "not redraw the previous test's items. Re-run "
                      "sample_items.py --seed <n> --test-id "
-                     f"{d.name} (item-pool-sampling 'Rotation is proved in the "
+                     f"{d.name} (exam-blueprint 'Rotation is proved in the "
                      "spec')")
     check(name, rot.get("recency_source") == "ledger",
           f"recency_source={rot.get('recency_source')!r} — only 'ledger' names "
-          f"a source this gate can re-check (item-pool-sampling)")
+          f"a source this gate can re-check (exam-blueprint)")
 
     cool = rot.get("cooldown")
     if not isinstance(cool, int) or cool <= 0:
@@ -2351,7 +2378,7 @@ def check_spec_rotation(d, spec: dict, sample):
           "; ".join(clashes[:6]) + " — the spec claims a cooldown the ledger "
           "contradicts, so either draw() is broken or the spec was edited "
           "after sampling. Never lower COOLDOWN to make this green "
-          "(item-pool-sampling 'Rotation is proved in the spec')")
+          "(exam-blueprint 'Rotation is proved in the spec')")
 
 
 def check_rotation_inputs():
@@ -2419,21 +2446,12 @@ def check_rotation_inputs():
         harvest = {s["seed"] for s in json.loads(seeds_path.read_text(encoding="utf-8"))}
         harvest_on_disk = hashlib.sha1(seeds_path.read_bytes()).hexdigest()[:12]
 
-    specs: list[tuple[Path, dict]] = []
-    tests_root = ROOT / "tests"
-    if tests_root.is_dir():
-        for d in sorted(tests_root.glob("*")):
-            if not d.is_dir() or d.name.startswith("imported-"):
-                continue
-            spec_path = d / "test_spec.json"
-            if spec_path.is_file():
-                specs.append(
-                    (d, json.loads(spec_path.read_text(encoding="utf-8"))))
+    specs = generated_specs()
 
     if not specs:
         return skip("test_spec blend contract", "no generated test_spec.json files")
 
-    sample = load(".agents/item-pool-sampling/scripts/sample_items.py")
+    sample = load(".agents/exam-blueprint/scripts/sample_items.py")
     for d, spec in specs:
         print(f"  {d.name}/test_spec.json")
         check_spec_blend(spec)
@@ -2457,7 +2475,7 @@ def check_rotation_inputs():
         #
         # This used to validate every spec against the single current
         # logs/seeds.json, which put the gate in direct conflict with the
-        # pipeline it gates: `web-topic-research` §"Step 0" makes the harvest a
+        # pipeline it gates: `exam-blueprint` §"Step 0" makes the harvest a
         # per-test input — 「A harvest is an input to one test, not a file that
         # lives in the repo. Re-harvest it, every time.」 — and leaving the
         # previous harvest in place is precisely what turned test 3 into a
@@ -2488,7 +2506,7 @@ def check_rotation_inputs():
                  f"spec was blended from harvest {spec_sha or 'unrecorded'}, "
                  f"logs/seeds.json is {harvest_on_disk or 'absent'} — a harvest "
                  f"is a per-test input and is re-harvested for the next test "
-                 f"(web-topic-research Step 0), so this spec's seeds are no "
+                 f"(exam-blueprint Step 0), so this spec's seeds are no "
                  f"longer on disk to check against")
             continue
         orphans = [f"{f}:「{t}」" for f, t in blended if t not in harvest]
@@ -2566,7 +2584,7 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
 # keys からい, which the corpus does NOT head for 辛い (it heads 辛い(つらい) at
 # N3 alone), and an unattested key is unrankable — it must SKIP, not fail, or
 # the check would reject the reference item it was measured on. Corpus levels
-# raise the question; item-pool-sampling documents that they are not a verdict
+# raise the question; exam-blueprint documents that they are not a verdict
 # on their own (把握 is labelled N1), which is why the FAIL is narrowed to one
 # headword's own two readings rather than to any key with an N1 label.
 LEVEL_HARDNESS = {"N3": 1, "N2": 2, "N1": 3}
@@ -2575,7 +2593,7 @@ LEVEL_HARDNESS = {"N3": 1, "N2": 2, "N1": 3}
 def openjlpt_readings() -> dict[str, dict[str, str]]:
     """{headword: {reading: level}} across the three vendored OpenJLPT slices."""
     out: dict[str, dict[str, str]] = {}
-    base = AGENTS / "item-pool-sampling" / "references" / "openjlpt"
+    base = AGENTS / "exam-blueprint" / "references" / "openjlpt"
     for lv in ("n1", "n2", "n3"):
         p = base / f"vocab-{lv}.json"
         if not p.is_file():
@@ -2627,8 +2645,8 @@ def check_mondai1_key_band(name: str, spec: dict, opts: dict[int, list[str]]):
           not harder,
           "; ".join(harder) + " — when a spelling carries more than one 訓読み, "
           "key the reading the corpus grades LOWER and send the harder one "
-          "back to item-pool-sampling; the pool entry is the defect, not the "
-          "option set (question-authoring 問題1; item-pool-sampling "
+          "back to exam-blueprint; the pool entry is the defect, not the "
+          "option set (question-authoring 問題1; exam-blueprint "
           "'kanji_reading validity rule' 2b)")
     check(f"{name}: no 問題1 option is another reading of its own target",
           not in_options,
@@ -2715,7 +2733,7 @@ def check_spec_target_items(d, gt: str, st: str, bi):
           f"({sum(len(spec.get('items', {}).get(c, [])) for c in haystacks)} targets)",
           not missing,
           "; ".join(missing) + " — author only the sampled items, or re-sample; "
-          "a silent substitution corrupts rotation (item-pool-sampling)")
+          "a silent substitution corrupts rotation (exam-blueprint)")
 
 
 def check_script_shape(script_text: str, ct: str, m, test_id: str = ""):
@@ -2855,7 +2873,7 @@ def check_mondai5_enumeration(name: str, script_text: str, ct: str, bi):
           f"「鳥が見られる所？」/「折りたためる自転車なら」, never 「Nつ目のに"
           f"します」. An ordinal decider ties the answer to a printed SLOT, so "
           f"re-ordering the booklet silently re-keys the item: name the "
-          f"candidate instead (choukai-script-writing 問題5 2番)")
+          f"candidate instead (choukai-audio 問題5 2番)")
 
     # (b) Candidate n of the enumeration must be printed option n.
     opts = choukai_p5_2ban_options(ct, bi)
@@ -2921,13 +2939,13 @@ def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
     check(f"{test_id}: 聴解 narration gender matches SPEAKER_MAP's voice",
           not mismatch,
           "; ".join(mismatch) + " — rename the speaker or recast it in "
-          "choukai-mp3-generation's SPEAKER_MAP; the audio and the booklet "
+          "choukai-audio's SPEAKER_MAP; the audio and the booklet "
           "must describe the same person")
     if origin == "generated":
         warn(f"{test_id}: 聴解 item speaker pairs cast distinguishable voices",
              not indistinct,
              "; ".join(indistinct) + " — speaker labels resolve to one voice or near-identical rate; "
-             "prefer contrasting voices (choukai-script-writing)")
+             "prefer contrasting voices (choukai-audio)")
 
 
 def check_artifact_freshness(d):
@@ -2988,11 +3006,11 @@ def check_artifact_freshness(d):
                              f"source is {want}")
     check(f"{d.name}: built HTML matches the Markdown it stamps", not stale,
           "; ".join(stale) + " — run `make booklet` and `make sheet`; the "
-          "Markdown is the single source of truth (AGENTS.md §5)")
+          "Markdown is the single source of truth (exam-app)")
     warn(f"{d.name}: built HTML records its source sha", not unstamped,
          f"{len(unstamped)} stamp(s) missing ({unstamped[:3]}…) — rebuild with "
          f"`make booklet {d.name} && make sheet {d.name}` to stamp them "
-         f"(exam-booklet-generation)")
+         f"(exam-app)")
 
 
 # Cross-test reuse (G15). Apparatus and 例 dialogues carried over verbatim: test
@@ -3026,10 +3044,10 @@ def check_cross_test_reuse(name: str, mine: dict, others: dict[str, dict]):
              "rewrite the gloss for THIS passage — three of test 2's were "
              "test 1's, and all three were orphaned because the passage changed"),
             ("examples", "例。block",
-             "author a fresh 例 dialogue (choukai-script-writing); test 1's and "
+             "author a fresh 例 dialogue (choukai-audio); test 1's and "
              "test 2's 問題1 例 are byte-identical to the official paper's"),
             ("choukai_options", "聴解 例 option line",
-             "author fresh 例 booklet options (choukai-script-writing)")):
+             "author fresh 例 booklet options (choukai-audio)")):
         shared = []
         for other, data in others.items():
             if kind in mine and kind in data:
@@ -3107,15 +3125,24 @@ def check_banned_collocations(d, gt: str, ct: str, st: str, origin: str):
 
 # --------------------------------------------------------------- per-test checks
 def check_tests():
-    g = load(".agents/exam-answer-grading/scripts/grade_answers.py")
-    m = load(".agents/choukai-mp3-generation/scripts/make_choukai_mp3.py")
-    bi = load(".agents/interactive-answer-sheet/scripts/build_interactive.py")
+    g = load(".agents/exam-app/scripts/grade_answers.py")
+    m = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
+    bi = load(".agents/exam-app/scripts/build_interactive.py")
     key_heading = re.compile(r"^#+\s*(解答|【?正解)", re.M)
     expected_choukai = ([f"問{s}-{i}" for s, n in ((1, 5), (2, 6), (3, 5), (4, 11))
                          for i in range(1, n + 1)]
                         + ["問5-1", "問5-2-1", "問5-2-2"])
 
     dirs = sorted(p for p in (ROOT / "tests").glob("*") if p.is_dir()) if (ROOT / "tests").is_dir() else []
+    if dirs and not any(ORIGIN.is_imported(p.name) for p in dirs):
+        # The cross-test reuse checks compare generated tests with each other,
+        # but their strongest comparison — against the official paper others
+        # copy from — needs an imported test on disk, and the calibration
+        # anchor tests/imported-n2-2025-07 was deleted. Say so instead of
+        # letting that half of the check pass silently.
+        skip("cross-test 例/（注N） reuse vs an official import",
+             "no tests/imported-* on disk — only generated↔generated "
+             "comparison runs; re-import a reference paper to restore it")
     if not dirs:
         print("\nper-test contracts")
         skip("tests/", "no test directories on disk")
@@ -3133,9 +3160,9 @@ def check_tests():
 
     for d in dirs:
         print(f"\nper-test contracts: {d.relative_to(ROOT)}")
-        origin = "imported" if d.name.startswith("imported-") else "generated"
+        origin = ORIGIN.test_origin(d.name)
         if origin == "imported":
-            slug = d.name[len("imported-"):]
+            slug = d.name[len(ORIGIN.IMPORTED_PREFIX):]
             check("imported- slug is non-empty kebab-case",
                   bool(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug)),
                   f"got {d.name!r}")
@@ -3335,8 +3362,6 @@ def check_tests():
             continue
 
         html = sheet.read_text(encoding="utf-8")
-        check("解答.html has no emoji in the report labels",
-              not re.search("[🟢🟡🔴]", html), "4cad944 removed them; rebuild the sheet")
 
         # Radio-group shape. Every one of these caught a real bug: a single
         # bubble per horizontally-laid-out question (unanswerable beyond
@@ -3424,7 +3449,7 @@ def check_grader_parity():
     if subprocess.run(["which", "node"], capture_output=True).returncode != 0:
         return skip("grader parity", "node not installed")
 
-    g = load(".agents/exam-answer-grading/scripts/grade_answers.py")
+    g = load(".agents/exam-app/scripts/grade_answers.py")
     for sheet in sheets:
         d = sheet.parent
         with tempfile.TemporaryDirectory() as tmp:
@@ -3466,6 +3491,7 @@ def main():
         check_refs()
         check_skills()
         check_filename_contracts()
+        check_makefile_help()
         check_deployments()
         check_pacing()
         check_item_counts()
@@ -3475,7 +3501,7 @@ def main():
         check_pool_kanji_reading_shape()
         print("\nrotation inputs (why a new test is actually new)")
         check_rotation_inputs()
-        check_ledger_draw_counts(load(".agents/item-pool-sampling/scripts/sample_items.py"))
+        check_ledger_draw_counts(load(".agents/exam-blueprint/scripts/sample_items.py"))
         check_ledger_spec_agreement()
         check_harvest_hygiene()
         check_harvest_provenance()

@@ -13,9 +13,7 @@ on:
     branches: [master]
     paths:
       - 'tests/**'
-      - '.agents/interactive-answer-sheet/**'
-      - '.agents/exam-booklet-generation/**'
-      - '.agents/exam-answer-grading/**'
+      - '.agents/exam-app/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
