@@ -201,6 +201,13 @@ distractors** (official July 2025 ships 液って/温って/汗って and 支接
 precision. ⚠ Worked examples in this file are patterns — never ship an
 example's target word or option set.
 
+**The stem's kana is the key's reading.** The 音/訓 reading printed in the 問題2
+stem must equal the reading of the keyed kanji option (しひん 下品 would miskey:
+下品 reads げひん). Write the stem kana from the key option's reading, then
+verify every non-key option parses as the same kana skeleton (かいこう →
+開港/開向/回港/回向). A stem kana no option reads is a gate-level automatic-fail
+class (shipped in 20260807_2 item 6: しひん ≠ 下品).
+
 ## 問題3 (語形成)
 
 諸〜, 〜化, 準〜, 〜済み, 〜制, 未〜, 〜性, and the four real negation prefixes
@@ -216,6 +223,20 @@ invented one like 迷〜.
 N2 nouns/adverbs: 難航, 発足 (distractor: 成立), かろうじて, うんざり, てきぱき,
 需要. Distractors share the semantic field — and the functional category, per
 the core sniff-test rule and category line.
+
+**The stem is a BLANK, never the answer.** Every 問題4 stem must carry （　）
+in the slot and must not print the answer word anywhere in the sentence
+(official booklets ship every stem with （　）). A stem that prints the answer
+is a gate-level automatic-fail class (shipped in 20260807_2, items 14–20). The
+（　） is the printed sentence's only gap — the instruction line reads
+「（　）に入れるのに最もよいものを…」.
+
+**Never key a near-synonym of the answer.** Context words are N2 nouns/adverbs
+chosen so exactly one option fits the sentence; a distractor that is a
+near-synonym the stem also accepts (コンクール vs コンテスト in the same
+sentence) makes the item double-answerable (shipped in 20260807_2 item 14). If
+the stem accepts two options, the target or the stem must change — reject the
+item, never the rule.
 
 ## 問題5 (paraphrase)
 

@@ -75,3 +75,12 @@ Tests idioms and keigo: 目を通す, お言葉に甘えて, 〜かと思いき�
 `qr_situation_seeds`, the seed flavors only the SETTING of the utterance; the
 tested keigo/idiom stays the sampled one. The keyed reply must fit the
 speaker's rank and keigo direction — core Item integrity #20.
+
+**The keyed reply introduces no unstated premise.** The reply that advances the
+dialogue (a suggestion, a consolation, a judgment) may only rely on what the
+prompt states or directly implies; a key that presupposes a fact the prompt
+never mentions (an appointment, a prior arrangement) lets a second option that
+answers the prompt as stated compete with it. That is a double-answer fail
+(shipped in 20260807_2 問題4-1番: the key's 「予約」 premise was never in the
+prompt, so a plain sympathetic reply was equally natural). When the key needs
+such a premise, put it in the prompt; otherwise pick a key the prompt grounds.

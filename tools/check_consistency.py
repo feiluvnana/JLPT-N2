@@ -61,6 +61,7 @@ import hashlib
 import importlib.util
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -2657,6 +2658,96 @@ def check_mondai1_key_band(name: str, spec: dict, opts: dict[int, list[str]]):
           "(question-authoring 問題1)")
 
 
+MOJI2_SEC = re.compile(r"^##\s*問題2\b(.*?)(?=^##\s*問題3\b)", re.M | re.S)
+MOJI4_SEC = re.compile(r"^##\s*問題4\b(.*?)(?=^##\s*問題5\b)", re.M | re.S)
+KANA_RUN = re.compile(r"[ぁ-ゔァ-ヴー]+")
+
+
+def check_moji4_blank_stems(name: str, gt: str, keys: dict[int, int],
+                            opts: dict[int, list[str]]):
+    """Every 問題4 stem is a printed （　） and prints no answer word (G16/F1).
+
+    20260807_2 shipped items 14–20 with the ANSWER printed in the stem
+    （「…を目指すコンテスト」）, making the row self-answering and doubling the
+    option line. Official booklets print every stem with （　） — the instruction
+    asks for the best word to put IN it — so the stem never holds the answer.
+    This is the string-decidable half: a stem line with no blank, or whose key
+    option text appears in the sentence, is the defect regardless of content
+    quality. Imported transcriptions that do not use **N** stem lines match no
+    stems and pass vacuously.
+    """
+    sec = MOJI4_SEC.search(gt)
+    if not sec:
+        return
+    missing, leaking = [], []
+    for ln in sec.group(1).splitlines():
+        ln = ln.strip()
+        m = re.match(r"\*\*(\d+)\*\*(.*)", ln)
+        if not m:
+            continue
+        q = int(m.group(1))
+        stem = m.group(2)
+        if "（　）" not in stem and not BLANK_RUN.search(stem):
+            missing.append(f"{q}: no blank — {stem[:34]}")
+        key_i = keys.get(q)
+        row = opts.get(q) or []
+        if key_i and 1 <= key_i <= len(row) and row[key_i - 1] in stem:
+            leaking.append(f"{q}: prints its key {row[key_i - 1]!r} in the stem")
+    check(f"{name}: every 問題4 stem prints （　） and no answer word",
+          not missing and not leaking,
+          "; ".join(missing + leaking) + " — the 問題4 instruction asks for the "
+          "best word to put in （　）; a stem that prints the blank's answer is "
+          "self-answering (question-authoring 問題4; shipped 20260807_2 items 14–20)")
+
+
+def check_moji2_stem_kana(name: str, gt: str, keys: dict[int, int],
+                          opts: dict[int, list[str]]):
+    """The 問題2 stem's kana is the KEYED option's reading (G17/F2).
+
+    20260807_2 item 6 printed 「しひん」 in the stem and keyed 下品 (げひん): no
+    option in the row read しひん, so the printed stem kana pointed at nothing.
+    Official 表記 items print the target's reading in the stem, so it must equal
+    an attested reading of the option the key column names. Non-key options need
+    not resolve — 非語 like 下晶 are the whole point of 表記 — only the KEY must.
+    Keys openjlpt does not head are unresolvable and pass, not fail.
+    """
+    sec = MOJI2_SEC.search(gt)
+    if not sec:
+        return
+    readings = openjlpt_readings()
+    if not readings:
+        return skip(f"{name}: 問題2 stem kana equals the keyed option's reading",
+                    "no openjlpt vocab slices on disk")
+    problems, unresolved = [], []
+    for ln in sec.group(1).splitlines():
+        ln = ln.strip()
+        m = re.match(r"\*\*(\d+)\*\*(.*)", ln)
+        if not m:
+            continue
+        q = int(m.group(1))
+        key_i = keys.get(q)
+        row = opts.get(q) or []
+        if not key_i or not (1 <= key_i <= len(row)):
+            continue
+        key_word = row[key_i - 1]
+        rds = readings.get(key_word)
+        if not rds:
+            unresolved.append(q)
+            continue
+        bold = [b for b in re.findall(r"\*\*(.+?)\*\*", ln) if KANA_RUN.fullmatch(b)]
+        if not bold:
+            continue
+        if bold[0] not in rds:
+            problems.append(f"{q}: stem kana {bold[0]!r}, key {key_word!r} "
+                            f"reads {sorted(rds)}")
+    detail = "; ".join(problems)
+    if unresolved:
+        detail += ("; " if detail else "") + f"unresolvable keys {unresolved} " \
+                   "(not openjlpt headwords — pass)"
+    check(f"{name}: 問題2 stem kana equals the keyed option's reading",
+          not problems, detail + " (question-authoring 問題2)")
+
+
 def check_spec_target_items(d, gt: str, st: str, bi):
     """The paper must test the items the spec drew (G19).
 
@@ -3228,6 +3319,8 @@ def check_tests():
             check_mondai8_chunk_lengths(gt, opts, bi)
             check_mondai8_bare_adverbs(d.name, opts)
         check_level_band_grammar(gt, keys, opts, origin, d.name)
+        check_moji4_blank_stems(d.name, gt, keys, opts)
+        check_moji2_stem_kana(d.name, gt, keys, opts)
         spec_path = d / "test_spec.json"
         if spec_path.is_file():
             _spec = json.loads(spec_path.read_text(encoding="utf-8"))
@@ -3446,7 +3539,7 @@ def check_grader_parity():
     sheets = sorted((ROOT / "tests").glob("*/解答.html"))
     if not sheets:
         return skip("grader parity", "no 解答.html built")
-    if subprocess.run(["which", "node"], capture_output=True).returncode != 0:
+    if shutil.which("node") is None:
         return skip("grader parity", "node not installed")
 
     g = load(".agents/exam-app/scripts/grade_answers.py")

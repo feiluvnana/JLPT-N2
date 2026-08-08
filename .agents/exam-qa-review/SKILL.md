@@ -361,12 +361,22 @@ and it sends the fixing pass off to break working items.
   or both characters swapped for a visually/structurally similar wrong one.
   Fail a set where a "distractor" is a real, unrelated word (test 4's 展開
   next to 傾向), or where only one character position ever varies across all
-  four options.
+  four options. Also confirm the stem kana matches the keyed option's reading:
+  20260807_2 item 6's stem reads しひん but its key 下品 reads げひん — no
+  option reads the stem's kana, so the item is unanswerable as printed. Fail
+  any 問題2 stem whose kana matches none of the options' readings.
 - **問題3 語形成:** confirm every option is a real, productive affix that
   could plausibly attach to the SPECIFIC stem — not just a plausible affix in
   the abstract. Fail a nonsense affix (test 4's 迷〜, not a real negation
   prefix — the real four are 非/無/未/不) or an option that doesn't suffix
   onto the stem at all (伴い/同行/組み合わせ on 家族).
+- **問題4 文脈規定:** every stem must carry a （　）blank for the options to
+  fill. Print the answer word in the stem and the item is trivially answerable
+  — fail it. 20260807_2 shipped all seven 問題4 stems (items 14–20) with the
+  key word in the sentence (「才能ある若手が集まり、**コンクール**で世界一を
+  目指す。」with コンクール = option 2), directly contradicting the paper's own
+  instruction 「（　）に入れるのに最もよいもの」and official 12/2025, which
+  blanks every 問題4 stem.
 - **問題14:** confirm the correct answer requires combining **at least two**
   constraints from the table/flyer (never a single-field lookup), and that
   every scenario detail the question references (a role, category, condition)

@@ -1,24 +1,11 @@
 [
   {
-    "seed": "週1日以上の運動習慣",
+    "seed": "高齢者のデジタル機器操作補助",
     "facts": [
-      "20歳以上の週1日以上実施率は約5割",
-      "1週間あたりの実施時間の中央値は約70分"
+      "高齢者のスマホ利用率は約7割",
+      "オンライン手続きの個別指導が必要なケースが増加"
     ],
-    "source": "https://www.mext.go.jp/sports/b_menu/houdou/jsa_00234.html",
-    "surfaces": [
-      "reading",
-      "listening",
-      "info"
-    ]
-  },
-  {
-    "seed": "都市鉄道の混雑率",
-    "facts": [
-      "東京圏の平均混雑率は約140％台",
-      "大阪圏・名古屋圏も100％超が続く"
-    ],
-    "source": "https://www.mlit.go.jp/report/press/tetsudo04_hh_000139.html",
+    "source": "https://www.digital.go.jp/policies/administrative_procedures_online",
     "surfaces": [
       "reading",
       "listening",
@@ -26,12 +13,24 @@
     ]
   },
   {
-    "seed": "プラスチック資源の一括回収",
+    "seed": "外国語教育の多様化",
     "facts": [
-      "先進モデル事業で複数自治体が実証",
-      "移行後のコストとCO2を概算する手引きを改定"
+      "高校で英語以外の言語を学ぶ生徒が増える",
+      "AI時代のコミュニケーション能力が重視される"
     ],
-    "source": "https://www.env.go.jp/press/press_00200.html",
+    "source": "https://www.mext.go.jp/a_menu/kokusai/gaikokugo/index.htm",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
+  },
+  {
+    "seed": "空き家の流通促進と移住",
+    "facts": [
+      "全国の空き家数は増加傾向",
+      "リモートワークを利用した移住者が増える"
+    ],
+    "source": "https://www.mlit.go.jp/jutakukentiku/house/akiya-model/realestate/akiya_innovation",
     "surfaces": [
       "reading",
       "listening",
@@ -39,23 +38,149 @@
     ]
   },
   {
-    "seed": "熱中症警戒アラートの発表増",
+    "seed": "再生可能エネルギーの導入拡大",
     "facts": [
-      "2025年の延べ発表回数は約1700回超",
-      "特別警戒アラートの発表はゼロ"
+      "太陽光発電の導入量が過去最高を記録",
+      "風力発電の立地候補地が増える"
     ],
-    "source": "https://www.wbgt.env.go.jp/pdf/report/R07_heatillness_report_24.pdf",
+    "source": "https://www.env.go.jp/press/press_01249.html",
     "surfaces": [
-      "listening",
+      "reading",
       "info",
       "qr"
     ]
   },
   {
-    "seed": "キャッシュレス決済の拡大",
+    "seed": "金融教育の推進",
     "facts": [
-      "2025年の比率は約6割",
-      "コード払いの割合は約1割"
+      "学校での金融教育が2025年度から本格化",
+      "若年層の投資信託利用率が上昇"
+    ],
+    "source": "https://www.fsa.go.jp/",
+    "surfaces": [
+      "reading",
+      "listening",
+      "carrier"
+    ]
+  },
+  {
+    "seed": "地方創生とワーケーション",
+    "facts": [
+      "地方都市のワーケーション施設が増加",
+      "企業の地方拠点設置に補助金が出る"
+    ],
+    "source": "https://www.kantei.go.jp/jp/singi/chiiki_jitsugen/",
+    "surfaces": [
+      "listening",
+      "carrier",
+      "qr"
+    ]
+  },
+  {
+    "seed": "動物愛護と保護活動",
+    "facts": [
+      "飼い主のいない猫の不妊手術が進む",
+      "保護犬猫の譲渡数が過去最高を記録"
+    ],
+    "source": "https://www.env.go.jp/nature/",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
+  },
+  {
+    "seed": "認知症カフェの広がり",
+    "facts": [
+      "認知症の人と家族が集まるカフェが増加",
+      "地域の見守りネットワークが強化される"
+    ],
+    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/topics.html",
+    "surfaces": [
+      "listening",
+      "qr",
+      "carrier"
+    ]
+  },
+  {
+    "seed": "SDGsと企業の取り組み",
+    "facts": [
+      "上場企業のSDGs報告書の発行率が8割超",
+      "サプライチェーン全体での脱炭素化が進む"
+    ],
+    "source": "https://www.meti.go.jp/policy/",
+    "surfaces": [
+      "reading",
+      "info"
+    ]
+  },
+  {
+    "seed": "子育て世代の住まい探し",
+    "facts": [
+      "子育て世帯向けの賃貸住宅が増加",
+      "保育所の近い住まいの人気が高い"
+    ],
+    "source": "https://www.mlit.go.jp/jutakukentiku/house/",
+    "surfaces": [
+      "reading",
+      "listening",
+      "carrier"
+    ]
+  },
+  {
+    "seed": "災害時の避難所運営",
+    "facts": [
+      "ペット同伴可能な避難所が増加",
+      "避難所の多言語対応が進む"
+    ],
+    "source": "https://www.bousai.go.jp/",
+    "surfaces": [
+      "listening",
+      "qr"
+    ]
+  },
+  {
+    "seed": "農業のスマート化",
+    "facts": [
+      "ドローンを使った農薬散布が広がる",
+      "AIによる作物の病虫害予測が導入される"
+    ],
+    "source": "https://www.maff.go.jp/j/kanbo/anpo/",
+    "surfaces": [
+      "reading",
+      "listening"
+    ]
+  },
+  {
+    "seed": "バリアフリー観光",
+    "facts": [
+      "車椅子対応の観光ルートが整備される",
+      "多言語でのバリアフリー情報提供が進む"
+    ],
+    "source": "https://www.jnto.go.jp/",
+    "surfaces": [
+      "reading",
+      "listening",
+      "info"
+    ]
+  },
+  {
+    "seed": "副業・複業の広がり",
+    "facts": [
+      "正社員の副業許可率が上昇",
+      "複数の仕事を持つ人が増加する"
+    ],
+    "source": "https://www.mhlw.go.jp/stf/newpage_71871.html",
+    "surfaces": [
+      "reading",
+      "carrier",
+      "qr"
+    ]
+  },
+  {
+    "seed": "電動自動車の販売拡大",
+    "facts": [
+      "電気自動車の新車販売台数が過去最高",
+      "充電ステーションの数が急増する"
     ],
     "source": "https://www.meti.go.jp/press/2025/03/20260331006/20260331006.html",
     "surfaces": [
@@ -65,61 +190,49 @@
     ]
   },
   {
-    "seed": "放課後児童クラブの受け皿",
+    "seed": "医療費のオンライン請求",
     "facts": [
-      "登録児童は約157万人",
-      "待機児童は約1.6万人で前年より減少"
+      "医療機関のオンライン請求対応率が向上",
+      "患者の自己負担額のオンライン確認が可能になる"
     ],
-    "source": "https://manabi-mirai.mext.go.jp/upload/2026_0423_2.pdf",
+    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/",
     "surfaces": [
-      "reading",
       "listening",
+      "carrier",
       "info"
     ]
   },
   {
-    "seed": "ふるさと納税の受入拡大",
+    "seed": "プログラミング教育の必修化",
     "facts": [
-      "令和6年度の受入額は約1.3兆円",
-      "受入件数は約5900万件"
+      "小学校でのプログラミング教育が始まる",
+      "中学校で情報Iが必修化される"
     ],
-    "source": "https://www.soumu.go.jp/main_content/001022811.pdf",
+    "source": "https://www.mext.go.jp/b_menu/shidou/",
     "surfaces": [
       "reading",
-      "info",
+      "listening",
       "carrier"
     ]
   },
   {
-    "seed": "自治会加入率の低下",
+    "seed": "地域通貨の導入実験",
     "facts": [
-      "把握団体の平均加入率は約7割",
-      "10年で約6ポイント低下した例がある"
+      "商店街での地域通貨決済が増加",
+      "地域貢献活動でポイントがもらえる"
     ],
-    "source": "https://www.soumu.go.jp/main_content/000819371.pdf",
+    "source": "https://www.soumu.go.jp/main_content_000819371.pdf",
     "surfaces": [
-      "reading",
       "listening",
-      "qr"
+      "qr",
+      "carrier"
     ]
   },
   {
-    "seed": "カロリーベースの国産供給",
+    "seed": "リモートワークの定着",
     "facts": [
-      "食料自給率は約4割前後で低水準",
-      "生産額ベースは6割台で推移"
-    ],
-    "source": "https://www.maff.go.jp/j/zyukyu/zikyu_ritu/012.html",
-    "surfaces": [
-      "reading",
-      "info"
-    ]
-  },
-  {
-    "seed": "成人の平均歩数の減少",
-    "facts": [
-      "男性の平均は約6600歩",
-      "女性の平均は約5700歩で直近10年減少"
+      "週3日以上リモートの企業が増加",
+      "オフィス面積の縮小が進む"
     ],
     "source": "https://www.mhlw.go.jp/stf/newpage_45540.html",
     "surfaces": [
@@ -129,128 +242,40 @@
     ]
   },
   {
-    "seed": "睡眠時間の不足感",
+    "seed": "洋服のリユース・リサイクル",
     "facts": [
-      "睡眠が6時間未満の人は約4割",
-      "睡眠で休養がとれている人は約7割台"
+      "古着回収ボックスが駅や商業施設に設置される",
+      "リユース服の販売額が増加する"
     ],
-    "source": "https://kennet.mhlw.go.jp/tools/wp/wp-content/themes/targis_mhlw/pdf/leaf-sleep.pdf",
+    "source": "https://www.env.go.jp/press/101928.html",
     "surfaces": [
       "reading",
-      "listening",
-      "carrier"
-    ]
-  },
-  {
-    "seed": "国内旅行消費の回復",
-    "facts": [
-      "日本人国内旅行消費は約27兆円",
-      "国内全体の旅行消費は約38兆円"
-    ],
-    "source": "https://www.travelvoice.jp/20260430-159734",
-    "surfaces": [
-      "reading",
-      "info",
       "listening"
     ]
   },
   {
-    "seed": "家庭の防災備蓄の頭打ち",
+    "seed": "フードバンクの活動拡大",
     "facts": [
-      "震災直後は備蓄実施率が大きく上昇",
-      "その後は取組実施率が伸び悩む傾向"
+      "食品ロスを削減するフードバンクが増加",
+      "企業からの寄付食品が家庭に届く"
     ],
     "source": "https://www.bousai.go.jp/kaigirep/hakusho/r05/honbun/t1_2s_04_01.html",
     "surfaces": [
       "listening",
-      "qr",
-      "carrier"
-    ]
-  },
-  {
-    "seed": "住宅用火災警報器の普及状況",
-    "facts": [
-      "全国の設置率は約8割半ば",
-      "条例適合率は約7割弱"
-    ],
-    "source": "https://www.fdma.go.jp/publication/hakusho/r6/point/1/68745.html",
-    "surfaces": [
-      "listening",
       "carrier",
-      "info"
+      "qr"
     ]
   },
   {
-    "seed": "文化財修理の原材料確保",
+    "seed": "多文化共生のまちづくり",
     "facts": [
-      "用具・原材料の生産者減少が課題",
-      "安定供給のための調査と支援が進む"
+      "多言語の行政窓口が拡充する",
+      "国際交流イベントが地域で開催される"
     ],
-    "source": "https://www.bunka.go.jp/takumi/sozai.html",
+    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/DX_suishin.html",
     "surfaces": [
       "reading",
       "listening"
-    ]
-  },
-  {
-    "seed": "都市のみどり活用",
-    "facts": [
-      "緑の基本計画にグリーンインフラを位置づけ",
-      "官民連携の整備支援制度がある"
-    ],
-    "source": "https://www.mlit.go.jp/toshi/park/toshi_parkgreen_tk_000181.html",
-    "surfaces": [
-      "listening",
-      "carrier"
-    ]
-  },
-  {
-    "seed": "野菜摂取量の減少傾向",
-    "facts": [
-      "20歳以上の平均摂取は約260グラム",
-      "男女とも直近で減少傾向"
-    ],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/r5-houkoku_00001.html",
-    "surfaces": [
-      "carrier",
-      "qr"
-    ]
-  },
-  {
-    "seed": "放送サービス接触の変化",
-    "facts": [
-      "リアルタイム接触は約86％",
-      "インターネット経由の接触は約4割"
-    ],
-    "source": "https://www.jstage.jst.go.jp/article/bunken/76/1-2/76_2/_article/-char/ja",
-    "surfaces": [
-      "listening",
-      "carrier",
-      "qr"
-    ]
-  },
-  {
-    "seed": "国民生活時間の最新調査",
-    "facts": [
-      "仕事・家事・メディア利用など1日の使い方を追う",
-      "定期調査で暮らしの変化を把握"
-    ],
-    "source": "https://prtimes.jp/main/html/rd/p/000000050.000160617.html",
-    "surfaces": [
-      "carrier",
-      "qr"
-    ]
-  },
-  {
-    "seed": "無料見逃し配信の広がり",
-    "facts": [
-      "TVerなど無料動画の利用が増える",
-      "録画再生からネット動画へ移る層がある"
-    ],
-    "source": "https://www.nhk.or.jp/bunken/d/_data/research/yoron/BUNA0000010760010002/files/20260105_01.pdf",
-    "surfaces": [
-      "carrier",
-      "qr"
     ]
   }
 ]
