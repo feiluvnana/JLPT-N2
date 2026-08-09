@@ -107,7 +107,7 @@ def parse_gengo_keys(gengo_md_path: Path) -> dict:
                 if q_clean.isdigit() and a_clean.isdigit():
                     q_num = int(q_clean)
                     a_num = int(a_clean)
-                    if 1 <= q_num <= 71 and 1 <= a_num <= 4:
+                    if 1 <= q_num <= 75 and 1 <= a_num <= 4:
                         answers[q_num] = a_num
 
     return answers
@@ -153,13 +153,16 @@ def parse_choukai_keys(choukai_md_path: Path) -> dict:
                         if q_digit:
                             answers[f"問{current_mondai}-{q_digit.group(1)}"] = ans_val
                     elif current_mondai == 5:
-                        if re.search(r"質問1|2[-\s]*質問1|2番.*質問1", q_label):
-                            answers["問5-2-1"] = ans_val
-                        elif re.search(r"質問2|2[-\s]*質問2|2番.*質問2", q_label):
-                            answers["問5-2-2"] = ans_val
+                        if "質問1" in q_label:
+                            answers["問5-3-1" if ("3" in q_label or "3番" in q_label) else "問5-2-1"] = ans_val
+                        elif "質問2" in q_label:
+                            answers["問5-3-2" if ("3" in q_label or "3番" in q_label) else "問5-2-2"] = ans_val
                         elif re.search(r"^1$|^1番$|1番(?!.*質問)", q_label) or (
                                 "1" in q_label and "質問" not in q_label and "2" not in q_label):
                             answers["問5-1"] = ans_val
+                        elif re.search(r"^2$|^2番$|2番(?!.*質問)", q_label) or (
+                                "2" in q_label and "質問" not in q_label and "3" not in q_label):
+                            answers["問5-2"] = ans_val
 
     return answers
 
@@ -172,12 +175,15 @@ def grade(gengo_keys: dict, choukai_keys: dict, user_answers: dict) -> dict:
     user_gengo = user_answers.get("言語知識_読解", {})
     user_choukai = user_answers.get("聴解", {})
 
-    # 1. Language Knowledge (Goi & Bunpou: Q1 - Q51)
-    goi_bunpou_total = 51
+    max_q = max(gengo_keys.keys()) if gengo_keys else 71
+    goi_cutoff = 54 if max_q > 71 else 51
+
+    # 1. Language Knowledge (Goi & Bunpou: Q1 - Q51/54)
+    goi_bunpou_total = goi_cutoff
     goi_bunpou_correct = 0
     gengo_detail = {}
 
-    for q in range(1, 52):
+    for q in range(1, goi_cutoff + 1):
         correct = gengo_keys.get(q)
         user_choice = user_gengo.get(str(q))
         if user_choice is not None:
@@ -191,10 +197,10 @@ def grade(gengo_keys: dict, choukai_keys: dict, user_answers: dict) -> dict:
             "is_correct": is_correct
         }
 
-    # 2. Reading (Dokkai: Q52 - Q71)
-    dokkai_total = 20
+    # 2. Reading (Dokkai: Q52/55 - Q71/75)
+    dokkai_total = max_q - goi_cutoff
     dokkai_correct = 0
-    for q in range(52, 72):
+    for q in range(goi_cutoff + 1, max_q + 1):
         correct = gengo_keys.get(q)
         user_choice = user_gengo.get(str(q))
         if user_choice is not None:

@@ -373,7 +373,7 @@ def validate_script(blocks):
         if f"{sec}。" not in text:
             errors.append(f"{sec} section header 「{sec}。」 missing")
             continue
-        if items[sec] != want:
+        if items[sec] != want and not (sec == "問題5" and items[sec] in (2, 3)):
             errors.append(f"{sec}: {items[sec]} item block(s), expected {want}"
                           + (" (例 + scored items)" if sec in NEEDS_EXAMPLE else ""))
         if sec in NEEDS_EXAMPLE:

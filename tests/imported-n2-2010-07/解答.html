@@ -1,0 +1,1621 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet"><title>N2 模擬試験 解答用紙 (imported-n2-2010-07)</title>
+<!-- src_sha: 言語知識・読解.md=068d843fce5a -->
+
+<!-- src_sha: 聴解.md=231ef2e195a0 -->
+
+<!-- src_sha: 聴解スクリプト.txt=2c6c6f30c8f4 -->
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+body { font-family: "Noto Serif JP", "Noto Serif CJK JP", serif; font-size: 10.5pt;
+       line-height: 1.9; color: #1a1a1a; }
+h1 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 15pt;
+     border-bottom: 2.5px solid #1a1a1a; padding-bottom: 5px;
+     margin: 30px 0 14px; page-break-after: avoid; }
+h2 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 12pt;
+     background: #efefef; border-left: 5px solid #444; padding: 5px 10px;
+     margin: 26px 0 12px; page-break-after: avoid; }
+h3 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 11pt;
+     margin: 20px 0 8px; page-break-after: avoid; }
+p { margin: 12px 0; }
+/* Furigana: WeasyPrint has NO ruby layout (and ignores ruby-position), so the
+   reading is stacked manually. rt is taken out of flow and pinned above the
+   base, which keeps the base glyphs on the text baseline and leaves line
+   spacing untouched. Do NOT go back to display:inline-table -- WeasyPrint
+   drops the base onto its own line under the reading. */
+ruby {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: baseline;
+  /* line-height 1 keeps the ruby box hugging its glyphs; with a taller
+     inherited line-height the box grows and `bottom: 100%` would push the
+     reading far above the text. */
+  line-height: 1;
+}
+rb { display: inline; }
+rt {
+  position: absolute;
+  bottom: calc(100% + 0.1em);
+  left: -0.6em;
+  right: -0.6em;
+  font-size: 0.5em;
+  line-height: 1;
+  font-weight: normal;
+  color: #333;
+  white-space: nowrap;
+  text-align: center;
+}
+rp { display: none; }
+/* Only blocks that actually carry furigana get extra leading, so the reading
+   clears the descenders of the line above without loosening plain text. */
+p.furi, li.furi { line-height: 2.1; }
+.vocab-notes { margin-top: 8px; font-size: 9pt; color: #333; line-height: 1.6; border-top: 1px dashed #aaa; padding-top: 6px; }
+table { border-collapse: collapse; margin: 10px 0; width: 100%; page-break-inside: avoid; }
+th, td { border: 1px solid #888; padding: 4px 9px; font-size: 9.5pt;
+         line-height: 1.6; }
+th { background: #f0f0f0; font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
+blockquote { border: 1px solid #999; background: #fafafa; margin: 10px 0;
+             padding: 10px 14px; page-break-inside: avoid; }
+hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
+strong { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
+
+@media screen {
+  :root { --gutter: 1.6em; }
+  body { max-width: 60em; margin: 0 auto; padding: 2.5em var(--gutter) 6em;
+         background: #fff; }
+  table { max-width: 100%; }
+}
+@media screen and (max-width: 48em) {
+  :root { --gutter: 0.8em; }
+  body { padding: 1.2em var(--gutter) 4em; font-size: 10pt; }
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  blockquote { padding: 8px 10px; margin: 8px 0; }
+  h1 { font-size: 13.5pt; margin: 22px 0 10px; }
+  h2 { font-size: 11pt; padding: 4px 8px; margin: 18px 0 10px; }
+}
+
+:root{--ink:#0f172a;--line:#cbd5e1;--muted:#475569;--accent:#1d4ed8;
+  --ui:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif}
+/* The bar spans the full window on every screen, so the scrollbar sits ON its
+   right edge — the horizontal padding has to clear it or it covers 採点する. */
+#bar{position:sticky;top:0;z-index:99;background:#111;color:#fff;
+  box-sizing:border-box;min-height:3.25em;padding:0 1.8em;display:flex;
+  flex-wrap:nowrap;gap:.45em 1em;align-items:center;font-family:var(--ui);
+  font-size:11pt}
+#bar b{font-size:12pt;font-weight:700;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;min-width:0;max-width:18em}
+#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#bar .grow{flex:1 1 auto;min-width:.5em}
+#bar-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:.45em;flex:0 0 auto}
+#bar button{font-size:10pt;padding:.25em .75em;cursor:pointer;border-radius:6px;
+  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui);
+  white-space:nowrap;line-height:1.35;min-height:32px;display:inline-flex;align-items:center}
+#bar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);
+  font-weight:700}
+#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap;
+  flex:0 0 auto;padding:.2em 0}
+#bar a.back:hover{color:#fff;text-decoration:underline}
+.ui-btn{display:inline-flex;align-items:center;justify-content:center;
+  font-size:11pt;padding:.45em 1.1em;border-radius:6px;text-decoration:none;
+  border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+  font-family:var(--ui);box-sizing:border-box;min-height:38px}
+.ui-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.ui-btn.danger{background:#fff;border-color:#fca5a5;color:#991b1b}
+.ui-btn.danger:hover{background:#fef2f2}
+.ui-btn:hover{filter:brightness(.96)}
+.ui-table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4em 0}
+.ui-table{border-collapse:collapse;width:100%;font-size:10.5pt;margin:.4em 0;
+  font-family:var(--ui)}
+.ui-table th,.ui-table td{border:1px solid var(--line);padding:.35em .6em;
+  text-align:left;vertical-align:middle}
+.ui-table th{background:#f1f5f9;font-weight:700}
+.ui-table td.n{text-align:right;font-variant-numeric:tabular-nums}
+.ui-table tr.weak td{background:#fff7ed}
+.badge{font-size:10pt;padding:.25em .7em;border-radius:99px;border:1px solid;
+  white-space:nowrap;font-variant-numeric:tabular-nums;font-family:var(--ui);
+  display:inline-flex;align-items:center}
+.badge.pass{background:#f0fdf4;border-color:#16a34a;color:#166534}
+.badge.fail{background:#fef2f2;border-color:#dc2626;color:#991b1b}
+.badge.none{background:#f8fafc;border-color:var(--line);color:#64748b}
+.badge.warn{background:#fffbeb;border-color:#f59e0b;color:#92400e}
+.chip{display:inline-flex;align-items:center;gap:.35em;font-size:10pt;
+  padding:.22em .55em;border-radius:6px;border:1px solid;font-family:var(--ui);
+  font-variant-numeric:tabular-nums;min-height:30px}
+.chip i{font-style:normal;font-size:9pt;opacity:.75}
+.chip.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
+.chip.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.chip.na{background:#f8fafc;border-color:var(--line);color:#64748b}
+.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden;
+  text-align:left}
+.meter .fill{height:100%;background:var(--accent)}
+.meter .fill.done{background:#16a34a}
+.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;text-align:left;
+  font-variant-numeric:tabular-nums;font-family:var(--ui)}
+@media screen and (max-width: 48em){
+  #bar{padding:.45em .9em;gap:.35em .7em;flex-wrap:wrap;font-size:10pt}
+  #bar b{max-width:11em;font-size:11pt}
+  #bar .sub{font-size:9pt}
+  #bar-controls{gap:.35em}
+  #bar button{font-size:9.5pt;padding:.3em .65em;min-height:34px}
+  .ui-btn{font-size:10pt;padding:.4em .85em;min-height:36px}
+}
+@media screen and (max-width: 32em){
+  #bar b{max-width:7.5em;font-size:10.5pt}
+  #where{display:none}
+}
+
+.qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
+.qa label{display:inline-flex;align-items:center;gap:.28em;cursor:pointer;
+  padding:.08em .45em;border:1px solid #bbb;border-radius:999px;font-size:10pt;
+  background:#fff;line-height:1.5}
+.qa label:hover{background:#eef4ff;border-color:#7aa7e8}
+.qa input{margin:0;cursor:pointer}
+.qa input:checked+span{font-weight:700}
+.qa label:has(input:checked){background:#1d4ed8;border-color:#1d4ed8;color:#fff}
+.qa .qid{border:none;background:none;color:#888;font-size:9pt;padding-left:0}
+/* The 例 row is shown, not answerable — its answer is already marked, because
+   the announcer says 「解答用紙の問題◯の例のところを見てください」. */
+.qa.ex .mark{display:inline-flex;align-items:center;justify-content:center;
+  min-width:2em;padding:.08em .5em;border:1px solid #bbb;border-radius:999px;
+  font-size:10pt;background:#fff;line-height:1.5;color:#777}
+.qa.ex .mark.on{background:#111;border-color:#111;color:#fff;font-weight:700}
+.opt{display:flex;align-items:flex-start;gap:.5em;margin:.1em 0}
+.opt .b{flex:0 0 auto;margin-top:.25em}
+#done{font-variant-numeric:tabular-nums}
+#player{position:sticky;top:3.4em;z-index:98;background:#f3f4f6;
+  border-top:1px solid #d1d5db;border-bottom:1px solid #d1d5db;
+  padding:.9em 1em;font-family:var(--ui)}
+#player audio{width:100%;height:36px;display:block}
+.pctl{display:flex;flex-wrap:wrap;gap:.5em .8em;align-items:center;
+  margin-top:.7em;font-size:10pt}
+.pctl button,.pctl select{font-size:10pt;padding:.2em .5em;cursor:pointer}
+.pctl .pick{cursor:pointer;color:#1d4ed8;text-decoration:underline}
+.pctl .pick input{display:none}
+#player.noaudio{background:#fee2e2}
+#player.noaudio::after{content:"聴解.mp3 を読み込めません。「MP3を選ぶ」から指定してください。";
+  display:block;font-size:10pt;color:#991b1b;margin-top:.3em}
+.section-divider{margin:3em 0;border:0;border-top:3px double #333}
+.section-title{font-size:16pt;background:#1e293b;color:#fff;padding:.4em .8em;
+  margin:2em 0 1em;border-radius:4px}
+/* Screen 3 — the result view the sheet switches to on 採点する. Screen 1 is the
+   test list served by serve_sheet.py; screen 2 is #screen-exam above. Both reuse
+   APP_CSS above, so the three screens share one look. */
+#screen-result{display:none;font-family:var(--ui);color:var(--ink);margin:1.4em 0 4em}
+/* The result screen is app UI, not exam paper: undo the booklet's heading
+   chrome (the gray 問題 bars, the ruled rules) so it matches screen 1. */
+#screen-result h1,#screen-result h2,#screen-result h3{background:none;border:0;
+  padding:0;color:var(--ink);font-family:var(--ui)}
+#screen-result h1{font-size:15pt;margin:.2em 0 .6em}
+#screen-result h2{font-size:13pt;margin:1.8em 0 .5em;border-bottom:2px solid #e2e8f0;
+  padding-bottom:.25em}
+#screen-result h3{font-size:11pt;margin:1.2em 0 .3em;color:var(--muted)}
+.rs-nav{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin:2em 0 0;
+  padding-top:1.2em;border-top:1px solid #e2e8f0}
+.rs-head{display:flex;flex-wrap:wrap;gap:1em;align-items:center;padding:1em 1.2em;
+  border-radius:10px;border:2px solid}
+.rs-head.pass{background:#f0fdf4;border-color:#16a34a}
+.rs-head.fail{background:#fef2f2;border-color:#dc2626}
+.rs-verdict{font-size:18pt;font-weight:700}
+.rs-head.pass .rs-verdict{color:#166534}
+.rs-head.fail .rs-verdict{color:#991b1b}
+.rs-score{font-size:24pt;font-weight:700;font-variant-numeric:tabular-nums;margin-left:auto}
+.rs-score small{font-size:11pt;font-weight:400;color:var(--muted)}
+.rs-why{flex-basis:100%;font-size:10.5pt;color:var(--muted);margin:0}
+.rs-saved{font-size:10pt;color:var(--muted);margin:.2em 0 1.2em}
+.rs-saved.ok{color:#15803d;font-weight:700}
+.rs-advice{border-left:4px solid #f59e0b;background:#fffbeb;padding:.7em 1em;
+  margin:.6em 0;font-size:10.5pt}
+.rs-advice b{display:block;margin-bottom:.25em}
+.rs-grid{display:flex;flex-wrap:wrap;gap:.3em;margin:.5em 0 1.2em}
+.rs-check-tools{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;
+  margin:.2em 0 .7em}
+.rs-hint{font-size:10pt;color:var(--muted);margin:0}
+.rs-all-detail{margin:.2em 0 1.4em}
+.rs-all-detail[hidden]{display:none!important}
+.rs-item{border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;
+  padding:.85em 1.05em;margin:0 0 .7em}
+.rs-detail-meta{display:flex;flex-wrap:wrap;gap:.4em 1.1em;align-items:center;
+  font-size:10.5pt;margin:0 0 .65em}
+.rs-detail-meta .tag{font-weight:700;padding:.1em .45em;border-radius:4px;
+  border:1px solid}
+.rs-detail-meta .tag.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
+.rs-detail-meta .tag.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.rs-detail-meta .tag.na{background:#fff;border-color:var(--line);color:#64748b}
+.rs-detail-body{background:#fff;border:1px solid #e2e8f0;border-radius:8px;
+  padding:.75em 1em;line-height:1.75;font-size:11pt}
+.rs-detail-body .qa,.rs-detail-body input{display:none!important}
+.rs-detail-body h1,.rs-detail-body h2,.rs-detail-body h3{background:none;border:0;
+  padding:0;margin:.35em 0 .45em;font-size:11.5pt;color:var(--ink)}
+.rs-detail-note{font-size:10pt;color:var(--muted);margin:.55em 0 0}
+.rs-group{border:1px solid #cbd5e1;border-radius:10px;background:#eef2f7;
+  padding:.85em 1.05em;margin:0 0 .7em}
+.rs-group-shared{margin:0 0 .7em}
+.rs-group-item{margin:0 0 .5em}
+.rs-group-item:last-child{margin-bottom:0}
+.rs-script-label{font-size:9.5pt;font-weight:700;color:var(--muted);
+  margin:0 0 .3em;letter-spacing:.02em}
+.rs-script{margin:.6em 0 0;padding:.6em .8em;background:#f8fafc;
+  border:1px solid #e2e8f0;border-radius:8px;font-size:10.5pt;line-height:1.7}
+.rs-script p{margin:.15em 0}
+@media print{#bar,#player,.rs-nav{display:none}.qa label{border-color:#666}}
+/* On screen the sheet keeps the booklet's centered 60em measure (SCREEN_CSS), so
+   the exam text and the printed booklet render identically — but the measure
+   moves OFF <body> and ONTO the screen wrappers. The bar is the app's chrome and
+   must span the window exactly as it does on screen 1, and a bar inside a
+   centered body cannot. (`width:100vw` was tried and is wrong: 100vw includes
+   the scrollbar, so the bar overflowed and the 採点する button fell off-screen.)
+   All of this is inside @media screen — the A4 @page geometry is untouched. */
+@media screen{
+  body{max-width:none;margin:0;padding:0;background:#eef1f5}
+  #screen-exam,#screen-result{max-width:60em;margin:0 auto;background:#fff;
+    padding:2.5em var(--gutter) 6em}
+  /* The player is chrome too, so it spans its card and sticks under the bar;
+     boot() sets its offset from the bar's measured height. */
+  #player{margin:.2em calc(-1 * var(--gutter)) 1em;padding:.9em var(--gutter)}
+}
+@media screen and (max-width:48em){
+  #screen-exam,#screen-result{padding:1.2em var(--gutter) 4em}
+  .qa{margin:.3em 0 .8em .2em;gap:.4em .6em}
+  .qa label{padding:.35em .75em;font-size:11pt;min-height:40px;min-width:40px;
+    justify-content:center;box-sizing:border-box;font-weight:500}
+  .qa input{width:18px;height:18px}
+  #player{padding:.6em var(--gutter)}
+  .pctl{gap:.4em .6em;margin-top:.5em;font-size:9.5pt}
+  .pctl button,.pctl select,.pctl .pick{min-height:36px;padding:.3em .65em;
+    border-radius:6px}
+  .pctl select#chap{max-width:100%;flex:1 1 auto}
+  .rs-head{flex-direction:column;align-items:flex-start;gap:.4em;padding:.85em 1em}
+  .rs-score{margin-left:0;font-size:20pt}
+  .rs-verdict{font-size:16pt}
+  .rs-nav{flex-direction:column;align-items:stretch;gap:.6em}
+  .rs-nav .ui-btn{width:100%;text-align:center;justify-content:center}
+  .rs-grid{gap:.35em}
+  .rs-item,.rs-group{padding:.7em .85em}
+  .rs-detail-meta{gap:.3em .8em;font-size:10pt}
+  .rs-detail-body{padding:.6em .8em;font-size:10.5pt}
+  .section-title{font-size:14pt;padding:.35em .6em;margin:1.5em 0 .8em}
+}
+</style></head><body><div id="bar"><a class="back" href="/">← テスト一覧</a><b id="bar-title">テスト imported-n2-2010-07（受験）</b><span class="sub" id="where"></span><span class="grow"></span><span id="bar-controls"><span class="sub" id="done">解答済み 0 / 101</span> <button onclick="clearAll()">消去</button> <button onclick="save()" class="primary">採点する</button></span></div><div id="screen-exam"><div id="section-gengo"><h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1><h1>【文字・語彙】</h1>
+<h2>問題1 ____の読み方として最もよいものを１・２・３・４から一つ選びなさい。</h2>
+<p><strong>1</strong> これからも様々な国との相互理解を深めていこうと思う。<br />
+ 1. しょうご　　　2. しょうごう　　　3. そうご　　　4. そうごう</p>
+<div class="qa"><label><input type="radio" name="q_1" value="1"><span>1</span></label><label><input type="radio" name="q_1" value="2"><span>2</span></label><label><input type="radio" name="q_1" value="3"><span>3</span></label><label><input type="radio" name="q_1" value="4"><span>4</span></label></div>
+<p><strong>2</strong> この料理は辛くて食べられない。<br />
+ 1. からくて　　　2. くさくて　　　3. にがくて　　　4. しぶくて</p>
+<div class="qa"><label><input type="radio" name="q_2" value="1"><span>1</span></label><label><input type="radio" name="q_2" value="2"><span>2</span></label><label><input type="radio" name="q_2" value="3"><span>3</span></label><label><input type="radio" name="q_2" value="4"><span>4</span></label></div>
+<p><strong>3</strong> 晴れている日は、この山頂からすばらしい景色が見える。<br />
+ 1. けいしき　　　2. けしき　　　3. けいいろ　　　4. けいろ</p>
+<div class="qa"><label><input type="radio" name="q_3" value="1"><span>1</span></label><label><input type="radio" name="q_3" value="2"><span>2</span></label><label><input type="radio" name="q_3" value="3"><span>3</span></label><label><input type="radio" name="q_3" value="4"><span>4</span></label></div>
+<p><strong>4</strong> このお金は、何かあったときに備えて残しておこう。<br />
+ 1. ととのえて　　　2. たくわえて　　　3. かかえて　　　4. そなえて</p>
+<div class="qa"><label><input type="radio" name="q_4" value="1"><span>1</span></label><label><input type="radio" name="q_4" value="2"><span>2</span></label><label><input type="radio" name="q_4" value="3"><span>3</span></label><label><input type="radio" name="q_4" value="4"><span>4</span></label></div>
+<p><strong>5</strong> 今から、防災訓練を行います。<br />
+ 1. ぼうえん　　　2. ぼうさい　　　3. ほうえん　　　4. ほうさい</p>
+<div class="qa"><label><input type="radio" name="q_5" value="1"><span>1</span></label><label><input type="radio" name="q_5" value="2"><span>2</span></label><label><input type="radio" name="q_5" value="3"><span>3</span></label><label><input type="radio" name="q_5" value="4"><span>4</span></label></div>
+<h2>問題2 ____の言葉で漢字を書くとき、最もよいものを１・２・３・４から一つ選びなさい。</h2>
+<p><strong>6</strong> 彼はとてもれいぎ正しいです。<br />
+ 1. 札義　　　2. 札儀　　　3. 礼義　　　4. 礼儀</p>
+<div class="qa"><label><input type="radio" name="q_6" value="1"><span>1</span></label><label><input type="radio" name="q_6" value="2"><span>2</span></label><label><input type="radio" name="q_6" value="3"><span>3</span></label><label><input type="radio" name="q_6" value="4"><span>4</span></label></div>
+<p><strong>7</strong> 彼は苦労を重ねて、社長にまでしゅっせした。<br />
+ 1. 出成　　　2. 出世　　　3. 昇成　　　4. 昇世</p>
+<div class="qa"><label><input type="radio" name="q_7" value="1"><span>1</span></label><label><input type="radio" name="q_7" value="2"><span>2</span></label><label><input type="radio" name="q_7" value="3"><span>3</span></label><label><input type="radio" name="q_7" value="4"><span>4</span></label></div>
+<p><strong>8</strong> この店はでんとうの味を守り続けている。<br />
+ 1. 伝授　　　2. 伝承　　　3. 伝統　　　4. 伝達</p>
+<div class="qa"><label><input type="radio" name="q_8" value="1"><span>1</span></label><label><input type="radio" name="q_8" value="2"><span>2</span></label><label><input type="radio" name="q_8" value="3"><span>3</span></label><label><input type="radio" name="q_8" value="4"><span>4</span></label></div>
+<p><strong>9</strong> そんなにあせらなくても大丈夫ですよ。<br />
+ 1. 焦らなくても　　　2. 騒らなくても　　　3. 競らなくても　　　4. 暴らなくても</p>
+<div class="qa"><label><input type="radio" name="q_9" value="1"><span>1</span></label><label><input type="radio" name="q_9" value="2"><span>2</span></label><label><input type="radio" name="q_9" value="3"><span>3</span></label><label><input type="radio" name="q_9" value="4"><span>4</span></label></div>
+<p><strong>10</strong> 大学に入学してから、一人でくらしています。<br />
+ 1. 幕らして　　　2. 募らして　　　3. 暮らして　　　4. 墓らして</p>
+<div class="qa"><label><input type="radio" name="q_10" value="1"><span>1</span></label><label><input type="radio" name="q_10" value="2"><span>2</span></label><label><input type="radio" name="q_10" value="3"><span>3</span></label><label><input type="radio" name="q_10" value="4"><span>4</span></label></div>
+<h2>問題3 （ ）に入れるのに最もよいものを、1・2・3・4・から一つ選びなさい。</h2>
+<p><strong>11</strong> 今日の講演のテーマは、教育の（ ）問題についてです。<br />
+ 1. 諸　　　2. 複　　　3. 雑　　　4. 類</p>
+<div class="qa"><label><input type="radio" name="q_11" value="1"><span>1</span></label><label><input type="radio" name="q_11" value="2"><span>2</span></label><label><input type="radio" name="q_11" value="3"><span>3</span></label><label><input type="radio" name="q_11" value="4"><span>4</span></label></div>
+<p><strong>12</strong> 駅前の商店（ ）で、買い物して帰ろう。<br />
+ 1. 帯　　　2. 域　　　3. 街　　　4. 町</p>
+<div class="qa"><label><input type="radio" name="q_12" value="1"><span>1</span></label><label><input type="radio" name="q_12" value="2"><span>2</span></label><label><input type="radio" name="q_12" value="3"><span>3</span></label><label><input type="radio" name="q_12" value="4"><span>4</span></label></div>
+<p><strong>13</strong> 夏休みに旅行に行きたいので、（ ）収入のアルバイトを探している。<br />
+ 1. 上　　　2. 良　　　3. 優　　　4. 高</p>
+<div class="qa"><label><input type="radio" name="q_13" value="1"><span>1</span></label><label><input type="radio" name="q_13" value="2"><span>2</span></label><label><input type="radio" name="q_13" value="3"><span>3</span></label><label><input type="radio" name="q_13" value="4"><span>4</span></label></div>
+<p><strong>14</strong> 来週の会議には、社長と（ ）社長も出席する予定だ。<br />
+ 1. 準　　　2. 副　　　3. 補　　　4. 助</p>
+<div class="qa"><label><input type="radio" name="q_14" value="1"><span>1</span></label><label><input type="radio" name="q_14" value="2"><span>2</span></label><label><input type="radio" name="q_14" value="3"><span>3</span></label><label><input type="radio" name="q_14" value="4"><span>4</span></label></div>
+<p><strong>15</strong> 疲れると、集中（ ）が落ちて仕事が進まなくなる。<br />
+ 1. 能　　　2. 考　　　3. 気　　　4. 力</p>
+<div class="qa"><label><input type="radio" name="q_15" value="1"><span>1</span></label><label><input type="radio" name="q_15" value="2"><span>2</span></label><label><input type="radio" name="q_15" value="3"><span>3</span></label><label><input type="radio" name="q_15" value="4"><span>4</span></label></div>
+<h2>問題4 （ ）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。</h2>
+<p><strong>16</strong> 今週は忙しかったから、週末は家で（　）テレビを見ていた。<br />
+ 1. のろのろ　　　2. のんびり　　　3. ぐるぐる　　　4. ぐっすり</p>
+<div class="qa"><label><input type="radio" name="q_16" value="1"><span>1</span></label><label><input type="radio" name="q_16" value="2"><span>2</span></label><label><input type="radio" name="q_16" value="3"><span>3</span></label><label><input type="radio" name="q_16" value="4"><span>4</span></label></div>
+<p><strong>17</strong> マラソンでは周りの人にあわせようとしないで、（　）で走るといい。<br />
+ 1. テクニック　　　2. フレッシュ　　　3. アプローチ　　　4. マイペース</p>
+<div class="qa"><label><input type="radio" name="q_17" value="1"><span>1</span></label><label><input type="radio" name="q_17" value="2"><span>2</span></label><label><input type="radio" name="q_17" value="3"><span>3</span></label><label><input type="radio" name="q_17" value="4"><span>4</span></label></div>
+<p><strong>18</strong> あの店はサービスがいいと（　）だ。<br />
+ 1. 評判　　　2. 評価　　　3. 診断　　　4. 決断</p>
+<div class="qa"><label><input type="radio" name="q_18" value="1"><span>1</span></label><label><input type="radio" name="q_18" value="2"><span>2</span></label><label><input type="radio" name="q_18" value="3"><span>3</span></label><label><input type="radio" name="q_18" value="4"><span>4</span></label></div>
+<p><strong>19</strong> 彼女とは久しぶりに会ったので、何時間話しても話が（　）。<br />
+ 1. 枯れない　　　2. 限らない　　　3. 尽きない　　　4. 衰えない</p>
+<div class="qa"><label><input type="radio" name="q_19" value="1"><span>1</span></label><label><input type="radio" name="q_19" value="2"><span>2</span></label><label><input type="radio" name="q_19" value="3"><span>3</span></label><label><input type="radio" name="q_19" value="4"><span>4</span></label></div>
+<p><strong>20</strong> 練習の成果が（　）できれば、きっと優勝できるだろう。<br />
+ 1. 発揮　　　2. 発生　　　3. 発行　　　4. 発明</p>
+<div class="qa"><label><input type="radio" name="q_20" value="1"><span>1</span></label><label><input type="radio" name="q_20" value="2"><span>2</span></label><label><input type="radio" name="q_20" value="3"><span>3</span></label><label><input type="radio" name="q_20" value="4"><span>4</span></label></div>
+<p><strong>21</strong> この表現は（　）でわかりにくい。<br />
+ 1. 軟弱　　　2. 質素　　　3. あいまい　　　4. ささやか</p>
+<div class="qa"><label><input type="radio" name="q_21" value="1"><span>1</span></label><label><input type="radio" name="q_21" value="2"><span>2</span></label><label><input type="radio" name="q_21" value="3"><span>3</span></label><label><input type="radio" name="q_21" value="4"><span>4</span></label></div>
+<p><strong>22</strong> この切符は、明日まで（　）です。<br />
+ 1. 利点　　　2. 権利　　　3. 効用　　　4. 有効</p>
+<div class="qa"><label><input type="radio" name="q_22" value="1"><span>1</span></label><label><input type="radio" name="q_22" value="2"><span>2</span></label><label><input type="radio" name="q_22" value="3"><span>3</span></label><label><input type="radio" name="q_22" value="4"><span>4</span></label></div>
+<h2>問題5 ____の言葉に意味が最も近いものを、１・２・３・４から一つ選びなさい。</h2>
+<p><strong>23</strong> とりあえず社長に電話で話しておいた。<br />
+ 1. さっき　　　2. すぐに　　　3. 一応　　　4. 直接</p>
+<div class="qa"><label><input type="radio" name="q_23" value="1"><span>1</span></label><label><input type="radio" name="q_23" value="2"><span>2</span></label><label><input type="radio" name="q_23" value="3"><span>3</span></label><label><input type="radio" name="q_23" value="4"><span>4</span></label></div>
+<p><strong>24</strong> 友人がバイクを安くゆずってくれた。<br />
+ 1. 売って　　　2. 貸して　　　3. 預かって　　　4. 直して</p>
+<div class="qa"><label><input type="radio" name="q_24" value="1"><span>1</span></label><label><input type="radio" name="q_24" value="2"><span>2</span></label><label><input type="radio" name="q_24" value="3"><span>3</span></label><label><input type="radio" name="q_24" value="4"><span>4</span></label></div>
+<p><strong>25</strong> 雑談をしているときにいいアイディアが浮かんだ。<br />
+ 1. あいさつ　　　2. おしゃべり　　　3. 説明　　　4. 報告</p>
+<div class="qa"><label><input type="radio" name="q_25" value="1"><span>1</span></label><label><input type="radio" name="q_25" value="2"><span>2</span></label><label><input type="radio" name="q_25" value="3"><span>3</span></label><label><input type="radio" name="q_25" value="4"><span>4</span></label></div>
+<p><strong>26</strong> うちの犬はとてもかしこい。<br />
+ 1. 頭がいい　　　2. 足が速い　　　3. めずらしい　　　4. おとなしい</p>
+<div class="qa"><label><input type="radio" name="q_26" value="1"><span>1</span></label><label><input type="radio" name="q_26" value="2"><span>2</span></label><label><input type="radio" name="q_26" value="3"><span>3</span></label><label><input type="radio" name="q_26" value="4"><span>4</span></label></div>
+<p><strong>27</strong> 彼の話はいつも大げさだ。<br />
+ 1. エネルギーがある　　　2. ユーモアがある　　　3. オープンだ　　　4. オーバーだ</p>
+<div class="qa"><label><input type="radio" name="q_27" value="1"><span>1</span></label><label><input type="radio" name="q_27" value="2"><span>2</span></label><label><input type="radio" name="q_27" value="3"><span>3</span></label><label><input type="radio" name="q_27" value="4"><span>4</span></label></div>
+<h2>問題6 次の言葉の使い方として最もよいものを、１・２・３・４から一つ選びなさい。</h2>
+<p><strong>28</strong> 取材<br />
+ 1. 学期末試験の範囲を友達に取材しました。<br />
+ 2. デパートに買い物に行く前に、営業時間を取材しておこう。<br />
+ 3. インターネットは、簡単に地図を取材できるので便利です。<br />
+ 4. あの選手の練習の様子を取材したときは、とても緊張しました。</p>
+<div class="qa"><label><input type="radio" name="q_28" value="1"><span>1</span></label><label><input type="radio" name="q_28" value="2"><span>2</span></label><label><input type="radio" name="q_28" value="3"><span>3</span></label><label><input type="radio" name="q_28" value="4"><span>4</span></label></div>
+<p><strong>29</strong> きっかけ<br />
+ 1. 季節のきっかけは風邪をひきやすい。<br />
+ 2. 友人に写真をほめられたのがきっかけで、本格的に勉強を始めた。<br />
+ 3. その意見に反対するきっかけは、主観的すぎるからだ。<br />
+ 4. 今回は時間がないので、次のきっかけに訪れようと思う。</p>
+<div class="qa"><label><input type="radio" name="q_29" value="1"><span>1</span></label><label><input type="radio" name="q_29" value="2"><span>2</span></label><label><input type="radio" name="q_29" value="3"><span>3</span></label><label><input type="radio" name="q_29" value="4"><span>4</span></label></div>
+<p><strong>30</strong> 深刻<br />
+ 1. 彼は動物に対して深刻な愛情を持っている。<br />
+ 2. 家族との時間を深刻に過ごしている。<br />
+ 3. 彼は深刻な悩みをかかえているようだ。<br />
+ 4. テストが近いので、深刻に勉強した。</p>
+<div class="qa"><label><input type="radio" name="q_30" value="1"><span>1</span></label><label><input type="radio" name="q_30" value="2"><span>2</span></label><label><input type="radio" name="q_30" value="3"><span>3</span></label><label><input type="radio" name="q_30" value="4"><span>4</span></label></div>
+<p><strong>31</strong> 続出<br />
+ 1. 満員電車から乗客が続出してきた。<br />
+ 2. 暑さのせいで気分が悪くなる人が続出した。<br />
+ 3. 最近は、天気の悪い日が続出している。<br />
+ 4. 薬で治ったと思っていた風邪が続出した。</p>
+<div class="qa"><label><input type="radio" name="q_31" value="1"><span>1</span></label><label><input type="radio" name="q_31" value="2"><span>2</span></label><label><input type="radio" name="q_31" value="3"><span>3</span></label><label><input type="radio" name="q_31" value="4"><span>4</span></label></div>
+<p><strong>32</strong> 外見<br />
+ 1. 人を外見で判断するのはよくないことだ。<br />
+ 2. 窓の外見をペンキで白く塗った。<br />
+ 3. 月の外見はでこぼこしている。<br />
+ 4. 母は怒っている外見だった。</p>
+<div class="qa"><label><input type="radio" name="q_32" value="1"><span>1</span></label><label><input type="radio" name="q_32" value="2"><span>2</span></label><label><input type="radio" name="q_32" value="3"><span>3</span></label><label><input type="radio" name="q_32" value="4"><span>4</span></label></div>
+<h1>【文法】</h1>
+<h2>問題7 次の文の（ ）に入れるのに最もよいものを、１・２・３・４から一つ選びなさい。</h2>
+<p><strong>33</strong> このレストランは、客の予算（ ）いくつかのコースを用意してくれる。<br />
+ 1. に比べて　　　2. に先立って　　　3. に応じて　　　4. に向けて</p>
+<div class="qa"><label><input type="radio" name="q_33" value="1"><span>1</span></label><label><input type="radio" name="q_33" value="2"><span>2</span></label><label><input type="radio" name="q_33" value="3"><span>3</span></label><label><input type="radio" name="q_33" value="4"><span>4</span></label></div>
+<p><strong>34</strong> 学校に来る（ ）財布を忘れたのに気づいた。<br />
+ 1. とちゅうで　　　2. ついでに　　　3. なかで　　　4. うちに</p>
+<div class="qa"><label><input type="radio" name="q_34" value="1"><span>1</span></label><label><input type="radio" name="q_34" value="2"><span>2</span></label><label><input type="radio" name="q_34" value="3"><span>3</span></label><label><input type="radio" name="q_34" value="4"><span>4</span></label></div>
+<p><strong>35</strong> 踏切事故のために、2 時間（ ）、電車がストップしました。<br />
+ 1. につき　　　2. につれ　　　3. にわたり　　　4. にともない</p>
+<div class="qa"><label><input type="radio" name="q_35" value="1"><span>1</span></label><label><input type="radio" name="q_35" value="2"><span>2</span></label><label><input type="radio" name="q_35" value="3"><span>3</span></label><label><input type="radio" name="q_35" value="4"><span>4</span></label></div>
+<p><strong>36</strong> 一回失敗したくらいで、（ ）そこまで悪く言わなくてもいいだろう。<br />
+ 1. なにを　　　2. なにが　　　3. なにも　　　4. なにで</p>
+<div class="qa"><label><input type="radio" name="q_36" value="1"><span>1</span></label><label><input type="radio" name="q_36" value="2"><span>2</span></label><label><input type="radio" name="q_36" value="3"><span>3</span></label><label><input type="radio" name="q_36" value="4"><span>4</span></label></div>
+<p><strong>37</strong> 田中選手は前大会に続いて、今大会でも優勝を果たした。彼の今後の活躍に周囲の期待は高まる（ ）。<br />
+ 1. 中心だ　　　2. 事情だ　　　3. 原因だ　　　4. 一方だ</p>
+<div class="qa"><label><input type="radio" name="q_37" value="1"><span>1</span></label><label><input type="radio" name="q_37" value="2"><span>2</span></label><label><input type="radio" name="q_37" value="3"><span>3</span></label><label><input type="radio" name="q_37" value="4"><span>4</span></label></div>
+<p><strong>38</strong> これだけ景気が悪いのに、税金を上げようとするのは、わたしたち国民には理解（ ）。<br />
+ 1. しすぎる　　　2. しがたい　　　3. しかねない　　　4. しがちだ</p>
+<div class="qa"><label><input type="radio" name="q_38" value="1"><span>1</span></label><label><input type="radio" name="q_38" value="2"><span>2</span></label><label><input type="radio" name="q_38" value="3"><span>3</span></label><label><input type="radio" name="q_38" value="4"><span>4</span></label></div>
+<p><strong>39</strong> （メールで）田中です。先日お話があったスピーチの件なんですが、ぜひわたしに（ ）。<br />
+ 1. やっていただけないでしょうか<br />
+ 2. やらせていただけないでしょうか<br />
+ 3. やってもよろしいでしょうか<br />
+ 4. やらせてもよろしいでしょうか</p>
+<div class="qa"><label><input type="radio" name="q_39" value="1"><span>1</span></label><label><input type="radio" name="q_39" value="2"><span>2</span></label><label><input type="radio" name="q_39" value="3"><span>3</span></label><label><input type="radio" name="q_39" value="4"><span>4</span></label></div>
+<p><strong>40</strong> 山下「田中君、きみ、また大阪に出張なんだって？」 田中「ええ、そうなんですよ。ついこの前も出張に（ ）なんですけどねえ。」<br />
+ 1. 行かれたまま　　　2. 行かされたまま　　　3. 行かれたばかり　　　4. 行かされたばかり</p>
+<div class="qa"><label><input type="radio" name="q_40" value="1"><span>1</span></label><label><input type="radio" name="q_40" value="2"><span>2</span></label><label><input type="radio" name="q_40" value="3"><span>3</span></label><label><input type="radio" name="q_40" value="4"><span>4</span></label></div>
+<p><strong>41</strong> 仕事の合間にときどき遠くを見る（ ）、目が疲れにくくなった。<br />
+ 1. ようにしたところに　　　2. ようにしたところ　　　3. までになったところに　　　4. までになったところ</p>
+<div class="qa"><label><input type="radio" name="q_41" value="1"><span>1</span></label><label><input type="radio" name="q_41" value="2"><span>2</span></label><label><input type="radio" name="q_41" value="3"><span>3</span></label><label><input type="radio" name="q_41" value="4"><span>4</span></label></div>
+<p><strong>42</strong> 人間の脳に関する研究で明らかになったことはまだほんの一部（ ）、その研究は着実に進んできた。<br />
+ 1. にすぎないとすると　　　2. ににかかわらないとすると　　　3. にすぎないとはいえ　　　4. ににかかわらないとはいえ</p>
+<div class="qa"><label><input type="radio" name="q_42" value="1"><span>1</span></label><label><input type="radio" name="q_42" value="2"><span>2</span></label><label><input type="radio" name="q_42" value="3"><span>3</span></label><label><input type="radio" name="q_42" value="4"><span>4</span></label></div>
+<p><strong>43</strong> 会議の目的は新商品のアイディアを自由に出し合う（ ）が、結局、上司の意見が優先されて終わった。<br />
+ 1. ことにあったはずだ　　　2. ことにあったためだ　　　3. のにあったはずだ　　　4. のにあったためだ</p>
+<div class="qa"><label><input type="radio" name="q_43" value="1"><span>1</span></label><label><input type="radio" name="q_43" value="2"><span>2</span></label><label><input type="radio" name="q_43" value="3"><span>3</span></label><label><input type="radio" name="q_43" value="4"><span>4</span></label></div>
+<p><strong>44</strong> 残業が続いて体を壊したときに、自分の人生は（ ）と思って、転職を決めた。<br />
+ 1. このままならいいのではないか<br />
+ 2. このままがいいのではないか<br />
+ 3. このままよりいいのだろうか<br />
+ 4. このままでいいのだろうか</p>
+<div class="qa"><label><input type="radio" name="q_44" value="1"><span>1</span></label><label><input type="radio" name="q_44" value="2"><span>2</span></label><label><input type="radio" name="q_44" value="3"><span>3</span></label><label><input type="radio" name="q_44" value="4"><span>4</span></label></div>
+<h2>問題8 次の文の ★ に入る最もよいものを、１・２・３・４から一つ選びなさい。</h2>
+<p><strong>45</strong> 甲「先週の授業、どこまで進んだ？」 乙「３課の文法の練習問題を ＿＿ ＿＿ ★ ＿＿ 終わったよ。」<br />
+ 1. で　　　2. 解いた　　　3. ところ　　　4. まで</p>
+<div class="qa"><label><input type="radio" name="q_45" value="1"><span>1</span></label><label><input type="radio" name="q_45" value="2"><span>2</span></label><label><input type="radio" name="q_45" value="3"><span>3</span></label><label><input type="radio" name="q_45" value="4"><span>4</span></label></div>
+<p><strong>46</strong> ひとくちに ＿＿ ＿＿ ★ ＿＿ 材料はさまざまだ。<br />
+ 1. カレーライス　　　2. それぞれの店　　　3. といっても　　　4. によって</p>
+<div class="qa"><label><input type="radio" name="q_46" value="1"><span>1</span></label><label><input type="radio" name="q_46" value="2"><span>2</span></label><label><input type="radio" name="q_46" value="3"><span>3</span></label><label><input type="radio" name="q_46" value="4"><span>4</span></label></div>
+<p><strong>47</strong> 田中さんはいつも ＿＿ ＿＿ ★ ＿＿ 自分では何もしない。<br />
+ 1. 文句を言う　　　2. ばかりで　　　3. 人の　　　4. やることに</p>
+<div class="qa"><label><input type="radio" name="q_47" value="1"><span>1</span></label><label><input type="radio" name="q_47" value="2"><span>2</span></label><label><input type="radio" name="q_47" value="3"><span>3</span></label><label><input type="radio" name="q_47" value="4"><span>4</span></label></div>
+<p><strong>48</strong> 甲「この『りかい』という言葉はどういう意味ですか。」 乙「ああ、確か『わかる』 ＿＿ ＿＿ ★ ＿＿ んですが。」<br />
+ 1. という　　　2. 意味だった　　　3. ような　　　4. と思う</p>
+<div class="qa"><label><input type="radio" name="q_48" value="1"><span>1</span></label><label><input type="radio" name="q_48" value="2"><span>2</span></label><label><input type="radio" name="q_48" value="3"><span>3</span></label><label><input type="radio" name="q_48" value="4"><span>4</span></label></div>
+<p><strong>49</strong> 毎年、合格者の８０パーセントが ＿＿ ＿＿ ★ ＿＿ この試験に合格するのは簡単ではないだろう。<br />
+ 1. 未経験者の　　　2. 実務経験者という　　　3. ことからすると　　　4. 私が</p>
+<div class="qa"><label><input type="radio" name="q_49" value="1"><span>1</span></label><label><input type="radio" name="q_49" value="2"><span>2</span></label><label><input type="radio" name="q_49" value="3"><span>3</span></label><label><input type="radio" name="q_49" value="4"><span>4</span></label></div>
+<h2>問題9 次の文章を読んで、文章全体の内容を考えて、「50」から「54」の中に入る最もよいものを、１・２・３・４から一つ選びなさい。</h2>
+<p>テレビや雑誌では、よく「血液型性格判断」が取り上げられます。これは、血液型によって性格が決まっている、言い換えれば、血液型がわかれば大体の性格もわかるという（ 50 ）です。<br />
+その血液型性格判断によると、人の性格は、エー型、ビー型、オー型、エービー型の血液型ごとに決まっているのだそうです。しかし、この世界には何十億人もの人が（ 51-a ）、人の性格をたった４種類に分類することが（ 51-b ）。<br />
+血液型は親から子への遺伝によって、４種類のうち、どの型になるかが決まります。つまり、（ 52-a ）は生まれてから死ぬまで、変わることはほぼありません。一方、（ 52-b ）はどうでしょうか。（ 52-c ）に関して言えば、子どものときは我慢が苦手だった子が、成長とともに我慢できるようになるといったことも少なくないでしょう。<br />
+また、ある調査によると、自分の血液型がどんな性格かということを聞いて、知らないうちに自分の性格がその性格に近づいてしまっているということもあるそうです。「私はエー型だから、こういう性格なんだ」という思い込みで、性格が作られている可能性も否定できないというのです。（ 53 ）、性格と血液型に関係はあると言えるかもしれませんが、それは血液型で性格が決まるということではありません。<br />
+こう考えると、やはり、血液型によって性格がたった４種類に分けられるとは（ 54 ）。</p>
+<p><strong>50</strong><br />
+ 1. 点　　　2. もの　　　3. 場合　　　4. 結果</p>
+<div class="qa"><label><input type="radio" name="q_50" value="1"><span>1</span></label><label><input type="radio" name="q_50" value="2"><span>2</span></label><label><input type="radio" name="q_50" value="3"><span>3</span></label><label><input type="radio" name="q_50" value="4"><span>4</span></label></div>
+<p><strong>51</strong><br />
+ 1. a いるわけですから／b できたのではないかと考えます<br />
+ 2. a いるわけですから／b できるのかと疑問に思います<br />
+ 3. a いるからこそ／b 疑問に思われなかったのです<br />
+ 4. a いるからこそ／b できなかったのだと考えられます</p>
+<div class="qa"><label><input type="radio" name="q_51" value="1"><span>1</span></label><label><input type="radio" name="q_51" value="2"><span>2</span></label><label><input type="radio" name="q_51" value="3"><span>3</span></label><label><input type="radio" name="q_51" value="4"><span>4</span></label></div>
+<p><strong>52</strong><br />
+ 1. a 性格／b 血液型／c 血液型<br />
+ 2. a 性格／b 血液型／c 性格<br />
+ 3. a 血液型／b 性格／c 性格<br />
+ 4. a 血液型／b 性格／c 血液型</p>
+<div class="qa"><label><input type="radio" name="q_52" value="1"><span>1</span></label><label><input type="radio" name="q_52" value="2"><span>2</span></label><label><input type="radio" name="q_52" value="3"><span>3</span></label><label><input type="radio" name="q_52" value="4"><span>4</span></label></div>
+<p><strong>53</strong><br />
+ 1. それが本当ならば　　　2. それと比べても　　　3. そうあるべきなので　　　4. それが前提でなかったら</p>
+<div class="qa"><label><input type="radio" name="q_53" value="1"><span>1</span></label><label><input type="radio" name="q_53" value="2"><span>2</span></label><label><input type="radio" name="q_53" value="3"><span>3</span></label><label><input type="radio" name="q_53" value="4"><span>4</span></label></div>
+<p><strong>54</strong><br />
+ 1. 言われてこなかったのです<br />
+ 2. 言われていないのでしょう<br />
+ 3. 言えないことはないのです<br />
+ 4. 言えないのではないでしょうか</p>
+<div class="qa"><label><input type="radio" name="q_54" value="1"><span>1</span></label><label><input type="radio" name="q_54" value="2"><span>2</span></label><label><input type="radio" name="q_54" value="3"><span>3</span></label><label><input type="radio" name="q_54" value="4"><span>4</span></label></div>
+<h1>【読解】</h1>
+<h2>問題10 次の（１）から（５）の文章を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。</h2>
+<p>（１）<br />
+人間の心理にはハロー（後光）効果といって、最初に受けた印象を強めていく傾向があります。例えばお会いした時に清潔な印象をうけると、その人の部屋が本当は汚かったとしても「部屋はいつもきれいに片づいているに違いない。 人間関係もきっとさわやかでしょう」などと、こちらが勝手にその人のよいイメージを重ねていきます。<br />
+反対にだらしない印象を受けると、部屋の中をピカピカにしていても「家の中も汚いだろう」と悪い印象を重ねてしまうようです。<br />
+（岩下宣子『実践 マナー塾』2009年4月18日付日本経済新聞による）</p>
+<p><strong>55</strong> 筆者はハロー効果をどのように説明しているか。<br />
+ 1. 新しいイメージを次々に重ねてることで、最初の印象は次第に変化していく。<br />
+ 2. 初対面のときに受けた印象は、その後に持つイメージに影響を与えていく。<br />
+ 3. だれとでもよい関係を築いておけば、初対面の人にもよいイメージを与えられる。<br />
+ 4. 最初に悪い印象を与えてしまっても、その後の付き合いでイメージは変えられる。</p>
+<div class="qa"><label><input type="radio" name="q_55" value="1"><span>1</span></label><label><input type="radio" name="q_55" value="2"><span>2</span></label><label><input type="radio" name="q_55" value="3"><span>3</span></label><label><input type="radio" name="q_55" value="4"><span>4</span></label></div>
+<p>（２）<br />
+木を植えることはいいことだ。われわれは無条件にそう考えがちだ。<br />
+でも、乾燥地帯に木を植えれば、少ししかない水が木に吸い取られる。悪くすると地下水が枯れ、川の流量も減る。よく考えてみれば当たり前のことだろう。しかし、森林の役割を重視するあまり、自然の循環を忘れた「植林神話」が世界に広がっているそうだ。<br />
+（伊藤智章「窓」2008年2月20日付朝日新聞夕刊による）</p>
+<p><strong>56</strong> 「植林神話」とはどのようなものか。<br />
+ 1. 乾燥地帯の地下水を増やすには、環境に適した木を植える必要があると考えること<br />
+ 2. 自然界の水の循環を考慮して、場所を選んで木を植えたほうがいいと考えること<br />
+ 3. 自然界におけるの森林の役割に注目し、木を植えるのはいいことだと考えること<br />
+ 4. 乾燥地帯での森林の役割を見直して、木をどんどん植えるようと考えること</p>
+<div class="qa"><label><input type="radio" name="q_56" value="1"><span>1</span></label><label><input type="radio" name="q_56" value="2"><span>2</span></label><label><input type="radio" name="q_56" value="3"><span>3</span></label><label><input type="radio" name="q_56" value="4"><span>4</span></label></div>
+<p>（３）<br />
+2010年6月28日<br />
+販売店各位<br />
+西東薬品株式会社<br />
+販売部長 南 五郎</p>
+<p>アンケート実施についてのお願い</p>
+<p>拝啓<br />
+いつもお世話になっております。<br />
+昨年夏に販売を開始いたしました商品「エネルギー Z」は、おかげさまで順調に売り上げを伸ばしてまいりました。来月、本製品販売１周年を迎えるにあたり、製品の使用効果、値段などについてお客様のご感想やご希望をうかがいたくアンケートを実施することにいたしました。<br />
+つきましては、本製品をお買い上げのお客様へのアンケート用紙の配布およびご協力の呼びかけをお願いいたします。<br />
+販売店のみなさまにはご面倒をおかけいたしますが、よろしくお願い申し上げます。<br />
+敬具</p>
+<p><strong>57</strong> ご協力とあるが、だれが何に協力するのか。<br />
+ 1. 販売店が、この製品の売り上げをさらに伸ばすことに協力する。<br />
+ 2. 販売店が、お客様にアンケート用紙を渡すことに協力する。<br />
+ 3. この製品を買った人が、それを他の人にすすめることに協力する。<br />
+ 4. この製品を買った人が、アンケートに答えることに協力する。</p>
+<div class="qa"><label><input type="radio" name="q_57" value="1"><span>1</span></label><label><input type="radio" name="q_57" value="2"><span>2</span></label><label><input type="radio" name="q_57" value="3"><span>3</span></label><label><input type="radio" name="q_57" value="4"><span>4</span></label></div>
+<p>（４）<br />
+国際宇宙ステーションは、地球から約 400 キロメートル離れたところを回る巨大な有人実験施設である。宇宙では、地球から運ばれる水はコップ１杯 30～40 万円に相当するほど高価なものとなるが、2008 年に、ステーションで使用した水をリサイクルする装置が設置された。再生された水は飲料水や実験のほか、酸素を作り出すのにも使われる。いずれ装置が完全に機能すれば、地球から新たに水を運ぶことも不要になる。</p>
+<p><strong>58</strong> 再生装置が完全に機能すると、国際宇宙ステーションで使われる水はどうなると述べているか。<br />
+ 1. 実験や酸素を作るときには地球から運ばれた水が使用される。<br />
+ 2. 使用後の水はリサイクルされ、再生装置からすべて供給される。<br />
+ 3. 飲料水は地球からの水を使用し、ほかは再生装置から供給される。<br />
+ 4. 地球から運ばれる水と再生装置で作られた水の両方が使用される。</p>
+<div class="qa"><label><input type="radio" name="q_58" value="1"><span>1</span></label><label><input type="radio" name="q_58" value="2"><span>2</span></label><label><input type="radio" name="q_58" value="3"><span>3</span></label><label><input type="radio" name="q_58" value="4"><span>4</span></label></div>
+<p>（５）<br />
+ほめるという行為は、本来、自然な気持ちのあらわれです。「ほめる教育」におけるほめるという行為は、この点において異なります。自然な気持ちのあらわれなどではなく、ほかの狙いをもった（注1）きわめて意図的な行為です。<br />
+（中略）「ほめる教育」の場合には、 ほめることそのものは本来の目的ではないのです。本来の目的は、ほめることを通して相手に影響をあたえることです。相手の心と行動に影響をあたえ、やる気を出させたり、自信をもたせたり、伸びていくようにする。つまり、こちらが望んでいるような方向へ向かわせることがねらいなのです。<br />
+（伊藤進『ほめるな』による）</p>
+<p>（注1）きわめて：非常に</p>
+<p><strong>59</strong> 「ほめる教育」におけるほめる行為とはどのようなものか。<br />
+ 1. 相手を伸ばしたいという目的を持った行為である。<br />
+ 2. 相手自身が望む方向へ向かうようにする行為である。<br />
+ 3. 相手に自分が感じたことをそのまま伝える行為である。<br />
+ 4. 相手に自然な気持ちを表現させようとする行為である。</p>
+<div class="qa"><label><input type="radio" name="q_59" value="1"><span>1</span></label><label><input type="radio" name="q_59" value="2"><span>2</span></label><label><input type="radio" name="q_59" value="3"><span>3</span></label><label><input type="radio" name="q_59" value="4"><span>4</span></label></div>
+<h2>問題11 次の（1）から（3）の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</h2>
+<p>（１）<br />
+①会話の技術は、運転技術とよく似ています。ボーッと運転をしていると、事故を起こしかねません。たとえば、数人で楽しく盛り上がっているときに、いきなり入ってきて、自分の話を始める人がいます。あれは、高速道路に加速しないで進入してくる車のようなもので、本人は気づかなくても、入った途端にクラッシュ（注1）して入るのです。<br />
+グループに加わりたいときは、まず黙って話を聞くことです。②うなずきながらエンジンを温め、他の車と速度を同じくして会話に加わると、流れにうまく乗ることができます。<br />
+そのうえで、自分の話ばかりしないように注意すること。人は誰でも、自分の話をしたかがっているのですから。会話は、ボールゲームのようなものです。サッカーでもバスケットボールでも、ひとりでボールを独占していたら、次からは遊んでもらえなくなります。<br />
+みんなで話しているとき、自分がどれだけ話をしたのか、常に意識していることも必要です。特に、大勢で話しているときは、発言しない人により多くの意識を配ってください。おとなしい人は無視されがちですが、同じ場にいることに敬意を払って、その人にも（注2）話を振らないと。<br />
+つくづく思いますけれど、会話ほど、個人のレベル差が大きいものはありません。充実した会話をしたいのであれば、それなりの準備や練習は必要なのです。私は練習することで得るものは大きいと思いますよ。その中に、人生を変える出会いや幸運が（注3）潜んでいるのではないでしょうか。<br />
+（斎藤孝『「できる人」の極意！』による）</p>
+<p>（注1）クラッシュする：衝突事故を起こす<br />
+（注2）話を振る：話す機会を与える<br />
+（注3）潜んでいる：隠れている</p>
+<p><strong>60</strong> ①会話の技術は、運転技術とよく似ていますとあるが、この文章ではどんなところが似ていると述べているか。<br />
+ 1. 運転で他の車に注意が払える人は会話でも他者に敬意が払えるところ<br />
+ 2. 会話も車の運転も技術が高ければ仲間と楽しい時間を過ごせるところ<br />
+ 3. 会話も車の運転のように他者とペースを合わせることが求められるところ<br />
+ 4. 車の運転で事故を起こさない人は会話も同じように慎重に進められるところ</p>
+<div class="qa"><label><input type="radio" name="q_60" value="1"><span>1</span></label><label><input type="radio" name="q_60" value="2"><span>2</span></label><label><input type="radio" name="q_60" value="3"><span>3</span></label><label><input type="radio" name="q_60" value="4"><span>4</span></label></div>
+<p><strong>61</strong> ②うなずきながらエンジンを温めとあるが、ここではどういうことか。<br />
+ 1. 人の話に軽く返事をしながら車のエンジンを温めること<br />
+ 2. 自分の話を聞いてもらいながらグループの話も聞くこと<br />
+ 3. まずは人の話を聞きながら会話に加わる準備をすること<br />
+ 4. 静かに自分の話しをしながら次の話題に移るのを待つこと</p>
+<div class="qa"><label><input type="radio" name="q_61" value="1"><span>1</span></label><label><input type="radio" name="q_61" value="2"><span>2</span></label><label><input type="radio" name="q_61" value="3"><span>3</span></label><label><input type="radio" name="q_61" value="4"><span>4</span></label></div>
+<p><strong>62</strong> みんなで会話をしているときには、どのような注意が必要だと述べているか。<br />
+ 1. 自分の発言量を意識しながら、おとなしい人にも話してもらうようにすること<br />
+ 2. 発言が少ない人やおとなしい人の話をよく聞き、それに答えるようにすること<br />
+ 3. ふだん発言しない人も、みんなの話をよく聞いて会話に参加するようにすること<br />
+ 4. おとなしい人も、大勢で話すときは意識して他の人に話しかけるようにすること</p>
+<div class="qa"><label><input type="radio" name="q_62" value="1"><span>1</span></label><label><input type="radio" name="q_62" value="2"><span>2</span></label><label><input type="radio" name="q_62" value="3"><span>3</span></label><label><input type="radio" name="q_62" value="4"><span>4</span></label></div>
+<p>（２）<br />
+2000 年から 2001 年にかけて、全国紙として有名な新聞が、基本の活字を少し大きなものに変えました。地方紙も同じだったと思います。高齢者人口の増加が原因でしょうが、新聞を読む人の総数の中で、老眼鏡（注1）を必要とする人の割合が増えたからです。<br />
+新聞だって「お客様は神様」でしょうから、その「神様」のニーズに沿って紙面を変えるということは、当然のことです。その案内の記事では、これまでの活字と新しい活字を比較して、いかに見やすくなったかがしめされていて、わかりやすく納得できるものでした。そして、各社ほとんど同じことを書いていたと思いますが、紙面の大きさは変えないわけだから、「文字が大きくなった分、文字数を減らさねばなりません。そこで、記事は要点をおさえ（注2）簡略化して適切化をはかる（注3）」というような説明になっていました。<br />
+なるほどと思う一方、①これまではそうでなかったのかなとも思いました。<br />
+大きな活字の本も出まわるようになってきました。とくに辞書は同じ内容で同じデザインで大きな版（注4）のものが出て、老眼鏡なしでも利用できるとありがたがられています。<br />
+ただサイズが大きくなった分、大きく重いという欠点もありますが、その快適さに換えられないという人には②問題になりません。<br />
+（光野有次『みんなでつくるバリアフリー』による）</p>
+<p>（注1）老眼鏡：年をとって近くが見えにくくなった人のための眼鏡<br />
+（注2）要点をおさえる：要点をつかむ<br />
+（注3）適切化をはかる：適切になるようにする<br />
+（注4）版：サイズ</p>
+<p><strong>63</strong> 新聞の文字が大きくなった理由は何か。<br />
+ 1. 文字を大きくすることで要点がわかりやすくなること<br />
+ 2. 小さい文字が読みにくい高齢の読者が多くなったこと<br />
+ 3. 紙面に余裕ができるように記事の表現を簡略化したこと<br />
+ 4. 高齢者から情報を絞ったほうがよいという意見があったこと</p>
+<div class="qa"><label><input type="radio" name="q_63" value="1"><span>1</span></label><label><input type="radio" name="q_63" value="2"><span>2</span></label><label><input type="radio" name="q_63" value="3"><span>3</span></label><label><input type="radio" name="q_63" value="4"><span>4</span></label></div>
+<p><strong>64</strong> これまではそうでなかったとは、どういう意味か。<br />
+ 1. 以前の紙面は活字の大きさを内容ほど重視していなかった。<br />
+ 2. 以前の紙面は高齢の読者のニーズに十分こたえていなかった。<br />
+ 3. 以前の紙面は重要な情報が簡潔にまとめて書かれていなかった。<br />
+ 4. 以前の紙面は読者が納得できるほど詳しく説明していなかった。</p>
+<div class="qa"><label><input type="radio" name="q_64" value="1"><span>1</span></label><label><input type="radio" name="q_64" value="2"><span>2</span></label><label><input type="radio" name="q_64" value="3"><span>3</span></label><label><input type="radio" name="q_64" value="4"><span>4</span></label></div>
+<p><strong>65</strong> ②問題になりませんとあるが、何が問題にならないのか。<br />
+ 1. 本を軽くするために活字が小さくなったこと<br />
+ 2. 老眼鏡を持っていないと少し読みにくいこと<br />
+ 3. 活字が大きくなって情報が少しだけ減ったこと<br />
+ 4. 文字が拡大されて辞書が以前より重くなったこと</p>
+<div class="qa"><label><input type="radio" name="q_65" value="1"><span>1</span></label><label><input type="radio" name="q_65" value="2"><span>2</span></label><label><input type="radio" name="q_65" value="3"><span>3</span></label><label><input type="radio" name="q_65" value="4"><span>4</span></label></div>
+<p>（３）<br />
+転職を考えることがときどきある。とはいっても、①それほど本気ではない。ただ、もし別の仕事を選んでいたら、自分はどんな人生だったのかを想像してしまう。想像するだけでもけっこう楽しい。いまの仕事に大きな不満はないが、そうかといって格別面白いというわけでもない。もしこの仕事をしてみたら、自分はもっと充実するのかも、とついつい考えてしまうのだ。<br />
+まあ、隣の芝生はよく見えると言われてしまえばそれまでだが、自分にピッタリの洋服がなかなかないように、誰しも（注1）自分だけの仕事を探しているのだろう。洋服は試着できるが、仕事に関しては、試しにちょっと、というわけにはいかない。もっとも多少働いたとしても、仕事の本質はわからないだろうが。<br />
+昔に比べれば、われわれの職業選択の幅ははるかに拡がっている。だけど、これが②自分の仕事だと胸を張って（注2）言える人は意外と少ないのではないだろうか。<br />
+才能があれば、と思う人がいるかもしれない。子供の頃に憧れていた野球選手とか、大学時代に憧れた映画監督になっていたら、たしかに楽しいだろう。探せればよいと思っている。誰しも、自由な職業選択における自分だけの「必然」（注3）を求めているのではないだろうか。<br />
+（梅崎修『マンガに教わる仕事学』による）</p>
+<p>（注1）誰しも：誰でも<br />
+（注2）胸を張って：自信を持って<br />
+（注3）必然：そうなって当然のこと</p>
+<p><strong>66</strong> ①それほど本気ではない理由として、本文から考えられることはどれか。<br />
+ 1. いまの仕事が嫌なわけではないこと<br />
+ 2. いまから転職をするのは難しいこと<br />
+ 3. いまの仕事がとても充実していること<br />
+ 4. いままで別の仕事をしたことがないこと</p>
+<div class="qa"><label><input type="radio" name="q_66" value="1"><span>1</span></label><label><input type="radio" name="q_66" value="2"><span>2</span></label><label><input type="radio" name="q_66" value="3"><span>3</span></label><label><input type="radio" name="q_66" value="4"><span>4</span></label></div>
+<p><strong>67</strong> ②自分の仕事とはどのような仕事か。<br />
+ 1. 特別な才能が必要な仕事<br />
+ 2. 他人がうらやましがる仕事<br />
+ 3. 自分に最も合っている仕事<br />
+ 4. 子供の頃から憧れていた仕事</p>
+<div class="qa"><label><input type="radio" name="q_67" value="1"><span>1</span></label><label><input type="radio" name="q_67" value="2"><span>2</span></label><label><input type="radio" name="q_67" value="3"><span>3</span></label><label><input type="radio" name="q_67" value="4"><span>4</span></label></div>
+<p><strong>68</strong> この文章で筆者が言いたいことは何か。<br />
+ 1. 職業の選択が自由になり、昔よりも自分に合った仕事を探しやすくなった<br />
+ 2. 自由に仕事を選べるので、仕事の本質を理解したいと考える人が増えている<br />
+ 3. 自由に仕事を選べる環境で、だれもが自分に適した仕事をしたいと考えている<br />
+ 4. 職業の選択の幅が拡がったため、いまではだれでも自由に転職できるようになった</p>
+<div class="qa"><label><input type="radio" name="q_68" value="1"><span>1</span></label><label><input type="radio" name="q_68" value="2"><span>2</span></label><label><input type="radio" name="q_68" value="3"><span>3</span></label><label><input type="radio" name="q_68" value="4"><span>4</span></label></div>
+<h2>問題12 次の A と B の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4 から1つ選びなさい。</h2>
+<p>Ａ<br />
+社内にばかりいると、ビジネスマンとして人脈（注1）も広がらない。そこで、セミナーや勉強会、講演会などに出かけて自己を磨いている人も多いはずだ。しかし意外と、あまりメモもとらず、「聞きっぱなし」という人も多いのではないだろうか。<br />
+話を聞いているときは「なるほどなあ」と思っていても、それを的確にメモしてなければ、あとになって「あの話は何だったっけ」ということになる。人間は忘れやすい動物なのだ。<br />
+では、こういうときのメモはどうすればいいか？<br />
+基本的なことは、話の内容をいちいちすべてメモまい、ということである。漫然と（注2）聞いて、話したことをすべてメモしていたら、核心（注3）が見えなくなる。そこで、自分の仕事やライフスタイルに関係すること、本当に興味のあることしかメモしないのである。<br />
+（坂戸健司『メモの技術』による）</p>
+<p>Ｂ<br />
+昔、ある大学者が、尋ねてきた同郷の（注4）後輩の大学生に、一字一句教授のことばをノートにとるのは愚だ（注5）と訓えた。いまどきの大学で、ノートをとっている学生はいなくても、戦前の講義といえば、一字一句ノートするのは常識であった。教授も、筆記に便なように（注6）、一句一句、ゆっくり話したものだ。<br />
+その大学者はそういう時代に、全部ノートするのは結局頭によく入らないという点に気付いていたらしい。大事な数字のほかは、ごく要点だけをノートに記入する。その方がずっとよく印象に残るというのである。<br />
+字を書いていると、そちらに気をとられて、内容がおるすになりやすい（注7）。<br />
+（外山滋比古『思考の生理学』による）</p>
+<p>（注1）人脈：人のつながり<br />
+（注2）漫然と：あまり注意しないで、なんとなく<br />
+（注3）核心：一番大切な部分<br />
+（注4）同郷の：同じ出身地の<br />
+（注5）愚だ：ばかだ<br />
+（注6）便なように：便利なように<br />
+（注7）内容がおるすになりやすい：内容に注意が向かなくなりやすい</p>
+<p><strong>69</strong> Ａは、なぜメモをとることを勧めているのか。<br />
+ 1. 話の内容を忘れないようにするため<br />
+ 2. 話の内容に集中できるようにするため<br />
+ 3. 話の内容に興味が持てるようにするため<br />
+ 4. 話の内容を聞き落とさないようにするため</p>
+<div class="qa"><label><input type="radio" name="q_69" value="1"><span>1</span></label><label><input type="radio" name="q_69" value="2"><span>2</span></label><label><input type="radio" name="q_69" value="3"><span>3</span></label><label><input type="radio" name="q_69" value="4"><span>4</span></label></div>
+<p><strong>70</strong> A と B で共通して述べられていることは何か。<br />
+ 1. メモやノートに話の内容のすべては書かないほうがよい。<br />
+ 2. 聞いたことをすべてメモやノートに書くと記憶に残りやすい。<br />
+ 3. 印象に残ったことだけを後でメモやノートにまとめるとよい。<br />
+ 4. メモやノートを的確にとれば話に関心が持てるようになる。</p>
+<div class="qa"><label><input type="radio" name="q_70" value="1"><span>1</span></label><label><input type="radio" name="q_70" value="2"><span>2</span></label><label><input type="radio" name="q_70" value="3"><span>3</span></label><label><input type="radio" name="q_70" value="4"><span>4</span></label></div>
+<h2>問題13 次の文書を読んで、後の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。</h2>
+<p>（ ① ）<br />
+この言葉は私のオリジナルです。この考え方にたどり着いたのは 38 歳のときですが、その頃から努力することにたいして抵抗感がなくなり、とても生きやすくなりました。<br />
+私たちはなぜか、中学、高校生の頃に「努力する姿」を人に見せることをやめてしまいます。試験前のガリ勉（注1）や運動会前の徒競走の猛練習（注2）などが、人に知られると気恥ずかしくなってしまうのです。<br />
+その心境は複雑です。まず結果が出なかったとき「あいつ、あれだけやってダメだった」とバカにされるのを恐れます。結果が出ても「あれだけ準備すれば当然だ」と評価が下がるのを恐れます。他者の評価を気にし始めると、いずれにせよ努力を隠すに越したことはない（注3）わけです。<br />
+それは社会人になっても同じです。得意技について「よほど努力しているのでしょうね」と褒められても、「たいしたことはしていません」と②自分の努力をわざわざ否定してしまったりするわけです。<br />
+しかし、この「謙遜して努力を隠す対応」はとても危険です。なぜなら、努力しなくていいことへの言い訳になる一方で、努力を「かっこう悪い」とする無意識のバリア（注4）になりかねないためです。<br />
+もちろん、努力すれば、すべてがなんとかなるわけではありませんが、努力なしでは何も始まりません。そのためには「努力」という言葉を生活に積極的に取り入れ、そのプロセスを楽しむ仕組みをつくらなければなりません。<br />
+そして、努力を客観視するための測定方法が「時間」なのです。<br />
+努力をする、しないはあくまで主観ですが、その分量を時間換算する仕組みを取り入れれば、自分がどこまで努力をしたのか、わかりやすく管理できるようになり、堂々と（注5）「〇〇については何年間やってきた」と言えます。<br />
+例えば、私はよく「文章を書くのが速い」と言われますが、その場合にこう返すのです。「大学卒業から 16 年間、独立するまで、文章で顧客（注6）にリポートを作る仕事でしたから速くないと困ります」と。<br />
+努力を時間で測定すれば、時間が有限だからこそ、何を努力するのか自分で考え、決めなければいけません。そうすれば、結果はあとからついてくる、という気持ちになれる魔法の言葉なのです。<br />
+（勝間和代『勝間和代の人生を変えるコトバ』による）</p>
+<p>（注1）ガリ勉：成績を上げるために勉強ばかりする様子<br />
+（注2）猛練習：一生懸命練習すること<br />
+（注3）隠すに越したことはない：隠したほうがいい<br />
+（注4）バリア：障害となるもの<br />
+（注5）堂々と：自信のある様子で<br />
+（注6）顧客：大切な客</p>
+<p><strong>71</strong> （ ① ）には、筆者の人生に影響を与えた言葉が入る。それはどれか。<br />
+ 1. 努力する姿は、隠すことに価値がある<br />
+ 2. 努力すれば、他人からの評価は変わる<br />
+ 3. 努力は、かけた時間によって測定できる<br />
+ 4. 努力すれば、時間管理も上手になる</p>
+<div class="qa"><label><input type="radio" name="q_71" value="1"><span>1</span></label><label><input type="radio" name="q_71" value="2"><span>2</span></label><label><input type="radio" name="q_71" value="3"><span>3</span></label><label><input type="radio" name="q_71" value="4"><span>4</span></label></div>
+<p><strong>72</strong> ②自分の努力をわざわざ否定してしまったりするのはなぜだと筆者は述べているか。<br />
+ 1. 努力していると感じるのは自分の主観であり、他の人には理解できないから<br />
+ 2. 自分の努力の結果に対し、他人にいろいろ言われたり思われたりしたくないから<br />
+ 3. 他の人に比べると自分の努力は不十分で、もっと努力が必要だと思っているから<br />
+ 4. 自分の努力している姿を見せると、他人から謙虚な人だと思ってもらえないから</p>
+<div class="qa"><label><input type="radio" name="q_72" value="1"><span>1</span></label><label><input type="radio" name="q_72" value="2"><span>2</span></label><label><input type="radio" name="q_72" value="3"><span>3</span></label><label><input type="radio" name="q_72" value="4"><span>4</span></label></div>
+<p><strong>73</strong> 筆者は「努力」についてどのように述べているか。<br />
+ 1. 努力は主観的なものなので、どこまで努力するか自分で決めればよい。<br />
+ 2. 社会人になったら、努力している姿は他人にあまり見せないほうがよい。<br />
+ 3. よい結果を出すためには他人に自分の努力している姿を見せることが大切だ。<br />
+ 4. 何をどれだけ努力したかを確認しながら、努力自体を楽しむことが大切だ。</p>
+<div class="qa"><label><input type="radio" name="q_73" value="1"><span>1</span></label><label><input type="radio" name="q_73" value="2"><span>2</span></label><label><input type="radio" name="q_73" value="3"><span>3</span></label><label><input type="radio" name="q_73" value="4"><span>4</span></label></div>
+<h2>問題14 下のページは、河山市で開かれる市民セミナーの案内である。下の問いに対する答えとして最もよいものを、１・２・３・４から一つ選びなさい。</h2>
+<p>2010 年度 河山市市民セミナーⅢ<br />
+「ビジネス場面での効果的なコミュニケーション法」参加者募集のお知らせ</p>
+<p>仕事をスムーズ進めるためには、コミュニケーションをうまくとることが重要です。このセミナーでは相手に自分の考えを効果的に伝えるためのコミュニケーション法を学びます。昨年度も同じテーマでセミナーを開催し、多くの方が参加されました。</p>
+<p>講師：鈴木花子（心理カウンセラー『社会人のコミュニケーション』著者）<br />
+対象：河山市在住・在勤の 18 歳以上の社会人（河山市職員を除きます。）<br />
+受講料：無料<br />
+定員：20 名（応募者多数の場合は抽選になります。結果ははがきでお知らせします。）<br />
+日程：平成 22 年 10 月 1 日～10 月 29 日 毎週金曜日 全 5 回 19:00～20:30<br />
+会場：河山市市民センター 第一会議室（河山市上町 3―5―2）</p>
+<p>申し込み方法（①～③のいずれかの方法でお申込みください）<br />
+①市役所市民課窓口 受付時間：水曜日を除く 9:00～17:00<br />
+②はがき<br />
+・「市民セミナーⅢ参加希望」と明記の上、住所、氏名、年齢、電話番号を記入して、申し込み締め切り日必着で、下記までお送りください。<br />
+・はがき 1 枚につき 1 名のみ受付可能です。<br />
+〒432—0001 河山市本町 1－1－1 河山市役所市民課 市民セミナー係<br />
+③市役所ホームページ（市民セミナーのページからお申し込みください。毎日午前 2:00～5:00 はホームページの点検作業のため申し込めません。）</p>
+<p>申し込み締め切り：平成 22 年 9 月 17 日（金）</p>
+<p>昨年度セミナー受講者の声<br />
+● 講師の指導が具体的でわかりやすかった。<br />
+● コミュニケーションの具体的な取り方の例を聞くことができて大変有意義だった。<br />
+● 自分の話し方が客観的にわかり、今まで気がつかなかった自分の癖を意識するようになった。</p>
+<p><strong>74</strong> この市民セミナーを受講できるのは次のうちのだれか。<br />
+ 1. 市外から河山市の大学に通学している２１歳の女性<br />
+ 2. 河山市のスーパーに勤務している３５歳の男性<br />
+ 3. 河山市外の自宅で学習を開いている４６歳の女性<br />
+ 4. 河山市役所の市民課に勤めている５３歳の男性</p>
+<div class="qa"><label><input type="radio" name="q_74" value="1"><span>1</span></label><label><input type="radio" name="q_74" value="2"><span>2</span></label><label><input type="radio" name="q_74" value="3"><span>3</span></label><label><input type="radio" name="q_74" value="4"><span>4</span></label></div>
+<p><strong>75</strong> このセミナーの申し込みについて、正しいものはどれか。<br />
+ 1. 定員２０名なので早く申し込む必要がある。<br />
+ 2. 市役所で申し込む場合は、水曜日の決められた時間に行く。<br />
+ 3. はがきで申し込む場合は、1 枚で何人でも申し込むことができる。<br />
+ 4. ホームページから申し込む場合は、申し込めない時間がある。</p>
+<div class="qa"><label><input type="radio" name="q_75" value="1"><span>1</span></label><label><input type="radio" name="q_75" value="2"><span>2</span></label><label><input type="radio" name="q_75" value="3"><span>3</span></label><label><input type="radio" name="q_75" value="4"><span>4</span></label></div></div><hr class="section-divider"><div id="section-choukai"><h1 class="section-title">JLPT N2 聴解</h1><div id="player"><audio id="au" controls preload="metadata" src="聴解.mp3"></audio><div class="pctl"><button type="button" onclick="nudge(-10)">◀ 10秒</button><button type="button" onclick="nudge(10)">10秒 ▶</button><label>速度 <select id="rate" onchange="au.playbackRate=+this.value"><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option></select></label><span id="chapwrap">章 <select id="chap" onchange="jump(this.value)"></select></span><label class="pick">MP3を選ぶ<input type="file" accept="audio/*" onchange="pick(this)"></label></div><script>window.CHAPTERS = {
+  "duration": 3009.52,
+  "chapters": [],
+  "source": "external",
+  "note": "External/official MP3 — no TTS segment marks. Re-run make mp3 to synthesize chapter marks from 聴解スクリプト.txt."
+}
+;</script></div><h1>【聴解】</h1>
+<h2>問題1</h2>
+<p>問題1では、まず質問を聞いてください。それから話を聞いて、問題用紙の1から4の中から、最もよいものを一つ選んでください。</p>
+<p><strong>例</strong><br />
+ 1. ◯◯　　　2. ◯◯　　　3. ◯◯　　　4. ◯◯</p>
+<div class="qa ex"><span class="qid">例</span><span class="mark">1</span><span class="mark">2</span><span class="mark">3</span><span class="mark">4</span></div>
+<p><strong>1番</strong><br />
+ 1. アパートの情報誌を買いに行く<br />
+ 2. 不動産屋に行く<br />
+ 3. 希望の条件を書きだす<br />
+ 4. 住みたい町を歩く</p>
+<div class="qa"><label><input type="radio" name="q_問1-1" value="1"><span>1</span></label><label><input type="radio" name="q_問1-1" value="2"><span>2</span></label><label><input type="radio" name="q_問1-1" value="3"><span>3</span></label><label><input type="radio" name="q_問1-1" value="4"><span>4</span></label></div>
+<p><strong>2番</strong><br />
+ 1. 家具がたおれないようにする<br />
+ 2. 背の低い家具を固定する<br />
+ 3. 避難用のセットを準備する<br />
+ 4. 家族のみんなで避難場所を決める</p>
+<div class="qa"><label><input type="radio" name="q_問1-2" value="1"><span>1</span></label><label><input type="radio" name="q_問1-2" value="2"><span>2</span></label><label><input type="radio" name="q_問1-2" value="3"><span>3</span></label><label><input type="radio" name="q_問1-2" value="4"><span>4</span></label></div>
+<p><strong>3番</strong><br />
+ 1. 0001 01<br />
+ 2. 0001 02<br />
+ 3. 0503 02<br />
+ 4. 0503 09</p>
+<div class="qa"><label><input type="radio" name="q_問1-3" value="1"><span>1</span></label><label><input type="radio" name="q_問1-3" value="2"><span>2</span></label><label><input type="radio" name="q_問1-3" value="3"><span>3</span></label><label><input type="radio" name="q_問1-3" value="4"><span>4</span></label></div>
+<p><strong>4番</strong><br />
+ 1. 田中さんへ　会議の時間が変わりました<br />
+ 2. 田中さんへ　明日の会議に出席してください<br />
+ 3. 田中さんへ　サクラ印刷の山川さんに電話してください<br />
+ 4. 田中さんへ　サクラ印刷の山川さんが再度電話をくだされます</p>
+<div class="qa"><label><input type="radio" name="q_問1-4" value="1"><span>1</span></label><label><input type="radio" name="q_問1-4" value="2"><span>2</span></label><label><input type="radio" name="q_問1-4" value="3"><span>3</span></label><label><input type="radio" name="q_問1-4" value="4"><span>4</span></label></div>
+<p><strong>5番</strong><br />
+ 1. 字の間違いを直す<br />
+ 2. さんこうぶんけんの書き方を直す<br />
+ 3. グラフを直す<br />
+ 4. ろんぶんのコピーを３部作る</p>
+<div class="qa"><label><input type="radio" name="q_問1-5" value="1"><span>1</span></label><label><input type="radio" name="q_問1-5" value="2"><span>2</span></label><label><input type="radio" name="q_問1-5" value="3"><span>3</span></label><label><input type="radio" name="q_問1-5" value="4"><span>4</span></label></div>
+<h2>問題2</h2>
+<p>問題2では、まず質問を聞いてください。そのあと、問題用紙を見てください。読む時間があります。それから話を聞いて、問題用紙の1から4の中から、最もよいものを一つ選んでください。</p>
+<p><strong>例</strong><br />
+ 1. ◯◯　　　2. ◯◯　　　3. ◯◯　　　4. ◯◯</p>
+<div class="qa ex"><span class="qid">例</span><span class="mark">1</span><span class="mark">2</span><span class="mark">3</span><span class="mark">4</span></div>
+<p><strong>1番</strong><br />
+ 1. 友達とつりに行く<br />
+ 2. 病院に友達のおみまいに行く<br />
+ 3. 友達のアパートに行く<br />
+ 4. 店に自転車を取りに行く</p>
+<div class="qa"><label><input type="radio" name="q_問2-1" value="1"><span>1</span></label><label><input type="radio" name="q_問2-1" value="2"><span>2</span></label><label><input type="radio" name="q_問2-1" value="3"><span>3</span></label><label><input type="radio" name="q_問2-1" value="4"><span>4</span></label></div>
+<p><strong>2番</strong><br />
+ 1. せんぱいにしょうかいしてもらったから<br />
+ 2. 大学での専門が役に立ちそうだから<br />
+ 3. 給料が高いから<br />
+ 4. 今住んでいるところから通えるから</p>
+<div class="qa"><label><input type="radio" name="q_問2-2" value="1"><span>1</span></label><label><input type="radio" name="q_問2-2" value="2"><span>2</span></label><label><input type="radio" name="q_問2-2" value="3"><span>3</span></label><label><input type="radio" name="q_問2-2" value="4"><span>4</span></label></div>
+<p><strong>3番</strong><br />
+ 1. 電車が事故で遅れたから<br />
+ 2. ドアの近くの人が動かなかったから<br />
+ 3. ドアが開かなかったから<br />
+ 4. 電車が止まらなかったから</p>
+<div class="qa"><label><input type="radio" name="q_問2-3" value="1"><span>1</span></label><label><input type="radio" name="q_問2-3" value="2"><span>2</span></label><label><input type="radio" name="q_問2-3" value="3"><span>3</span></label><label><input type="radio" name="q_問2-3" value="4"><span>4</span></label></div>
+<p><strong>4番</strong><br />
+ 1. 医者に吸うなと言われたから<br />
+ 2. 身近な人にめいわくがかかるから<br />
+ 3. 吸えない場所が増えているから<br />
+ 4. たばこが値上がりしているから</p>
+<div class="qa"><label><input type="radio" name="q_問2-4" value="1"><span>1</span></label><label><input type="radio" name="q_問2-4" value="2"><span>2</span></label><label><input type="radio" name="q_問2-4" value="3"><span>3</span></label><label><input type="radio" name="q_問2-4" value="4"><span>4</span></label></div>
+<p><strong>5番</strong><br />
+ 1. かぜをひいたから<br />
+ 2. バイトを交代するから<br />
+ 3. 旅行に行くことになったから<br />
+ 4. 本をまだ読んでいないから</p>
+<div class="qa"><label><input type="radio" name="q_問2-5" value="1"><span>1</span></label><label><input type="radio" name="q_問2-5" value="2"><span>2</span></label><label><input type="radio" name="q_問2-5" value="3"><span>3</span></label><label><input type="radio" name="q_問2-5" value="4"><span>4</span></label></div>
+<p><strong>6番</strong><br />
+ 1. 流行りにのれたこと<br />
+ 2. 体力がついたこと<br />
+ 3. よく眠れるようになったこと<br />
+ 4. 精神的に強くなったこと</p>
+<div class="qa"><label><input type="radio" name="q_問2-6" value="1"><span>1</span></label><label><input type="radio" name="q_問2-6" value="2"><span>2</span></label><label><input type="radio" name="q_問2-6" value="3"><span>3</span></label><label><input type="radio" name="q_問2-6" value="4"><span>4</span></label></div>
+<h2>問題3</h2>
+<p>問題3では、問題用紙に何も印刷されていません。この問題は、全体としてどんな内容かを聞く問題です。話の前に質問はありません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。</p>
+<p>―メモ―</p>
+<p><strong>1番</strong> <div class="qa"><label><input type="radio" name="q_問3-1" value="1"><span>1</span></label><label><input type="radio" name="q_問3-1" value="2"><span>2</span></label><label><input type="radio" name="q_問3-1" value="3"><span>3</span></label><label><input type="radio" name="q_問3-1" value="4"><span>4</span></label></div><br />
+<strong>2番</strong> <div class="qa"><label><input type="radio" name="q_問3-2" value="1"><span>1</span></label><label><input type="radio" name="q_問3-2" value="2"><span>2</span></label><label><input type="radio" name="q_問3-2" value="3"><span>3</span></label><label><input type="radio" name="q_問3-2" value="4"><span>4</span></label></div><br />
+<strong>3番</strong> <div class="qa"><label><input type="radio" name="q_問3-3" value="1"><span>1</span></label><label><input type="radio" name="q_問3-3" value="2"><span>2</span></label><label><input type="radio" name="q_問3-3" value="3"><span>3</span></label><label><input type="radio" name="q_問3-3" value="4"><span>4</span></label></div><br />
+<strong>4番</strong> <div class="qa"><label><input type="radio" name="q_問3-4" value="1"><span>1</span></label><label><input type="radio" name="q_問3-4" value="2"><span>2</span></label><label><input type="radio" name="q_問3-4" value="3"><span>3</span></label><label><input type="radio" name="q_問3-4" value="4"><span>4</span></label></div><br />
+<strong>5番</strong> <div class="qa"><label><input type="radio" name="q_問3-5" value="1"><span>1</span></label><label><input type="radio" name="q_問3-5" value="2"><span>2</span></label><label><input type="radio" name="q_問3-5" value="3"><span>3</span></label><label><input type="radio" name="q_問3-5" value="4"><span>4</span></label></div></p>
+<h2>問題4</h2>
+<p>問題4では、問題用紙に何も印刷されていません。まず文を聞いてください。それから、それに対する返事を聞いて、1から3の中から、最もよいものを一つ選んでください。</p>
+<p>―メモ―</p>
+<p><strong>1番</strong> <div class="qa"><label><input type="radio" name="q_問4-1" value="1"><span>1</span></label><label><input type="radio" name="q_問4-1" value="2"><span>2</span></label><label><input type="radio" name="q_問4-1" value="3"><span>3</span></label></div><br />
+<strong>2番</strong> <div class="qa"><label><input type="radio" name="q_問4-2" value="1"><span>1</span></label><label><input type="radio" name="q_問4-2" value="2"><span>2</span></label><label><input type="radio" name="q_問4-2" value="3"><span>3</span></label></div><br />
+<strong>3番</strong> <div class="qa"><label><input type="radio" name="q_問4-3" value="1"><span>1</span></label><label><input type="radio" name="q_問4-3" value="2"><span>2</span></label><label><input type="radio" name="q_問4-3" value="3"><span>3</span></label></div><br />
+<strong>4番</strong> <div class="qa"><label><input type="radio" name="q_問4-4" value="1"><span>1</span></label><label><input type="radio" name="q_問4-4" value="2"><span>2</span></label><label><input type="radio" name="q_問4-4" value="3"><span>3</span></label></div><br />
+<strong>5番</strong> <div class="qa"><label><input type="radio" name="q_問4-5" value="1"><span>1</span></label><label><input type="radio" name="q_問4-5" value="2"><span>2</span></label><label><input type="radio" name="q_問4-5" value="3"><span>3</span></label></div><br />
+<strong>6番</strong> <div class="qa"><label><input type="radio" name="q_問4-6" value="1"><span>1</span></label><label><input type="radio" name="q_問4-6" value="2"><span>2</span></label><label><input type="radio" name="q_問4-6" value="3"><span>3</span></label></div><br />
+<strong>7番</strong> <div class="qa"><label><input type="radio" name="q_問4-7" value="1"><span>1</span></label><label><input type="radio" name="q_問4-7" value="2"><span>2</span></label><label><input type="radio" name="q_問4-7" value="3"><span>3</span></label></div><br />
+<strong>8番</strong> <div class="qa"><label><input type="radio" name="q_問4-8" value="1"><span>1</span></label><label><input type="radio" name="q_問4-8" value="2"><span>2</span></label><label><input type="radio" name="q_問4-8" value="3"><span>3</span></label></div><br />
+<strong>9番</strong> <div class="qa"><label><input type="radio" name="q_問4-9" value="1"><span>1</span></label><label><input type="radio" name="q_問4-9" value="2"><span>2</span></label><label><input type="radio" name="q_問4-9" value="3"><span>3</span></label></div><br />
+<strong>10番</strong> <div class="qa"><label><input type="radio" name="q_問4-10" value="1"><span>1</span></label><label><input type="radio" name="q_問4-10" value="2"><span>2</span></label><label><input type="radio" name="q_問4-10" value="3"><span>3</span></label></div><br />
+<strong>11番</strong> <div class="qa"><label><input type="radio" name="q_問4-11" value="1"><span>1</span></label><label><input type="radio" name="q_問4-11" value="2"><span>2</span></label><label><input type="radio" name="q_問4-11" value="3"><span>3</span></label></div><br />
+<strong>12番</strong> <div class="qa"><label><input type="radio" name="q_問4-12" value="1"><span>1</span></label><label><input type="radio" name="q_問4-12" value="2"><span>2</span></label><label><input type="radio" name="q_問4-12" value="3"><span>3</span></label></div></p>
+<h2>問題5</h2>
+<p>問題5では、長めの話を聞きます。この問題には練習はありません。問題用紙にメモをとってもかまいません。</p>
+<p>―メモ―</p>
+<p><strong>1番</strong> <div class="qa"><label><input type="radio" name="q_問5-1" value="1"><span>1</span></label><label><input type="radio" name="q_問5-1" value="2"><span>2</span></label><label><input type="radio" name="q_問5-1" value="3"><span>3</span></label><label><input type="radio" name="q_問5-1" value="4"><span>4</span></label></div><br />
+<strong>2番</strong> <div class="qa"><label><input type="radio" name="q_問5-2" value="1"><span>1</span></label><label><input type="radio" name="q_問5-2" value="2"><span>2</span></label><label><input type="radio" name="q_問5-2" value="3"><span>3</span></label><label><input type="radio" name="q_問5-2" value="4"><span>4</span></label></div></p>
+<p><strong>3番</strong><br />
+まず話を聞いてください。それから、二つの質問を聞いて、それぞれ問題用紙の1から4の中から、最もよいものを一つ選んでください。</p>
+<p><strong>質問1</strong><br />
+ 1. リラックスコース<br />
+ 2. わくわくコース<br />
+ 3. ロマンコース<br />
+ 4. よくばりコース</p>
+<div class="qa"><label><input type="radio" name="q_問5-3-1" value="1"><span>1</span></label><label><input type="radio" name="q_問5-3-1" value="2"><span>2</span></label><label><input type="radio" name="q_問5-3-1" value="3"><span>3</span></label><label><input type="radio" name="q_問5-3-1" value="4"><span>4</span></label></div>
+<p><strong>質問2</strong><br />
+ 1. リラックスコース<br />
+ 2. わくわくコース<br />
+ 3. ロマンコース<br />
+ 4. よくばりコース</p>
+<div class="qa"><label><input type="radio" name="q_問5-3-2" value="1"><span>1</span></label><label><input type="radio" name="q_問5-3-2" value="2"><span>2</span></label><label><input type="radio" name="q_問5-3-2" value="3"><span>3</span></label><label><input type="radio" name="q_問5-3-2" value="4"><span>4</span></label></div></div></div><div id="screen-result"></div><script>
+const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "問1-1", "問1-2", "問1-3", "問1-4", "問1-5", "問2-1", "問2-2", "問2-3", "問2-4", "問2-5", "問2-6", "問3-1", "問3-2", "問3-3", "問3-4", "問3-5", "問4-1", "問4-2", "問4-3", "問4-4", "問4-5", "問4-6", "問4-7", "問4-8", "問4-9", "問4-10", "問4-11", "問4-12", "問5-1", "問5-2", "問5-3-1", "問5-3-2"], TESTID = "imported-n2-2010-07";
+const GENGO_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75"], CHOUKAI_KEYS = ["問1-1", "問1-2", "問1-3", "問1-4", "問1-5", "問2-1", "問2-2", "問2-3", "問2-4", "問2-5", "問2-6", "問3-1", "問3-2", "問3-3", "問3-4", "問3-5", "問4-1", "問4-2", "問4-3", "問4-4", "問4-5", "問4-6", "問4-7", "問4-8", "問4-9", "問4-10", "問4-11", "問4-12", "問5-1", "問5-2", "問5-3-1", "問5-3-2"];
+const ANSWER_KEY = {"1": 3, "3": 2, "2": 4, "4": 4, "5": 2, "6": 4, "7": 2, "8": 3, "9": 1, "10": 3, "11": 1, "12": 3, "13": 4, "14": 2, "15": 4, "16": 2, "17": 4, "18": 1, "19": 3, "20": 1, "21": 3, "22": 4, "23": 3, "24": 1, "25": 2, "26": 1, "27": 4, "28": 4, "29": 2, "30": 3, "31": 2, "32": 1, "33": 3, "34": 1, "35": 3, "36": 3, "37": 4, "38": 2, "39": 2, "40": 4, "41": 2, "42": 3, "43": 1, "44": 4, "45": 4, "46": 2, "47": 1, "48": 3, "49": 3, "50": 2, "51": 2, "52": 3, "53": 1, "54": 4, "55": 2, "56": 3, "57": 4, "58": 2, "59": 1, "60": 3, "61": 3, "62": 1, "63": 2, "64": 3, "65": 4, "66": 1, "67": 3, "68": 3, "69": 1, "70": 1, "71": 3, "72": 2, "73": 4, "74": 2, "75": 4, "問1-1": 4, "問1-2": 3, "問1-3": 2, "問1-4": 3, "問1-5": 3, "問2-1": 3, "問2-2": 2, "問2-3": 2, "問2-4": 2, "問2-5": 2, "問2-6": 4, "問3-1": 1, "問3-2": 1, "問3-3": 3, "問3-4": 2, "問3-5": 2, "問4-1": 2, "問4-2": 1, "問4-3": 3, "問4-4": 3, "問4-5": 1, "問4-6": 1, "問4-7": 3, "問4-8": 2, "問4-9": 2, "問4-10": 3, "問4-11": 1, "問4-12": 3, "問5-1": 2, "問5-2": 3, "問5-3-1": 2, "問5-3-2": 3}, TAXONOMY = [{"code": "問1", "name": "漢字読み (Kanji Reading)", "section": "言語知識", "keys": ["1", "2", "3", "4", "5"]}, {"code": "問2", "name": "表記 (Orthography)", "section": "言語知識", "keys": ["6", "7", "8", "9", "10"]}, {"code": "問3", "name": "語形成 (Word Formation)", "section": "言語知識", "keys": ["11", "12", "13"]}, {"code": "問4", "name": "文脈規定 (Word in Context)", "section": "言語知識", "keys": ["14", "15", "16", "17", "18", "19", "20"]}, {"code": "問5", "name": "言い換え類義 (Paraphrases)", "section": "言語知識", "keys": ["21", "22", "23", "24", "25"]}, {"code": "問6", "name": "用法 (Correct Usage)", "section": "言語知識", "keys": ["26", "27", "28", "29", "30"]}, {"code": "問7", "name": "文法形式の判断 (Grammar Form)", "section": "言語知識", "keys": ["31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"]}, {"code": "問8", "name": "文の組み立て (Sentence Composition ★)", "section": "言語知識", "keys": ["43", "44", "45", "46", "47"]}, {"code": "問9", "name": "文章の文法 (Text Grammar / Cloze)", "section": "言語知識", "keys": ["48", "49", "50", "51"]}, {"code": "問10", "name": "内容理解・短文 (Short Passages)", "section": "読解", "keys": ["52", "53", "54", "55", "56"]}, {"code": "問11", "name": "内容理解・中文 (Medium Passages)", "section": "読解", "keys": ["57", "58", "59", "60", "61", "62", "63", "64"]}, {"code": "問12", "name": "統合理解 (A/B Comparative Texts)", "section": "読解", "keys": ["65", "66"]}, {"code": "問13", "name": "主張理解・長文 (Long Essay)", "section": "読解", "keys": ["67", "68", "69"]}, {"code": "問14", "name": "情報検索 (Information Retrieval)", "section": "読解", "keys": ["70", "71"]}, {"code": "問題1", "name": "課題理解 (Task Comprehension)", "section": "聴解", "keys": ["問1-1", "問1-2", "問1-3", "問1-4", "問1-5"]}, {"code": "問題2", "name": "ポイント理解 (Point Comprehension)", "section": "聴解", "keys": ["問2-1", "問2-2", "問2-3", "問2-4", "問2-5", "問2-6"]}, {"code": "問題3", "name": "概要理解 (Summary Comprehension)", "section": "聴解", "keys": ["問3-1", "問3-2", "問3-3", "問3-4", "問3-5"]}, {"code": "問題4", "name": "即時応答 (Quick Response)", "section": "聴解", "keys": ["問4-1", "問4-2", "問4-3", "問4-4", "問4-5", "問4-6", "問4-7", "問4-8", "問4-9", "問4-10", "問4-11", "問4-12"]}, {"code": "問題5", "name": "統合理解 (Integrated Comprehension)", "section": "聴解", "keys": ["問5-1", "問5-2", "問5-3-1", "問5-3-2"]}], ADVICE = {"問1": "『新完全マスター単語N2』『新完全マスター漢字N2』の基本語彙・訓読み・複合語の復習を徹底しましょう。", "問2": "『新完全マスター単語N2』『新完全マスター漢字N2』の基本語彙・訓読み・複合語の復習を徹底しましょう。", "問3": "『新完全マスター単語N2』『新完全マスター漢字N2』の基本語彙・訓読み・複合語の復習を徹底しましょう。", "問4": "語彙の文脈的意味やコロケーション（類義語・用法）の精度を高めましょう。単語カードでの例文暗記が効果的です。", "問5": "語彙の文脈的意味やコロケーション（類義語・用法）の精度を高めましょう。単語カードでの例文暗記が効果的です。", "問6": "語彙の文脈的意味やコロケーション（類義語・用法）の精度を高めましょう。単語カードでの例文暗記が効果的です。", "問7": "『新完全マスター文法N2』で機能語の接続・意味の違いおよび文章全体の論理展開（接続詞・指示語）を復習しましょう。", "問8": "『新完全マスター文法N2』で機能語の接続・意味の違いおよび文章全体の論理展開（接続詞・指示語）を復習しましょう。", "問9": "『新完全マスター文法N2』で機能語の接続・意味の違いおよび文章全体の論理展開（接続詞・指示語）を復習しましょう。", "問10": "『新完全マスター読解N2』を活用し、設問のキーワードのスキャニングおよび段落ごとの要旨把握のスキマ時間を増やしましょう。", "問11": "『新完全マスター読解N2』を活用し、設問のキーワードのスキャニングおよび段落ごとの要旨把握のスキマ時間を増やしましょう。", "問12": "『新完全マスター読解N2』を活用し、設問のキーワードのスキャニングおよび段落ごとの要旨把握のスキマ時間を増やしましょう。", "問13": "『新完全マスター読解N2』を活用し、設問のキーワードのスキャニングおよび段落ごとの要旨把握のスキマ時間を増やしましょう。", "問14": "『新完全マスター読解N2』を活用し、設問のキーワードのスキャニングおよび段落ごとの要旨把握のスキマ時間を増やしましょう。", "問題1": "『新完全マスター聴解N2』CD音源によるシャドーイングおよび即時応答（問題4）の定型表現・敬語表現の反復練習を行いましょう。", "問題2": "『新完全マスター聴解N2』CD音源によるシャドーイングおよび即時応答（問題4）の定型表現・敬語表現の反復練習を行いましょう。", "問題3": "『新完全マスター聴解N2』CD音源によるシャドーイングおよび即時応答（問題4）の定型表現・敬語表現の反復練習を行いましょう。", "問題4": "『新完全マスター聴解N2』CD音源によるシャドーイングおよび即時応答（問題4）の定型表現・敬語表現の反復練習を行いましょう。", "問題5": "『新完全マスター聴解N2』CD音源によるシャドーイングおよび即時応答（問題4）の定型表現・敬語表現の反復練習を行いましょう。"};
+const CHOUKAI_SCRIPTS = {};
+
+// Where 「← テスト一覧」 and 「テスト一覧へ戻る」 go: the unified server's root, or
+// the static list two levels up on GitHub Pages (which is served from /<repo>/).
+const LIST_HREF = "/";
+
+/* ---------------------------------------------------------------- the store
+   STORAGE is baked in at build time and exactly ONE backend is live per build —
+   never both, and never sniffed at runtime (see local_store.py). Two live
+   stores would let the test list and this sheet disagree about what you
+   answered, which is the whole reason the answers had a single home.
+
+     'server'  make serve — tests/<id>/ユーザー解答.json + 採点結果.json on disk
+     'local'   GitHub Pages / file:// — the same two documents in localStorage
+
+   Both backends expose the same four methods, so nothing below this block
+   knows which one it is talking to. */
+const STORAGE = "server";
+// Routes on the unified server (serve_sheet.py, `make serve`). Opened over
+// file:// these fetches simply fail and grading falls back to a download.
+const API = '/api/tests/' + encodeURIComponent(TESTID) + '/';
+
+const StoreServer = {
+  async loadAnswers(){
+    try {
+      const r = await fetch('ユーザー解答.json', {cache: 'no-store'});
+      return r.ok ? await r.json() : null;
+    } catch(e){ return null; }
+  },
+  saveAnswers(payload){
+    return fetch(API + 'answers', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({answers: payload})
+    }).then(()=>{}, ()=>{ /* file:// or offline: grade download only */ });
+  },
+  async loadResult(){
+    try {
+      const r = await fetch('採点結果.json', {cache: 'no-store'});
+      return r.ok ? await r.json() : null;
+    } catch(e){ return null; }
+  },
+  async submit(payload, res){
+    try {
+      const r = await fetch(API + 'submit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({answers: payload, result: res})
+      });
+      const data = r.ok ? await r.json() : null;
+      if (data && data.success) return {saved: true, message: data.message};
+    } catch(e){}
+    return {saved: false, message: ''};
+  }
+};
+
+const StoreLocal = {
+  async loadAnswers(){ return window.JLPTStore.answers(TESTID); },
+  saveAnswers(payload){
+    window.JLPTStore.setAnswers(TESTID, payload);
+    return Promise.resolve();
+  },
+  async loadResult(){ return window.JLPTStore.result(TESTID); },
+  async submit(payload, res){
+    // A full localStorage (quota) returns false, and grading then falls back to
+    // the download exactly as it does with no server. Both writes are attempted
+    // before the verdict — && would skip the result on a failed answers write.
+    const wroteAnswers = window.JLPTStore.setAnswers(TESTID, payload);
+    const wroteResult = window.JLPTStore.setResult(TESTID, res);
+    return (wroteAnswers && wroteResult) ? {saved: true,
+                 message: 'このブラウザに保存しました（テスト一覧に反映されます）。'}
+              : {saved: false, message: ''};
+  }
+};
+
+const STORE = STORAGE === 'local' ? StoreLocal : StoreServer;
+// Section labels are the keys grade_answers.py uses in its own result JSON —
+// the two graders write the SAME 採点結果.json shape, and make check proves it.
+const SEC_GENGO = "言語知識（文字・語彙・文法）", SEC_DOKKAI = "読解", SEC_CHOUKAI = "聴解";
+const EXAM_TITLE = "テスト " + TESTID + "（受験）", RESULT_TITLE = "テスト " + TESTID + "（採点結果）";
+
+function state(){
+  const o = {};
+  document.querySelectorAll('input[type=radio]:checked').forEach(r=>{
+    o[r.name.slice(2)] = parseInt(r.value);
+  });
+  return o;
+}
+function answersPayload(ans){
+  const gengoAns = {}, choukaiAns = {};
+  for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gengoAns[k] = ans[k]; }
+  for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) choukaiAns[k] = ans[k]; }
+  return {"言語知識_読解": gengoAns, "聴解": choukaiAns};
+}
+let _saveTimer = null;
+function persistAnswers(ans){
+  // Single source of truth, whichever backend is live: tests/<id>/ユーザー解答.json
+  // under make serve, the matching localStorage key on GitHub Pages. Screen 1
+  // reads that same one place back to show progress — there is never a second
+  // copy. Debounced so rapid clicks do not thrash the disk.
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(()=>{ STORE.saveAnswers(answersPayload(ans)); }, 250);
+}
+function updateCounter(ans){
+  let gCount = 0, cCount = 0;
+  for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gCount++; }
+  for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) cCount++; }
+  const total = gCount + cCount;
+  document.getElementById('done').textContent =
+    "言語: " + gCount + "/" + GENGO_KEYS.length + " | 聴解: " + cCount + "/" + CHOUKAI_KEYS.length + " | 計: " + total + " / " + KEYS.length;
+}
+function refresh(){
+  const ans = state();
+  updateCounter(ans);
+  persistAnswers(ans);
+}
+function applyAnswers(o){
+  for (const k in o){
+    const el = document.querySelector('input[name="q_'+CSS.escape(k)+'"][value="'+o[k]+'"]');
+    if (el) el.checked = true;
+  }
+}
+function flattenSaved(data){
+  const o = {};
+  if (!data || typeof data !== 'object') return o;
+  const g = data["言語知識_読解"] || data.gengo || {};
+  const c = data["聴解"] || data.choukai || {};
+  for (const k in g){ if (g[k] !== undefined && g[k] !== null) o[k] = parseInt(g[k], 10); }
+  for (const k in c){ if (c[k] !== undefined && c[k] !== null) o[k] = parseInt(c[k], 10); }
+  // also accept a flat map { "33": 2, "問1-1": 1 }
+  if (!Object.keys(o).length){
+    for (const k in data){
+      if (k === "言語知識_読解" || k === "聴解") continue;
+      if (typeof data[k] === 'number' || /^\d+$/.test(String(data[k]))) o[k] = parseInt(data[k], 10);
+    }
+  }
+  return o;
+}
+async function restore(){
+  const o = flattenSaved(await STORE.loadAnswers());
+  applyAnswers(o);
+  // Apply without re-POSTing: refresh() would persistAnswers and race the load.
+  updateCounter(state());
+}
+function clearAll(){
+  if (!confirm("すべての解答を消去しますか？")) return;
+  document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+  refresh();
+}
+
+/* ---------------------------------------------------------------- grading
+   computeResult() is the ONLY scoring path in the page and it returns DATA,
+   never markup — the same object grade_answers.py builds, so 採点結果.json has
+   one shape whichever grader wrote it. Keep it pure (no DOM, no Date): make
+   check runs this exact function under node and compares it with the Python
+   grader on identical answers. */
+function computeResult(ans){
+  const detailGengo = {}, detailChoukai = {};
+  let goi = 0, dokkai = 0, choukai = 0;
+  const maxQ = GENGO_KEYS.length;
+  const goiCutoff = maxQ > 71 ? 54 : 51;
+
+  for (let q = 1; q <= maxQ; q++){
+    const k = String(q);
+    const correct = ANSWER_KEY[k] === undefined ? null : ANSWER_KEY[k];
+    const user = ans[k] === undefined ? null : ans[k];
+    const ok = correct !== null && user !== null && user === correct;
+    if (ok){ if (q <= goiCutoff) goi++; else dokkai++; }
+    detailGengo[k] = {correct: correct, user: user, is_correct: ok};
+  }
+  for (const k of CHOUKAI_KEYS){
+    const correct = ANSWER_KEY[k] === undefined ? null : ANSWER_KEY[k];
+    const user = ans[k] === undefined ? null : ans[k];
+    const ok = correct !== null && user !== null && user === correct;
+    if (ok) choukai++;
+    detailChoukai[k] = {correct: correct, user: user, is_correct: ok};
+  }
+
+  // Raw section sizes: 51/54 / 20/21 / 30/32, each scaled to 60 (JLPT equating).
+  const nGoi = goiCutoff, nDokkai = maxQ - goiCutoff, nChoukai = CHOUKAI_KEYS.length || 30;
+  const sGoi = Math.round((goi / nGoi) * 60);
+  const sDokkai = Math.round((dokkai / nDokkai) * 60);
+  const sChoukai = Math.round((choukai / nChoukai) * 60);
+  const totalScaled = sGoi + sDokkai + sChoukai;
+  const cutoffPassed = sGoi >= 19 && sDokkai >= 19 && sChoukai >= 19;
+  const overallPassed = totalScaled >= 90;
+
+  function sec(correct, total, scaled){
+    return {raw_correct: correct, raw_total: total, scaled_score: scaled,
+            cutoff: 19, passed_cutoff: scaled >= 19};
+  }
+  const sections = {};
+  sections[SEC_GENGO] = sec(goi, nGoi, sGoi);
+  sections[SEC_DOKKAI] = sec(dokkai, nDokkai, sDokkai);
+  sections[SEC_CHOUKAI] = sec(choukai, nChoukai, sChoukai);
+
+  const taxonomy = {};
+  for (const t of TAXONOMY){
+    let c = 0;
+    for (const k of t.keys){ if (ans[k] !== undefined && ans[k] === ANSWER_KEY[k]) c++; }
+    const n = t.keys.length;
+    taxonomy[t.code] = {name: t.name, section: t.section, correct: c, total: n,
+                        percentage: n ? Math.round((c / n) * 100 * 10) / 10 : 0};
+  }
+
+  const weak = [];
+  for (const t of TAXONOMY){
+    const s = taxonomy[t.code];
+    if (s.percentage < 60){
+      weak.push({code: t.code, name: s.name, section: s.section,
+                 percentage: s.percentage, advice: ADVICE[t.code] || ""});
+    }
+  }
+
+  return {
+    test_id: TESTID,
+    graded_at: null,
+    summary: {
+      passed: overallPassed && cutoffPassed,
+      total_scaled_score: totalScaled,
+      max_scaled_score: 180,
+      cutoff_passed: cutoffPassed,
+      overall_threshold_passed: overallPassed,
+      sections: sections
+    },
+    taxonomy_stats: taxonomy,
+    weak_areas: weak,
+    detail_gengo: detailGengo,
+    detail_choukai: detailChoukai
+  };
+}
+
+/* ------------------------------------------------------- screen 3: 採点結果 */
+function rating(p){ return p >= 80 ? "優 (Strong)" : p >= 60 ? "良 (Fair)" : "要強化 (Weak)"; }
+
+function chip(label, d){
+  const cls = d.user === null ? 'na' : (d.is_correct ? 'ok' : 'ng');
+  const body = d.user === null ? '未解答'
+             : (d.is_correct ? String(d.user) : d.user + ' → ' + d.correct);
+  return '<span class="chip ' + cls + '"><i>' + label + '</i>' + body + '</span>';
+}
+
+function _isQa(el){ return !!(el && el.classList && el.classList.contains('qa')); }
+function _isBreak(el){ return !!(el && (/^H[12]$/.test(el.tagName) || el.tagName === 'HR')); }
+function _isUnit(el){ return !!(el && el.tagName === 'H3'); }
+function _isOptLine(el){
+  return !!(el && el.tagName === 'P' && /^\s*[1-4][.．]/.test(el.textContent || ''));
+}
+function _looksLikeStem(el){
+  if (!el || el.tagName !== 'P') return false;
+  const s = el.querySelector('strong');
+  if (!s) return false;
+  const t = (s.textContent || '').trim();
+  return /^(?:\d{1,2}\b|例|[1-5]番|質問\s*[12])/.test(t);
+}
+
+/** Live exam nodes for one scored item (stem + shared passage / 問題 heading),
+ *  as node REFERENCES — not yet cloned. Kept as references (not HTML) so two
+ *  items whose walks converge on the same preceding nodes can be detected by
+ *  reference equality, which is how shared-passage GROUPING works below.
+ *  Contiguous slices are wrong: walking back to h2 would drag in every earlier
+ *  item in that 問題. Collect stem nodes, then prepend passage context while
+ *  skipping other questions' stems/.qa blocks. */
+function extractQuestionNodes(key){
+  const inp = document.querySelector(
+    '#screen-exam input[name="q_' + CSS.escape(key) + '"]');
+  if (!inp) return [];
+  const qa = inp.closest('.qa');
+  if (!qa || !qa.parentElement) return [];
+  const kids = Array.from(qa.parentElement.children);
+  const qi = kids.indexOf(qa);
+  if (qi < 0) return [];
+
+  const nodes = [];
+  let i = qi - 1;
+  while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))){
+    nodes.unshift(kids[i]);
+    i--;
+  }
+  while (i >= 0){
+    const n = kids[i];
+    if (_isQa(n)){
+      i--;
+      while (i >= 0 && (_looksLikeStem(kids[i]) || _isOptLine(kids[i]))) i--;
+      continue;
+    }
+    if (n.tagName === 'HR') break;
+    if (n.tagName === 'H1' && n.classList.contains('section-title')) break;
+    if (n.tagName === 'H1' || n.tagName === 'H2'){
+      nodes.unshift(n);
+      break;
+    }
+    if (_isUnit(n)){
+      nodes.unshift(n);
+      break;
+    }
+    nodes.unshift(n);
+    i--;
+  }
+  return nodes;
+}
+
+function nodesToHtml(nodes){
+  if (!nodes.length) return '';
+  const wrap = document.createElement('div');
+  nodes.forEach(n => wrap.appendChild(n.cloneNode(true)));
+  wrap.querySelectorAll('input, .qa').forEach(el => el.remove());
+  return wrap.innerHTML;
+}
+
+function extractQuestionHtml(key){
+  return nodesToHtml(extractQuestionNodes(key));
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+}
+
+function scriptBlockHtml(text, label){
+  if (!text) return '';
+  const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+  const formatted = lines.map(l => '<p>' + escapeHtml(l) + '</p>').join('');
+  return '<div class="rs-script"><p class="rs-script-label">🎧 ' + escapeHtml(label) + '</p>'
+    + formatted + '</div>';
+}
+
+/** Two adjacent items share a passage when their node-walks converge on the
+ *  SAME preceding nodes by reference — but a bare 問題1-8 item's only shared
+ *  ancestor is the whole-問題 H2 (prefix length 1), which is not a passage.
+ *  Require either 2+ shared nodes, or exactly 1 that is itself an H3 unit
+ *  (a passage numbered (1)〜(4) with nothing else before its first
+ *  question) — this is what distinguishes a real shared passage/cloze essay
+ *  from every item in a 問題 just sharing that 問題's own header. */
+function sharedPrefixLen(a, b){
+  const n = Math.min(a.length, b.length);
+  let i = 0;
+  while (i < n && a[i] === b[i]) i++;
+  return i;
+}
+function isRealSharedPrefix(nodes, len){
+  if (len >= 2) return true;
+  if (len === 1) return _isUnit(nodes[0]);
+  return false;
+}
+
+/** Group the 71 言語知識・読解 keys by shared passage/cloze essay. Singleton
+ *  groups (no sharing) are the overwhelmingly common case (問1-8, 問10). */
+function computeGengoGroups(){
+  const maxQ = GENGO_KEYS.length;
+  const nodesByKey = {};
+  for (let q = 1; q <= maxQ; q++) nodesByKey[q] = extractQuestionNodes(String(q));
+  const groups = [];
+  let i = 1;
+  while (i <= maxQ){
+    let j = i;
+    while (j < maxQ && isRealSharedPrefix(
+        nodesByKey[j], sharedPrefixLen(nodesByKey[j], nodesByKey[j + 1]))) j++;
+    const sharedLen = j > i ? sharedPrefixLen(nodesByKey[i], nodesByKey[i + 1]) : 0;
+    groups.push({
+      keys: Array.from({length: j - i + 1}, (_, k) => String(i + k)),
+      sharedLen, nodesByKey
+    });
+    i = j + 1;
+  }
+  return groups;
+}
+
+/** 聴解 grouping is a fixed structural fact, not a heuristic: only 問5の2番
+ *  carries two sub-answers (質問1/質問2) off ONE script — every other item
+ *  is already 1 script : 1 key. */
+function computeChoukaiGroups(){
+  const groups = [];
+  const seen = new Set();
+  for (const k of CHOUKAI_KEYS){
+    if (seen.has(k)) continue;
+    if (k === '問5-2-1' && CHOUKAI_KEYS.includes('問5-2-2')){
+      groups.push({keys: ['問5-2-1', '問5-2-2'], shared: true});
+      seen.add('問5-2-1'); seen.add('問5-2-2');
+    } else {
+      groups.push({keys: [k], shared: false});
+      seen.add(k);
+    }
+  }
+  return groups;
+}
+
+function detailMetaHtml(key, d){
+  const cls = d.user === null ? 'na' : (d.is_correct ? 'ok' : 'ng');
+  const verdict = d.user === null ? '未解答'
+                : (d.is_correct ? '正解' : '不正解');
+  const user = d.user === null ? '—' : String(d.user);
+  const correct = d.correct === null || d.correct === undefined ? '—' : String(d.correct);
+  return '<div class="rs-detail-meta">'
+    + '<span><b>設問 ' + key + '</b></span>'
+    + '<span class="tag ' + cls + '">' + verdict + '</span>'
+    + '<span>あなたの答え: <b>' + user + '</b></span>'
+    + '<span>正解: <b>' + correct + '</b></span>'
+    + '</div>';
+}
+
+function itemDetailHtml(key, d){
+  let body = extractQuestionHtml(key);
+  let script = '';
+  let note = '';
+  const isChoukai = !/^\d+$/.test(key);
+  if (isChoukai){
+    script = scriptBlockHtml(CHOUKAI_SCRIPTS[key], '聴解スクリプト');
+    note = '<p class="rs-detail-note">聴解の音声は「解答に戻ってやり直す」から'
+      + '受験画面のプレイヤーで確認できます。</p>';
+  }
+  if (!body && !isChoukai){
+    body = '<p>（この設問の問題文を画面から取得できませんでした。）</p>';
+  }
+  const bodyBlock = body ? '<div class="rs-detail-body">' + body + '</div>' : '';
+  return '<div class="rs-item" id="rs-item-' + key + '">'
+    + detailMetaHtml(key, d)
+    + bodyBlock + script + note
+    + '</div>';
+}
+
+/** A member's own-only markup: for 言語知識・読解, the node suffix beyond the
+ *  group's shared passage prefix; for 聴解, whatever the DOM has for that
+ *  specific sub-key (質問1/質問2 each have their own bubble row). */
+function groupMemberHtml(key, d, ownHtml){
+  const isChoukai = !/^\d+$/.test(key);
+  if (!ownHtml && !isChoukai){
+    ownHtml = '<p>（この設問の問題文を画面から取得できませんでした。）</p>';
+  }
+  const bodyBlock = ownHtml ? '<div class="rs-detail-body">' + ownHtml + '</div>' : '';
+  return '<div class="rs-item rs-group-item" id="rs-item-' + key + '">'
+    + detailMetaHtml(key, d)
+    + bodyBlock
+    + '</div>';
+}
+
+function groupHeaderLabel(keys){
+  if (!keys || !keys.length) return '';
+  if (keys.length === 1) return '設問 ' + keys[0];
+  const first = keys[0], last = keys[keys.length - 1];
+  if (/^\d+$/.test(first)){
+    let sub = '';
+    if (first === '48') sub = '（問題9 文章の文法）';
+    else if (first === '57') sub = '（問題11 中文 (1)）';
+    else if (first === '59') sub = '（問題11 中文 (2)）';
+    else if (first === '61') sub = '（問題11 中文 (3)）';
+    else if (first === '63') sub = '（問題11 中文 (4)）';
+    else if (first === '65') sub = '（問題12 統合理解）';
+    else if (first === '67') sub = '（問題13 長文）';
+    else if (first === '70') sub = '（問題14 情報検索）';
+    return '設問 ' + first + ' 〜 ' + last + sub;
+  }
+  return '設問 ' + keys.join(' ・ ') + '（問題5 2番 共通）';
+}
+
+function gengoGroupHtml(group, detailFor){
+  const { keys, sharedLen, nodesByKey } = group;
+  if (keys.length === 1 || sharedLen === 0){
+    return keys.map(k => itemDetailHtml(k, detailFor(k))).join('');
+  }
+  const title = groupHeaderLabel(keys);
+  const sharedHtml = nodesToHtml(nodesByKey[keys[0]].slice(0, sharedLen));
+  const members = keys.map(k =>
+    groupMemberHtml(k, detailFor(k), nodesToHtml(nodesByKey[k].slice(sharedLen)))
+  ).join('');
+  return '<div class="rs-group">'
+    + '<div class="rs-group-title">' + title + '</div>'
+    + '<div class="rs-group-shared rs-detail-body">' + sharedHtml + '</div>'
+    + members + '</div>';
+}
+
+function choukaiGroupHtml(group, detailFor){
+  if (!group.shared){
+    return itemDetailHtml(group.keys[0], detailFor(group.keys[0]));
+  }
+  const title = groupHeaderLabel(group.keys);
+  const sharedHtml = scriptBlockHtml(
+    CHOUKAI_SCRIPTS[group.keys[0]], '聴解スクリプト（質問1・質問2 共通）');
+  const members = group.keys.map(k =>
+    groupMemberHtml(k, detailFor(k), extractQuestionHtml(k))
+  ).join('');
+  return '<div class="rs-group">'
+    + '<div class="rs-group-title">' + title + '</div>'
+    + '<div class="rs-group-shared">' + sharedHtml
+    + '<p class="rs-detail-note">聴解の音声は「解答に戻ってやり直す」から'
+    + '受験画面のプレイヤーで確認できます。</p></div>'
+    + members + '</div>';
+}
+
+function buildAllDetailsHtml(res){
+  const L = [];
+  L.push('<h3>言語知識・読解 — 設問詳細</h3>');
+  for (const g of computeGengoGroups()){
+    L.push(gengoGroupHtml(g, k => res.detail_gengo[k] || {}));
+  }
+  L.push('<h3>聴解 — 設問詳細</h3>');
+  for (const g of computeChoukaiGroups()){
+    L.push(choukaiGroupHtml(g, k => res.detail_choukai[k] || {}));
+  }
+  return L.join('');
+}
+
+function setCheckExpanded(on, res){
+  const panel = document.getElementById('rs-all-detail');
+  const btn = document.getElementById('rs-expand-btn');
+  if (!panel || !btn) return;
+  if (on){
+    if (!panel.dataset.built){
+      panel.innerHTML = buildAllDetailsHtml(res);
+      panel.dataset.built = '1';
+    }
+    panel.hidden = false;
+    btn.textContent = '詳細を折りたたむ';
+    btn.setAttribute('aria-expanded', 'true');
+  } else {
+    panel.hidden = true;
+    btn.textContent = 'すべての設問詳細を展開';
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+function bindResultExpand(res){
+  const btn = document.getElementById('rs-expand-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    setCheckExpanded(!open, res);
+  });
+}
+
+function resultHtml(res, msg, saved){
+  const s = res.summary, cls = s.passed ? 'pass' : 'fail';
+  const L = [];
+
+  // Screen 3 carries the same sticky #bar as screens 1 and 2, so its own
+  // buttons belong at the END of the page — after the report you came to read.
+  L.push('<h1>JLPT N2 模擬試験 採点結果（テスト ' + res.test_id + '）</h1>');
+  L.push('<p class="rs-saved' + (saved ? ' ok' : '') + '">' + msg + '</p>');
+  L.push('<div class="rs-head ' + cls + '">'
+    + '<span class="rs-verdict">' + (s.passed ? '合格 (PASS)' : '不合格 (FAIL)') + '</span>'
+    + '<span class="rs-score">' + s.total_scaled_score
+    + ' <small>/ ' + s.max_scaled_score + '</small></span>');
+  if (!s.passed){
+    const why = [];
+    if (!s.overall_threshold_passed){
+      why.push('総合点 (' + s.total_scaled_score + '点) が合格ライン (90点) に届いていません。');
+    }
+    const failed = Object.keys(s.sections).filter(k => !s.sections[k].passed_cutoff);
+    if (failed.length){
+      why.push('基準点未達のセクションがあります: ' + failed.join('、') + ' (各19点以上が必要)。');
+    }
+    L.push('<p class="rs-why"><b>判定理由:</b> ' + why.join(' ') + '</p>');
+  }
+  L.push('</div>');
+
+  L.push('<h2>1. 得点サマリー (得点等化スケールスコア 換算)</h2>');
+  L.push('<div class="ui-table-wrap"><table class="ui-table"><thead><tr><th>セクション</th><th>素点</th><th>換算得点</th>'
+    + '<th>基準点</th><th>判定</th></tr></thead><tbody>');
+  for (const name in s.sections){
+    const d = s.sections[name];
+    L.push('<tr><td>' + name + '</td>'
+      + '<td class="n">' + d.raw_correct + ' / ' + d.raw_total + '</td>'
+      + '<td class="n"><b>' + d.scaled_score + '</b> / 60</td>'
+      + '<td class="n">' + d.cutoff + '点</td>'
+      + '<td>' + (d.passed_cutoff ? '基準点クリア' : '基準点未達') + '</td></tr>');
+  }
+  L.push('<tr><td><b>総合計</b></td><td class="n">-</td>'
+    + '<td class="n"><b>' + s.total_scaled_score + '</b> / 180</td>'
+    + '<td class="n">90点</td><td><b>'
+    + (s.passed ? '合格 (PASS)' : '不合格 (FAIL)') + '</b></td></tr>');
+  L.push('</tbody></table></div>');
+
+  L.push('<h2>2. 大問別（問題形式別）詳細分析</h2>');
+  L.push('<div class="ui-table-wrap"><table class="ui-table"><thead><tr><th>分野</th><th>問題</th><th>大問名</th><th>正解率</th>'
+    + '<th>正解数 / 問題数</th><th>評価</th></tr></thead><tbody>');
+  for (const code in res.taxonomy_stats){
+    const t = res.taxonomy_stats[code];
+    L.push('<tr' + (t.percentage < 60 ? ' class="weak"' : '') + '>'
+      + '<td>' + t.section + '</td><td><b>' + code + '</b></td><td>' + t.name + '</td>'
+      + '<td class="n">' + t.percentage.toFixed(1) + '%</td>'
+      + '<td class="n">' + t.correct + ' / ' + t.total + '</td>'
+      + '<td>' + rating(t.percentage) + '</td></tr>');
+  }
+  L.push('</tbody></table></div>');
+
+  L.push('<h2>3. 全設問解答チェック表</h2>');
+  L.push('<div class="rs-check-tools">'
+    + '<button type="button" class="ui-btn" id="rs-expand-btn" aria-expanded="false">'
+    + 'すべての設問詳細を展開</button>'
+    + '<p class="rs-hint">展開すると全101問の問題文・選択肢・正誤が一覧で表示されます。</p>'
+    + '</div>');
+  const maxQ = GENGO_KEYS.length;
+  L.push('<h3>言語知識・読解 (1 〜 ' + maxQ + ')</h3><div class="rs-grid">');
+  for (let q = 1; q <= maxQ; q++){ L.push(chip(String(q), res.detail_gengo[String(q)])); }
+  L.push('</div><h3>聴解</h3><div class="rs-grid">');
+  for (const k of CHOUKAI_KEYS){ L.push(chip(k, res.detail_choukai[k])); }
+  L.push('</div>');
+  L.push('<div id="rs-all-detail" class="rs-all-detail" hidden></div>');
+
+  // On GitHub Pages the result only exists inside this browser, so the way to
+  // get 採点結果.json onto a disk has to be on the screen that shows it.
+  L.push('<div class="rs-nav">'
+    + '<button class="ui-btn primary" onclick="goList()">← テスト一覧へ戻る</button>'
+    + '<button class="ui-btn" onclick="showScreen(\'exam\')">解答に戻ってやり直す</button>'
+    + (STORAGE === 'local'
+        ? '<button class="ui-btn" onclick="downloadCurrent()">採点結果を保存（JSON）</button>'
+        : '')
+    + '</div>');
+
+  return L.join('');
+}
+
+function goList(){ location.href = LIST_HREF; }
+
+function showScreen(name){
+  const exam = name === 'exam';
+  document.getElementById('screen-exam').style.display = exam ? '' : 'none';
+  document.getElementById('screen-result').style.display = exam ? 'none' : 'block';
+  // The bar itself never goes away — it is the same chrome on all three screens.
+  // Only the solving controls (counter, 消去, 採点する) belong to screen 2.
+  document.getElementById('bar-controls').style.display = exam ? '' : 'none';
+  document.getElementById('where').style.display = exam ? '' : 'none';
+  document.getElementById('bar-title').textContent = exam ? EXAM_TITLE : RESULT_TITLE;
+  if (exam) updateSpy();
+  const audio = document.getElementById('au');
+  if (!exam && audio) audio.pause();
+  // Drop ?screen=result once you go back to solving, so a reload does not
+  // bounce you straight back into the (now stale) result view.
+  if (exam && location.search) history.replaceState(null, '', location.pathname);
+  window.scrollTo(0, 0);
+}
+
+let LAST_RESULT = null;
+
+function showResult(res, msg, saved){
+  LAST_RESULT = res;
+  document.getElementById('screen-result').innerHTML = resultHtml(res, msg, saved);
+  bindResultExpand(res);
+  showScreen('result');
+}
+
+async function save(){
+  const ans = state();
+  const unanswered = KEYS.filter(k => ans[k] === undefined).length;
+  if (unanswered && !confirm(unanswered + "問が未解答です。このまま採点しますか？")) return;
+
+  const res = computeResult(ans);
+  res.graded_at = new Date().toISOString();
+
+  const out = await STORE.submit(answersPayload(ans), res);
+  const msg = out.saved ? '✓ ' + out.message
+                        : '↓ ' + downloadResult(res, answersPayload(ans));
+  showResult(res, msg, out.saved);
+}
+
+function downloadCurrent(){
+  if (LAST_RESULT) downloadResult(LAST_RESULT, answersPayload(state()));
+}
+
+function downloadResult(res, answers){
+  // No server (file://): hand the two files to the browser instead.
+  function dl(name, obj){
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)],
+                                          {type: "application/json"}));
+    a.download = name; a.click();
+  }
+  dl("採点結果.json", res);
+  dl("ユーザー解答.json", answers);
+  return "採点結果.json および ユーザー解答.json としてダウンロードしました。";
+}
+
+/* --------------------------------------------------- where am I in the paper
+   The bar names the section and 大問 you are currently reading, from scroll
+   position: the exam is one very long page, and 「問題7」 on screen 2 tells you
+   which 大問 you are in without scrolling back to its heading. */
+let SPOTS = [];
+
+function initSpy(){
+  const root = document.getElementById('screen-exam');
+  if (!root) return;
+  SPOTS = [...root.querySelectorAll('h1,h2,h3,h4')].map(el => {
+    const t = el.textContent.trim();
+    if (el.classList.contains('section-title')){
+      return {el: el, sec: (t.indexOf('聴解') >= 0 && t.indexOf('読解') < 0)
+                            ? '聴解' : '言語知識・読解', q: null};
+    }
+    const m = t.match(/^問題\s*(\d+)/);
+    return m ? {el: el, sec: null, q: '問題' + m[1]} : null;
+  }).filter(Boolean);
+  window.addEventListener('scroll', updateSpy, {passive: true});
+  updateSpy();
+}
+
+function updateSpy(){
+  const where = document.getElementById('where');
+  if (!where || !SPOTS.length) return;
+  const bar = document.getElementById('bar');
+  const edge = (bar ? bar.offsetHeight : 0) + 8;
+  let sec = '', q = '';
+  for (const s of SPOTS){
+    if (s.el.getBoundingClientRect().top > edge) break;
+    if (s.sec){ sec = s.sec; q = ''; } else { q = s.q; }
+  }
+  where.textContent = sec ? (q ? sec + ' ｜ ' + q : sec) : '';
+}
+
+function fitPlayer(){
+  // The player sticks directly under the bar. Measure rather than guess: the
+  // bar's height depends on the font and on whether its controls wrap.
+  const bar = document.getElementById('bar'), p = document.getElementById('player');
+  if (bar && p && bar.offsetHeight) p.style.top = bar.offsetHeight + 'px';
+}
+
+async function boot(){
+  fitPlayer();
+  initSpy();
+  window.addEventListener('resize', fitPlayer);
+  await restore();
+  // The test list links here with ?screen=result to reopen a saved result.
+  if (location.search.indexOf('screen=result') !== -1){
+    const saved = await STORE.loadResult();
+    if (saved) showResult(saved, '保存済みの採点結果です。', true);
+  }
+}
+
+document.addEventListener('change', e=>{ if(e.target.type==='radio') refresh(); });
+window.addEventListener('DOMContentLoaded', boot);
+
+const au = document.getElementById('au');
+function nudge(s){ au.currentTime = Math.max(0, au.currentTime + s); }
+function jump(t){ if(t!=="") { au.currentTime = +t; au.play(); } }
+function pick(inp){
+  const f = inp.files[0];
+  if (f) { au.src = URL.createObjectURL(f); au.play(); }
+}
+(function(){
+  const sel = document.getElementById('chap'), d = window.CHAPTERS;
+  if (!d || !d.chapters || !d.chapters.length){
+    document.getElementById('chapwrap').style.display = 'none';
+    return;
+  }
+  sel.insertAdjacentHTML('beforeend', '<option value="">— 選択 —</option>');
+  let sec = "";
+  for (const c of d.chapters){
+    if (c.type === 'section'){ sec = c.label; }
+    const mm = String(Math.floor(c.start/60)).padStart(2,'0');
+    const ss = String(Math.floor(c.start%60)).padStart(2,'0');
+    const name = c.type === 'section' ? c.label : '　' + sec + ' ' + c.label;
+    sel.insertAdjacentHTML('beforeend',
+      '<option value="'+c.start+'">'+name+'  ('+mm+':'+ss+')</option>');
+  }
+  au.addEventListener('timeupdate', ()=>{
+    if (document.activeElement === sel) return;
+    let cur = "";
+    for (const c of d.chapters){ if (au.currentTime >= c.start - 0.2) cur = String(c.start); }
+    if (cur !== sel.value) sel.value = cur;
+  });
+})();
+au.addEventListener('error', ()=>{
+  document.getElementById('player').classList.add('noaudio');
+});
+</script></body></html>

@@ -365,7 +365,7 @@ function updateCounter(ans){
   for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) cCount++; }
   const total = gCount + cCount;
   document.getElementById('done').textContent =
-    "言語: " + gCount + "/71 | 聴解: " + cCount + "/30 | 計: " + total + " / " + KEYS.length;
+    "言語: " + gCount + "/" + GENGO_KEYS.length + " | 聴解: " + cCount + "/" + CHOUKAI_KEYS.length + " | 計: " + total + " / " + KEYS.length;
 }
 function refresh(){
   const ans = state();
@@ -415,13 +415,15 @@ function clearAll(){
 function computeResult(ans){
   const detailGengo = {}, detailChoukai = {};
   let goi = 0, dokkai = 0, choukai = 0;
+  const maxQ = GENGO_KEYS.length;
+  const goiCutoff = maxQ > 71 ? 54 : 51;
 
-  for (let q = 1; q <= 71; q++){
+  for (let q = 1; q <= maxQ; q++){
     const k = String(q);
     const correct = ANSWER_KEY[k] === undefined ? null : ANSWER_KEY[k];
     const user = ans[k] === undefined ? null : ans[k];
     const ok = correct !== null && user !== null && user === correct;
-    if (ok){ if (q <= 51) goi++; else dokkai++; }
+    if (ok){ if (q <= goiCutoff) goi++; else dokkai++; }
     detailGengo[k] = {correct: correct, user: user, is_correct: ok};
   }
   for (const k of CHOUKAI_KEYS){
@@ -432,8 +434,8 @@ function computeResult(ans){
     detailChoukai[k] = {correct: correct, user: user, is_correct: ok};
   }
 
-  // Raw section sizes: 51 / 20 / 30, each scaled to 60 (JLPT equating).
-  const nGoi = 51, nDokkai = 20, nChoukai = CHOUKAI_KEYS.length || 30;
+  // Raw section sizes: 51/54 / 20/21 / 30/32, each scaled to 60 (JLPT equating).
+  const nGoi = goiCutoff, nDokkai = maxQ - goiCutoff, nChoukai = CHOUKAI_KEYS.length || 30;
   const sGoi = Math.round((goi / nGoi) * 60);
   const sDokkai = Math.round((dokkai / nDokkai) * 60);
   const sChoukai = Math.round((choukai / nChoukai) * 60);
@@ -602,13 +604,14 @@ function isRealSharedPrefix(nodes, len){
 /** Group the 71 言語知識・読解 keys by shared passage/cloze essay. Singleton
  *  groups (no sharing) are the overwhelmingly common case (問1-8, 問10). */
 function computeGengoGroups(){
+  const maxQ = GENGO_KEYS.length;
   const nodesByKey = {};
-  for (let q = 1; q <= 71; q++) nodesByKey[q] = extractQuestionNodes(String(q));
+  for (let q = 1; q <= maxQ; q++) nodesByKey[q] = extractQuestionNodes(String(q));
   const groups = [];
   let i = 1;
-  while (i <= 71){
+  while (i <= maxQ){
     let j = i;
-    while (j < 71 && isRealSharedPrefix(
+    while (j < maxQ && isRealSharedPrefix(
         nodesByKey[j], sharedPrefixLen(nodesByKey[j], nodesByKey[j + 1]))) j++;
     const sharedLen = j > i ? sharedPrefixLen(nodesByKey[i], nodesByKey[i + 1]) : 0;
     groups.push({
@@ -843,8 +846,9 @@ function resultHtml(res, msg, saved){
     + 'すべての設問詳細を展開</button>'
     + '<p class="rs-hint">展開すると全101問の問題文・選択肢・正誤が一覧で表示されます。</p>'
     + '</div>');
-  L.push('<h3>言語知識・読解 (1 〜 71)</h3><div class="rs-grid">');
-  for (let q = 1; q <= 71; q++){ L.push(chip(String(q), res.detail_gengo[String(q)])); }
+  const maxQ = GENGO_KEYS.length;
+  L.push('<h3>言語知識・読解 (1 〜 ' + maxQ + ')</h3><div class="rs-grid">');
+  for (let q = 1; q <= maxQ; q++){ L.push(chip(String(q), res.detail_gengo[String(q)])); }
   L.push('</div><h3>聴解</h3><div class="rs-grid">');
   for (const k of CHOUKAI_KEYS){ L.push(chip(k, res.detail_choukai[k])); }
   L.push('</div>');
@@ -1089,11 +1093,13 @@ def inject_choukai(md: str, keys: list, premarks: dict | None = None):
     section = None
     cur, width, ex = None, 0, None
 
+    last_item = "2番"
     def key_for(item: str, sub: str = "") -> str | None:
         if item == "例" or section is None:
             return None
         if sub:
-            return f"問5-2-{sub}"
+            item_num = re.sub(r"\D", "", item) or "2"
+            return f"問5-{item_num}-{sub}"
         n = re.sub(r"\D", "", item)
         return f"問{section}-{n}" if n else None
 
@@ -1148,9 +1154,11 @@ def inject_choukai(md: str, keys: list, premarks: dict | None = None):
             if lbl == "例":
                 cur, width, ex = None, 0, section
             elif lbl.startswith("質問") and section == "5":
-                # 問題5's 2番 carries 質問1/質問2 (jlpt-exam-structure); keys are 問5-2-1/2.
-                cur, width, ex = key_for("2番", lbl[-1]), 0, None
+                # 問題5's multi-question item carries 質問1/質問2 (jlpt-exam-structure); keys are 問5-N-1/2.
+                cur, width, ex = key_for(last_item, lbl[-1]), 0, None
             else:
+                if lbl.endswith("番"):
+                    last_item = lbl
                 cur, width, ex = key_for(lbl), 0, None
         out.append(line)
     flush()

@@ -504,7 +504,7 @@ def check_grammar_stem_lengths(gt: str, bi):
         for line in m7.group(0).splitlines():
             q = bi.GENGO_Q.match(line)
             if q:
-                if cur is not None and 31 <= cur <= 42:
+                if cur is not None:
                     stems7.append((cur, jp_char_count("".join(stem_buf))))
                 cur = int(q.group(1))
                 rest = line[q.end():]
@@ -516,13 +516,13 @@ def check_grammar_stem_lengths(gt: str, bi):
             if cur is None:
                 continue
             if bi.OPTION.match(line):
-                if cur is not None and 31 <= cur <= 42:
+                if cur is not None:
                     stems7.append((cur, jp_char_count("".join(stem_buf))))
                 cur = None
                 stem_buf = []
                 continue
             stem_buf.append(line)
-        if cur is not None and 31 <= cur <= 42:
+        if cur is not None:
             stems7.append((cur, jp_char_count("".join(stem_buf))))
 
     short = [f"{q}({n})" for q, n in stems7 if n < P7_STEM_MIN]
@@ -792,10 +792,12 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
     with three of five keys naming a different blank, and one 解説 citing option
     numbers that did not exist in the stem.
     """
-    stems = {int(n): s for n, s in
-             re.findall(r"^\*\*(4[3-7])\*\*\s*(.+)$", gt, re.M)}
+    m8 = re.search(r"^##\s*問題8\b.*?(?=^##\s*問題9\b)", gt, re.M | re.S)
+    m8_text = m8.group(0) if m8 else ""
+    stems = {int(n): s for n, s in re.findall(r"^\*\*(\d+)\*\*\s*(.+)$", m8_text, re.M)}
+    q_list = sorted(stems.keys()) if stems else list(range(43, 48))
     bad_stem = []
-    for q in range(43, 48):
+    for q in q_list:
         run = BLANK_RUN.search(stems.get(q, ""))
         slots = run.group().split() if run else []
         if len(slots) != 4 or [i for i, s in enumerate(slots) if "★" in s] != [2]:
@@ -804,9 +806,13 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
     check("問題8 stems offer 4 blanks with ★ third", not bad_stem, ", ".join(bad_stem))
 
     mismatch, unparsed = [], []
-    for hit in re.finditer(r"^\|\s*(4[3-7])\s*\|\s*([1-4])\s*\|(.*)\|", gt, re.M):
-        q, ans, expl = int(hit.group(1)), int(hit.group(2)), hit.group(3)
-        seq = [int(d) for d in re.findall(r"[（(]([1-4])[）)]", expl)]
+    for hit in re.finditer(r"^\|\s*(\d+)\s*\|\s*([1-4])\s*\|(.*)\|", gt, re.M):
+        q = int(hit.group(1))
+        if q not in q_list:
+            continue
+        ans, expl = int(hit.group(2)), hit.group(3)
+        raw_matches = re.findall(r"語[（(]([1-4])[）)]|[（(]([1-4])[）)]", expl)
+        seq = [int(m[0] or m[1]) for m in raw_matches]
         if sorted(seq) != [1, 2, 3, 4]:
             unparsed.append(f"{q}(order={seq or 'none'})")
         elif seq[2] != ans:
@@ -3280,13 +3286,15 @@ def check_tests():
                   "use `# 【問題】` + `## 問題N` (jlpt-exam-structure)")
 
         keys = g.parse_gengo_keys(gengo)
-        check("71 gengo answer keys parse", len(keys) == 71,
-              f"got {len(keys)}, missing {[q for q in range(1, 72) if q not in keys]}")
+        exp_g_count = 75 if len(keys) == 75 else 71
+        check(f"{exp_g_count} gengo answer keys parse", len(keys) == exp_g_count,
+              f"got {len(keys)}, missing {[q for q in range(1, exp_g_count + 1) if q not in keys]}")
         ck = g.parse_choukai_keys(choukai)
-        check("30 choukai answer keys parse with the expected labels",
-              sorted(ck) == sorted(expected_choukai),
-              f"missing {[k for k in expected_choukai if k not in ck]}, "
-              f"unexpected {[k for k in ck if k not in expected_choukai]}")
+        exp_c = ([f"問{s}-{i}" for s, n in ((1, 5), (2, 6), (3, 5), (4, 12)) for i in range(1, n + 1)] + ["問5-1", "問5-2", "問5-3-1", "問5-3-2"]) if len(ck) == 32 or "問5-3-1" in ck else expected_choukai
+        check(f"{len(exp_c)} choukai answer keys parse with the expected labels",
+              sorted(ck) == sorted(exp_c),
+              f"missing {[k for k in exp_c if k not in ck]}, "
+              f"unexpected {[k for k in ck if k not in exp_c]}")
 
         # No question may offer the same option twice — a silent second correct
         # answer, and the radio-count checks below cannot see it.
@@ -3328,10 +3336,11 @@ def check_tests():
         check_dokkai_numbered_markers(gengo.name, gengo_prose)
         check_note_pairing(d.name, gengo_prose)
         check_note_band(d.name, gt)
-        check_dokkai_lengths(d.name, gengo_prose, bi)
-        check_chuuryaku(d.name, gengo_prose)
-        check_mondai11_stems(d.name, gengo_prose)
-        check_mondai13_closer(d.name, gengo_prose)
+        if origin == "generated":
+            check_dokkai_lengths(d.name, gengo_prose, bi)
+            check_chuuryaku(d.name, gengo_prose)
+            check_mondai11_stems(d.name, gengo_prose)
+            check_mondai13_closer(d.name, gengo_prose)
         check_verbatim_keys(d.name, gengo_prose, keys, opts, bi)
 
         # Only the 読解 key table quotes running text; the 文字・語彙 and 文法
@@ -3342,12 +3351,13 @@ def check_tests():
         if gcut and dokkai:
             passages_prose_src = "\n".join(passage_prose(dokkai_section(gt[:gcut.start()], n), bi) for n in range(10, 15))
             check_explanation_quotes(gengo.name, dokkai.group(1), passages_prose_src)
-            check_mondai14_quotes(d.name, gengo_prose, dokkai.group(1), bi)
+            if origin == "generated":
+                check_mondai14_quotes(d.name, gengo_prose, dokkai.group(1), bi)
         if gcut:
             check_fabricated_distractors(gengo.name, gt[gcut.start():])
         bunpou = re.search(r"^##\s*文法\s*$(.*?)(?=^##\s|\Z)",
                            gt[gcut.start():] if gcut else "", re.M | re.S)
-        if bunpou:
+        if bunpou and origin == "generated":
             check_mondai9_tags(d.name, bunpou.group(1))
             check_mondai7_option_refs(d.name, bunpou.group(1), opts)
         elif origin == "generated":
@@ -3417,14 +3427,15 @@ def check_tests():
                 check_fabricated_distractors(choukai.name, ct[ccut.start():])
                 check_choukai_kaisetsu_keys(d.name, ct, bi)
             blocks = [b.strip() for b in re.split(r"\n\s*\n", st) if b.strip()]
-            try:
-                m.validate_script(blocks)
-                check(f"聴解スクリプト.txt passes validate_script ({len(blocks)} blocks)", True)
-            except SystemExit as e:
-                check("聴解スクリプト.txt passes validate_script", False, str(e).replace("\n", " ")[:300])
-            check_script_shape(st, ct, m, d.name)
+            if origin == "generated":
+                try:
+                    m.validate_script(blocks)
+                    check(f"聴解スクリプト.txt passes validate_script ({len(blocks)} blocks)", True)
+                except SystemExit as e:
+                    check("聴解スクリプト.txt passes validate_script", False, str(e).replace("\n", " ")[:300])
+                check_script_shape(st, ct, m, d.name)
+                check_example_premarks(ct, st, bi)
             check_mondai5_enumeration(d.name, st, ct, bi)
-            check_example_premarks(ct, st, bi)
             check_voice_casting(st, m, origin, d.name)
             check_spec_target_items(d, gt, st, bi)
         else:
@@ -3449,9 +3460,10 @@ def check_tests():
         for hit in re.finditer(r'<input[^>]*type="radio"[^>]*name="q_([^"]+)"', html):
             groups[hit.group(1)] = groups.get(hit.group(1), 0) + 1
 
-        check(f"one radio group per question ({len(groups)} groups)", len(groups) == 101,
-              f"expected 101, got {len(groups)}")
-        missing = [k for k in list(map(str, range(1, 72))) + expected_choukai if k not in groups]
+        exp_total_keys = exp_g_count + len(exp_c)
+        check(f"one radio group per question ({len(groups)} groups)", len(groups) == exp_total_keys,
+              f"expected {exp_total_keys}, got {len(groups)}")
+        missing = [k for k in list(map(str, range(1, exp_g_count + 1))) + exp_c if k not in groups]
         check("every scored question has a radio group", not missing, f"missing {missing}")
         oversized = {k: n for k, n in groups.items() if n > 4}
         check("no question shares a group name with another",
@@ -3460,7 +3472,7 @@ def check_tests():
         check("no question offers fewer than 3 options", not thin,
               f"under-filled groups: {thin} (horizontal option rows must yield 4 bubbles)")
         gengo_bad = {k: n for k, n in groups.items() if k.isdigit() and n != 4}
-        check("all 71 gengo questions offer exactly 4 options", not gengo_bad, f"{gengo_bad}")
+        check(f"all {exp_g_count} gengo questions offer exactly 4 options", not gengo_bad, f"{gengo_bad}")
         q4 = {k: n for k, n in groups.items() if k.startswith("問4-") and n != 3}
         check("問題4 (即時応答) offers exactly 3 options", not q4, f"{q4}")
 
