@@ -313,6 +313,13 @@ TOOLS_LOCAL = ('<div class="tools">'
                '</div>')
 
 
+FONT_TAGS = (
+    '<link rel="preconnect" href="https://fonts.googleapis.com">'
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">'
+)
+
+
 def index_html(mode: str = "server", tests: list | None = None) -> str:
     """Screen 1 for either deployment.
 
@@ -330,6 +337,7 @@ def index_html(mode: str = "server", tests: list | None = None) -> str:
     return (
         '<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f'{FONT_TAGS}'
         '<title>JLPT N2 模擬試験 — テスト一覧</title>'
         f'<style>{app_style.APP_CSS}{INDEX_CSS}</style></head><body>'
         f'<script>window.LIST_MODE = "{mode}";</script>{boot}'

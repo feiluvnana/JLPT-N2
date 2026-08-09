@@ -40,15 +40,15 @@ SCREEN_CSS = """
 
 CSS = """
 @page { size: A4; margin: 18mm 16mm; }
-body { font-family: "Noto Serif CJK JP", serif; font-size: 10.5pt;
+body { font-family: "Noto Serif JP", "Noto Serif CJK JP", serif; font-size: 10.5pt;
        line-height: 1.9; color: #1a1a1a; }
-h1 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 15pt;
+h1 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 15pt;
      border-bottom: 2.5px solid #1a1a1a; padding-bottom: 5px;
      margin: 30px 0 14px; page-break-after: avoid; }
-h2 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 12pt;
+h2 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 12pt;
      background: #efefef; border-left: 5px solid #444; padding: 5px 10px;
      margin: 26px 0 12px; page-break-after: avoid; }
-h3 { font-family: "Noto Sans CJK JP", sans-serif; font-size: 11pt;
+h3 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 11pt;
      margin: 20px 0 8px; page-break-after: avoid; }
 p { margin: 12px 0; }
 /* Furigana: WeasyPrint has NO ruby layout (and ignores ruby-position), so the
@@ -87,11 +87,11 @@ p.furi, li.furi { line-height: 2.1; }
 table { border-collapse: collapse; margin: 10px 0; width: 100%; page-break-inside: avoid; }
 th, td { border: 1px solid #888; padding: 4px 9px; font-size: 9.5pt;
          line-height: 1.6; }
-th { background: #f0f0f0; font-family: "Noto Sans CJK JP", sans-serif; }
+th { background: #f0f0f0; font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
 blockquote { border: 1px solid #999; background: #fafafa; margin: 10px 0;
              padding: 10px 14px; page-break-inside: avoid; }
 hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
-strong { font-family: "Noto Sans CJK JP", sans-serif; }
+strong { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
 """
 
 
@@ -263,10 +263,17 @@ def widen(line: str) -> str:
     return line
 
 
+FONT_TAGS = (
+    '<link rel="preconnect" href="https://fonts.googleapis.com">'
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">'
+)
+
+
 def build(src: Path) -> Path:
-    """Markdown -> styled booklet HTML. The Markdown stays the source of truth;
-    the HTML is the deliverable. No PDF is produced — dropping that step also
-    drops the WeasyPrint/wkhtmltopdf divergence that used to misalign furigana,
+    """Markdown source -> styled A4 HTML booklet.
+
+    No PDF toolchain — browser `@page` geometry layout renders identical A4
     and the same CSS prints correctly straight from the browser."""
     md = src.read_text(encoding="utf-8")
     if "聴解" in src.name or "choukai" in src.name.lower():
@@ -280,6 +287,7 @@ def build(src: Path) -> Path:
     html_path.write_text(
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f'{FONT_TAGS}'
         f"<title>{src.stem}</title>"
         f"{src_sha_comments([src])}"
         f"<style>{CSS}{SCREEN_CSS}</style></head><body>{body}</body></html>",

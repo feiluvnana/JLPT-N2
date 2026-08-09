@@ -1308,6 +1308,7 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
     out_path.write_text(
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f'{booklet.FONT_TAGS}'
         f'<title>{title}</title>'
         # Staleness stamps for every source whose CONTENT is baked into this
         # file — the two Markdowns and, because the 聴解 scripts are embedded

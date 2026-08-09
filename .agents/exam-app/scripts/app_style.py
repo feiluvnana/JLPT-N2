@@ -16,7 +16,7 @@ typography and its A4 print geometry. Scope every rule to an id or a class.
 
 APP_CSS = """
 :root{--ink:#0f172a;--line:#cbd5e1;--muted:#475569;--accent:#1d4ed8;
-  --ui:"Hiragino Sans","Yu Gothic",sans-serif}
+  --ui:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif}
 /* The bar spans the full window on every screen, so the scrollbar sits ON its
    right edge — the horizontal padding has to clear it or it covers 採点する. */
 #bar{position:sticky;top:0;z-index:99;background:#111;color:#fff;
