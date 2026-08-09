@@ -411,7 +411,7 @@ def check_taxonomy():
 
 
 # ------------------------------------------- item-level content contracts
-# Everything below caught a bug in test 2 as generated: two questions whose
+# Everything below catches content bugs: two questions whose
 # option list contained the same string twice (so two options were correct),
 # a 問題8 key naming the option in the 2nd blank instead of the ★ (3rd) one,
 # a cloze blank whose key pointed at a different option than its own
@@ -423,7 +423,7 @@ def gengo_option_sets(md: str, bi) -> dict[int, list[str]]:
 
     Handles every layout in use: four options on their own line (問題1-5, 7, 8),
     one option per line (問題6, 10-14), and options trailing the stem itself on
-    one line (test 1's 問題9).
+    one line (e.g. 問題9).
     """
     def split_row(text: str) -> list[str]:
         return [p.strip() for p in re.split(r"(?<![^\s（(])[1-4]\.\s*", text.strip())
@@ -473,7 +473,7 @@ P8_ASSEMBLED_MIN = 30       # was 45, which failed 10 of 29 current-era items (3
 # P8_LONG_OPTS_MIN is RETIRED: at 2 it failed 24 of 64 official items (38%), and
 # the archive's own floor for the measure is 0. What replaces it is a
 # paper-level WARN — an item may legitimately be four short strips, but a whole
-# 問題8 with no chunk of any weight anywhere is the drill shape test 1 shipped.
+# 問題8 with no chunk of any weight anywhere is a drill shape.
 P8_LONG_OPTS_PAPER_MIN = 1  # WARN: ≥5-char options summed over the five items
 
 
@@ -558,8 +558,7 @@ def check_mondai8_chunk_lengths(gt: str, opts: dict[int, list[str]], bi):
     """問題8 options must be N2-sized chunks, not four 2-char scraps.
 
     Official papers (and jlpt.jp 2018 sample) put real phrase mass in the four
-    strips — sum often 16–29 JP chars, with several options ≥5. Test 1 shipped
-    `わりに/ケーキは/とても/値段の` (sum 13).
+    strips — sum often 16–29 JP chars, with several options ≥5.
     """
     cut = bi.KEY_HEADING.search(gt)
     body = gt[: cut.start()] if cut else gt
@@ -622,8 +621,7 @@ def check_mondai8_chunk_lengths(gt: str, opts: dict[int, list[str]], bi):
 # R5. 問題8 construction rule 1 — "no bare adverb on a card" (question-authoring
 # 「exactly ONE of the 24 orderings」). An adverb constrains neither its left nor
 # its right neighbour, so it fits every slot and multiplies the valid orderings;
-# tests 2, 3 and 4 each failed QA on exactly that (ほとんど自分の時間を /
-# 直接窓口に / 一度原点に), and test 4 shipped four items with two valid ★.
+# avoid bare adverbs on cards which read naturally in multiple slots (e.g., ほとんど自分の時間を / 直接窓口に / 一度原点に).
 #
 # ONLY THE DECIDABLE HALF IS HERE, and it is a small half. Counting the 24
 # orderings is not machinable at all — that stays with question-authoring's link
@@ -2253,7 +2251,7 @@ def check_ledger_spec_agreement():
 def check_harvest_provenance():
     """R12: a harvest_sha must identify a real harvest, not a date-shaped string.
 
-    The existing stamp check is `[0-9a-f]{12}`, which accepts `20260805c3d4` —
+    The existing stamp check is `[0-9a-f]{12}`, which accepts invalid hex stamps —
     a forgery in exactly the shape someone reaching for a plausible value would
     type. Three facts make the stamp mean something again, and all three are
     decidable:
@@ -2315,8 +2313,8 @@ def check_harvest_provenance():
 
 # R10/R17. `sample_items.py` writes the rotation it actually enforced into the
 # spec, so a paper drawn WITHOUT rotation says so in a file instead of in a
-# console nobody kept. The gate re-checks the claim: an unverified claim is how
-# test 4 redrew six of test 1's items with every gate green.
+# console nobody kept. The gate re-checks the claim: an unverified claim allows
+# a draw to repeat items from previous tests.
 #
 # GRANDFATHER SCOPE, stated exactly: the two specs on disk on 2026-08-06
 # (tests/1 and tests/2) were written before `sample_items.py` emitted the key,
@@ -2361,7 +2359,7 @@ def check_spec_rotation(d, spec: dict, sample):
                     "no other draws in the ledger to rotate against")
     recent: dict[str, str] = {}
     for entry in prior[-cool:]:
-        tid = str(entry.get("test_id"))
+        tid = str(entry.get("test_id")) # leaving the previous harvest in place causes a test to become a re-skin of a previous paper.
         for xs in (entry.get("items") or {}).values():
             for x in xs:
                 t = pool_entry_text(x)
@@ -2388,11 +2386,8 @@ def check_rotation_inputs():
     Pool items rotate because the ledger excludes what previous tests drew.
     Web topics have no such memory: `merge_seeds.py` seeds its RNG from the
     spec's own seed, so the SAME `--seed` plus an unchanged `logs/seeds.json`
-    reproduces the previous test's blend slot for slot. Test 3 was generated
-    with test 2's seed (20260804) against test 2's untouched harvest and came
-    out a re-skin of it — same デジタルデトックス, same クラフトツーリズム,
-    same ハイブリッドワーク down to the 「約7割」 figure, and the same web
-    scenario in the same 聴解 slot. Every other gate passed.
+    reproduces the previous test's blend slot for slot. Using an un-updated
+    harvest causes a test to come out as a re-skin of a previous test.
     """
     led = ROOT / "logs" / "ledger.json"
     if led.is_file():
@@ -2406,13 +2401,9 @@ def check_rotation_inputs():
         # so two entries that agree on the seed must EACH carry a harvest_sha
         # and disagree on it.
         #
-        # An unrecorded harvest is a failure, not an excuse. This check was
-        # written for tests 2 and 3 (both seed 20260804) and passed them
-        # anyway, because test 2 predates the stamp: `None` counted as "a
-        # different harvest", so the re-skin the rule exists to catch stayed
-        # green. Treat a missing sha as unknown-and-therefore-unsafe; fix it by
-        # re-harvesting and re-running merge_seeds for that test, not by
-        # hand-writing a sha.
+        # An unrecorded harvest is a failure, not an excuse. Treat a missing sha as
+        # unknown-and-therefore-unsafe; fix it by re-harvesting and re-running
+        # merge_seeds for that test, not by hand-writing a sha.
         clash = []
         for s, entries in by_seed.items():
             if len(entries) < 2:
@@ -2667,12 +2658,11 @@ def check_moji4_blank_stems(name: str, gt: str, keys: dict[int, int],
                             opts: dict[int, list[str]]):
     """Every 問題4 stem is a printed （　） and prints no answer word (G16/F1).
 
-    20260807_2 shipped items 14–20 with the ANSWER printed in the stem
-    （「…を目指すコンテスト」）, making the row self-answering and doubling the
-    option line. Official booklets print every stem with （　） — the instruction
-    asks for the best word to put IN it — so the stem never holds the answer.
-    This is the string-decidable half: a stem line with no blank, or whose key
-    option text appears in the sentence, is the defect regardless of content
+    A stem that prints its answer word in the sentence (e.g. 「…を目指すコンテスト」)
+    makes the row self-answering and doubles the option line. Official booklets
+    print every stem with （　） — the instruction asks for the best word to put IN it —
+    so the stem never holds the answer. This is the string-decidable half: a stem line with no blank,
+    or whose key option text appears in the sentence, is the defect regardless of content
     quality. Imported transcriptions that do not use **N** stem lines match no
     stems and pass vacuously.
     """
@@ -2697,15 +2687,15 @@ def check_moji4_blank_stems(name: str, gt: str, keys: dict[int, int],
           not missing and not leaking,
           "; ".join(missing + leaking) + " — the 問題4 instruction asks for the "
           "best word to put in （　）; a stem that prints the blank's answer is "
-          "self-answering (question-authoring 問題4; shipped 20260807_2 items 14–20)")
+          "self-answering (question-authoring 問題4)")
 
 
 def check_moji2_stem_kana(name: str, gt: str, keys: dict[int, int],
                           opts: dict[int, list[str]]):
     """The 問題2 stem's kana is the KEYED option's reading (G17/F2).
 
-    20260807_2 item 6 printed 「しひん」 in the stem and keyed 下品 (げひん): no
-    option in the row read しひん, so the printed stem kana pointed at nothing.
+    If a stem prints mismatched kana (e.g. 「しひん」 in the stem while keying 下品 (げひん)),
+    no option in the row reads that kana, so the printed stem kana points at nothing.
     Official 表記 items print the target's reading in the stem, so it must equal
     an attested reading of the option the key column names. Non-key options need
     not resolve — 非語 like 下晶 are the whole point of 表記 — only the KEY must.
@@ -3042,8 +3032,7 @@ def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
 def check_artifact_freshness(d):
     """Deliverables must carry the sha of the source they were built from (G4).
 
-    Commit 4df5631 rewrote 聴解スクリプト.txt for tests 1–4 and the import but
-    regenerated the MP3 for test 3 only: four shipped papers speak superseded
+    Rebuilding a script without regenerating MP3 results in papers speaking superseded
     問題N instructions. mtimes cannot see this (they are checkout-unstable), so
     make_choukai_mp3.py stamps `script_sha` into 聴解_チャプター.json and
     build_booklet.py stamps `<!-- src_sha: <name>=<sha> -->` into every HTML.
@@ -3104,10 +3093,9 @@ def check_artifact_freshness(d):
          f"(exam-app)")
 
 
-# Cross-test reuse (G15). Apparatus and 例 dialogues carried over verbatim: test
-# 2's 問題1 例 block is byte-identical to test 1's, and both are byte-identical
-# to the official July 2025 paper's. Only a GENERATED test can be at fault — the
-# import reproduces an outside source and is the thing being copied.
+# Cross-test reuse (G15). Apparatus and 例 dialogues carried over verbatim:
+# avoid byte-identical 例 blocks across generated tests or from official papers.
+# Only a GENERATED test can be at fault — the import reproduces an outside source.
 def test_note_lines(gt: str) -> set[str]:
     return {unicodedata.normalize("NFKC", ln.strip()) for ln in gt.splitlines() if NOTE_DEF.match(ln)}
 
@@ -3132,11 +3120,9 @@ def test_choukai_example_options(ct: str) -> set[str]:
 def check_cross_test_reuse(name: str, mine: dict, others: dict[str, dict]):
     for kind, label, fix in (
             ("notes", "（注N） definition line",
-             "rewrite the gloss for THIS passage — three of test 2's were "
-             "test 1's, and all three were orphaned because the passage changed"),
+             "rewrite the gloss for THIS passage — avoid copying glosses from another test"),
             ("examples", "例。block",
-             "author a fresh 例 dialogue (choukai-audio); test 1's and "
-             "test 2's 問題1 例 are byte-identical to the official paper's"),
+             "author a fresh 例 dialogue (choukai-audio); avoid copying 例 dialogues from reference papers"),
             ("choukai_options", "聴解 例 option line",
              "author fresh 例 booklet options (choukai-audio)")):
         shared = []
