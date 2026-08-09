@@ -1199,16 +1199,13 @@ def parse_choukai_scripts(script_path: Path) -> dict:
             continue  # practice item — not scored, no key to attach it to
         ordinal += 1
         if section == 5:
-            if ordinal == 1:
-                scripts["問5-1"] = block
-            elif ordinal == 2:
-                # 2番 carries 質問1 AND 質問2 in one block (see
-                # choukai-audio's "must be ONE block" rule) — both
-                # sub-keys share this exact text, which is also how the
-                # answer-sheet groups them into one shared script instead of
-                # showing it twice.
-                scripts["問5-2-1"] = block
-                scripts["問5-2-2"] = block
+            item_match = CHOUKAI_ITEM_RE.match(first)
+            item_num = item_match.group(2) if (item_match and item_match.group(2)) else str(ordinal)
+            if "質問1" in block or "質問2" in block:
+                scripts[f"問5-{item_num}-1"] = block
+                scripts[f"問5-{item_num}-2"] = block
+            else:
+                scripts[f"問5-{item_num}"] = block
         else:
             scripts[f"問{section}-{ordinal}"] = block
     return scripts

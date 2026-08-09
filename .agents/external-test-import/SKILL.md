@@ -112,8 +112,12 @@ tables. Defer format facts to `jlpt-exam-structure`. Defer script block rules to
 - If the source is incomplete (missing keys, missing 聴解 half), import only
   what exists, state the gap in the final report, and do not invent answers.
 - Partial imports still use the `imported-` prefix.
+- **Bold emphasis on tested words & passage markers**:
+  - In 言語知識 (問題1, 2, 5, 6), bold the target tested word in each stem (`**相互**`, `**辛くて**`, `**れいぎ**`, `**とりあえず**`, `**取材**`). Raw PDF text extraction loses underline formatting; restore bold manually.
+  - In 読解 (問題10–13), bold all numbered passage markers (`①**...**`, `②**...**`) and key target phrases in both the passage body and the corresponding question stem, ensuring 1-to-1 matching.
 - 問題8: four blanks, ★ third; key = option that lands on ★ (same integrity
-  rules as generated tests — `make check` enforces them).
+  rules as generated tests — `make check` enforces them). Explanation cell MUST start with the 1-4 permutation: `語(1)→語(4)→語(3)→語(2)。 「...」`.
+- （注N） gloss definitions must never be circular (do not define a term using its own kanji or same phrase).
 
 **Answer-key reconciliation (NON-NEGOTIABLE — the since-deleted July 2025 import shipped
 one wrong 聴解 key by spot-check alone)**
