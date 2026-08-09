@@ -356,15 +356,20 @@ and it sends the fixing pass off to break working items.
   each passage, confirm the glossed term actually occurs in that passage's
   body — an orphaned gloss (test 3 shipped this across all 4 passages) fails
   the paper.
-- **問題2 表記:** confirm the 2×2 component-matrix shape — each of the 4
-  options should share the compound's two-character skeleton with only one
-  or both characters swapped for a visually/structurally similar wrong one.
-  Fail a set where a "distractor" is a real, unrelated word (test 4's 展開
-  next to 傾向), or where only one character position ever varies across all
-  four options. Also confirm the stem kana matches the keyed option's reading:
-  20260807_2 item 6's stem reads しひん but its key 下品 reads げひん — no
-  option reads the stem's kana, so the item is unanswerable as printed. Fail
-  any 問題2 stem whose kana matches none of the options' readings.
+- **問題2 表記:** confirm the 2×2 component-matrix shape `{A, B} × {C, D} → {AC, AD, BC, BD}`
+  — each of the 4 options should share the compound's two-character skeleton with
+  each character position varied independently across the 4 options ({下, 不} × {品, 晶}
+  → 下品, 下晶, 不品, 不晶; {運, 雲} × {河, 海} → 運河, 運海, 雲河, 雲海; {下, 不} × {駄, 太}
+  → 下駄, 下太, 不駄, 不太). Pseudo-compounds (非語) are standard and valid.
+  Fail a set where an arbitrary 3rd kanji breaks the 2×2 grid (e.g. 転海 in 運河's set),
+  or where a non-standard / alien glyph appears (banned: `惰楪`'s `楪`).
+  For single-kanji stems with okurigana (けわしい → 険しい), confirm all 4 options share
+  the okurigana and use real radical/homophone sets ({険しい, 験しい, 検しい, 剣しい}).
+  For native compound items (やぬし → 家主), confirm all options use plausible standard kanji
+  (家主, 宅主, 宿主, 店主), not nonsensical gibberish like `守柱`.
+  Also confirm the stem kana matches the keyed option's reading: 20260807_2 item 6's stem
+  reads しひん but its key 下品 reads げひん — no option reads the stem's kana, so the item
+  is unanswerable as printed. Fail any 問題2 stem whose kana matches none of the options' readings.
 - **問題3 語形成:** confirm every option is a real, productive affix that
   could plausibly attach to the SPECIFIC stem — not just a plausible affix in
   the abstract. Fail a nonsense affix (test 4's 迷〜, not a real negation
@@ -396,11 +401,22 @@ and it sends the fixing pass off to break working items.
   and two content-inference blanks; test 2 and test 3 each repeated one
   pair) or if NONE of the four blanks requires tracking the whole passage's
   argument rather than just the local sentence.
-- **問題1 漢字読み:** all four options the same word form as the target; each
-  a real word; and none uniquely selected by the stem's conjugation/okurigana.
-  Cover the kanji, keep okurigana visible — if only one option still fits the
-  conjugation class, fail it (test 1: 慌てて with three ～れて vs one ～てて).
-  Same mora count is not required.
+- **問題1 漢字読み:**
+  - **Stem underline formatting:** bold span covers the entire word including
+    okurigana (`**生じる**`, `**潜る**`, `**逃す**`, `**慌てる**`), never bolding
+    surrounding particles (`**に**生じる`) and never leaving okurigana unbolded
+    outside (`**生**じる`).
+  - **Okurigana consistency & non-exposure:** all four options MUST share the exact
+    same printed okurigana (e.g. `生じる` → all options end in `〜じる`, never `〜する`).
+    Fail any item where options vary okurigana that is already visibly printed in
+    the stem (which leaks the answer on sight).
+  - **2×2 Cartesian product matrix for 2-kanji on-reading compounds:** confirm
+    {A, B} × {C, D} → {AC, AD, BC, BD} (e.g. 矛盾 {む, ぶ} × {じゅん, じゅう};
+    縮小 {しゅく, じゅく} × {しょう, しょ}). Fail arbitrary 3rd endings like `むじん`.
+  - All four options are the same word form as the target; each a real word (or valid
+    清濁/長短 on-reading derivation); and none uniquely selected by the stem's
+    conjugation/okurigana (cover the kanji, keep okurigana visible — if only one
+    option still fits, fail it). Same mora count is not required.
 - **One grammar point, one KEY per paper** — check 問題7/8/9 keys against each
   other AND against the reading passages' running text.
 - **Every sentence is Japanese.** Read the whole paper aloud once. Test 4 had

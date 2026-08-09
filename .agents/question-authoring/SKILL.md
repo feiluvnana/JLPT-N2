@@ -203,20 +203,28 @@ before calling any authoring work done.
     the option swapped in (t4 keyed 比較的 for 「値段の**わりに**」 →
     「値段の比較的美味しい」 — unanswerable as printed). A meaning match is not
     enough; the frame must accept the word.
-13. **問題1: all four options are the same word form as PRINTED.** t4 gave
-    dictionary-form 労わる three て-form options — answerable without reading
-    the kanji. Distractors are READINGS that fit the printed form: same word
-    form AND same okurigana/conjugation lock (rule 14 is the test). A trap the
-    kanji supports is ideal *only when it fits that lock* — 労う＝ねぎらう
-    cannot sit beside 労わる＝いたわる (okurigana locks ～わる), which is what
-    made that target undrawable, not a model trap; see
-    `references/moji-goi.md` §"Build the set BEFORE you accept the target".
-14. **問題1: conjugation must not give the answer away; every option is a real
-    word.** t1's 慌てて put three ～れる-class readings under a ～てて stem —
-    only the key fit the printed okurigana (the leak is conjugation class, not
-    mora count; likewise ～って vs ～いて, ～んで vs ～いで…). Test: cover the
-    kanji, keep okurigana — if exactly one option still fits, rewrite. Fixes in
-    order: dictionary form; same-class real-word distractors; a new carrier.
+13. **問題1 & 問題2: 2×2 Cartesian product matrix ({A, B} × {C, D} → {AC, AD, BC, BD}).**
+    - **問題1 on-reading compounds (矛盾, 縮小, 概要, 効率):** options follow the
+      2×2 reading matrix {A, B} × {C, D} (e.g. 矛盾 {む, ぶ} × {じゅん, じゅう} →
+      {むじゅん, むじゅう, ぶじゅん, ぶじゅう}). Never break the grid with an
+      arbitrary 3rd ending (like `むじん`).
+    - **問題2 2-kanji compounds (下品, 運河, 下駄, 開港):** options follow the
+      2×2 component matrix {A, B} × {C, D} (e.g. {下, 不} × {品, 晶} →
+      {下品, 下晶, 不品, 不晶}; {運, 雲} × {河, 海} → {運河, 運海, 雲河, 雲海}).
+      Pseudo-compounds (下晶, 不品, 運海, 不太) are normal, standard, and expected.
+14. **問題1 & 問題2: okurigana non-exposure and kanji legitimacy.**
+    - **Underline covers the whole word:** write `**生じる**`, `**潜る**`, `**逃す**`,
+      never bold particles (`**に**生じる`) and never split okurigana (`**生**じる`).
+    - **Okurigana non-exposure (問題1):** all four options must share the exact
+      printed okurigana (e.g. `生じる` → all four end in `〜じる`, never `〜する`;
+      the printed `じる` in the sentence directly leaks the ending if options vary).
+    - **Kanji legitimacy (問題2):** every constituent glyph must be a real,
+      legitimate 常用/N2 kanji — never use non-standard or alien glyphs (banned:
+      `惰楪`'s `楪`).
+    - **Single-kanji stems (けわしい → 険しい):** all four options share the printed
+      okurigana and use real radical/homophone sets ({険しい, 験しい, 検しい, 剣しい}).
+    - **Native compound items (やぬし → 家主):** use plausible standard kanji ({家主,
+      宅主, 宿主, 店主} or {家, 宅} × {主, 守}), never nonsensical gibberish like `守柱`.
 15. **One grammar point may be the KEY only once per paper** — not once per
     問題 (t4 keyed 〜にともなって in 問題7 and again as a 問題9 blank) — and a
     tested form stays out of the reading passages (問題9's passage said

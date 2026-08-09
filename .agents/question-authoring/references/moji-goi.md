@@ -13,10 +13,11 @@ Build distractors from REAL confusions — reading traps (措置(そち) vs
 しょち/そうち), homophone kanji sets (納める/収める/治める/修める, 敗れる/破れる),
 same-radical fakes (険/検/剣/験).
 
-### Underline the WHOLE word, okurigana included
+### Underline the WHOLE word, okurigana included (no particle, no okurigana split, no okurigana leak)
 
 In the Markdown the underline is the bold span: write `**収まった**`, never
-`**収**まった`. Official July 2025 (`refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`,
+`**収**まった`, and never bold a surrounding particle like `**に**生じる` (write
+`**生じる**`). Official July 2025 (`refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`,
 問1) marks `**才能**`, `**辛い**`, `**刑事**`, `**起床**`, `**収まった**` — the
 inflectional tail sits *inside* the mark in both okurigana items, and 問題2 does
 the same with kana spans (`**しめって**`). Corroborated across the archive
@@ -30,6 +31,30 @@ Legitimate: a whole word that happens to be one kanji — official draws them
 (腕 12/2023-1, 柱 12/2025-1, 針 12/2012; 柱's set ゆか/かべ/たな is an ordinary
 訓読み semantic-field set). A single-kanji *word* is a normal target; a
 single-kanji *fragment* of a longer word is not.
+
+**Okurigana non-exposure:** When the target has okurigana (e.g. 生じる, 慌てる,
+逃す, 潜る), the hiragana tail is visibly printed in the stem. Therefore:
+1. **All four options MUST share the exact same okurigana as printed in the stem** —
+   `生じる` options must all end in `〜じる` (`1. せいじる  2. しょうじる  3. そうじる  4. しょじる`).
+2. **Never vary the okurigana in the options** — offering `しょうする` or `せいする`
+   beside `生じる` is a broken item: examinees see `じる` printed in hiragana right
+   in the stem sentence, which immediately eliminates `〜する` options on sight.
+
+### 2-kanji on-reading compounds: the 2×2 Cartesian product matrix ({A, B} × {C, D} → {AC, AD, BC, BD})
+
+For 2-kanji 音読み compound targets (e.g. 矛盾, 縮小, 概要, 効率, 措置, 交渉):
+Official items test each kanji's reading independently using a complete **2×2
+Cartesian product matrix**:
+- **Kanji 1 on-reading:** A (correct reading) vs B (confused on-reading / 清濁・長短・同音/同類漢字 reading).
+- **Kanji 2 on-reading:** C (correct reading) vs D (confused on-reading / 清濁・長短・同音/同類漢字 reading).
+- **Four options:** {AC, AD, BC, BD} (permuted into the prescribed key slot).
+
+**Worked examples:**
+- **矛盾 (むじゅん):** A=む, B=ぶ; C=じゅん, D=じゅう → {1. むじゅん, 2. むじゅう, 3. ぶじゅん, 4. ぶじゅう}.
+  *Defect:* options like `むじん` introduce an arbitrary 3rd ending and break the 2×2 symmetry.
+- **縮小 (しゅくしょう):** A=しゅく, B=じゅく; C=しょう, D=しょ (or じょう) → {1. しゅくしょう, 2. しゅくしょ, 3. じゅくしょう, 4. じゅくしょ}.
+  *Defect:* mixing `しゅくじょう` with `しゅくしょ` without forming a complete 2×2 grid.
+- **概要 (がいよう):** A=がい, B=かい; C=よう, D=ゆ → {1. がいよう, 2. がいゆ, 3. かいよう, 4. かいゆ}.
 
 ### The two-branch rule — same kanji OR same semantic field (the ONLY statement)
 
@@ -191,22 +216,56 @@ so confirm the verdict against `refs/Shinkanzen/` before replacing anything.
 ## 問題2 (表記)
 
 Official items use a **2×2 component matrix**: take the correct 2-kanji
-compound and swap EACH kanji independently for a visually/structurally similar
-wrong one, so all four options share the same two-character skeleton
-(かいこう → 開港/開向/回港/回向; のうこう → 濃厚/農厚/濃高/農高; かくじゅう →
-拡張/拡充/各充/各張). Do not vary only one position while holding the other
-fixed. **Non-words and pseudo-compounds are normal and expected in 表記
-distractors** (official July 2025 ships 液って/温って/汗って and 支接/施接/支設)
-— they need not be dictionary headwords, but must test orthographic component
-precision. ⚠ Worked examples in this file are patterns — never ship an
-example's target word or option set.
+compound and swap EACH kanji independently for a visually/structurally/phonetically
+similar wrong one, so all four options form the complete Cartesian product
+`{A, B} × {C, D} → {AC, AD, BC, BD}`.
 
-**The stem's kana is the key's reading.** The 音/訓 reading printed in the 問題2
-stem must equal the reading of the keyed kanji option (しひん 下品 would miskey:
-下品 reads げひん). Write the stem kana from the key option's reading, then
-verify every non-key option parses as the same kana skeleton (かいこう →
-開港/開向/回港/回向). A stem kana no option reads is a gate-level automatic-fail
-class (shipped in 20260807_2 item 6: しひん ≠ 下品).
+### The 2×2 component matrix: {A, B} × {C, D} → {AC, AD, BC, BD}
+
+- **Position 1 kanji:** A (correct kanji) vs B (confused / lookalike / homophone kanji).
+- **Position 2 kanji:** C (correct kanji) vs D (confused / lookalike / homophone kanji).
+- **Four options:** {AC, AD, BC, BD} (permuted into the prescribed key slot).
+- **Pseudo-compounds and non-words are standard and expected in 表記:**
+  They need not be dictionary headwords; their purpose is testing character-level
+  orthographic precision (official July 2025 ships `支接/施接/支設` and `液って/温って/汗って`).
+
+**Worked examples (patterns — do not ship exact examples):**
+- **げひん (下品):** A=下, B=不; C=品, D=晶 (or 等) → {1. 下品, 2. 下晶, 3. 不品, 4. 不晶}.
+  *Defect:* options like `下等, 下晶, 不品, 下品` fail the 2×2 symmetry by mixing `等` and `晶` and omitting B+D (`不晶` or `不等`).
+- **うんが (運河):** A=運, B=雲; C=河, D=海 → {1. 運河, 2. 運海, 3. 雲河, 4. 雲海}.
+  *Defect:* options like `雲海, 運河, 転海, 雲河` inject an arbitrary 3rd kanji `転` instead of completing the {運, 雲} × {河, 海} grid.
+- **げた (下駄):** A=下, B=不; C=駄, D=太 → {1. 下駄, 2. 下太, 3. 不駄, 4. 不太}.
+  *Defect:* options like `下太, 惰楪, 下駄, 不駄` break the 2×2 grid and use an alien, non-standard glyph `楪`.
+- **かいこう (開港):** A=開, B=回; C=港, D=向 → {開港, 開向, 回港, 回向}.
+- **のうこう (濃厚):** A=濃, B=農; C=厚, D=高 → {濃厚, 農厚, 濃高, 農高}.
+
+### Constituent kanji legitimacy: real 常用/N2 kanji only (no alien or bizarre glyphs)
+
+Even though pseudo-compounds are standard in the 2×2 matrix, **every single
+constituent kanji glyph MUST be a legitimate, standard 常用 / N2 kanji**:
+- **Banned:** Fabricating or using obscure, non-standard, or alien kanji (such as
+  `惰楪`'s `楪`). Examinees are tested on standard Japanese orthography, not rare
+  CJK dictionary curiosities.
+
+### Single-kanji stem + okurigana items & Native compound items
+
+1. **Single-kanji stems with okurigana (e.g. けわしい → 険しい, あやうい → 危うい, たくましい → 逞しい):**
+   - All four options share the **exact same okurigana** (e.g. `〜しい`).
+   - The four kanji options must be **legitimate standard kanji** from the same
+     phonetic radical / visual confusion set: `{1. 験しい, 2. 険しい, 3. 検しい, 4. 剣しい}`
+     (all four share the ケン reading and radical/component elements).
+2. **Native kun-yomi / compound items (e.g. やぬし → 家主, ほのお → 炎, けはい → 気配):**
+   - Every constituent kanji and distractor option must be **legitimate, standard, and plausible**:
+     for `やぬし` (家主), use standard kanji ({家主, 宅主, 宿主, 店主} or {家, 宅} × {主, 守}).
+   - **Banned:** Absurd, nonsensical combinations like `守柱` or `家柱` (random pillar compounds).
+
+### The stem's kana is the key's reading
+
+The 音/訓 reading printed in the 問題2 stem must equal the reading of the keyed
+kanji option (しひん 下品 would miskey: 下品 reads げひん). Write the stem kana
+from the key option's reading, then verify every non-key option parses as the
+same kana skeleton (かいこう → 開港/開向/回港/回向). A stem kana no option reads
+is a gate-level automatic-fail class (shipped in 20260807_2 item 6: しひん ≠ 下品).
 
 ## 問題3 (語形成)
 
