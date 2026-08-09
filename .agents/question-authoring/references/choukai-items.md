@@ -17,8 +17,8 @@ conversation. For **問題3 (概要理解) only**, official distractors are
 topic-level summaries or general statements with key modifiers missing/altered.
 
 **An option that is raised and left TRUE is a second answer**, even if it is
-"only a contributing factor": test 1's 遅刻理由 item affirmed 道が混んでいた in
-the audio while keying USB忘れ. A どうして item's wrong causes must be denied,
+"only a contributing factor": e.g., an item affirming 道が混んでいた in
+a dialogue where that was just a minor factor. A どうして item's wrong causes must be denied,
 not merely outweighed.
 
 課題理解 (問題1) hides the correct FIRST action behind 「その前に」「それが先」.
@@ -45,9 +45,7 @@ Why an order and an artifact rather than the prohibition they replace:
 files, always as a property to verify *after* both files exist — the last thing
 an author does, in the last file authored, exactly where long-run degradation
 lands. Nothing recorded whether the check ran, so skipping it was invisible,
-and **4/4** papers shipped ungrounded options (t1 問題2-1番 options 2 and 4 —
-the 解説 itself admits it; t2 five options across 4 items; t3 ~14 options, with
-問題2-2番's three wrong options all fabricated; t4 問題2 例 option 2).
+and **4/4** papers shipped ungrounded options — the 解説 itself admits it.
 `make check` WARNs when a 問題1/2 option shares no ≥2-char kanji/katakana token
 with its item's script block — WARN only, because that heuristic flags 5/44 on
 the *official* paper (official distractors are often paraphrased). The
@@ -78,9 +76,7 @@ speaker's rank and keigo direction — core Item integrity #20.
 
 **The keyed reply introduces no unstated premise.** The reply that advances the
 dialogue (a suggestion, a consolation, a judgment) may only rely on what the
-prompt states or directly implies; a key that presupposes a fact the prompt
-never mentions (an appointment, a prior arrangement) lets a second option that
+prompt states or directly implies; a key that presupposes a fact the prompt never mentions (an appointment, a prior arrangement) lets a second option that
 answers the prompt as stated compete with it. That is a double-answer fail
-(shipped in 20260807_2 問題4-1番: the key's 「予約」 premise was never in the
-prompt, so a plain sympathetic reply was equally natural). When the key needs
+(e.g., if the key's 「予約」 premise was never in the prompt, a plain sympathetic reply is equally natural). When the key needs
 such a premise, put it in the prompt; otherwise pick a key the prompt grounds.

@@ -30,10 +30,10 @@ shipped every historical mis-key.
 
 Two context-isolation rules are non-negotiable, because both shipped failure
 modes are context problems: (a) **no long single-run authoring** — defects
-cluster in whatever one context writes last (test 4's entire listening half:
-swapped 問題 types, an unanswerable 例, five phantom 解説 quotes); (b) **QA is
-a context that authored nothing** — an author cannot audit its own intent, and
-every shipped mis-key survived exactly that self-review.
+cluster in whatever one context writes last (e.g., swapping 問題 types, an
+unanswerable 例, five phantom 解説 quotes); (b) **QA is a context that authored
+nothing** — an author cannot audit its own intent, and every shipped mis-key
+survived exactly that self-review.
 
 | Stage | Job | Contexts |
 |-------|-----|----------|
@@ -101,13 +101,14 @@ make merge-seeds <id>              # blend web seeds into every spec surface
 - **The seed is an RNG output, never a number you write down** — run
   `python3 -c "import secrets; print(secrets.randbelow(10**8))"` (or any
   equivalent) and use the printed value verbatim. Agent-"picked" seeds are
-  date-shaped and collide across sessions: tests 2 and 3 both chose 20260804
+  date-shaped and collide across sessions if agents choose the same date
   independently. It must also be a seed no previous test used
   (`logs/ledger.json` records them) — the blend is a pure function of
   `(seed, logs/seeds.json)`, and the gate only fails a reused seed against
   the SAME harvest, so a fresh seed is on you.
 - **Re-harvest `logs/seeds.json` for every test** — it is a per-test input, not
-  a repo fixture. Test 3 inherited test 2's harvest and shipped as its re-skin.
+  a repo fixture. Inheriting a previous test's harvest causes the paper to
+  ship as a re-skin of past tests.
 - Read the printed **blend report** before authoring: 30–60% web per surface,
   pool side ≥40%, ≤2 seeds per domain. Re-harvest and re-run if it warns.
 - Offline: skip harvest/merge; the pure-pool spec is valid. Say so in the
@@ -149,17 +150,18 @@ each 聴解 item — with one column per test (this one and the two before it),
 and check:
 
 - **No topic appears twice in this paper**, even in a different register (an
-  essay and a monologue on one subject are still a repeat). Test 2 shipped the
-  問題14 flyer spelling out a 聴解 item's keyed answer in its fine print, and
-  one デジタルデトックス essay serving both 問題9 and 問題10(1).
-- **No topic repeats the previous test.** Test 3 duplicated ten of test 2's
-  eleven web topics, four in the same 聴解 slots.
+  essay and a monologue on one subject are still a repeat). For example, avoid
+  having the 問題14 flyer spell out a 聴解 item's keyed answer in its fine
+  print, or having one デジタルデトックス essay serve both 問題9 and 問題10(1).
+- **No topic repeats the previous test.** Avoid duplicating web topics from the
+  previous paper, especially in the same 聴解 slots.
 - **No condition, number, or rule shared** between the 問題14 flyer and any
   聴解 item. Shared setting is tolerable; shared decisive detail is not.
 - **Two 聴解 items may not run the same errand**, and errand **archetypes**
   (reschedule call, model choice at a store, campaign flyer…) must not repeat
   within the last two tests — add a shape column, not just a subject column
-  (a reschedule-an-appointment call ran in tests 1, 2, AND 3).
+  (e.g., avoiding having a reschedule-an-appointment call run across
+  consecutive tests).
 - **問題12 (A/B) gets its own cross-test column** — it is one topic per paper
   and repeated three papers running (働き方) once already.
 - **A duplicated seed in the spec is a defect**: it means `merge_seeds.py` ran
@@ -170,7 +172,7 @@ and check:
 ## Stage 4 — QA
 
 Read `exam-qa-review/SKILL.md` in full and run it with fresh eyes. NOT
-optional: tests 2, 3, and 4 all shipped content defects through a green gate.
+optional: generated papers can ship content defects through a green gate if QA is skipped.
 A test that has not survived this pass is not done, whatever the gate says.
 
 ## Taking the exam (after QA)

@@ -73,7 +73,7 @@ per-sitting figures: `references/official_calibration.md` §2.
 
 Use `（中略）` when a quoted source would otherwise run long: official ships
 **2–5 per paper in the current era, median 3, never zero**
-(`official_calibration.md` §3); tests 1–4 shipped none. Cut at least one
+(`official_calibration.md` §3); avoid shipping papers with zero `（中略）`. Cut at least one
 passage across 問題11–13, and every `（中略）` must sit inside a 問題11–13
 passage body — never floating under an instruction line (the gate checks
 placement).
@@ -85,8 +85,8 @@ All figures from `official_calibration.md` §4 — current era, n = 7 sittings,
 
 - **Anchoring:** every stem is anchored either on **筆者** or on a **marked
   span** (「①…とあるが」/「〜とは何を指すか」). 82% name 筆者; **18% do not**
-  and anchor on a span instead (0–3 per paper). A stem that names neither is
-  the retrieval shape below — tests 1/2/3/4 shipped 4/6/5/6 of those out of 8.
+  and anchor on a span instead (0–3 per paper). Stem shapes must avoid unanchored
+  pure-retrieval shapes.
 - **Banned — the four pure-retrieval shapes:** 「本文で述べられている〜はどれか」
   「〜として正しいものはどれか」「〜の主な目的は何か」「〜の内容と合っているもの
   はどれか」. Corroborated at n = 15 sittings: **0 occurrences**, and not in
@@ -133,12 +133,10 @@ sentence needs a reader (`exam-qa-review` step 3).
 - **Pairing is 1-to-1 per passage, both directions:** every `（注N）` definition
   line annotates a word actually in that passage's body, and every in-body
   marker has a definition line. An orphan either way is an automatic QA fail,
-  not a stylistic slip (t3 shipped unmarked glosses across all four 問題11
-  passages; t2 shipped 4 orphans; t4 a 問題13 「準備（注5）」 with no 注5 line).
+  not a stylistic slip (e.g., unmarked glosses, orphan definition lines, or missing 注 definition lines).
 - **Count in-body markers** — one per glossed term, in the passage region — not
   raw `（注N）` occurrences, which double-count because each gloss also has a
-  definition line. (That confusion once had the gate reporting tests 1–4 at
-  18/17/58/10 when they carry 9/6/29/5.)
+  definition line. (Count actual in-body markers, not definition lines.)
 - **The two numbers:** the gate **WARNs below 25** in-body glosses
   (`GLOSS_MARKER_MIN` — a floor *below* every current official paper, which is
   what a floor should be). **Author to the official band, not the floor**:
@@ -158,10 +156,9 @@ sentence needs a reader (`exam-qa-review` step 3).
   per 中文 and ~7 for the 長文 and the paper total takes care of itself; do not
   spread a quota across 問題10 to reach a number.
 - **The count rule and the band rule are ONE rule — choose the notes while
-  drafting the passage.** Test 3 is the warning: the only paper in band on the
-  count (29), and it got there by glossing 割引・洗髪・契機・規制・革新・省力化・
-  増幅 — banned-band words. Reaching the count with basic-word glosses is worse
-  than shipping 5, because it also degrades the passage. A 中文 on a
+  drafting the passage.** Avoid glossing basic or in-band N2 words just to increase the gloss count.
+  Reaching the count with basic-word glosses (such as 割引・洗髪・契機・規制・革新・省力化・増幅) is worse
+  than shipping a low count, because it degrades the passage. A 中文 on a
   specialized subject (ゾウの進化, 医療の個別性, 起業 — July 2025's own)
   naturally carries five domain terms; a passage written entirely in general
   vocabulary carries none and cannot be rescued by annotation afterwards. If a

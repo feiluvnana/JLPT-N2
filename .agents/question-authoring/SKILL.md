@@ -73,8 +73,8 @@ the archive's `script.md` — are in `references/reading-reference-pdfs.md`.
 
 `exam-qa-review`'s two-answer hunt catches a distractor that is too STRONG (a
 second defensible answer). This rule catches the opposite: a distractor too
-WEAK — eliminable on sight for a reason unrelated to the tested point. Four
-tests shipped it across 問1, 問4–6, and 聴解問題1–3 simultaneously.
+WEAK — eliminable on sight for a reason unrelated to the tested point. Avoid shipping
+weak distractors across 問1, 問4–6, and 聴解問題1–3.
 
 **The test, for every distractor:** *"Would a well-prepared N2 examinee,
 moving quickly, seriously weigh this option before ruling it out — for the

@@ -32,13 +32,13 @@ workflow is owned by `jlpt-test-generation` (pass table).
 Do not add N1-only forms or N3–N5 drills to `references/pools.json` — the banned lists
 live in `question-authoring/references/level_band_grammar.txt`. `make check` fails papers
 whose 問題7–9 keys hit that list **and checks the pool itself**: a `TOO_EASY` form
-(`〜ば〜ほど`) sat in `grammar_p8` for four tests because the paper check only matches the
+(`〜ば〜ほど`) sat in `grammar_p8` because the paper check only matches the
 keyed *option string*. A banned pool form is a defect when committed, not when drawn.
 
 **A `kanji_reading` entry must come with a writable distractor set, or it is not a pool
 entry.** The 問題1 two-branch distractor rule is owned by `question-authoring`; for some
 entries its intersection is **empty**, and an author who has already drawn the target
-invents non-words instead of rejecting it (test 4's 「労わる」). Before adding or keeping
+invents non-words instead of rejecting it (e.g., 「労わる」). Before adding or keeping
 an entry, write its three distractors with their source kanji; if you cannot, it is out.
 
 **A pool spelling must match its `references/openjlpt/vocab-n*.json` headword.** 問題1
@@ -47,8 +47,8 @@ corpus's `労る`). Fix the pool, never just the paper.
 
 ### The `kanji_reading` validity rule (audited 2026-08-06)
 
-Test 4 shipped three unanswerable 問題1 items (`領(えり)`, `線(すじ)`, `爆(は.ぜる)`)
-because nothing checked the printed kanji actually *has* the keyed reading. Every entry
+Unanswerable 問題1 items (such as `領(えり)`, `線(すじ)`, `爆(は.ぜる)`) ship
+when nothing checks that the printed kanji actually *has* the keyed reading. Every entry
 must satisfy all four:
 
 1. **Shape.** `語(よみ)`: `語` contains a kanji; `よみ` is hiragana, **no `.` and no
@@ -83,8 +83,8 @@ only category whose parenthetical is a reading** — `納める(税金)` is cont
 ## One grammar point, one pool entry (no spelling variants)
 
 The sampler's cross-category `taken` guard compares **raw strings**, so two spellings of
-one point are two items to the code: `grammar_p7` carried `〜気味` + `〜ぎみだ` and test 3
-keyed one point twice in one 問題7.
+one point are two items to the code: `grammar_p7` carried `〜気味` + `〜ぎみだ` resulting in
+keying one point twice in one 問題7.
 
 - **One spelling per point.** Not kanji *and* kana (`〜に伴って` / `〜にともなって`), not
   with *and* without an optional tail (`〜つつも` / `〜つつ(も)`), not two conjugations of
@@ -128,7 +128,7 @@ agreement and is worse than a wrong one. Pick the nearest value, or say the entr
 belong. Adding a value is a deliberate taxonomy edit: change `THEMES`, retag every entry
 the new value should own, report it. The tags exist because string checks compare
 *wording*: 「交替制勤務と睡眠の質」 and 「就寝前の刺激と生活習慣」 pass as two subjects
-and the paper tests sleep twice (tests 2 and 4 shipped that pair) — under the tags both
+and the paper tests sleep twice — under the tags both
 read `睡眠・健康`, a lookup instead of a judgement.
 
 **What the sampler enforces.** `check_pool_themes()` **fails** on any themed entry that is
@@ -150,7 +150,7 @@ get caps.
 > `問題14` flyer, `聴解問題5` 統合理解. Five surfaces.
 >
 > 1. **Five headline surfaces, five DIFFERENT themes.**
-> 2. **A headline theme appears nowhere else in the 読解 half** (test 2 shipped
+> 2. **A headline theme appears nowhere else in the 読解 half** (e.g., shipping
 >    デジタルデトックス as both 問題9 and 問題10(1)). Listening is governed by rule 3 only.
 > 3. **Caps everywhere else: ≤2 reading surfaces, ≤5 listening scenarios per theme**
 >    (`THEME_CAP`); a *third* reading surface on one theme is a defect even with no FAIL.
@@ -188,8 +188,8 @@ automatically into one synthetic oldest draw.
 - **Cooldown, not exhaustion.** An item used within the last `COOLDOWN` (=2) draws is
   ineligible (`ago(x) >= cool`; `apply_adjunct` uses the same test). A pool that cannot
   fill a draw relaxes the cooldown one step at a time, says so, and **the level it
-  settled on is written into the spec** — the old v1 sampler cleared a category's whole
-  history instead, which is how test 4 redrew six of test 1's items.
+  settled on is written into the spec** — clearing a category's whole history instead
+  causes a draw to repeat multiple items from earlier papers.
 - **One item, one 問題 per test** — categories draw against a shared `taken` set; a
   post-draw assertion aborts on any collision.
 - **Cooldown is by WORD, across categories** — recency tracks both raw string and
@@ -231,7 +231,7 @@ repair is paper-repair work, not pool work.)
 
 Per-section `[(i % width) + 1 …]` filling is even *within* a section but hands every
 `count % 4` remainder to the lowest positions — a structural +15/+7/+4/+0 on positions
-1/2/3/4 over the 18 four-choice sections (test 4: 31 keys on position 1).
+1/2/3/4 over the 18 four-choice sections (e.g. an unmanaged distribution yielding 31 keys on position 1).
 `balanced_position_plan()` keeps the per-section floor allocation and gives each remainder
 to whichever positions are furthest behind **paper-wide** (realised 22/23/23/22). Never 3+
 identical positions in a row; 即時応答 keys are uniform over 1-3.
@@ -263,10 +263,9 @@ sampler starts reporting exhausted categories.
 ## `scripts/sample_items.py` — usage
 
 **The seed must be an RNG output, never a number the agent writes down.**
-Agents left to "pick" a seed produce date-shaped, memorable values — tests 2
-and 3 both chose 20260804 in separate sessions, which is exactly the collision
-the seed exists to prevent. Generate it by running a command and use the
-printed value verbatim:
+Agents left to "pick" a seed produce date-shaped, memorable values that collide
+across separate sessions, which is exactly the collision the seed exists to prevent.
+Generate it by running a command and use the printed value verbatim:
 
 ```bash
 python3 -c "import secrets; print(secrets.randbelow(10**8))"   # any platform
@@ -275,7 +274,7 @@ python3 -c "import secrets; print(secrets.randbelow(10**8))"   # any platform
 
 ```bash
 SEED=$(python3 -c "import secrets; print(secrets.randbelow(10**8))")
-python .agents/exam-blueprint/scripts/sample_items.py --seed "$SEED" --test-id 4
+python .agents/exam-blueprint/scripts/sample_items.py --seed "$SEED" --test-id <id>
 python .agents/exam-blueprint/scripts/sample_items.py --check-depth
 python .agents/exam-blueprint/scripts/sample_items.py --reroll listening_scenarios --seed "$SEED"
 ```
@@ -308,7 +307,7 @@ test); what matters is depth.
 **A harvest is an input to one test, not a file that lives in the repo.** The blend is a
 pure function of `(spec seed, seeds.json)`: `merge_seeds.py` seeds its RNG from the spec's
 own seed, so the same `--seed` against an unchanged harvest reproduces the previous test's
-blend **slot for slot** — exactly how test 3 shipped as a re-skin of test 2, while pool
+blend **slot for slot** — causing a new test to ship as a re-skin of a previous test, while pool
 items rotated correctly (the ledger only remembers what the *sampler* drew).
 
 Before harvesting, list what is already spent (the ledger's
@@ -321,7 +320,7 @@ subject are the same topic. Aim to reuse nothing from the previous two tests.
 check` fails when two tests share both a seed and a harvest, or reuse a harvest at all.
 Never hand-edit those fields to silence it. **But `(seed, harvest_sha)` uniqueness is NOT
 topic uniqueness** — a fresh harvest and seed can still land on the same subjects, because
-the *harvest* was on the same subjects (tests 3 and 4 shared 8 surfaces this way).
+the *harvest* was on the same subjects (e.g., sharing 8 surfaces across tests this way).
 
 **`logs/topics.json` — the whole-paper topic table, as a file.** One row per test, written
 by the **build pass** from the finished sources (`jlpt-test-generation` stage 3) — what the
@@ -343,8 +342,8 @@ table pass stays mandatory; a green topic check is not evidence the paper is new
 
 **Every seed must come from a page you actually fetched — no web, no harvest.** If web
 access is unavailable, SKIP the blend entirely (the pure-pool pipeline is the documented
-offline mode); never fabricate plausible seeds, URLs, or facts — test 4 shipped an
-invented harvest (made-up IDs that 404), silently voiding the no-shared-harvest
+offline mode); never fabricate plausible seeds, URLs, or facts — avoid shipping an
+invented harvest (made-up IDs that 404), which silently voids the no-shared-harvest
 guarantee. QA fetches sample URLs and reports an invented harvest as a major finding.
 
 **Run `merge_seeds.py` exactly once per test, on a spec straight from the sampler.** It
@@ -363,7 +362,7 @@ topics and 21 listening scenarios, so:
 | full 60% | 7 | 13 | 1 | 1 | 22 | 11 |
 
 So 6 domains funds the floor exactly and nothing more — 22 seeds from 6 domains still
-caps at 12 picks; add *domains*, not seeds (test 4's 28 seeds from 5 domains left 聴解 at
+caps at 12 picks; add *domains*, not seeds (e.g., 28 seeds from 5 domains leaves 聴解 at
 4/20 = 20% web, below the floor, warning ignored). Below `MIN_DOMAINS` (3) the script
 also shrinks the whole web share.
 
@@ -378,7 +377,7 @@ also shrinks the whole web share.
 
 It also **warns** on two seeds sharing a ≥3-char content token — distinct URLs, adjacent
 subjects. Act on those: each seed feeds **exactly one** surface, and near-duplicates
-blended onto two surfaces read as one topic tested twice (tests 2 and 3 both put
+blended onto two surfaces read as one topic tested twice (e.g., putting
 フードドライブ in 聴解問題1 *and* the 問題14 flyer) — treat them as one seed and drop the
 weaker, and read your own list too (傘シェアリング and シェアサイクル share no token and
 are one subject).

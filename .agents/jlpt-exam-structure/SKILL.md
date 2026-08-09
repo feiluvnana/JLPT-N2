@@ -80,8 +80,7 @@ nothing measured in characters.
 this used to cite was deleted):** a real paper glosses freely across 問題10–13 and uses `（中略）`
 inside 中文/長文. The gloss count, its metric (in-body markers), the vocabulary
 band a gloss may target, and the 問題13 length floor are all owned by
-`question-authoring`. Generated tests 1–4 shipped 5–9 glosses (t3 excepted) and
-no `（中略）` at all — treat that as under-calibrated even when keys parse.
+`question-authoring`. Avoid shipping low gloss counts or omitting `（中略）` entirely.
 
 **問題11 shape:** every paper in the current era is **4 passages × 2 questions**
 (Q57–64) — but that shape is **younger than the item counts**: 問題11 ran **3
@@ -114,7 +113,7 @@ claims do not survive:
 
 - **筆者 is not obligatory.** 82% of current-era 問題11 stems name 筆者; **18% do
   not**, anchoring on a marked span instead (0–3 per paper). What no official
-  stem does is anchor on *neither* — that is the defect tests 1/2/3/4 shipped.
+  stem does is anchor on *neither* — avoid stems that anchor on neither.
 - **"At least one 考え/主張 per passage" is a paper-level rule, not a pair-level
   one.** Official pairs split 13 one-of-each / 13 two-事実 / 2 two-考え, so a
   per-pair requirement rejects **6 of the 7** current papers. The format fact is:

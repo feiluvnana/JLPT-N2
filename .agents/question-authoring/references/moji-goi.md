@@ -25,7 +25,7 @@ the same with kana spans (`**しめって**`). Corroborated across the archive
 a Word-typeset reproduction, consistent across sittings).
 
 **The defect is splitting a word, not the character count.** Forbidden: marking
-part of a word and leaving the rest outside — test 4 shipped `**爆**ぜる`, which
+part of a word and leaving the rest outside — e.g. `**爆**ぜる`, which
 asks for a bare character's reading and lets ばく/はつ compete with はぜる.
 Legitimate: a whole word that happens to be one kanji — official draws them
 (腕 12/2023-1, 柱 12/2025-1, 針 12/2012; 柱's set ゆか/かべ/たな is an ordinary
@@ -72,7 +72,7 @@ AND be either:
 Both branches are legal. Forbidden is the grab-bag that satisfies neither:
 いたわる's distractors must not be ことわる/さわる/かわる (readings of
 断る/触る/代わる — kanji sharing nothing with 労, fields sharing nothing with
-"care for"; test 4 shipped exactly that). A one-branch reading of this rule is
+"care for"). A one-branch reading of this rule is
 what produced it: when the "same kanji" branch is empty for a drawn target, the
 next step is inventing non-words, never widening to unrelated words.
 **Scope:** branch (b) is the 訓読み branch. For a 音読み compound target (才能,
@@ -100,9 +100,8 @@ a target's alternative reading in its own option set. Decisive case: 7/2025-2,
 options, and record BOTH readings and levels on the 問題1 source line:
 `くぐる=潜る[N1] / もぐる=潜る[N2] → key もぐる`. A pool entry naming the harder
 reading is a **pool** defect: send it back to `exam-blueprint` (kanji_reading
-validity rule) rather than repairing the option set. Shipped counter-example:
-tests/2 問題1-4 prints 潜る, keys くぐる, offers もぐる — its key note documented
-the trap as if it were a feature. `check_mondai1_key_band()` fails both halves.
+validity rule) rather than repairing the option set. Avoid documenting
+the trap as if it were a feature when stem prints 潜る, keys くぐる, and offers もぐる. `check_mondai1_key_band()` fails both halves.
 
 ### Build the set BEFORE you accept the target — reject the target, never the rule
 
@@ -115,17 +114,15 @@ words of the same class in the target's semantic field → branch (b) candidates
 (4) **if (a)+(b) still yield fewer than three real words, STOP — report the
 target as undrawable and ask `exam-blueprint` to re-draw it.** Do not invent a
 word, do not widen the field to "any ～わる verb", do not ship near-misses plus
-filler. Worked empty case — test 4's 「労わる」: okurigana locks ～わる; 労 reads
+filler. Worked empty case — e.g. 「労わる」: okurigana locks ～わる; 労 reads
 only ロウ/いたわ(る)/ねぎら(う) and no look-alike gives a ～わる verb, so (a)={};
 every real ～わる verb (ことわる・かわる・くわわる・まじわる・さわる…) is in an
-unrelated field, so (b)={}. The paper shipped invented non-words, and a previous
-fix round had already shipped the unrelated-kanji set — two failures on one
-undrawable target.
+unrelated field, so (b)={}. Avoid shipping invented non-words or unrelated-kanji sets on an undrawable target.
 
 ### All four readings must RESOLVE — look them up, do not judge them
 
-「実在語のみ」 was already a rule and test 4 still shipped がいり/そうじる/
-うんじる, because nothing said WHERE to look. It is a lookup with two branches,
+Every option must be a real word (avoid non-words like がいり/そうじる/うんじる),
+by performing a lookup with two branches,
 because official papers treat 音読み and 訓読み targets differently — measured
 over all 35 current-era 問題1 items (`references/official_calibration.md` §5):
 
@@ -163,7 +160,7 @@ The operational procedure:
    line — `さだまる=定まる[N1]`, `あまい=甘[N2 kunyomi]` — plus the branch label
    each option satisfies (`[同漢字]` or `[同分野]`). The source is whatever the
    lookup returned — run it; never write the spelling from memory.
-4. **A MISS is not a verdict, it is a debt.** The slices hold 7,040 vocab
+4. **A MISS is a debt.** The slices hold 7,040 vocab
    entries (~790 with an empty `reading`) and the kanji lists stop at N3, so
    real words miss (やすまる=休まる — an official distractor — and こうじる=講じる
    both MISS). On a miss, write the option's kanji spelling, confirm the reading
@@ -186,20 +183,20 @@ The operational procedure:
    must quote the headword the lookup returned, not a form assembled while
    writing the cell.
 
-**NO GATE CHECKS THIS.** An earlier version claimed `make check` WARNs on a
+An earlier version claimed `make check` WARNs on a
 non-listed reading; it does not — the gate touches `openjlpt/kanji-n2.json` only
-to assert the file exists. Three invented non-words shipped in test 4 without a
-warning. Until the QA work-list item `GATE-BLIND` lands, the written
+to assert the file exists. Invented non-words must never be written without a
+warning or check. Until the QA work-list item `GATE-BLIND` lands, the written
 source-and-branch line **is** the check — the author's, not the gate's. A
 distractor with no writable branch label must be replaced; a distractor that is
-not a real word must never be written at all — test 4's "repair" of the 労わる
-set was もてあそわる/まねわる/ひるがえわる with invented spellings
-(弄わる/招わる/翻わる), a worse failure than the set it replaced.
+not a real word must never be written at all — repairing an item like 労わる
+by writing もてあそわる/まねわる/ひるがえわる with invented spellings
+(弄わる/招わる/翻わる) is a severe defect.
 
 ### The target's spelling must match its openjlpt headword
 
 問題1 tests a reading off a printed spelling, so non-standard okurigana changes
-the item: test 4 printed 「労わる」 (from `pools.json`) where `vocab-n1.json`
+the item: printing 「労わる」 (from `pools.json`) where `vocab-n1.json`
 heads it 「労る」 — and the extra 「わ」 is what locked the option class. On a
 mismatch, fix `pools.json`, then re-sample; re-spelling the stem alone leaves
 the pool to re-draw the defect next test.
@@ -209,7 +206,7 @@ the pool to re-draw the defect next test.
 The band gate reads `references/level_band_grammar.txt`, which covers 問題7–9
 grammar only. Before shipping any 問題1–6 item, look the key up in the openjlpt
 vocab slices: a key that is an N3 headword and absent from the N2 list is too
-easy — test 4 keyed 賢い/かしこい (N3). Treat the lookup as a question, not a
+easy — avoid keying N3 words like 賢い/かしこい. Treat the lookup as a question, not a
 ruling: that corpus labels ordinary N2 words (把握・転換・審査・じっくり) "N1",
 so confirm the verdict against `refs/Shinkanzen/` before replacing anything.
 
@@ -265,7 +262,7 @@ The 音/訓 reading printed in the 問題2 stem must equal the reading of the ke
 kanji option (しひん 下品 would miskey: 下品 reads げひん). Write the stem kana
 from the key option's reading, then verify every non-key option parses as the
 same kana skeleton (かいこう → 開港/開向/回港/回向). A stem kana no option reads
-is a gate-level automatic-fail class (shipped in 20260807_2 item 6: しひん ≠ 下品).
+is a gate-level automatic-fail class (e.g. stem しひん paired with key 下品 which reads げひん).
 
 ## 問題3 (語形成)
 
@@ -286,14 +283,14 @@ the core sniff-test rule and category line.
 **The stem is a BLANK, never the answer.** Every 問題4 stem must carry （　）
 in the slot and must not print the answer word anywhere in the sentence
 (official booklets ship every stem with （　）). A stem that prints the answer
-is a gate-level automatic-fail class (shipped in 20260807_2, items 14–20). The
+is a gate-level automatic-fail class. The
 （　） is the printed sentence's only gap — the instruction line reads
 「（　）に入れるのに最もよいものを…」.
 
 **Never key a near-synonym of the answer.** Context words are N2 nouns/adverbs
 chosen so exactly one option fits the sentence; a distractor that is a
-near-synonym the stem also accepts (コンクール vs コンテスト in the same
-sentence) makes the item double-answerable (shipped in 20260807_2 item 14). If
+near-synonym the stem also accepts (e.g. コンクール vs コンテスト in the same
+sentence) makes the item double-answerable. If
 the stem accepts two options, the target or the stem must change — reject the
 item, never the rule.
 
@@ -307,9 +304,8 @@ integrity #12.
 
 1 correct sentence + 3 that are grammatical but misuse the word's
 collocation/domain (妥協, 発揮, 解消, 募集, あふれる). "Wrong sentences must be
-tempting, not absurd" was a prohibition-with-examples and 4/4 papers reproduced
-the defect anyway (t1 28 解消 — three 消す-domain sentences; t2 27/28; t3 26,
-28, 29, 30; t4 26 解消, plus the mirror failure — 「契約を解消」, a REAL
+tempting, not absurd" is the rule (avoid three 消す-domain sentences for 解消,
+plus the mirror failure — 「契約を解消」, a REAL
 collocation and therefore a second correct sentence). The procedure, per wrong
 sentence, in this order:
 
@@ -332,8 +328,7 @@ Worked example for 解消, spanning both failure edges and the target:
 
 **Length:** official option sentences measure mean 25.0, median 25, range 9–35
 JP chars (current era, n=136; `official_calibration.md` §7 — the old 「~27」 was
-a mild over-estimate). Tests 1–4 averaged ~19, so the gap is real, but the mean
-is not the rule and a 9-char option sentence is official: one short line among
-four is fine, four short lines is the drill. Give each sentence a who/when/what
+a mild over-estimate). Avoid short stems averaging ~19; target standard stem lengths.
+Give each sentence a who/when/what
 unless brevity is doing work — a telegram-length misuse line leaves no room for
 the situation that makes a wrong collocation tempting.

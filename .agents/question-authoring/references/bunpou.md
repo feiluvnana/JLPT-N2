@@ -22,8 +22,8 @@ include one FAKE form like 参られます as a distractor). Pool draws come fro
 - **BANNED too hard (N1):** 〜にあって, 〜をもって, 〜ともなると, 〜までもなく
   (except the set phrase 言うまでもなく as running text, not a productive key),
   〜を皮切りに, 〜がてら/〜かたわら as keys, 〜ずにはおかない, 〜余儀なくされる
-  as the tested form — `## TOO_HARD` in the same file. Tests 2–4 shipped
-  several of these as 問題7 keys through a green gate.
+  as the tested form — `## TOO_HARD` in the same file. Avoid shipping
+  these as 問題7 keys.
 - **One grammar point may be the KEY only once per paper**, and a tested form
   stays out of the reading passages — core Item integrity #15.
 
@@ -38,9 +38,9 @@ target, not an official per-item invariant; `official_calibration.md` §9.)
 
 Build length with scene-setting (職場・電話・掲示・インタビュー), a subordinate
 clause, or a short dialogue lead-in — never by padding the tested form.
-Official items often open with `(会社で)` / `(電話で)` / a named role. Tests
-1–4 shipped 20–34 char averages with the right grammar points — the carrier was
-too short. Lengthen the *situation*:
+Official items often open with `(会社で)` / `(電話で)` / a named role. Avoid short
+20–34 char stem averages with the right grammar points where the carrier is too short.
+Lengthen the *situation*:
 「このまま働きすぎると、体を壊し(　)よ。」 fails the band even when かねない is
 the correct key; rewrite toward
 「最近残業が続き休日もほとんど取れない。このまま働きすぎると、体を壊し(　)よ。」
@@ -48,8 +48,7 @@ the correct key; rewrite toward
 
 **Shape:** every official paper includes several 問題7 items with dialogue
 turns or a setting label (`（会社で）`/`（電話で）`/`（インタビューで）`/homepage
-notice). Generated tests 1–4 shipped zero — include **at least 2** (prefer 2–4)
-per paper among the 12 (`make check` WARNs on a set with none).
+notice). Include **at least 2** (prefer 2–4) per paper among the 12 (`make check` WARNs on a set with none).
 
 **Dialogue / setting Markdown layout** — do NOT crush the stem onto one line.
 Official booklets put the place label first, then each speaker on its own line:
@@ -79,7 +78,7 @@ N2G.pdf) and the July 2025 booklet
   chunks like 「山を下りて何日かすると」「二度としたくないと」).
 - **Per option:** a mix is fine (a 2–3 char particle next to an 8–12 char
   clause), but **≥2 options ≥5 JP chars** and the longest usually **≥7**. Four
-  scraps of 2–4 chars (`わりに/ケーキは/とても/値段の` — test 1) read as drill
+  scraps of 2–4 chars (e.g. `わりに/ケーキは/とても/値段の`) read as drill
   chunks, not N2 scramble chunks.
 - **Assembled sentence** (stem frame + four options) **≥45 JP chars**; prefer
   ~50–75. Stem context before/after the blank run is required when the options

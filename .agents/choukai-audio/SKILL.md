@@ -46,7 +46,7 @@ in the booklet HTML.
 ```
 
 - A bare `最もよいものは◯番です。` after `1番。`〜`12番。` is FORBIDDEN — it
-  speaks the answer aloud (tests 2 and 3 shipped it on every scored item).
+  speaks the answer aloud (avoid speaking the answer aloud on scored items).
 - `質問1の最もよいものは◯番です。` / `質問2の…` are FORBIDDEN anywhere. 問題5
   has no 例 and never carries a reveal or confirmation line; 問題1〜4 each get
   exactly one, after the 例. Answers live in the key tables of `聴解.md`.
@@ -67,9 +67,8 @@ in the booklet HTML.
   closing question, NO blank line inside. `gap_before_line()`/`pause_after()`
   key off each block's OWN first line, so a stray blank line mid-item silently
   relocates the pauses — 問題2's 20-second option-reading pause disappears and
-  the ANSWER-TIME pause lands **before the dialogue has even played**. Shipped
-  silently in tests 2, 3, and 4 (the ENTIRE listening section); the MP3 still
-  built and passed every gate. `validate_script()` now requires every item
+  the ANSWER-TIME pause lands **before the dialogue has even played** (avoid stray
+  blank lines mid-item). `validate_script()` requires every item
   block to contain a speaker-tagged line (問題1/2/3/5 — a monologue's own
   speech is tagged too, e.g. 専門家:) or, for 問題4, ≥3 spoken option lines.
 - 問題1/2: repeat the question as the block's last line.
@@ -115,32 +114,29 @@ Two rules (evidence owned by `jlpt-exam-structure` §"問題5 2番"):
    In 31 sittings no 問題5 item speaks an ordinal back-reference.
 
 An ordinal decider ties the answer to a printed SLOT: re-ordering the printed
-list silently re-keys the item, leaving two defensible answers — `tests/3`
-shipped exactly that (a repair re-ordered its printed list while the audio
-still said 「それなら、3つ目の方法がぴったりですね」). **A mis-keyed 問題5 2番
+list silently re-keys the item, leaving two defensible answers
+(avoid re-ordering printed lists without updating audio). **A mis-keyed 問題5 2番
 is fixed HERE**: re-enumerate so spoken order matches printed, replace any
 ordinal decider with the candidate's name, then `make mp3 <test_id>` — never
 by re-ordering the printed list alone, which leaves an MP3 speaking the old
 order that `check_artifact_freshness()` cannot see.
 `check_mondai5_enumeration()` fails both rules; `make check` also fails spoken
-choice lines that belong in the booklet (printed/spoken drift — test 2).
+choice lines that belong in the booklet (printed/spoken drift).
 
 ## Instructions are copied, not re-worded
 
 The 問題N instruction must be **character-for-character** the one in `聴解.md`
-(the script adds only 「では、練習しましょう。」); test 2 drifted in three
-places. Take the canonical text from **`jlpt-exam-structure` §"問題N
+(the script adds only 「では、練習しましょう。」); avoid drifting instruction wording between files. Take the canonical text from **`jlpt-exam-structure` §"問題N
 instruction lines"** and paste it into both files — the gate compares booklet
 against SCRIPT, not official wording, so both drifting the same way passes
-green. Copy from that section, never from a previous test.
+green. Copy from that section.
 
 ## The 例 must be answerable, and its announced number must be the answer
 
 `最もよいものは◯番です。` names a number in the BOOKLET's 例 option list, so the
 two are one item split across two files (the 例 format fact belongs to
-`jlpt-exam-structure`; the script consequence is this rule). Test 4's 問題1 例
-asked 「このあとまず何をしますか」 against printed options answering a different
-question, the announcer declaring an option the dialogue never mentions. Read
+`jlpt-exam-structure`; the script consequence is this rule). Avoid unanswerable 例 items where options answer a different question
+(e.g., asking 「このあとまず何をしますか」 against printed options answering a different question). Read
 the printed options against the spoken 例 and its question, and confirm the
 announced number is the option the dialogue supports — `make check` cannot.
 
@@ -155,16 +151,14 @@ scenarios to 問題. The section's task type binds:
 | 2 | ポイント理解 | どうして〜か / 何が一番〜か / どのように説明していますか | conversation or monologue, no action required |
 | 3 | 概要理解 | 〜は何について話していますか | monologue, gist only |
 
-Test 4 shipped these swapped; the repair exchanged the two items and
-re-ordered their options (the key must land where `answer_positions` says).
+Ensure question types match section definitions (課題理解 vs ポイント理解 vs 概要理解) and options are ordered to match answer position specifications.
 
 ## The keyed option must be quotable, and every other option denied
 
 **Construction order is binding: this file comes FIRST; the option sets in
 `聴解.md` are harvested out of it.** Never write an option that has no line in
 the script yet — an option set drafted first is a set of guesses, and the
-dialogue gets bent to fit three of them and not the fourth. **All four papers
-shipped 聴解 options nobody says** (test 1: 2; test 2: 5; test 3: ~14; test 4: 1).
+dialogue gets bent to fit three of them and not the fourth. **Avoid shipping 聴解 options nobody says.**
 
 Every wrong option must be **traceable to a line this file contains** — a
 candidate the dialogue *raises* and then **reassigns**, **supersedes**, or
@@ -175,7 +169,7 @@ that **`question-authoring`** defines and mandates. If a wrong option has no
 quotable line, the fix is in THIS file: add the line that raises and kills it,
 or replace the option. `make check`'s token-overlap check is a **WARN only**
 (it flags official paraphrases too); the grounding lines are the real check —
-their absence means the item is not shippable. Three rules, broken by test 4:
+their absence means the item is not shippable. Three critical rules:
 
 - **Quotable.** 問題1-5番 keyed 「点検作業員に車移動の連絡をする」 while the
   script says 「事前に管理事務所へご連絡の上」 — the keyed action named the
@@ -190,13 +184,11 @@ their absence means the item is not shippable. Three rules, broken by test 4:
 
 A full N2 script is **exactly 33 item blocks** (`例。`/`N番。`) in the counts
 below, plus 問題 headers, instructions, announcer lines and 例 confirmations.
-**The TOTAL block count is not fixed** — the scripts on disk run **43–46
-blocks** (tests 1–4: 46, 44, 43, 43; the since-deleted July 2025 import: 46;
-the first, since-removed test 4 was 56) — all valid; the difference is only
+**The TOTAL block count is not fixed** — scripts on disk typically run **43–46
+blocks** — all valid; the difference is only
 how instruction and announcer text is split, so do not treat any total as a
 target: `validate_script()` enforces the 33 item blocks and their distribution
-and merely *prints* the total. Missing pieces are otherwise SILENT — the MP3
-still builds (tests 2 and 3 shipped with no 例 at all for 問題3/問題4).
+and merely *prints* the total. Missing pieces are otherwise SILENT — ensure every section includes its required 例.
 `validate_script()` enforces every row below **except the two marked (eye)**:
 
 | Element | Rule |
@@ -222,8 +214,7 @@ Dialogue lines: `男:` `女:` `男1:` `男2:` `夫:` `妻:` `学生:` `先生:` 
 `医者:` `部長:` `店長:` `専門家:` `レポーター:` `教室の人:` `職員:` `係員:`
 `担当者:` `講師:` `アナウンス:` `アナウンサー:` `教授:` `FP:` — half or
 full-width colon. Unlabeled lines = narrator. **An unmapped label does not
-error at synthesis time — it silently falls through to the narrator voice**
-(shipped in tests 2 and 3 across 10 labels). `validate_script()` now rejects
+error at synthesis time — it silently falls through to the narrator voice.** `validate_script()` now rejects
 any label missing from the map; add it to `SPEAKER_MAP` *before* using it,
 choosing a voice that contrasts with the other speaker in that item's
 narration (Part 2). Check by eye for mojibake (`�`), stray Latin/Cyrillic
@@ -238,26 +229,21 @@ pass of the finished section is owned by **`exam-qa-review`**.
 the examinee who is speaking. Nothing reconciles them — the author does:
 
 - **A narration that states a gender must resolve to a voice of that gender.**
-  「〜の男の人」 must map to `MALE` (Keita); 「〜の女の人」 to `FEMALE` (Nanami).
-  Test 3 shipped **three** items where it did not — 係員の男の人,
-  アナウンサーの男の人, 職員の男の人, all mapped FEMALE. Resolve by rewording
+  「〜の男の人」 must map to `MALE` (Keita); 「〜の女的人」 to `FEMALE` (Nanami).
+  Ensure narrations specifying a gender resolve to a voice of that gender. Resolve by rewording
   the narration or picking a label whose mapping already matches; **remapping
   an existing label is a last resort** — labels are shared across tests, a
   remap silently changes every other paper's already-built audio, `script_sha`
   cannot see it (the map is not hashed), so it means `make mp3` everywhere.
 - **A two-party item whose two labels resolve to the SAME voice is a defect.**
   Same `voice` a few percent of `rate` apart is not a distinguishable second
-  person — who said the deciding line is the whole task in 問題1/2/5. **All
-  four papers shipped at least one** (test 1 three items — 店員+女, 職員+女,
-  店員+女, all Nanami; test 4 教授+学生, both Keita). Cast one male and one
+  person — who said the deciding line is the whole task in 問題1/2/5. Avoid casting both speakers of a two-party item to the same voice. Cast one male and one
   female label per item; `男1`/`男2` rate-splitting is for the three-person
   conversation only.
 - **Scan the WHOLE block for the narration, not its first line.** 問題5's 2番
-  puts the situation on the block's **second** line — exactly why a
-  first-line-only pass missed test 3's third mismatch.
+  puts the situation on the block's **second** line — scan the full block so gender assignments are not missed.
 - **Questions must name speakers unambiguously.** If they say 「男の学生は」/
-  「女の学生は」, the item must contain exactly one of each (test 2's 問題5-3番
-  had two male students — 質問1 was unanswerable as posed).
+  「女の学生は」, the item must contain exactly one of each (e.g. avoiding having two male students when asking 「男の学生は」).
 
 `make check` fails the gender contradiction and WARNs on the one-voice pair,
 but the lookup belongs in authoring: read `SPEAKER_MAP` before writing.
@@ -298,12 +284,9 @@ automatically; `--keep-segments` keeps per-question audio for drilling.
 where `script_sha` is the **first 12 hex digits of sha1 over the raw bytes of
 `聴解スクリプト.txt`** (`source_sha()`). `make check` recomputes it and fails
 on disagreement — the only mechanical evidence that the audio on disk speaks
-the script on disk. It exists because commit `4df5631` rewrote the 問題N
-instructions for tests 1–4 and the July 2025 import but re-ran `make mp3` for
-**test 3 only** — four papers shipped stale audio through a green gate and QA.
+the script on disk. Always run `make mp3 <test_id>` whenever editing a script to ensure audio and script stay in sync.
 
-- A **content** hash, deliberately not an mtime — mtimes are checkout-unstable
-  (test 3's current MP3 looked older than its script after that commit).
+- A **content** hash, deliberately not an mtime — mtimes are checkout-unstable.
 - **Never hand-edit the sha.** The only way to make it agree is `make mp3
   <test_id>`; editing the script without rebuilding in the same change is a
   defect. The HTML deliverables carry the same 12-hex `<!-- src_sha: … -->`
@@ -373,7 +356,7 @@ python3 -c "
 import re,pathlib,importlib.util
 s=importlib.util.spec_from_file_location('m','.agents/choukai-audio/scripts/make_choukai_mp3.py')
 m=importlib.util.module_from_spec(s); s.loader.exec_module(m)
-b=[x.strip() for x in re.split(r'\n\s*\n', pathlib.Path('tests/1/聴解スクリプト.txt').read_text(encoding='utf-8')) if x.strip()]
+b=[x.strip() for x in re.split(r'\n\s*\n', pathlib.Path('tests/<test_id>/聴解スクリプト.txt').read_text(encoding='utf-8')) if x.strip()]
 m.validate_script(b)"
 ```
 
