@@ -40,8 +40,11 @@ jobs:
         with:
           python-version: '3.14'
 
-      # build_booklet.py's renderer; pykakasi supplies the furigana readings.
-      - run: pip install markdown pykakasi
+      # build_booklet.py's renderer; pykakasi supplies the furigana readings;
+      # edge-tts is imported at module scope by make_choukai_mp3.py, which
+      # `make check-tests` loads to inspect its constants — needed even
+      # though this workflow never synthesizes audio.
+      - run: pip install markdown pykakasi edge-tts
 
       # The same read-only gate every local change has to pass, --tests being
       # the per-test contracts only. NON-BLOCKING on purpose: the gate also
