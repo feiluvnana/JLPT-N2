@@ -32,13 +32,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           lfs: true          # the 聴解.mp3 files, if this repo ever moves them to LFS
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
-          python-version: '3.12'
+          python-version: '3.14'
 
       # build_booklet.py's renderer; pykakasi supplies the furigana readings.
       - run: pip install markdown pykakasi
@@ -54,7 +54,7 @@ jobs:
 
       - run: make pages
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
