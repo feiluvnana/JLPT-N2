@@ -1,0 +1,460 @@
+{
+ "seed": "81480636+reroll(reading_topics,81480636)",
+ "generated_at": "2026-08-10 10:02:21",
+ "test_id": "20260810_1",
+ "rotation": {
+  "recency_source": "ledger",
+  "history_len": 1,
+  "cooldown": 2
+ },
+ "items": {
+  "kanji_reading": [
+   "演じる(えんじる)",
+   "恵まれる(めぐまれる)",
+   "潔い(いさぎよい)",
+   "漠然(ばくぜん)",
+   "竹(たけ)"
+  ],
+  "orthography": [
+   "貨物",
+   "育児",
+   "王女",
+   "系統",
+   "救助"
+  ],
+  "word_formation": [
+   "〜ち(勝ち)",
+   "〜費(交通費)",
+   "当〜(当劇場)"
+  ],
+  "context_words": [
+   "ええと",
+   "逆らう",
+   "おさきに",
+   "あれこれ",
+   "しつこい",
+   "こぼれる",
+   "あくび"
+  ],
+  "paraphrase": [
+   "スカーフ",
+   "たちまち",
+   "タイア",
+   "おそらく(たぶん)",
+   "そうして"
+  ],
+  "usage": [
+   "順調",
+   "ファスナー",
+   "持参",
+   "ぶつける",
+   "もしかしたら"
+  ],
+  "grammar_p7": [
+   "〜ないことには",
+   "〜つつある",
+   "〜まいか",
+   "〜を通して",
+   "〜一方だ",
+   "〜にほかならない",
+   "〜を契機に",
+   "〜上は",
+   "〜か〜ないかのうちに",
+   "〜に限って",
+   "〜どころか",
+   "〜を問わず"
+  ],
+  "grammar_p8": [
+   "目的表現(〜ように…する)",
+   "変化推移(〜につれて…ていく)",
+   "換言要約(〜つまり…ということだ)",
+   "対比表現(〜一方…だ)",
+   "順接接続(〜したがって…)"
+  ],
+  "quick_response": [
+   "山田さん、来週の当番、代わってもらえないかな。",
+   "引けを取らない",
+   "存じております",
+   "保証書をお持ちでしたら、無料で修理できます。",
+   "停電のため、エレベーターは使えません。",
+   "ご遠慮なく",
+   "先方から連絡がありましたので、折り返しお電話いたします。",
+   "次回の予約、来週の同じ時間でよろしいですか。",
+   "袋は有料となっておりますが、ご利用になりますか。",
+   "迷子のお子様がいらっしゃいます。",
+   "在庫が少ないため、取り寄せとなりますがよろしいですか。"
+  ],
+  "listening_scenarios": [
+   {
+    "scenario": "パン屋:予約キャンセル",
+    "theme": "食"
+   },
+   {
+    "scenario": "部署:異動挨拶",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "自転車専用レーンの整備拡大",
+    "origin": "web",
+    "facts": [
+     "国と警察は自転車事故を大幅に減らす目標を掲げている",
+     "自転車専用レーンの拡大や交差点の安全対策が各地で進む"
+    ],
+    "source": "https://www.mlit.go.jp/road/road/bicycle/pdf/guideline.pdf"
+   },
+   {
+    "scenario": "八百屋:予約取り置き",
+    "theme": "食"
+   },
+   {
+    "scenario": "ペット同伴で泊まれる宿泊施設の拡大",
+    "origin": "web",
+    "facts": [
+     "ペット同伴客の宿泊料金は一般客より高めに設定される傾向がある",
+     "車以外の移動手段の充実を望む飼い主の声も多い"
+    ],
+    "source": "https://innconnect.jp/pet-tourism"
+   },
+   {
+    "scenario": "市役所:手続き案内",
+    "theme": "地域活性化"
+   },
+   {
+    "scenario": "動物園:イベントの案内",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "副業を通じたキャリア形成",
+    "origin": "web",
+    "facts": [
+     "会社員の多くが将来のキャリアに漠然とした不安を感じている",
+     "副業が新しい学びの場や気持ちの支えになっているという調査結果がある"
+    ],
+    "source": "https://www.persol-innovation.co.jp/news/2026-0528-1"
+   },
+   {
+    "scenario": "ラジオ:趣味の話",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "歯科:定期検診",
+    "theme": "医療・福祉"
+   },
+   {
+    "scenario": "空き家バンクによる移住者の呼び込み",
+    "origin": "web",
+    "facts": [
+     "自治体が空き家情報を登録・紹介する制度を設けるケースが増えている",
+     "都会の暮らしに疲れて地方への移住を考える人が増加している"
+    ],
+    "source": "https://www.pref.saitama.lg.jp/a1107/akiyabanku.html"
+   },
+   {
+    "scenario": "高齢者の運転免許自主返納支援",
+    "origin": "web",
+    "facts": [
+     "返納した高齢者にバスやタクシーの利用券などの特典を用意する自治体が多い",
+     "運転経歴証明書とマイナンバーカードを一体化する新しい制度も始まった"
+    ],
+    "source": "https://www.keishicho.metro.tokyo.lg.jp/kotsu/jikoboshi/koreisha/shomeisho/support.html"
+   },
+   {
+    "scenario": "留学生センター:住居の相談",
+    "theme": "地域活性化"
+   },
+   {
+    "scenario": "社内システム変更に伴うパスワード更新",
+    "theme": "デジタル化"
+   },
+   {
+    "scenario": "フリマアプリを使った不要品の処分",
+    "origin": "web",
+    "facts": [
+     "フリマアプリを利用する目的で最も多いのは不要品の処分である",
+     "年代によって好んで使うアプリの傾向が異なる"
+    ],
+    "source": "https://ecclab.empowershop.co.jp/archives/93918"
+   },
+   {
+    "scenario": "研修:電話応対の基本",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "経理:経費精算",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "銀行:口座開設",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "文化祭模擬店:メニュー割り当て(かき氷/ホットドッグ/たこ焼き/フルーツポンチ)",
+    "item": "文化祭模擬店:メニュー割り当て(かき氷/ホットドッグ/たこ焼き/フルーツポンチ)",
+    "theme": "食",
+    "origin": "adjunct",
+    "level": "N2",
+    "evidence": [
+     "already authored and shipped in tests/20260810_1/聴解スクリプト.txt (問題5 2番) and 聴解.md before this spec entry was written; content independently verified internally consistent and unambiguous by qa/qa-report-20260810_1.md §3 (聴解5-2番 rows) and §4 finding F1",
+     "vocabulary is N2-or-below: 模擬店/売り切れる/保存がきく/行列/冷蔵設備 are ordinary N2 daily-life words; かき氷/ホットドッグ/たこ焼き/フルーツポンチ are common food nouns with no N1 terms"
+    ]
+   },
+   {
+    "scenario": "書店:取り寄せ",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "観光地の多言語案内表示の整備",
+    "origin": "web",
+    "facts": [
+     "観光庁が観光地の多言語解説文づくりを支援する事業を行っている",
+     "AI翻訳に頼るだけでなく専門家による確認も重視されている"
+    ],
+    "source": "https://www.mlit.go.jp/kankocho/seisaku_seido/kihonkeikaku/inbound_kaifuku/ukeire/kankochi/annaihyoji.html"
+   }
+  ],
+  "reading_topics": [
+   {
+    "topic": "無形文化財の保存",
+    "theme": "文化・伝統"
+   },
+   {
+    "topic": "防災訓練の実施要領と避難場所案内",
+    "theme": "防災"
+   },
+   {
+    "topic": "情報を疑う力",
+    "theme": "メディア・情報"
+   },
+   {
+    "topic": "ワーケーション制度の導入拡大",
+    "origin": "web",
+    "facts": [
+     "従業員100名以上の企業でワーケーション制度の導入率が増加している",
+     "受け入れ側の体制づくりが今後の課題とされている"
+    ],
+    "source": "https://japan-telework.or.jp/wordpress/wp-content/uploads/2024/01/12_240112_kankoucyou.pdf"
+   },
+   {
+    "topic": "自治体による認知症予防教室",
+    "origin": "web",
+    "facts": [
+     "運動と脳を使う活動を組み合わせた予防プログラムを提供する自治体が増えている",
+     "申込不要で気軽に参加できる教室も出てきた"
+    ],
+    "source": "https://www.city.shizuoka.lg.jp/s4523/s002778.html"
+   },
+   {
+    "topic": "育休取得の男性化",
+    "theme": "働き方"
+   },
+   {
+    "topic": "川と暮らしの関わり",
+    "theme": "環境"
+   },
+   {
+    "topic": "メンタルヘルスと職場",
+    "theme": "睡眠・健康"
+   },
+   {
+    "topic": "商店街の空き区画を活かした地域交流拠点づくり",
+    "origin": "web",
+    "facts": [
+     "空いた区画を研修や交流の場に生まれ変わらせる事例が増えている",
+     "若手の起業希望者と地域住民をつなぐ試みが進められている"
+    ],
+    "source": "https://www.kansai.meti.go.jp/5ryusa/shogyo/5workshop/230208jireishu.pdf"
+   },
+   {
+    "topic": "スマート農業技術の普及",
+    "origin": "web",
+    "facts": [
+     "ドローンやセンサーを使い農作業を省力化する取り組みが広がっている",
+     "認定を受けた農業者は税制や資金面の支援を受けられる制度ができた"
+    ],
+    "source": "https://www.maff.go.jp/j/kanbo/smart/"
+   },
+   {
+    "topic": "部活動の地域移行",
+    "theme": "教育"
+   },
+   {
+    "topic": "転職の増加",
+    "theme": "働き方"
+   }
+  ]
+ },
+ "answer_positions": {
+  "問題1_語彙": [
+   2,
+   2,
+   3,
+   1,
+   4
+  ],
+  "問題2_語彙": [
+   4,
+   3,
+   2,
+   3,
+   1
+  ],
+  "問題3_語彙": [
+   4,
+   2,
+   1
+  ],
+  "問題4_語彙": [
+   1,
+   2,
+   2,
+   4,
+   4,
+   1,
+   3
+  ],
+  "問題5_語彙": [
+   3,
+   2,
+   4,
+   1,
+   1
+  ],
+  "問題6_語彙": [
+   1,
+   3,
+   4,
+   2,
+   4
+  ],
+  "問題7": [
+   4,
+   3,
+   1,
+   2,
+   1,
+   3,
+   4,
+   3,
+   1,
+   2,
+   2,
+   4
+  ],
+  "問題8": [
+   3,
+   4,
+   1,
+   1,
+   2
+  ],
+  "問題9": [
+   3,
+   4,
+   1,
+   2
+  ],
+  "問題10": [
+   3,
+   3,
+   1,
+   2,
+   4
+  ],
+  "問題11": [
+   3,
+   4,
+   2,
+   1,
+   3,
+   1,
+   4,
+   2
+  ],
+  "問題12": [
+   4,
+   3
+  ],
+  "問題13": [
+   2,
+   4,
+   1
+  ],
+  "問題14": [
+   2,
+   1
+  ],
+  "聴解_問題1": [
+   2,
+   1,
+   3,
+   2,
+   4
+  ],
+  "聴解_問題2": [
+   4,
+   3,
+   4,
+   2,
+   1,
+   3
+  ],
+  "聴解_問題3": [
+   3,
+   4,
+   2,
+   3,
+   1
+  ],
+  "聴解_問題4": [
+   2,
+   1,
+   3,
+   2,
+   1,
+   2,
+   1,
+   3,
+   3,
+   1,
+   2
+  ],
+  "聴解_問題5": [
+   3,
+   1,
+   2
+  ]
+ },
+ "cloze_topic": {
+  "topic": "会社における熱中症対策の義務化",
+  "origin": "web",
+  "facts": [
+   "2025年6月から労働安全衛生規則が改正され、暑さ指数の高い作業での熱中症対策が事業者の義務になった",
+   "管理体制の整備や緊急時の手順づくりが求められている"
+  ],
+  "source": "https://www.mhlw.go.jp/stf/coolwork_2026.html"
+ },
+ "qr_situation_seeds": [
+  {
+   "detail": "賞味期限表示の大くくり化",
+   "origin": "web",
+   "source": "https://www.pref.osaka.lg.jp/o120110/ryutai/foodloss/index.html"
+  },
+  {
+   "detail": "学校給食での地元産食材の利用拡大",
+   "origin": "web",
+   "source": "https://www.city.kobe.lg.jp/a54017/kosodate/gakko/school/lunch/chisanchisyou.html"
+  }
+ ],
+ "carrier_seeds": [
+  {
+   "detail": "電子図書館サービスの普及拡大",
+   "origin": "web",
+   "facts": [
+    "スマートフォンなどから電子書籍を借りられる図書館が年々増えている",
+    "来館せずに利用できる利便性が支持を集めている"
+   ],
+   "source": "https://aebs.or.jp/Activity/Electronic_library_introduction_record.html"
+  }
+ ],
+ "harvest_sha": "a17048ca5f3c"
+}

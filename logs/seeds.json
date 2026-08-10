@@ -1,281 +1,137 @@
 [
   {
-    "seed": "高齢者のデジタル機器操作補助",
+    "seed": "会社における熱中症対策の義務化",
     "facts": [
-      "高齢者のスマホ利用率は約7割",
-      "オンライン手続きの個別指導が必要なケースが増加"
+      "2025年6月から労働安全衛生規則が改正され、暑さ指数の高い作業での熱中症対策が事業者の義務になった",
+      "管理体制の整備や緊急時の手順づくりが求められている"
     ],
-    "source": "https://www.digital.go.jp/policies/administrative_procedures_online",
-    "surfaces": [
-      "reading",
-      "listening",
-      "carrier"
-    ]
+    "source": "https://www.mhlw.go.jp/stf/coolwork_2026.html",
+    "surfaces": ["reading", "listening", "carrier"]
   },
   {
-    "seed": "外国語教育の多様化",
+    "seed": "スマート農業技術の普及",
     "facts": [
-      "高校で英語以外の言語を学ぶ生徒が増える",
-      "AI時代のコミュニケーション能力が重視される"
+      "ドローンやセンサーを使い農作業を省力化する取り組みが広がっている",
+      "認定を受けた農業者は税制や資金面の支援を受けられる制度ができた"
     ],
-    "source": "https://www.mext.go.jp/a_menu/kokusai/gaikokugo/index.htm",
-    "surfaces": [
-      "reading",
-      "listening"
-    ]
+    "source": "https://www.maff.go.jp/j/kanbo/smart/",
+    "surfaces": ["reading", "info"]
   },
   {
-    "seed": "空き家の流通促進と移住",
+    "seed": "副業を通じたキャリア形成",
     "facts": [
-      "全国の空き家数は増加傾向",
-      "リモートワークを利用した移住者が増える"
+      "会社員の多くが将来のキャリアに漠然とした不安を感じている",
+      "副業が新しい学びの場や気持ちの支えになっているという調査結果がある"
     ],
-    "source": "https://www.mlit.go.jp/jutakukentiku/house/akiya-model/realestate/akiya_innovation",
-    "surfaces": [
-      "reading",
-      "listening",
-      "info"
-    ]
+    "source": "https://www.persol-innovation.co.jp/news/2026-0528-1",
+    "surfaces": ["reading", "listening"]
   },
   {
-    "seed": "再生可能エネルギーの導入拡大",
+    "seed": "商店街の空き区画を活かした地域交流拠点づくり",
     "facts": [
-      "太陽光発電の導入量が過去最高を記録",
-      "風力発電の立地候補地が増える"
+      "空いた区画を研修や交流の場に生まれ変わらせる事例が増えている",
+      "若手の起業希望者と地域住民をつなぐ試みが進められている"
     ],
-    "source": "https://www.env.go.jp/press/press_01249.html",
-    "surfaces": [
-      "reading",
-      "info",
-      "qr"
-    ]
+    "source": "https://www.kansai.meti.go.jp/5ryusa/shogyo/5workshop/230208jireishu.pdf",
+    "surfaces": ["reading", "listening"]
   },
   {
-    "seed": "金融教育の推進",
+    "seed": "高齢者の運転免許自主返納支援",
     "facts": [
-      "学校での金融教育が2025年度から本格化",
-      "若年層の投資信託利用率が上昇"
+      "返納した高齢者にバスやタクシーの利用券などの特典を用意する自治体が多い",
+      "運転経歴証明書とマイナンバーカードを一体化する新しい制度も始まった"
     ],
-    "source": "https://www.fsa.go.jp/",
-    "surfaces": [
-      "reading",
-      "listening",
-      "carrier"
-    ]
+    "source": "https://www.keishicho.metro.tokyo.lg.jp/kotsu/jikoboshi/koreisha/shomeisho/support.html",
+    "surfaces": ["reading", "listening", "qr"]
   },
   {
-    "seed": "地方創生とワーケーション",
+    "seed": "学校給食での地元産食材の利用拡大",
     "facts": [
-      "地方都市のワーケーション施設が増加",
-      "企業の地方拠点設置に補助金が出る"
+      "地元でとれた旬の野菜を使った特産給食を提供する自治体がある",
+      "地産地消は食育の教材としても位置づけられている"
     ],
-    "source": "https://www.kantei.go.jp/jp/singi/chiiki_jitsugen/",
-    "surfaces": [
-      "listening",
-      "carrier",
-      "qr"
-    ]
+    "source": "https://www.city.kobe.lg.jp/a54017/kosodate/gakko/school/lunch/chisanchisyou.html",
+    "surfaces": ["reading", "info"]
   },
   {
-    "seed": "動物愛護と保護活動",
+    "seed": "ペット同伴で泊まれる宿泊施設の拡大",
     "facts": [
-      "飼い主のいない猫の不妊手術が進む",
-      "保護犬猫の譲渡数が過去最高を記録"
+      "ペット同伴客の宿泊料金は一般客より高めに設定される傾向がある",
+      "車以外の移動手段の充実を望む飼い主の声も多い"
     ],
-    "source": "https://www.env.go.jp/nature/",
-    "surfaces": [
-      "reading",
-      "listening"
-    ]
+    "source": "https://innconnect.jp/pet-tourism",
+    "surfaces": ["reading", "listening"]
   },
   {
-    "seed": "認知症カフェの広がり",
+    "seed": "電子図書館サービスの普及拡大",
     "facts": [
-      "認知症の人と家族が集まるカフェが増加",
-      "地域の見守りネットワークが強化される"
+      "スマートフォンなどから電子書籍を借りられる図書館が年々増えている",
+      "来館せずに利用できる利便性が支持を集めている"
     ],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/topics.html",
-    "surfaces": [
-      "listening",
-      "qr",
-      "carrier"
-    ]
+    "source": "https://aebs.or.jp/Activity/Electronic_library_introduction_record.html",
+    "surfaces": ["reading", "info"]
   },
   {
-    "seed": "SDGsと企業の取り組み",
+    "seed": "フリマアプリを使った不要品の処分",
     "facts": [
-      "上場企業のSDGs報告書の発行率が8割超",
-      "サプライチェーン全体での脱炭素化が進む"
+      "フリマアプリを利用する目的で最も多いのは不要品の処分である",
+      "年代によって好んで使うアプリの傾向が異なる"
     ],
-    "source": "https://www.meti.go.jp/policy/",
-    "surfaces": [
-      "reading",
-      "info"
-    ]
+    "source": "https://ecclab.empowershop.co.jp/archives/93918",
+    "surfaces": ["reading", "listening", "carrier"]
   },
   {
-    "seed": "子育て世代の住まい探し",
+    "seed": "観光地の多言語案内表示の整備",
     "facts": [
-      "子育て世帯向けの賃貸住宅が増加",
-      "保育所の近い住まいの人気が高い"
+      "観光庁が観光地の多言語解説文づくりを支援する事業を行っている",
+      "AI翻訳に頼るだけでなく専門家による確認も重視されている"
     ],
-    "source": "https://www.mlit.go.jp/jutakukentiku/house/",
-    "surfaces": [
-      "reading",
-      "listening",
-      "carrier"
-    ]
+    "source": "https://www.mlit.go.jp/kankocho/seisaku_seido/kihonkeikaku/inbound_kaifuku/ukeire/kankochi/annaihyoji.html",
+    "surfaces": ["reading", "listening"]
   },
   {
-    "seed": "災害時の避難所運営",
+    "seed": "ワーケーション制度の導入拡大",
     "facts": [
-      "ペット同伴可能な避難所が増加",
-      "避難所の多言語対応が進む"
+      "従業員100名以上の企業でワーケーション制度の導入率が増加している",
+      "受け入れ側の体制づくりが今後の課題とされている"
     ],
-    "source": "https://www.bousai.go.jp/",
-    "surfaces": [
-      "listening",
-      "qr"
-    ]
+    "source": "https://japan-telework.or.jp/wordpress/wp-content/uploads/2024/01/12_240112_kankoucyou.pdf",
+    "surfaces": ["reading", "listening"]
   },
   {
-    "seed": "農業のスマート化",
+    "seed": "自転車専用レーンの整備拡大",
     "facts": [
-      "ドローンを使った農薬散布が広がる",
-      "AIによる作物の病虫害予測が導入される"
+      "国と警察は自転車事故を大幅に減らす目標を掲げている",
+      "自転車専用レーンの拡大や交差点の安全対策が各地で進む"
     ],
-    "source": "https://www.maff.go.jp/j/kanbo/anpo/",
-    "surfaces": [
-      "reading",
-      "listening"
-    ]
+    "source": "https://www.mlit.go.jp/road/road/bicycle/pdf/guideline.pdf",
+    "surfaces": ["reading", "listening", "carrier"]
   },
   {
-    "seed": "バリアフリー観光",
+    "seed": "自治体による認知症予防教室",
     "facts": [
-      "車椅子対応の観光ルートが整備される",
-      "多言語でのバリアフリー情報提供が進む"
+      "運動と脳を使う活動を組み合わせた予防プログラムを提供する自治体が増えている",
+      "申込不要で気軽に参加できる教室も出てきた"
     ],
-    "source": "https://www.jnto.go.jp/",
-    "surfaces": [
-      "reading",
-      "listening",
-      "info"
-    ]
+    "source": "https://www.city.shizuoka.lg.jp/s4523/s002778.html",
+    "surfaces": ["reading", "listening"]
   },
   {
-    "seed": "副業・複業の広がり",
+    "seed": "賞味期限表示の大くくり化",
     "facts": [
-      "正社員の副業許可率が上昇",
-      "複数の仕事を持つ人が増加する"
+      "賞味期限を年月だけで表す大くくりの表示が広がっている",
+      "納品期限を緩和して食品の廃棄を減らす狙いがある"
     ],
-    "source": "https://www.mhlw.go.jp/stf/newpage_71871.html",
-    "surfaces": [
-      "reading",
-      "carrier",
-      "qr"
-    ]
+    "source": "https://www.pref.osaka.lg.jp/o120110/ryutai/foodloss/index.html",
+    "surfaces": ["reading", "info"]
   },
   {
-    "seed": "電動自動車の販売拡大",
+    "seed": "空き家バンクによる移住者の呼び込み",
     "facts": [
-      "電気自動車の新車販売台数が過去最高",
-      "充電ステーションの数が急増する"
+      "自治体が空き家情報を登録・紹介する制度を設けるケースが増えている",
+      "都会の暮らしに疲れて地方への移住を考える人が増加している"
     ],
-    "source": "https://www.meti.go.jp/press/2025/03/20260331006/20260331006.html",
-    "surfaces": [
-      "reading",
-      "info",
-      "listening"
-    ]
-  },
-  {
-    "seed": "医療費のオンライン請求",
-    "facts": [
-      "医療機関のオンライン請求対応率が向上",
-      "患者の自己負担額のオンライン確認が可能になる"
-    ],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/",
-    "surfaces": [
-      "listening",
-      "carrier",
-      "info"
-    ]
-  },
-  {
-    "seed": "プログラミング教育の必修化",
-    "facts": [
-      "小学校でのプログラミング教育が始まる",
-      "中学校で情報Iが必修化される"
-    ],
-    "source": "https://www.mext.go.jp/b_menu/shidou/",
-    "surfaces": [
-      "reading",
-      "listening",
-      "carrier"
-    ]
-  },
-  {
-    "seed": "地域通貨の導入実験",
-    "facts": [
-      "商店街での地域通貨決済が増加",
-      "地域貢献活動でポイントがもらえる"
-    ],
-    "source": "https://www.soumu.go.jp/main_content_000819371.pdf",
-    "surfaces": [
-      "listening",
-      "qr",
-      "carrier"
-    ]
-  },
-  {
-    "seed": "リモートワークの定着",
-    "facts": [
-      "週3日以上リモートの企業が増加",
-      "オフィス面積の縮小が進む"
-    ],
-    "source": "https://www.mhlw.go.jp/stf/newpage_45540.html",
-    "surfaces": [
-      "reading",
-      "listening",
-      "carrier"
-    ]
-  },
-  {
-    "seed": "洋服のリユース・リサイクル",
-    "facts": [
-      "古着回収ボックスが駅や商業施設に設置される",
-      "リユース服の販売額が増加する"
-    ],
-    "source": "https://www.env.go.jp/press/101928.html",
-    "surfaces": [
-      "reading",
-      "listening"
-    ]
-  },
-  {
-    "seed": "フードバンクの活動拡大",
-    "facts": [
-      "食品ロスを削減するフードバンクが増加",
-      "企業からの寄付食品が家庭に届く"
-    ],
-    "source": "https://www.bousai.go.jp/kaigirep/hakusho/r05/honbun/t1_2s_04_01.html",
-    "surfaces": [
-      "listening",
-      "carrier",
-      "qr"
-    ]
-  },
-  {
-    "seed": "多文化共生のまちづくり",
-    "facts": [
-      "多言語の行政窓口が拡充する",
-      "国際交流イベントが地域で開催される"
-    ],
-    "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/DX_suishin.html",
-    "surfaces": [
-      "reading",
-      "listening"
-    ]
+    "source": "https://www.pref.saitama.lg.jp/a1107/akiyabanku.html",
+    "surfaces": ["reading", "listening", "info"]
   }
 ]

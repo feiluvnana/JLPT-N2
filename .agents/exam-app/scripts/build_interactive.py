@@ -1121,6 +1121,19 @@ def inject_choukai(md: str, keys: list, premarks: dict | None = None):
             out.append(line)
             continue
 
+        # 問題5's 2番 (質問1/質問2) is announced only by a `## N番` sub-heading,
+        # never by a bare `**N番**` item line (its own answer row is the inline
+        # bubble format instead, which does not update last_item below). Track
+        # these headings directly so 質問1/質問2 resolve to the right N, not to
+        # whatever 番 last set last_item in an earlier 問題 (a real bug: without
+        # this, 問5-2-1/問5-2-2 were emitted as 問5-6-1/問5-6-2, keyed off 問題2's
+        # last item, and the two questions got no radio group at all).
+        m_item5_heading = re.match(r"^#+\s*(\d+)番\s*$", line.strip())
+        if section == "5" and m_item5_heading:
+            last_item = f"{m_item5_heading.group(1)}番"
+            out.append(line)
+            continue
+
         if CHOUKAI_INLINE.search(line):
             flush()
             parts, last = [], 0
