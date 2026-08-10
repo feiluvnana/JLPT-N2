@@ -17,6 +17,11 @@ description: Single owner of the listening audio end to end — the TTS script �
   never recover via `silencedetect`). Consumed by `exam-app`
   (chapter dropdown); regenerate the MP3 to refresh. Carries `"script_sha"`.
 - **Measured pacing evidence**: `references/official_pacing.md` (this folder).
+- **Measured REGISTER evidence**: `references/official_register.md` — the
+  countable difference between official dialogue and generated dialogue
+  (reaction density,
+  fillers, how a wrong option gets killed, 問題4 reply shapes). Read it before
+  writing any dialogue; Part 1's register section is its enforcement.
 
 ---
 
@@ -35,6 +40,71 @@ the official script PDFs in `refs/JLPT_N2_NEW/` (paths in **`AGENTS.md` §3**):
 3–5 exchanges for 問題1/2, monologues for 問題3, rapid single turn for 問題4.
 **NO FURIGANA** — clean plain text, no `<ruby>` tags; furigana belongs only
 in the booklet HTML.
+
+## Register: write people talking, not a template being filled
+
+**Evidence and inventories: `references/official_register.md`.** Read it before
+the first line of dialogue. The four numbers that matter — the official archive
+against generated papers written without this section:
+
+| | Official | Generated papers | 
+|---|---|---|
+| turns that are short reactions (≤12 chars: 「はい。」「そうですか。」「うん。」) | **18 %** | 6 % |
+| turns opening with a filler/reaction (はい・うん・ああ・ええ・あの・うーん・へえ・でも…) | **35 %** | 18 % |
+| hesitation tokens per paper (あのう/えー/えっと/うーん/まあ) | **median 41**, in 31/31 sittings | 0–4 |
+| flat contradiction 「〜ではありません」 per 10 k chars | **0.4** | 17.1 |
+
+Four binding rules follow. They are not style advice: a paper that fails them
+is solvable by pattern, which is a content defect.
+
+1. **Every item gets reaction turns.** Aim for the official rate — roughly one
+   short reaction turn in five. They are also what makes the audio breathe:
+   each one is a 0.9 s turn gap (Part 3), which is half the answer to "the
+   audio just talks without stopping".
+2. **Hesitation is normal speech.** Use 「あのう」「えーと」「うーん」「まあ」
+   「あ、」 where a real speaker would stall — asking a stranger a favour,
+   weighing two options, being corrected. Zero fillers in a 45-minute recording
+   is the single loudest tell that no human wrote it. Keep them OUT of the
+   announcer's lines: the 問題N instructions and 例 confirmations are read text.
+3. **Match the register to the relationship, and hold it.** Casual
+   (うん / 〜だけど / 〜かな / 〜じゃない) for students, family, close
+   colleagues; keigo (はい / ええ / 承知しました / おっしゃる) at a counter, to a
+   部長, from a 医者. One speaker must not drift between them mid-item.
+4. **Kill a wrong option the way official does.** Official order of preference
+   is **reassign** it to a named third party, **defer** it (その前に / 先に /
+   あとで / 後回しになってました), **refuse** it (難しい / 無理 / 見送), or note
+   it is **already done** (もう〜てある) — flat 「〜ではありません」 is the last
+   resort, 0.4 per 10 k chars — papers written without this rule have used it
+   over forty times as often. Rotate the device
+   across the items of a section; the grounding line still has to be quotable
+   in the 解説 cell (see below), which reassignment and deferral satisfy.
+
+### Banned formulas — each one shipped, with the count that banned it
+
+| Never write | Official / 31 sittings | Generated papers |
+|---|---|---|
+| 「Xの話ではありませんし、Yについて論じているのでもありません。Zを取り上げているわけでもありません」 (問題3 close) | **0** | every 問題3 item |
+| 「〜た方がいいですか」 as the examinee's every probe | 0 | every 問題1 probe |
+| 「かしこまりました」 opening every service reply | 4 in 31 sittings | every service reply |
+| 「わかりました。書きます。」 (or any identical closing turn reused) | 0 | reused across a section |
+| 「なるほど、〜なんですね」 echo just before the answer | rare | once per 問題2 item |
+| 問題4 replies opening はい / いいえ / では | **1.3 %** of replies | **over half** |
+
+**The formula is the defect, not the phrase.** A 問題1 section has shipped
+running 「すみません、〜んですが」→「かしこまりました。まず〜」→ two
+「〜た方がいいですか」 probes, each refused →「まずは〜をお願いします」→
+「わかりました。書きます。」 in **every one of its items**: a candidate who notices
+that the last refused suggestion is never the answer scores the section without
+Japanese. So:
+
+- **No two items in a section may share their opening move, their probe shape,
+  or their closing turn.** Write the section, then read only the first and last
+  line of each item in a column — if they rhyme, rewrite.
+- **Vary who drives.** Official 問題1 is as often 「an instruction giver assigns
+  tasks」 (「〜してくれる？」) as 「a customer asks and is redirected」.
+- 「まず」 is the 問題1 QUESTION's word (このあとまず何をしますか). Inside the
+  dialogue it is a crutch: official uses it 5.6 per 10 k chars, and generated
+  papers have run six times that.
 
 ### NEVER reveal an answer for a scored item (exam-breaking)
 
@@ -87,41 +157,49 @@ jlpt-exam-structure's "Printed in booklet" column decides this (it owns the
 | 1, 2 | PRINTED in `聴解.md` — never spoken |
 | 3, 4 | SPOKEN only — booklet prints nothing |
 | 5, 1番 | SPOKEN only |
-| 5, 2番 | **PRINTED** — the two-question item's options are in the booklet |
+| 5, 2番 | **SPOKEN only** — read after 質問1, then again after 質問2 |
 
-**問題5 2番 speaks its SITUATION and nothing else — no lead-in, no
-instruction.** Because 2番's options are printed, its 「まず話を聞いてください。
-それから、二つの質問を聞いて…」 line is **booklet text**. The model (official
-July 2025) is the whole of 2番's narration —
+**問題5 prints nothing at all in this repo**, so every one of its choices is
+spoken. That is a house rule diverging from official (which prints 2番's four
+options and reads none); `jlpt-exam-structure` §"問題5 prints nothing" owns it,
+including what official does and why the divergence was accepted. What it means
+for this file:
 
-```
-2番。ラジオを聞いて男の人と女の人が話しています。
-```
+- **Both items get a spoken lead-in block, each before its `N番。` marker.**
+  1番's ends 「では、始めます。」; 2番's does not. 2番's text is the
+  `jlpt-exam-structure` instruction-line table's 問題5 2番 row, verbatim —
+  「問題用紙に何も印刷されていません。まず話を聞いてください。それから、二つの質問と
+  せんたくしを聞いて、それぞれ1から4の中から、最もよいものを一つ選んでください。」
+- **`2番。` is followed by the SITUATION**, never by the lead-in — a lead-in
+  glued onto the marker line gets read as part of the situation and lands the
+  block's pauses wrong. Write `2番。<situation>。` on its own first line.
+  (Official's model line is `2番。ラジオを聞いて男の人と女の人が話しています。`;
+  under official rules 2番 got no lead-in at all, and all four generated papers
+  broke *that* asymmetry by speaking the instruction from the marker line. The
+  lead-in is now correct to speak — from its own block.)
+- **The four choices are read TWICE**, `1、…。`〜`4、…。` after 質問1 and the same
+  four after 質問2, all inside the one 2番 block. 12 spoken choice lines in
+  問題5 total (4 for 1番 + 8 for 2番); `make check` counts them.
 
-— then the dialogue, ending with 質問1 and 質問2. 1番 **does** get the spoken
-lead-in because nothing is printed for it; that asymmetry is the whole rule
-(all four generated papers broke it). Write 2番 as `2番。<situation>。` on its
-own first line.
+### 問題5 2番: read the choices in enumeration order, and decide by NAME, not by ordinal
 
-### 問題5 2番: enumerate in the printed order, and decide by NAME, not by ordinal
+Two rules (evidence owned by `jlpt-exam-structure` §"問題5 prints nothing"):
 
-Two rules (evidence owned by `jlpt-exam-structure` §"問題5 2番"):
-
-1. **Candidate *n* of the spoken enumeration must be printed option *n*.**
-   Write the candidates here first, in introduction order; harvest `聴解.md`'s
-   numbered list from that order — never the reverse.
+1. **Candidate *n* of the spoken enumeration must be spoken choice *n*.**
+   Write the candidates first, in introduction order; build the read-back list
+   from that order — never the reverse.
 2. **The deciding line names a candidate attribute — never `Nつ目`/`N番目`.**
    In 31 sittings no 問題5 item speaks an ordinal back-reference.
 
-An ordinal decider ties the answer to a printed SLOT: re-ordering the printed
-list silently re-keys the item, leaving two defensible answers
-(avoid re-ordering printed lists without updating audio). **A mis-keyed 問題5 2番
-is fixed HERE**: re-enumerate so spoken order matches printed, replace any
-ordinal decider with the candidate's name, then `make mp3 <test_id>` — never
-by re-ordering the printed list alone, which leaves an MP3 speaking the old
-order that `check_artifact_freshness()` cannot see.
-`check_mondai5_enumeration()` fails both rules; `make check` also fails spoken
-choice lines that belong in the booklet (printed/spoken drift).
+An ordinal decider ties the answer to a numbered SLOT: re-ordering the choice
+list silently re-keys the item, leaving two defensible answers. **A mis-keyed
+問題5 2番 is fixed HERE**: re-enumerate so the dialogue introduces candidates in
+the read-back order, replace any ordinal decider with the candidate's name, then
+`make mp3 <test_id>`. Both halves being in one file removes the old booklet/audio
+desync but not the defect — one edit to the read-back list still re-keys an item
+whose dialogue decides by ordinal. `check_mondai5_enumeration()` fails both
+rules; `check_mondai5_prints_nothing()` fails a booklet that prints an option
+list under 問題5.
 
 ## Instructions are copied, not re-worded
 
@@ -197,7 +275,7 @@ and merely *prints* the total. Missing pieces are otherwise SILENT — ensure ev
 | 問題1〜5 headers | `問題N。` as its own block, all five. **(eye)** for own-block-ness and order — the code only tests the substring occurs |
 | 問題1〜4 practice | each: instruction ending 「では、練習しましょう。」 → ONE `例。` item → ONE full confirmation line → items |
 | 問題5 practice | NONE. Instruction must contain 「この問題には練習はありません。」; no `例。` block |
-| 問題5 1番 lead-in | **(eye)** Its own block between the instruction and `1番。`: 「問題用紙に何も印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。では、始めます。」 — covers **1番 only**; 2番 gets no spoken lead-in (§"Spoken vs printed choices"). Do **not** write a combined 「1番、2番。問題用紙に何も印刷されていません」 line — false for 2番, and no official paper has it |
+| 問題5 lead-ins | **TWO** blocks, each between the instruction/previous item and its own `N番。` marker, both starting 「問題用紙に何も印刷されていません」 — `validate_script()` counts exactly 2. 1番: 「…まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。では、始めます。」 2番: 「…まず話を聞いてください。それから、二つの質問とせんたくしを聞いて、それぞれ1から4の中から、最もよいものを一つ選んでください。」 (no 「では、始めます。」). Do **not** merge them into a combined 「1番、2番。問題用紙に何も印刷されていません」 line — no official paper has it, and `ITEM_RE` would then mis-detect the item |
 | Item counts (incl. 例) | 問題1=6, 問題2=7, 問題3=6, 問題4=12, 問題5=2 |
 | Closing | file must END with 「これで、聴解試験を終わります。」 |
 | Answer reveals | 例 confirmations only — see the section above |
@@ -250,16 +328,23 @@ but the lookup belongs in authoring: read `SPEAKER_MAP` before writing.
 
 ## Voice model (matches the official recording)
 
-- **Narrator/announcer = FEMALE** (`ja-JP-NanamiNeural`, rate −10%). The
-  official announcer is female in all 31 archive recordings; a male narrator
-  was a real user complaint.
-- Dialogue: male roles → `ja-JP-KeitaNeural`; female roles → Nanami at rates
-  distinguishable from the narrator. 男1/男2 are separated by rate (edge-tts
-  free tier has only 2 ja-JP voices; `pitch` support is feature-detected).
+`SPEAKER_MAP` is the gender contract: `make check` reads it to confirm every
+「〜の男の人」/「〜の女の人」 narration resolves to a voice of that gender.
+
+- **Narrator/announcer = FEMALE** (`ja-JP-NanamiNeural`, rate −10 %). The
+  official announcer is female in all 31 archive recordings; a male narrator was
+  a real user complaint.
+- **Identity comes from `pitch`, difficulty from `rate`.** edge-tts ships
+  exactly two ja-JP voices, so two same-gender roles are separated by `pitch`
+  (≤20 Hz on a ~120 Hz male, ~25 Hz on a ~210 Hz female) while `rate` stays on
+  its calibrated value. The old rate-only split (男1 +4 % vs 男2 −8 %) is not a
+  second person to the ear — `check_voice_casting()` WARNed on exactly that
+  pair — and spending `rate` on identity moves the paper's difficulty.
 - **Speech rate is verified, not just chosen for voice contrast** — it also
   decides whether the exam underestimates N2 level. Verified per Part 4 step
   5: dialogue (±0–6%) ~378 morae/min; narrator (−10%) ~295. **Re-verify any
-  rate change against that step** — nothing else checks speech rate.
+  rate change against that step** — nothing else checks speech rate, and a TTS
+  engine change moves it as much as a `rate` edit does.
 
 ---
 
@@ -267,16 +352,33 @@ but the lookup belongs in authoring: read `SPEAKER_MAP` before writing.
 
 ## Execution
 
-Prerequisites: `pip install edge-tts` (free, no key; ffmpeg required).
+Prerequisites: `ffmpeg` on PATH and `pip install edge-tts` (free, no API key).
 
 ```bash
 python .agents/choukai-audio/scripts/make_choukai_mp3.py tests/<test_id>/聴解スクリプト.txt
+… --jobs 3             # fewer requests in flight
 ```
 
-A cold build (~250 lines → ~45 min of audio) takes about a minute; lines are
-synthesized concurrently (`TTS_JOBS = 8`; `--jobs 3` if throttled); the floor
-is the final `loudnorm` encode (~35 s). On success `segments/` is deleted
-automatically; `--keep-segments` keeps per-question audio for drilling.
+A cold build (~250 lines → ~45 min of audio) takes about a minute on edge; lines
+are synthesized concurrently (`TTS_JOBS = 8`). The floor is the final `loudnorm`
+encode (~35 s). On success `segments/` is deleted; `--keep-segments` keeps
+per-question audio for drilling.
+
+### One engine: edge-tts. Two paid ones were tried and rejected
+
+Do not re-run these experiments — both were implemented against real keys and
+measured, and the findings are the reason the code is gone:
+
+| Engine | Why it is not here |
+|---|---|
+| **ElevenLabs** | Every Japanese-native voice is a shared-LIBRARY voice, and a free key gets `402 paid_plan_required` for all of them (Morioki / Asahi / Otani, every ja voice tried). The 21 reachable premade ids are English-native, so the Japanese came out **accented** — heard in a sample and rejected by the user. Needs a Creator-tier key *and* Japanese voice ids to be worth revisiting |
+| **Gemini TTS** | The free tier allows only about ten requests per DAY against a ~250-line script, so it cannot finish a single paper. Prosody and Japanese quality looked promising (native-sounding, small padding, style prompts respected and not read aloud) — revisit only on a paid tier |
+
+edge-tts stays because it is the only engine that speaks native Japanese AND
+always finishes. If an engine is ever added back, two rules from that work hold:
+a build must use **one** engine end to end (a paper whose 問題1 and 問題3 differ
+in voice breaks every 「男の人は」 question), and **accent is an ear-only check** —
+no gate hears anything, so listen to one item before adopting it.
 
 ## `script_sha`: the MP3 says which script it was built from
 
@@ -305,17 +407,47 @@ values here and in the code together.
 | GAP_AFTER_PRE_QUESTION | 3 s | 2.80 s [2.5–4.6, bimodal ≈2.8 / ≈4.1], n=74 | 問1: question → conversation |
 | GAP_OPTION_READING | **20 s** | 20.22 s [20.19–20.81], n=139 | 問2 only: read printed options (most-missed pause) |
 | GAP_BETWEEN_SPOKEN_CHOICES | 3 s | 3.10 s [2.66–3.26], n=427 | 問3/問5 spoken choices |
-| GAP_AFTER_SHITSUMON1 | 10 s | 10.0 s [7.8–12.4], n=20 | 問5: between 質問1 and 質問2 |
+| GAP_AFTER_SHITSUMON1 | 10 s | 10.0 s [7.8–12.4], n=20 | 問5: 質問1's answer time — inserted BEFORE the 質問2 line, i.e. after 質問1's four spoken choices |
+| GAP_WITHIN_TURN_MAX | 0.5 s | 0.40 s [p75 0.53, p90 0.72], n=181 same-speaker | ceiling for a pause INSIDE one turn |
+| SHAPE_PAUSE_FLOOR | 0.6 s | — (threshold, not a measurement) | only pauses above this are capped |
 | ANSWER_PAUSE | 問1/2: 12 s, 問3/4: 8 s, 問5: 10 s | 12.2 s / 8.3 s / 8.3–12.3 s | after each item block |
 
 **Every value is inside the measured band, and the band has not moved in 15
 years** (|r| ≤ 0.22 against sitting year). Loudness target: **−15 LUFS,
-−1.0 dBTP** (official median −15.01 [−15.5, −14.3], n=31). Two knowing
-deviations from the archive:
+−1.0 dBTP** (official median −15.01 [−15.5, −14.3], n=31).
+
+### A gap is only real if the segments around it are trimmed
+
+Every gap above is silence inserted BETWEEN segments, so it is the true gap only
+if each segment starts and ends on speech. **TTS engines pad**: edge-tts writes
+~0.22 s of lead and ~0.85 s of TAIL silence into every utterance. Unshaved, that
+made the measured turn gap in shipped audio **about 2 s** against a
+`GAP_BETWEEN_LINES` of 0.9 and an official median of 0.51 — the whole archive
+calibration silently defeated by TTS padding, and no gate could see it because
+the constants were "right". The same padding made a mid-turn 。 run near 1 s,
+twice the official same-speaker p75.
+
+`shape_pauses()` fixes both, on 24 kHz mono samples, leaving speech untouched:
+trim leading/trailing silence to zero, and cap any internal pause longer than
+`SHAPE_PAUSE_FLOOR` to `GAP_WITHIN_TURN_MAX`. Pauses **below** the floor are
+left exactly as the engine produced them — a Japanese 促音 closure is a ~0.1 s
+silence, and "improving" it would eat the consonant. Verified on the rendered
+MP3 after the change: turn gaps ~0.93 s, mid-turn 。 ~0.5 s, and one item lost
+about 15 % of its runtime, all of it dead air.
+
+**Verify a pacing constant on the rendered MP3, never in the source.** A
+constants-only review passed this defect on every paper it had.
+
+Three knowing deviations from the archive:
 
 - **問題5's three pauses are not one value.** Official gives 1番 ≈ 8.3 s
   (spoken choices, like 問題3), 質問1 → 質問2 = 10.0 s, final 質問2 ≈ 11.2 s;
   `ANSWER_PAUSE` is one number per 問題, so 10 s is the compromise.
+- **問題5 2番 runs longer than official**, because this repo speaks its four
+  choices twice where official prints them (§"Spoken vs printed choices"). Eight
+  extra utterances plus six 3 s inter-choice gaps add roughly 35 s to the item.
+  The pause CONSTANTS are unchanged and still measured — only how many segments
+  sit between them. Do not shave a gap to buy the time back.
 - **Official reads each spoken choice as 「1、」+ ~1.1 s + the option text**,
   then ~3.1 s before the next number; we speak the whole choice line as one
   utterance, so only the ~3 s inter-choice gap is reproduced.
@@ -324,14 +456,16 @@ To recalibrate, use Part 4 and update ONLY these constants.
 
 ## Engineering rules (each fixed a real bug)
 
-- Synthesize per line → 24 kHz mono WAV → concat WAVs → encode MP3 ONCE with
-  `loudnorm=I=-15:TP=-1.0:LRA=11` — never concat MP3 segments directly.
-  `I=-15` is the official median; it replaced `I=-17`, a `volumedetect`
-  mean_volume reading mistaken for LUFS (Part 4 step 1).
+- Synthesize per line → 24 kHz mono WAV → **shape pauses** → concat WAVs →
+  encode MP3 ONCE with `loudnorm=I=-15:TP=-1.0:LRA=11` — never concat MP3
+  segments directly. `I=-15` is the official median; it replaced `I=-17`, a
+  `volumedetect` mean_volume reading mistaken for LUFS (Part 4 step 1).
+- **Shape each segment as soon as it is synthesized, before it is cached**, so a
+  warm cache and a cold build produce byte-identical audio.
 - Retry synthesis (3×, backoff); cache segments in `tests/<test_id>/segments/`
   so re-runs skip finished lines. The cache key is a hash of
-  **text + voice + rate**, not the line's position — position-keying meant a
-  reworded line or a remapped speaker silently reused the old audio.
+  **text + voice + rate + pitch**, not the line's position — position-keying
+  meant a reworded line or a remapped speaker silently reused the old audio.
 - **Parse into a plan, then synthesize, then assemble.** The plan pins every
   segment path and gap duration up front: parallel tasks never target the
   same file, and the output is byte-identical to a sequential build.

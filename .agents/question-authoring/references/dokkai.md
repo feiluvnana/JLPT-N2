@@ -18,6 +18,65 @@ matching where one tempting option fails exactly one condition.
 no `<ruby>` — test-takers read N2 kanji unaided. Over-the-level, rare, or
 domain words are glossed ONLY via `（注N）` (below).
 
+## Thirteen surfaces, thirteen different essays — subject AND closing move
+
+The 読解 half is 13 surfaces (問題9 cloze + 問題10×5 + 問題11×4 + 問題12 + 問題13 +
+問題14). They must differ on **two** axes, and a paper can pass the first while
+failing the second badly. 20260810_1 shipped both failures through a green gate.
+
+**Axis 1 — subject/theme. All thirteen carry DIFFERENT themes**, per
+`exam-blueprint` §"The four theme rules" rule 3. Not "at most two per theme" —
+one each. 19 of the 20 themes carry reading entries, so 13 distinct is always
+reachable and a repeat is a re-angle, never a pool limit.
+
+**Count the SHIPPED surfaces, not the spec draw.** 20260810_1's spec drew only
+two `働き方` reading topics, but the two web seeds carried no `theme` at all and
+the 問題9 cloze was never counted, so the paper shipped **five**
+workplace-institution surfaces (問題9 職場の熱中症対策 / 問題10(4) 育休メール /
+問題11(1) 職場のメンタルヘルス / 問題11(4) 転職と定着 / 問題12 ワーケーション)
+while every gate stayed green. The recording rule that closes this hole is
+`exam-blueprint` §"`logs/topics.json`" — every surface, web ones included,
+records a theme, and `check_topics_themes()` reads them.
+
+**Axis 2 — the closing move, which no theme tag can see.** Two passages on
+completely different subjects are still *the same essay* when both end
+「制度／技術／箱を整えるだけでは足りない。人の姿勢こそが要る」. 20260810_1 ran
+that one move in **nine of its ten essay-type passages**; a reader meets the
+same argument thirteen times and the paper reads as one author with one idea.
+
+MEASURED over the 問題10–14 region of the 31-sitting archive, counting the
+marker family 「〜だけで(は)」「こそ」「〜て初めて」「求められ(ている)／欠かせない」
+「〜ではないだろうか／のではないか」:
+
+| | official (7 current-era sittings) | generated |
+|---|---|---|
+| markers per 読解 half | **5–9, median 6** | 23 / 29 / **33** |
+
+Official uses the move — it just does not use it *twice in a row*.
+`check_dokkai_rhetorical_monotony()` in `tools/check_consistency.py` **WARNs
+above 12** (official max 9 + headroom, so no real paper trips it) and prints the
+per-marker split. A WARN here is a rewrite instruction, not noise.
+
+**How to comply while drafting** — write the closing move of each passage in one
+line beside its theme, and require the list to be varied. The shapes official
+actually ships, so no more than **two** passages share one:
+
+- 主張 — 「AだけではB、Cこそが」 (the move above; ≤2 per paper, not 9)
+- 説明 — the passage explains a mechanism or a distinction and stops there
+- 意外な観察 — an unexpected fact, then its cause (「意外にも〜。理由は〜」)
+- 反論応答 — 「〜という批判もあるが、実際には〜」
+- 随筆 — a personal observation that generalises without prescribing
+- 条件提示 — a concrete, checkable condition (「〜した自治体ほど〜」), no exhortation
+
+**The answerability consequence, which is the real damage.** When nine
+passages close the same way, their keys close the same way too: 20260810_1's
+52/54/56/58/60/62/64/69 were all the "human/attitude" option beside three
+「Xさえすれば十分」 strawmen — a test-taker keys eight items by picking the
+soft-sounding option **without reading a single passage**. Distractor sets must
+therefore vary in kind across the section (see the core `SKILL.md` distractor
+rules); a section whose wrong options are uniformly overstatements is
+strategy-solvable however well each item reads on its own.
+
 ## Length bands — the single copy in this repo
 
 These numbers once lived in three files at once, hand-synced, and 4/4 generated

@@ -39,12 +39,26 @@ ADJUNCT_CAP = 0.20  # max share of each category draw filled from staging
 # maps scenarios to 問題, so only they can see whether two same-theme entries
 # actually collide.
 #
-# The caps are set ABOVE the expected count so the warning means "unusually
-# concentrated", not "the pool is uneven". The heaviest themes are 働き方
-# (23/200 reading -> 1.4 expected in a 12-draw; 44/240 listening -> 3.9 in a
-# 21-draw), so a cap of 3 on listening would fire on nearly every seed and be
-# ignored within two tests. Re-derive these if the pool balance changes.
-THEME_CAP = {"reading_topics": 2, "listening_scenarios": 5}
+# The LISTENING cap is set ABOVE the expected count so the warning means
+# "unusually concentrated", not "the pool is uneven": 働き方 holds 44/240
+# listening entries -> 3.9 expected in a 21-draw, so a cap of 3 would fire on
+# nearly every seed and be ignored within two tests. Re-derive it if the pool
+# balance changes.
+#
+# READING is 1, and it is a floor the draw itself now meets rather than a
+# warning the author is left to act on: every 読解 surface must sit on its own
+# theme (`exam-blueprint` rule 3, `question-authoring/references/dokkai.md`
+# §"Thirteen surfaces, thirteen different essays"). 20260810_1 shipped five
+# workplace-institution reading surfaces under the old cap of 2 — the cap held
+# on the draw and the paper still read as one essay repeated, because the cloze
+# and the web seeds were never counted. The arithmetic works: 19 of the 20
+# themes carry reading entries (行政・手続き carries none) against a 12-topic
+# draw, so distinctness leaves 7 themes spare.
+THEME_CAP = {"reading_topics": 1, "listening_scenarios": 5}
+
+# Categories whose draw must hold at most one entry per theme, enforced during
+# the draw by `sample_distinct_theme()` rather than warned about afterwards.
+DISTINCT_THEME_CATS = {"reading_topics"}
 
 # category -> items drawn per test (N2)
 DRAW = {
@@ -277,6 +291,33 @@ def recency_map(history: list) -> dict:
     return rec
 
 
+def sample_distinct_theme(rng: random.Random, eligible: list, n: int,
+                          name: str) -> list | None:
+    """`n` entries, no two sharing a theme. None when the pool cannot.
+
+    Greedy over a shuffle, which is uniform enough for this purpose and, unlike
+    rejection sampling over `rng.sample`, terminates: the caller only needs SOME
+    theme-distinct draw, not a uniformly-random one among all such draws.
+    Untagged entries are treated as one shared theme so a category that lost its
+    tags degrades to "one untagged entry", never to "distinctness is vacuous".
+    """
+    shuffled = list(eligible)
+    rng.shuffle(shuffled)
+    picked, used = [], set()
+    for e in shuffled:
+        th = entry_theme(e) or ""
+        if th in used:
+            continue
+        picked.append(e)
+        used.add(th)
+        if len(picked) == n:
+            return picked
+    print(f"  warning: pool '{name}' cannot fill {n} distinct themes "
+          f"({len(picked)} available) — falling back to a themed draw; grow "
+          f"the thin themes rather than relaxing the rule")
+    return None
+
+
 def draw(rng: random.Random, pool: list, recency: dict, n: int,
          name: str, taken: set) -> tuple[list, int]:
     """LRU draw. Returns (picked, cooldown_actually_applied).
@@ -312,6 +353,10 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
             elif cool < COOLDOWN:
                 print(f"  note: pool '{name}' is tight — cooldown relaxed to "
                       f"{cool} draw(s); consider growing the pool")
+            if name in DISTINCT_THEME_CATS:
+                picked = sample_distinct_theme(rng, eligible, n, name)
+                if picked is not None:
+                    return picked, cool
             return rng.sample(eligible, n), cool
     remaining = len([x for x in pool if item_text(x) not in taken])
     sys.exit(f"pool '{name}' cannot supply {n} distinct items "

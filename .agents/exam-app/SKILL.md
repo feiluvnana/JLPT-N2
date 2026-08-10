@@ -334,8 +334,12 @@ are the renderer's contract; content and format authoring rules live with
   then `A「…」` turns) before the option row: `inject_gengo` must keep `cur`
   across those stem lines — flushing on every non-option line used to drop
   radios for Q32/39/40/41/42.
-- 聴解: `**1番**` + indented options, OR a bare bubble row
-  `**1番** 1 ・ 2 ・ 3 ・ 4` for the 問題3/4/5 items that print nothing.
+- 聴解: `**1番**` + indented options (問題1/2 only — the two sections that print
+  their choices), OR a bare bubble row `**1番** 1 ・ 2 ・ 3 ・ 4` for the
+  問題3/4/5 items that print nothing. **All of 問題5 takes the bubble-row form,
+  `**質問1**`/`**質問2**` included** — this repo prints no options for either of
+  its items (`jlpt-exam-structure` §聴解), so 質問N is a bubble row, not a
+  `**質問1**` heading over an option list.
 - `**例**` rows get a STATIC row with the answer already filled in, never
   radios — the 例 is a demonstration, not a scored item. The number comes from
   the `解答用紙` grid's `**(n)**` cell (`example_premarks()`), read BEFORE
@@ -437,7 +441,9 @@ question** — 問題1–8 print all four choices on one line and the group got
 `width=1`; `option_run()` counts a consecutive `1..k` run on the line (a
 consecutive run only, so `1. 価格が3.5倍…` is not miscounted) — and **問題5's
 質問1/質問2 colliding with 1番**, which made two items unanswerable; 質問N
-always belongs to 2番 whenever the section is 問題5.
+always belongs to 2番 whenever the section is 問題5. That second rule holds in
+BOTH parser paths — the `**質問1**`-heading path and the bubble-row path — and
+the bubble-row path is the one every current test takes.
 
 Manual spot-check after a parser change:
 `python3 .agents/exam-app/scripts/build_interactive.py tests/1` — expect

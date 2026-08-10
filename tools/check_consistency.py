@@ -315,7 +315,11 @@ def check_pacing():
     doc = (AGENTS / "choukai-audio" / "SKILL.md").read_text(encoding="utf-8")
 
     for const in ("GAP_BETWEEN_LINES", "GAP_AFTER_PRE_QUESTION", "GAP_OPTION_READING",
-                  "GAP_BETWEEN_SPOKEN_CHOICES", "GAP_AFTER_SHITSUMON1"):
+                  "GAP_BETWEEN_SPOKEN_CHOICES", "GAP_AFTER_SHITSUMON1",
+                  # Added with shape_pauses(): the inter-segment gaps above are
+                  # only real because segment padding is trimmed, and these two
+                  # decide what happens to a pause INSIDE one utterance.
+                  "GAP_WITHIN_TURN_MAX", "SHAPE_PAUSE_FLOOR"):
         row = re.search(rf"^\|\s*{const}\s*\|([^|]+)\|", doc, re.M)
         if not row:
             check(f"{const} documented", False, "no row in the pacing table")
@@ -345,6 +349,18 @@ def check_pacing():
         check(f"dry-run: {reading.group(1)} × 20s option-reading pauses",
               int(reading.group(1)) == m.EXPECTED_ITEMS["問題2"],
               f"doc {reading.group(1)}, 問題2 has {m.EXPECTED_ITEMS['問題2']} items")
+
+    # A pause inside one turn must stay under the gap BETWEEN turns, or a
+    # speaker's own sentence break sounds like the other person's cue.
+    check("GAP_WITHIN_TURN_MAX < GAP_BETWEEN_LINES",
+          m.GAP_WITHIN_TURN_MAX < m.GAP_BETWEEN_LINES,
+          f"{m.GAP_WITHIN_TURN_MAX} vs {m.GAP_BETWEEN_LINES}: a within-turn pause "
+          f"at or above the turn gap makes one speaker sound like two")
+    check("SHAPE_PAUSE_FLOOR > GAP_WITHIN_TURN_MAX",
+          m.SHAPE_PAUSE_FLOOR > m.GAP_WITHIN_TURN_MAX,
+          f"{m.SHAPE_PAUSE_FLOOR} vs {m.GAP_WITHIN_TURN_MAX}: with the floor at or "
+          f"below the cap, shaping would lengthen pauses it was meant to leave "
+          f"alone — including the ~0.1 s 促音 closures it must never touch")
 
 
 # ------------------------------------------------------------------- item counts
@@ -415,8 +431,9 @@ def check_taxonomy():
 # option list contained the same string twice (so two options were correct),
 # a 問題8 key naming the option in the 2nd blank instead of the ★ (3rd) one,
 # a cloze blank whose key pointed at a different option than its own
-# explanation, and 問題5 2番 printing one option set while the audio spoke
-# another. None of it is visible to the shape checks in check_tests().
+# explanation, and 問題5 2番 numbering its candidates in one order while the
+# audio enumerated them in another. None of it is visible to the shape checks
+# in check_tests().
 
 def gengo_option_sets(md: str, bi) -> dict[int, list[str]]:
     """{question number: [option text, …]} from the question body only.
@@ -969,6 +986,135 @@ DOKKAI_FLOOR = {10: 1100, 11: 2250, 12: 510, 13: 800, 14: 450}
 DOKKAI_PASSAGE_FLOOR = {10: 150, 11: 400}
 # In-body （注N） markers per paper: official current era 27–61, median 39.
 GLOSS_MARKER_MIN = 25
+
+# The "X alone is not enough — what really matters is Y" closing family. Two
+# passages on unrelated subjects that both end this way are one essay written
+# twice, and no theme tag can see it: 20260810_1 ran the move in NINE of its ten
+# essay-type passages, so its keys became the soft-sounding option beside
+# 「Xさえすれば十分」 strawmen and eight 読解 items were answerable without
+# reading a passage (question-authoring/references/dokkai.md §"Thirteen
+# surfaces, thirteen different essays").
+#
+# MEASURED over the 問題10→end region of the 31-sitting archive, stems and
+# options included (the strawman distractors are part of the defect):
+#   official  5 5 5 6 6 9 9  (n=7 current era; max 9)
+#   generated 19 / 28 / 29
+# WARN, not FAIL, and the ceiling sits at 12 — official max plus a third — so no
+# real paper trips it and the line means "this paper argues one way only", not
+# "you used こそ". It is a rewrite instruction: the fix is varying the CLOSING
+# MOVE of each passage (dokkai.md lists the six official shapes), never
+# find-and-replacing the markers, which leaves thirteen identical arguments
+# behind different wording.
+RHETORIC_MARKERS = {
+    "だけで": re.compile(r"だけで(は|も)?(?!き)"),
+    "こそ": re.compile(r"こそ"),
+    "て初めて": re.compile(r"[てで]初めて"),
+    "求められ/欠かせな": re.compile(r"求められ|欠かせな"),
+    "ではないだろうか": re.compile(r"ではないだろうか|のではないか|ではないか。"),
+}
+RHETORIC_CEILING = 12
+
+
+def check_dokkai_rhetorical_monotony(name: str, body: str):
+    """One paper, thirteen different essays — not one essay thirteen times.
+
+    `body` is the 言語知識・読解 source with the key tables already cut; the
+    region measured is 問題10 to the end of it, matching how the official band
+    above was measured.
+    """
+    m = re.search(r"^##\s*問題10\b", body, re.M)
+    if not m:
+        return
+    region = body[m.start():]
+    counts = {k: len(v.findall(region)) for k, v in RHETORIC_MARKERS.items()}
+    total = sum(counts.values())
+    split = " ".join(f"{k}={v}" for k, v in counts.items() if v)
+    warn(f"{name}: 読解 closing-move variety ({total} markers, official 5-9)",
+         total <= RHETORIC_CEILING,
+         f"{split} — {total} uses of the 「〜だけでは足りない、〜こそが要る」 "
+         f"family against an official band of 5-9 per 読解 half (ceiling "
+         f"{RHETORIC_CEILING}). Label each passage's closing move and rewrite "
+         f"until no more than two share one; then re-check that the keys did "
+         f"not inherit it (question-authoring/references/dokkai.md "
+         f"§'Thirteen surfaces, thirteen different essays')")
+
+
+# The 読解 surfaces of a logs/topics.json row, and which of them are headline
+# surfaces (exam-blueprint §"The four theme rules").
+READING_SURFACE = re.compile(r"^問題(9|1[0-4])(\(|$)")
+HEADLINE_READING = ("問題9", "問題12", "問題13", "問題14")
+
+
+def surface_group(key: str) -> str:
+    """`問題12(A)` and `問題12(B)` are ONE surface; `問題10(3)` is its own."""
+    return key.split("(")[0] if key.startswith("問題12") else key
+
+
+def check_topics_themes():
+    """The four theme rules, applied to the SHIPPED paper.
+
+    `sample_items.check_theme_spread()` sees only the draw, and a spec records
+    no theme at all for its `cloze_topic` or for any `"origin": "web"` entry.
+    20260810_1 drew two `働き方` reading topics — at the cap of the day — and
+    shipped FIVE workplace-institution reading surfaces (問題9 熱中症対策 /
+    問題10(4) 育休メール / 問題11(1) メンタルヘルス / 問題11(4) 転職と定着 /
+    問題12 ワーケーション) with every gate green, because the cloze and the two
+    web seeds were invisible and one passage had been authored away from its
+    pool tag. The only record of what a paper actually tests is
+    logs/topics.json, so that is where the rule has to be enforced.
+
+    Rows written before the `themes` field WARN rather than fail — the field is
+    additive, and a missing theme map is "unrecorded", not "compliant".
+    """
+    print("\ntopic themes (one 読解 surface, one theme)")
+    path = ROOT / "logs" / "topics.json"
+    if not path.is_file():
+        return skip("logs/topics.json themes", "no topics.json on disk")
+    lv = load(".agents/exam-blueprint/scripts/level_data.py")
+    rows = json.loads(path.read_text(encoding="utf-8")).get("history", [])
+    for row in rows:
+        tid = str(row.get("test_id"))
+        if ORIGIN.is_imported(tid):
+            continue
+        surfaces = row.get("surfaces", {})
+        themes = row.get("themes")
+        if not themes:
+            warn(f"{tid}: records themes for its surfaces", False,
+                 "no `themes` map — the four theme rules cannot be checked on "
+                 "this paper (exam-blueprint §'logs/topics.json')")
+            continue
+
+        bad = sorted({v for v in themes.values() if v not in lv.THEMES})
+        check(f"{tid}: themes come from the closed THEMES vocabulary", not bad,
+              f"off-list: {bad} — pick the nearest value or say the surface "
+              f"does not belong; never widen the list (exam-blueprint)")
+
+        reading = [k for k in surfaces if READING_SURFACE.match(k)]
+        missing = sorted(k for k in reading if k not in themes)
+        check(f"{tid}: every 読解 surface carries a theme", not missing,
+              f"untagged: {missing} — the cloze and every web seed inherit a "
+              f"theme too; an untagged surface is uncounted, not exempt")
+
+        by_theme: dict[str, set[str]] = {}
+        for k in reading:
+            if k in themes:
+                by_theme.setdefault(themes[k], set()).add(surface_group(k))
+        dupes = {t: sorted(g) for t, g in by_theme.items() if len(g) > 1}
+        check(f"{tid}: no theme on two 読解 surfaces", not dupes,
+              "; ".join(f"{t} x{len(g)} {g}" for t, g in dupes.items())
+              + " — all thirteen 読解 surfaces take different themes "
+                "(exam-blueprint rule 3). 19 themes carry reading entries "
+                "against 13 surfaces, so a repeat is a re-angle or a re-draw, "
+                "never a pool limit")
+
+        head = {themes[k] for k in HEADLINE_READING if k in themes}
+        m5 = {themes[k] for k in themes if k.startswith("聴解問題5")}
+        clash = sorted(head & m5)
+        check(f"{tid}: headline surfaces take five different themes",
+              not clash,
+              f"聴解問題5 shares {clash} with a 読解 headline surface — the five "
+              f"headline surfaces (問題9/12/13/14/聴解問題5) are the paper's "
+              f"spine and must not double up (exam-blueprint rule 1)")
 
 
 def check_dokkai_lengths(name: str, body: str, bi):
@@ -2848,46 +2994,57 @@ def check_script_shape(script_text: str, ct: str, m, test_id: str = ""):
     spoken = {int(secs[i]): len(re.findall(r"^[1-4]、", secs[i + 1], re.M))
               for i in range(1, len(secs), 2)}
     # 問題1/2 print their options; 問題3 speaks 4 per item, 問題4 speaks 3;
-    # 問題5 speaks 4 for 1番 only — 2番's are printed.
+    # 問題5 prints NOTHING for either item, so it speaks 4 for 1番 plus 4 under
+    # each of 2番's two questions = 12.
     ei = m.EXPECTED_ITEMS
-    want = {1: 0, 2: 0, 3: 4 * ei["問題3"], 4: 3 * ei["問題4"], 5: 4}
+    want = {1: 0, 2: 0, 3: 4 * ei["問題3"], 4: 3 * ei["問題4"], 5: 12}
     check("options are spoken exactly where the booklet prints none",
           spoken == want, f"spoken option lines {spoken}, expected {want}")
 
-    # 問題5's 2番 gets NO spoken lead-in: official July 2025 opens it with the
-    # situation alone (「2番。ラジオを聞いて男の人と女の人が話しています。」) because
-    # its instruction and its options are printed. All four generated scripts
-    # spoke 「2番。まず話を聞いてください。それから、二つの質問を…」, and the check
-    # below used to SPLIT on that literal — it assumed the defect was there and
-    # only complained about what followed it. A gate written around a defect
-    # normalizes it, so the anchor is now 「2番。」 alone.
-    check(f"{test_id}: 問題5 2番 lead-in is booklet-only "
-          f"(official speaks only the situation)",
-          not re.search(r"^2番。まず話を聞いてください。", script_text, re.M),
-          "delete the instruction from the script; 2番's options are printed "
-          "(jlpt-exam-structure) — official July 2025 opens the block "
-          "「2番 ラジオを聞いて男の人と女の人が話しています。」 and nothing else "
-          "(refs/JLPT_N2_NEW/16. N2 7-2025/script.md)")
+    # 問題5's 2番 gets a spoken lead-in of its OWN, as a block before 「2番。」 —
+    # never as the first line of the item block, where it would sit after the
+    # 「2番。」 marker and be read as part of the situation. Official prints 2番's
+    # options and therefore speaks no lead-in at all; this repo prints nothing
+    # for 問題5, so the lead-in has to be heard or the examinee is never told the
+    # choices are spoken. The anchor is 「2番。」 alone: an earlier version split
+    # on the full sentence, i.e. it assumed the text was there and only checked
+    # what followed, which is a gate written around the shape it is judging.
+    check(f"{test_id}: 問題5 2番 lead-in is spoken, and precedes 「2番。」",
+          not re.search(r"^2番。(問題用紙に何も印刷|まず話を聞いてください)",
+                        script_text, re.M),
+          "the lead-in must be its own block BEFORE 「2番。」, not the item "
+          "block's opening line — 「2番。」 must be followed by the situation "
+          "(jlpt-exam-structure §問題5, choukai-audio §'Spoken vs printed choices')")
 
+    # 2番 SPEAKS its four choices, twice — once under 質問1, once under 質問2 —
+    # because nothing is printed for it. The inverse of this check (「2番 does
+    # not speak its printed options」) was correct only while the booklet
+    # carried the option list; leaving it in would now forbid the only thing
+    # that makes the item answerable.
     p5 = re.split(r"^問題5。$", script_text, maxsplit=1, flags=re.M)
     tail = re.split(r"^2番。", p5[-1], flags=re.M)
-    if len(tail) > 1 and re.search(r"^[1-4]、", tail[-1], re.M):
-        check("問題5 2番 does not speak its printed options", False,
-              "options for the two-question item are printed in the booklet only")
-    else:
-        check("問題5 2番 does not speak its printed options", True)
+    spoken_2ban = len(re.findall(r"^[1-4]、", tail[-1], re.M)) if len(tail) > 1 else 0
+    check("問題5 2番 speaks four choices under each of its two questions",
+          spoken_2ban == 8,
+          f"{spoken_2ban} spoken choice lines after 「2番。」, expected 8 — "
+          f"問題5 prints nothing, so 質問1 and 質問2 each need their four "
+          f"choices read aloud (jlpt-exam-structure §問題5)")
 
     ascii_punct = re.findall(r"(?<!\d)[,.](?!\d)", script_text)
     check("no ASCII , or . in the script (TTS mis-times them)", not ascii_punct,
           f"{len(ascii_punct)} found — use 、 and 。")
 
 
-# G3. 問題5 2番 enumerates four candidates aloud and prints them as a numbered
-# list. Two facts about official papers make that pair checkable, both measured
-# on the archive extracts (`refs/JLPT_N2_NEW/*/script.md` + `booklet.md`; the
-# dialogue there is OCR, good enough for ORDER and SHAPE, never for wording):
+# G3. 問題5 2番 enumerates four candidates aloud, then reads them back as a
+# numbered choice list under each question. Two facts about official papers make
+# that pair checkable, both measured on the archive extracts
+# (`refs/JLPT_N2_NEW/*/script.md` + `booklet.md`; the dialogue there is OCR,
+# good enough for ORDER and SHAPE, never for wording). Official carries the
+# numbered list in the BOOKLET and this repo speaks it instead, but the rules
+# are about the relationship between the enumeration and the numbered list, so
+# they survive the move intact — only the file the list is read from changed.
 #
-#   ORDER — the printed list is the enumeration order. July 2025 speaks
+#   ORDER — the numbered list is the enumeration order. July 2025 speaks
 #   1つ目 夕日通り / 2つ目 西が丘 / 3つ目 さくら公園 / 最後 東山 and prints
 #   1 夕日通り / 2 にしがおか / 3 さくら公園 / 4 東山. Dec 2014 (1〜4つ目, 4 方法)
 #   and July 2019 (まず/2つ目/それから/4つ目, 4 校舎) do the same. Dec 2025
@@ -2920,19 +3077,48 @@ def _ordinal_value(m: re.Match) -> int:
     return _KANJI_DIGIT.get(tok, 0) or int(tok)
 
 
-def choukai_p5_2ban_options(ct: str, bi) -> list[str]:
-    """The four names printed under 問題5 2番's 質問1, in printed order."""
+def choukai_p5_2ban_options(script_text: str) -> list[str]:
+    """The four candidate names 問題5 2番 SPEAKS under 質問1, in spoken order.
+
+    These used to be read out of the booklet, because 2番 was the one 問題5 item
+    whose options were printed. This repo prints nothing for 問題5 at all, so the
+    numbered list the key points at is the spoken one and the script is now its
+    only home — the ordering rule below is unchanged, it just has one file to
+    read instead of two.
+    """
+    p5 = re.split(r"^問題5。$", script_text, maxsplit=1, flags=re.M)
+    tail = re.split(r"^2番。", p5[-1], flags=re.M)
+    if len(tail) < 2:
+        return []
+    block = tail[-1].split("\n\n")[0]
+    q1 = re.split(r"^質問1。", block, maxsplit=1, flags=re.M)
+    if len(q1) < 2:
+        return []
+    q1_span = re.split(r"^質問2。", q1[-1], maxsplit=1, flags=re.M)[0]
+    return [o.strip().rstrip("。") for _, o in
+            re.findall(r"^([1-4])、(.+)$", q1_span, re.M)]
+
+
+# 問題5 prints NOTHING — for 1番 (official) and, in this repo, for 2番 too. The
+# booklet carries a bare bubble row per question and a メモ area, never an option
+# list. This is the check that keeps the two halves of that decision together:
+# the moment someone re-adds a printed list under 質問1, the audio is still
+# speaking the same four choices and the paper has two option lists to
+# desynchronise (which is the defect the printed-vs-spoken column exists to
+# prevent, one level up).
+def check_mondai5_prints_nothing(name: str, ct: str, bi):
     cut = bi.KEY_HEADING.search(ct)
     body = ct[: cut.start()] if cut else ct
     sec = re.search(r"^##\s*問題5\b.*", body, re.M | re.S)
     if not sec:
-        return []
-    q1 = re.search(r"\*\*質問1\*\*(.*?)(?=\*\*質問2\*\*|^---|\Z)",
-                   sec.group(0), re.M | re.S)
-    if not q1:
-        return []
-    return [o.strip() for _, o in
-            re.findall(r"^\s*([1-4])\.\s*(.+)$", q1.group(1), re.M)]
+        return
+    printed = re.findall(r"^\s+([1-4])\.\s*(\S.*)$", sec.group(0), re.M)
+    check(f"{name}: 問題5 prints no options (both items are spoken)",
+          not printed,
+          f"{len(printed)} printed option line(s) under 問題5 "
+          f"({[o for _, o in printed][:4]}) — 問題5 carries only the bubble rows "
+          f"「**質問1** 1 ・ 2 ・ 3 ・ 4」 and メモ space; its choices are read "
+          f"aloud (jlpt-exam-structure §聴解)")
 
 
 def check_mondai5_enumeration(name: str, script_text: str, ct: str, bi):
@@ -2941,9 +3127,13 @@ def check_mondai5_enumeration(name: str, script_text: str, ct: str, bi):
     if len(tail) < 2:
         return
     block = tail[-1].split("\n\n")[0]
+    # Scan the DIALOGUE only. The block now also carries the numbered choice
+    # lists read back under 質問1/質問2, and those name every candidate — an
+    # ordinal's span would run into them and match all four, resolving nothing.
+    block = re.split(r"^質問1。", block, maxsplit=1, flags=re.M)[0]
     marks = list(P5_ORDINAL.finditer(block))
     if not marks:
-        return skip(f"{name}: 問題5 2番 printed order = spoken enumeration order",
+        return skip(f"{name}: 問題5 2番 choice order = spoken enumeration order",
                     "the script enumerates without Nつ目/最後 labels — "
                     "exam-qa-review step 4 owns it")
 
@@ -2959,12 +3149,12 @@ def check_mondai5_enumeration(name: str, script_text: str, ct: str, bi):
     check(f"{name}: 問題5 2番 decides by attribute, not by ordinal", not back,
           f"{back} spoken after the enumeration closed — official resolves with "
           f"「鳥が見られる所？」/「折りたためる自転車なら」, never 「Nつ目のに"
-          f"します」. An ordinal decider ties the answer to a printed SLOT, so "
-          f"re-ordering the booklet silently re-keys the item: name the "
+          f"します」. An ordinal decider ties the answer to a numbered SLOT, so "
+          f"re-ordering the choice list silently re-keys the item: name the "
           f"candidate instead (choukai-audio 問題5 2番)")
 
-    # (b) Candidate n of the enumeration must be printed option n.
-    opts = choukai_p5_2ban_options(ct, bi)
+    # (b) Candidate n of the enumeration must be choice n of the numbered list.
+    opts = choukai_p5_2ban_options(script_text)
     if len(opts) != 4:
         return
     flat_opts = [_flat(o) for o in opts]
@@ -2978,17 +3168,168 @@ def check_mondai5_enumeration(name: str, script_text: str, ct: str, bi):
         else:
             unresolved += 1
     if len(seen) < 2:
-        return skip(f"{name}: 問題5 2番 printed order = spoken enumeration order",
-                    f"only {len(seen)} of {len(marks)} spoken candidates match a "
-                    f"printed option by name")
-    check(f"{name}: 問題5 2番 printed order = spoken enumeration order "
+        return skip(f"{name}: 問題5 2番 choice order = spoken enumeration order",
+                    f"only {len(seen)} of {len(marks)} enumerated candidates match "
+                    f"a numbered choice by name")
+    check(f"{name}: 問題5 2番 choice order = spoken enumeration order "
           f"({len(seen)} of {len(marks)} candidates resolved)",
           seen == sorted(seen),
-          f"spoken candidates land on printed slots {seen} — official prints "
-          f"the four in the order the audio introduces them (7/2025, 12/2014, "
-          f"7/2019). Fix it in 聴解スクリプト.txt by re-enumerating, then "
-          f"`make mp3 {name}`; re-ordering the printed list alone re-keys the "
-          f"item (jlpt-exam-structure 問題5 2番)")
+          f"enumerated candidates land on choice slots {seen} — the four are "
+          f"read back in the order the audio introduced them (7/2025, 12/2014, "
+          f"7/2019). Both halves live in 聴解スクリプト.txt now, so fix it there "
+          f"and run `make mp3 {name}`; re-ordering the choice list alone "
+          f"re-keys the item (jlpt-exam-structure 問題5 2番)")
+
+
+# G15. REGISTER. Every generated paper so far passed this gate while sounding
+# nothing like the official recording, and the difference is countable — see
+# `choukai-audio/references/official_register.md`, measured over the 31-sitting
+# archive (321 k chars, 3 215 turns) against generated papers:
+#
+#   short reaction turns (<=12 ch)   official 18 %   generated 6 %
+#   turns opening with a filler      official 35 %   generated 18 %
+#   hesitation tokens per paper      official 41     generated 0-4
+#   flat 「〜ではありません」/10 k       official 0.4    generated 17.1
+#
+# The FAIL-class rows below are not style: each makes items solvable by pattern.
+# 問題3's triple denial names three of the four options aloud and rejects each;
+# an identical closing turn across a section's items teaches the shape of the
+# key; a 問題4 option set of はい/いいえ/では is answerable without the prompt
+# (when almost every 「まだ〜ていません」 option is a wrong answer, the shape is
+# the key).
+#
+# Thresholds are set at or below the official MINIMUM, never at its median, so a
+# paper is only flagged when it is outside the archive's whole range.
+P3_DENIAL_RE = re.compile(r"(話ではありません|論じているのでもありません"
+                          r"|取り上げているわけでもありません|わけでもありません)")
+FILLERS = ("あのう", "あの、", "えー", "えっと", "ええと", "うーん", "まあ、", "あ、", "ああ、")
+REACTION_MAX_CH = 12
+Q4_SHAPE_RE = re.compile(r"^(はい|いいえ|いえ|では)[、。]")
+
+
+def script_turns(script_text: str, m) -> list[str]:
+    """Spoken text of every speaker-tagged line (the narrator is not a turn)."""
+    out = []
+    for line in script_text.splitlines():
+        hit = m.SPEAKER_RE.match(line.strip())
+        if hit and hit.group(1) in m.SPEAKER_MAP:
+            out.append(hit.group(2).strip())
+    return out
+
+
+def check_script_register(name: str, script_text: str, m):
+    """Dialogue must read as people talking, not one template per section (G15)."""
+    turns = script_turns(script_text, m)
+    if not turns:
+        return skip(f"{name}: 聴解 script register", "no speaker-tagged turns")
+
+    # --- FAIL: the 問題3 denial sweep (0 in 31 official sittings) -------------
+    p3 = re.split(r"^問題3。$", script_text, maxsplit=1, flags=re.M)
+    p3 = re.split(r"^問題4。$", p3[-1], maxsplit=1, flags=re.M)[0] if len(p3) > 1 else ""
+    sweeps = P3_DENIAL_RE.findall(p3)
+    check(f"{name}: 問題3 monologues do not deny the other options",
+          not sweeps,
+          f"{len(sweeps)} denial phrase(s) in 問題3 — the close 「Xの話ではありません"
+          f"し、Yについて論じているのでもありません…」 appears 0 times in 31 official "
+          f"sittings and has shipped in every item of a generated 問題3. It reads "
+          f"the wrong options out and rejects them, so the item is solvable from "
+          f"the negations alone. Official 概要理解 distractors are topic-level "
+          f"near-misses the talk never mentions "
+          f"(question-authoring/references/choukai-items.md 問題3)")
+
+    # --- FAIL: a 問題3 monologue that names its own distractors --------------
+    # Stronger than the phrase list above, which only catches the wordings we
+    # happened to ship: one paper wrote 「〜を主に論じているのではありません」 and
+    # slipped through. This counts how many of the item's OWN four spoken
+    # options the talk mentions. Official monologues mention the keyed topic and
+    # nothing else — usually paraphrased, so even that often scores 0.
+    named = []
+    for block in re.split(r"\n\s*\n", p3):
+        lines = [l.strip() for l in block.strip().splitlines() if l.strip()]
+        if not lines or not m.ITEM_RE.match(lines[0]):
+            continue
+        opts = [o for _, o in re.findall(r"^([1-4])、(.+?)。?$", "\n".join(lines), re.M)]
+        talk = "\n".join(l for l in lines if not re.match(r"^[1-4]、", l))
+        hits = [o for o in opts if len(o) >= 5 and o.rstrip("。") in talk]
+        if len(hits) >= 2:
+            named.append(f"{lines[0][:4]} mentions {hits}")
+    check(f"{name}: 問題3 monologues do not name their own distractors",
+          not named,
+          "; ".join(named) + " — a 概要理解 talk that lists the other options "
+          "(to reject them, or at all) is answerable from the list instead of "
+          "the content. Official talks mention only their own subject "
+          "(choukai-items.md 問題3)")
+
+    # --- FAIL: a 問題3 lead-in that names the topic answers the question -----
+    topical = [ln.split("。")[0] for ln in re.findall(r"^(?:例|\d+番)。.*$", p3, re.M)
+               if "について" in ln or "の話" in ln]
+    check(f"{name}: 問題3 lead-ins name the setting, not the topic", not topical,
+          f"{topical} — official 問題3 says 「ラジオで女の人が話しています。」 and "
+          f"nothing more, in every item of every sitting, because 「何について話して"
+          f"いますか」 IS the task. Generated papers wrote 「…◯◯の注意点について"
+          f"話しています」 over a keyed option naming that same ◯◯, i.e. read the "
+          f"answer out before the talk began (choukai-items.md 問題3)")
+
+    # --- FAIL: an identical closing turn reused across items -----------------
+    closers = collections.Counter()
+    for block in re.split(r"\n\s*\n", script_text):
+        lines = [l.strip() for l in block.strip().splitlines() if l.strip()]
+        if not lines or not m.ITEM_RE.match(lines[0]):
+            continue
+        spoken = [t for t in (m.SPEAKER_RE.match(l) for l in lines) if t
+                  and t.group(1) in m.SPEAKER_MAP]
+        if spoken:
+            closers[spoken[-1].group(2).strip()] += 1
+    reused = {t: n for t, n in closers.items() if n > 1 and len(t) > 4}
+    check(f"{name}: no two 聴解 items end on the same turn", not reused,
+          "; ".join(f"「{t}」×{n}" for t, n in sorted(reused.items())) +
+          " — one closing turn reused across most items of a section "
+          "which teaches the shape of the key rather than testing listening "
+          "(choukai-audio §Banned formulas)")
+
+    # --- WARN: register floors (official minimum, not median) ----------------
+    reactions = [t for t in turns if len(t) <= REACTION_MAX_CH]
+    share = len(reactions) / len(turns)
+    warn(f"{name}: 聴解 dialogue carries short reaction turns "
+         f"({share * 100:.0f}% of {len(turns)})", share >= 0.12,
+         f"official is 18% (589/3215 turns <=12 chars: 「はい。」「そうですか。」"
+         f"「うん。」); below ~12% the conversation never lets the other speaker "
+         f"land, and the audio loses the 0.9 s turn gaps that make it breathe "
+         f"(official_register.md §1)")
+
+    fillers = sum(script_text.count(f) for f in FILLERS)
+    warn(f"{name}: 聴解 dialogue hesitates like a person ({fillers} tokens)",
+         fillers >= 13,
+         f"official carries a median of 41 hesitation tokens per paper "
+         f"(あのう/えー/えっと/うーん/まあ/あ、) and never fewer than 13, in 31/31 "
+         f"sittings; generated papers have carried as few as 3. Zero fillers in "
+         f"45 minutes is the loudest tell that no human wrote it — keep them out "
+         f"of the ANNOUNCER's lines only (choukai-audio §Register)")
+
+    denials = len(re.findall(r"(ではありません|じゃありません|必要は?ありません"
+                             r"|しなくていい)", script_text))
+    per10k = denials / max(len(script_text) / 10000, 1e-9)
+    warn(f"{name}: wrong options are eliminated, not contradicted "
+         f"({per10k:.1f} flat denials/10k chars)", per10k <= 6.0,
+         f"official measures 1.4/10k for this whole family and 0.4 for bare "
+         f"「〜ではありません」; papers written without the rule measure over ten "
+         f"times that. Prefer reassigning the task to a named third party, "
+         f"deferring it (その前に/後回し), refusing it (難しい/見送), or noting it is "
+         f"already done — and rotate the device across a section's items "
+         f"(choukai-items.md §Eliminated ≠ contradicted)")
+
+    q4 = re.split(r"^問題4。$", script_text, maxsplit=1, flags=re.M)
+    q4 = re.split(r"^問題5。$", q4[-1], maxsplit=1, flags=re.M)[0] if len(q4) > 1 else ""
+    replies = [r for _, r in re.findall(r"^([1-3])、(.+)$", q4, re.M)]
+    if replies:
+        shaped = [r for r in replies if Q4_SHAPE_RE.match(r)]
+        pct = len(shaped) / len(replies)
+        warn(f"{name}: 問題4 replies open with content, not はい/いいえ/では "
+             f"({pct * 100:.0f}% of {len(replies)})", pct <= 0.20,
+             f"official: 1.3% of 1113 replies (94% open with content); generated "
+             f"papers have run over half. A set of 「はい、〜」/「いいえ、まだ〜ていません」"
+             f"/「では、〜」 is solvable without hearing the prompt — write three "
+             f"stances on the prompt instead (choukai-items.md §即時応答)")
 
 
 def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
@@ -3339,6 +3680,7 @@ def check_tests():
         check_note_band(d.name, gt)
         if origin == "generated":
             check_dokkai_lengths(d.name, gengo_prose, bi)
+            check_dokkai_rhetorical_monotony(d.name, gengo_prose)
             check_chuuryaku(d.name, gengo_prose)
             check_mondai11_stems(d.name, gengo_prose)
             check_mondai13_closer(d.name, gengo_prose)
@@ -3438,8 +3780,14 @@ def check_tests():
                     check("聴解スクリプト.txt passes validate_script", False, str(e).replace("\n", " ")[:300])
                 check_script_shape(st, ct, m, d.name)
                 check_example_premarks(ct, st, bi)
+            check_mondai5_prints_nothing(d.name, ct, bi)
             check_mondai5_enumeration(d.name, st, ct, bi)
             check_voice_casting(st, m, origin, d.name)
+            # Register is a GENERATION failure mode: an imported official paper
+            # is the reference these thresholds came from, and its script.md is
+            # partly OCR, so measuring it here would flag the yardstick.
+            if origin == "generated":
+                check_script_register(d.name, st, m)
             check_spec_target_items(d, gt, st, bi)
         else:
             check("聴解スクリプト.txt present", False, "canonical name required")
@@ -3599,6 +3947,7 @@ def main():
         check_ledger_spec_agreement()
         check_harvest_hygiene()
         check_harvest_provenance()
+        check_topics_themes()
         check_draw_provenance()
     check_tests()
     check_grader_parity()

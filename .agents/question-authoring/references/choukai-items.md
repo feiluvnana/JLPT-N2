@@ -23,6 +23,28 @@ not merely outweighed.
 
 課題理解 (問題1) hides the correct FIRST action behind 「その前に」「それが先」.
 
+### Eliminated ≠ contradicted — rotate the DEVICE, and count it
+
+Measured over the 31-sitting archive against generated papers
+(`choukai-audio/references/official_register.md` §2.3), official kills a
+candidate by **reassigning** it to a named third party, **deferring** it
+(その前に / 先に / 後回しになってました), **refusing** it (難しい / 無理 / 見送), or
+noting it is **already done** (もう〜てある). Flat 「〜ではありません」 is its last
+resort: **0.4 per 10 k chars, against 17.1 in papers written without this
+rule**.
+
+- **No two items in a section may use the same elimination device for their
+  key.** Write the section, then list device-per-item in one column; if the
+  column reads the same word four times, rewrite.
+- Reassignment and deferral both satisfy the quotable-grounding rule below —
+  「その資料は山下さんが引き受けてくれました」 is a better 解説 quote than
+  「それは必要ありません」 precisely because the listener has to track who.
+- 「一番大切なのは〜」 as the answer-marking phrase in every 問題2 item is the
+  same failure one level up: official uses 一番 2.1 per 10 k chars, and generated
+  papers have run ten times that.
+  Let the speaker mark the answer by **contrast** (「〜も大事ですけど、やっぱり…」)
+  or by **conceding then correcting**, and vary it item to item.
+
 ## Construction order is binding: dialogue FIRST, then harvest the options
 
 Never draft an option set before the script line exists. Write the dialogue,
@@ -52,21 +74,83 @@ the *official* paper (official distractors are often paraphrased). The
 mechanical check cannot tell "reassigned" from "never said"; the written
 grounding line is what does.
 
+## 問題3 (概要理解): the narration names the SETTING, never the topic
+
+Official 問題3 item lines are 「1番 ラジオで女の人が話しています。」/「2番 講演会で
+家具を作る職人が話しています。」/「3番 テレビでアナウンサーの男の人がお菓子屋の人に
+インタビューしています。」 — setting plus speaker, and **nothing about what the
+talk is about**, in every item of every sitting. The question 「何について話して
+いますか」 is the whole task, so naming the subject in the lead-in answers it.
+
+Generated papers have written 「ラジオで、専門家が◯◯の注意点について話しています。」
+over a keyed option naming that same ◯◯ — i.e. the answer was read out before the
+talk began. Write `N番。<場所>で、<話者>が話しています。` and stop. `make check`
+fails a 問題3 item line carrying 「〜について」/「〜の話」.
+
+## 問題3 (概要理解): the monologue must NOT mention the wrong options
+
+In 31 official sittings, **no 問題3 monologue refers to its distractors at all**.
+The four options are topic-level summaries of the same talk with a modifier
+moved or a scope widened (7/2025 1番: 一人旅のよさ vs 一人旅をする寂しさ /
+一人旅とグループ旅の共通点 / 一人旅の注意点 — 寂しさ appears only as something
+*other people say*, and the other two never appear). The item is hard because
+all four options are *about* the talk.
+
+So the closing "denial sweep" — 「Xの話ではありませんし、Yについて論じているので
+もありません。Zを取り上げているわけでもありません」 — is **forbidden**. It appears
+**0 times in the archive**, and it has shipped in every item of a generated
+問題3. It destroys the item twice over: it hands the answer to anyone who hears
+the three negations, and it is not language a human speaker would produce. Write
+the monologue as a talk that is only ever about ONE thing, then harvest three
+near-misses from its own content. `make check` fails the formula outright, and
+also fails a talk that mentions two or more of its own four options.
+
 ## Spoken choice pacing
 
 Options spoken in 聴解 must follow official lengths: **~10–15 chars per choice
 in 問題3/問題4**.
 
-## 問題5-2番 printed options
+## 問題5-2番 choices — spoken, not printed
 
-Official papers print **bare labels** for the four choices (「夕日通り /
-にしがおか / さくら公園 / 東山」-style) — never full sentences and never the
-deciding attributes (`東山（商店街の近くで便利）` is forbidden): the item exists
-to test matching the attributes *heard* in the audio to the labels. The printed
-format spec (same four labels, same order, for 質問1 and 質問2) is owned by
-`jlpt-exam-structure` — defer to it.
+**This repo prints nothing anywhere in 問題5**; 2番's four choices are read aloud
+after 質問1 and again after 質問2. Official prints them instead — the divergence,
+and why it was accepted, is owned by `jlpt-exam-structure` §"問題5 prints
+nothing". Defer to it for the format spec (same four labels, same order, both
+questions) and to `choukai-audio` for where they sit in the script block.
+
+What is yours to get right when authoring the item:
+
+- **Bare labels** (「夕日通り / にしがおか / さくら公園 / 東山」-style) — never full
+  sentences, and never the deciding attribute riding along
+  (`4、東山、商店街の近くで便利です。` is forbidden, exactly as
+  `東山（商店街の近くで便利）` was when the list was printed). The item exists to
+  test matching attributes *heard* in the dialogue to the labels; a choice that
+  restates the attribute answers itself.
+- **Spoken now means the labels must survive being heard once.** A printed list
+  could be re-read; this one cannot. Keep the four short and phonetically
+  distinct — four place names differing in one mora
+  (「中央町 / 中央通り / 中山町 / 中野通り」) is a listening-discrimination item by
+  accident, not 統合理解.
+- The ~10–15-char-per-choice band under "Spoken choice pacing" above is for
+  問題3/問題4 sentence options. 問題5 2番's are names: shorter is correct.
 
 ## 即時応答 (問題4)
+
+### The three replies must not be はい / いいえ / では
+
+Measured over 1 113 official replies: **94 % open with content**, and only
+1.3 % open with はい, いいえ or では combined. Generated papers have run over half
+their replies on those three openers, plus 「まだ〜ていません」 four times as often
+as official. When almost every 「まだ〜ていません」 option is a wrong answer, the
+*shape* is the key: the item becomes solvable without hearing the prompt.
+
+Write the three replies as three **stances** on the prompt instead: take it and
+act, misread its tense or aspect, invert its polarity. Official shape (7/2025
+4番, OCR — pattern only): prompt 「見てて、この定食。この量は食べきれないよ。」 →
+`1 私、ちょっと食べてあげようか？` `2 他のも注文する？` `3 量、ちょうどいいんだ。`
+Nothing announces yes or no; each reply commits to a reading of 食べきれない.
+Reply length stays official (median 15 chars). `make check` WARNs when a paper's
+問題4 exceeds the official rate of these openers.
 
 Tests idioms and keigo: 目を通す, お言葉に甘えて, 〜かと思いきや, 〜ようがない,
 席を外しております, 在庫を切らしております. When the spec carries

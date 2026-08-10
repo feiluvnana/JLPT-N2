@@ -133,11 +133,13 @@ read `睡眠・健康`, a lookup instead of a judgement.
 
 **What the sampler enforces.** `check_pool_themes()` **fails** on any themed entry that is
 a bare string, lacks a `theme`, or carries an off-list value. After the draw,
-`check_theme_spread()` **warns** when one theme exceeds `THEME_CAP` (reading 2, listening
-5) — a re-draw/re-blend decision, not noise. `THEME_CAP` and rule 3 below are one decision
-in two places: change either, change the other in the same pass. The WARN-vs-defect
-**asymmetry is deliberate** — the sampler cannot see which entry maps to which 問題; do
-not harden the WARN or soften the prose.
+`check_theme_spread()` **warns** when one theme exceeds `THEME_CAP` (reading **1**,
+listening 5) — a re-draw/re-blend decision, not noise. `THEME_CAP` and rule 3 below are one
+decision in two places: change either, change the other in the same pass. Reading is the
+half that must come out all-distinct, so the draw meets it directly
+(`sample_distinct_theme()`) and the WARN is only the backstop for a hand-edited or blended
+spec. Listening keeps the WARN-vs-defect **asymmetry deliberately** — the sampler cannot
+see which scenario maps to which 問題; do not harden that WARN or soften the prose.
 
 ### The four theme rules
 
@@ -152,8 +154,12 @@ get caps.
 > 1. **Five headline surfaces, five DIFFERENT themes.**
 > 2. **A headline theme appears nowhere else in the 読解 half** (e.g., shipping
 >    デジタルデトックス as both 問題9 and 問題10(1)). Listening is governed by rule 3 only.
-> 3. **Caps everywhere else: ≤2 reading surfaces, ≤5 listening scenarios per theme**
->    (`THEME_CAP`); a *third* reading surface on one theme is a defect even with no FAIL.
+> 3. **Reading: ONE surface per theme — all thirteen 読解 surfaces differ.** Listening
+>    caps at ≤5 scenarios per theme (`THEME_CAP`). The reading side is a distinctness
+>    rule, not a cap: 13 surfaces against the 19 themes that carry reading entries leaves
+>    6 spare, so "no repeat" is arithmetically reachable and a repeat is always a
+>    re-angle or a re-draw, never a pool limit. `sample_distinct_theme()` meets it inside
+>    the draw; the cloze and every web seat are yours to keep distinct.
 > 4. **Cross-test: no theme headlines two consecutive papers, and across the previous two
 >    papers together at most ONE headline theme may repeat** (only against the
 >    paper-before-last, only once in the set).
@@ -178,6 +184,26 @@ or the nearest existing tag); check the five headline themes against each other,
 count in your final report. A theme tag is a floor exactly as token overlap is: it catches
 the renamed subject, not a *shape* repeat or a stretched label — the whole-paper topic
 table pass (`jlpt-test-generation` §"One topic, one surface") stays mandatory.
+
+**The four rules bind the SHIPPED surfaces, and only `logs/topics.json` records those.**
+The spec-side `check_theme_spread()` WARN can never enforce them: it counts the *draw*, it
+cannot see which entry became which 問題, and — the hole 20260810_1 fell through — it
+counts nothing at all for the two surface kinds that carry no theme in a spec, the
+`cloze_topic` and every `"origin": "web"` entry. That paper's draw held two `働き方`
+reading topics, exactly at `THEME_CAP`; the shipped paper held **five**, because the
+untagged web ワーケーション seed, the untagged 熱中症 cloze, and a 職場-framed passage
+tagged `睡眠・健康` were invisible to every check. So:
+
+- **Every web seed and the cloze inherit a theme, and the inherited value is written down**
+  — into the spec entry when you blend (`"theme"` beside `"origin": "web"`), and into
+  `logs/topics.json` when you build. An entry with no theme is not "untagged", it is
+  uncounted, which reads as compliant.
+- **A tag must describe the passage as authored, not the topic as drawn.** Re-tag at build
+  time if drafting moved the subject: a 「メンタルヘルスと職場」 essay written entirely
+  about corporate systems is `働き方`, whatever the pool row says. Re-tagging is the honest
+  repair; the defect is authoring away from the tag and leaving the tag behind.
+- `check_topics_themes()` in `tools/check_consistency.py` reads the recorded themes and
+  FAILs the four rules on the 読解 half. Papers whose rows predate the field WARN.
 
 ## Rotation model (ledger v2 — LRU, not reset)
 
@@ -326,9 +352,11 @@ the *harvest* was on the same subjects (e.g., sharing 8 surfaces across tests th
 by the **build pass** from the finished sources (`jlpt-test-generation` stage 3) — what the
 paper *actually* tests, never what the spec asked for. Each row carries `surfaces` (every
 読解 passage, 問題9, 問題14, and every 聴解 item incl. the 例 — the shipped subject as one
-noun phrase) and `shapes` (each 聴解 item's errand shape, e.g. "reschedule call" — two
-subjects can run the identical errand). No subject or shape may repeat within the paper
-or against the previous two rows. `merge_seeds.py` reads those rows
+noun phrase), `themes` (the same keys → a `THEMES` value, **every surface, web and cloze
+included**; this is what makes the four theme rules checkable at all — see "The four rules
+bind the SHIPPED surfaces" above) and `shapes` (each 聴解 item's errand shape, e.g.
+"reschedule call" — two subjects can run the identical errand). No subject or shape may
+repeat within the paper or against the previous two rows. `merge_seeds.py` reads those rows
 before blending and **aborts** on any seed sharing a ≥2-char content token (kanji,
 katakana, or latin run) with a recorded subject; a missing file is tolerated and loudly
 reported.

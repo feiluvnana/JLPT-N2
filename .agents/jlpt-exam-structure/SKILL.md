@@ -148,16 +148,23 @@ review):
 | 2 | ポイント理解 (why/what point) | 6 | 4 options per item + 例 options; has option-READING time | yes + confirmation |
 | 3 | 概要理解 (gist of monologue) | 5 | NOTHING (memo space only) | yes + confirmation |
 | 4 | 即時応答 (quick response, 3 choices) | 11 | NOTHING | yes + confirmation |
-| 5 | 統合理解 (long integrated) | 3 answers | nothing for 1番; printed options for 2番's two questions | NO practice (この問題には練習はありません) |
+| 5 | 統合理解 (long integrated) | 3 answers | **NOTHING — both items** (memo space + bubble rows only) | NO practice (この問題には練習はありません) |
 
-問題5 shape (recent official papers): **2 item blocks, 3 answers** — `1番` (spoken choices) + `2番` (二つの質問, options printed). Keys are `問5-1`, `問5-2-1`, `問5-2-2`.
+問題5 shape: **2 item blocks, 3 answers** — `1番` + `2番` (二つの質問), **all choices spoken**. Keys are `問5-1`, `問5-2-1`, `問5-2-2`.
 
-**問題5 2番 — what the booklet prints (format fact, measured):** the four options
-are **names only**, and 質問1 and 質問2 print the **same four options in the same
-order**. Measured on the July 2025 official booklet — `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`,
-the exact text layer of the PDF (the in-tree import this used to cite,
-`tests/imported-n2-2025-07`, was deleted) — the page carries exactly this, twice
-— once under `**質問1**`, once under `**質問2**`:
+### 問題5 prints nothing — a deliberate divergence from official
+
+**This repo prints NO options anywhere in 問題5**, for 1番 and 2番 alike. The
+booklet carries the instruction, a メモ area, and a bare bubble row per answer
+(`**質問1** 1 ・ 2 ・ 3 ・ 4`); every choice is read aloud. **This is a house
+rule, not a format fact** — flagged here in full because everything else in this
+file is measured, and a reader must not mistake this for the archive.
+
+**What official actually does, for calibration:** all 31 sittings print 2番's
+four options. They are **names only**, and 質問1 and 質問2 print the **same four
+in the same order**. July 2025 (`refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`, the
+exact text layer of the PDF) carries exactly this, twice — once under `**質問1**`,
+once under `**質問2**`:
 
 ```
  1. 夕日通り
@@ -166,18 +173,30 @@ the exact text layer of the PDF (the in-tree import this used to cite,
  4. 東山
 ```
 
-Two prohibitions follow, both of which a generated paper has broken:
+Dec 2025 prints `1 1番の自転車 / 2 2番の自転車 / …` — the same list emptied of
+information. **The house rule is the next step along that line**: with nothing
+printed, all four candidates must be held from the audio, and no printed word
+can leak a deciding attribute. The cost is that a candidate loses the option
+list they could re-read while the audio ran, so our 問題5 is harder than the real
+one. Do not "restore" the printed list on the grounds that official has it — it
+was removed knowingly. Do raise it if the difficulty proves wrong in QA.
 
-- **No parenthesised decisive attribute beside a name** — no 家賃, 立地, 条件,
-  時間帯, 定員 in the printed option (`1. 夕日通り（海沿い・徒歩5分）`). 統合理解
-  measures holding four candidates' attributes from the audio and matching them
-  against two questions; printing the deciding attribute is the answer, and the
-  item stops measuring anything. The official page prints place names and nothing
-  else — the sea-front detail that decides 質問1 is spoken only.
-- **質問1 and 質問2 share one option list, in one order.** Two different lists (or
-  the same four re-ordered) turn one memory task into two and desynchronise the
-  booklet from the announcer, who reads no options here at all.
-- **The printed order IS the order the audio introduces the candidates, and the
+Mechanically, 問題5 is now shaped exactly like 問題3: nothing printed, choices
+spoken, 3 s between them. Three rules follow, the first two inherited from the
+official page and re-pointed at the spoken list:
+
+- **No decisive attribute attached to a name** — no 家賃, 立地, 条件, 時間帯,
+  定員 riding along with the candidate in the read-back list
+  (`1、夕日通り、海沿いで駅から5分。`). 統合理解 measures holding four candidates'
+  attributes from the audio and matching them against two questions; restating
+  the deciding attribute in the choice IS the answer, and the item stops
+  measuring anything. Speak the bare name — the sea-front detail that decides
+  質問1 belongs in the dialogue only. (Under the old printed list this same rule
+  read "no parenthesised attribute beside a name"; a generated paper broke it.)
+- **質問1 and 質問2 read the same four choices, in one order.** Two different
+  lists, or the same four re-ordered, turn one memory task into two and
+  desynchronise the two questions from each other and from the key.
+- **The choice-list order IS the order the audio introduces the candidates, and the
   deciding line names a candidate — never an ordinal.** Both halves are
   format facts, measured across the archive:
   - **Order.** July 2025 speaks 1つ目 夕日通り / 2つ目 西が丘 / 3つ目 さくら公園 /
@@ -192,17 +211,21 @@ Two prohibitions follow, both of which a generated paper has broken:
     enumeration.
 
   **Consequence, and it is the whole reason this is written down:** a mis-keyed
-  問題5 2番 is fixed in `聴解スクリプト.txt` — re-enumerate the candidates in the
-  printed order, then `make mp3 <test_id>` — **never by re-ordering the printed
-  list alone.** Re-ordering the booklet under an audio that still says
-  「3つ目の方法がぴったりですね」 silently re-keys the item: the ordinal points at
-  a printed SLOT, so the paper then has two defensible answers, the ordinal's
-  and the key's. That is exactly what one repair pass did to `tests/3` (spoken
-  個別面談/模擬面接/AI/座談会, printed AI/模擬面接/個別面談/座談会, deciding line
-  「3つ目」, key on printed slot 1). `tools/check_consistency.py` now fails both
-  halves — `check_mondai5_enumeration()` — wherever the script uses ordinal
-  labels at all; a paper that enumerates by name resolves nothing there and is
-  left to `exam-qa-review` step 4.
+  問題5 2番 is fixed by re-enumerating the candidates so the dialogue introduces
+  them in the read-back order, then `make mp3 <test_id>` — **never by re-ordering
+  the choice list alone.** A list re-ordered under an audio that still says
+  「3つ目の方法がぴったりですね」 silently re-keys the item: the ordinal points at a
+  numbered SLOT, so the paper then has two defensible answers, the ordinal's and
+  the key's. That is exactly what one repair pass did to `tests/3` (spoken
+  個別面談/模擬面接/AI/座談会, listed AI/模擬面接/個別面談/座談会, deciding line
+  「3つ目」, key on slot 1). Both halves now live in `聴解スクリプト.txt`, which
+  removes the two-file desync but **not** the defect — an ordinal decider still
+  re-keys the item when the enumeration is re-ordered, and now one file edit is
+  enough to do it. `tools/check_consistency.py` fails both halves —
+  `check_mondai5_enumeration()` — wherever the script uses ordinal labels at
+  all; a paper that enumerates by name resolves nothing there and is left to
+  `exam-qa-review` step 4. `check_mondai5_prints_nothing()` fails a booklet that
+  prints an option list under 問題5.
 
 ## Announcer / 例 mechanics (script + booklet must both honor these)
 
@@ -211,13 +234,17 @@ Two prohibitions follow, both of which a generated paper has broken:
   「最もよいものは◯番です。解答用紙の問題◯の例のところを見てください。
   最もよいものは◯番ですから、答えはこのように書きます。では、始めます。」
 - 問題1/2 questions are spoken TWICE: before and after the conversation.
-- 問題3/4/5(1番): choices are SPOKEN (「1、…。2、…。」), not printed.
+- 問題3/4/5: choices are SPOKEN (「1、…。2、…。」), not printed — **all of 問題5,
+  2番's two questions included** (§"問題5 prints nothing" above; official prints
+  2番's).
   **Spoken ≠ same pacing**: measured on the official Dec 2025 audio, 問題3 and
   問題5 leave ~3.0 s between choices, while 問題4's three choices are read
   continuously (1.0–2.0 s apart, i.e. ordinary dialogue spacing). That is why
   `GAP_BETWEEN_SPOKEN_CHOICES` in `choukai-audio` applies to 問題3/問題5
   only — not an oversight; do not "fix" it.
-- 問題5 2番 options are printed only — do not speak them.
+- 問題5 2番 options are SPOKEN, twice — the four choices are read after 質問1 and
+  again after 質問2, with the 10 s answer pause between the two runs (official
+  prints them and reads none; see the divergence note above).
 - Exam closes: 「これで、聴解試験を終わります。」
 
 ## 問題N instruction lines (canonical — transcribed from `refs/JLPT_N2_NEW/`)
@@ -236,14 +263,18 @@ drift. Transcribed from the July 2025 booklet (`refs/JLPT_N2_NEW/16. N2 7-2025/1
 | 問題4 | 問題4では、問題用紙に何も印刷されていません。まず文を聞いてください。それから、それに対する返事を聞いて、1から3の中から、最もよいものを一つ選んでください。 |
 | 問題5 | 問題5では、長めの話を聞きます。この問題には練習はありません。問題用紙にメモをとってもかまいません。 |
 | 問題5 1番 | 問題用紙に何も印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。 |
-| 問題5 2番 | まず話を聞いてください。それから、二つの質問を聞いて、それぞれ問題用紙の1から4の中から、最もよいものを一つ選んでください。 |
+| 問題5 2番 | 問題用紙に何も印刷されていません。まず話を聞いてください。それから、二つの質問とせんたくしを聞いて、それぞれ1から4の中から、最もよいものを一つ選んでください。 |
 
 - 問題1〜4: the SCRIPT appends 「では、練習しましょう。」 to the instruction, then
   the 例, then the confirmation line ending 「では、始めます。」. The BOOKLET
   prints the instruction only.
-- 問題5: the 1番 lead-in is spoken (script blocks add 「では、始めます。」 after
-  it); 2番's line is **booklet-only**, because its options are printed. There is
-  no combined 「1番、2番。…」 line.
+- 問題5: **both** lead-ins are spoken and appear in both files, each as its own
+  block BEFORE its `N番。` marker — the 1番 one adds 「では、始めます。」, the 2番
+  one does not (the section is already running). The 2番 line is a house
+  adaptation of the official one, since nothing is printed: 「問題用紙に何も印刷
+  されていません」 replaces 「問題用紙の」 and 「せんたくし」 joins the two 質問.
+  Official's 2番 line is booklet-only, because official prints 2番's options.
+  There is still no combined 「1番、2番。…」 line.
 - The official scan renders some words in kana (いんさつ, えらんで); this repo
   writes 印刷 / 選んで, and `make check`'s typo guard expects 印刷. Either is
   acceptable as long as the booklet and the script match — do not "fix" one file
@@ -286,7 +317,10 @@ Two consequences the pipeline actually uses:
 - **Markdown Question Numbering**: Always use bold numbers (`**1**` ... `**71**` for file 1; `**例**`, `**1番**` for file 2). Never use `1.` or `6.` list syntax to prevent HTML `<ol>` list resets.
 - 文字・語彙・文法: short options run HORIZONTALLY on one line
   (` 1. ◯◯  2. ◯◯  3. ◯◯  4. ◯◯`). Reading questions and 問題6 usage sentences are vertical.
-- 聴解 booklet: options stacked VERTICALLY, one per line with a leading space.
+- 聴解 booklet: options stacked VERTICALLY, one per line with a leading space —
+  in **問題1 and 問題2 only**, the two sections that print any. 問題3/4/5 print a
+  bare bubble row per item (`**1番** 1 ・ 2 ・ 3 ・ 4`, `**質問1** 1 ・ 2 ・ 3 ・ 4`)
+  and nothing else.
 - Question stems bold the tested word: **地域**, or show blanks as (　) / ＿＿.
   The bold span is the booklet's underline, so it covers the **whole word,
   okurigana included** (July 2025 問1 marks `**収まった**`, `**辛い**`) — never a

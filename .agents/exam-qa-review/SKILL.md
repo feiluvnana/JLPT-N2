@@ -421,6 +421,23 @@ subject repeating the previous test; two 聴解 items running the same errand
 a decisive detail with a listening item; and check 問題12's A/B theme against
 the previous tests' 問題12 specifically.
 
+Two columns of that table are yours to judge, because no string check decides
+either — both shipped green in 20260810_1:
+
+- **Theme column, from the SHIPPED passage.** Re-tag every 読解 surface yourself
+  from what the passage is *about*, then apply `exam-blueprint` §"The four theme
+  rules". Do not trust `test_spec.json`: web seeds and the cloze carry no theme,
+  and a drafted passage can wander off its pool tag (a 「メンタルヘルスと職場」
+  entry tagged `睡眠・健康` was authored as a corporate-systems essay). That paper
+  shipped five `働き方` reading surfaces against a cap of 2 with every gate green.
+- **Closing-move column** — `question-authoring/references/dokkai.md` §"Thirteen
+  surfaces, thirteen different essays". Read each passage's last two sentences
+  and label the move. More than two passages closing 「〜だけでは足りない、〜こそ
+  が要る」 is a finding; nine of ten is what shipped. Then check whether the
+  **keys inherit it**: if 6+ keyed 読解 options are the "human/attitude" choice
+  beside 「Xさえすれば十分」 strawmen, the section is solvable without reading and
+  that is a major finding, not a style note.
+
 ### 6. Provenance & Spec Blueprint Audit
 
 Verify `tests/<test_id>/test_spec.json` against the authored paper end to end:

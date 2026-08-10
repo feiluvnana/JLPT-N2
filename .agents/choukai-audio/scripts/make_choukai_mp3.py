@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
 """
-N2 choukai exam MP3 generator (v2) — official-style audio.
+N2 choukai exam MP3 generator (v3) — official-style audio.
 
 Calibrated against the official JLPT N2 exam audio archive in
 refs/JLPT_N2_NEW/ (31 sittings, 2010-07 .. 2025-12 — see
 .agents/choukai-audio/references/official_pacing.md):
-  - Narrator/announcer: FEMALE voice (ja-JP-NanamiNeural), slightly slow,
-    like the official test announcer (measured F0 176-254 Hz, 31/31 female).
+  - Narrator/announcer: FEMALE voice, slightly slow, like the official test
+    announcer (measured F0 176-254 Hz, 31/31 female).
   - ~0.9 s of air between utterances (official turn gaps: median 0.51 s,
     p75 0.75 s, p90 1.08 s over 465 diarized turn boundaries).
   - Answer pauses: 12 s after each question (8 s for 問題4 quick response).
   - Output loudness normalized to about -15 LUFS, the median integrated
     loudness of all 31 official recordings.
+
+ONE engine: edge-tts (free, no key, native Japanese). Two paid alternatives were
+implemented, measured on real keys and REMOVED — the evidence is kept in the
+skill so nobody re-runs the experiment: ElevenLabs reaches only English-native
+voices without a Creator-tier key (accented Japanese), and Gemini TTS caps the
+free tier at 10–15 requests per DAY against a ~250-line script. Neither could
+build a paper this repo would ship, and an unreliable engine in the default path
+is worse than two ja-JP voices that always work.
 
 Setup (one time):
     pip install edge-tts
@@ -19,11 +27,11 @@ Setup (one time):
 
 Run:
     python make_choukai_mp3.py tests/<test_id>/聴解スクリプト.txt
-    python make_choukai_mp3.py … --jobs 4      # fewer parallel TTS requests
+    python make_choukai_mp3.py … --jobs 4        # fewer parallel TTS requests
 
 Output (written next to the input script):
     聴解.mp3               (full exam)
-    聴解_チャプター.json    (per-問題/per-item offsets + script_sha)
+    聴解_チャプター.json    (per-問題/per-item offsets + script_sha + engine)
     segments/             (per-block mp3s for drilling single questions)
 
 Re-running is cheap: already-synthesized lines are skipped (delete the
@@ -31,6 +39,7 @@ segments/ folder to force a full rebuild). A cold build synthesizes lines
 concurrently — see TTS_JOBS.
 """
 
+import array
 import asyncio
 import hashlib
 import json
@@ -39,9 +48,13 @@ import os
 import re
 import subprocess
 import sys
+import wave
 from pathlib import Path
 
-import edge_tts
+try:
+    import edge_tts
+except ModuleNotFoundError:            # checked in main(); `make check` imports
+    edge_tts = None                    # this module without needing to speak
 
 FEMALE = "ja-JP-NanamiNeural"
 MALE = "ja-JP-KeitaNeural"
@@ -49,36 +62,44 @@ MALE = "ja-JP-KeitaNeural"
 # Narrator = official announcer: female, a touch slower.
 NARRATOR = {"voice": FEMALE, "rate": "-10%"}
 
-# Dialogue roles. Female roles use a normal-speed Nanami so the narrator
-# (slower) still reads as a different "person". 男2 is slowed to separate
-# him from 男1 in the three-person conversation.
+# Dialogue roles for the EDGE engine. edge-tts ships exactly two ja-JP voices,
+# so identity has to come from rate and pitch on top of those two.
+#   rate  is the calibrated speech rate (Part 4 step 5) — do not spend it on
+#         telling speakers apart, or the paper's difficulty moves with the cast.
+#   pitch is what separates two same-gender roles. It was added because a
+#         rate-only split (男1 +4% vs 男2 -8%) is not a second person to the
+#         ear: `check_voice_casting()` WARNed on exactly that pair. Kept modest
+#         (≤20 Hz on a ~120 Hz male, ~25 Hz on a ~210 Hz female) — edge-tts
+#         resynthesizes pitch, and large shifts buzz.
+# **This map is also the gender contract**: `make check` reads it to confirm
+# every 「〜の男の人」/「〜の女の人」 narration resolves to a voice of that gender.
 SPEAKER_MAP = {
-    "男":     {"voice": MALE,   "rate": "+0%"},
-    "男1":    {"voice": MALE,   "rate": "+4%"},
-    "男2":    {"voice": MALE,   "rate": "-8%"},
-    "夫":     {"voice": MALE,   "rate": "+0%"},
-    "学生":   {"voice": MALE,   "rate": "+6%"},
-    "部長":   {"voice": MALE,   "rate": "-6%"},
-    "店長":   {"voice": MALE,   "rate": "+0%"},
-    "女":     {"voice": FEMALE, "rate": "+4%"},
-    "妻":     {"voice": FEMALE, "rate": "+4%"},
-    "店員":   {"voice": FEMALE, "rate": "+6%"},
-    "先生":   {"voice": FEMALE, "rate": "+0%"},
-    "医者":   {"voice": FEMALE, "rate": "+0%"},
-    "専門家": {"voice": FEMALE, "rate": "+0%"},
-    "レポーター": {"voice": FEMALE, "rate": "+6%"},
-    "教室の人":   {"voice": FEMALE, "rate": "+0%"},
+    "男":     {"voice": MALE,   "rate": "+0%", "pitch": "+0Hz"},
+    "男1":    {"voice": MALE,   "rate": "+4%", "pitch": "+18Hz"},
+    "男2":    {"voice": MALE,   "rate": "-8%", "pitch": "-16Hz"},
+    "夫":     {"voice": MALE,   "rate": "+0%", "pitch": "-12Hz"},
+    "学生":   {"voice": MALE,   "rate": "+6%", "pitch": "+14Hz"},
+    "部長":   {"voice": MALE,   "rate": "-6%", "pitch": "-18Hz"},
+    "店長":   {"voice": MALE,   "rate": "+0%", "pitch": "+10Hz"},
+    "女":     {"voice": FEMALE, "rate": "+4%", "pitch": "+0Hz"},
+    "妻":     {"voice": FEMALE, "rate": "+4%", "pitch": "+16Hz"},
+    "店員":   {"voice": FEMALE, "rate": "+6%", "pitch": "+22Hz"},
+    "先生":   {"voice": FEMALE, "rate": "+0%", "pitch": "-16Hz"},
+    "医者":   {"voice": FEMALE, "rate": "+0%", "pitch": "-10Hz"},
+    "専門家": {"voice": FEMALE, "rate": "+0%", "pitch": "-22Hz"},
+    "レポーター": {"voice": FEMALE, "rate": "+6%", "pitch": "+25Hz"},
+    "教室の人":   {"voice": FEMALE, "rate": "+0%", "pitch": "+12Hz"},
     # Added after validate_script() caught these being silently narrated.
     # Gender is chosen to contrast with the OTHER speaker named in the item's
     # narration (学生 and 男の人 are male), so the two voices stay distinguishable.
-    "職員":   {"voice": FEMALE, "rate": "+0%"},   # vs 学生 (male)
-    "係員":   {"voice": FEMALE, "rate": "+6%"},   # vs 男の人
-    "担当者": {"voice": FEMALE, "rate": "+0%"},
-    "講師":   {"voice": FEMALE, "rate": "+0%"},
-    "アナウンス":   {"voice": FEMALE, "rate": "+0%"},
-    "アナウンサー": {"voice": FEMALE, "rate": "+4%"},
-    "教授":   {"voice": MALE,   "rate": "-6%"},   # vs 学生 (male, +6%) — split by rate
-    "FP":     {"voice": MALE,   "rate": "+0%"},
+    "職員":   {"voice": FEMALE, "rate": "+0%", "pitch": "-14Hz"},   # vs 学生 (male)
+    "係員":   {"voice": FEMALE, "rate": "+6%", "pitch": "+18Hz"},   # vs 男の人
+    "担当者": {"voice": FEMALE, "rate": "+0%", "pitch": "-20Hz"},
+    "講師":   {"voice": FEMALE, "rate": "+0%", "pitch": "-25Hz"},
+    "アナウンス":   {"voice": FEMALE, "rate": "+0%", "pitch": "+8Hz"},
+    "アナウンサー": {"voice": FEMALE, "rate": "+4%", "pitch": "+20Hz"},
+    "教授":   {"voice": MALE,   "rate": "-6%", "pitch": "-20Hz"},   # vs 学生 (male)
+    "FP":     {"voice": MALE,   "rate": "+0%", "pitch": "-14Hz"},
 }
 
 # Pacing (seconds) — measured across the 31-sitting official archive in
@@ -90,7 +111,30 @@ GAP_BETWEEN_LINES = 0.9        # ordinary gap between dialogue turns
 GAP_AFTER_PRE_QUESTION = 3.0   # 問題1/2: after the question, before the talk
 GAP_OPTION_READING = 20.0      # 問題2 only: time to read printed options
 GAP_BETWEEN_SPOKEN_CHOICES = 3.0  # 問題3/5: between spoken choices 1〜4
-GAP_AFTER_SHITSUMON1 = 10.0    # 問題5 two-question item: after 質問1
+GAP_AFTER_SHITSUMON1 = 10.0    # 問題5 two-question item: answer time for 質問1
+# Placed BEFORE the 質問2 line, not after the 質問1 line. Those were the same
+# point while 2番's options were printed and 質問1/質問2 sat adjacent. This repo
+# now prints NOTHING for 問題5 (both items) and speaks 2番's four choices under
+# each question, so keying the gap off 質問1 would drop 10 s of answer time
+# between the question and its own choice 1, and leave choice 4 running straight
+# into 質問2 with no answer time at all.
+
+# Every gap above is inserted BETWEEN segments, so it is only the real gap if a
+# segment starts and ends at its first and last sample of speech. Both engines
+# pad: edge-tts writes ~0.22 s of lead and ~0.85 s of TAIL silence into every
+# utterance, Gemini ~0.26 s either side. Unshaved, that made the measured turn
+# gap in tests/20260810_2 **1.88–2.09 s** where the constant says 0.9 and
+# official measures 0.51 [p75 0.75, p90 1.08] — i.e. the whole archive
+# calibration was silently defeated by TTS padding, and the audio dragged.
+# `shape_pauses()` trims both ends to zero so the numbers above mean what they
+# say, and it caps over-long pauses INSIDE one utterance:
+GAP_WITHIN_TURN_MAX = 0.5      # cap for a pause inside one turn (at 。 mostly)
+SHAPE_PAUSE_FLOOR = 0.6        # only pauses longer than this get capped
+# Why a cap and not a target: official same-speaker (within-turn) pauses
+# measure median 0.40 s [p75 0.53, p90 0.72] (official_pacing.md §2), while
+# edge-tts renders a mid-turn 。 as 0.97 s — twice the official p75. Pauses
+# BELOW the floor are left exactly as the engine produced them: a Japanese 促音
+# closure is a ~0.1 s silence, and "improving" it would eat the consonant.
 
 ANSWER_PAUSE = {               # answer time appended after each item block
     "問題1": 12.0,
@@ -102,7 +146,7 @@ ANSWER_PAUSE = {               # answer time appended after each item block
 PAUSE_AFTER_INSTRUCTION = 3.0
 PAUSE_DEFAULT = 1.5
 
-SR = 24000  # edge-tts native sample rate
+SR = 24000  # both engines are native 24 kHz mono
 
 # Parallelism. Synthesizing a line is a network round trip (0.6–1.9 s measured),
 # so a cold build of a ~250-line script is latency-bound, not CPU-bound, and runs
@@ -116,7 +160,8 @@ ITEM_RE = re.compile(r"^(例。|\d+番。)")
 SPEAKER_RE = re.compile(r"^([^:: ]{1,6})[::](.*)$")
 
 # edge-tts pitch support varies by version — only pass it if accepted.
-_PITCH_OK = "pitch" in inspect.signature(edge_tts.Communicate.__init__).parameters
+_PITCH_OK = bool(edge_tts) and "pitch" in inspect.signature(
+    edge_tts.Communicate.__init__).parameters
 
 
 def source_sha(path: Path) -> str:
@@ -142,6 +187,77 @@ def run(cmd):
 def to_wav(src: Path, dst: Path):
     run(["ffmpeg", "-y", "-i", str(src),
          "-ar", str(SR), "-ac", "1", "-c:a", "pcm_s16le", str(dst)])
+
+
+def shape_pauses(path: Path, frame_ms: int = 10):
+    """Trim a segment's leading/trailing silence and cap its internal pauses.
+
+    Both TTS engines pad every utterance (edge-tts ~0.22 s lead + ~0.85 s tail;
+    Gemini ~0.26 s), and that padding lands INSIDE the segment, on top of every
+    gap the pacing table inserts between segments. Measured consequence before
+    this function existed: turn gaps of 1.88–2.09 s in tests/20260810_2 against
+    a `GAP_BETWEEN_LINES` of 0.9 and an official median of 0.51 — the audio
+    dragged, and no gate could see it because the constants were "right".
+
+    Two operations, both on 24 kHz mono s16 samples, speech untouched:
+      1. drop leading and trailing silence entirely, so the inter-segment gap
+         is exactly what the plan asked for;
+      2. shorten any internal pause longer than `SHAPE_PAUSE_FLOOR` to
+         `GAP_WITHIN_TURN_MAX` (official same-speaker pauses: median 0.40,
+         p75 0.53). Anything shorter is left alone — a 促音 closure is a ~0.1 s
+         silence and shortening or padding it would damage the consonant.
+
+    Silence is decided per 10 ms frame against a floor 38 dB below the
+    segment's own peak (and never above −50 dBFS absolute), which is inside the
+    valley for both engines: their speech sits above −30 dBFS and their padding
+    is digital zero.
+    """
+    with wave.open(str(path), "rb") as w:
+        if w.getnchannels() != 1 or w.getsampwidth() != 2:
+            return                                  # not our format; leave it
+        sr = w.getframerate()
+        samples = array.array("h", w.readframes(w.getnframes()))
+    if not samples:
+        return
+
+    step = max(1, int(sr * frame_ms / 1000))
+    peak = max(max(samples), -min(samples), 1)
+    floor = max(peak * 10 ** (-38 / 20), 32767 * 10 ** (-50 / 20))
+
+    loud = []
+    for start in range(0, len(samples), step):
+        chunk = samples[start:start + step]
+        loud.append(max(max(chunk), -min(chunk)) >= floor)
+    if not any(loud):
+        return                                      # silence only — keep as is
+
+    first, last = loud.index(True), len(loud) - 1 - loud[::-1].index(True)
+    keep_floor = int(SHAPE_PAUSE_FLOOR * 1000 / frame_ms)
+    keep_max = int(GAP_WITHIN_TURN_MAX * 1000 / frame_ms)
+
+    out = array.array("h")
+    i = first
+    while i <= last:
+        if loud[i]:
+            out.extend(samples[i * step:(i + 1) * step])
+            i += 1
+            continue
+        run_end = i
+        while run_end <= last and not loud[run_end]:
+            run_end += 1
+        length = run_end - i
+        keep = keep_max if length > keep_floor else length
+        out.extend(array.array("h", [0]) * (keep * step))
+        i = run_end
+    # The tail of the last loud frame is partial when the file does not end on a
+    # frame boundary; take the real samples rather than a truncated frame.
+    out.extend(samples[(last + 1) * step:min(len(samples), (last + 2) * step)])
+
+    with wave.open(str(path), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(sr)
+        w.writeframes(out.tobytes())
 
 
 def make_silence_wav(seconds: float, dst: Path):
@@ -180,16 +296,23 @@ def wav_to_mp3(src: Path, dst: Path, normalize=False):
     run(cmd)
 
 
-async def synth(text: str, voice: str, rate: str, out_mp3: Path,
-                retries: int = 3):
+async def synth(text: str, cast: dict, out_wav: Path, retries: int = 3):
+    """One line of script -> one shaped 24 kHz mono WAV.
+
+    edge-tts returns MP3, so it is decoded before shaping; `shape_pauses` runs
+    here, before the segment is cached, so a warm cache and a cold build produce
+    byte-identical audio.
+    """
+    mp3 = out_wav.with_suffix(".mp3")
     for attempt in range(1, retries + 1):
         try:
-            kwargs = {"voice": voice, "rate": rate}
+            kwargs = {"voice": cast["voice"], "rate": cast["rate"]}
             if _PITCH_OK:
-                kwargs["pitch"] = "+0Hz"
-            tts = edge_tts.Communicate(text, **kwargs)
-            await tts.save(str(out_mp3))
-            if out_mp3.stat().st_size > 0:
+                kwargs["pitch"] = cast.get("pitch", "+0Hz")
+            await edge_tts.Communicate(text, **kwargs).save(str(mp3))
+            if mp3.stat().st_size:
+                await asyncio.to_thread(to_wav, mp3, out_wav)
+                await asyncio.to_thread(shape_pauses, out_wav)
                 return
         except Exception as e:  # noqa: BLE001
             if attempt == retries:
@@ -198,10 +321,16 @@ async def synth(text: str, voice: str, rate: str, out_mp3: Path,
 
 
 def voice_for(line: str):
+    """Split a line into (voice spec, spoken text).
+
+    An unlabelled line is the narrator. A label with no entry in `SPEAKER_MAP`
+    cannot reach here: `validate_script()` rejects it, because `voice_for` would
+    otherwise silently narrate that speaker.
+    """
     m = SPEAKER_RE.match(line)
-    if m and m.group(1) in SPEAKER_MAP:
-        return SPEAKER_MAP[m.group(1)], m.group(2).strip()
-    return NARRATOR, line.strip()
+    label = m.group(1) if m and m.group(1) in SPEAKER_MAP else None
+    spoken = m.group(2).strip() if label else line.strip()
+    return dict(NARRATOR if label is None else SPEAKER_MAP[label]), spoken
 
 
 def pause_after(block_first_line: str, section: str) -> float:
@@ -213,7 +342,7 @@ def pause_after(block_first_line: str, section: str) -> float:
 
 
 CHOICE_RE = re.compile(r"^[1-4]、")
-SHITSUMON1_RE = re.compile(r"^質問1。")
+SHITSUMON2_RE = re.compile(r"^質問2。")
 
 
 def gap_before_line(section: str, line_index: int, line: str,
@@ -221,8 +350,8 @@ def gap_before_line(section: str, line_index: int, line: str,
     """Silence inserted BEFORE this line (i.e., after the previous one)."""
     if line_index == 0:
         return 0.0
-    if prev_line and SHITSUMON1_RE.match(prev_line):
-        return GAP_AFTER_SHITSUMON1          # 質問1 -> answer time -> 質問2
+    if SHITSUMON2_RE.match(line):
+        return GAP_AFTER_SHITSUMON1          # 質問1 (+ its choices) -> answer -> 質問2
     if is_item_block and line_index == 1:
         if section == "問題2":
             return GAP_OPTION_READING        # printed-option reading time
@@ -366,8 +495,20 @@ def validate_script(blocks):
         errors.append(f"missing opening announcement 「{OPENING}…」")
     if blocks[-1].strip() != CLOSING:
         errors.append(f"the last block of the script must be exactly 「{CLOSING}」 on its own line")
-    if "問題5。" in text and not any(b.strip().startswith("問題用紙に何も印刷されていません") for b in blocks):
-        errors.append("問題5: missing lead-in block starting with 「問題用紙に何も印刷されていません」")
+    # 問題5 prints nothing for EITHER item in this repo, so BOTH 1番 and 2番 get
+    # a spoken 「問題用紙に何も印刷されていません…」 lead-in of their own. While
+    # 2番's options were printed it had no spoken lead-in at all and one block
+    # was correct here; a paper carrying only one now leaves 2番's examinee with
+    # neither printed options nor an instruction telling them the choices are
+    # spoken. (問題3/4 also say the phrase, but inside a 「問題Nでは、…」 block,
+    # so they never satisfy this startswith.)
+    if "問題5。" in text:
+        lead_ins = sum(1 for b in blocks
+                       if b.strip().startswith("問題用紙に何も印刷されていません"))
+        if lead_ins != 2:
+            errors.append(
+                f"問題5: {lead_ins} lead-in block(s) starting with 「問題用紙に何も"
+                f"印刷されていません」, expected 2 (one before 1番, one before 2番)")
 
     for sec, want in EXPECTED_ITEMS.items():
         if f"{sec}。" not in text:
@@ -436,16 +577,16 @@ def build_plan(blocks, seg: Path):
             spec, spoken = voice_for(line)
             if not spoken:
                 continue
-            # Cache key includes the text AND the voice/rate, not just the
-            # position: keying on position alone silently reuses stale audio
-            # when a line is reworded or a speaker is remapped to a new voice.
+            # Cache key includes the text AND the full cast (voice, rate,
+            # pitch), not just the position: keying on position alone silently
+            # reuses stale audio when a line is reworded or a speaker is
+            # remapped to a different voice.
             tag = hashlib.sha1(
-                f"{spoken}|{spec['voice']}|{spec['rate']}".encode("utf-8")
-            ).hexdigest()[:10]
-            mp3 = seg / f"b{bi:03d}_l{li:02d}_{tag}.mp3"
+                f"{spoken}|{spec['voice']}|{spec['rate']}|{spec.get('pitch', '+0Hz')}"
+                .encode("utf-8")).hexdigest()[:10]
+            wav = seg / f"b{bi:03d}_l{li:02d}_{tag}.wav"
             entries.append({
-                "spoken": spoken, "spec": spec,
-                "mp3": mp3, "wav": mp3.with_suffix(".wav"),
+                "spoken": spoken, "spec": spec, "wav": wav,
                 # None for the block's first spoken line: nothing precedes it.
                 "gap": None if not entries else
                        gap_before_line(section, li, line, prev_line, is_item_block),
@@ -473,10 +614,10 @@ async def synthesize_lines(plan, limit: int):
     async def one(e):
         nonlocal done
         async with sem:
-            await synth(e["spoken"], e["spec"]["voice"], e["spec"]["rate"], e["mp3"])
-            await asyncio.to_thread(to_wav, e["mp3"], e["wav"])
+            await synth(e["spoken"], e["spec"], e["wav"])
         done += 1
-        print(f"  [{done}/{len(todo)}] {e['spoken'][:40]}")
+        if done % 10 == 0 or done == len(todo):
+            print(f"  [{done}/{len(todo)}] {e['spoken'][:40]}")
 
     await asyncio.gather(*(one(e) for e in todo))
 
@@ -554,9 +695,10 @@ async def main():
               if b.strip()]
     validate_script(blocks)
 
+    if edge_tts is None:
+        raise SystemExit("edge-tts is not installed — pip install edge-tts")
     seg = out_dir / "segments"
     seg.mkdir(exist_ok=True)
-
     plan = build_plan(blocks, seg)
     await synthesize_lines(plan, tts_jobs)
     silences = await make_silences(plan, seg, FFMPEG_JOBS)
@@ -614,7 +756,7 @@ async def main():
         shutil.rmtree(seg)
         print(f"Cleaned up temporary directory: {seg}")
 
-    print(f"\nDone -> {out_mp3}")
+    print(f"\nDone -> {out_mp3} ({clock / 60:.1f} min)")
 
 
 

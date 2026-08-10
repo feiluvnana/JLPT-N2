@@ -147,7 +147,21 @@ The failure mode that survives every automated gate: the same content on two
 surfaces of one paper, or recycled from recent papers. List every surface's
 topic in ONE table — 問題9 cloze, each 問題10–13 passage, the 問題14 flyer,
 each 聴解 item — with one column per test (this one and the two before it),
+**plus a `theme` column and, for the 読解 surfaces, a closing-move column**,
 and check:
+
+- **The theme column is filled from the SHIPPED surface, for every surface** —
+  including the 問題9 cloze and every `origin: web` seed, which arrive without a
+  theme and are the reason 20260810_1 shipped five `働き方` reading surfaces
+  against a cap of 2. Then apply `exam-blueprint` §"The four theme rules" to
+  that column and write the counts into your report. This is the column the
+  spec-side WARN cannot produce, because the sampler cannot see which entry
+  became which 問題.
+- **The closing-move column is a 読解 rule with its own owner** —
+  `question-authoring/references/dokkai.md` §"Thirteen surfaces, thirteen
+  different essays". Two passages on unrelated subjects that both end
+  「〜だけでは足りない、〜こそが要る」 are one essay written twice; official
+  ships that move 5–9 times per 読解 half and 20260810_1 shipped it 33 times.
 
 - **No topic appears twice in this paper**, even in a different register (an
   essay and a monologue on one subject are still a repeat). For example, avoid

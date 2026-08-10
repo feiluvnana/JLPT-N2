@@ -95,6 +95,31 @@ Same-speaker (within-turn) pauses, for contrast: median 0.40, p75 0.53,
 p90 0.72, n=181. Turn boundaries really are the longer class, and they are
 still only half a second.
 
+### The constants were right and the audio was still wrong
+
+Every value above was inside its band while the shipped audio was **2× too
+slow at every turn boundary**, because a gap is inserted BETWEEN segments and
+both TTS engines pad each segment: edge-tts writes ~0.22 s of lead and
+~0.85 s of tail silence into every utterance (Gemini ~0.26 s either side).
+Measured in a shipped paper's 問題1 before the fix: turn gaps **1.88–2.09 s**
+against `GAP_BETWEEN_LINES = 0.9`, and a mid-turn 。 running 0.97–1.04 s against
+an official same-speaker p75 of 0.53.
+
+`shape_pauses()` now trims each segment's leading/trailing silence to zero and
+caps internal pauses above `SHAPE_PAUSE_FLOOR` (0.6 s) at
+`GAP_WITHIN_TURN_MAX` (0.5 s), leaving shorter ones untouched so a ~0.1 s 促音
+closure survives. Re-measured on the rendered MP3 after the fix:
+
+| | before | after | official |
+|---|---|---|---|
+| turn gap, median | 1.88–2.09 s | **0.93 s** | 0.51 [p75 0.75, p90 1.08] |
+| within-turn pause, median | 0.30 s, with 。 at 0.97 | **0.38–0.44 s** | 0.40 [p75 0.53] |
+| runtime of one item, same lines | 87.1 s | **74.3 s** | — |
+
+**The lesson is a method, not a number: verify a pacing constant on the
+rendered MP3, not in the source.** A constants-only review passed this defect on
+every paper it had.
+
 ### 問題5 is three different pauses, not one
 
 | Position | n | min | median | max |

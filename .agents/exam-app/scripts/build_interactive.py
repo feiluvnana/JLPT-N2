@@ -55,8 +55,12 @@ KEY_HEADING = re.compile(r"^#+\s*(解答|【?正解)", re.M)
 GENGO_Q = re.compile(r"^\*\*(\d{1,2})(\*\*|\s)")
 # 聴解 item headings: `**1番**`, `**質問1**`, `**例**`
 CHOUKAI_ITEM = re.compile(r"^\*\*(例|\d{1,2}番|質問[12])\*\*\s*$")
-# 聴解 inline bubble rows: `**1番** 1 ・ 2 ・ 3 ・ 4` (可 two per line)
-CHOUKAI_INLINE = re.compile(r"\*\*(例|\d{1,2}番)\*\*\s*((?:[1-4]\s*・\s*)+[1-4])")
+# 聴解 inline bubble rows: `**1番** 1 ・ 2 ・ 3 ・ 4` (可 two per line).
+# 質問1/質問2 take this form too: 問題5 prints nothing for either of its items,
+# so 2番's two questions are bubble rows exactly like 問題3/4's items, not the
+# `**質問1**` + option-list shape CHOUKAI_ITEM handles.
+CHOUKAI_INLINE = re.compile(
+    r"\*\*(例|\d{1,2}番|質問[12])\*\*\s*((?:[1-4]\s*・\s*)+[1-4])")
 OPTION = re.compile(r"^\s+([1-4])\.\s*(.+)$")
 # 例 answers pre-marked on the 解答用紙 grid: `| 1 **(2)** 3 4 | …`
 EXAMPLE_PREMARK = re.compile(r"\*\*[（(]([1-4])[)）]\*\*")
@@ -1141,7 +1145,13 @@ def inject_choukai(md: str, keys: list, premarks: dict | None = None):
                 parts.append(line[last:m.start()])
                 item = m.group(1)
                 w = len(re.findall(r"[1-4]", m.group(2)))
-                k = key_for(item)
+                # 質問N always belongs to 問題5's 2番, never to an item called
+                # 「1番」: key_for("質問1") would otherwise strip the label to its
+                # digit and emit 問5-1, colliding with 1番's own group and
+                # leaving 質問2 unanswerable.
+                k = (key_for(last_item, item[-1])
+                     if item.startswith("質問") and section == "5"
+                     else key_for(item))
                 if k:
                     parts.append(f"**{item}** " + radios(k, w))
                     used.append(k)
