@@ -40,7 +40,7 @@ SCREEN_CSS = """
 
 CSS = """
 @page { size: A4; margin: 18mm 16mm; }
-body { font-family: "MS Mincho", "ＭＳ 明朝", "Noto Serif JP", "Noto Serif CJK JP", serif;
+body { font-family: "Noto Sans JP", "Noto Serif CJK JP", serif;
        font-size: 11.5pt; line-height: 1.9; color: #1a1a1a; }
 h1 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 15pt;
      border-bottom: 2.5px solid #1a1a1a; padding-bottom: 5px;
