@@ -8,8 +8,8 @@ answer-key heading the sheet builder needs but no doc mentioned, two graders
 drifting apart. The docs are prose and cannot be executed, so this asserts the
 handful of facts they duplicate from the code.
 
-Hardening round 1 added the check classes that round-1 QA on tests 1–4 found the
-gate blind to, every threshold measured on the July 2025 official paper (a
+Hardening round 1 added the check classes that round-1 QA on generated papers
+found the gate blind to, every threshold measured on the July 2025 official paper (a
 check a real paper fails is a wrong check, not a finding). It was measured from
 an in-tree import that has since been deleted; the live copy is the archive
 extract `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`:
@@ -484,7 +484,7 @@ def jp_char_count(s: str) -> int:
 def check_grammar_stem_lengths(gt: str, bi):
     """問題7/9 carrier lengths must sit near the official JLPT band.
 
-    Tests 1–4 shipped 問題7 stems averaging 20–34 JP chars against an official
+    Generated papers have shipped 問題7 stems averaging 20–34 JP chars against an official
     ~43 average — keys looked fine, carriers read as textbook drills. The PAPER
     AVERAGE is the enforceable rule (official 36–51, n=7 current era); the
     per-stem floor is a WARN, because the archive shows official papers ship
@@ -719,7 +719,7 @@ def check_level_band_grammar(gt: str, keys: dict[int, int],
     """Generated 問題7–9 keys must stay inside the N2 band.
 
     String-decidable half of exam-qa-review §2.5. Imported papers are skipped
-    (they reproduce an outside source). Tests 2–4 shipped N1 keys
+    (they reproduce an outside source). Generated papers have shipped N1 keys
     (にあって / をもって / ともなると / までもなく) through a green gate.
     """
     if origin != "generated":
@@ -760,7 +760,7 @@ def check_level_band_grammar(gt: str, keys: dict[int, int],
           "; ".join(easy) + " — see question-authoring/references/level_band_grammar.txt")
 
     # 問題8 keys are option STRIPS, so the banned form never appears whole in one:
-    # test 3's item 46 tested 〜ば〜ほど with the option reading 「触れるほど」 and the
+    # an item has tested 〜ば〜ほど with the option reading 「触れるほど」 and the
     # loop above saw nothing. The spec names the grammar point it drew, so match
     # that instead — the only place 問題8's target is written down.
     spec_path = ROOT / "tests" / test_id / "test_spec.json"
@@ -788,9 +788,9 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
 
     Both facts are checkable from the Markdown alone: the stem must offer four
     blanks with ★ on the third, and the 解説 cell must spell the word order out
-    as `語(n)→語(n)→語(n)→語(n)`, whose 3rd entry is the answer. Test 2 shipped
-    with three of five keys naming a different blank, and one 解説 citing option
-    numbers that did not exist in the stem.
+    as `語(n)→語(n)→語(n)→語(n)`, whose 3rd entry is the answer. A paper has
+    shipped with three of five keys naming a different blank, and one 解説
+    citing option numbers that did not exist in the stem.
     """
     m8 = re.search(r"^##\s*問題8\b.*?(?=^##\s*問題9\b)", gt, re.M | re.S)
     m8_text = m8.group(0) if m8 else ""
@@ -822,12 +822,12 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
     check("問題8 keys name the option on ★", not mismatch, "; ".join(mismatch))
 
     # The option strips ARE the missing span, so the stem must not already
-    # contain them. Test 3 shipped all five items with the whole sentence
+    # contain them. A paper has shipped all five items with the whole sentence
     # written out in the stem AND chopped into the options, so every permutation
     # read `…本番でパニックになってパニックになってうろたえる…`. The star and
     # permutation checks above pass happily on that — neither reads the stem's
     # own words. Two signals, both chosen to leave honest repetition alone
-    # (test 2's 46 legitimately says 新しい町 in the stem and 新しい in an option):
+    # (item 46 in one paper legitimately says 新しい町 in the stem and 新しい in an option):
     # an option butting straight up against the blanks, and a long option
     # already spelled out somewhere in the stem.
     echoes = []
@@ -850,7 +850,7 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
 
 
 # Latin script is a drafting artefact, never exam content: a passage that still
-# says 「単なる無音の contrast ではない」 (test 3, 問題9) got half-written in
+# says 「単なる無音の contrast ではない」 (問題9) got half-written in
 # English and never finished. Loan words belong in katakana. The allowlist is
 # the handful of initialisms official papers really do print.
 LATIN_OK = {"SNS", "AI", "IT", "CO", "PC", "DVD", "CD", "BOX", "QR", "URL",
@@ -906,7 +906,7 @@ def passage_scopes(sec: str, n: int) -> list[str]:
     its five passages is the run up to the next stem (a passage's note block
     sits with its own markers either way). 問題12–14 number their notes once
     across the whole section (official July 2025 does the same), so they are a
-    single scope — splitting A/B there invented four orphans in test 1.
+    single scope — splitting A/B there has invented four orphans in a generated paper.
     """
     if n == 11:
         parts = PASSAGE_MARKER.split(sec)
@@ -975,8 +975,8 @@ def check_dokkai_lengths(name: str, body: str, bi):
     """読解 passages must reach the official length band (G8).
 
     The bands were documented in three prose places and gated in none, so an
-    author could not verify one without measuring and nobody did: every one of
-    tests 1–4 shipped a short 問題11 and a short 問題14.
+    author could not verify one without measuring and nobody did: multiple
+    generated papers have shipped a short 問題11 and a short 問題14.
     """
     short, thin = [], []
     for n, floor in DOKKAI_FLOOR.items():
@@ -1009,9 +1009,9 @@ NOTE_CHUU = re.compile(r"（中略）")
 def check_chuuryaku(name: str, body: str):
     """（中略） has to cut a passage, not float under the instruction (G18).
 
-    Tests 2 and 4 each carry a bare `（中略）` line directly beneath the 問題11
-    instruction, attached to no passage — and that stray marker is exactly what
-    made the old `"中略" in gt` substring WARN pass.
+    Generated papers have carried a bare `（中略）` line directly beneath the
+    問題11 instruction, attached to no passage — and that stray marker is
+    exactly what made the old `"中略" in gt` substring WARN pass.
     """
     stray, inside = [], 0
     for n in (11, 12, 13):
@@ -1035,9 +1035,10 @@ def check_chuuryaku(name: str, body: str):
 def check_note_pairing(name: str, body: str):
     """（注N） markers and definitions pair 1-to-1 per passage (G2c).
 
-    An orphan either way is an automatic QA fail and both shipped: test 2
-    defined 格段/精神論/屋上緑化 for passages that no longer contain them, and
-    tests 2 and 4 print a 注5 marker in 問題13 with only four definitions.
+    An orphan either way is an automatic QA fail and both have shipped: a
+    paper has defined 格段/精神論/屋上緑化 for passages that no longer contain
+    them, and papers have printed a 注5 marker in 問題13 with only four
+    definitions.
     """
     bad = []
     for n in (9, 10, 11, 12, 13, 14):
@@ -1115,9 +1116,9 @@ def pool_entry_text(entry) -> str:
 #
 # The paper↔spec half is check_spec_target_items() (the 問題1 section must
 # actually print what the spec drew). The spec↔pool half was checked NOWHERE,
-# and that is the half that decides whether the drawn item is *valid*: test 4
+# and that is the half that decides whether the drawn item is *valid*: a paper
 # shipped 領(えり), 線(すじ) and 爆(は.ぜる) — printed kanji that do not have the
-# keyed reading — and the 2026-08-06 pool audit removed 103 such entries.
+# keyed reading — and a pool audit removed 103 such entries.
 # Anchoring the paper on the audited pool closes the class for good.
 #
 # NOT anchored on `openjlpt/kanji-n*.json`: that file is KANJIDIC-derived and
@@ -1286,7 +1287,7 @@ P11_BANNED_STEM = re.compile(r"(?:本文|文章|この文章)で(?:述べられ�
 # order is load-bearing — 「売れた理由とあるが、筆者はなぜ売れたと考えているか」 is
 # 事実把握 even though it contains 考えて, because it is anchored on a span.
 # Enumerating 事実把握 shapes instead does not work: the list in
-# question-authoring is examples, and test 2's 「筆者は、…理由として何を
+# question-authoring is examples, and a stem reading 「筆者は、…理由として何を
 # 挙げているか」 is a sixth shape that such a list false-failed.
 P11_SPAN_ANCHOR = re.compile(r"とあるが|によると|[①②③④⑤]")
 P11_OPINION_STEM = re.compile(
@@ -1404,7 +1405,7 @@ def flyer_condition_text(sec: str, bi) -> str:
 def check_mondai14_quotes(name: str, body: str, key_dokkai: str, bi):
     """70 and 71 must each combine TWO flyer cells, and the 解説 must prove it (G7).
 
-    Tests 2, 3 and 4 all wrote 71 as 「このお知らせの内容と合っているものはどれか」,
+    Generated papers have written 71 as 「このお知らせの内容と合っているものはどれか」,
     which collapses to a one-cell lookup. One quote in the 解説 means one
     constraint, so the artifact is the check.
     """
@@ -1487,15 +1488,15 @@ def check_mondai9_tags(name: str, key_bunpou: str):
 
 
 # 読解 keys (G16). A key far longer than its three distractors is findable by
-# string length alone: test 3 shipped three in a row (67/68/69 — 94/107/63 JP
-# chars against 31–36 means) and test 4 one (66 — 55 vs 31). Measured silent on
-# tests 1, 2 and the July 2025 official paper, so the length signal alone is
-# safe.
+# string length alone: a paper has shipped three in a row (67/68/69 — 94/107/63 JP
+# chars against 31–36 means) and another shipped one (66 — 55 vs 31). Measured
+# silent on other generated papers and the July 2025 official paper, so the
+# length signal alone is safe.
 #
 # The verbatim-lift test is reported, not required: with the haystack restricted
 # to PASSAGE prose (it has to be — the options are printed in the same file, so
-# searching the whole section makes "verbatim" vacuously true) test 3's three
-# keys are verbatim lifts and test 4's 66 is a 統合理解 meta-statement
+# searching the whole section makes "verbatim" vacuously true) three keys from
+# one paper are verbatim lifts and a 66 from another is a 統合理解 meta-statement
 # (「Aは…とし、Bは…と述べている」) that appears in no passage. Both are the same
 # defect for the candidate: the key is identifiable without reading.
 #
@@ -1554,9 +1555,9 @@ def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
 
 
 # 解説 cells decide items, so a quote inside one is load-bearing. When it is
-# invented, the item it justifies is usually broken too and nothing shows:
-# test 2's 聴解 key quoted four lines of dialogue that were not in the script;
-# test 4's 問題2-6番 key quoted a 「3日前」 rule the script gives as 1週間前, and
+# invented, the item it justifies is usually broken too and nothing shows: a
+# 聴解 key has quoted four lines of dialogue that were not in the script; a
+# 問題2-6番 key has quoted a 「3日前」 rule the script gives as 1週間前, and
 # named two speakers (アンさん・キムさん) the script never introduces.
 QUOTE = re.compile(r"「([^」]{14,})」")
 QUOTE_ELLIPSIS = re.compile(r"[…‥]+")
@@ -1588,7 +1589,7 @@ def strip_annotations(s: str) -> str:
 # and every 読解 distractor must be wrong for a nameable reason in the source.
 # This is the sister of the 解説-quote WARN and the opposite kind of evidence:
 # that check guesses whether a quote is real, this one reads an admission, so
-# it FAILs. Tests 1–4 shipped ~20 ungrounded 聴解 options between them.
+# it FAILs. Generated papers have shipped ~20 ungrounded 聴解 options between them.
 FABRICATED_ADMISSION = re.compile(r"言及なし|未言及|言及されていない|今回の話ではない")
 
 
@@ -1624,10 +1625,10 @@ def check_fabricated_distractors(name: str, key_section: str):
 # quote is real; it is the KEY that is wrong.
 #
 # Silent by construction where the convention is not used: a cell with no
-# digit-plus-mark grounding lines (tests/1's prose cells, every 問題4 cell) is
+# digit-plus-mark grounding lines (a paper's prose cells, every 問題4 cell) is
 # skipped rather than demanded, so this can only ever fire on a contradiction
 # the author already wrote down. The convention does NOT hold in
-# 言語知識・読解 — zero ○/（正解） annotations across tests 1/2/3's 文字・語彙,
+# 言語知識・読解 — zero ○/（正解） annotations across generated papers' 文字・語彙,
 # 文法 and 読解 key tables, which state the key in prose (「…から3」) — so this
 # check is 聴解-only until that changes.
 GROUNDING_MARK = re.compile(r"([1-4])\s*([✗×✕✖☓○◯〇])")
@@ -1692,16 +1693,16 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
 
     Reported, not enforced: a 解説 may legitimately put its own wording in 「」,
     so this cannot be decided by matching alone. What it catches is the class
-    of bug where it is NOT the explanation that is wrong — test 2's 聴解 key
-    quoted four lines of dialogue that were nowhere in the script, and test 4's
-    問題4-10番 key quoted an option 「本当ですか！ぜひお願いしたいです」 that the
+    of bug where it is NOT the explanation that is wrong — a 聴解 key has
+    quoted four lines of dialogue that were nowhere in the script, and a
+    問題4-10番 key has quoted an option 「本当ですか！ぜひお願いしたいです」 that the
     script never speaks. A quote nobody can find usually means the item was
     keyed against a draft that no longer exists.
     """
     # Strip inline （注N） markers from the source: a 解説 quotes the sentence
     # without them, so 「…大脳辺縁系に直接伝達される」 failed to match a passage
     # reading 「…大脳辺縁系（注3）に直接伝達される」. That produced five false
-    # positives in test 3 and buried the one real miss (問66's 「過去の情熱」
+    # positives in one paper and buried the one real miss (問66's 「過去の情熱」
     # against the passage's 「当時の情熱」) among them.
     #
     # R15: （注N） is not the only parenthetical a quote drops. A passage
@@ -1737,7 +1738,7 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
 # A gate that fails 95% of honest draws cannot be satisfied by re-drawing. It
 # trains the operator to re-seed until the gate goes green, which selects the
 # paper by gate-satisfaction instead of by quality — strictly worse than having
-# no check. Test 3's six collisions were every one of them naming vocabulary,
+# no check. A run's six collisions were every one of them naming vocabulary,
 # not subject: 確認, 説明, 注意, 会社.
 #
 # The cause is that a pool entry is NOT a subject string. `exam-blueprint`
@@ -1749,12 +1750,12 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
 # subject; official papers do both in every sitting.
 #
 # So the fix is not to scope by origin. Scoping `token_map` to
-# `"origin": "web"` would clear test 3 (none of its six pairs is web×web), but
+# `"origin": "web"` would clear that run (none of its six pairs is web×web), but
 # both skills forbid it in as many words — `exam-blueprint` §"Topic themes":
 # 「Scoping it by origin instead would exempt an offline all-pool paper from the
 # theme rule entirely」, and `exam-blueprint` §"How to comply": 「Scope by
 # surface, not by origin」. A pool-origin 問題13 beside a web-origin 問題9 on one
-# subject is exactly the defect, and test 3's own 注意 pair is web×pool.
+# subject is exactly the defect, and that run's own 注意 pair is web×pool.
 #
 # What IS decidable is DISTINCTIVENESS. Strip the setting prefix, drop the
 # errand vocabulary, and fail only on a token the pool does not itself reuse:
@@ -1864,7 +1865,7 @@ def check_surface_subjects(token_map: dict[str, list[str]]):
 def check_spec_blend(spec: dict):
     """The blend contract the authoring step reads off tests/<id>/test_spec.json.
 
-    Two invariants no other gate can see, both violated by test 4's spec:
+    Two invariants no other gate can see, both violated by a shipped spec:
     every surface needs a DISTINCT topic (a duplicate silently starves one
     問題, which then gets authored off-contract), and the pool side keeps >=40%
     of every blended surface (exam-blueprint 'Balanced blend'). merge_seeds.py compounds both when
@@ -1927,7 +1928,7 @@ def check_pool_infrastructure():
 
 
 # Kanji↔kana spellings of the same grammar tail. `grammar_p7` shipped both
-# 〜気味 and 〜ぎみだ and the sampler drew both into test 3, keying one grammar
+# 〜気味 and 〜ぎみだ and the sampler drew both into one paper, keying one grammar
 # point twice — and 〜がち/〜がちだ the same way. No reading source in refs/ or
 # references/ can bridge those: openjlpt/kanji-n2.json holds only the 367
 # N2-level kanji (気 and 味 are below it) and vocab-n2.json has no 気味 headword.
@@ -1945,7 +1946,7 @@ def pool_skeleton(entry: str) -> str:
     Strips the 〜/～ placeholder and the parenthetical example gloss, folds the
     kanji spellings above to kana, and drops a trailing だ/です. All three steps
     are load-bearing: without the last two, `〜がち`/`〜がちだ` and
-    `〜気味`/`〜ぎみだ` — the exact pairs that shipped test 3's double-keyed
+    `〜気味`/`〜ぎみだ` — the exact pairs that shipped a paper's double-keyed
     grammar point — compare as distinct entries.
     """
     e = re.sub(r"[（(][^）)]*[）)]", "", entry).replace("〜", "").replace("～", "").strip()
@@ -1959,7 +1960,7 @@ def check_pool_grammar_band():
 
     `grammar_p8` shipped `相対比較(〜ば〜ほど)` — `〜ば〜ほど` is TOO_EASY on
     exam-qa-review's level-band list AND on question-authoring's banned list.
-    Test 3 keyed it at item 46 and the keyed-option check could not see it,
+    A paper keyed it at item 46 and the keyed-option check could not see it,
     because the option string reads 「触れるほど」. Checking the DATA closes the
     class permanently: the pool is what the sampler draws from.
     """
@@ -2200,8 +2201,8 @@ def check_ledger_spec_agreement():
     and `sample_items.py` writes both from one draw — so a disagreement means
     one side was hand-edited afterwards. Both consequences are silent: the
     ledger burns cooldown on an item no paper ever asked, and the substitute
-    the spec names never rotates at all. Test 2 carries three of them
-    (paraphrase テニスコート→キャンセル, はじめまして→お疲れ様でした,
+    the spec names never rotates at all. A paper has carried three of them at
+    once (paraphrase テニスコート→キャンセル, はじめまして→お疲れ様でした,
     quick_response 〜ずじまい→行かずじまい).
 
     It is an EQUALITY check on purpose — except on the two surfaces
@@ -2476,12 +2477,12 @@ def check_rotation_inputs():
         # pipeline it gates: `exam-blueprint` §"Step 0" makes the harvest a
         # per-test input — 「A harvest is an input to one test, not a file that
         # lives in the repo. Re-harvest it, every time.」 — and leaving the
-        # previous harvest in place is precisely what turned test 3 into a
-        # re-skin of test 2. So performing step 3.5 correctly for test N
-        # NECESSARILY orphans every web entry of test N−1, and the gate failed
-        # the older test for the newer one having been generated properly. On
-        # 2026-08-06 test 2 failed all 13 of its blended entries for no reason
-        # but that.
+        # previous harvest in place is precisely what once turned a paper into
+        # a re-skin of the one before it. So performing step 3.5 correctly for
+        # test N NECESSARILY orphans every web entry of test N−1, and the gate
+        # has failed an older test for the newer one having been generated
+        # properly — once failing all 13 of a test's blended entries for no
+        # reason but that.
         #
         # The property worth keeping is that a spec's web entries trace to a
         # REAL harvest rather than being invented during authoring — and that is
@@ -2747,7 +2748,7 @@ def check_moji2_stem_kana(name: str, gt: str, keys: dict[int, int],
 def check_spec_target_items(d, gt: str, st: str, bi):
     """The paper must test the items the spec drew (G19).
 
-    Test 3's 問題4 8番 tests 「本日は遠方からお越しいただき…」 while the spec drew
+    A paper's 問題4 8番 has tested 「本日は遠方からお越しいただき…」 while the spec drew
     「こちらこそ、いつもお世話になっております。」 — an unrecorded substitution, so the
     ledger burned an item the paper never asked and the substitute never
     rotates. Only the three categories that are literal substrings of their own
@@ -3149,9 +3150,9 @@ def check_example_premarks(ct: str, st: str, bi):
     問題1-4 each open with a practice 例 whose answer the script announces
     (「最もよいものは◯番です…答えはこのように書きます」) while the booklet's
     answer grid shows that same number pre-marked — one demonstration, seen and
-    heard together. Tests 2 (問題3) and 4 (問題4) shipped grids pre-marking a
-    different number than the announcement; nothing caught it because 例 rows
-    are not among the 30 scored keys.
+    heard together. Generated papers have shipped grids pre-marking a
+    different number than the announcement (in 問題3 and in 問題4); nothing
+    caught it because 例 rows are not among the 30 scored keys.
     """
     cut = bi.KEY_HEADING.search(ct)
     lines = ct[cut.start():].splitlines() if cut else []
@@ -3162,8 +3163,8 @@ def check_example_premarks(ct: str, st: str, bi):
             continue
         m = EXAMPLE_PREMARK.search(line)
         if not m:
-            # horizontal grid (tests 1-3): 例 is a column header; its bubbles
-            # sit in the first cell of the next data row.
+            # horizontal grid (an earlier layout convention): 例 is a column
+            # header; its bubbles sit in the first cell of the next data row.
             for nxt in lines[i + 1:]:
                 ncells = [c.strip() for c in nxt.split("|")[1:-1]]
                 if not ncells or set(nxt.strip()) <= set("|-: "):
@@ -3372,13 +3373,14 @@ def check_tests():
                  "an imported paper is what others copy, not the copier")
 
         # Official July 2025 (~50+ 注, 中略 in 中文, 長文 ~1000) is the bar.
-        # Generated tests 1–4 under-annotated; warn so authoring cannot ignore it.
+        # Generated papers have under-annotated; warn so authoring cannot ignore it.
         if origin == "generated":
             # Count IN-BODY （注N） markers in the passage region: every gloss
             # occurs at least twice (marker + definition line) and 解説
             # back-references add more, so counting raw occurrences across the
-            # file roughly doubled the total — tests 1–3 cleared this bar on
-            # 6–9 real glosses and test 4's reported 10 was really 5. Counting
+            # file roughly doubled the total — generated papers have cleared
+            # this bar on 6–9 real glosses while one reported 10 that was
+            # really 5. Counting
             # definition lines instead is format-specific (the official July
             # 2025 paper glosses in-body and measures 5 that way, not 30), and
             # 注 numbers restart per passage so distinct numbers undercount.
@@ -3391,7 +3393,8 @@ def check_tests():
             # Floor RE-MEASURED: the archive's current-era band is 27–61
             # in-body markers, median 39 (official_calibration §3), so the old
             # floor of 15 was "half of official" and passed every
-            # under-annotated paper — tests 1–4 shipped 9/6/29/15 under it.
+            # under-annotated paper — generated papers have shipped
+            # 9/6/29/15 under it.
             # Raised to 25, which is `question-authoring`'s authoring target and
             # sits just under the observed minimum of 27.
             warn(f"{d.name}: 読解 has substantial （注N） glosses "

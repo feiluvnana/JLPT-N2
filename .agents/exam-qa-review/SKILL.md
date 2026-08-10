@@ -155,8 +155,8 @@ then name what let each defect through.
   changed) are regenerated and `make check` re-run. Then the changed items AND
   their whole 問題 go back through steps 1–4, and step 5's table is rebuilt if
   any topic moved. Fixes introduce defects at the same rate as authoring —
-  test 4's repairs were themselves re-reviewed and one had to be redone. A
-  fix-and-approve in the same breath is a rubber stamp, not a review.
+  a prior round of repairs was itself re-reviewed and one had to be redone.
+  A fix-and-approve in the same breath is a rubber stamp, not a review.
 - **The reviewer does not negotiate the bar.** No waiving a rule because the
   test is "mostly fine", the deadline is close, or the author already ran the
   gate. If a rule here seems wrong, propose the change in the report; apply the
@@ -365,8 +365,8 @@ and it sends the fixing pass off to break working items.
   Then name each blank's category (論理接続表現 / 文末モーダル表現 / 内容推論 /
   慣用・形式名詞 — see `question-authoring`'s 問題9 rule). Fail the passage if
   two or more blanks share a category (e.g., shipping two connective blanks
-  and two content-inference blanks; test 2 and test 3 each repeated one
-  pair) or if NONE of the four blanks requires tracking the whole passage's
+  and two content-inference blanks — a repeated pairing that has shipped
+  before) or if NONE of the four blanks requires tracking the whole passage's
   argument rather than just the local sentence.
 - **問題1 漢字読み:**
   - **Stem underline formatting:** bold span covers the entire word including
@@ -428,8 +428,8 @@ Verify `tests/<test_id>/test_spec.json` against the authored paper end to end:
 1. **Target Item Match Audit (問題1–8 & 聴解 問題4):**
    - Verify every item tested in `漢字読み` (問1), `表記` (問2), `語形成` (問3), `文脈規定` (問4), `言い換え類義` (問5), `用法` (問6), `文法問題7` (問7), `文法問題8` (問8), and `即時応答` (聴解 問4) matches the EXACT target item specified in `test_spec.json["items"]`.
    - Fail any paper where an author substituted a different target item during drafting — unrecorded substitutions corrupt the rotation ledger.
-   - **Check the spec against the ledger and the pool, not only against the paper.** `tools/check_consistency.py` compares paper↔spec, so editing `test_spec.json` to match an authored substitution makes the gate green: test 2's 問題1-4 tests 林立(りんりつ) while `logs/ledger.json` and `pools.json` both record the drawn item as 林(はやし), which is not even in the pool. For every `items` entry, confirm it appears in `pools.json` (or carries `origin: adjunct` with evidence) AND matches the same test's `logs/ledger.json` history entry.
-   - **Extend the audit to `listening_scenarios`.** Map every 聴解 item's narration to a drawn scenario. An item with no matching scenario alongside a drawn scenario that went unused is a substitution: test 2's 問題2-1番 (家電量販店/冷蔵庫の配送) matches no entry while four drawn scenarios were never authored.
+   - **Check the spec against the ledger and the pool, not only against the paper.** `tools/check_consistency.py` compares paper↔spec, so editing `test_spec.json` to match an authored substitution makes the gate green even when the substituted item was never drawn — a paper has shipped testing an item that `logs/ledger.json` and `pools.json` recorded as a different item, one not even in the pool. For every `items` entry, confirm it appears in `pools.json` (or carries `origin: adjunct` with evidence) AND matches the same test's `logs/ledger.json` history entry.
+   - **Extend the audit to `listening_scenarios`.** Map every 聴解 item's narration to a drawn scenario. An item with no matching scenario alongside a drawn scenario that went unused is a substitution — this has shipped as an authored item (e.g. a 家電量販店/冷蔵庫の配送 dialogue) matching no drawn entry while other drawn scenarios went unauthored.
 2. **Answer Positions Compliance Audit:**
    - Verify all 101 answer key positions (71 Gengo + 30 Choukai) match `test_spec.json["answer_positions"]` exactly.
 3. **Web Fact Consistency & Copyright Non-Reproduction:**

@@ -190,8 +190,8 @@ A test that has not survived this pass is not done, whatever the gate says.
   `.md` → `make booklet <id> && make sheet <id>`. The artifacts carry the sha
   of the bytes they were built from (`script_sha`, `<!-- src_sha -->`) and the
   gate compares them — but the gate is the backstop, not the workflow. Never
-  hand-edit a sha. (Commit `4df5631` rewrote the script for five papers and
-  rebuilt one MP3; four shipped speaking superseded instructions.)
+  hand-edit a sha. (A single script rewrite across several papers once
+  rebuilt only one MP3; the rest shipped speaking superseded instructions.)
 - `聴解.md` and `聴解スクリプト.txt` stay synchronized: printed 例 options ↔
   spoken 例; any script item change requires a key check.
 - After script/audio edits, re-run the dry-run validators in `choukai-audio`

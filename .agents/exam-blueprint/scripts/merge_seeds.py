@@ -106,16 +106,16 @@ def validate_harvest(seeds: list[dict]) -> None:
 
     Nothing used to look at seeds.json at all, so two failures were invisible:
 
-    1. **Two seeds from one document are one seed.** The harvest on disk when
-       this check was written (test 3's) had 22 seeds over 14 domains, but THREE
-       of them cited the identical URL (`www.env.go.jp/…/h23_lca_01.pdf`), and
-       two of the facts attributed to it are not in that document — mining one
-       PDF for three "topics" produces one subject wearing three hats plus
-       invented facts. Drop the weaker seeds; do not re-title them.
+    1. **Two seeds from one document are one seed.** A harvest has had 22
+       seeds over 14 domains, but THREE of them cited the identical URL
+       (`www.env.go.jp/…/h23_lca_01.pdf`), and two of the facts attributed to
+       it are not in that document — mining one PDF for three "topics"
+       produces one subject wearing three hats plus invented facts. Drop the
+       weaker seeds; do not re-title them.
     2. **Domains, not seed count, cap the blend.** MAX_PER_DOMAIN is 2 and that
        budget is shared across every topic-level surface, so N domains fund at
-       most 2N picks. Six domains funds the 30% floor (12 picks) exactly; test 4
-       harvested 28 seeds from 5 domains and 聴解 finished at 20% web.
+       most 2N picks. Six domains funds the 30% floor (12 picks) exactly; a
+       harvest of 28 seeds from only 5 domains once left 聴解 at 20% web.
 
     Both abort rather than warn: a bad harvest cannot be repaired downstream,
     and every surface authored off a starved blend has to be rewritten.
@@ -226,9 +226,10 @@ def check_topic_reuse(seeds: list[dict], topics_path: Path, test_id=None) -> Non
     """Abort when a seed reuses a subject from either of the previous two tests.
 
     `(--seed, harvest_sha)` uniqueness is NOT topic uniqueness, and that gap
-    shipped three re-skins through a green gate: test 2 repeated test 1's urban
-    greening in the same 問題11 slot, and tests 3/4 shared 8 surfaces including a
-    地域通貨 flyer that matched down to 20% / 2,000pt and the same ※ note.
+    has shipped re-skins through a green gate: one paper repeating an earlier
+    paper's urban-greening subject in the same 問題11 slot, and two consecutive
+    papers sharing 8 surfaces including a 地域通貨 flyer that matched down to
+    20% / 2,000pt and the same ※ note.
 
     HONEST LIMIT — read this before trusting it. Token overlap is a FLOOR, not
     the rule. 「屋上緑化」 vs 「グリーンパートナー制度」 and 「みどりコイン」 vs
@@ -360,10 +361,11 @@ def unblend(spec: dict, entry: dict) -> None:
     time against an already-blended spec it blends on top of its own output:
     the MAX_WEB ceiling applies per run, so the web share compounds, and a seed
     can be written into a second slot while its first copy still sits in the
-    spec. Test 4 shipped that way — 規格外野菜 and スマート農業 each in two
-    reading slots, 昇降式デスク in two listening slots, 9 of 11 reading topics
-    web against a cap of 6 — which left two reading surfaces with no distinct
-    topic to author from, so they were written off-contract. Nothing caught it:
+    spec. A paper has shipped that way — a reading-topic word each doubled
+    into two reading slots, another doubled into two listening slots, 9 of 11
+    reading topics web against a cap of 6 — which left two reading surfaces
+    with no distinct topic to author from, so they were written off-contract.
+    Nothing caught it:
     every downstream gate reads the spec, and the spec looked full.
 
     The sampler's draw is recorded in logs/ledger.json, so it can be put back.

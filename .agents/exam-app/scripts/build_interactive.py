@@ -1344,7 +1344,7 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
 # `exam-qa-review`'s first ground rule is "blind-solve before reading the keys",
 # and until this mode existed it was not executable: the keys live at the END of
 # the same two Markdown files the paper lives in, so one Read returns the paper
-# AND its keys (test 4's report, §2 and root cause R20). This emits the paper
+# AND its keys. This emits the paper
 # alone, through the SAME strip_key() the sheet uses — one truncation parser, so
 # a key that could reach this render could also reach 解答.html, and the missing
 # heading aborts both builds identically instead of silently leaking.

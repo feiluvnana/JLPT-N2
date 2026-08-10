@@ -14,9 +14,9 @@ the owner wins — and the disagreement is a defect to fix, not to route around.
 
 Every defect this repo has shipped came from an agent that had the rule
 available and did not read it. Not from a hard problem. From skipping.
-(Test 2: duplicated options and mis-keyed 問題8 items, rules already written.
-Test 3: skipped the harvest step, reused the previous seed, and shipped as a
-re-skin of test 2 with every automated gate green.)
+(Past defects: duplicated options and mis-keyed 問題8 items despite the rules
+already being written; a skipped harvest step that reused a previous seed and
+shipped a re-skin of an earlier paper with every automated gate green.)
 
 1. **Read `AGENTS.md` end to end before your first tool call.** All of it.
    It is short on purpose.

@@ -79,9 +79,9 @@ ANSWER_SECTIONS = [
 # R17: per-section evenness is not paper-level evenness. The old plan built
 # each section as [(i % width) + 1 ...], so every section's REMAINDER always
 # landed on the lowest positions: summed over the 18 four-choice sections that
-# is +15 on position 1, +7 on 2, +4 on 3, +0 on 4, and test 4 shipped 31 keys
-# on position 1 against 17 on position 4. The remainders are now allocated
-# across sections instead of inside them.
+# is +15 on position 1, +7 on 2, +4 on 3, +0 on 4, and a paper has shipped 31
+# keys on position 1 against 17 on position 4. The remainders are now
+# allocated across sections instead of inside them.
 #
 # PROVISIONAL BAND — retune, don't reinterpret. 90 four-choice items / 4 = 22.5,
 # and ±4 is the working tolerance until the measured spread of the official
@@ -261,9 +261,10 @@ def recency_map(history: list) -> dict:
 
     Recency is tracked BY WORD, ACROSS CATEGORIES, not per category. Pools
     overlap on purpose (41 words are both context_words and usage items), and
-    a category-local map let 「あらかじめ」 be tested in test 3's 問題4 and again
-    in test 4's 問題5 — consecutive papers testing the same word, with every
-    gate green. `taken` stops that inside one test; this stops it across tests.
+    a category-local map let 「あらかじめ」 be tested in one paper's 問題4 and
+    again in the next paper's 問題5 — consecutive papers testing the same word,
+    with every gate green. `taken` stops that inside one test; this stops it
+    across tests.
     Keys are both the raw string and its head(), so either spelling matches.
     """
     rec: dict = {}
@@ -473,11 +474,12 @@ def main():
             sys.exit(f"--reroll needs an existing {spec_path.relative_to(ROOT)}")
         spec = json.loads(spec_path.read_text(encoding="utf-8"))
         # Find THIS test's ledger entry by id — it is not necessarily the newest
-        # one. Test 2 was rerolled while test 3 already existed, and writing to
-        # history[-1] put test 2's picks into test 3's entry, which then failed
-        # assert_rotation against them. Drop this category from the entry so its
-        # own picks are not counted against the redraw, and exclude everything
-        # the other categories already hold.
+        # one. An earlier test has been rerolled after a later test already
+        # existed, and writing to history[-1] put the earlier test's picks into
+        # the later test's entry, which then failed assert_rotation against
+        # them. Drop this category from the entry so its own picks are not
+        # counted against the redraw, and exclude everything the other
+        # categories already hold.
         own_entry = None
         for e in reversed(history):
             if (str(e.get("test_id")) == str(spec.get("test_id")) or

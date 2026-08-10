@@ -110,9 +110,9 @@ def src_sha_comments(sources) -> str:
 
     Stamped into every generated HTML so an artifact built from a superseded
     Markdown source is detectable by content, and `make check` can fail on it.
-    Commit 4df5631 is the precedent on the audio side: it rewrote five
-    \u8074\u89e3\u30b9\u30af\u30ea\u30d7\u30c8.txt files and rebuilt one MP3, and nothing could see the
-    other four. The HTML deliverables had exactly the same blind spot.
+    The precedent is on the audio side: a script rewrite across several
+    \u8074\u89e3\u30b9\u30af\u30ea\u30d7\u30c8.txt files once rebuilt only one MP3, and nothing could see
+    the rest. The HTML deliverables had exactly the same blind spot.
     `build_interactive.py` calls this helper too, so both builders emit one
     format. Each stamp gets its own line (the rest of the document is one long
     line) so it is greppable and shows up as a one-line diff on a rebuild.

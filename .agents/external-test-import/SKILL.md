@@ -15,6 +15,13 @@ Generation stays in `jlpt-test-generation`. Import never samples the pool,
 never touches `logs/ledger.json` / `logs/seeds.json`, and never reuses a bare
 numeric id like `tests/5/`.
 
+The source content is authoritative — it is a real, already-administered
+exam, so its questions and answers are correct by construction. What can
+still go wrong is the **transcription**: OCR slips, mis-keyed rows, dropped
+notes, mojibake. Everything in this skill after authoring is therefore a
+mechanical check that the copy matches the source and the project's format —
+not a content-quality review.
+
 ## Origin flag (folder name) — NON-NEGOTIABLE
 
 | Origin | Folder name | Example |
@@ -119,27 +126,43 @@ tables. Defer format facts to `jlpt-exam-structure`. Defer script block rules to
   rules as generated tests — `make check` enforces them). Explanation cell MUST start with the 1-4 permutation: `語(1)→語(4)→語(3)→語(2)。 「...」`.
 - （注N） gloss definitions must never be circular (do not define a term using its own kanji or same phrase).
 
-**Answer-key reconciliation (NON-NEGOTIABLE — the since-deleted July 2025 import shipped
-one wrong 聴解 key by spot-check alone)**
+### 4. Mechanical fidelity checklist (format/transcription verification only)
 
-When an answer-key PDF/sheet is available (`import_meta.json` → `answer_key`):
+This is a copy-matches-source check, not a content review — the source is
+never wrong; only the transcription can be. Run all of these before `make
+check` in step 6.
 
-1. Parse **all 101** keys (71 gengo + 30 choukai) from the sheet into a table.
-2. Diff against the imported Markdown keys before `make check`. Zero mismatches.
-3. **Layout trap on official 聴解 answer grids:** 問題4's 7–11 answers often
-   sit on the same visual row as 問題5's headers. Do not assign the `3 1 2 3 2`
-   (or similar) five-number run to 問題5. 問題5 is the separate three-number
-   run (`1番`, `2番 質問1`, `2番 質問2`). July 2025's import keyed 質問1 as 3
-   (さくら公園) from a plausible 解説, while the sheet's 問題5 row is `3 1 2`
-   → 質問1 = **1**. Always prefer the sheet over a re-solved 解説.
-4. After fixing a key, rewrite that row's 解説 from the script/booklet line that
-   actually decides it (paste, do not paraphrase).
+1. **Answer-key diff.** When `import_meta.json → answer_key` is set, parse
+   all 101 keys (71 gengo + 30 choukai) from the sheet into a table and diff
+   against the imported Markdown keys. Zero mismatches. Mis-transcribed
+   digits have shipped this way before, and a full mechanical diff is the
+   only check that reliably catches them — a spot-check does not.
+   - **Layout trap on official 聴解 answer grids:** 問題4's 7–11 answers often
+     sit on the same visual row as 問題5's headers. Do not assign that
+     five-number run to 問題5 — 問題5 is the separate three-number run
+     (`1番`, `2番 質問1`, `2番 質問2`). Always prefer the sheet's assignment
+     over a re-solved 解説.
+   - After fixing a key, rewrite that row's 解説 from the script/booklet line
+     that actually decides it (paste, do not paraphrase).
+   - No answer-key PDF supplied → skip this step and note the gap in the
+     final report per the Fidelity rules above; do not invent a diff.
+2. **Stem/passage presence.** For 言語知識: every 問題1–9 stem's distinctive
+   12+ char span must appear in the booklet extract; 問題6's four sentences
+   each must appear. For 読解: passage openings and every `（注N）` label are
+   present, and `中略` markers are kept.
+3. **Booklet↔script sync.** For 聴解: booklet options match the script for
+   問題1–2 and 問題5-2番; 例 pre-mark = announcer number (the marksheet half
+   is `make check`'s job; the dialogue-matches-options half is yours).
+4. `make serve` → imported badge renders → audio plays.
 
 **OCR / text-layer hygiene**
 
-- Scanned script PDFs need OCR (`_extract/script_ocr.txt`). After OCR, **replay
-  decisive listening lines against the external MP3** (especially 問題5 統合理解
-  and any item whose options are near-synonym places/reasons).
+- Scanned script PDFs need OCR (`_extract/script_ocr.txt`).
+- **Only** when working from an OCR'd scan or an extract the step-2 script
+  flagged as garbage: replay the decisive listening lines against the
+  external MP3 before trusting the transcription — especially 問題5 統合理解
+  and any item whose options are near-synonym places/reasons. A clean
+  text-layer extraction does not need this.
 - Obvious text-layer glitches may be cleaned when certain (doubled tokens like
   「何を何を支え」→「何を支え」). Ambiguous glitches (`人か愛着` vs `人が愛情`)
   require a rasterized page check — do not guess; flag in the report if still
@@ -157,17 +180,7 @@ When an answer-key PDF/sheet is available (`import_meta.json` → `answer_key`):
   passage (4) to "match" the header, and do not silently rewrite the header
   unless the user asks for a normalized project copy (note the rewrite).
 
-**Fidelity QA (replaces "spot-check ≥5")**
-
-1. Full 101-key diff vs answer sheet (above).
-2. For 言語知識: every 問題1–9 stem's distinctive 12+ char span must appear in
-   the booklet extract; 問題6's four sentences each must appear.
-3. For 読解: passage openings + all `（注N）` labels present; 中略 markers kept.
-4. For 聴解: booklet options ↔ script for 問題1–2 / 問題5-2番; 例 pre-mark =
-   announcer number (`make check`).
-5. `make serve` → imported badge → audio plays.
-
-### 4. Listening audio
+### 5. Listening audio
 
 **Prefer the external MP3** when the user supplies one (official timing):
 
@@ -184,7 +197,7 @@ python3 .agents/external-test-import/scripts/write_external_chapters.py \
 make mp3 imported-<slug>
 ```
 
-### 5. Build + gate
+### 6. Build + gate
 
 ```bash
 make booklet imported-<slug>
@@ -196,24 +209,26 @@ Read every `make check` line. `answer_positions` checks skip when
 `tests/<test_id>/test_spec.json` is not for this id (normal for imports). Fix format
 failures in the Markdown/script; do not paper over them.
 
-### 6. QA for imports (different from generated)
+### 7. QA for imports (different from generated)
 
-Do **not** run the generation-style “originality / topic reuse” pass as if you
-authored the paper. Instead run the **Fidelity QA** checklist in §3 (full 101
-key diff, stem/option presence, 注/中略 kept, booklet↔script sync).
+Do **not** run the generation-style "originality / topic reuse" pass, and do
+**not** run `exam-qa-review`'s adversarial content-quality pass. Both exist
+to catch bad *authoring* (weak distractors, two-defensible-answers, topic
+reuse across papers); an import has no authored content to critique — its
+content is whatever the official paper already contains. The gate for an
+import is `make check` plus the mechanical fidelity checklist in §4.
 
-`exam-qa-review` still applies for **solvability / two-defensible-answer /
-marksheet 例 sync** defects introduced by a bad transcription — run it on
-touched items with fresh eyes after `make check` is green. When the official
-sheet and a re-solve disagree, **the sheet wins** and the 解説 must be rewritten
-to the sheet's answer (see July 2025 問題5 質問1).
+When the official sheet and a re-solved 解説 disagree, **the sheet wins** and
+the 解説 must be rewritten to the sheet's answer.
 
 ## What not to do
 
 - Put an imported exam in `tests/1/` (or any id without `imported-`).
 - Run `sample_items.py` / `merge_seeds.py` for an import, or append/update
   `logs/ledger.json` or `logs/seeds.json` during import or QA.
-- Run generation-style pool originality or cross-test topic rotation QA passes on imported tests.
+- Run generation-style pool-originality, cross-test topic-rotation, or
+  `exam-qa-review`'s content-quality QA passes on imported tests — the
+  mechanical fidelity checklist in §4 is the gate for transcription defects.
 - Skip `聴解スクリプト.txt` because an external MP3 exists — the gate and
   booklet sync still need the script.
 - Treat `refs/Shinkanzen/` textbook PDFs as importable exams (calibration only).
@@ -228,10 +243,10 @@ to the sheet's answer (see July 2025 問題5 質問1).
 | TTS MP3 (if no external audio) | `choukai-audio` / `make mp3 <id>` |
 | Answer sheet | `exam-app` / `make sheet <id>` |
 | Gate | `make check` |
-| Transcription QA | `exam-qa-review` (fidelity + solvability, not pool originality) |
+| Transcription QA | Mechanical fidelity checklist above (§4) — not `exam-qa-review` |
 
 ## Final report (required)
 
 State: source paths, `tests/imported-<slug>/`, what was extracted vs OCR-blocked,
-whether audio was copied or synthesized, `make check` result, fidelity
-spot-checks done, and anything skipped.
+whether audio was copied or synthesized, `make check` result, which mechanical
+fidelity checklist items were run (and their results), and anything skipped.
