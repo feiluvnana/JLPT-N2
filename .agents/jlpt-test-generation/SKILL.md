@@ -155,6 +155,12 @@ and check:
   print, or having one デジタルデトックス essay serve both 問題9 and 問題10(1).
 - **No topic repeats the previous test.** Avoid duplicating web topics from the
   previous paper, especially in the same 聴解 slots.
+- **A topic/domain match found in the 2-tests-back column is a minor finding,
+  not an automatic fail** — note it in the QA report even though it does not
+  block the paper, so a domain (e.g., civic waste-sorting notices) doesn't
+  become a recurring crutch across the pool one skip apart. The three-test
+  table exists precisely to catch this column too, not just the immediate
+  previous-test one. (Root-caused from `qa/qa-report-20260810_2.md` R2.)
 - **No condition, number, or rule shared** between the 問題14 flyer and any
   聴解 item. Shared setting is tolerable; shared decisive detail is not.
 - **Two 聴解 items may not run the same errand**, and errand **archetypes**

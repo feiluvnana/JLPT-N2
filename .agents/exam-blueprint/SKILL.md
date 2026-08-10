@@ -346,6 +346,17 @@ offline mode); never fabricate plausible seeds, URLs, or facts — avoid shippin
 invented harvest (made-up IDs that 404), which silently voids the no-shared-harvest
 guarantee. QA fetches sample URLs and reports an invented harvest as a major finding.
 
+**A resolvable URL is not proof of the fact.** A cited page can be real, on-topic, and
+still not state the specific number/statistic written into `facts` — a general portal or
+guideline landing page is the common case (an org's topic overview page, not the
+press release with the actual figure). Before writing a numeric or statistical fact into
+`logs/seeds.json`, re-derive it from the fetched page's actual text, not from a search
+snippet or the model's paraphrase of the page. If the specific figure cannot be located
+on the candidate page, either find and cite the sub-page/press-release that states it, or
+drop the numeric specificity from `facts` and keep only what the page actually supports.
+(Root-caused from `qa/qa-report-20260810_2.md` R1: a cited MLIT overview page described a
+different, more specific program than the "30–40か所/100か所以上" figures drawn from it.)
+
 **Run `merge_seeds.py` exactly once per test, on a spec straight from the sampler.** It
 restores the sampler's draw from the ledger first (re-running used to compound its own
 output) and aborts if the ledger cannot supply it; never hand-edit the blended spec.
