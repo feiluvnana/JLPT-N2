@@ -253,6 +253,14 @@ sentence needs a reader (`exam-qa-review` step 3).
     その場しのぎ); onomatopoeic/colloquial expressions (むきむきの);
     specialized/domain jargon (大脳辺縁系, 起業, 機動性); contextual/figurative
     metaphors (余白のあるメディア, 思い出の扉).
+  - **Cross-check against this SAME paper's 問題1–6.** `20260811_1` glossed
+    健やかさ in 問題11(4)'s （注3） while 健やか was, in the same paper,
+    the correct-answer key of a 問題6 usage item — the paper itself proves the
+    word is ordinary, testable N2 vocabulary, contradicting the gloss's own
+    implicit claim that it needs explaining. Before finalizing any （注N）
+    target, check it against every 問題1–6 stem/option/key already drawn for
+    this test; a word tested elsewhere in the same paper as plain N2
+    vocabulary can never also be a （注N） target here.
 - **「ここでは」 is not the defect.** Official uses it freely in definition
   lines (July 2025 glosses 像を結ぶ as 「ここでは、姿がわかる」) — the ban is
   about glossing a *basic* word circularly, not about the phrase. A
@@ -286,6 +294,15 @@ single-field lookup.
   be describable from the flyer/table text as printed — t3 asked how someone
   applies as 「補助スタッフ」 when the flyer described no staff/volunteer role
   at all.
+- **Every WRONG option must contain at least one clause that is factually
+  FALSE against the flyer** — not merely incomplete. `20260811_1` shipped a
+  wrong option combining two clauses that were BOTH true (a photo count that
+  really was sufficient, plus a document that really was required) — true-but-
+  incomplete is a second defensible answer, since nothing in the option can be
+  disproven. Build a wrong option by taking a true combination and changing
+  ONE fact to something the flyer contradicts (a wrong photo count, a document
+  the flyer does not require for this row, a fee/deadline that does not match),
+  never by just leaving a requirement out.
 
 ## 読解 keys — paraphrase, and keep the four lengths close
 

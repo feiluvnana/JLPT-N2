@@ -158,6 +158,18 @@ then name what let each defect through.
   any topic moved. Fixes introduce defects at the same rate as authoring —
   a prior round of repairs was itself re-reviewed and one had to be redone.
   A fix-and-approve in the same breath is a rubber stamp, not a review.
+- **A fix that changes WHAT a surface tests (its topic/scenario, not just its
+  wording) must also update `test_spec.json["items"]["reading_topics"]`/
+  `["listening_scenarios"]` and `logs/ledger.json`'s mirrored entry** — mark
+  the changed entry `"origin": "reauthored"` with a `"note"` explaining why
+  (`tools/check_consistency.py`'s `check_draw_provenance()` requires this, the
+  same evidentiary bar as an `adjunct` row). `20260811_1` re-themed five
+  surfaces across two fix rounds to resolve theme-collision findings and left
+  the spec/ledger pointing at the original, orphaned draws through an entire
+  QA pass — an automatic-fail spec/paper provenance mismatch that a same-file
+  re-review cannot see, because the mismatch is BETWEEN files. Check this
+  explicitly whenever a fix round changes a topic/scenario, not just when a
+  paper first ships.
 - **The reviewer does not negotiate the bar.** No waiving a rule because the
   test is "mostly fine", the deadline is close, or the author already ran the
   gate. If a rule here seems wrong, propose the change in the report; apply the
@@ -293,7 +305,12 @@ Master N2-Goi/N2-Kanji and 日本語総まとめ N2 語彙/漢字 exclusively. C
 tested key against those two textbooks (`refs/Shinkanzen/`, `refs/Soumatome/`)
 and write the result into the report: a word that is a headline N3-or-lower
 textbook item and does not appear as N2 in either volume is **TOO_EASY** (e.g.
-keying 賢い/かしこい). **This is a judgment call, not a lookup verdict** — when
+keying 賢い/かしこい — and just as much an absolute-beginner verb/set-phrase
+like 治す/なおす or お金をためる, or a basic katakana loanword set like
+スカート/ジャケット/セーター/ワンピース: `20260811_1` shipped all three shapes
+in one paper, so do not assume those categories are exempt from this check just
+because they are common daily words rather than a single hard vocabulary item).
+**This is a judgment call, not a lookup verdict** — when
 `openjlpt` existed it mislabeled ordinary, correctly keyable N2 exam vocabulary
 (把握, 審査, じっくり, 依頼, 徐々に, …) as "N1" or "N3", so a single source's
 label was never sufficient even when a script could produce one. Answer with
@@ -429,6 +446,16 @@ subject repeating the previous test; two 聴解 items running the same errand
 (e.g., apartment-hunting in both 問題1-4番 and 問題5-3番); the 問題14 flyer sharing
 a decisive detail with a listening item; and check 問題12's A/B theme against
 the previous tests' 問題12 specifically.
+
+**Also compare the headline-theme SET as a whole, not just 問題12.** Build this
+test's 5-surface headline set (問題9, 問題12, 問題13, 問題14, 聴解問題5 — both
+its items) and the paper-before-last's own headline set, then intersect them.
+`exam-blueprint` rule 4 allows **at most one** repeat across the whole set;
+checking only 問題12 in isolation missed a second repeat elsewhere in
+`20260811_1` (問題12 and paper-before-last's 聴解問題5-2番 both landed on 食,
+on top of the one already-recorded, already-permitted 問題13 repeat) — two
+repeats total, one over budget, and neither in-flight `test_spec.json` note
+mentioned the second.
 
 Two columns of that table are yours to judge, because no string check decides
 either — both shipped green in 20260810_1:

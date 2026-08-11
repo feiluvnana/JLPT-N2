@@ -402,6 +402,19 @@ pool items — `make check` enforces the cap and provenance. **The staging file 
 growth tooling is archived** (below). Never inline an unclassified string into a test,
 `pools.json`, or the staging file.
 
+**Adjunct evidence must cite a currently-valid source.** `20260811_1` shipped an adjunct row
+(`context_words:"ワンピース"`) whose only evidence was `["openjlpt vocab N2"]` — `openjlpt`
+was deleted from this repo in commit `f43531b` (2026-08-11 13:23:51), **32 minutes before**
+that test's own `generated_at` timestamp (13:55:23); the same byte-identical row also shipped
+in `20260807_1`, four days earlier, when the corpus still existed but was never re-verified.
+Never cite `openjlpt` in new evidence (there is nothing left to cite), and never copy a prior
+test's adjunct entry verbatim — re-derive the evidence fresh each time, against
+Shin Kanzen Master N2-Goi/N2-Kanji, 日本語総まとめ N2 語彙/漢字, or the official archive.
+`check_draw_provenance()` now FAILs any `origin: adjunct` row whose evidence cites `openjlpt`.
+Separately: the item itself must still clear the N2 band on its own merits (`question-authoring`'s
+golden rule) — a stale citation and an off-level word are two different defects, and fixing the
+citation does not excuse re-checking the level.
+
 ## Archived growth tooling
 
 `archive/` now holds only `promote_adjunct.py` — it grows `references/pools.json` by
@@ -508,6 +521,14 @@ topic/scenario string does not yet suggest a concrete scene.
 - The TESTED item (grammar point, vocabulary, kanji reading, idiom/keigo) is
   always the pool-sampled item from `test_spec.json["items"]` — the assigned
   topic sets scene and content only, exactly as before.
+- **A drawn `listening_scenarios` string names both a SETTING and an
+  ERRAND** (`空港:搭乗手続きの案内` = airport SETTING, boarding-procedure
+  ERRAND) — the authored dialogue must match both, not just the setting.
+  `20260811_1` shipped a 空港 dialogue about a weather delay against a drawn
+  `搭乗手続きの案内` errand — same place, different task. If the errand
+  genuinely does not fit what needs writing, that is a substitution
+  (`--reroll listening_scenarios`), not a free rewrite of the label's second
+  half.
 
 **`logs/topics.json` — the whole-paper topic table, as a file.** One row per test, written
 by the **build pass** from the finished sources (`jlpt-test-generation` stage 3) — what the

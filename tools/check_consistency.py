@@ -2249,11 +2249,34 @@ def check_draw_provenance():
                     if isinstance(entry, dict) and entry.get("origin") == "web":
                         continue            # merge_seeds blend; check_harvest_provenance owns it
                     if isinstance(entry, dict) and entry.get("origin") == "adjunct":
+                        evidence = entry.get("evidence")
                         ok = (bool(entry.get("item")) and entry.get("level") == "N2"
-                              and isinstance(entry.get("evidence"), list))
+                              and isinstance(evidence, list))
+                        # openjlpt was deleted 2026-08-11 (exam-blueprint SKILL.md) —
+                        # a citation into a corpus no longer in the repo is not
+                        # evidence, it is a dangling pointer. 20260811_1 shipped an
+                        # adjunct row citing it 32 minutes after the deletion commit.
+                        stale = ok and any("openjlpt" in str(e).lower() for e in evidence)
                         if not ok:
                             orphans.append(f"{where} {cat}:「{entry.get('item')}」"
                                            f"(adjunct row missing item/level/evidence)")
+                        elif stale:
+                            orphans.append(f"{where} {cat}:「{entry.get('item')}」"
+                                           f"(adjunct evidence cites deleted openjlpt corpus — "
+                                           f"re-cite against Shinkanzen/Soumatome or the official archive)")
+                        continue
+                    if (isinstance(entry, dict) and entry.get("origin") == "reauthored"
+                            and cat in ("reading_topics", "listening_scenarios")):
+                        # A 読解/聴解 surface can be rewritten off its drawn topic/
+                        # scenario after sampling (e.g. to fix a cross-test theme
+                        # collision found in a later stage) — the tested pool ITEMS
+                        # never move, only the self-composed prose's seed does, so
+                        # this is not the "surface form instead of headword" mistake
+                        # the bare check below guards against. Require a `note`
+                        # explaining why, same evidentiary bar as `adjunct`.
+                        if not entry.get("note"):
+                            orphans.append(f"{where} {cat}:「{pool_entry_text(entry)[:20]}」"
+                                           f"(reauthored row missing note)")
                         continue
                     text = pool_entry_text(entry)
                     if (not text or text in web_texts
@@ -2439,7 +2462,10 @@ def check_spec_rotation(d, spec: dict, sample):
                     f"cooldown={cool!r} — the draw claims no rotation, so "
                     f"there is nothing to verify")
     hist = ledger_history()
-    prior = [h for h in hist if str(h.get("test_id")) != d.name]
+    self_idx = next((i for i, h in enumerate(hist)
+                      if str(h.get("test_id")) == d.name), None)
+    prior = hist[:self_idx] if self_idx is not None else \
+        [h for h in hist if str(h.get("test_id")) != d.name]
     if not prior:
         return skip(f"{d.name}: rotation claim holds against logs/ledger.json",
                     "no other draws in the ledger to rotate against")

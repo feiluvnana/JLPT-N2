@@ -136,6 +136,24 @@ What is yours to get right when authoring the item:
 
 ## 即時応答 (問題4)
 
+### The stimulus must be spoken TO a specific person, never broadcast
+
+A 即時応答 item only works if there is someone for the test-taker to answer
+*as*. `20260811_1` shipped a `quick_response` pool phrase
+(「館内では携帯電話のご利用をお控えください」) scripted with the speaker label
+`アナウンス:` — a facility-wide PA broadcast with no addressee — matching the
+skill's own automatic-fail precedent (a 火災報知器 prompt with no
+addressee-reply; `exam-qa-review/SKILL.md`'s automatic-fail list). This is now
+a **second shipped occurrence** of the same defect class.
+
+**Never label a 問題4 stimulus line `アナウンス:` or `アナウンサー:`** — those
+labels are for 問題3-style monologues only (`choukai-audio/SKILL.md`'s
+`SPEAKER_MAP`), where no reply is expected. If a drawn `quick_response` phrase
+reads as a public announcement, recast it as a specific staff member speaking
+directly to the specific customer in front of them before scripting it (e.g.
+`係員:お客様、館内では携帯電話のご利用をお控えください。`) — same tested
+phrase/register, but now addressed to someone who can answer.
+
 ### The three replies must not be はい / いいえ / では
 
 Measured over 1 113 official replies: **94 % open with content**, and only

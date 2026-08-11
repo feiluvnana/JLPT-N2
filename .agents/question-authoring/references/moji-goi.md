@@ -357,3 +357,27 @@ a mild over-estimate). Avoid short stems averaging ~19; target standard stem len
 Give each sentence a who/when/what
 unless brevity is doing work — a telegram-length misuse line leaves no room for
 the situation that makes a wrong collocation tempting.
+
+### A word's OTHER attested sense is still that word — check it too
+
+Step 3's search must cover every sense the word carries, not just the one the
+KEY sentence uses. `20260811_1` shipped 落ち着く keyed on its
+"person calms down" sense with a wrong option reading 「試験の点数が落ち着いて
+きた」 — but 落ち着く also has an attested "a fluctuating VALUE settles/
+stabilizes" sense (相場が落ち着く, 気候が落ち着く), and a test score is a
+fluctuating value, so the "wrong" sentence is a live second-correct-answer
+risk, not a domain violation. For any verb/adjective with more than one
+dictionary sense (settle/calm; raise/lift; break/interrupt…), name EACH sense
+before writing distractors, and check step 3's search against all of them —
+a sentence need not be tempting-and-wrong; it can be quietly right under a
+sense the author forgot to enumerate.
+
+### All four options share the SAME word-form of the headword
+
+If the headword is a suru-verb (宣伝する), every option bolds a conjugated verb
+form (宣伝する/した/して…) — never mix a bare noun option (宣伝) against three
+verb-form options. `20260811_1` shipped exactly this inconsistency in 問題6-26.
+A mixed word-form set is not itself a second-answer risk, but it is a
+tell — a reader can spot the odd-shaped option before evaluating its domain,
+which is the same "solvable without reading" failure step 2b guards against
+elsewhere in this file.

@@ -44,9 +44,15 @@ survived exactly that self-review.
 
 Every QA finding adds a fix + re-review round: the fix may reuse an authoring
 context; the re-review of the touched items must again be fresh eyes. The loop
-ends only at `QA: PASS` — and PASS closes the *paper*, not the *generator*: an
-open entry in QA's root-cause table blocks the next generation run until
-applied or rejected with a reason.
+ends at `QA: PASS`, **capped at 3 fresh-eyes QA rounds total.** If round 3 still
+returns FAIL, the orchestrator applies that round's findings directly (same
+rigor as any other fix — root-cause each one, verify `make check`, sanity-read
+the diff) but does **not** spawn a 4th fresh-eyes QA pass; ship the paper and
+say so explicitly in the final report — which findings were fixed without an
+independent re-verification, and why (the cap, not a skipped step). PASS closes
+the *paper*, not the *generator*: an open entry in QA's root-cause table blocks
+the next generation run until applied or rejected with a reason, regardless of
+which round found it.
 
 **Fallback with no subagents:** approximate the table with new sessions, one
 stage per session, handing off through disk. The one split that survives every
@@ -178,7 +184,17 @@ and check:
   (reschedule call, model choice at a store, campaign flyer…) must not repeat
   within the last two tests — add a shape column, not just a subject column
   (e.g., avoiding having a reschedule-an-appointment call run across
-  consecutive tests).
+  consecutive tests). **This rule DOES apply to 聴解問題5-2番's fixed task
+  shape** ("two people each pick a different option from a shared list by a
+  stated attribute") even though that shape is inherent to the official
+  統合理解 format — 3 consecutive generated papers ran it on a materially
+  identical structure (menu choice, then rental listing, then course choice).
+  The archetype constraint binds the SPECIFIC scenario category (a two-person
+  pick-one-from-a-shared-list decision), not just literal repeated content —
+  vary the underlying decision structure itself (e.g., one item that is a
+  single person choosing among options with a change of mind, not always two
+  people independently landing on two different picks) across consecutive
+  papers, not only the subject matter.
 - **問題12 (A/B) gets its own cross-test column** — it is one topic per paper
   and repeated three papers running (働き方) once already.
 - **A duplicated topic in the spec is a sampler defect**: `check_spec_blend`
