@@ -1,13 +1,13 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check check-tests grade sheet keyless serve pages preview-pages booklet mp3 sample merge-seeds \
+.PHONY: help check check-tests grade sheet keyless serve pages preview-pages booklet mp3 sample \
        init-import extract-pdf extract-archive extract-keys
 
 # Positional test-id argument: "make grade 1", "make sheet 2", "make sample 5".
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
 # covers every test, so it takes no id. `pages` builds every test by default;
 # "make pages 1" (or TEST=1) narrows it to one.
-TARGET_CMDS := grade sheet keyless booklet mp3 pages sample merge-seeds
+TARGET_CMDS := grade sheet keyless booklet mp3 pages sample
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -39,7 +39,6 @@ help:
 	@echo "  make check-tests      Same gate, per-test contracts only (skips doc/code checks)"
 	@echo "  make sample 5 SEED=n  Sample question pool -> tests/5/test_spec.json + ledger"
 	@echo "                        (SEED required, from an RNG: python3 -c 'import secrets; print(secrets.randbelow(10**8))')"
-	@echo "  make merge-seeds 5    Merge logs/seeds.json into tests/5/test_spec.json"
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
 	@echo "  make mp3 1            Synthesize listening audio for test 1 (聴解.mp3)"
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
@@ -66,9 +65,6 @@ sample:
 	@test -n "$(SEED)" || (echo 'usage: make sample <id> SEED=$$(python3 -c "import secrets; print(secrets.randbelow(10**8))")'; \
 	  echo 'the seed must be an RNG output, never a number an agent picked (exam-blueprint/SKILL.md)'; exit 1)
 	python3 .agents/exam-blueprint/scripts/sample_items.py --seed $(SEED) --test-id $(TEST)
-
-merge-seeds:
-	python3 .agents/exam-blueprint/scripts/merge_seeds.py logs/seeds.json tests/$(TEST)/test_spec.json
 
 booklet:
 	python3 .agents/exam-app/scripts/build_booklet.py tests/$(TEST)/言語知識・読解.md tests/$(TEST)/聴解.md

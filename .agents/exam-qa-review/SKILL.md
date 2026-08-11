@@ -75,8 +75,7 @@ then name what let each defect through.
   line, a spliced sentence, or a table — never "looks fine". If you cannot
   produce the evidence, the item fails.
 - **No sampling. All 101 items, every check.** "Spot-checked and it looked
-  good" is a skipped step, not a pass. The only sampling allowed is the harvest
-  URL fetch in step 6 (2–3 URLs), because the rest of that step is exhaustive.
+  good" is a skipped step, not a pass.
 - **Any single automatic-fail finding fails the WHOLE test** until fixed and
   re-reviewed. Automatic fails: a second defensible answer; a keyed option the
   source does not state; an unanswerable item or 例; a 解説 quote not in the
@@ -163,7 +162,7 @@ then name what let each defect through.
   test is "mostly fine", the deadline is close, or the author already ran the
   gate. If a rule here seems wrong, propose the change in the report; apply the
   rule as written to this test.
-- **Imported Tests (`tests/imported-*`) Rule:** Do NOT update `logs/ledger.json` or `logs/seeds.json` for an imported test. Imported tests do not sample from the item pool or web seeds. For imported tests, skip Step 5 (topic table against past generated tests) and Step 6 (provenance audit). Focus QA strictly on transcription fidelity against source PDFs/audio, booklet-script option sync, and solvability.
+- **Imported Tests (`tests/imported-*`) Rule:** Do NOT update `logs/ledger.json` for an imported test. Imported tests do not sample from the item pool. For imported tests, skip Step 5 (topic table against past generated tests) and Step 6 (provenance audit). Focus QA strictly on transcription fidelity against source PDFs/audio, booklet-script option sync, and solvability.
 
 
 ## The pass, in order
@@ -459,14 +458,10 @@ Verify `tests/<test_id>/test_spec.json` against the authored paper end to end:
    - **Extend the audit to `listening_scenarios`.** Map every 聴解 item's narration to a drawn scenario. An item with no matching scenario alongside a drawn scenario that went unused is a substitution — this has shipped as an authored item (e.g. a 家電量販店/冷蔵庫の配送 dialogue) matching no drawn entry while other drawn scenarios went unauthored.
 2. **Answer Positions Compliance Audit:**
    - Verify all 101 answer key positions (71 Gengo + 30 Choukai) match `test_spec.json["answer_positions"]` exactly.
-3. **Web Fact Consistency & Copyright Non-Reproduction:**
-   - For every web-derived surface (`origin: "web"` in `reading_topics`, `listening_scenarios`, `info_retrieval_texture`, `qr_situation_seeds`, `carrier_seeds`), verify the passage/dialogue incorporates the simplified fact in `test_spec.json` accurately without contradicting it.
-   - Verify copyright invariants: max 1 simplified fact per passage/dialogue, original phrasing, no reproduction of source article structure or verbatim sentences.
-4. **Web Blend Balance & Carrier Cap:**
-   - Verify web share sits within 30–60% per surface with pool ≥40%, and no single domain supplies >2 topic seeds.
-   - Verify carrier sentences in 問題1–8 use web texture on at most 1 in 3 stems per 問題.
-5. **Harvest URL Verification:**
-   - Spot-check 2–3 `logs/seeds.json` URLs by fetching them. Sequential or unresolvable URLs mean the harvest was invented — report it immediately.
+3. **Topic Match & Copyright Non-Reproduction:**
+   - For every 読解 passage and 聴解 scenario, confirm it was written from its OWN assigned `reading_topics`/`listening_scenarios` entry, not a substituted or borrowed one (see item 1's substitution check, extended to topics).
+   - Verify any invented flavor detail (a survey figure, a flyer deadline) reads as the author's own invention, N2-simplified (約4割, not a decimal), never phrased as a citation of a real source.
+   - Verify no passage/dialogue is copied from `refs/` or from an `imported-*` paper (`jlpt-test-generation` §Invariants).
 
 ### 6.5. Root-cause every finding against the skills
 
@@ -515,7 +510,7 @@ the warning.
 | Which item is tested, answer-position balance, rotation/ledger accounting | `exam-blueprint` |
 | 問題-to-question-type mapping, 例 mechanics, what is printed vs spoken, section counts | `jlpt-exam-structure` |
 | Script block shape, spoken/booklet split, narration labels, `SPEAKER_MAP`, voice↔narration agreement, pacing, pauses | `choukai-audio` |
-| Topic freshness, cross-test/cross-surface repetition, blend caps, domain caps | `exam-blueprint` + `merge_seeds.py` |
+| Topic freshness, cross-test/cross-surface repetition, pool rotation | `exam-blueprint` |
 | Pass ordering, regeneration steps, artifact staleness | `jlpt-test-generation` |
 | Booklet/sheet rendering, stem-line layout, furigana | `exam-app` |
 | Anything string-decidable, in any row above | also `tools/check_consistency.py` |

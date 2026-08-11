@@ -31,8 +31,8 @@ shipped a re-skin of an earlier paper with every automated gate green.)
    mode: skimming to the code block skips the rules around it.
 4. **Execute every stage of the workflow, in order.** A stage is not optional
    because its output file already exists — a previous test's
-   `logs/seeds.json` or `test_spec.json` looks exactly like yours. If a stage
-   genuinely does not apply (no web access), say so in your final report.
+   `test_spec.json` looks exactly like yours. If a stage genuinely does not
+   apply, say so in your final report.
 5. **Run `make check` and read every line of its output** before reporting any
    work as done. Green is the floor, not the goal: it cannot see topic reuse,
    two-defensible-answer items, or a passage that repeats last test's subject.
@@ -40,8 +40,8 @@ shipped a re-skin of an earlier paper with every automated gate green.)
    surface"** — the cross-surface AND cross-test topic table. No script does
    this for you.
 7. **State what you did in your final message**: which skills you read, which
-   stages you ran, the seed and harvest you used, and anything you skipped and
-   why. An unstated skip is the thing that keeps shipping.
+   stages you ran, the seed you used, and anything you skipped and why. An
+   unstated skip is the thing that keeps shipping.
 
 If a rule here is wrong or blocks the work, say so and propose a change. Do
 not route around it silently.
@@ -57,7 +57,7 @@ not route around it silently.
 - Available Skills:
   1. `jlpt-test-generation`: End-to-end mock exam generation orchestrator — **read this one first** for generated exams. Owns the 4-stage pass structure and the per-stage reading map.
   2. `jlpt-exam-structure`: Official JLPT exam format facts — section layouts, question counts, timing, booklet printing conventions, answer-key table format.
-  3. `exam-blueprint`: WHAT each exam tests — random non-repeating pool sampling (`sample_items.py`), answer-position balance, web topic harvest & blend (`merge_seeds.py`). Runs before any authoring.
+  3. `exam-blueprint`: WHAT each exam tests — random non-repeating pool sampling (`sample_items.py`), answer-position balance. Runs before any authoring.
   4. `question-authoring`: HOW to write N2-calibrated items — distractors, item integrity, per-section construction rules (`references/moji-goi.md`, `bunpou.md`, `dokkai.md`, `choukai-items.md`), and calibration against `refs/` (`references/official_calibration.md`).
   5. `choukai-audio`: The listening audio end to end — TTS script format (`聴解スクリプト.txt`), MP3 synthesis with official pacing/voices (`make_choukai_mp3.py`), and the method for measuring official audio.
   6. `exam-app`: Rendering and running the exam — booklet HTML (`build_booklet.py`, no PDF), the merged answer sheet `解答.html` with in-page grading (`build_interactive.py`), the one server (`serve_sheet.py`), the static GitHub Pages build (`build_pages.py`), and CLI grading (`grade_answers.py`).
@@ -72,7 +72,7 @@ not route around it silently.
 
 - `refs/`: Reference input files (scanned PDFs and audio recordings). See §3.
 - `tests/<test_id>/`: Output folder for each exam. **Origin is encoded in the folder name:** ids starting with `imported-` are external imports (e.g. `tests/imported-n2-2025-12/`); any other id is **generated** (e.g. `tests/1/`). See `external-test-import`.
-- `logs/`: Item coverage ledger (`logs/ledger.json`), web seed harvests (`logs/seeds.json`), topic history (`logs/topics.json`), adjunct staging. Each generated test's blueprint lives at `tests/<test_id>/test_spec.json`.
+- `logs/`: Item coverage ledger (`logs/ledger.json`), topic history (`logs/topics.json`), adjunct staging. Each generated test's blueprint lives at `tests/<test_id>/test_spec.json`.
 - `.agents/`: The 8 skills — docs, scripts, and reference data.
 - `tools/`: Repo-level tooling that is not a skill (`check_consistency.py`, the `refs/` archive extractors).
 - `_site/`: **Build output only, gitignored.** The static GitHub Pages copy of the exam app, rebuilt from `tests/` by `make pages` and by CI on push. Never edit or commit it. See `exam-app`.
@@ -155,7 +155,6 @@ restate them here or in a skill; fix them there.
 | `make check`              | `tools/check_consistency.py` — the read-only gate | (below) |
 | `make check-tests`        | the same gate, per-test contracts only | (below) |
 | `make sample <id> SEED=n` | `sample_items.py` → `test_spec.json` + ledger | `exam-blueprint` |
-| `make merge-seeds <id>`   | `merge_seeds.py logs/seeds.json …/test_spec.json` | `exam-blueprint` |
 | `make booklet <id>`       | `build_booklet.py` on both Markdown sources | `exam-app` |
 | `make mp3 <id>`           | `make_choukai_mp3.py` on `聴解スクリプト.txt` | `choukai-audio` |
 | `make sheet <id>`         | `build_interactive.py` → `解答.html` | `exam-app` |

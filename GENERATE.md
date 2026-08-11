@@ -23,9 +23,9 @@ Binding points, all from those two files:
 2. **Use exactly the id `⟨test_id⟩`, and obtain the seed from an RNG** — run
    `python3 -c "import secrets; print(secrets.randbelow(10**8))"` (or a
    platform equivalent) and use the printed value verbatim; never type a seed
-   from memory or design one. Re-harvest `logs/seeds.json` fresh for this
-   test (skip the web blend only if you have no web access, and say so), and
-   verify the blend report before authoring.
+   from memory or design one. There is no web harvest step — every 読解
+   passage and 聴解 dialogue is written directly from its sampled
+   `reading_topics`/`listening_scenarios` entry (`exam-blueprint` Part II).
 3. **Gate and QA are both mandatory**: `make check` with every line read
    (including WARN), the whole-paper one-topic-one-surface table, then
    `exam-qa-review` with fresh eyes, looping fix → fresh re-review until
@@ -33,5 +33,5 @@ Binding points, all from those two files:
    table.
 4. **Commit** `tests/⟨test_id⟩/` and the updated `logs/` together when done.
 5. **Final report** per `AGENTS.md` §0.7: which skills you read, which stages
-   you ran, the seed and harvest you used, every WARN you resolved or
-   justified, and anything you skipped and why.
+   you ran, the seed you used, every WARN you resolved or justified, and
+   anything you skipped and why.

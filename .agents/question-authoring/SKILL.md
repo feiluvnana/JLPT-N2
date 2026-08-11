@@ -124,16 +124,17 @@ bad example in the skills). So the check is a line that exists or does not:
   evidence in `references/moji-goi.md`. NO GATE checks 問題1 readings (three
   invented non-words shipped without a warning); the written line IS the check.
 
-## Web seeds (when `tests/<test_id>/test_spec.json` carries them)
+## Topics (from `tests/<test_id>/test_spec.json`, written by you — no web fetch)
 
-Blend rules, caps, and provenance are owned by `exam-blueprint` — read it when
-the spec has web entries. Binding while authoring: `"origin"` markers are never
-swapped to taste; the TESTED item is always the sampled pool item — web seeds
-set only topic, scene, and facts; at most 1 in 3 stems per 問題 draw on
-`carrier_seeds` (same N2 bar); 問題9 follows `spec.cloze_topic`, 問題14 weaves
-`spec.info_retrieval_texture`, 問題4 uses `qr_situation_seeds` for setting
-only; max one borrowed fact per passage/dialogue, simplified (約4割, not
-38.6%), never source sentences or article structure.
+Ownership and the N2-authoring gate for topics are `exam-blueprint` Part II —
+read it before drafting. Binding while authoring: the TESTED item is always
+the sampled pool item in `test_spec.json["items"]`; the assigned
+`reading_topics`/`listening_scenarios` entry sets scene and content only.
+There is no `origin: web` entry to honor anymore and nothing to cite — 問題9
+is authored from its own assigned `reading_topics` entry exactly like
+問題10-13, and any flyer/announcement/即時応答 texture (numbers, deadlines,
+survey figures) is your own invention, simplified to an N2-friendly form
+(約4割, not 38.6%), never phrased as a citation.
 
 ## Item integrity (every rule here shipped broken at least once)
 

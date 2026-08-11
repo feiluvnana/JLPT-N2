@@ -153,10 +153,10 @@ Reply length stays official (median 15 chars). `make check` WARNs when a paper's
 問題4 exceeds the official rate of these openers.
 
 Tests idioms and keigo: 目を通す, お言葉に甘えて, 〜かと思いきや, 〜ようがない,
-席を外しております, 在庫を切らしております. When the spec carries
-`qr_situation_seeds`, the seed flavors only the SETTING of the utterance; the
-tested keigo/idiom stays the sampled one. The keyed reply must fit the
-speaker's rank and keigo direction — core Item integrity #20.
+席を外しております, 在庫を切らしております. Invent the utterance's SETTING
+yourself (office, store, phone call…); the tested keigo/idiom stays the
+sampled one regardless of setting. The keyed reply must fit the speaker's
+rank and keigo direction — core Item integrity #20.
 
 **The keyed reply introduces no unstated premise.** The reply that advances the
 dialogue (a suggestion, a consolation, a judgment) may only rely on what the

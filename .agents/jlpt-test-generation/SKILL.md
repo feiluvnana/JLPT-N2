@@ -37,7 +37,7 @@ survived exactly that self-review.
 
 | Stage | Job | Contexts |
 |-------|-----|----------|
-| 1. Blueprint | Sample the pool, harvest web seeds, merge, verify the blend report | 1 subagent |
+| 1. Blueprint | Sample the pool (topics/scenarios are authored directly from the draw — no web harvest) | 1 subagent |
 | 2. Author | 文字・語彙 (問1–6) \| 文法 (問7–9) \| 読解 (問10–14) \| 聴解 (booklet §聴解 + script) | 4 subagents, **in parallel** |
 | 3. Build + gate | Booklet HTML, MP3, 解答.html, `make check`, whole-paper topic table (below) | 1 subagent |
 | 4. QA | `exam-qa-review` in full — blind-solve first, all 101 items, root-cause table | 1 **fresh** subagent |
@@ -59,7 +59,7 @@ never from the orchestrator's summary), and nothing else:
 
 | Stage | Reads | Writes |
 |-------|-------|--------|
-| 1 Blueprint | `exam-blueprint/SKILL.md` | `tests/<id>/test_spec.json`, `logs/ledger.json`, `logs/seeds.json` |
+| 1 Blueprint | `exam-blueprint/SKILL.md` | `tests/<id>/test_spec.json`, `logs/ledger.json` |
 | 2 文字・語彙 | `test_spec.json` + `question-authoring/SKILL.md` + its `references/moji-goi.md` + `jlpt-exam-structure/SKILL.md` | 問1–6 fragment of `言語知識・読解.md` |
 | 2 文法 | same, with `references/bunpou.md` | 問7–9 fragment |
 | 2 読解 | same, with `references/dokkai.md` | 問10–14 fragment |
@@ -90,12 +90,10 @@ end; they must stay synchronized — `choukai-audio`).
 
 ## Stage 1 — blueprint rules
 
-Commands (details in `exam-blueprint/SKILL.md`):
+Command (details in `exam-blueprint/SKILL.md`):
 
 ```bash
 make sample <id> SEED=<n>          # -> tests/<id>/test_spec.json + ledger
-# re-harvest logs/seeds.json (web research), then:
-make merge-seeds <id>              # blend web seeds into every spec surface
 ```
 
 - **The seed is an RNG output, never a number you write down** — run
@@ -103,16 +101,10 @@ make merge-seeds <id>              # blend web seeds into every spec surface
   equivalent) and use the printed value verbatim. Agent-"picked" seeds are
   date-shaped and collide across sessions if agents choose the same date
   independently. It must also be a seed no previous test used
-  (`logs/ledger.json` records them) — the blend is a pure function of
-  `(seed, logs/seeds.json)`, and the gate only fails a reused seed against
-  the SAME harvest, so a fresh seed is on you.
-- **Re-harvest `logs/seeds.json` for every test** — it is a per-test input, not
-  a repo fixture. Inheriting a previous test's harvest causes the paper to
-  ship as a re-skin of past tests.
-- Read the printed **blend report** before authoring: 30–60% web per surface,
-  pool side ≥40%, ≤2 seeds per domain. Re-harvest and re-run if it warns.
-- Offline: skip harvest/merge; the pure-pool spec is valid. Say so in the
-  final report.
+  (`logs/ledger.json` records them).
+- There is no harvest/merge step. `test_spec.json`'s `reading_topics` and
+  `listening_scenarios` are what every 読解/聴解 surface is authored from —
+  see `exam-blueprint` Part II for how to write from them at N2 level.
 
 ## Stage 2 — authoring rules
 
@@ -120,8 +112,10 @@ The construction rules live in `question-authoring` (core + the per-section
 reference file from the reading map). Binding here:
 
 - Author ONLY items in `test_spec.json`; keys go where `answer_positions` says.
-- Tested items (grammar/vocab/kanji) are ALWAYS the pool-sampled ones; web
-  seeds supply only topics, settings, and facts (`exam-blueprint`).
+- Tested items (grammar/vocab/kanji) are ALWAYS the pool-sampled ones; the
+  assigned `reading_topics`/`listening_scenarios` entry supplies scene and
+  content only, and you write the passage/dialogue from it yourself
+  (`exam-blueprint` Part II — no external source).
 - Answer keys go at the END of each Markdown source, never inline
   (`jlpt-exam-structure` owns the key-table format).
 
@@ -139,7 +133,8 @@ make booklet <id> && make mp3 <id> && make sheet <id> && make check
   sources: `surfaces` (each 読解 passage, 問題9, 問題14, every 聴解 item incl.
   例, as one noun phrase each) and `shapes` (each 聴解 item's errand shape).
   Row format and why the file exists: `exam-blueprint` §"logs/topics.json" —
-  the next test's `merge_seeds.py` reads it to refuse repeated subjects.
+  the next test's whole-paper topic pass reads it to check for repeated
+  subjects.
 
 ## One topic, one surface (whole-paper pass, stage 3)
 
@@ -150,13 +145,15 @@ each 聴解 item — with one column per test (this one and the two before it),
 **plus a `theme` column and, for the 読解 surfaces, a closing-move column**,
 and check:
 
-- **The theme column is filled from the SHIPPED surface, for every surface** —
-  including the 問題9 cloze and every `origin: web` seed, which arrive without a
-  theme and are the reason 20260810_1 shipped five `働き方` reading surfaces
-  against a cap of 2. Then apply `exam-blueprint` §"The four theme rules" to
-  that column and write the counts into your report. This is the column the
-  spec-side WARN cannot produce, because the sampler cannot see which entry
-  became which 問題.
+- **The theme column is filled from the SHIPPED surface, for every surface.**
+  Every `reading_topics`/`listening_scenarios` entry (including 問題9's) now
+  carries its pool theme by construction, but a drafted passage can still
+  wander off its tag — re-tag from what you actually wrote, not from the spec
+  (20260810_1 shipped five `働き方` reading surfaces against a cap of 2 this
+  way, back when the cloze and web seeds also arrived untagged). Then apply
+  `exam-blueprint` §"The four theme rules" to that column and write the counts
+  into your report. This is the column the spec-side WARN cannot produce,
+  because the sampler cannot see which entry became which 問題.
 - **The closing-move column is a 読解 rule with its own owner** —
   `question-authoring/references/dokkai.md` §"Thirteen surfaces, thirteen
   different essays". Two passages on unrelated subjects that both end
@@ -167,7 +164,7 @@ and check:
   essay and a monologue on one subject are still a repeat). For example, avoid
   having the 問題14 flyer spell out a 聴解 item's keyed answer in its fine
   print, or having one デジタルデトックス essay serve both 問題9 and 問題10(1).
-- **No topic repeats the previous test.** Avoid duplicating web topics from the
+- **No topic repeats the previous test.** Avoid duplicating a topic from the
   previous paper, especially in the same 聴解 slots.
 - **A topic/domain match found in the 2-tests-back column is a minor finding,
   not an automatic fail** — note it in the QA report even though it does not
@@ -184,10 +181,10 @@ and check:
   consecutive tests).
 - **問題12 (A/B) gets its own cross-test column** — it is one topic per paper
   and repeated three papers running (働き方) once already.
-- **A duplicated seed in the spec is a defect**: it means `merge_seeds.py` ran
-  over its own output. Re-run it; never invent a topic for a starved surface.
-  Each spec seed feeds exactly one surface, and `origin` is binding (a
-  `"pool"` cloze must not borrow a web reading seed).
+- **A duplicated topic in the spec is a sampler defect**: `check_spec_blend`
+  (`tools/check_consistency.py`) fails a `reading_topics`/`listening_scenarios`
+  draw that repeats an entry. `--reroll` the category; never invent a
+  substitute topic for a surface by hand.
 
 ## Stage 4 — QA
 
@@ -217,7 +214,7 @@ A test that has not survived this pass is not done, whatever the gate says.
 - After script/audio edits, re-run the dry-run validators in `choukai-audio`
   (block count, speaker-map coverage, pause distribution).
 - Never copy questions from the copyrighted textbooks in `refs/` — calibration
-  only; all items original. Web sources give WHAT to write about, never the
-  words.
+  only; all items original. The sampled topic gives WHAT to write about;
+  compose the words yourself (`exam-blueprint` Part II) — no web fetch.
 - Commit `tests/<test_id>/` and the updated `logs/` together with the pipeline
   changes that produced them.

@@ -21,8 +21,8 @@ workflow and this prompt does not override any of it.
 Binding points, all from those two files:
 
 1. This is an **import, not a generation**: the folder id must start with
-   `imported-`, and you must never run `sample_items.py` or `merge_seeds.py`
-   or touch `logs/ledger.json` / `logs/seeds.json` for it.
+   `imported-`, and you must never run `sample_items.py` or touch
+   `logs/ledger.json` for it.
 2. **Fidelity over invention**: author the Markdown deliverables from the PDF
    extracts, reconcile all 101 answer keys against the source's answer sheet
    (the answer sheet wins), and prefer copying the original MP3 over

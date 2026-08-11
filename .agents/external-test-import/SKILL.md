@@ -12,8 +12,8 @@ description: >-
 
 Single owner of turning an **outside** exam into this repo's deliverables.
 Generation stays in `jlpt-test-generation`. Import never samples the pool,
-never touches `logs/ledger.json` / `logs/seeds.json`, and never reuses a bare
-numeric id like `tests/5/`.
+never touches `logs/ledger.json`, and never reuses a bare numeric id like
+`tests/5/`.
 
 The source content is authoritative — it is a real, already-administered
 exam, so its questions and answers are correct by construction. What can
@@ -224,8 +224,8 @@ the 解説 must be rewritten to the sheet's answer.
 ## What not to do
 
 - Put an imported exam in `tests/1/` (or any id without `imported-`).
-- Run `sample_items.py` / `merge_seeds.py` for an import, or append/update
-  `logs/ledger.json` or `logs/seeds.json` during import or QA.
+- Run `sample_items.py` for an import, or append/update `logs/ledger.json`
+  during import or QA.
 - Run generation-style pool-originality, cross-test topic-rotation, or
   `exam-qa-review`'s content-quality QA passes on imported tests — the
   mechanical fidelity checklist in §4 is the gate for transcription defects.
