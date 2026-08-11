@@ -26,16 +26,30 @@ from classify_level import classify_one  # noqa: E402
 from level_data import head  # noqa: E402
 
 TARGETS = {
-    "kanji_reading": 220,
-    "orthography": 180,
+    "kanji_reading": 200,
+    "orthography": 250,
     "word_formation": 90,
-    "context_words": 220,
-    "paraphrase": 140,
-    "usage": 150,
+    "context_words": 320,
+    "paraphrase": 200,
+    "usage": 210,
     "quick_response": 200,
     "listening_scenarios": 240,
     "reading_topics": 200,
 }
+
+# Katakana headword rate is deliberately capped by `sample_items.py`'s
+# `KATAKANA_TARGET_RATE`/`KATAKANA_CAP` (measured against the official archive
+# in `question-authoring/references/official_calibration.md` §12: the archive
+# draws a katakana headword in only 3/35 問題5 items and 1/35 問題6 items, but
+# `paraphrase`/`usage` were already 27–33% katakana before that fix). The
+# 2026-08-11 pass found only 1 unused katakana entry left in `vocab-n2.json`
+# (128 of 129 katakana N2 words were already in the pool, vs ~20% of the 1665
+# non-katakana N2 words) — the pool's katakana share came from exhausting the
+# katakana side of the source file while barely touching the rest, not from a
+# deliberate ratio. Do not add katakana entries here; grow the non-katakana
+# side only, which is also what lowers the ratio in the pool itself (the
+# sampler cap fixes the DRAW; this fixes the SOURCE).
+KATAKANA_RE = re.compile(r"[゠-ヿ]")
 
 
 def existing_heads(pools: dict) -> set[str]:
@@ -49,12 +63,32 @@ def existing_heads(pools: dict) -> set[str]:
     return hs
 
 
+def load_vocab(level: str) -> list[dict]:
+    return json.loads((OPENJLPT / f"vocab-{level}.json").read_text(encoding="utf-8"))
+
+
 def load_vocab_n2() -> list[dict]:
-    return json.loads((OPENJLPT / "vocab-n2.json").read_text(encoding="utf-8"))
+    return load_vocab("n2")
 
 
-def load_kanji_n2() -> list[dict]:
-    return json.loads((OPENJLPT / "kanji-n2.json").read_text(encoding="utf-8"))
+def word_reading_levels() -> dict[str, list[tuple[str, str]]]:
+    """word -> [(reading, level), ...] across vocab-n1/n2/n3.json.
+
+    Used to keep the "two 訓読み" rule (`moji-goi.md` §"A spelling with TWO
+    訓読み") at pool-build time, not just at authoring time: 潜る carries
+    もぐる[N2] and くぐる[N1], and only the LOWER-graded reading may become a
+    `kanji_reading` entry. A word whose OTHER recorded reading is N2/N3 (not
+    strictly harder) is ambiguous — which reading the pool means is not
+    decidable from the word alone — so it is excluded rather than guessed.
+    """
+    out: dict[str, list[tuple[str, str]]] = {}
+    for lv in ("n1", "n2", "n3"):
+        for row in load_vocab(lv):
+            w = (row.get("word") or "").strip()
+            r = (row.get("reading") or "").strip()
+            if w and r:
+                out.setdefault(w, []).append((r, row["level"]))
+    return out
 
 
 TOPIC_CATS = frozenset({
@@ -85,17 +119,40 @@ def append_n2(pools: dict, cat: str, item: str, seen: set[str]) -> bool:
 
 
 def expand_kanji(pools: dict, seen: set[str], limit: int) -> int:
+    """Grow `kanji_reading` from vocab-n1/n2/n3.json word+reading pairs.
+
+    NOT from `kanji-n2.json` (KANJIDIC) — exam-blueprint's "kanji_reading
+    validity rule" bans that source for the item's own reading, because a raw
+    KANJIDIC kunyomi/onyomi is not a printable word (`領(えり)`, `爆(は.ぜる)`
+    shipped exactly this way and had to be removed in the 2026-08-06 audit).
+    Every candidate here is instead a real dictionary headword+reading pair —
+    Shape and Attested (rule-1/rule-2 of the validity rule) hold by
+    construction; `check_pool_kanji_reading_shape()` (G-R2) still gates Shape
+    mechanically. Rule 2b (lower-graded reading) is enforced via
+    `word_reading_levels()`. Rule 4 (drawable distractors) is NOT verified
+    here — per `question-authoring/references/moji-goi.md` §"Build the set
+    BEFORE you accept the target", that check happens when a paper actually
+    draws the entry, with an established re-draw path if the intersection is
+    empty; the pool has never required drawability to be pre-verified for
+    every entry, only that entries are real, attested, and in-band.
+    """
     n = 0
-    for row in load_kanji_n2():
+    levels = word_reading_levels()
+    for row in load_vocab_n2():
         if len(pools.get("kanji_reading", [])) >= limit:
             break
-        c = row.get("character", "")
-        if not c or c in seen:
+        w = (row.get("word") or "").strip()
+        r = (row.get("reading") or "").strip()
+        if not w or not r or head(w) in seen:
             continue
-        kun = (row.get("kunyomi") or [""])[0]
-        on = (row.get("onyomi") or [""])[0]
-        reading = kun if kun and re.search(r"[\u3040-\u30ff]", kun) else on.lower()
-        item = f"{c}({reading})" if reading else c
+        if not re.search(r"[\u4e00-\u9fff]", w):
+            continue  # no kanji: not a kanji_reading candidate
+        if KATAKANA_RE.search(w) or not re.match(r"^[\u3041-\u3096\u309d\u309e\u30fc]+$", r):
+            continue  # Shape: reading must be plain hiragana (matches G-R2's KANA_YOMI)
+        others = {(rr, lv) for rr, lv in levels.get(w, []) if rr != r}
+        if any(lv != "N1" for _, lv in others):
+            continue  # ambiguous: another reading at N2/N3 — not clearly ours
+        item = f"{w}({r})"
         if append_n2(pools, "kanji_reading", item, seen):
             n += 1
     return n
@@ -109,6 +166,8 @@ def expand_vocab_cat(pools: dict, cat: str, seen: set[str], limit: int) -> int:
         w = (row.get("word") or "").strip()
         if not w or head(w) in seen:
             continue
+        if KATAKANA_RE.search(w):
+            continue  # §12: katakana share is already saturated — see TARGETS note
         if cat == "orthography" and not re.search(r"[\u4e00-\u9fff]{2,}", w):
             continue
         if cat in ("context_words", "usage") and len(w) < 2:

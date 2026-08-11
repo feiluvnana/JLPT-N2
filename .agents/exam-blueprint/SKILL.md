@@ -80,6 +80,18 @@ The 2026-08-06 audit removed **103** of 218 entries and repaired `免れる(ま�
 only category whose parenthetical is a reading** — `納める(税金)` is context,
 `詫びる(謝る)` a synonym, `諸〜(諸問題)` an example; the rule does not apply to them.
 
+**2026-08-11: grown to 200 via `vocab-n1/n2/n3.json`, never `kanji-n2.json`.** The
+archived `expand_pools.py`'s `expand_kanji()` used to source `kanji_reading` from
+`kanji-n2.json` (KANJIDIC) — exactly the banned authority above, and exactly how
+`領(えり)`/`爆(は.ぜる)` shipped before the 2026-08-06 audit had to remove them. It now
+reads `vocab-n1/n2/n3.json` word+reading pairs instead, which makes Shape and Attested
+(rules 1–2) hold by construction, and additionally enforces rule 2b (keep only the
+lower-graded reading of a two-訓読み word, via `word_reading_levels()`) at build time
+instead of leaving it to a later audit. Rule 4 (drawable distractors) is still not
+pre-verified per entry — see `question-authoring/references/moji-goi.md` §"Build the set
+BEFORE you accept the target" for the authoring-time re-draw path when an entry turns out
+undrawable; that has always been how the pool handles it, not a gap this pass introduced.
+
 ## One grammar point, one pool entry (no spelling variants)
 
 The sampler's cross-category `taken` guard compares **raw strings**, so two spellings of
@@ -131,6 +143,17 @@ by re-measuring the archive (§12), never by recomputing `len(katakana)/len(pool
 This does not fix the pool's katakana entries that are themselves too easy for N2 (§12's
 second finding) — that is a `kanji_reading`-style band audit still to be done, following
 "Pool entries stay inside the N2 band" above.
+
+**2026-08-11: grown the non-katakana side instead of removing the katakana side.**
+`expand_pools.py`'s `expand_vocab_cat()` now skips any candidate containing a katakana
+character. `vocab-n2.json` had only **1** unused katakana word left (128 of 129 katakana
+N2 entries were already in the pool) against **1339** unused non-katakana N2 words — the
+pool's ratio came from exhausting the katakana side of the source file while the
+non-katakana majority sat untouched, not from a deliberate mix. Growing `paraphrase` to
+200 (+60) and `usage` to 210 (+60) from that non-katakana majority dropped the pool ratio
+to 19.0% and 23.3% respectively — real progress, but still above the archive's ~5–9%
+per-item rate, which is why the sampler cap above still does the actual enforcement; this
+expansion is dilution, not the mechanism.
 
 ## Topic themes — the closed vocabulary (this skill owns it)
 

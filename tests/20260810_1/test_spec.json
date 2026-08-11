@@ -1,10 +1,10 @@
 {
- "seed": "81480636+reroll(reading_topics,81480636)",
+ "seed": "81480636+reroll(reading_topics,81480636)+reroll(paraphrase,60851241)",
  "generated_at": "2026-08-10 10:02:21",
  "test_id": "20260810_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 1,
+  "history_len": 2,
   "cooldown": 2
  },
  "items": {
@@ -37,11 +37,11 @@
    "あくび"
   ],
   "paraphrase": [
-   "スカーフ",
-   "たちまち",
-   "タイア",
-   "おそらく(たぶん)",
-   "そうして"
+   "直ちに",
+   "項目",
+   "公衆",
+   "厄介だ(面倒だ)",
+   "どなる"
   ],
   "usage": [
    "順調",

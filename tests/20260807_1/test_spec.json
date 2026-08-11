@@ -1,497 +1,497 @@
 {
-  "seed": 15212088,
-  "generated_at": "2026-08-07 18:26:24",
-  "test_id": "20260807_1",
-  "rotation": {
-    "recency_source": "ledger",
-    "history_len": 0,
-    "cooldown": 2
-  },
-  "items": {
-    "kanji_reading": [
-      "誓う(ちかう)",
-      "惜しい(おしい)",
-      "迅速(じんそく)",
-      "漂う(ただよう)",
-      "抑える(おさえる)"
-    ],
-    "orthography": [
-      "一旦",
-      "努める(努力)",
-      "果実",
-      "歌謡",
-      "免責"
-    ],
-    "word_formation": [
-      "〜好き(猫好き)",
-      "〜立て(採れたて)",
-      "〜主(依頼主)"
-    ],
-    "context_words": [
-      "サラリーマン",
-      "抑制",
-      "ウーマン",
-      "推移",
-      "柔軟",
-      "くっつく",
-      {
-        "item": "ワンピース",
-        "origin": "adjunct",
-        "level": "N2",
-        "evidence": [
-          "openjlpt vocab N2"
-        ]
-      }
-    ],
-    "paraphrase": [
-      "案外",
-      "そのほか",
-      "そういえば",
-      "あらかじめ(事前に)",
-      "ショップ"
-    ],
-    "usage": [
-      "まあまあ",
-      "フリー",
-      "充実",
-      "もったいない",
-      "マフラー"
-    ],
-    "grammar_p7": [
-      "〜がち",
-      "〜わけにはいかない",
-      "〜たところ",
-      "〜そうにない",
-      "〜ずにはいられない",
-      "〜に沿って",
-      "〜をはじめ",
-      "〜からには",
-      "〜あげく",
-      "〜ことから",
-      "〜に基づいて",
-      "〜に伴って"
-    ],
-    "grammar_p8": [
-      "原因理由構文(〜ばかりに…てしまった)",
-      "例示指示(〜例えば…)",
-      "〜おかげで",
-      "〜からといって",
-      "条件限定(〜ない限りは…)"
-    ],
-    "quick_response": [
-      "心当たりがない",
-      "部長、来週の会議の資料、印刷して机の上に置いておきました。",
-      "部長、急なご相談で大変恐縮なのですが、10分ほどお時間をいただけますでしょうか。",
-      "かしこまりました",
-      "今日は定時で上がらせていただいてもよろしいでしょうか。",
-      "息が合う",
-      "避難経路は、各階の掲示をご確認ください。",
-      "皆さんのおかげで無事に終えることができました。",
-      "めどが立つ",
-      "この路線は本日運休しております。",
-      "部長がお呼びですので、至急会議室までお願いいたします。"
-    ],
-    "listening_scenarios": [
-      {
-        "scenario": "国内旅行消費の回復",
-        "origin": "web",
-        "facts": [
-          "日本人国内旅行消費は約27兆円",
-          "国内全体の旅行消費は約38兆円"
-        ],
-        "source": "https://www.travelvoice.jp/20260430-159734"
-      },
-      {
-        "scenario": "住宅用火災警報器の普及状況",
-        "origin": "web",
-        "facts": [
-          "全国の設置率は約8割半ば",
-          "条例適合率は約7割弱"
-        ],
-        "source": "https://www.fdma.go.jp/publication/hakusho/r6/point/1/68745.html"
-      },
-      {
-        "scenario": "マンション:置き配ボックスの設置",
-        "theme": "住まい"
-      },
-      {
-        "scenario": "放課後児童クラブの受け皿",
-        "origin": "web",
-        "facts": [
-          "登録児童は約157万人",
-          "待機児童は約1.6万人で前年より減少"
-        ],
-        "source": "https://manabi-mirai.mext.go.jp/upload/2026_0423_2.pdf"
-      },
-      {
-        "scenario": "タクシー:配車アプリの使い方",
-        "theme": "交通"
-      },
-      {
-        "scenario": "管理人室:騒音の相談",
-        "theme": "住まい"
-      },
-      {
-        "scenario": "成人の平均歩数の減少",
-        "origin": "web",
-        "facts": [
-          "男性の平均は約6600歩",
-          "女性の平均は約5700歩で直近10年減少"
-        ],
-        "source": "https://www.mhlw.go.jp/stf/newpage_45540.html"
-      },
-      {
-        "scenario": "カスタマー:返品",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "ジム:入会相談",
-        "theme": "スポーツ・余暇"
-      },
-      {
-        "scenario": "文化財修理の原材料確保",
-        "origin": "web",
-        "facts": [
-          "用具・原材料の生産者減少が課題",
-          "安定供給のための調査と支援が進む"
-        ],
-        "source": "https://www.bunka.go.jp/takumi/sozai.html"
-      },
-      {
-        "scenario": "新入社員研修の宿泊施設手配",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "店舗の改装工事期間中の営業案内",
-        "theme": "消費・経済"
-      },
-      {
-        "scenario": "都市のみどり活用",
-        "origin": "web",
-        "facts": [
-          "緑の基本計画にグリーンインフラを位置づけ",
-          "官民連携の整備支援制度がある"
-        ],
-        "source": "https://www.mlit.go.jp/toshi/park/toshi_parkgreen_tk_000181.html"
-      },
-      {
-        "scenario": "科学館:展示説明",
-        "theme": "科学・技術"
-      },
-      {
-        "scenario": "工場見学の集合場所と注意事項",
-        "theme": "教育"
-      },
-      {
-        "scenario": "動物園:年間パス",
-        "theme": "スポーツ・余暇"
-      },
-      {
-        "scenario": "家庭の防災備蓄の頭打ち",
-        "origin": "web",
-        "facts": [
-          "震災直後は備蓄実施率が大きく上昇",
-          "その後は取組実施率が伸び悩む傾向"
-        ],
-        "source": "https://www.bousai.go.jp/kaigirep/hakusho/r05/honbun/t1_2s_04_01.html"
-      },
-      {
-        "scenario": "留守番電話:約束変更",
-        "theme": "人間関係"
-      },
-      {
-        "scenario": "大学の授業:統計の読み方",
-        "theme": "教育"
-      },
-      {
-        "scenario": "放送サービス接触の変化",
-        "origin": "web",
-        "facts": [
-          "リアルタイム接触は約86％",
-          "インターネット経由の接触は約4割"
-        ],
-        "source": "https://www.jstage.jst.go.jp/article/bunken/76/1-2/76_2/_article/-char/ja"
-      },
-      {
-        "scenario": "税務署:確定申告の相談窓口",
-        "theme": "行政・手続き"
-      }
-    ],
-    "reading_topics": [
-      {
-        "topic": "キャッシュレス決済の拡大",
-        "origin": "web",
-        "facts": [
-          "2025年の比率は約6割",
-          "コード払いの割合は約1割"
-        ],
-        "source": "https://www.meti.go.jp/press/2025/03/20260331006/20260331006.html"
-      },
-      {
-        "topic": "フードロス削減の取り組み",
-        "theme": "食"
-      },
-      {
-        "topic": "睡眠時間の不足感",
-        "origin": "web",
-        "facts": [
-          "睡眠が6時間未満の人は約4割",
-          "睡眠で休養がとれている人は約7割台"
-        ],
-        "source": "https://kennet.mhlw.go.jp/tools/wp/wp-content/themes/targis_mhlw/pdf/leaf-sleep.pdf"
-      },
-      {
-        "topic": "同一労働同一賃金",
-        "theme": "働き方"
-      },
-      {
-        "topic": "都市鉄道の混雑率",
-        "origin": "web",
-        "facts": [
-          "東京圏の平均混雑率は約140％台",
-          "大阪圏・名古屋圏も100％超が続く"
-        ],
-        "source": "https://www.mlit.go.jp/report/press/tetsudo04_hh_000139.html"
-      },
-      {
-        "topic": "半導体と経済安保",
-        "theme": "科学・技術"
-      },
-      {
-        "topic": "サテライトオフィス",
-        "theme": "働き方"
-      },
-      {
-        "topic": "効率と創造性",
-        "theme": "働き方"
-      },
-      {
-        "topic": "買い物のかたちの変化",
-        "theme": "消費・経済"
-      },
-      {
-        "topic": "ボランティアの意義",
-        "theme": "地域活性化"
-      },
-      {
-        "topic": "週1日以上の運動習慣",
-        "origin": "web",
-        "facts": [
-          "20歳以上の週1日以上実施率は約5割",
-          "1週間あたりの実施時間の中央値は約70分"
-        ],
-        "source": "https://www.mext.go.jp/sports/b_menu/houdou/jsa_00234.html"
-      },
-      {
-        "topic": "カロリーベースの国産供給",
-        "origin": "web",
-        "facts": [
-          "食料自給率は約4割前後で低水準",
-          "生産額ベースは6割台で推移"
-        ],
-        "source": "https://www.maff.go.jp/j/zyukyu/zikyu_ritu/012.html"
-      }
+ "seed": "15212088+reroll(usage,56459537)",
+ "generated_at": "2026-08-07 18:26:24",
+ "test_id": "20260807_1",
+ "rotation": {
+  "recency_source": "ledger",
+  "history_len": 2,
+  "cooldown": 2
+ },
+ "items": {
+  "kanji_reading": [
+   "誓う(ちかう)",
+   "惜しい(おしい)",
+   "迅速(じんそく)",
+   "漂う(ただよう)",
+   "抑える(おさえる)"
+  ],
+  "orthography": [
+   "一旦",
+   "努める(努力)",
+   "果実",
+   "歌謡",
+   "免責"
+  ],
+  "word_formation": [
+   "〜好き(猫好き)",
+   "〜立て(採れたて)",
+   "〜主(依頼主)"
+  ],
+  "context_words": [
+   "サラリーマン",
+   "抑制",
+   "ウーマン",
+   "推移",
+   "柔軟",
+   "くっつく",
+   {
+    "item": "ワンピース",
+    "origin": "adjunct",
+    "level": "N2",
+    "evidence": [
+     "openjlpt vocab N2"
     ]
-  },
-  "answer_positions": {
-    "問題1_語彙": [
-      2,
-      3,
-      1,
-      2,
-      4
-    ],
-    "問題2_語彙": [
-      2,
-      4,
-      4,
-      3,
-      1
-    ],
-    "問題3_語彙": [
-      3,
-      1,
-      4
-    ],
-    "問題4_語彙": [
-      1,
-      2,
-      2,
-      1,
-      4,
-      3,
-      4
-    ],
-    "問題5_語彙": [
-      4,
-      3,
-      1,
-      3,
-      2
-    ],
-    "問題6_語彙": [
-      1,
-      3,
-      4,
-      2,
-      4
-    ],
-    "問題7": [
-      1,
-      2,
-      3,
-      4,
-      3,
-      4,
-      2,
-      2,
-      1,
-      1,
-      4,
-      3
-    ],
-    "問題8": [
-      1,
-      4,
-      2,
-      2,
-      3
-    ],
-    "問題9": [
-      2,
-      4,
-      3,
-      1
-    ],
-    "問題10": [
-      1,
-      4,
-      3,
-      1,
-      2
-    ],
-    "問題11": [
-      3,
-      1,
-      1,
-      2,
-      4,
-      3,
-      4,
-      2
-    ],
-    "問題12": [
-      3,
-      1
-    ],
-    "問題13": [
-      2,
-      1,
-      4
-    ],
-    "問題14": [
-      3,
-      2
-    ],
-    "聴解_問題1": [
-      3,
-      3,
-      1,
-      2,
-      4
-    ],
-    "聴解_問題2": [
-      3,
-      3,
-      4,
-      2,
-      1,
-      1
-    ],
-    "聴解_問題3": [
-      2,
-      1,
-      3,
-      2,
-      4
-    ],
-    "聴解_問題4": [
-      3,
-      3,
-      2,
-      1,
-      1,
-      2,
-      2,
-      1,
-      1,
-      2,
-      3
-    ],
-    "聴解_問題5": [
-      3,
-      2,
-      4
-    ]
-  },
-  "cloze_topic": {
-    "origin": "pool",
-    "note": "author picks any pool reading topic register"
-  },
-  "info_retrieval_texture": {
-    "detail": "プラスチック資源の一括回収",
+   }
+  ],
+  "paraphrase": [
+   "案外",
+   "そのほか",
+   "そういえば",
+   "あらかじめ(事前に)",
+   "ショップ"
+  ],
+  "usage": [
+   "採る",
+   "まあまあ",
+   "提示",
+   "鮮やか",
+   "ひとりでに"
+  ],
+  "grammar_p7": [
+   "〜がち",
+   "〜わけにはいかない",
+   "〜たところ",
+   "〜そうにない",
+   "〜ずにはいられない",
+   "〜に沿って",
+   "〜をはじめ",
+   "〜からには",
+   "〜あげく",
+   "〜ことから",
+   "〜に基づいて",
+   "〜に伴って"
+  ],
+  "grammar_p8": [
+   "原因理由構文(〜ばかりに…てしまった)",
+   "例示指示(〜例えば…)",
+   "〜おかげで",
+   "〜からといって",
+   "条件限定(〜ない限りは…)"
+  ],
+  "quick_response": [
+   "心当たりがない",
+   "部長、来週の会議の資料、印刷して机の上に置いておきました。",
+   "部長、急なご相談で大変恐縮なのですが、10分ほどお時間をいただけますでしょうか。",
+   "かしこまりました",
+   "今日は定時で上がらせていただいてもよろしいでしょうか。",
+   "息が合う",
+   "避難経路は、各階の掲示をご確認ください。",
+   "皆さんのおかげで無事に終えることができました。",
+   "めどが立つ",
+   "この路線は本日運休しております。",
+   "部長がお呼びですので、至急会議室までお願いいたします。"
+  ],
+  "listening_scenarios": [
+   {
+    "scenario": "国内旅行消費の回復",
     "origin": "web",
     "facts": [
-      "先進モデル事業で複数自治体が実証",
-      "移行後のコストとCO2を概算する手引きを改定"
+     "日本人国内旅行消費は約27兆円",
+     "国内全体の旅行消費は約38兆円"
     ],
-    "source": "https://www.env.go.jp/press/press_00200.html"
+    "source": "https://www.travelvoice.jp/20260430-159734"
+   },
+   {
+    "scenario": "住宅用火災警報器の普及状況",
+    "origin": "web",
+    "facts": [
+     "全国の設置率は約8割半ば",
+     "条例適合率は約7割弱"
+    ],
+    "source": "https://www.fdma.go.jp/publication/hakusho/r6/point/1/68745.html"
+   },
+   {
+    "scenario": "マンション:置き配ボックスの設置",
+    "theme": "住まい"
+   },
+   {
+    "scenario": "放課後児童クラブの受け皿",
+    "origin": "web",
+    "facts": [
+     "登録児童は約157万人",
+     "待機児童は約1.6万人で前年より減少"
+    ],
+    "source": "https://manabi-mirai.mext.go.jp/upload/2026_0423_2.pdf"
+   },
+   {
+    "scenario": "タクシー:配車アプリの使い方",
+    "theme": "交通"
+   },
+   {
+    "scenario": "管理人室:騒音の相談",
+    "theme": "住まい"
+   },
+   {
+    "scenario": "成人の平均歩数の減少",
+    "origin": "web",
+    "facts": [
+     "男性の平均は約6600歩",
+     "女性の平均は約5700歩で直近10年減少"
+    ],
+    "source": "https://www.mhlw.go.jp/stf/newpage_45540.html"
+   },
+   {
+    "scenario": "カスタマー:返品",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "ジム:入会相談",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "文化財修理の原材料確保",
+    "origin": "web",
+    "facts": [
+     "用具・原材料の生産者減少が課題",
+     "安定供給のための調査と支援が進む"
+    ],
+    "source": "https://www.bunka.go.jp/takumi/sozai.html"
+   },
+   {
+    "scenario": "新入社員研修の宿泊施設手配",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "店舗の改装工事期間中の営業案内",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "都市のみどり活用",
+    "origin": "web",
+    "facts": [
+     "緑の基本計画にグリーンインフラを位置づけ",
+     "官民連携の整備支援制度がある"
+    ],
+    "source": "https://www.mlit.go.jp/toshi/park/toshi_parkgreen_tk_000181.html"
+   },
+   {
+    "scenario": "科学館:展示説明",
+    "theme": "科学・技術"
+   },
+   {
+    "scenario": "工場見学の集合場所と注意事項",
+    "theme": "教育"
+   },
+   {
+    "scenario": "動物園:年間パス",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "家庭の防災備蓄の頭打ち",
+    "origin": "web",
+    "facts": [
+     "震災直後は備蓄実施率が大きく上昇",
+     "その後は取組実施率が伸び悩む傾向"
+    ],
+    "source": "https://www.bousai.go.jp/kaigirep/hakusho/r05/honbun/t1_2s_04_01.html"
+   },
+   {
+    "scenario": "留守番電話:約束変更",
+    "theme": "人間関係"
+   },
+   {
+    "scenario": "大学の授業:統計の読み方",
+    "theme": "教育"
+   },
+   {
+    "scenario": "放送サービス接触の変化",
+    "origin": "web",
+    "facts": [
+     "リアルタイム接触は約86％",
+     "インターネット経由の接触は約4割"
+    ],
+    "source": "https://www.jstage.jst.go.jp/article/bunken/76/1-2/76_2/_article/-char/ja"
+   },
+   {
+    "scenario": "税務署:確定申告の相談窓口",
+    "theme": "行政・手続き"
+   }
+  ],
+  "reading_topics": [
+   {
+    "topic": "キャッシュレス決済の拡大",
+    "origin": "web",
+    "facts": [
+     "2025年の比率は約6割",
+     "コード払いの割合は約1割"
+    ],
+    "source": "https://www.meti.go.jp/press/2025/03/20260331006/20260331006.html"
+   },
+   {
+    "topic": "フードロス削減の取り組み",
+    "theme": "食"
+   },
+   {
+    "topic": "睡眠時間の不足感",
+    "origin": "web",
+    "facts": [
+     "睡眠が6時間未満の人は約4割",
+     "睡眠で休養がとれている人は約7割台"
+    ],
+    "source": "https://kennet.mhlw.go.jp/tools/wp/wp-content/themes/targis_mhlw/pdf/leaf-sleep.pdf"
+   },
+   {
+    "topic": "同一労働同一賃金",
+    "theme": "働き方"
+   },
+   {
+    "topic": "都市鉄道の混雑率",
+    "origin": "web",
+    "facts": [
+     "東京圏の平均混雑率は約140％台",
+     "大阪圏・名古屋圏も100％超が続く"
+    ],
+    "source": "https://www.mlit.go.jp/report/press/tetsudo04_hh_000139.html"
+   },
+   {
+    "topic": "半導体と経済安保",
+    "theme": "科学・技術"
+   },
+   {
+    "topic": "サテライトオフィス",
+    "theme": "働き方"
+   },
+   {
+    "topic": "効率と創造性",
+    "theme": "働き方"
+   },
+   {
+    "topic": "買い物のかたちの変化",
+    "theme": "消費・経済"
+   },
+   {
+    "topic": "ボランティアの意義",
+    "theme": "地域活性化"
+   },
+   {
+    "topic": "週1日以上の運動習慣",
+    "origin": "web",
+    "facts": [
+     "20歳以上の週1日以上実施率は約5割",
+     "1週間あたりの実施時間の中央値は約70分"
+    ],
+    "source": "https://www.mext.go.jp/sports/b_menu/houdou/jsa_00234.html"
+   },
+   {
+    "topic": "カロリーベースの国産供給",
+    "origin": "web",
+    "facts": [
+     "食料自給率は約4割前後で低水準",
+     "生産額ベースは6割台で推移"
+    ],
+    "source": "https://www.maff.go.jp/j/zyukyu/zikyu_ritu/012.html"
+   }
+  ]
+ },
+ "answer_positions": {
+  "問題1_語彙": [
+   2,
+   3,
+   1,
+   2,
+   4
+  ],
+  "問題2_語彙": [
+   2,
+   4,
+   4,
+   3,
+   1
+  ],
+  "問題3_語彙": [
+   3,
+   1,
+   4
+  ],
+  "問題4_語彙": [
+   1,
+   2,
+   2,
+   1,
+   4,
+   3,
+   4
+  ],
+  "問題5_語彙": [
+   4,
+   3,
+   1,
+   3,
+   2
+  ],
+  "問題6_語彙": [
+   1,
+   3,
+   4,
+   2,
+   4
+  ],
+  "問題7": [
+   1,
+   2,
+   3,
+   4,
+   3,
+   4,
+   2,
+   2,
+   1,
+   1,
+   4,
+   3
+  ],
+  "問題8": [
+   1,
+   4,
+   2,
+   2,
+   3
+  ],
+  "問題9": [
+   2,
+   4,
+   3,
+   1
+  ],
+  "問題10": [
+   1,
+   4,
+   3,
+   1,
+   2
+  ],
+  "問題11": [
+   3,
+   1,
+   1,
+   2,
+   4,
+   3,
+   4,
+   2
+  ],
+  "問題12": [
+   3,
+   1
+  ],
+  "問題13": [
+   2,
+   1,
+   4
+  ],
+  "問題14": [
+   3,
+   2
+  ],
+  "聴解_問題1": [
+   3,
+   3,
+   1,
+   2,
+   4
+  ],
+  "聴解_問題2": [
+   3,
+   3,
+   4,
+   2,
+   1,
+   1
+  ],
+  "聴解_問題3": [
+   2,
+   1,
+   3,
+   2,
+   4
+  ],
+  "聴解_問題4": [
+   3,
+   3,
+   2,
+   1,
+   1,
+   2,
+   2,
+   1,
+   1,
+   2,
+   3
+  ],
+  "聴解_問題5": [
+   3,
+   2,
+   4
+  ]
+ },
+ "cloze_topic": {
+  "origin": "pool",
+  "note": "author picks any pool reading topic register"
+ },
+ "info_retrieval_texture": {
+  "detail": "プラスチック資源の一括回収",
+  "origin": "web",
+  "facts": [
+   "先進モデル事業で複数自治体が実証",
+   "移行後のコストとCO2を概算する手引きを改定"
+  ],
+  "source": "https://www.env.go.jp/press/press_00200.html"
+ },
+ "qr_situation_seeds": [
+  {
+   "detail": "無料見逃し配信の広がり",
+   "origin": "web",
+   "source": "https://www.nhk.or.jp/bunken/d/_data/research/yoron/BUNA0000010760010002/files/20260105_01.pdf"
   },
-  "qr_situation_seeds": [
-    {
-      "detail": "無料見逃し配信の広がり",
-      "origin": "web",
-      "source": "https://www.nhk.or.jp/bunken/d/_data/research/yoron/BUNA0000010760010002/files/20260105_01.pdf"
-    },
-    {
-      "detail": "ふるさと納税の受入拡大",
-      "origin": "web",
-      "source": "https://www.soumu.go.jp/main_content/001022811.pdf"
-    },
-    {
-      "detail": "自治会加入率の低下",
-      "origin": "web",
-      "source": "https://www.soumu.go.jp/main_content/000819371.pdf"
-    }
-  ],
-  "carrier_seeds": [
-    {
-      "detail": "野菜摂取量の減少傾向",
-      "origin": "web",
-      "facts": [
-        "20歳以上の平均摂取は約260グラム",
-        "男女とも直近で減少傾向"
-      ],
-      "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/r5-houkoku_00001.html"
-    },
-    {
-      "detail": "国民生活時間の最新調査",
-      "origin": "web",
-      "facts": [
-        "仕事・家事・メディア利用など1日の使い方を追う",
-        "定期調査で暮らしの変化を把握"
-      ],
-      "source": "https://prtimes.jp/main/html/rd/p/000000050.000160617.html"
-    },
-    {
-      "detail": "熱中症警戒アラートの発表増",
-      "origin": "web",
-      "facts": [
-        "2025年の延べ発表回数は約1700回超",
-        "特別警戒アラートの発表はゼロ"
-      ],
-      "source": "https://www.wbgt.env.go.jp/pdf/report/R07_heatillness_report_24.pdf"
-    }
-  ],
-  "harvest_sha": "165eb22f8fd9"
+  {
+   "detail": "ふるさと納税の受入拡大",
+   "origin": "web",
+   "source": "https://www.soumu.go.jp/main_content/001022811.pdf"
+  },
+  {
+   "detail": "自治会加入率の低下",
+   "origin": "web",
+   "source": "https://www.soumu.go.jp/main_content/000819371.pdf"
+  }
+ ],
+ "carrier_seeds": [
+  {
+   "detail": "野菜摂取量の減少傾向",
+   "origin": "web",
+   "facts": [
+    "20歳以上の平均摂取は約260グラム",
+    "男女とも直近で減少傾向"
+   ],
+   "source": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/eiyou/r5-houkoku_00001.html"
+  },
+  {
+   "detail": "国民生活時間の最新調査",
+   "origin": "web",
+   "facts": [
+    "仕事・家事・メディア利用など1日の使い方を追う",
+    "定期調査で暮らしの変化を把握"
+   ],
+   "source": "https://prtimes.jp/main/html/rd/p/000000050.000160617.html"
+  },
+  {
+   "detail": "熱中症警戒アラートの発表増",
+   "origin": "web",
+   "facts": [
+    "2025年の延べ発表回数は約1700回超",
+    "特別警戒アラートの発表はゼロ"
+   ],
+   "source": "https://www.wbgt.env.go.jp/pdf/report/R07_heatillness_report_24.pdf"
+  }
+ ],
+ "harvest_sha": "165eb22f8fd9"
 }
