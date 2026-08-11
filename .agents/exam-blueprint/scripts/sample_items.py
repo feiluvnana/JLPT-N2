@@ -16,6 +16,7 @@ import argparse
 import itertools
 import json
 import random
+import re
 import sys
 import time
 from pathlib import Path
@@ -59,6 +60,60 @@ THEME_CAP = {"reading_topics": 1, "listening_scenarios": 5}
 # Categories whose draw must hold at most one entry per theme, enforced during
 # the draw by `sample_distinct_theme()` rather than warned about afterwards.
 DISTINCT_THEME_CATS = {"reading_topics"}
+
+# Target per-ITEM probability that a 問題5/6 draw slot is a katakana
+# headword, enforced during the draw by `sample_katakana_capped()`.
+# Measured against the 7 current-era sittings
+# (`question-authoring/references/official_calibration.md` §12): the archive
+# draws a katakana HEADWORD in only 3/35 (問題5, 8.6%) and 1/35 (問題6, 2.9%)
+# items — never more than one per section in the same paper. `pools.json`'s
+# `paraphrase` is 27.1% katakana-containing and `usage` is 32.7%; a plain
+# `rng.sample()` reproduces that composition (~1.4 and ~1.6 expected katakana
+# items per 5-draw) instead of the archive's near-zero norm. Three generated
+# papers checked before this existed drew 3, 3 and 6 combined katakana
+# headwords per paper against an official average of 0.57. These are the
+# measured item-level rates, not the pool's native share — do not replace them
+# with `len(katakana)/len(pool)` if the pool composition changes; re-measure
+# the archive instead.
+KATAKANA_TARGET_RATE = {"paraphrase": 3 / 35, "usage": 1 / 35}
+KATAKANA_CAP = {"paraphrase": 1, "usage": 1}  # never observed 2 in one section
+
+
+def is_katakana_headword(entry) -> bool:
+    """True if the pool entry's headword (gloss stripped) is a katakana word.
+
+    `head()` already strips the disambiguating `(...)`/`（...）` gloss —
+    `怠る(サボる/なまける)`'s headword is `怠る`, not katakana, even though the
+    gloss names a katakana synonym. Matches on any katakana character, same
+    test used to measure the archive rate in official_calibration.md §12.
+    """
+    return bool(re.search(r"[゠-ヿ]", head(item_text(entry))))
+
+
+def sample_katakana_capped(rng: random.Random, eligible: list, n: int,
+                           target_rate: float, cap: int, name: str) -> list:
+    """`n` entries whose katakana-headword count matches the archive's rate.
+
+    §12's archive rate is near-zero per paper (0 in most sittings, 1 in a
+    minority, never 2+ in one section) — a fixed quota that forces exactly
+    `cap` katakana items every draw, or that only trims the pool's native ~30%
+    share down to `cap` without lowering how OFTEN a katakana item appears at
+    all, both reproduce a shape the archive doesn't have. So: run `n`
+    independent Bernoulli(target_rate) trials to decide how many katakana
+    slots this draw gets (capped at `cap`), then fill that many from the
+    katakana subset and the rest from the non-katakana subset.
+    """
+    kata = [e for e in eligible if is_katakana_headword(e)]
+    plain = [e for e in eligible if not is_katakana_headword(e)]
+    k = min(cap, len(kata), sum(rng.random() < target_rate for _ in range(n)))
+    if len(plain) < n - k:
+        print(f"  warning: pool '{name}' has too few non-katakana entries "
+              f"({len(plain)}) to fill {n - k} of {n} slots — falling back "
+              f"to an uncapped draw; grow the non-katakana side of this pool")
+        return rng.sample(eligible, n)
+    picked = rng.sample(plain, n - k) + (rng.sample(kata, k) if k else [])
+    rng.shuffle(picked)
+    return picked
 
 # category -> items drawn per test (N2)
 DRAW = {
@@ -357,6 +412,10 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
                 picked = sample_distinct_theme(rng, eligible, n, name)
                 if picked is not None:
                     return picked, cool
+            if name in KATAKANA_CAP:
+                return sample_katakana_capped(
+                    rng, eligible, n, KATAKANA_TARGET_RATE[name],
+                    KATAKANA_CAP[name], name), cool
             return rng.sample(eligible, n), cool
     remaining = len([x for x in pool if item_text(x) not in taken])
     sys.exit(f"pool '{name}' cannot supply {n} distinct items "

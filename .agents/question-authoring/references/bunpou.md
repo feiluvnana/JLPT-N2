@@ -95,6 +95,38 @@ or particle on a card is official practice. Chunk-size intuitions do not
 survive contact with the archive — **the invariant is ★-uniqueness** (core Item
 integrity #8, the link table), and length is calibration.
 
+### Register mix across the 5 items — the archive varies SCENE, not grammar band
+
+A paper whose 問題8 items are all correctly N2-band grammar but all set in the
+same dense, formal register still reads as uniformly hard — because "hard"
+here is a register/scene effect, not a grammar-band one, and it is invisible
+to `level_band_grammar.txt`. Measured over the same 35 current-era items
+(`official_calibration.md` §13), classifying each stem's setting:
+
+| register | share |
+|---|---|
+| personal/casual (family, friends, first-person daily life, casual dialogue) | **63%** |
+| neutral/factual (trivia, weather, plain description) | 23% |
+| formal/institutional (workplace policy, business, administrative notice, technical) | **14%** |
+
+**Personal/casual is the majority register in every one of the 7 sittings, and
+two sittings (12/2024, 12/2025) ship ZERO formal/institutional items** — an
+all-personal paper is normal; no sitting exceeds 2 of 5 formal/institutional
+items. Three generated papers checked before this rule existed skewed the
+opposite way — 11/15 items (73%) corporate/formal (契約書 negotiation, system
+procurement, price negotiation, workplace manuals), one paper 5/5 formal — a
+shape that never occurs in the archive.
+
+**Binding target: at most 2 of the 5 問題8 items may be
+formal/institutional; at least 2 should be personal/casual** (family, a
+friend, first-person daily life, a casual dialogue quote — `A「…」`/`B「…」`
+same layout as 問題7). This is independent of which grammar point was drawn —
+a formal-sounding grammar form can still carry a personal-register sentence
+(`〜わりに` about a family dinner, not a quarterly budget), and the reverse.
+Do not let every item default to the same office/business setting just
+because 問題7's carrier seeds or the test's web topics lean corporate; 問題8's
+register is a separate authoring decision from 問題7's.
+
 ## 問題9 (cloze)
 
 - Official cloze passages run **~500–700 JP chars** (title + body, excluding

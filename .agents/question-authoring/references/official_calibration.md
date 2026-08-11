@@ -389,3 +389,88 @@ Non-official sites were not used for any number in this file.
 >   against a single paper.** The current exam format (71 + 30 items, 問題11 in
 >   four passages) dates from **12/2022**; earlier sittings are a different
 >   blueprint and must not be averaged in for 読解 lengths.
+
+---
+
+## 12. 問題5/問題6 katakana-headword rate — the pool over-draws it 5–7×
+
+Measured by reading every 問題5 (言い換え類義) and 問題6 (用法) item's TESTED
+HEADWORD across the current-era archive (n = 35 items each; 12/2022, 7/2023,
+12/2023, 7/2024, 12/2024, 7/2025, 12/2025), classifying the headword itself as
+katakana or kanji/wago (a katakana word appearing only among the four options,
+never as the tested word, is recorded separately — it is a register choice on
+the distractor set, not a pool draw).
+
+| 問題 | katakana HEADWORD | all-options-katakana (headword is wago) | zero katakana anywhere |
+|---|---|---|---|
+| 5 (n=35) | **3 (8.6%)** — 12/2022-21 テクニック, 7/2023-22 テンポ, 12/2024-21 ガイド | 2 (5.7%) — 7/2024-22 行儀→アイディア/サービス/マナー/イメージ, 12/2025-22 題→デザイン/アイデア/ストーリー/タイトル | 30 (85.7%) |
+| 6 (n=35) | **1 (2.9%)** — 12/2022-29 ベテラン | n/a (問題6 options are sentences, not a word list) | 34 (97.1%) |
+
+- **Combined headword rate: 4/70 (5.7%).** Only 12/2022 drew a katakana
+  headword in BOTH sections of the same paper; 6 of the 7 sittings drew **zero**
+  katakana headwords across 問題5+問題6 combined.
+- **`references/pools.json`'s `paraphrase` pool is 27.1% katakana-containing
+  (38/140) and `usage` is 32.7% (49/150)** — 3–6× the measured official rate.
+  `sample_items.py`'s `draw()` is a plain `rng.sample()` with no
+  script-awareness, so an unweighted 5-item draw from either pool has an
+  ~27–33% expected katakana share per item — close to **5 combined katakana
+  headwords per paper in expectation**, against an official average of 0.57.
+  Three generated papers checked (`tests/20260807_1`, `20260810_1`,
+  `20260810_2`) drew 3, 3 and 6 combined katakana headwords respectively —
+  averaging 4/paper, ~7× the official rate, and never once resembling the
+  official "usually zero" shape.
+- **Root cause is the draw, not the writing.** The pool's katakana share was
+  never capped against measured official behavior; a uniform random sample
+  reproduces the pool's composition, and the pool's composition does not match
+  the archive.
+- **A second, separate finding while reading the pool**: several `paraphrase`
+  and `usage` katakana entries (バケツ, ダム, ハンドル, ピストル, ビタミン,
+  マラソン, モーター, ロビー, ボーナス, ランチ, ランニング…) are concrete,
+  everyday loanwords that read as N3/N4 vocabulary under the golden rule
+  ("would this appear in an N3 book?") — `references/openjlpt` labels them
+  `N2`, but that corpus is a legacy 2級 word list and mislabels in both
+  directions (`question-authoring/references/moji-goi.md` §"KEY must be N2"
+  already warns of the opposite mislabel, N2 words tagged N1). This pass did
+  not purge the pool — it only measured the ratio and fixed the draw (§ below,
+  `exam-blueprint/scripts/sample_items.py`'s `KATAKANA_CAP`) — a follow-up pass
+  should re-run the openjlpt/Shin-Kanzen band check on every katakana pool
+  entry the same way `kanji_reading` was audited (exam-blueprint §"Pool
+  entries stay inside the N2 band").
+
+## 13. 問題8 register mix — official skews personal/casual, generated skews corporate/formal
+
+Classified every current-era 問題8 stem's setting/register (n = 35; same 7
+sittings as §12) into **personal/casual** (family, friends, first-person daily
+life, casual dialogue quotes), **neutral/factual** (trivia, weather, plain
+description, no institutional actor), or **formal/institutional** (workplace
+policy, business, administrative notice, scientific/technical exposition):
+
+| sitting | personal/casual | neutral/factual | formal/institutional |
+|---|---|---|---|
+| 12/2022 | 2 | 1 | 2 |
+| 7/2023 | 2 | 3 | 0 |
+| 12/2023 | 2 | 1 | 2 |
+| 7/2024 | 3 | 2 | 0 |
+| 12/2024 | **5** | 0 | **0** |
+| 7/2025 | 3 | 1 | 1 |
+| 12/2025 | **5** | 0 | **0** |
+| **total (35)** | **22 (63%)** | **8 (23%)** | **5 (14%)** |
+
+- **Personal/casual is the majority register in every sitting, and two of the
+  seven sittings (12/2024, 12/2025) ship ZERO formal/institutional 問題8
+  items** — the format tolerates an all-personal paper but not an
+  all-institutional one; no sitting exceeds 2 of 5 formal/institutional items.
+- The same 3 generated papers checked in §12 skew the other way: **11 of 15
+  items (73%) are corporate/formal** (契約書 negotiation, system procurement,
+  personal-data policy, price negotiation, workplace manuals, project
+  outcomes), **2 (13%) personal/casual**, **2 (13%) neutral**. One paper
+  (`20260807_1`) is 5/5 formal/institutional — a shape that never occurs in the
+  7-sitting archive.
+- **This is a register/scene variance finding, not a grammar-band finding** —
+  every generated item's grammar point is still correctly N2 (per
+  `level_band_grammar.txt`); the reported "問題8 feels uniformly hard" comes
+  from every item sharing one dense, abstract, institutional register, where
+  official papers mix in plain first-person narrative and casual dialogue that
+  reads easier at equal grammatical difficulty. The fix is a register-mix rule
+  in `question-authoring/references/bunpou.md` §問題8, not a change to which
+  grammar forms are drawn.

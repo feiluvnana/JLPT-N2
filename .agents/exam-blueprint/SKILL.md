@@ -109,6 +109,29 @@ one paper — the fix belongs in `sample_items.py`, still open; `〜に過言で
 `〜ずくめ(黒ずくめ)` matches `TOO_HARD` `ずくめ` but is a 問題3 affix — the band check
 stays scoped to the grammar categories (elsewhere it produces false hits).
 
+## `paraphrase`/`usage` katakana rate is capped, not left to the pool's composition
+
+`references/pools.json`'s `paraphrase` pool is 27.1% katakana-containing (38/140) and
+`usage` is 32.7% (49/150) — legacy 2級-era loanword entries (バケツ, ダム, ハンドル,
+マラソン…) inflate both. The official archive draws a katakana HEADWORD in only 3/35
+問題5 items and 1/35 問題6 items (`question-authoring/references/official_calibration.md`
+§12) — a plain `rng.sample()` reproduces the pool's ~30% share per draw instead of the
+archive's ~5-9% per-item rate, and three generated papers measured before the fix drew 3,
+3 and 6 combined katakana headwords against an official average of 0.57.
+
+`sample_items.py`'s `draw()` routes `paraphrase`/`usage` through
+`sample_katakana_capped()` instead of `rng.sample()`: it runs `n` independent
+Bernoulli(`KATAKANA_TARGET_RATE[name]`) trials to decide how many katakana slots the draw
+gets (capped at `KATAKANA_CAP[name]`, never observed above 1 in one section of one paper),
+then fills those slots from the pool's katakana subset and the rest from the non-katakana
+subset. **Do not derive the target rate from the pool's own katakana share** — that is
+the composition being corrected for, not the target; re-derive `KATAKANA_TARGET_RATE` only
+by re-measuring the archive (§12), never by recomputing `len(katakana)/len(pool)`.
+
+This does not fix the pool's katakana entries that are themselves too easy for N2 (§12's
+second finding) — that is a `kanji_reading`-style band audit still to be done, following
+"Pool entries stay inside the N2 band" above.
+
 ## Topic themes — the closed vocabulary (this skill owns it)
 
 `reading_topics` and `listening_scenarios` entries are **objects, not bare strings** —

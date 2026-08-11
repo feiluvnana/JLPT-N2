@@ -300,6 +300,14 @@ The stem contains the HARD word (あいにく, 妥当, ありふれた, くた�
 options are simpler. Never the reverse. Substitutability check: core Item
 integrity #12.
 
+**Katakana headwords are rare on purpose — do not add more for "variety."** The
+archive draws a katakana target in only 3/35 current-era 問題5 items
+(`references/official_calibration.md` §12); `exam-blueprint`'s
+`sample_items.py` now draws `paraphrase`/`usage` at that measured rate instead
+of the pool's raw ~30% katakana share. If a draw hands you a paper with zero
+katakana targets in 問題5/6, that is the archive's usual shape, not a thin
+draw to compensate for.
+
 ## 問題6 (用法)
 
 1 correct sentence + 3 that are grammatical but misuse the word's
