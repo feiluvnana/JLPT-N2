@@ -96,12 +96,17 @@ consequences:
 Measured: all 35 current-era 問題1 items (12/2022–12/2025, 14 訓読み) — ZERO put
 a target's alternative reading in its own option set. Decisive case: 7/2025-2,
 辛い carries からい and つらい and official offered あまい/にがい/しぶい.
-**Procedure:** look the spelling up in the openjlpt vocab slices before writing
-options, and record BOTH readings and levels on the 問題1 source line:
+**Procedure:** check the spelling against Shin Kanzen Master N2-Goi/N2-Kanji and
+日本語総まとめ N2 語彙/漢字 (`refs/Shinkanzen/`, `refs/Soumatome/`) before writing
+options, and record BOTH readings and their levels on the 問題1 source line:
 `くぐる=潜る[N1] / もぐる=潜る[N2] → key もぐる`. A pool entry naming the harder
 reading is a **pool** defect: send it back to `exam-blueprint` (kanji_reading
 validity rule) rather than repairing the option set. Avoid documenting
-the trap as if it were a feature when stem prints 潜る, keys くぐる, and offers もぐる. `check_mondai1_key_band()` fails both halves.
+the trap as if it were a feature when stem prints 潜る, keys くぐる, and offers
+もぐる. **2026-08-11: there is no automated gate for this anymore** —
+`check_mondai1_key_band()` (which used to fail both halves) was deleted along
+with `openjlpt`, the JSON corpus it read; this rule is verified by the
+author/QA reading the actual textbook pages, not by `make check`.
 
 ### Build the set BEFORE you accept the target — reject the target, never the rule
 
@@ -119,10 +124,24 @@ only ロウ/いたわ(る)/ねぎら(う) and no look-alike gives a ～わる ve
 every real ～わる verb (ことわる・かわる・くわわる・まじわる・さわる…) is in an
 unrelated field, so (b)={}. Avoid shipping invented non-words or unrelated-kanji sets on an undrawable target.
 
-### All four readings must RESOLVE — look them up, do not judge them
+### All four readings must RESOLVE — check them against the books, do not judge them
+
+**2026-08-11: this procedure used to run as a scripted lookup against `openjlpt`,
+a vendored JSON corpus. `openjlpt` is now deleted — exam-blueprint's pool
+authority is Shin Kanzen Master N2-Goi/N2-Kanji and 日本語総まとめ N2 語彙/漢字
+exclusively, corroborated by the official archive for anything missing from
+those two.** Both Shinkanzen and Soumatome are scanned-image PDFs with **no
+text layer** — confirmed via `pdftotext` (zero lines extracted from either the
+Shinkanzen Goi PDF or the Soumatome Goi PDF) — so there is no grep-able index
+to script a lookup against. What follows is now an author-diligence
+procedure: read the relevant textbook page(s) via the Read tool's PDF `pages`
+support, or rely on trained Japanese-vocabulary knowledge and cross-check
+against these books (and, for a miss, the official archive's already-OCR'd
+`booklet.md`/`key.md` under `refs/JLPT_N2_NEW/`) when uncertain. The RULES
+below did not change — only the mechanism that verifies them did.
 
 Every option must be a real word (avoid non-words like がいり/そうじる/うんじる),
-by performing a lookup with two branches,
+verified against Shinkanzen/Soumatome (or the archive) with two branches,
 because official papers treat 音読み and 訓読み targets differently — measured
 over all 35 current-era 問題1 items (`references/official_calibration.md` §5):
 
@@ -141,33 +160,27 @@ The operational procedure:
 
 1. **Reduce each option to dictionary form** (さだまった → さだまる; the
    conjugation lock has already forced all four into one class).
-2. **Run all four through the openjlpt indices** — vocab `word`/`reading` fields
-   plus kanji `kunyomi` (dots and leading `-` stripped). From the workspace root:
-
-   ```bash
-   python3 -c "
-   import json,sys;B='.agents/exam-blueprint/references/openjlpt';V={};K={}
-   for lv in ('n1','n2','n3'):
-    for e in json.load(open(f'{B}/vocab-{lv}.json')):
-     for k in (e['word'],e['reading']):
-      if k: V.setdefault(k,set()).add(e['word']+'['+e['level']+']')
-    for e in json.load(open(f'{B}/kanji-{lv}.json')):
-     for r in e['kunyomi']: K.setdefault(r.replace('.','').lstrip('-'),set()).add(e['character']+'['+e['level']+']')
-   for a in sys.argv[1:]: print(a, sorted(V.get(a,())) or sorted(K.get(a,())) or 'MISS')
-   " さだまる しずまる おさまる やすまる
-   ```
-3. **A HIT is the evidence**: write the returned headword into the 問題1 source
-   line — `さだまる=定まる[N1]`, `あまい=甘[N2 kunyomi]` — plus the branch label
-   each option satisfies (`[同漢字]` or `[同分野]`). The source is whatever the
-   lookup returned — run it; never write the spelling from memory.
-4. **A MISS is a debt.** The slices hold 7,040 vocab
-   entries (~790 with an empty `reading`) and the kanji lists stop at N3, so
-   real words miss (やすまる=休まる — an official distractor — and こうじる=講じる
-   both MISS). On a miss, write the option's kanji spelling, confirm the reading
-   in a second source (`refs/Shinkanzen/` or the 常用漢字表 音訓), record it as
-   `やすまる=休まる[SK]`.
-5. **If no spelling can be written, the reading is invented — delete the
-   option.** がいり/そうじる/うんじる all MISS and have no spelling: 概 reads
+2. **Check all four against Shinkanzen/Soumatome** — read the relevant N2-Goi
+   (or N2-Kanji, for a single-kanji target) pages via the Read tool's `pages`
+   parameter, or draw on trained Japanese-vocabulary knowledge and treat the
+   books as the check when you verify a specific candidate you're unsure of.
+   There is no index to query in bulk; do this per option, per item.
+3. **A HIT is the evidence**: write the confirmed headword into the 問題1 source
+   line — `さだまる=定まる[N1, Shinkanzen p.NNN]`, `あまい=甘[N2 kunyomi,
+   Soumatome 週N-日N]` — plus the branch label each option satisfies (`[同漢字]`
+   or `[同分野]`). The source is whichever book (or archive corroboration) you
+   actually checked — cite it; never write the spelling from memory without
+   checking anything.
+4. **A MISS is a debt.** Shinkanzen/Soumatome don't cover every possible
+   distractor spelling, so real words will sometimes be absent from both
+   (やすまる=休まる — an official distractor — is the kind of word that can miss
+   a vocabulary-textbook's headword list even though it's a common, legitimate
+   N2-band word). On a miss, write the option's kanji spelling, confirm the
+   reading in a second source (常用漢字表 音訓, or corroborate against the
+   official archive's `booklet.md`/`key.md`), and record it as
+   `やすまる=休まる[常用音訓]` or `やすまる=休まる[archive: refs/JLPT_N2_NEW/…]`.
+5. **If no spelling can be confirmed anywhere, the reading is invented — delete
+   the option.** がいり/そうじる/うんじる have no confirmable spelling: 概 reads
    ガイ/おおむ.ね, 要 reads ヨウ, 損 reads ソン, so none is a reading of its
    target nor a derivation of the key. (そうじる is the one defensible member —
    ん→う is a real manipulation; the set still shipped two fabrications.)
@@ -180,35 +193,39 @@ The operational procedure:
    with neither a headword nor a derivation is fabricated — replace it. (In a
    訓読み set this branch does not exist: every option is a real word, full stop.)
 7. **If the 解説 gives an etymology or names the trap** (「労う＝ねぎらう」), it
-   must quote the headword the lookup returned, not a form assembled while
-   writing the cell.
+   must quote the headword actually confirmed in step 3, not a form assembled
+   while writing the cell.
 
-An earlier version claimed `make check` WARNs on a
-non-listed reading; it does not — the gate touches `openjlpt/kanji-n2.json` only
-to assert the file exists. Invented non-words must never be written without a
-warning or check. Until the QA work-list item `GATE-BLIND` lands, the written
-source-and-branch line **is** the check — the author's, not the gate's. A
-distractor with no writable branch label must be replaced; a distractor that is
-not a real word must never be written at all — repairing an item like 労わる
-by writing もてあそわる/まねわる/ひるがえわる with invented spellings
-(弄わる/招わる/翻わる) is a severe defect.
+`make check` has never WARNed on a non-listed reading — the gate used to touch
+`openjlpt/kanji-n2.json` only to assert the file existed, and even that
+existence check is gone now that `openjlpt` is deleted. Invented non-words must
+never be written without a warning or check. The written source-and-branch
+line **is** the check — the author's, not the gate's, and always has been for
+this rule. A distractor with no writable branch label must be replaced; a
+distractor that is not a real word must never be written at all — repairing an
+item like 労わる by writing もてあそわる/まねわる/ひるがえわる with invented
+spellings (弄わる/招わる/翻わる) is a severe defect.
 
-### The target's spelling must match its openjlpt headword
+### The target's spelling must match its headword in Shinkanzen/Soumatome
 
 問題1 tests a reading off a printed spelling, so non-standard okurigana changes
-the item: printing 「労わる」 (from `pools.json`) where `vocab-n1.json`
-heads it 「労る」 — and the extra 「わ」 is what locked the option class. On a
+the item: printing 「労わる」 (from `pools.json`) where the dictionary/textbook
+headword is 「労る」 — and the extra 「わ」 is what locked the option class. On a
 mismatch, fix `pools.json`, then re-sample; re-spelling the stem alone leaves
 the pool to re-draw the defect next test.
 
 ### The KEY must be N2 — and no gate checks that for vocabulary
 
 The band gate reads `references/level_band_grammar.txt`, which covers 問題7–9
-grammar only. Before shipping any 問題1–6 item, look the key up in the openjlpt
-vocab slices: a key that is an N3 headword and absent from the N2 list is too
-easy — avoid keying N3 words like 賢い/かしこい. Treat the lookup as a question, not a
-ruling: that corpus labels ordinary N2 words (把握・転換・審査・じっくり) "N1",
-so confirm the verdict against `refs/Shinkanzen/` before replacing anything.
+grammar only. Before shipping any 問題1–6 item, check the key against
+Shinkanzen N2-Goi/N2-Kanji and Soumatome N2 語彙/漢字: a key that is a
+headline N3 (or below) textbook word and does not appear in either N2 volume is
+too easy — avoid keying N3 words like 賢い/かしこい. This is a judgment call, not
+a corpus lookup — there is no vendored word list to query anymore, and even
+when `openjlpt` existed it mislabeled ordinary N2 words as N1 (把握・転換・審査・
+じっくり), so a script would not have been a ruling either. When in doubt,
+confirm against `refs/Shinkanzen/` and `refs/Soumatome/` directly, or against
+the official archive, before replacing anything.
 
 ## 問題2 (表記)
 

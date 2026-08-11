@@ -9,7 +9,6 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REF = HERE.parent / "references"
-OPENJLPT = REF / "openjlpt"
 POOLS_PATH = REF / "pools.json"
 LEVEL_BAND = (
     HERE.parents[1]
@@ -84,43 +83,6 @@ def load_level_band() -> dict[str, list[str]]:
         if line and cur:
             sections[cur].append(line)
     return sections
-
-
-def load_openjlpt() -> dict[str, dict[str, str]]:
-    """word/kanji/grammar -> level (N1..N5)."""
-    out: dict[str, dict[str, str]] = {
-        "vocab": {},
-        "kanji": {},
-        "grammar": {},
-    }
-    for path in sorted(OPENJLPT.glob("*.json")):
-        if path.name == "NOTICE.md":
-            continue
-        data = json.loads(path.read_text(encoding="utf-8"))
-        if not isinstance(data, list):
-            continue
-        m = re.match(r"(vocab|kanji|grammar)-n([1-5])", path.stem, re.I)
-        if not m:
-            continue
-        kind, num = m.group(1), m.group(2)
-        level = f"N{num}"
-        for row in data:
-            if kind == "vocab":
-                w = (row.get("word") or "").strip()
-                r = (row.get("reading") or "").strip()
-                if w:
-                    out["vocab"][w] = level
-                if r:
-                    out["vocab"][r] = level
-            elif kind == "kanji":
-                c = (row.get("character") or "").strip()
-                if c:
-                    out["kanji"][c] = level
-            elif kind == "grammar":
-                p = (row.get("pattern") or row.get("grammar") or "").strip()
-                if p:
-                    out["grammar"][p] = level
-    return out
 
 
 def load_pool_heads() -> set[str]:

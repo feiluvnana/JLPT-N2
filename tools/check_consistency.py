@@ -183,7 +183,6 @@ def check_filename_contracts():
         ("聴解_チャプター.json", ".agents/choukai-audio/scripts/make_choukai_mp3.py"),
         ("ledger.json", ".agents/exam-blueprint/scripts/sample_items.py"),
         ("test_spec.json", ".agents/exam-blueprint/scripts/sample_items.py"),
-        ("adjunct_staging.json", ".agents/exam-blueprint/archive/classify_level.py"),
         ("import_meta.json", ".agents/external-test-import/scripts/init_imported_test.py"),
     ]
     for literal, script in contracts:
@@ -642,18 +641,17 @@ def check_mondai8_chunk_lengths(gt: str, opts: dict[int, list[str]], bi):
 #
 # ONLY THE DECIDABLE HALF IS HERE, and it is a small half. Counting the 24
 # orderings is not machinable at all — that stays with question-authoring's link
-# table and exam-qa-review. Even the bare-adverb subset is only partly
-# decidable: 「着実に」 (な-adjective adverbial — a bare adverb, banned) and
-# 「状況に」 (noun + case particle — glued, and construction rule 2 *requires*
-# cards to end that way) are the same string shape, and the openjlpt slices
-# carry no part-of-speech field to separate them. So the check fires only where
-# the corpus itself attests the whole option as a lexical item — i.e. the option
-# IS the adverb, not a noun wearing a particle. Consequences, deliberately:
-#   * `く` endings are excluded entirely — くっつく/つまずく/ほどく/ぼやく are
-#     corpus headwords ending in く and are ordinary verb cards.
-#   * 「着実に」「お気軽に」 are NOT caught (corpus miss / お客様に collides).
-#   * `々` and all-hiragana shapes are NOT caught (人々に, しないと collide).
-# A miss here is not a pass: the link table in question-authoring is the rule.
+# table and exam-qa-review.
+#
+# 2026-08-11: the corpus-attested branch (an option matching a generic
+# 2-6-char 〜に/〜と shape AND attested as a lexical headword in openjlpt) was
+# retired with openjlpt — Shinkanzen/Soumatome have no text layer to build a
+# replacement lexical index from, and the shape alone (BARE_ADVERB_SHAPE) is
+# far too loose to flag on its own (it also matches ordinary noun+particle
+# cards like お客様に, 状況に — construction rule 2 *requires* cards to end
+# that way). Only the unambiguous 3-char-stem+的に shape remains, which needs
+# no corpus: a miss here is not a pass — the link table in question-authoring
+# is the rule.
 #
 # WARN, NOT FAIL — the flat ban is contradicted by the archive. Official 問題8
 # ships bare adverbs and bare particles as standalone cards: 12/2023-47 「一度」,
@@ -661,27 +659,20 @@ def check_mondai8_chunk_lengths(gt: str, opts: dict[int, list[str]], bi):
 # 「だけ」「する」「して」 — 4 of 29 current-era items (14%) carry one, and 51% of
 # all official options are under 5 JP chars (official_calibration §7, §9). The
 # real invariant is single-solution uniqueness, which a bare adverb ENDANGERS
-# but does not by itself violate, and uniqueness is not machinable. Verified:
-# none of 一度/もう/もちろん/珍しく/だけ/する/して is flagged by the patterns
-# below (they end in 度/う/ん/く/け/る/て, not に/と, and are not 〜的に) — but
-# きちんと and 徐々に are, and those are the same word class as もちろん. So the
-# flagged class is one official uses, and this may only suggest.
-BARE_ADVERB_SHAPE = re.compile(r"^[^、。\s]{2,6}[にと]$")
+# but does not by itself violate, and uniqueness is not machinable.
 # 3-char stem + 的に is unambiguously adverbial (積極的に/具体的に/一方的に);
 # a 2-char stem is not (目的に is a noun taking に), hence the exact {3}.
 NA_ADVERB_SHAPE = re.compile(r"^.{3}的に$")
 
 
 def check_mondai8_bare_adverbs(name: str, opts: dict[int, list[str]]):
-    lexical = openjlpt_headwords()
     hits = []
     for q in range(43, 48):
         for i, opt in enumerate(opts.get(q) or [], 1):
             o = opt.strip()
             if not o:
                 continue
-            if NA_ADVERB_SHAPE.match(o) or (
-                    BARE_ADVERB_SHAPE.match(o) and o in lexical):
+            if NA_ADVERB_SHAPE.match(o):
                 hits.append(f"{q}-{i}「{o}」")
     warn(f"{name}: no 問題8 option is a bare adverb", not hits,
          "; ".join(hits) + " — an adverb alone constrains neither neighbour, so "
@@ -1210,35 +1201,6 @@ def check_note_pairing(name: str, body: str):
           "marker with no note) is an automatic fail (exam-qa-review)")
 
 
-def openjlpt_vocab() -> set[str]:
-    """Every headword in the vendored OpenJLPT N2 vocabulary list."""
-    p = AGENTS / "exam-blueprint" / "references" / "openjlpt" / "vocab-n2.json"
-    if not p.is_file():
-        return set()
-    words = {e.get("word", "") for e in json.loads(p.read_text(encoding="utf-8"))}
-    return {w for word in words for w in word.split("/") if w}
-
-
-def openjlpt_headwords() -> set[str]:
-    """Every headword across the N1+N2+N3 vendored slices.
-
-    Wider than openjlpt_vocab() on purpose: used to ask "is this string a
-    LEXICAL item at all", not "is it N2". Never use it as a level ruling —
-    exam-blueprint documents that the slices both miss real N2 words and
-    label ordinary N2 words N1.
-    """
-    out: set[str] = set()
-    base = AGENTS / "exam-blueprint" / "references" / "openjlpt"
-    for lv in ("n1", "n2", "n3"):
-        p = base / f"vocab-{lv}.json"
-        if not p.is_file():
-            continue
-        for e in json.loads(p.read_text(encoding="utf-8")):
-            for w in str(e.get("word", "")).split("/"):
-                if w.strip():
-                    out.add(w.strip())
-    return out
-
 
 def pool_entry_text(entry) -> str:
     """The label of a pools.json entry, whichever shape it is on disk.
@@ -1284,8 +1246,10 @@ def check_pool_kanji_reading_shape():
     with no `.` and no katakana. A dot (`爆(は.ぜる)`) is a raw KANJIDIC kunyomi
     — a single kanji with its okurigana detached, which cannot be underlined as
     a word; katakana (`療(リョウ)`) is a raw on-reading dump, a bound morpheme.
-    Both shipped, both are undrawable, and the audit that removed them leaves
-    nothing to stop `expand_pools.py` putting them back.
+    Both shipped, both are undrawable, and this check is what stops a future
+    hand-added entry (pool growth is manual now that `expand_pools.py` and its
+    openjlpt source are deleted — see exam-blueprint/SKILL.md) from
+    reintroducing the same shape.
     """
     print("\npools.json kanji_reading entries are printable 語(よみ) words")
     pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
@@ -1338,58 +1302,30 @@ def check_spec_pool_kanji_reading(d, spec: dict):
 
 
 def check_note_band(name: str, gt: str):
-    """（注N） may only gloss above-band words, and must actually define them (G2a).
+    """（注N） definitions must not be circular (G2a).
 
-    The old check enumerated 21 banned words, which can never cover the class
-    ("any standard N2 or below word") — it missed 鑑賞, 割引, 便箋, 蘇る. The
-    operational test replaces the list: a term in the N2 vocabulary file is
-    standard N2 by definition, and a definition assembled from the term's own
-    kanji (洗髪：髪の毛を洗うこと) teaches nothing.
+    2026-08-11: the above-band half of this check (a term glossed by （注N）
+    that a vendored N2 vocabulary file also lists as standard N2) was retired
+    with openjlpt — there is no remaining grep-able word/level index to check
+    it against (Shinkanzen/Soumatome are scanned PDFs, no text layer), and the
+    repo has moved off openjlpt as an authority by design (exam-blueprint
+    SKILL.md). Catching an above-band gloss is now on the author/QA reading
+    against Shinkanzen/Soumatome and the official archive, same as every
+    other 問題1–6 band judgment call question-authoring already asks for.
 
-    WARN, not FAIL: the vocabulary file is one inventory among several, so a
-    hit can be a legitimate specialised sense.
+    What remains machinable without any corpus: a definition assembled from
+    the term's own kanji (洗髪：髪の毛を洗うこと) teaches nothing, regardless of
+    what inventory the term is in.
     """
-    vocab = openjlpt_vocab()
-    if not vocab:
-        return skip(f"{name}: （注N） notes target above-band words", "no openjlpt/vocab-n2.json")
-    in_band, self_ref = [], []
+    self_ref = []
     for ln in gt.splitlines():
         m = NOTE_DEF.match(ln)
         if not m:
             continue
         term, defn = m.group(2).strip(), m.group(3).strip()
-
-        # Normalize candidates for vocabulary band lookup
-        candidates = {term}
-        candidates.add(re.sub(r"(する|な|の|に|た|だ|い)$", "", term))
-        candidates.add(term + "る")
-        candidates.add(term + "する")
-        candidates.add(term + "い")
-        if term.endswith("め"):
-            candidates.add(term[:-1] + "める")
-        if term.endswith("け"):
-            candidates.add(term[:-1] + "ける")
-        if term.endswith("さ"):
-            candidates.add(term[:-1] + "い")
-
-        # Check compound rule for 4-kanji terms (e.g. 評価制度)
-        is_compound_in_band = False
-        kanji_only = [c for c in term if "一" <= c <= "鿿"]
-        if len(kanji_only) == 4 and len(term) == 4:
-            head1, head2 = term[:2], term[2:]
-            if (head1 in vocab or (head1 + "する") in vocab) and (head2 in vocab or (head2 + "する") in vocab):
-                is_compound_in_band = True
-
-        if is_compound_in_band or any(c in vocab for c in candidates if c):
-            in_band.append(term)
-
         kanji = [c for c in term if "一" <= c <= "鿿"]
         if len(kanji) >= 2 and all(c in defn for c in kanji):
             self_ref.append(f"{term}：{defn[:12]}…")
-    warn(f"{name}: （注N） notes target words above the N2 band", not in_band,
-         f"glossed but listed in openjlpt/vocab-n2.json: {sorted(set(in_band))} — "
-         f"gloss N1/rare/specialised terms only (question-authoring "
-         f"'STRICT VOCABULARY BAND FOR NOTES')")
     warn(f"{name}: （注N） definitions introduce words the term does not contain",
          not self_ref,
          f"circular: {self_ref} — a definition built from the term's own kanji "
@@ -2054,9 +1990,6 @@ def check_spec_blend(spec: dict):
 
 def check_pool_infrastructure():
     print("\npool expansion / adjunct staging")
-    oj = AGENTS / "exam-blueprint" / "references" / "openjlpt"
-    for name in ("vocab-n2.json", "kanji-n2.json", "NOTICE.md"):
-        check(f"openjlpt/{name} exists", (oj / name).is_file())
     staging = ROOT / "logs" / "adjunct_staging.json"
     check("logs/adjunct_staging.json exists", staging.is_file())
     if staging.is_file():
@@ -2076,8 +2009,8 @@ def check_pool_infrastructure():
 # Kanji↔kana spellings of the same grammar tail. `grammar_p7` shipped both
 # 〜気味 and 〜ぎみだ and the sampler drew both into one paper, keying one grammar
 # point twice — and 〜がち/〜がちだ the same way. No reading source in refs/ or
-# references/ can bridge those: openjlpt/kanji-n2.json holds only the 367
-# N2-level kanji (気 and 味 are below it) and vocab-n2.json has no 気味 headword.
+# references/ can bridge those automatically (Shinkanzen/Soumatome are scanned
+# PDFs with no text layer, so there is no grep-able index to build one from).
 # So this is a fold TABLE, not a boundary — extend it when a new pair appears,
 # and prefer deleting one spelling from pools.json over teaching the gate to
 # tolerate two. Longest key first, so 以上 folds before 上.
@@ -2709,97 +2642,14 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
           + label_tail, not off, f"prescribed vs actual: {off}")
 
 
-# G7. Nothing in this gate has ever read a 問題1–6 KEY's level: the band file is
-# grammar-only (check_level_band_grammar covers 問題7–9). This closes the one
-# corner of that hole which IS string-decidable — a 問題1 target whose spelling
-# carries two attested readings.
-#
-# tests/2 問題1-4 prints 潜る, keys くぐる, and offers もぐる in the same row. The
-# corpus heads the word twice — 潜る(くぐる) at N1, 潜る(もぐる) at N2 — so the
-# paper keys the N1 member and asks the examinee to reject the N2 member.
-#
-# MEASURED against the archive before writing this: all 35 問題1 items of the 7
-# current-era sittings (12/2022–12/2025), of which 14 are 訓読み targets. In
-# ZERO of them does an option repeat another attested reading of the target's
-# own spelling — the decisive case is 7/2025-2, where 辛い carries both からい
-# and つらい and official offered あまい/にがい/しぶい; 12/2025-1 柱 likewise
-# offers ゆか/かべ/たな. So neither half of this check can reject a real paper.
-#
-# The level half compares only readings the corpus actually attests. 7/2025-2
-# keys からい, which the corpus does NOT head for 辛い (it heads 辛い(つらい) at
-# N3 alone), and an unattested key is unrankable — it must SKIP, not fail, or
-# the check would reject the reference item it was measured on. Corpus levels
-# raise the question; exam-blueprint documents that they are not a verdict
-# on their own (把握 is labelled N1), which is why the FAIL is narrowed to one
-# headword's own two readings rather than to any key with an N1 label.
-LEVEL_HARDNESS = {"N3": 1, "N2": 2, "N1": 3}
-
-
-def openjlpt_readings() -> dict[str, dict[str, str]]:
-    """{headword: {reading: level}} across the three vendored OpenJLPT slices."""
-    out: dict[str, dict[str, str]] = {}
-    base = AGENTS / "exam-blueprint" / "references" / "openjlpt"
-    for lv in ("n1", "n2", "n3"):
-        p = base / f"vocab-{lv}.json"
-        if not p.is_file():
-            continue
-        for e in json.loads(p.read_text(encoding="utf-8")):
-            reading = str(e.get("reading") or "").strip()
-            if not reading:
-                continue
-            for w in str(e.get("word", "")).split("/"):
-                w = w.strip()
-                if w:
-                    out.setdefault(w, {}).setdefault(reading, lv.upper())
-    return out
-
-
-def check_mondai1_key_band(name: str, spec: dict, opts: dict[int, list[str]]):
-    entries = (spec.get("items") or {}).get("kanji_reading") or []
-    if not entries:
-        return
-    readings = openjlpt_readings()
-    if not readings:
-        return skip(f"{name}: 問題1 keys the easier of a headword's two readings",
-                    "no openjlpt vocab slices on disk")
-    harder, in_options = [], []
-    for entry in entries:
-        raw = pool_entry_text(entry)
-        m = KANJI_READING_ENTRY.match(raw.strip())
-        if not m:
-            continue
-        word, key_yomi = m.group("word").strip(), m.group("yomi").strip()
-        attested = readings.get(word) or {}
-        others = {r: lv for r, lv in attested.items() if r != key_yomi}
-        if not others:
-            continue
-        if key_yomi in attested:
-            keyed_lv = attested[key_yomi]
-            easier = [f"{r}({lv})" for r, lv in others.items()
-                      if LEVEL_HARDNESS.get(lv, 2) < LEVEL_HARDNESS.get(keyed_lv, 2)]
-            if easier:
-                harder.append(f"{word}: keys {key_yomi}({keyed_lv}) over "
-                              f"{', '.join(easier)}")
-        row = next((v for v in opts.values() if key_yomi in v), None)
-        if row:
-            clash = [r for r in others if r in row]
-            if clash:
-                in_options.append(f"{word}({key_yomi}) vs option(s) "
-                                  f"{clash} = the same word's other reading")
-    check(f"{name}: 問題1 keys the easier of a headword's two readings",
-          not harder,
-          "; ".join(harder) + " — when a spelling carries more than one 訓読み, "
-          "key the reading the corpus grades LOWER and send the harder one "
-          "back to exam-blueprint; the pool entry is the defect, not the "
-          "option set (question-authoring 問題1; exam-blueprint "
-          "'kanji_reading validity rule' 2b)")
-    check(f"{name}: no 問題1 option is another reading of its own target",
-          not in_options,
-          "; ".join(in_options) + " — 0 of the 14 current-era official 訓読み "
-          "items do this (7/2025-2 keys 辛い=からい and offers あまい/にがい/"
-          "しぶい, never つらい): the item stops testing the kanji and starts "
-          "testing which of two real readings the examiner meant "
-          "(question-authoring 問題1)")
+# 2026-08-11: check_mondai1_key_band() and check_moji2_stem_kana() were
+# retired here along with openjlpt (exam-blueprint/SKILL.md; no replacement
+# word/reading/level index — Shinkanzen/Soumatome have no text layer). Both
+# encoded real rules that shipped real defects (kanji_reading validity rule
+# 2b — 免れる keyed the harder of two 訓読み before an audit fixed it; a 問題2
+# stem printing kana that matched no option's reading) and both are now on
+# the author/QA to verify by hand against Shinkanzen/Soumatome and the
+# official archive, not on this gate.
 
 
 MOJI2_SEC = re.compile(r"^##\s*問題2\b(.*?)(?=^##\s*問題3\b)", re.M | re.S)
@@ -2841,54 +2691,6 @@ def check_moji4_blank_stems(name: str, gt: str, keys: dict[int, int],
           "; ".join(missing + leaking) + " — the 問題4 instruction asks for the "
           "best word to put in （　）; a stem that prints the blank's answer is "
           "self-answering (question-authoring 問題4)")
-
-
-def check_moji2_stem_kana(name: str, gt: str, keys: dict[int, int],
-                          opts: dict[int, list[str]]):
-    """The 問題2 stem's kana is the KEYED option's reading (G17/F2).
-
-    If a stem prints mismatched kana (e.g. 「しひん」 in the stem while keying 下品 (げひん)),
-    no option in the row reads that kana, so the printed stem kana points at nothing.
-    Official 表記 items print the target's reading in the stem, so it must equal
-    an attested reading of the option the key column names. Non-key options need
-    not resolve — 非語 like 下晶 are the whole point of 表記 — only the KEY must.
-    Keys openjlpt does not head are unresolvable and pass, not fail.
-    """
-    sec = MOJI2_SEC.search(gt)
-    if not sec:
-        return
-    readings = openjlpt_readings()
-    if not readings:
-        return skip(f"{name}: 問題2 stem kana equals the keyed option's reading",
-                    "no openjlpt vocab slices on disk")
-    problems, unresolved = [], []
-    for ln in sec.group(1).splitlines():
-        ln = ln.strip()
-        m = re.match(r"\*\*(\d+)\*\*(.*)", ln)
-        if not m:
-            continue
-        q = int(m.group(1))
-        key_i = keys.get(q)
-        row = opts.get(q) or []
-        if not key_i or not (1 <= key_i <= len(row)):
-            continue
-        key_word = row[key_i - 1]
-        rds = readings.get(key_word)
-        if not rds:
-            unresolved.append(q)
-            continue
-        bold = [b for b in re.findall(r"\*\*(.+?)\*\*", ln) if KANA_RUN.fullmatch(b)]
-        if not bold:
-            continue
-        if bold[0] not in rds:
-            problems.append(f"{q}: stem kana {bold[0]!r}, key {key_word!r} "
-                            f"reads {sorted(rds)}")
-    detail = "; ".join(problems)
-    if unresolved:
-        detail += ("; " if detail else "") + f"unresolvable keys {unresolved} " \
-                   "(not openjlpt headwords — pass)"
-    check(f"{name}: 問題2 stem kana equals the keyed option's reading",
-          not problems, detail + " (question-authoring 問題2)")
 
 
 def check_spec_target_items(d, gt: str, st: str, bi):
@@ -3656,12 +3458,6 @@ def check_tests():
             check_mondai8_bare_adverbs(d.name, opts)
         check_level_band_grammar(gt, keys, opts, origin, d.name)
         check_moji4_blank_stems(d.name, gt, keys, opts)
-        check_moji2_stem_kana(d.name, gt, keys, opts)
-        spec_path = d / "test_spec.json"
-        if spec_path.is_file():
-            _spec = json.loads(spec_path.read_text(encoding="utf-8"))
-            if str(_spec.get("test_id")) == d.name:
-                check_mondai1_key_band(d.name, _spec, opts)
         st_text = (d / "聴解スクリプト.txt").read_text(encoding="utf-8") if (d / "聴解スクリプト.txt").is_file() else ""
         check_banned_collocations(d, gt, ct, st_text, origin)
         check_answer_positions(d, keys, ck, g)

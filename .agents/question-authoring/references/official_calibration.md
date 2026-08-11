@@ -409,16 +409,22 @@ the distractor set, not a pool draw).
 - **Combined headword rate: 4/70 (5.7%).** Only 12/2022 drew a katakana
   headword in BOTH sections of the same paper; 6 of the 7 sittings drew **zero**
   katakana headwords across 問題5+問題6 combined.
-- **`references/pools.json`'s `paraphrase` pool is 27.1% katakana-containing
-  (38/140) and `usage` is 32.7% (49/150)** — 3–6× the measured official rate.
-  `sample_items.py`'s `draw()` is a plain `rng.sample()` with no
-  script-awareness, so an unweighted 5-item draw from either pool has an
-  ~27–33% expected katakana share per item — close to **5 combined katakana
-  headwords per paper in expectation**, against an official average of 0.57.
-  Three generated papers checked (`tests/20260807_1`, `20260810_1`,
-  `20260810_2`) drew 3, 3 and 6 combined katakana headwords respectively —
-  averaging 4/paper, ~7× the official rate, and never once resembling the
-  official "usually zero" shape.
+- **`references/pools.json`'s `paraphrase` pool was 27.1% katakana-containing
+  (38/140) and `usage` was 32.7% (49/150) at measurement time** — 3–6× the
+  measured official rate. `sample_items.py`'s `draw()` was a plain
+  `rng.sample()` with no script-awareness, so an unweighted 5-item draw from
+  either pool had an ~27–33% expected katakana share per item — close to
+  **5 combined katakana headwords per paper in expectation**, against an
+  official average of 0.57. Three generated papers checked (`tests/20260807_1`,
+  `20260810_1`, `20260810_2`) drew 3, 3 and 6 combined katakana headwords
+  respectively — averaging 4/paper, ~7× the official rate, and never once
+  resembling the official "usually zero" shape. **Current pool composition
+  (post 2026-08-11 growth + `usage` legacy-dump audit) has moved on from these
+  numbers — exam-blueprint/SKILL.md's katakana section owns the up-to-date
+  ratio.** This §12 finding is preserved as the evidence that motivated
+  `sample_katakana_capped()`; the fix it produced (below) is what actually
+  enforces the rate, not pool composition — do not re-derive
+  `KATAKANA_TARGET_RATE` from a fresh `len(katakana)/len(pool)` count.
 - **Root cause is the draw, not the writing.** The pool's katakana share was
   never capped against measured official behavior; a uniform random sample
   reproduces the pool's composition, and the pool's composition does not match

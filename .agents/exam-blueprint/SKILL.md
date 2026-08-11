@@ -41,9 +41,10 @@ entries its intersection is **empty**, and an author who has already drawn the t
 invents non-words instead of rejecting it (e.g., 「労わる」). Before adding or keeping
 an entry, write its three distractors with their source kanji; if you cannot, it is out.
 
-**A pool spelling must match its `references/openjlpt/vocab-n*.json` headword.** 問題1
-tests a reading off a printed spelling, so okurigana is part of the item (`労わる` vs the
-corpus's `労る`). Fix the pool, never just the paper.
+**A pool spelling must match its headword in Shin Kanzen Master N2-Goi/N2-Kanji or
+日本語総まとめ N2 語彙/漢字** (`refs/Shinkanzen/`, `refs/Soumatome/`). 問題1 tests a
+reading off a printed spelling, so okurigana is part of the item (`労わる` vs the
+dictionary's `労る`). Fix the pool, never just the paper.
 
 ### The `kanji_reading` validity rule (audited 2026-08-06)
 
@@ -54,26 +55,36 @@ must satisfy all four:
 1. **Shape.** `語(よみ)`: `語` contains a kanji; `よみ` is hiragana, **no `.` and no
    katakana** (a dot is a raw KANJIDIC kunyomi with okurigana detached; katakana is a
    bound-morpheme on-reading dump — neither is a printable word).
-2. **Attested.** `(語, よみ)` is a headword + `reading` pair in
-   `references/openjlpt/vocab-n1|n2|n3.json` — decisive for **single-kanji** entries,
+2. **Attested.** `(語, よみ)` appears as a headword + reading in Shin Kanzen Master
+   N2-Goi/N2-Kanji or 日本語総まとめ N2 語彙/漢字 — decisive for **single-kanji** entries,
    which have no fallback (`針(はり)` is a headword and legitimate; `領(えり)` is not).
 2b. **One 語, two 訓読み → keep the LOWER-graded reading.** `潜る(くぐる)` is attested —
    at N1, beside N2 `潜る(もぐる)`; the harder member turns the item into "which reading
-   did the examiner mean". Keep the lowest-graded entry, delete the others; rank with
-   `vocab-n1|n2|n3.json` levels only. `question-authoring` carries the paper-side half,
-   but the pool entry is the defect — repair it here.
-3. **In band, if the corpus misses it.** A **multi-character** word absent from the
-   corpus stays only when its reading is the ordinary dictionary reading on 常用 音訓
-   *and* the word is corroborated by the official archive under `refs/JLPT_N2_NEW/`.
-   Corpus absence is often a gap (概要, 潜む); zero hits in **both** sources is the
-   removal signal.
+   did the examiner mean". Keep the lowest-graded entry, delete the others; rank by
+   whether the reading is the one carried in the Shinkanzen/Soumatome N2 volume (present
+   there → N2; recognizably harder and absent from the N2 volume → N1 by trained
+   Japanese-vocabulary knowledge) or by which reading the official archive
+   (`refs/JLPT_N2_NEW/`'s `booklet.md`/`key.md`) actually keys. `question-authoring`
+   carries the paper-side half, but the pool entry is the defect — repair it here.
+3. **In band, if the reference misses it.** A **multi-character** word not found on the
+   author-checked pages of the Shinkanzen/Soumatome N2 volumes stays only when its
+   reading is the ordinary dictionary reading on 常用 音訓 *and* the word is corroborated
+   by the official archive under `refs/JLPT_N2_NEW/`. A reference-book miss is often a
+   gap (概要, 潜む); zero hits in **both** sources is the removal signal.
 4. **Drawable.** Three distractors writable (see `question-authoring`).
 
-**Never use `references/openjlpt/kanji-n*.json` as the 音訓 authority** — it is
-KANJIDIC-derived, carries 表外 readings (the source of `領: えり`), and can refute an
-okurigana shape but never *confirm* an entry. To verify a candidate, index
-`word → readings` over `vocab-n1|n2|n3.json` and require a hit; for a corpus miss, grep
-the archive PDFs via `pdftotext` — calibration only, never copy an official item.
+**Verify against Shin Kanzen Master N2-Goi/N2-Kanji and Soumatome N2 語彙/漢字 — never a
+bare kanji dictionary.** A KANJIDIC-style raw readings list carries 表外 readings (the
+source of the previously-shipped `領: えり` defect) and can refute an okurigana shape but
+never *confirm* an entry; the same trap applies to any future word/reading index, so
+never stand one up as a shortcut. Both the Shinkanzen and Soumatome N2 PDFs are scanned
+images with **no text layer** (confirmed via `pdftotext` — zero lines extracted from
+either the Soumatome Goi PDF or the Shinkanzen Goi PDF), so there is no grep-able
+replacement for a corpus lookup: verify a candidate by reading the relevant PDF pages
+(the Read tool's PDF vision support) or by trained Japanese-vocabulary knowledge
+cross-checked against these books; for a reference-book miss, corroborate against the
+official archive's already-OCR'd `booklet.md`/`key.md` under `refs/JLPT_N2_NEW/` —
+calibration only, never copy an official item.
 
 The 2026-08-06 audit removed **103** of 218 entries and repaired `免れる(まぬがれる)` →
 `免れる(まぬかれる)`; 112 remain, 22× headroom over `DRAW` of 5. **`kanji_reading` is the
@@ -81,16 +92,32 @@ only category whose parenthetical is a reading** — `納める(税金)` is cont
 `詫びる(謝る)` a synonym, `諸〜(諸問題)` an example; the rule does not apply to them.
 
 **2026-08-11: grown to 200 via `vocab-n1/n2/n3.json`, never `kanji-n2.json`.** The
-archived `expand_pools.py`'s `expand_kanji()` used to source `kanji_reading` from
-`kanji-n2.json` (KANJIDIC) — exactly the banned authority above, and exactly how
-`領(えり)`/`爆(は.ぜる)` shipped before the 2026-08-06 audit had to remove them. It now
-reads `vocab-n1/n2/n3.json` word+reading pairs instead, which makes Shape and Attested
-(rules 1–2) hold by construction, and additionally enforces rule 2b (keep only the
-lower-graded reading of a two-訓読み word, via `word_reading_levels()`) at build time
-instead of leaving it to a later audit. Rule 4 (drawable distractors) is still not
-pre-verified per entry — see `question-authoring/references/moji-goi.md` §"Build the set
-BEFORE you accept the target" for the authoring-time re-draw path when an entry turns out
-undrawable; that has always been how the pool handles it, not a gap this pass introduced.
+(now-deleted) `expand_pools.py`'s `expand_kanji()` sourced `kanji_reading` candidates from
+`vocab-n1/n2/n3.json` word+reading pairs rather than `kanji-n2.json` (KANJIDIC) — exactly
+the banned authority above, and exactly how `領(えり)`/`爆(は.ぜる)` shipped before the
+2026-08-06 audit had to remove them. That construction made Shape and Attested (rules 1–2)
+hold by construction, and additionally enforced rule 2b (keep only the lower-graded
+reading of a two-訓読み word, via `word_reading_levels()`) at build time instead of
+leaving it to a later audit. Rule 4 (drawable distractors) was never pre-verified per
+entry — see `question-authoring/references/moji-goi.md` §"Build the set BEFORE you accept
+the target" for the authoring-time re-draw path when an entry turns out undrawable; that
+has always been how the pool handles it, not a gap this pass introduced.
+
+**2026-08-11 (later still): `openjlpt` fully removed.** The `references/openjlpt/` data
+directory and its four consuming scripts (`classify_level.py`, `expand_pools.py`,
+`suggest_pool_additions.py`, `fetch_openjlpt.py`) are gone from the repo — only
+`promote_adjunct.py` remains archived, since it never touched `openjlpt` (see "Archived
+growth tooling" below). Any further `kanji_reading` growth is manual from here: read the
+Shinkanzen/Soumatome N2 volumes (or corroborate a reference-book miss against the official
+archive) and hand-verify all four rules above before adding an entry — there is no script
+left to source or pre-check candidates. The two automated `make check` gates that
+depended on `openjlpt` in `tools/check_consistency.py` — `check_mondai1_key_band()`
+(enforced rule 2b above; the exact rule that caught the previously-shipped `免れる`
+reading defect) and `check_moji2_stem_kana()` (問題2 stem-kana-matches-key check) — have
+likewise been deleted already, by parallel work on this same removal. Both rules are now
+enforced by manual review only (`exam-qa-review`, `question-authoring`), not by
+`make check`; a green gate no longer proves either one held, so read those skills'
+relevant sections with the same rigor `make check` used to substitute for.
 
 ## One grammar point, one pool entry (no spelling variants)
 
@@ -116,10 +143,20 @@ Known residue, left deliberately (audited 2026-08-06): five `grammar_p7` × `gra
 pairs where p8's labelled pattern contains p7's bare form — do not add more, and
 `--reroll grammar_p8` if a drawn 問題8 pattern repeats a 問題7 point; `taken` is
 raw-string (`head()` is recency-only), so `交渉(こうしょう)` and `交渉` can both land in
-one paper — the fix belongs in `sample_items.py`, still open; `〜に過言ではない` in
-`grammar_p7` is malformed (`〜と言っても過言ではない`) — do not author from it;
+one paper — the fix belongs in `sample_items.py`, still open;
 `〜ずくめ(黒ずくめ)` matches `TOO_HARD` `ずくめ` but is a 問題3 affix — the band check
 stays scoped to the grammar categories (elsewhere it produces false hits).
+
+**2026-08-11: `grammar_p7`/`grammar_p8` audited against the Shin Kanzen N2 Bunpou
+TOC + 索引 (all 26 lessons, ~211 forms) and found roughly half the book's discrete
+forms missing** — two whole lessons (13課's topic-framing cluster `〜とは`/`〜といえば`/
+`〜というと`; 21課's emphasis cluster) had zero coverage, and a dozen more lessons were
+missing 2-5 forms each. Added 60 N2-band forms to `grammar_p7` (172 total; `grammar_p8`
+unchanged at 42), each checked against `references/level_band_grammar.txt`'s bans and
+against the skeleton-dup check before landing (`〜上(に)`/`〜限り(は)` were rewritten to
+`〜上に`/`〜限りは` — the parenthetical form collided on skeleton with an existing entry).
+The previously-malformed `〜に過言ではない` was fixed in place to
+`〜と言っても過言ではない`, the form the trap example above actually names.
 
 ## `paraphrase`/`usage` katakana rate is capped, not left to the pool's composition
 
@@ -154,6 +191,48 @@ non-katakana majority sat untouched, not from a deliberate mix. Growing `paraphr
 to 19.0% and 23.3% respectively — real progress, but still above the archive's ~5–9%
 per-item rate, which is why the sampler cap above still does the actual enforcement; this
 expansion is dilution, not the mechanism.
+
+**2026-08-11 (later same day): `usage` audited and its legacy dump removed instead of
+diluted further.** Of the pool's 210 entries, only the first 67 were curated for 問題6's
+shape (妥協/発揮/解消-style: abstract, collocation-rich, one right domain + three tempting
+wrong ones). The remaining 143 were a raw legacy-corpus tail — 49 basic 2級-era katakana
+loanwords (ピストル, ビタミン, ピンク…) plus 94 non-katakana entries that `openjlpt`
+tags "N2" but are really concrete single-referent nouns with no exploitable domain
+(算盤, 座布団, 三日月, へそ…) or otherwise below band — neither shape supports a 問題6
+item at all. Removed the 143, added 54 curated replacements (30 abstract nouns/adjectives,
+19 collocation-rich verbs, 5 katakana) mined from `vocab-n2.json` and checked against
+this doc and `question-authoring/references/moji-goi.md` for domain richness, then
+grandfathered back the 6 removed words two already-shipped tests had actually drawn
+(`logs/ledger.json`/`test_spec.json` entries must resolve to a live pool string —
+`check_draw_provenance()`; removing a historically-drawn entry breaks that, and
+re-sampling an already-authored test is forbidden elsewhere in this doc, so the correct
+repair here is to keep the word, not to re-draw the test). Net: 210 → 127, katakana share
+23.3% → 4.7% (6/127) — close to the archive's ~5–9% rate by composition alone, though the
+sampler cap remains the actual enforcement mechanism, not pool composition.
+
+**2026-08-11 (after `openjlpt` removal): `paraphrase` and `usage` grown from
+Shinkanzen/Soumatome instead of `vocab-n2.json`.** With `openjlpt` gone, growth is manual:
+sampled ~370 pages combined across `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Goi.pdf` and
+`refs/Soumatome/nihongo-soumatome-n2-goi.pdf` (`nihongo-soumatome-n2-kanji.pdf` wasn't part
+of this vocabulary pass — it's the kanji volume), harvested candidate words matching each
+pool's shape (paraphrase: a hard word with a simpler common synonym; usage: an abstract,
+collocation-rich verb/noun/adjective that supports one correct + three
+tempting-wrong-domain sentences), then filtered against `pools.json`. Two independent
+passes ran concurrently (this repo's own removal-plus-expansion effort) and each missed
+some of the other's collisions — a reconciliation pass caught them by normalizing every
+candidate's trailing な/だ/に/する/の before comparing (a harvested `衛生的な` against an
+existing bare `衛生的`, or `見事な` against a same-pass addition `見事だ`, read as the SAME
+headword) and dropped 13 paraphrase near-duplicates and 1 usage near-duplicate
+(`普及する` against the pool's existing bare `普及`) that plain string comparison missed.
+Net: `paraphrase` 200 → 118 (the legacy-dump audit two entries above) → 156 (+38 from the
+concurrent pass) → 143 (−13 reconciled dupes); `usage` 127 → 189 (+62 curated) → 218 (+29
+from the concurrent pass) → 217 (−1 reconciled dupe, `普及する` against the pool's existing
+bare `普及`). Cross-pool suffix-variant
+overlap (a bare `context_words` headword and a conjugated `paraphrase`/`usage` entry of
+the same word) was left in deliberately per "Pools may legitimately overlap... what
+matters is depth" above — only BYTE-IDENTICAL entries are guaranteed kept apart by the
+sampler's `taken` set (see "One grammar point, one pool entry"), so a future audit could
+still tighten this, but it is not the defect class that rule targets.
 
 ## Topic themes — the closed vocabulary (this skill owns it)
 
@@ -326,11 +405,22 @@ growth tooling is archived** (below). Never inline an unclassified string into a
 
 ## Archived growth tooling
 
-`archive/` holds the five pool-growth scripts (`classify_level.py`, `promote_adjunct.py`,
-`expand_pools.py`, `suggest_pool_additions.py`, `fetch_openjlpt.py`). Pool growth is
-paused; they have **no Makefile targets** and must be moved back into `scripts/` to run
-(they import `level_data.py` as a sibling) — see `archive/README.md`. Restore them if the
+`archive/` now holds only `promote_adjunct.py` — it grows `references/pools.json` by
+promoting approved `logs/adjunct_staging.json` rows, and never touched `openjlpt`. Pool
+growth is paused; it has **no Makefile target** and must be moved back into `scripts/` to
+run (it imports `level_data.py` as a sibling) — see `archive/README.md`. Restore it if the
 sampler starts reporting exhausted categories.
+
+**2026-08-11: `classify_level.py`, `expand_pools.py`, `suggest_pool_additions.py`, and
+`fetch_openjlpt.py` were deleted, not archived.** All four existed solely to
+classify/fetch/expand `pools.json` against the vendored OpenJLPT N1–N3 JSON slices
+(`references/openjlpt/`), which is itself deleted — the pool authority is now Shin Kanzen
+Master (`refs/Shinkanzen/`) and 日本語総まとめ N2 (`refs/Soumatome/`) exclusively (see
+"Pool entries stay inside the N2 band" above). Both are scanned PDFs with no text layer,
+so there is no scripted equivalent of the old classify/expand pipeline — growing a pool
+now means an author reading the relevant Shinkanzen/Soumatome pages (or the official
+archive) and hand-adding entries, the same way `promote_adjunct.py`'s staging rows are
+already authored by hand before promotion. See `archive/README.md` for the full account.
 
 ## `scripts/sample_items.py` — usage
 

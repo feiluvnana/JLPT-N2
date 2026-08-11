@@ -232,15 +232,20 @@ sentence needs a reader (`exam-qa-review` step 3).
     (it never covered 割引, 洗髪, 契機, 鑑賞, 評価制度, 省力化, and 4/4 papers
     shipped wrong-band glosses under it).
   - 🚫 **The operational test, not the list:** a term is glossable only if
-    (1) it does **not** appear in
-    `.agents/exam-blueprint/references/openjlpt/vocab-n2.json` (in the file =
-    standard N2 = do not gloss), and (2) the definition introduces words the
-    term itself does not contain (「洗髪：髪の毛を洗うこと」 and
-    「割引：…金額を引くこと」 fail; 「大脳辺縁系：…」 passes). One-line check:
-    `python3 -c "import json,sys;w={e['word'] for e in json.load(open('.agents/exam-blueprint/references/openjlpt/vocab-n2.json'))};print([x for x in sys.argv[1:] if x in w])" 鑑賞 割引 バランス`
-    `make check` WARNs on both halves. **Both conditions are necessary,
-    neither is sufficient** — the slice is 1793 entries, so absence is not
-    proof of over-level (準備, 技術, 選択 are all absent and all banned). A
+    (1) it is genuinely above the N2 band — checked against Shin Kanzen Master
+    N2-Goi/N2-Kanji and 日本語総まとめ N2 語彙/漢字 (`refs/Shinkanzen/`,
+    `refs/Soumatome/`): if either book carries it as a headline N2 word, do not
+    gloss it — and (2) the definition introduces words the term itself does
+    not contain (「洗髪：髪の毛を洗うこと」 and 「割引：…金額を引くこと」 fail；
+    「大脳辺縁系：…」 passes). **2026-08-11: the automated half of this check
+    (an `openjlpt`-based band lookup) was removed along with `openjlpt`** —
+    `make check` now WARNs on condition (2) only (the circular-definition
+    half, which needs no corpus); condition (1) is a manual band judgment call
+    for the author/reviewer, same as every other 問題1–6 vocabulary-band
+    decision in this repo (`exam-qa-review` §2.5). **Both conditions are
+    necessary, neither is sufficient** on its own — a term absent from
+    Shinkanzen/Soumatome is not automatically over-level (準備, 技術, 選択 are
+    plausibly absent from any one textbook's index and are still banned). A
     glossable term must ALSO fall in ✅ TARGETS, which is the positive
     requirement that decides.
   - ✅ **TARGETS** — `（注N）` glosses are strictly reserved for: N1-level or

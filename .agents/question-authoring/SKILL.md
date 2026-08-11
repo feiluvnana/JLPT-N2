@@ -39,7 +39,9 @@ The tested point must be something an N2 mock may key on. Passive exposure to
 harder wording in a 読解 passage is fine when glossed with `（注N）`; it must
 not be the answer discrimination. Off-level KEYS are an automatic QA fail —
 `exam-qa-review` §2.5 and `references/level_band_grammar.txt` (grammar only;
-the vocabulary-key check is the openjlpt lookup in `references/moji-goi.md`).
+the vocabulary-key check is the manual Shinkanzen/Soumatome verification in
+`references/moji-goi.md` — `openjlpt`, the scripted corpus this used to read,
+was removed 2026-08-11).
 Verify every tested item against `refs/Shinkanzen/`; benchmark structure,
 distractor density, and length against `refs/JLPT_N2_NEW/`. Items drawn
 `"origin": "adjunct"` passed `classify_level.py` — treat them like pool items;

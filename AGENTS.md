@@ -114,6 +114,16 @@ All calibration inputs must be looked up in `refs/`:
   - Vocabulary: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Goi.pdf`
   - Kanji: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Kanji.pdf`
   - Textbook CDs: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/`
+- **Textbooks (`refs/Soumatome/`) — 日本語総まとめ N2**:
+  - Vocabulary: `refs/Soumatome/nihongo-soumatome-n2-goi.pdf`
+  - Kanji: `refs/Soumatome/nihongo-soumatome-n2-kanji.pdf`
+  - Together with Shinkanzen's Goi/Kanji volumes, these are exam-blueprint's
+    ONLY vocabulary/kanji pool authority (`pools.json`'s `kanji_reading`,
+    `context_words`, `paraphrase`, `usage`) — the vendored OpenJLPT JSON corpus
+    was removed 2026-08-11 (exam-blueprint/SKILL.md). Both Soumatome PDFs are
+    scanned images with no text layer (confirmed via `pdftotext`), same as
+    Shinkanzen — read them via the pages-parameter PDF support, never assume a
+    grep-able extract exists.
 - **Official Past Exam Archive (`refs/JLPT_N2_NEW/`) — 31 Sittings (Booklet PDF, Script PDF, Audio MP3)**:
   - **July 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023 (script).pdf`, Audio `refs/JLPT_N2_NEW/14. N2 7-2023/File nghe N2 7-2023.mp3`
   - **Dec 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 12-2023/14.N2 12-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 12-2023/14. script N2 12-2023.pdf`, Audio `refs/JLPT_N2_NEW/14. N2 12-2023/14. Nghe N2 T12-2023.mp3`

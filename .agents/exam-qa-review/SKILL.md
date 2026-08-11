@@ -86,7 +86,9 @@ then name what let each defect through.
   off-level KEY** (N1-hard or N3/N4/N5-easy — see step 2.5 /
   `question-authoring/references/level_band_grammar.txt`, which covers 問題7–9
   GRAMMAR only, so every 問題1–6 vocab key is on the reviewer: avoid keying
-  賢い/かしこい, an N3 headword in `openjlpt/vocab-n3.json`); **an option that is not a real Japanese word** (e.g.
+  賢い/かしこい, an N3 headword — check Shin Kanzen Master N2-Goi/N2-Kanji and
+  日本語総まとめ N2 語彙/漢字 (`refs/Shinkanzen/`, `refs/Soumatome/`), not a
+  vendored corpus (`openjlpt` was removed 2026-08-11); **an option that is not a real Japanese word** (e.g.
   もてあそわる/まねわる/ひるがえわる); **a drawn target for which no
   rule-compliant option set exists** — file it against the draw, not the
   options (e.g., 労わる, step 2b); **a paper whose
@@ -237,9 +239,12 @@ ever engages that point?"* Evidence, not a feeling:
   is the defect**: do not invent options and do not argue the set down — fail
   the item and send the target back to `exam-blueprint` to be re-drawn.
 - **問1 — the `(漢字, 読み)` PAIR must exist, and the underline must cover the
-  whole word, okurigana included.** Look every 問題1 target up in
-  `exam-blueprint/references/openjlpt/vocab-n1|n2|n3.json`; a pair with no
-  headword (a 表外音訓 like `領(えり)` or `線(すじ)`) is a **pool** defect —
+  whole word, okurigana included.** Check every 問題1 target against Shin
+  Kanzen Master N2-Goi/N2-Kanji and 日本語総まとめ N2 語彙/漢字
+  (`refs/Shinkanzen/`, `refs/Soumatome/` — `openjlpt` was removed 2026-08-11,
+  so there is no JSON index to query; read the relevant page or corroborate
+  against the official archive); a pair with no headword (a 表外音訓 like
+  `領(えり)` or `線(すじ)`) is a **pool** defect —
   delete the entry and re-draw, never patch the sentence. The underline/bold
   layout rule and its shipped counter-example live in
   `question-authoring/references/moji-goi.md`.
@@ -281,17 +286,22 @@ Procedure for every 問題7–9 key (and spot-check 問題1–6 / 即時応答):
 5. Passive exposure to N1 wording inside 読解/聴解 prose is allowed when
    glossed (`（注N）`) or simplified; it must not be what the question keys on.
 
-**The vocab half is entirely yours — do it as a lookup, not a feeling.** The
-band file holds grammar; no gate has ever checked a 問題1–6 key. Look every
-tested key up in `exam-blueprint/references/openjlpt/vocab-n1|n2|n3.json` and
-write the result into the report: an **N3 headword absent from the N2 list is
-TOO_EASY** (e.g. keying 賢い/かしこい, an N3 headword). **But the
-labels are a lookup, not a verdict**: that corpus labels ordinary, correctly
-keyable N2 exam vocabulary (把握, 審査, じっくり, 依頼, 徐々に, …) as "N1" or
-"N3". Use the lookup to *raise* the question, then answer it with step 2's two
-questions against Shin Kanzen N2 (`refs/Shinkanzen/`). Filing 把握 as off-level
-because a list said "N1" is the mis-measurement this skill codes `GATE-WRONG`,
-and it sends the fixing pass off to break working items.
+**The vocab half is entirely yours — check it against the books, not a
+feeling.** The band file holds grammar; no gate has ever checked a 問題1–6
+key, and (2026-08-11) there is no vendored corpus to script one against either
+— `openjlpt` is deleted, and exam-blueprint's pool authority is now Shin Kanzen
+Master N2-Goi/N2-Kanji and 日本語総まとめ N2 語彙/漢字 exclusively. Check every
+tested key against those two textbooks (`refs/Shinkanzen/`, `refs/Soumatome/`)
+and write the result into the report: a word that is a headline N3-or-lower
+textbook item and does not appear as N2 in either volume is **TOO_EASY** (e.g.
+keying 賢い/かしこい). **This is a judgment call, not a lookup verdict** — when
+`openjlpt` existed it mislabeled ordinary, correctly keyable N2 exam vocabulary
+(把握, 審査, じっくり, 依頼, 徐々に, …) as "N1" or "N3", so a single source's
+label was never sufficient even when a script could produce one. Answer with
+step 2's two questions against Shin Kanzen N2 (`refs/Shinkanzen/`), cross-check
+Soumatome and the official archive when a call is close. Filing 把握 as
+off-level because one source said "N1" is the mis-measurement this skill codes
+`GATE-WRONG`, and it sends the fixing pass off to break working items.
 
 ### 3. Mechanical reads
 
