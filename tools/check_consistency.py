@@ -1741,6 +1741,30 @@ def check_mondai9_tags(name: str, key_bunpou: str):
           f"(question-authoring 問題9)")
 
 
+# 問題9 options are grammar/phrase scale on every official current-era paper
+# (112 options, max 14 JP chars). Generated papers repeatedly shipped a
+# `[内容推論]` blank whose four choices were 読解-length thesis paraphrases
+# (20–40 chars, 「〜ことにある」 mini-summaries) — bunpou.md now forbids that,
+# and this gate enforces the archive ceiling with a 2-char headroom so a
+# 14-char official item never false-positives.
+P9_OPTION_MAX = 16
+
+
+def check_mondai9_option_lengths(name: str, opts: dict[int, list[str]]):
+    bad = []
+    for q in (48, 49, 50, 51):
+        for i, o in enumerate(opts.get(q) or [], 1):
+            n = jp_char_count(o)
+            if n > P9_OPTION_MAX:
+                bad.append(f"{q}-{i}({n}「{o}」)")
+    check(f"{name}: 問題9 options each ≤{P9_OPTION_MAX} JP chars "
+          f"(official current-era max 14)",
+          not bad,
+          f"long={bad[:6]} — rewrite as short grammar/phrase forms; "
+          f"[内容推論] does not authorize 読解-length paraphrases "
+          f"(question-authoring/references/bunpou.md 問題9)")
+
+
 # 読解 keys (G16). A key far longer than its three distractors is findable by
 # string length alone: a paper has shipped three in a row (67/68/69 — 94/107/63 JP
 # chars against 31–36 means) and another shipped one (66 — 55 vs 31). Measured
@@ -3752,6 +3776,7 @@ def check_tests():
                            gt[gcut.start():] if gcut else "", re.M | re.S)
         if bunpou and origin == "generated":
             check_mondai9_tags(d.name, bunpou.group(1))
+            check_mondai9_option_lengths(d.name, opts)
             check_mondai7_option_refs(d.name, bunpou.group(1), opts)
         elif origin == "generated":
             check(f"{d.name}: 問題9 解説 cells carry four distinct category "

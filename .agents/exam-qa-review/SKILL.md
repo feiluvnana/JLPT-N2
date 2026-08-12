@@ -409,7 +409,10 @@ off-level because one source said "N1" is the mis-measurement this skill codes
   two or more blanks share a category (e.g., shipping two connective blanks
   and two content-inference blanks — a repeated pairing that has shipped
   before) or if NONE of the four blanks requires tracking the whole passage's
-  argument rather than just the local sentence.
+  argument rather than just the local sentence. **Also fail any option that
+  reads like a 読解 paraphrase** (20+ JP chars, 「〜ことにある」 thesis
+  summaries, mini-要約 of the passage) — official options max at 14 chars;
+  `[内容推論]` changes *what decides the blank*, not option length.
 - **問題1 漢字読み:**
   - **Stem underline formatting:** bold span covers the entire word including
     okurigana (`**生じる**`, `**潜る**`, `**逃す**`, `**慌てる**`), never bolding

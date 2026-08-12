@@ -275,6 +275,13 @@ defect: 12/2023-47 「一度」, 12/2024-43 「もう」, 7/2025-43 「もちろ
 597.** Current era: 498 / 597 / 695 / 672 / 577 / 674 / 689 — min 498. The 393
 outlier is 7/2021. Four blanks in every sitting since 12/2020.
 
+**問題9 options (current era, 7 sittings × 4 blanks × 4 = 112):** mean **6.1**,
+median **6**, range **1 – 14**. Per-blank longest option: median 8, max 14.
+**Zero options exceed 14 JP chars.** Generated papers that ship 20–40 char
+読解-style paraphrases on a `[内容推論]` blank are off the official format —
+`question-authoring/references/bunpou.md` and `check_mondai9_option_lengths`
+cap every option at **≤16** (author to ≤14).
+
 **問題6 用法 option sentences: mean 25.0 JP chars, median 25, range 9 – 35**
 (current era, n=136; last 15 gives mean 25.3). `question-authoring`'s stated
 「~27」 is a mild over-estimate, and the real news is the floor: a 9-char option

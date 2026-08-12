@@ -133,6 +133,15 @@ register is a separate authoring decision from 問題7's.
   the four option lists). Never a 150–200 char mini-paragraph — that is N3
   drill length. Four blanks; the prose must feel like a short magazine/column
   piece.
+- **Every option stays grammar/phrase scale — never 読解-length paraphrases.**
+  Across the 7 current-era sittings (12/2022–12/2025, 112 options), official
+  問題9 options run **1–14 JP chars** (median 6, mean 6.1; longest observed
+  「試してみてはいかがでしょうか」「感じられるところだと思います」= 14).
+  Author to **≤14**; `make check` FAILs any option **>16**. A blank whose four
+  choices look like 問題10–13 主張/内容 options (「〜ことにある」 mini-summaries
+  of the thesis, 20–40 char paraphrases) is off-format even when the blank is
+  tagged `[内容推論]` — that defect shipped in every generated paper until the
+  length gate existed.
 - **The four blanks must test four DIFFERENT categories** — assign each blank a
   distinct type BEFORE writing, then check no type repeats:
   - **(a) 論理接続表現** — sentence-initial discourse connective
@@ -141,9 +150,14 @@ register is a separate authoring decision from 問題7's.
     clause (わけだ/わけがない/わけではない/わけにはいかない, はずだ/はずがない,
     のも無理はない…) — ONE such family per paper, never two blanks drawing on
     the same family;
-  - **(c) 内容推論** — a full predicate requiring the whole passage's argument,
-    not just the local sentence (the passage-level trap — at least one blank
-    must be this type);
+  - **(c) 内容推論** — the *choice* requires tracking the whole passage's
+    argument, not just the local sentence (the passage-level trap — at least
+    one blank must be this type). Options remain short grammar/phrase forms
+    of the same kind as (a)(b)(d): conjugations, short predicates, particles,
+    demonstratives (official examples: 利用してもいい / 試してみてはいかがで
+    しょうか / いいものだと思います / 感じるようになりました / 供給網の厚みに
+    ある-scale noun phrases ≤14). **Do not** write four mini-要約 of the
+    thesis — that is 読解 問題10–13, not 文章の文法;
   - **(d) 慣用/形式名詞** — a set phrase or formal noun (つもり, 元も子もない,
     願ってもない…).
 
@@ -159,9 +173,8 @@ register is a separate authoring decision from 問題7's.
   `[文末モーダル] 前の文の「…はずだった」を受け、…`. Assign the tags *before*
   writing the blanks and write each blank to its tag — tagging afterwards, to
   whatever you happened to write, is how t1/t2/t4 ended up with two modal
-  blanks. The `[内容推論]` blank is the one whose four options are full
-  predicates/clauses and cannot be chosen from the local sentence alone (t3's
-  blank 50 is the shipped example that qualifies).
+  blanks. The `[内容推論]` blank is the one that cannot be chosen from the
+  local sentence alone; its options stay short (see length rule above).
 
 ## Counting
 
