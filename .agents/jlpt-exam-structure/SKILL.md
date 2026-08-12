@@ -229,7 +229,10 @@ official page and re-pointed at the spoken list:
 
 ## Announcer / 例 mechanics (script + booklet must both honor these)
 
-- Exam opens: 「N2聴解。これから、N2の聴解試験を始めます。問題用紙にメモをとってもかまいません。」
+- Exam opens (spoken / `聴解スクリプト.txt`): 「Nに聴解。これから、Nにの聴解試験を始めます。問題用紙にメモをとってもかまいません。」
+  — spell the level as **`Nに`**, never `N2`, so TTS does not read the digit
+  as English "two" (`choukai-audio` owns the TTS spelling rule). Printed
+  booklet titles may still say `N2`.
 - Each of 問題1-4: instruction → 「では、練習しましょう。」 → 例 item →
   「最もよいものは◯番です。解答用紙の問題◯の例のところを見てください。
   最もよいものは◯番ですから、答えはこのように書きます。では、始めます。」

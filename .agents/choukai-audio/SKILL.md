@@ -35,6 +35,20 @@ the exact announcer lines): opening → per-section instruction →
 「では、練習しましょう。」→ 例 → 「最もよいものは◯番です。…では、始めます。」→
 items → … → 「これで、聴解試験を終わります。」 (問題5: 「この問題には練習はありません。」)
 
+### TTS spelling: level is `Nに`, never `N2`
+
+In `聴解スクリプト.txt` only, spell the exam level as **`Nに`** (not `N2`).
+Edge-TTS reads digit `2` as English "two" / awkward Latin, so the opening must
+be:
+
+```
+Nに聴解。これから、Nにの聴解試験を始めます。問題用紙にメモをとってもかまいません。
+```
+
+(Booklet titles in `聴解.md` / HTML may still say `N2` — that is print, not
+TTS.) `validate_script()`'s `OPENING` substring is `これから、Nにの聴解試験を始めます`.
+Never write `N2` anywhere in the TTS script.
+
 Cross-check tone, turn length, announcer wording, and distractor flow against
 the official script PDFs in `refs/JLPT_N2_NEW/` (paths in **`AGENTS.md` §3**):
 3–5 exchanges for 問題1/2, monologues for 問題3, rapid single turn for 問題4.
@@ -271,7 +285,7 @@ and merely *prints* the total. Missing pieces are otherwise SILENT — ensure ev
 
 | Element | Rule |
 |---|---|
-| Opening | 「これから、N2の聴解試験を始めます…」 must be present |
+| Opening | 「これから、Nにの聴解試験を始めます…」 must be present (TTS spelling — never `N2`; see above) |
 | 問題1〜5 headers | `問題N。` as its own block, all five. **(eye)** for own-block-ness and order — the code only tests the substring occurs |
 | 問題1〜4 practice | each: instruction ending 「では、練習しましょう。」 → ONE `例。` item → ONE full confirmation line → items |
 | 問題5 practice | NONE. Instruction must contain 「この問題には練習はありません。」; no `例。` block |

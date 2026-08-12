@@ -386,7 +386,7 @@ ANNOTATION_RE = re.compile(r"[（(]※")
 # questions (質問1/質問2), giving 3 answers from 2 item blocks.
 EXPECTED_ITEMS = {"問題1": 6, "問題2": 7, "問題3": 6, "問題4": 12, "問題5": 2}
 NEEDS_EXAMPLE = ("問題1", "問題2", "問題3", "問題4")
-OPENING = "これから、N2の聴解試験を始めます"
+OPENING = "これから、Nにの聴解試験を始めます"
 CLOSING = "これで、聴解試験を終わります。"
 NO_PRACTICE = "この問題には練習はありません。"
 TYPO_RE = re.compile(r"問題用紙になに印刷")   # 「何も印刷」 mistyped; TTS reads it wrong
