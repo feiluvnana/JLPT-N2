@@ -1,0 +1,520 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet"><title>聴解</title>
+<!-- src_sha: 聴解.md=05e075a26806 -->
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+body { font-family: "Noto Sans JP", "Noto Serif CJK JP", serif;
+       font-size: 11.5pt; line-height: 1.9; color: #1a1a1a; }
+h1 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 15pt;
+     border-bottom: 2.5px solid #1a1a1a; padding-bottom: 5px;
+     margin: 30px 0 14px; page-break-after: avoid; }
+h2 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 12pt;
+     background: #efefef; border-left: 5px solid #444; padding: 5px 10px;
+     margin: 26px 0 12px; page-break-after: avoid; }
+h3 { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 11pt;
+     margin: 20px 0 8px; page-break-after: avoid; }
+p { margin: 12px 0; }
+/* Furigana: WeasyPrint has NO ruby layout (and ignores ruby-position), so the
+   reading is stacked manually. rt is taken out of flow and pinned above the
+   base, which keeps the base glyphs on the text baseline and leaves line
+   spacing untouched. Do NOT go back to display:inline-table -- WeasyPrint
+   drops the base onto its own line under the reading. */
+ruby {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: baseline;
+  /* line-height 1 keeps the ruby box hugging its glyphs; with a taller
+     inherited line-height the box grows and `bottom: 100%` would push the
+     reading far above the text. */
+  line-height: 1;
+}
+rb { display: inline; }
+rt {
+  position: absolute;
+  bottom: calc(100% + 0.1em);
+  left: -0.6em;
+  right: -0.6em;
+  font-size: 0.5em;
+  line-height: 1;
+  font-weight: normal;
+  color: #333;
+  white-space: nowrap;
+  text-align: center;
+}
+rp { display: none; }
+/* Only blocks that actually carry furigana get extra leading, so the reading
+   clears the descenders of the line above without loosening plain text. */
+p.furi, li.furi { line-height: 2.1; }
+.vocab-notes { margin-top: 8px; font-size: 9.5pt; color: #333; line-height: 1.6; border-top: 1px dashed #aaa; padding-top: 6px; }
+table { border-collapse: collapse; margin: 10px 0; width: 100%; page-break-inside: avoid; }
+th, td { border: 1px solid #888; padding: 4px 9px; font-size: 10pt;
+         line-height: 1.6; }
+th { background: #f0f0f0; font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
+blockquote { border: 1px solid #999; background: #fafafa; margin: 10px 0;
+             padding: 10px 14px; page-break-inside: avoid; }
+hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
+strong { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
+
+@media screen {
+  :root { --gutter: 1.6em; }
+  body { max-width: 60em; margin: 0 auto; padding: 2.5em var(--gutter) 6em;
+         background: #fff; }
+  table { max-width: 100%; }
+}
+@media screen and (max-width: 48em) {
+  :root { --gutter: 0.8em; }
+  body { padding: 1.2em var(--gutter) 4em; font-size: 11pt; }
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  blockquote { padding: 8px 10px; margin: 8px 0; }
+  h1 { font-size: 13.5pt; margin: 22px 0 10px; }
+  h2 { font-size: 11pt; padding: 4px 8px; margin: 18px 0 10px; }
+}
+</style></head><body><h1>【聴解】</h1>
+<h2>問題1</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>1では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby>見学<rt>けんがく</rt></ruby>の<ruby>人数<rt>にんずう</rt></ruby>を<ruby>電話<rt>でんわ</rt></ruby>で<ruby>伝<rt>つた</rt></ruby>える<br />
+ 2. <ruby style="min-width:2.50em">料金<rt>りょうきん</rt></ruby>を<ruby>振り込<rt>ふりこ</rt></ruby>む<br />
+ 3. <ruby style="min-width:3.50em">申込書<rt>もうしこみしょ</rt></ruby>に<ruby>記入<rt>きにゅう</rt></ruby>してメールで<ruby>送<rt>おく</rt></ruby>る<br />
+ 4. <ruby>見学者<rt>けんがくしゃ</rt></ruby>の<ruby>名簿<rt>めいぼ</rt></ruby>を<ruby style="min-width:2.50em">提出<rt>ていしゅつ</rt></ruby>する</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>取引先<rt>とりひきさき</rt></ruby>にお<ruby>詫<rt>わ</rt></ruby>びの<ruby>電話<rt>でんわ</rt></ruby>をする<br />
+ 2. <ruby>部長<rt>ぶちょう</rt></ruby>の<ruby>予定<rt>よてい</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>する<br />
+ 3. <ruby>候補日<rt>こうほび</rt></ruby>を<ruby>先方<rt>せんぽう</rt></ruby>にメールで<ruby>送<rt>おく</rt></ruby>る<br />
+ 4. <ruby>訪問<rt>ほうもん</rt></ruby>に<ruby>持<rt>も</rt></ruby>っていく<ruby>資料<rt>しりょう</rt></ruby>を<ruby>印刷<rt>いんさつ</rt></ruby>する</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. メールのリンクから<ruby>資料<rt>しりょう</rt></ruby>をダウンロードする<br />
+ 2. <ruby>事前<rt>じぜん</rt></ruby><ruby>課題<rt>かだい</rt></ruby>を<ruby>送<rt>おく</rt></ruby>る<br />
+ 3. <ruby style="min-width:3.50em">受講料<rt>じゅこうりょう</rt></ruby>を<ruby>支払<rt>しはら</rt></ruby>う<br />
+ 4. パソコンにソフトを<ruby>入<rt>い</rt></ruby>れる</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. システムに<ruby>使<rt>つか</rt></ruby>った<ruby>金額<rt>きんがく</rt></ruby>を<ruby style="min-width:3.00em">入力<rt>にゅうりょく</rt></ruby>する<br />
+ 2. <ruby style="min-width:4.00em">領収書<rt>りょうしゅうしょ</rt></ruby>を<ruby>経理部<rt>けいりぶ</rt></ruby>に<ruby>届<rt>とど</rt></ruby>ける<br />
+ 3. <ruby>課長<rt>かちょう</rt></ruby>に<ruby style="min-width:2.50em">承認<rt>しょうにん</rt></ruby>を<ruby>頼<rt>たの</rt></ruby>みに<ruby>行<rt>い</rt></ruby>く<br />
+ 4. <ruby style="min-width:3.00em">出張<rt>しゅっちょう</rt></ruby>の<ruby>報告書<rt>ほうこくしょ</rt></ruby>を<ruby>書<rt>か</rt></ruby>く</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. ブレーキパッドを<ruby>交換<rt>こうかん</rt></ruby>する<br />
+ 2. <ruby>追加<rt>ついか</rt></ruby>でオイル<ruby>交換<rt>こうかん</rt></ruby>を<ruby>頼<rt>たの</rt></ruby>む<br />
+ 3. <ruby style="min-width:3.50em">車検証<rt>しゃけんしょう</rt></ruby>と<ruby>自賠責保険<rt>じばいせきほけん</rt></ruby>の<ruby style="min-width:3.50em">証明書<rt>しょうめいしょ</rt></ruby>を<ruby>受付<rt>うけつけ</rt></ruby>に<ruby>出<rt>だ</rt></ruby>す<br />
+ 4. <ruby>代車<rt>だいしゃ</rt></ruby>の<ruby>鍵<rt>かぎ</rt></ruby>を<ruby>受け取<rt>うけと</rt></ruby>る</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>予約<rt>よやく</rt></ruby>システムに<ruby>時間<rt>じかん</rt></ruby>を<ruby style="min-width:3.00em">入力<rt>にゅうりょく</rt></ruby>する<br />
+ 2. <ruby>装置<rt>そうち</rt></ruby>の<ruby>説明書<rt>せつめいしょ</rt></ruby>を<ruby>読<rt>よ</rt></ruby>む<br />
+ 3. <ruby>先輩<rt>せんぱい</rt></ruby>に<ruby>使い方<rt>つかいかた</rt></ruby>を<ruby>教<rt>おし</rt></ruby>えてもらう<br />
+ 4. <ruby style="min-width:2.50em">講習<rt>こうしゅう</rt></ruby>の<ruby>申し込<rt>もうしこ</rt></ruby>みメールを<ruby>送<rt>おく</rt></ruby>る</p>
+<h2>問題2</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>2では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。そのあと、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>を<ruby>見<rt>み</rt></ruby>てください。<ruby>読<rt>よ</rt></ruby>む<ruby>時間<rt>じかん</rt></ruby>があります。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby style="min-width:2.50em">一色<rt>いっしょく</rt></ruby>だけのシンプルなデザイン<br />
+ 2. <ruby style="min-width:1.50em">桜<rt>さくら</rt></ruby>の<ruby>花<rt>はな</rt></ruby>の<ruby>絵<rt>え</rt></ruby>のデザイン<br />
+ 3. <ruby>星<rt>ほし</rt></ruby>の<ruby>模様<rt>もよう</rt></ruby>のデザイン<br />
+ 4. <ruby>小<rt>ちい</rt></ruby>さい<ruby>石<rt>いし</rt></ruby>を<ruby>並<rt>なら</rt></ruby>べたデザイン</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>見<rt>み</rt></ruby>たい<ruby>番組<rt>ばんぐみ</rt></ruby>が<ruby>少<rt>すく</rt></ruby>なくなったから<br />
+ 2. <ruby style="min-width:2.50em">料金<rt>りょうきん</rt></ruby>が<ruby>高<rt>たか</rt></ruby>くなったから<br />
+ 3. <ruby>画質<rt>がしつ</rt></ruby>に<ruby>不満<rt>ふまん</rt></ruby>があるから<br />
+ 4. <ruby>他<rt>ほか</rt></ruby>の<ruby>会社<rt>かいしゃ</rt></ruby>のサービスに<ruby>移<rt>うつ</rt></ruby>るから</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>夜<rt>よる</rt></ruby>、なかなか<ruby>眠<rt>ねむ</rt></ruby>れないから<br />
+ 2. <ruby>家族<rt>かぞく</rt></ruby>に<ruby>勧<rt>すす</rt></ruby>められたから<br />
+ 3. <ruby style="min-width:1.50em">薬<rt>くすり</rt></ruby>をもらいたいから<br />
+ 4. <ruby>昼間<rt>ひるま</rt></ruby>の<ruby>眠気<rt>ねむけ</rt></ruby>で<ruby>仕事<rt>しごと</rt></ruby>に<ruby>支障<rt>ししょう</rt></ruby>が<ruby>出<rt>で</rt></ruby>ているから</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>画面<rt>がめん</rt></ruby>を<ruby>見<rt>み</rt></ruby>る<ruby>時間<rt>じかん</rt></ruby>が<ruby>増<rt>ふ</rt></ruby>えて<ruby>目<rt>め</rt></ruby>が<ruby>疲<rt>つか</rt></ruby>れるから<br />
+ 2. レンズに<ruby>傷<rt>きず</rt></ruby>がついたから<br />
+ 3. フレームの<ruby style="min-width:1.50em">形<rt>かたち</rt></ruby>を<ruby>変<rt>か</rt></ruby>えたいから<br />
+ 4. <ruby>遠<rt>とお</rt></ruby>くが<ruby>見<rt>み</rt></ruby>えにくくなったから</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby style="min-width:2.50em">残業<rt>ざんぎょう</rt></ruby>が<ruby>増<rt>ふ</rt></ruby>えたから<br />
+ 2. <ruby>子<rt>こ</rt></ruby>どもが<ruby>友達<rt>ともだち</rt></ruby>と<ruby>遊<rt>あそ</rt></ruby>びたがっているから<br />
+ 3. <ruby>家<rt>いえ</rt></ruby>で<ruby style="min-width:2.50em">宿題<rt>しゅくだい</rt></ruby>を<ruby>見<rt>み</rt></ruby>る<ruby>時間<rt>じかん</rt></ruby>がないから<br />
+ 4. <ruby>迎<rt>むか</rt></ruby>えを<ruby>頼<rt>たの</rt></ruby>んでいた<ruby>母親<rt>ははおや</rt></ruby>が<ruby style="min-width:2.50em">病院<rt>びょういん</rt></ruby>に<ruby>通<rt>かよ</rt></ruby>うから</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>毎月<rt>まいつき</rt></ruby>の<ruby>保険料<rt>ほけんりょう</rt></ruby><br />
+ 2. <ruby style="min-width:2.50em">入院<rt>にゅういん</rt></ruby>したときの<ruby>保障<rt>ほしょう</rt></ruby><br />
+ 3. <ruby>保険金<rt>ほけんきん</rt></ruby>の<ruby>受取人<rt>うけとりにん</rt></ruby><br />
+ 4. <ruby>契約<rt>けいやく</rt></ruby>の<ruby>期間<rt>きかん</rt></ruby></p>
+<p class="furi"><strong>6<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>色<rt>いろ</rt></ruby>が<ruby style="min-width:2.50em">注文<rt>ちゅうもん</rt></ruby>と<ruby>違<rt>ちが</rt></ruby>っていたから<br />
+ 2. <ruby>箱<rt>はこ</rt></ruby>に<ruby>傷<rt>きず</rt></ruby>がついていたから<br />
+ 3. <ruby>大<rt>おお</rt></ruby>きすぎて<ruby>置<rt>お</rt></ruby>く<ruby>場所<rt>ばしょ</rt></ruby>がないから<br />
+ 4. <ruby>動<rt>うご</rt></ruby>く<ruby>音<rt>おと</rt></ruby>がうるさいから</p>
+<h2>問題3</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>3では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。この<ruby>問題<rt>もんだい</rt></ruby>は、<ruby>全体<rt>ぜんたい</rt></ruby>としてどんな<ruby>内容<rt>ないよう</rt></ruby>かを<ruby>聞<rt>き</rt></ruby>く<ruby>問題<rt>もんだい</rt></ruby>です。<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<ruby>質問<rt>しつもん</rt></ruby>はありません。まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>質問<rt>しつもん</rt></ruby>とせんたくしを<ruby>聞<rt>き</rt></ruby>いて、1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<h2>問題4</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>4では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby>文<rt>ぶん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、それに<ruby>対<rt>たい</rt></ruby>する<ruby>返事<rt>へんじ</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、1から3の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>6<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>7<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>8<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>9<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>10<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>11<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<h2>問題5</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>5では、<ruby>長<rt>なが</rt></ruby>めの<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>きます。この<ruby>問題<rt>もんだい</rt></ruby>には<ruby style="min-width:2.50em">練習<rt>れんしゅう</rt></ruby>はありません。<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>にメモをとってもかまいません。</p>
+<p>（メモ）</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+<strong><ruby>質問<rt>しつもん</rt></ruby>1</strong> 1 ・ 2 ・ 3 ・ 4<br />
+<strong><ruby>質問<rt>しつもん</rt></ruby>2</strong> 1 ・ 2 ・ 3 ・ 4</p>
+<h1>解答用紙(マークシート)</h1>
+<p>答えの番号に○をつけてください。</p>
+<h2>問題1</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 2 <strong>(3)</strong> 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+</tr>
+</tbody>
+</table>
+<h2>問題2</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+<th>6番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>(1)</strong> 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+</tr>
+</tbody>
+</table>
+<h2>問題3</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 2 <strong>(3)</strong> 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+</tr>
+</tbody>
+</table>
+<h2>問題4</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+<th>6番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 <strong>(2)</strong> 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>7番</th>
+<th>8番</th>
+<th>9番</th>
+<th>10番</th>
+<th>11番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+<td>1 2 3</td>
+</tr>
+</tbody>
+</table>
+<h2>問題5</h2>
+<table>
+<thead>
+<tr>
+<th>1番</th>
+<th>2番-質問1</th>
+<th>2番-質問2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+<td>1 2 3 4</td>
+</tr>
+</tbody>
+</table>
+<!-- KEY -->
+
+<h1>【正解・解説】※解き終わってから見てください</h1>
+<h2>問題1</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>2</td>
+<td>1 ✗「お詫びは私から直接電話するよ」→ 部長自身が引き受けた／3 ✗「確認できたら、候補日をまとめてメールでお送りします」→ 予定確認のあとの作業／4 ✗「資料でしたら、もう印刷してあります」→ 既に完了。部長が「その前に、私の来週と再来週の予定で空いているところを確認してもらえる？」と頼んでいるため、2が正解。</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>1</td>
+<td>2 ✗「それは資料を読み終わってから送っていただければ結構です」→ 資料を読んだあとでよい／3 ✗「お申し込みのときにカードでお支払いいただいておりますので」→ 支払い済み／4 ✗「ソフトは当日、会場でスタッフがお手伝いしながら入れますので」→ 当日スタッフが対応。担当者が「そちらから資料をダウンロードしていただけますか」と述べているため、1が正解。</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>1</td>
+<td>2 ✗「領収書は台紙に貼って、月末までにうちの部に届けてもらえれば大丈夫ですよ」→ 月末まででよい／3 ✗「入力が終わると自動で課長に通知が行く仕組みなので」→ 頼みに行く作業は不要／4 ✗「もう出してあります」→ 提出済み。男の人が「経費のシステムに、使った金額を入力するところから始めてください。今日中にお願いできますか」と述べているため、1が正解。</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>3</td>
+<td>1 ✗「次の点検まで、あと半年ほどは持つと思います」「それは次の機会にお願いします」→ 今回は見送られた／2 ✗「こちらは基本料金にもう含まれておりますので、追加のご相談は不要です」→ 不要と否定された／4 ✗「それは書類の確認が終わったあと、受付で鍵をお渡ししますね」→ 書類確認のあとの作業。整備士が「車検証と自賠責保険の証明書は、今お持ちでしたら受付にお出しいただけますか」と述べているため、3が正解。</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>4</td>
+<td>1 ✗「システムのアカウントは講習が終わった人にしか発行されないの」→ 今の段階では入力できない／2 ✗「説明書は講習のときに新しい版を配るから」→ 講習で配布される／3 ✗「自己流で覚えるのはだめよ」→ 認められなかった。先生が「講習の申し込みは、今日中に事務室にメールを送っておいて」と述べているため、4が正解。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題2</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>1</td>
+<td>2 ✗「値上げのお知らせは見ました。でも、正直、それだけなら続けてたと思います」→ 理由として退けた／3 ✗「画質はきれいで、そこは満足してますよ」→ 不満はない／4 ✗「ほかの会社に移ることも考えたんですけど、まあ、たまには見るので、安いプランで続けようかなと」→ 移らないと述べた。男の人が「見たい番組がほとんどなくなっちゃったんですよね」と述べているため、1が正解。</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>4</td>
+<td>1 ✗「寝つきはむしろいいほうなんです」→ 眠れない悩みは退けた／2 ✗「妻には前から、一度診てもらったらって言われてたんですけど、そのときは行く気にならなくて」→ 勧めは決め手ではない／3 ✗「薬がほしいというより、原因をちゃんと調べてもらいたいんです」→ 薬が目的ではないと言い直した。男の人が「昼間の眠気がひどくて、仕事にならないんですよ」と述べているため、4が正解。</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>1</td>
+<td>2 ✗「傷はほとんどないんですよ」→ 退けた／3 ✗「形は今のが気に入ってるので」→ 変えるつもりはない／4 ✗「遠くを見る度は、前回とほとんど変わっていませんね」→ 検査結果で退けられた。男の人が「仕事でパソコンの画面を見る時間が前の倍ぐらいに増えて、夕方になると目の奥が痛くなるんです」と述べているため、1が正解。</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>4</td>
+<td>1 ✗「残業はほとんどないんです」→ 退けた／2 ✗「本人は喜ぶと思いますけど、まあ、それが理由というわけでもなくて」→ 理由ではないと述べた／3 ✗「宿題は今も学童で済ませてきてくれるので、家では困っていないんですが」→ 困っていない。男の人が「いつも迎えを頼んでいた母が、来月から週に三回、病院に通うことになったんです」と述べているため、4が正解。</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>2</td>
+<td>1 ✗「保険料は、安くなればうれしいですけど、多少上がってもいいと思ってるんです」→ 一番の関心ではない／3 ✗「受取人は去年、娘に変えたばかりなので、そのままで大丈夫です」→ 変更済み／4 ✗「期間も今のままで問題ありません」→ 見直し不要。女の人が「私の契約も入院のときの保障が古いままなので、そこを手厚くしたいんです」と述べているため、2が正解。</td>
+</tr>
+<tr>
+<td>6番</td>
+<td>3</td>
+<td>1 ✗「色は注文したとおりの白でしたよ」→ 退けた／2 ✗「箱の角は少しへこんでましたけど、中は無事でしたし、それはいいんです」→ 理由ではないと述べた／4 ✗「まだ一度も使っていないので、音は分からないです」→ 音は理由になり得ない。女の人が「届いてみたら思っていたより大きくて。うちの台所には置く場所がないんです」と述べているため、3が正解。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題3</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>3</td>
+<td>本文引用「来月から始まる時差出勤制度について説明します」「出社の時間を、朝の七時、八時、九時の三つの中から、月ごとに選べるようになります」— 新しい出勤制度の内容と申請方法を説明する話。1 ✗ 通勤手当は話題にされていない／2 ✗ 保育園の送り迎えに触れるだけで、育児休暇の話ではない／4 ✗ 残業を減らす取り組みは話題にされていない。</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>3</td>
+<td>本文引用「毎年行っている安全講習を第二会議室で行います」「服や手を機械に巻き込まれないための服装の決まりと、けが人が出たときの連絡の流れを中心に、一時間ほどの予定です」— 安全講習の日程と内容を知らせる話。1 ✗ 事故の原因は話題にされていない／2 ✗ 機械は巻き込まれ防止の文脈で触れるだけで、新しい機械の紹介ではない／4 ✗ 会場は示されるだけで、変更の話ではない。</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>2</td>
+<td>本文引用「出していただけるのは、ご家庭で使わなくなった衣類や食器、本などです」「値段は皆さんご自身で決めていただきますが、値札を必ず付けてください」— 出品のルールをまとめて伝える話。1 ✗ リサイクル市の歴史は話題にされていない／3 ✗ 会場は最後に触れるだけで、行き方の説明ではない／4 ✗ ごみの減らし方は話題にされていない。</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>1</td>
+<td>本文引用「大人の方を教えるときに私が心がけているのは、練習の順番を変えることです」「その方が弾きたい曲の、弾きやすい部分から始めるんです」— 大人の生徒への教え方の工夫を語る話。2 ✗ 練習時間は短くてよいと触れるだけで、時間の話が中心ではない／3 ✗ 発表会は話題にされていない／4 ✗ 楽器の選び方は話題にされていない。</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>4</td>
+<td>本文引用「いつもより三十分早い八時に、校庭に集合してください」「持ち物は、お弁当と水筒、それからしおりです」— 校外学習の持ち物と当日の予定を連絡する話。1 ✗ 日程の変更は話題にされていない／2 ✗ 給食の献立は話題にされていない／3 ✗ 授業参観は話題にされていない。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題4</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>2</td>
+<td>女「部長、来週の会議の資料、印刷して机の上に置いておきました」という報告に対し、礼を言って受け取る2が正解。1は既に印刷したという報告と矛盾する依頼。3は来週の会議という前提と時間関係が合わない。</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>2</td>
+<td>係員「駐車時間が超過しております」という注意に対し、謝って車を動かす2が正解。1は超過の注意を延長の許可と誤解している。3は支払いの話にすり替えており、超過への応答になっていない。</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>1</td>
+<td>係員「地震のため、一時的に閉館いたします」という案内に対し、従って出口を尋ねる1が正解。2はまだ開いていない館への質問で、今いる客の返事として合わない。3は閉館の案内を正反対に受け取っている。</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>3</td>
+<td>女「部長がお呼びですので、至急会議室までお願いいたします」という伝言に対し、すぐ向かうと応じる3が正解。1は部長が呼んでいるという前提と矛盾する。2は場所の希望を聞かれたかのような的外れな返答。</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>1</td>
+<td>男「早く帰れるかと思いきや、急ぎの仕事を頼まれちゃってさ」— 期待が外れた愚痴に対し、同情して手伝いを申し出る1が正解。2は「かと思いきや」の逆転を聞き取れておらず、帰れた前提で祝っている。3は断ったという事実にない前提を作っている。</td>
+</tr>
+<tr>
+<td>6番</td>
+<td>3</td>
+<td>店員「領収書の宛名、ご指定はございますか」という質問に対し、宛名を答える3が正解。1は受け取り済みという別の話。2は金額の話で、宛名の質問に答えていない。</td>
+</tr>
+<tr>
+<td>7番</td>
+<td>1</td>
+<td>男「プレゼンさせていただけないでしょうか」という部下の申し出に対し、許可して条件を付ける1が社長の返答として正解。2はプレゼンをプレゼントと聞き違えている。3は来月のイベントという前提と時間関係が合わない。</td>
+</tr>
+<tr>
+<td>8番</td>
+<td>2</td>
+<td>女「頼む前にお茶の準備までしてくれて、気が利くよね」という評価に対し、同意して喜ぶ2が正解。1はお茶の好みの話にずれている。3は「気が利く」を、注意が足りないという逆の意味に取り違えた返答。</td>
+</tr>
+<tr>
+<td>9番</td>
+<td>3</td>
+<td>職員「本人確認のため、身分証明書を見せていただけますか」という依頼に対し、保険証でよいか確かめる3が正解。1は証明写真という別の物の話。2は本人確認の意味を取り違えている。</td>
+</tr>
+<tr>
+<td>10番</td>
+<td>2</td>
+<td>担当者「天候によっては中止になる可能性もございます」という予告に対し、その場合の連絡方法を確かめる2が正解。1はまだ決まっていない中止を決定と誤解している。3は可能性の説明を正反対に受け取っている。</td>
+</tr>
+<tr>
+<td>11番</td>
+<td>1</td>
+<td>女「今ちょっと立て込んでいて、あとでもいい？」という頼みに対し、了承して合図を頼む1が正解。2は「立て込んでいて」を暇だという正反対の意味に取っている。3は「立て込んでいて」を店が混んでいる意味と取り違えている。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題5</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>4</td>
+<td>1 ✗「目当てのビーチのアクティビティが天気次第でね」「天気頼みなのはちょっと心配だね」→ 天候不安で除外／2 ✗「一人あたり、去年の旅行より二万円ぐらい高くなっちゃう」→ 費用が高く除外／3 ✗「その週末はもう団体の予約でいっぱいなんだって」→ 先約があり利用できない。学生の「じゃあ、天気に左右されない港町に決めよう」より、4が正解。</td>
+</tr>
+<tr>
+<td>2番 質問1</td>
+<td>3</td>
+<td>女の人は最初「ビジネスクラスにしようかな」と名前で挙げた。1 ✗「文法は一応自信があるんだよね」→ 後で男の人に勧められて退けた案で、最初の考えではない／2 ✗「それに決めた」→ 話し合いの末の最終的な決定であり、最初の考えではない／4 ✗「資格自体は今のところ必要ないんだよね」→ 後で男の人に勧められて退けた案。</td>
+</tr>
+<tr>
+<td>2番 質問2</td>
+<td>2</td>
+<td>女の人は「空港やレストランで使える表現、覚えておきたいし、ゲストと話せるイベントもあるっていうのがいいね。それに決めた」と名前で選び直した。1 ✗「文法は一応自信があるんだよね」→ 不要と判断して退けた／3 ✗「宿題を毎週きちんとやる時間はなさそう」→ 最初考えていた案だが、残業を理由に退けた／4 ✗「資格自体は今のところ必要ないんだよね」→ 不要と判断して退けた。</td>
+</tr>
+</tbody>
+</table>
+<h2>得点の目安</h2>
+<p>聴解は30問、各問1点の合計30点を60点満点に換算します（1問=2点）。18点以上（60点満点で36点以上）が合格の目安です。</p></body></html>

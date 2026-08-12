@@ -158,6 +158,16 @@ then name what let each defect through.
   any topic moved. Fixes introduce defects at the same rate as authoring —
   a prior round of repairs was itself re-reviewed and one had to be redone.
   A fix-and-approve in the same breath is a rubber stamp, not a review.
+  **A closing-move-shape fix (dokkai.md §"Thirteen surfaces, thirteen
+  different essays") is verified by RE-READING the new closing against the
+  six named shapes and writing which one it now is — never by `make check`
+  turning green alone.** `20260812_1`'s round 1 "fixed" 問題11(4) by swapping
+  `ではなく` for `である前に`, which satisfied the mechanized marker check
+  (`check_dokkai_closing_reframe()`, itself only a proxy) while shipping the
+  identical 主張 shape as two other passages — caught only because round 2 QA
+  re-read the closing itself instead of trusting the gate (qa-report-20260812_1.md
+  F2→F3). The same standard already applies to distractor fixes; it applies
+  here too.
 - **A fix that changes WHAT a surface tests (its topic/scenario, not just its
   wording) must also update `test_spec.json["items"]["reading_topics"]`/
   `["listening_scenarios"]` and `logs/ledger.json`'s mirrored entry** — mark

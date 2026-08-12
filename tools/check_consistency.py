@@ -827,7 +827,13 @@ def check_grammar_p8_targets(gt: str, opts: dict[int, list[str]], test_id: str):
     blocks: dict[int, str] = {}
     cur = None
     for line in sec.splitlines():
-        qm = re.match(r"^\s*\*?\*?(4[3-7])[\.．、]", line)
+        # Item numbers print as bold-only (`**47**`) with no trailing
+        # punctuation before the stem text — a stricter pattern silently
+        # matched nothing, so blocks[] stayed empty and every target had to
+        # be found inside the option strips alone (missing stem-only targets
+        # like 47's にちがいない tail, caught only by reading the rendered gate
+        # output against the actual Markdown, not by trusting the check).
+        qm = re.match(r"^\s*\*{0,2}(4[3-7])\*{0,2}[\.．、]?", line)
         if qm:
             cur = int(qm.group(1))
             blocks[cur] = line
@@ -1100,6 +1106,100 @@ def check_dokkai_rhetorical_monotony(name: str, body: str):
          f"until no more than two share one; then re-check that the keys did "
          f"not inherit it (question-authoring/references/dokkai.md "
          f"§'Thirteen surfaces, thirteen different essays')")
+
+
+# The "not-A(system/singular)-but-B(human/relational) reframe" shape
+# specifically — one narrow slice of the broader RHETORIC_MARKERS family, but
+# the one dokkai.md caps at 2 SHARED PASSAGES (not 12 raw hits paper-wide).
+# 20260812_1 shipped 6 of 13 closings on this exact shape while
+# check_dokkai_rhetorical_monotony() stayed green (6 raw hits under its
+# ceiling of 12) because that check counts markers anywhere in the WHOLE
+# passage body (by design, to catch strawman distractors) — its hits landed
+# mid-passage and even inside one distractor option's own printed text, not
+# on the 6 closings that actually shared this shape (qa/qa-report-20260812_1.md
+# F2). A per-passage, closing-region-only proxy is added here instead of
+# narrowing the existing check, which stays as designed for its own
+# documented purpose (qa-report F2's root-cause table, option 2).
+REFRAME_CLOSING = re.compile(
+    r"だけでは|だけのものではなく|にとどまらない|にすぎない.{0,20}ではなく"
+    r"|である前に.{0,20}だ|の中にこそ")
+# Bare 「ではなく」 was tried and dropped: it is an ordinary contrastive
+# connector that appears in unrelated argumentative and descriptive prose
+# (measured: it alone fires this check on EVERY one of the 4 prior generated
+# papers, none of which QA flagged for this defect — a check that fails 100%
+# of the archive trains the operator to ignore it, exactly what a gate must
+# not do). The narrower family above stays close to dokkai.md's own named
+# example phrase ("〜だけでは足りない、〜こそが要る") instead of any A-vs-B
+# contrast. 「である前に…だ」/「の中にこそ」 were added after 20260812_1 QA
+# round 2 (F3): a fix pass swapped 「ではなく」 for 「である前に」 to dodge this
+# very check while shipping the identical shape — confirmed absent from all 4
+# prior papers before adding, so this extension does not reproduce the
+# bare-「ではなく」 cry-wolf mistake (qa/qa-report-20260812_1.md F3 root-cause).
+# This marker family is a proxy, not a shape-classification proof — a fix that
+# dodges these specific tokens while keeping the same argument can still slip
+# through; the mandatory human read of all 13 closings against dokkai.md's six
+# named shapes (exam-qa-review) is what actually enforces the rule.
+REFRAME_CLOSING_SPAN = 150   # JP chars from the end of a passage's prose
+REFRAME_SHAPE_CAP = 2        # dokkai.md's own stated per-shape ceiling
+
+
+def check_dokkai_closing_reframe(name: str, body: str, bi):
+    """No more than 2 読解 passages may close on the same reframe shape.
+
+    Scans only the LAST `REFRAME_CLOSING_SPAN` JP characters of each passage's
+    own prose (via `passage_prose`, which already strips stems/options), so a
+    hit means the shape sits in the CLOSING, not scattered through the body or
+    inside a distractor's own text.
+    """
+    hits: dict[str, str] = {}
+    m9 = re.search(r"^##\s*問題9\b.*?(?=^##\s*問題10\b)", body, re.M | re.S)
+    if m9:
+        prose9 = passage_prose(m9.group(0), bi)
+        tail = jp_tail(prose9, REFRAME_CLOSING_SPAN)
+        if REFRAME_CLOSING.search(tail):
+            hits["問題9"] = tail[-40:]
+    for n in (10, 11, 12, 13):
+        sec = dokkai_section(body, n)
+        if not sec:
+            continue
+        for i, scope in enumerate(passage_scopes(sec, n), 1):
+            prose = passage_prose(scope, bi)
+            tail = jp_tail(prose, REFRAME_CLOSING_SPAN)
+            if not tail.strip():
+                continue
+            if REFRAME_CLOSING.search(tail):
+                label = f"問題{n}" if len(passage_scopes(sec, n)) == 1 else f"問題{n}({i})"
+                hits[label] = tail[-40:]
+    warn(f"{name}: no more than {REFRAME_SHAPE_CAP} 読解 passages match this "
+         f"marker family for the 「not-A-but-B」 reframe closing "
+         f"({len(hits)} matched — a marker-family PROXY, not a shape-"
+         f"classification proof: a fix can dodge these exact tokens while "
+         f"keeping the same argument, as 20260812_1's own F2→F3 did)",
+         len(hits) <= REFRAME_SHAPE_CAP,
+         f"{sorted(hits)} — dokkai.md caps any one closing shape at "
+         f"{REFRAME_SHAPE_CAP} shared passages; rewrite the extras onto a "
+         f"different catalogued shape (説明/意外な観察/反論応答/随筆/条件提示) "
+         f"and re-check that any key relying on the old closing's content "
+         f"still matches the new one. A green run here is NOT proof the "
+         f"paper complies — read all 13 closings against dokkai.md's six "
+         f"named shapes yourself and write which one each is "
+         f"(question-authoring/references/dokkai.md "
+         f"§'Thirteen surfaces, thirteen different essays')")
+
+
+def jp_tail(text: str, n: int) -> str:
+    """Last `n` JP characters of a passage's CLOSING (JP_CHAR class), order preserved.
+
+    `passage_prose()` deliberately keeps the trailing （注N） glossary block
+    (needed for the length checks), but those definition lines sit AFTER the
+    passage's actual closing sentence — a 5-gloss passage can push the whole
+    tail window into glossary text and never reach the closing at all. Strip
+    glossary lines first so the window lands on prose.
+    """
+    no_gloss = "\n".join(ln for ln in text.splitlines()
+                          if not re.match(r"^\s*（注\d*）|^\s*\(注\d*\)", ln))
+    chars = [c for c in no_gloss if JP_CHAR.match(c)]
+    return "".join(chars[-n:])
 
 
 # The 読解 surfaces of a logs/topics.json row, and which of them are headline
@@ -2014,6 +2114,53 @@ def check_surface_subjects(token_map: dict[str, list[str]]):
           "same subject starve each other. Re-harvest the seed or "
           "`--reroll` the category; never re-seed until the gate goes green "
           "(exam-blueprint 'One topic, one surface')")
+
+
+# Calibrated against every consecutive-pair max ratio on disk at write time:
+# the confirmed defect (20260811_1↔20260812_1's two 引っ越し業者 scenarios)
+# scored 0.833; the highest UNFLAGGED historical pair (20260810_1↔20260810_2's
+# two 銀行:口座開設 scenarios) scored 0.778. subject_tokens() cannot see either
+# — it filters common errand nouns like 業者/口座 as non-distinctive, and its
+# kanji-run matching does not span a hiragana particle like 「との」, so a
+# same-institution-same-errand pair phrased in free text (not the pool's own
+# `場所:用件` shorthand) tokenizes to nothing shared even when a human reads
+# them as the same scenario. Raw string similarity catches what token-based
+# subject matching structurally cannot.
+CROSS_TEST_SCENARIO_RATIO = 0.8
+
+
+def check_cross_test_listening_subjects():
+    """No 聴解1/2/3/5 errand repeats the IMMEDIATELY PREVIOUS test's (G-new).
+
+    `check_topics_themes()`'s rule-4 comparison only covers the 5-surface
+    headline set (問題9/12/13/14/聴解問題5); `check_surface_subjects()` only
+    covers collisions WITHIN one spec. Neither compares the other 19 pool-drawn
+    `listening_scenarios` (問題1/2/3) against the previous test's — 20260812_1
+    shipped 聴解問題1-4番 (引っ越し業者, 見積もり) one test after 20260811_1's own
+    聴解問題1-2番 (引っ越し業者, 見積もり) through a fully green gate
+    (qa/qa-report-20260812_1.md F1) because that comparison had no owner.
+    """
+    print("\ncross-test 聴解1/2/3/5 subject repeat (previous test only)")
+    history = [h for h in ledger_history() if str(h.get("test_id")) != "legacy"]
+    for prev, cur in zip(history, history[1:]):
+        pid, cid = str(prev.get("test_id")), str(cur.get("test_id"))
+        prev_scen = [pool_entry_text(e) for e in prev.get("items", {}).get("listening_scenarios") or []]
+        cur_scen = [pool_entry_text(e) for e in cur.get("items", {}).get("listening_scenarios") or []]
+        if not prev_scen or not cur_scen:
+            continue
+        collisions = []
+        for cs in cur_scen:
+            for ps in prev_scen:
+                r = SequenceMatcher(None, cs, ps).ratio()
+                if r >= CROSS_TEST_SCENARIO_RATIO:
+                    collisions.append(f"「{cs}」(this) x 「{ps}」({pid}) ratio={r:.2f}")
+        check(f"{cid}: no 聴解1/2/3/5 errand repeats {pid}'s (immediately previous)",
+              not collisions,
+              "; ".join(collisions) + " — a listening scenario repeated one "
+              "test apart is an automatic-fail cross-test topic repeat "
+              "(exam-qa-review); re-author the surface onto a different "
+              "institution/errand and record `origin: reauthored` + a note "
+              "in test_spec.json and logs/ledger.json")
 
 
 def check_spec_blend(spec: dict):
@@ -3583,6 +3730,7 @@ def check_tests():
         if origin == "generated":
             check_dokkai_lengths(d.name, gengo_prose, bi)
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
+            check_dokkai_closing_reframe(d.name, gengo_prose, bi)
             check_chuuryaku(d.name, gengo_prose)
             check_mondai11_stems(d.name, gengo_prose)
             check_mondai13_closer(d.name, gengo_prose)
@@ -3850,6 +3998,7 @@ def main():
         check_harvest_hygiene()
         check_harvest_provenance()
         check_topics_themes()
+        check_cross_test_listening_subjects()
         check_draw_provenance()
     check_tests()
     check_grader_parity()
