@@ -477,7 +477,11 @@ test); what matters is depth.
 # Part II — Author the passage yourself
 
 `sample_items.py`'s draw assigns one `reading_topics` entry to every 読解
-surface (問題9-13, cloze included) and one `listening_scenarios` entry to
+surface of 問題10–14 (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info —
+the 問題9 cloze has NO pool seat: its author composes the topic, keeping it
+distinct under the four theme rules, and the build pass records what shipped
+as a 13th `reading_topics` entry with `origin: "reauthored"` + note in both
+`test_spec.json` and the ledger, per 20260811_1's precedent) and one `listening_scenarios` entry to
 every 聴解 setting (問題1/2/3/5), each carrying its theme tag ("Topic themes"
 above). Compose every passage, dialogue, flyer, notice, or 即時応答 setting
 yourself, in original prose, directly from that assigned `topic`/`scenario`

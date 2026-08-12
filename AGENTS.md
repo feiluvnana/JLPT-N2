@@ -52,7 +52,7 @@ not route around it silently.
 
 - Skills are located in `.agents/<skill_name>/SKILL.md`.
 - Before performing any specialized task, **read the corresponding `SKILL.md` file** (they are plain Markdown — open them with whatever file-reading tool your harness provides).
-- **Claude Code**: the same 8 skills are exposed natively via symlinks in `.claude/skills/<skill_name>` → `.agents/<skill_name>`, so they are auto-discovered and invocable as `/<skill-name>`. `.agents/` remains the single copy — edit files there.
+- **Claude Code**: the same 9 skills are exposed natively via symlinks in `.claude/skills/<skill_name>` → `.agents/<skill_name>`, so they are auto-discovered and invocable as `/<skill-name>`. `.agents/` remains the single copy — edit files there.
 - **`jlpt-test-generation` is the entry point for generating mocks.** For importing an outside PDF/past paper, read `external-test-import` instead. For any other exam work, read `jlpt-test-generation` first — it routes to the other skills in order.
 - Available Skills:
   1. `jlpt-test-generation`: End-to-end mock exam generation orchestrator — **read this one first** for generated exams. Owns the 4-stage pass structure and the per-stage reading map.
@@ -63,6 +63,7 @@ not route around it silently.
   6. `exam-app`: Rendering and running the exam — booklet HTML (`build_booklet.py`, no PDF), the merged answer sheet `解答.html` with in-page grading (`build_interactive.py`), the one server (`serve_sheet.py`), the static GitHub Pages build (`build_pages.py`), and CLI grading (`grade_answers.py`).
   7. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test). It also root-causes every finding back to the skill, script, or gate check that let it through, so the next test does not reproduce it.
   8. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
+  9. `exam-model-answer`: Model answer & comprehensive explanation generator — builds `模範解答.html` explaining every item (why the correct option is chosen and why each distractor is wrong) across Language Knowledge, Reading, and Listening.
 
 ---
 
@@ -73,7 +74,7 @@ not route around it silently.
 - `refs/`: Reference input files (scanned PDFs and audio recordings). See §3.
 - `tests/<test_id>/`: Output folder for each exam. **Origin is encoded in the folder name:** ids starting with `imported-` are external imports (e.g. `tests/imported-n2-2025-12/`); any other id is **generated** (e.g. `tests/1/`). See `external-test-import`.
 - `logs/`: Item coverage ledger (`logs/ledger.json`), topic history (`logs/topics.json`), adjunct staging. Each generated test's blueprint lives at `tests/<test_id>/test_spec.json`.
-- `.agents/`: The 8 skills — docs, scripts, and reference data.
+- `.agents/`: The 9 skills — docs, scripts, and reference data.
 - `tools/`: Repo-level tooling that is not a skill (`check_consistency.py`, the `refs/` archive extractors).
 - `_site/`: **Build output only, gitignored.** The static GitHub Pages copy of the exam app, rebuilt from `tests/` by `make pages` and by CI on push. Never edit or commit it. See `exam-app`.
 
@@ -99,6 +100,7 @@ Inside `tests/<test_id>/` — this table is the single copy; skills point here:
 | Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
 | User Answers Record                  | `ユーザー解答.json`                    | Saved automatically on submit from `解答.html`                                         |
 | Combined Grading Result              | `採点結果.json`                        | Generated on submit from `解答.html` or written by `grade_answers.py`. There is no Markdown report — the result is data, read back by the result screen and by the test list |
+| Model Answer & Detailed Explanation  | `模範解答.html`                        | Comprehensive model answer and explanation document for all 101 items, rendered by `build_model_answer.py` |
 | Import provenance (imported only)    | `import_meta.json`                     | Written by `external-test-import` for `tests/imported-<slug>/` only — generated tests must not have this file |
 
 ---
@@ -158,6 +160,7 @@ restate them here or in a skill; fix them there.
 | `make booklet <id>`       | `build_booklet.py` on both Markdown sources | `exam-app` |
 | `make mp3 <id>`           | `make_choukai_mp3.py` on `聴解スクリプト.txt` | `choukai-audio` |
 | `make sheet <id>`         | `build_interactive.py` → `解答.html` | `exam-app` |
+| `make model-answer <id>`  | `build_model_answer.py` → `模範解答.html` | `exam-model-answer` |
 | `make keyless <id>`       | the QA blind-solve render → `qa/<id>/keyless.md` | `exam-app` |
 | `make serve`              | `serve_sheet.py` — ONE server for every test (no id) | `exam-app` |
 | `make grade <id>`         | `grade_answers.py --test-dir tests/<id>` | `exam-app` |
@@ -194,11 +197,15 @@ the rule, the incident behind it, and the repair.
 
 ## 5. Pass structure — orchestrate, don't work
 
-The generation pipeline runs as **4 stages** — blueprint → 4 parallel
-authoring sections → build+gate → fresh-eyes QA — each a subagent with a
-bounded reading list, handing off through files on disk only.
+The generation pipeline runs as **4 stages + final model-answer step** — blueprint → 4 parallel
+authoring sections → build+gate → fresh-eyes QA → model-answer generation (`make model-answer <id>`),
+each a subagent with a bounded reading list, handing off through files on disk only.
 `jlpt-test-generation` owns the stage table, the reading map, the prompt
 template, and the fix→re-review loop; read it before any generation work.
+
+**Model answer generation (`make model-answer <id>`) MUST always be the final step**
+(for both generated exams and imported exams) — run only after QA/fidelity verification
+has passed and all questions, options, and keys are locked.
 
 The two context-isolation rules that are never optional, in any harness or
 fallback: **no long single-run authoring** (defects cluster in whatever one

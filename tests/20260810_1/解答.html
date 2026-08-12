@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet"><title>N2 模擬試験 解答用紙 (20260810_1)</title>
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>if(window.location.search&&window.location.search.indexOf("screen=result")!==-1){document.documentElement.classList.add("is-result-mode");}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet"><title>N2 模擬試験 解答用紙 (20260810_1)</title>
 <!-- src_sha: 言語知識・読解.md=9a5c6d4d5258 -->
 
 <!-- src_sha: 聴解.md=93171f07f91e -->
@@ -74,110 +74,383 @@ strong { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
   h2 { font-size: 11pt; padding: 4px 8px; margin: 18px 0 10px; }
 }
 
-:root{--ink:#0f172a;--line:#cbd5e1;--muted:#475569;--accent:#1d4ed8;
-  --ui:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif}
+:root{
+  --ink:#0f172a;
+  --line:#cbd5e1;
+  --muted:#64748b;
+  --accent:#2563eb;
+  --accent-hover:#1d4ed8;
+  --ui:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic",sans-serif;
+  --serif:"Noto Serif JP","Yu Mincho",serif;
+}
 /* The bar spans the full window on every screen, so the scrollbar sits ON its
    right edge — the horizontal padding has to clear it or it covers 採点する. */
-#bar{position:sticky;top:0;z-index:99;background:#111;color:#fff;
-  box-sizing:border-box;min-height:3.25em;padding:0 1.8em;display:flex;
-  flex-wrap:nowrap;gap:.45em 1em;align-items:center;font-family:var(--ui);
-  font-size:11pt}
-#bar b{font-size:12pt;font-weight:700;white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis;min-width:0;max-width:18em}
-#bar .sub{font-size:10pt;color:#cbd5e1;font-variant-numeric:tabular-nums;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-#bar .grow{flex:1 1 auto;min-width:.5em}
-#bar-controls{display:flex;flex-wrap:nowrap;align-items:center;gap:.45em;flex:0 0 auto}
-#bar button{font-size:10pt;padding:.25em .75em;cursor:pointer;border-radius:6px;
-  border:1px solid #555;background:#fff;color:var(--ink);font-family:var(--ui);
-  white-space:nowrap;line-height:1.35;min-height:32px;display:inline-flex;align-items:center}
-#bar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);
-  font-weight:700}
-#bar a.back{color:#cbd5e1;text-decoration:none;font-size:10.5pt;white-space:nowrap;
-  flex:0 0 auto;padding:.2em 0}
-#bar a.back:hover{color:#fff;text-decoration:underline}
-.ui-btn{display:inline-flex;align-items:center;justify-content:center;
-  font-size:11pt;padding:.45em 1.1em;border-radius:6px;text-decoration:none;
-  border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
-  font-family:var(--ui);box-sizing:border-box;min-height:38px}
-.ui-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
-.ui-btn.danger{background:#fff;border-color:#fca5a5;color:#991b1b}
-.ui-btn.danger:hover{background:#fef2f2}
-.ui-btn:hover{filter:brightness(.96)}
-.ui-table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4em 0}
-.ui-table{border-collapse:collapse;width:100%;font-size:10.5pt;margin:.4em 0;
-  font-family:var(--ui)}
-.ui-table th,.ui-table td{border:1px solid var(--line);padding:.35em .6em;
-  text-align:left;vertical-align:middle}
-.ui-table th{background:#f1f5f9;font-weight:700}
-.ui-table td.n{text-align:right;font-variant-numeric:tabular-nums}
-.ui-table tr.weak td{background:#fff7ed}
-.badge{font-size:10pt;padding:.25em .7em;border-radius:99px;border:1px solid;
-  white-space:nowrap;font-variant-numeric:tabular-nums;font-family:var(--ui);
-  display:inline-flex;align-items:center}
-.badge.pass{background:#f0fdf4;border-color:#16a34a;color:#166534}
-.badge.fail{background:#fef2f2;border-color:#dc2626;color:#991b1b}
-.badge.none{background:#f8fafc;border-color:var(--line);color:#64748b}
-.badge.warn{background:#fffbeb;border-color:#f59e0b;color:#92400e}
-.chip{display:inline-flex;align-items:center;gap:.35em;font-size:10pt;
-  padding:.22em .55em;border-radius:6px;border:1px solid;font-family:var(--ui);
-  font-variant-numeric:tabular-nums;min-height:30px}
-.chip i{font-style:normal;font-size:9pt;opacity:.75}
-.chip.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
-.chip.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
-.chip.na{background:#f8fafc;border-color:var(--line);color:#64748b}
-.meter .track{height:9px;border-radius:99px;background:#e2e8f0;overflow:hidden;
-  text-align:left}
-.meter .fill{height:100%;background:var(--accent)}
-.meter .fill.done{background:#16a34a}
-.meter .lbl{font-size:10pt;color:var(--muted);margin-top:.3em;text-align:left;
-  font-variant-numeric:tabular-nums;font-family:var(--ui)}
+#bar{
+  position:sticky;
+  top:0;
+  z-index:99;
+  background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color:#ffffff;
+  box-sizing:border-box;
+  min-height:3.4em;
+  padding:0 1.8em;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:.6em 1.2em;
+  align-items:center;
+  font-family:var(--ui);
+  font-size:11pt;
+  box-shadow:0 4px 14px rgba(0,0,0,0.08);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+#bar b{
+  font-size:12.5pt;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width:0;
+  max-width:20em;
+  color:#ffffff;
+}
+#bar .sub{
+  font-size:9.5pt;
+  color:#94a3b8;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width:0;
+}
+#bar .grow{
+  flex:1 1 auto;
+  min-width:.5em;
+}
+#bar-controls{
+  display:flex;
+  flex-wrap:nowrap;
+  align-items:center;
+  gap:.55em;
+  flex:0 0 auto;
+}
+#bar button{
+  font-size:10pt;
+  font-weight:700;
+  padding:.3em .85em;
+  cursor:pointer;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.1);
+  color:#ffffff;
+  font-family:var(--ui);
+  white-space:nowrap;
+  line-height:1.35;
+  min-height:34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s ease;
+}
+#bar button:hover{
+  background:rgba(255,255,255,0.2);
+  border-color:rgba(255,255,255,0.35);
+}
+#bar button.primary{
+  background:var(--accent);
+  color:#ffffff;
+  border-color:var(--accent);
+  box-shadow:0 2px 6px rgba(37,99,235,0.3);
+}
+#bar button.primary:hover{
+  background:var(--accent-hover);
+  border-color:var(--accent-hover);
+}
+#bar a.back{
+  display:inline-flex;
+  align-items:center;
+  gap:.35em;
+  color:#cbd5e1;
+  text-decoration:none;
+  font-size:10pt;
+  font-weight:700;
+  white-space:nowrap;
+  flex:0 0 auto;
+  padding:.3em .75em;
+  border-radius:6px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  transition:all .15s ease;
+}
+#bar a.back:hover{
+  background:rgba(255,255,255,0.18);
+  color:#ffffff;
+  border-color:rgba(255,255,255,0.3);
+}
+.ui-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10pt;
+  font-weight:600;
+  padding:0 1.1em;
+  height:38px;
+  min-height:38px;
+  max-height:38px;
+  line-height:36px;
+  border-radius:6px;
+  text-decoration:none;
+  border:1px solid var(--line);
+  background:#ffffff;
+  color:var(--ink);
+  cursor:pointer;
+  font-family:var(--ui);
+  box-sizing:border-box;
+  vertical-align:middle;
+  -webkit-appearance:none;
+  appearance:none;
+  transition:all .15s ease;
+}
+.ui-btn:hover{
+  background:#f8fafc;
+  border-color:#94a3b8;
+  color:var(--ink);
+}
+.ui-btn.primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#ffffff;
+  font-weight:700;
+  box-shadow:0 2px 6px rgba(37,99,235,0.2);
+}
+.ui-btn.primary:hover{
+  background:var(--accent-hover);
+  border-color:var(--accent-hover);
+  color:#ffffff;
+}
+.ui-btn.danger{
+  background:#ffffff;
+  border-color:#fca5a5;
+  color:#991b1b;
+}
+.ui-btn.danger:hover{
+  background:#fef2f2;
+  border-color:#f87171;
+}
+.ui-table-wrap{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  margin:.6em 0;
+  border-radius:8px;
+  border:1px solid var(--line);
+}
+.ui-table{
+  border-collapse:collapse;
+  width:100%;
+  font-size:10pt;
+  margin:0;
+  font-family:var(--ui);
+}
+.ui-table th,.ui-table td{
+  border:1px solid #e2e8f0;
+  padding:.55em .8em;
+  text-align:left;
+  vertical-align:middle;
+}
+.ui-table th{
+  background:#f1f5f9;
+  font-weight:700;
+  color:#1e293b;
+  border-bottom:2px solid #cbd5e1;
+}
+.ui-table tr{
+  transition:background .1s ease;
+}
+.ui-table tbody tr:hover{
+  background:#f8fafc;
+}
+.ui-table td.n{
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.ui-table tr.weak td{
+  background:#fffbeb;
+  color:#92400e;
+}
+.badge{
+  font-size:9.5pt;
+  font-weight:700;
+  padding:.22em .75em;
+  border-radius:9999px;
+  border:1px solid;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+  font-family:var(--ui);
+  display:inline-flex;
+  align-items:center;
+  letter-spacing:.02em;
+}
+.badge.pass{
+  background:#ecfdf5;
+  border-color:#a7f3d0;
+  color:#065f46;
+}
+.badge.fail{
+  background:#fef2f2;
+  border-color:#fecaca;
+  color:#991b1b;
+}
+.badge.none{
+  background:#f8fafc;
+  border-color:var(--line);
+  color:#64748b;
+}
+.badge.warn{
+  background:#fffbeb;
+  border-color:#fde68a;
+  color:#92400e;
+}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.35em;
+  font-size:9.5pt;
+  font-weight:700;
+  padding:.22em .6em;
+  border-radius:6px;
+  border:1px solid;
+  font-family:var(--ui);
+  font-variant-numeric:tabular-nums;
+  min-height:30px;
+  transition:all .15s ease;
+}
+.chip i{
+  font-style:normal;
+  font-size:8.5pt;
+  opacity:.8;
+}
+.chip.ok{
+  background:#ecfdf5;
+  border-color:#a7f3d0;
+  color:#065f46;
+}
+.chip.ng{
+  background:#fef2f2;
+  border-color:#fecaca;
+  color:#991b1b;
+}
+.chip.na{
+  background:#f8fafc;
+  border-color:var(--line);
+  color:#64748b;
+}
+.meter .track{
+  height:8px;
+  border-radius:9999px;
+  background:#e2e8f0;
+  overflow:hidden;
+  text-align:left;
+}
+.meter .fill{
+  height:100%;
+  border-radius:9999px;
+  background:var(--accent);
+  transition:width .3s ease;
+}
+.meter .fill.done{
+  background:#059669;
+}
+.meter .lbl{
+  font-size:9.5pt;
+  color:var(--muted);
+  margin-top:.35em;
+  text-align:left;
+  font-variant-numeric:tabular-nums;
+  font-family:var(--ui);
+}
 @media screen and (max-width: 48em){
-  #bar{padding:.45em .9em;gap:.35em .7em;flex-wrap:wrap;font-size:10pt}
-  #bar b{max-width:11em;font-size:11pt}
-  #bar .sub{font-size:9pt}
-  #bar-controls{gap:.35em}
-  #bar button{font-size:9.5pt;padding:.3em .65em;min-height:34px}
-  .ui-btn{font-size:10pt;padding:.4em .85em;min-height:36px}
+  #bar{
+    padding:.5em .9em;
+    gap:.4em .8em;
+    flex-wrap:wrap;
+    font-size:10pt;
+  }
+  #bar b{
+    max-width:12em;
+    font-size:11.5pt;
+  }
+  #bar .sub{
+    font-size:9pt;
+  }
+  #bar-controls{
+    gap:.4em;
+  }
+  #bar button{
+    font-size:9.5pt;
+    padding:.3em .7em;
+    min-height:34px;
+  }
+  .ui-btn{
+    font-size:10pt;
+    padding:.4em .9em;
+    min-height:36px;
+  }
 }
 @media screen and (max-width: 32em){
-  #bar b{max-width:7.5em;font-size:10.5pt}
-  #where{display:none}
+  #bar b{
+    max-width:8.5em;
+    font-size:10.5pt;
+  }
+  #where{
+    display:none;
+  }
 }
 
-.qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
-.qa label{display:inline-flex;align-items:center;gap:.28em;cursor:pointer;
-  padding:.08em .45em;border:1px solid #bbb;border-radius:999px;font-size:10pt;
-  background:#fff;line-height:1.5}
-.qa label:hover{background:#eef4ff;border-color:#7aa7e8}
+html.is-result-mode #screen-exam{display:none!important}
+html.is-result-mode #screen-result{display:block!important}
+html.is-result-mode #bar-controls{display:none!important}
+html.is-result-mode #where{display:none!important}
+.qa{display:flex;flex-wrap:wrap;gap:.25em 1.1em;margin:.25em 0 .65em 1.2em}
+.qa label{display:inline-flex;align-items:center;gap:.32em;cursor:pointer;
+  padding:.15em .6em;border:1px solid #cbd5e1;border-radius:9999px;font-size:10pt;
+  background:#ffffff;line-height:1.5;transition:all .15s ease}
+.qa label:hover{background:#eff6ff;border-color:#93c5fd}
 .qa input{margin:0;cursor:pointer}
 .qa input:checked+span{font-weight:700}
-.qa label:has(input:checked){background:#1d4ed8;border-color:#1d4ed8;color:#fff}
-.qa .qid{border:none;background:none;color:#888;font-size:9pt;padding-left:0}
+.qa label:has(input:checked){background:#2563eb;border-color:#2563eb;color:#ffffff;
+  font-weight:700;box-shadow:0 2px 6px rgba(37,99,235,0.25)}
+.qa .qid{border:none;background:none;color:#64748b;font-size:9pt;padding-left:0}
 /* The 例 row is shown, not answerable — its answer is already marked, because
    the announcer says 「解答用紙の問題◯の例のところを見てください」. */
 .qa.ex .mark{display:inline-flex;align-items:center;justify-content:center;
-  min-width:2em;padding:.08em .5em;border:1px solid #bbb;border-radius:999px;
-  font-size:10pt;background:#fff;line-height:1.5;color:#777}
-.qa.ex .mark.on{background:#111;border-color:#111;color:#fff;font-weight:700}
-.opt{display:flex;align-items:flex-start;gap:.5em;margin:.1em 0}
+  min-width:2em;padding:.12em .6em;border:1px solid #cbd5e1;border-radius:9999px;
+  font-size:10pt;background:#ffffff;line-height:1.5;color:#64748b}
+.qa.ex .mark.on{background:#0f172a;border-color:#0f172a;color:#ffffff;font-weight:700}
+.opt{display:flex;align-items:flex-start;gap:.5em;margin:.15em 0}
 .opt .b{flex:0 0 auto;margin-top:.25em}
 #done{font-variant-numeric:tabular-nums}
-#player{position:sticky;top:3.4em;z-index:98;background:#f3f4f6;
-  border-top:1px solid #d1d5db;border-bottom:1px solid #d1d5db;
-  padding:.9em 1em;font-family:var(--ui)}
+#player{position:sticky;top:3.4em;z-index:98;background:#1e293b;color:#ffffff;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  padding:.9em 1.2em;font-family:var(--ui);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
 #player audio{width:100%;height:36px;display:block}
-.pctl{display:flex;flex-wrap:wrap;gap:.5em .8em;align-items:center;
-  margin-top:.7em;font-size:10pt}
-.pctl button,.pctl select{font-size:10pt;padding:.2em .5em;cursor:pointer}
-.pctl .pick{cursor:pointer;color:#1d4ed8;text-decoration:underline}
+.pctl{display:flex;flex-wrap:wrap;gap:.6em .9em;align-items:center;
+  margin-top:.7em;font-size:9.5pt}
+.pctl button,.pctl select{font-size:9.5pt;padding:.25em .65em;cursor:pointer;
+  border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);
+  color:#ffffff;font-family:var(--ui);transition:all .15s ease}
+.pctl button:hover,.pctl select:hover{background:rgba(255,255,255,0.2)}
+.pctl select option{background:#1e293b;color:#ffffff}
+.pctl .pick{cursor:pointer;color:#93c5fd;text-decoration:none;font-weight:700}
+.pctl .pick:hover{text-decoration:underline}
 .pctl .pick input{display:none}
-#player.noaudio{background:#fee2e2}
+#player.noaudio{background:#fef2f2;color:#991b1b;border-color:#fca5a5}
 #player.noaudio::after{content:"聴解.mp3 を読み込めません。「MP3を選ぶ」から指定してください。";
-  display:block;font-size:10pt;color:#991b1b;margin-top:.3em}
-.section-divider{margin:3em 0;border:0;border-top:3px double #333}
-.section-title{font-size:16pt;background:#1e293b;color:#fff;padding:.4em .8em;
-  margin:2em 0 1em;border-radius:4px}
+  display:block;font-size:9.5pt;color:#991b1b;margin-top:.3em}
+.section-divider{margin:3.5em 0;border:0;border-top:2px dashed #cbd5e1}
+.section-title{font-size:15pt;font-weight:800;background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color:#ffffff;padding:.55em 1em;margin:2em 0 1.2em;border-radius:8px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 /* Screen 3 — the result view the sheet switches to on 採点する. Screen 1 is the
    test list served by serve_sheet.py; screen 2 is #screen-exam above. Both reuse
    APP_CSS above, so the three screens share one look. */
@@ -186,76 +459,70 @@ strong { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
    chrome (the gray 問題 bars, the ruled rules) so it matches screen 1. */
 #screen-result h1,#screen-result h2,#screen-result h3{background:none;border:0;
   padding:0;color:var(--ink);font-family:var(--ui)}
-#screen-result h1{font-size:15pt;margin:.2em 0 .6em}
-#screen-result h2{font-size:13pt;margin:1.8em 0 .5em;border-bottom:2px solid #e2e8f0;
-  padding-bottom:.25em}
-#screen-result h3{font-size:11pt;margin:1.2em 0 .3em;color:var(--muted)}
-.rs-nav{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin:2em 0 0;
-  padding-top:1.2em;border-top:1px solid #e2e8f0}
-.rs-head{display:flex;flex-wrap:wrap;gap:1em;align-items:center;padding:1em 1.2em;
-  border-radius:10px;border:2px solid}
-.rs-head.pass{background:#f0fdf4;border-color:#16a34a}
-.rs-head.fail{background:#fef2f2;border-color:#dc2626}
-.rs-verdict{font-size:18pt;font-weight:700}
-.rs-head.pass .rs-verdict{color:#166534}
+#screen-result h1{font-size:16pt;font-weight:900;margin:.2em 0 .6em;color:#0f172a}
+#screen-result h2{font-size:13pt;font-weight:800;margin:2em 0 .6em;border-bottom:2px solid #e2e8f0;
+  padding-bottom:.35em;color:#1e293b}
+#screen-result h3{font-size:11pt;font-weight:700;margin:1.4em 0 .4em;color:var(--muted)}
+.rs-nav{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin:2.5em 0 0;
+  padding-top:1.4em;border-top:1px solid #e2e8f0}
+.rs-head{display:flex;flex-wrap:wrap;gap:1em;align-items:center;padding:1.25em 1.5em;
+  border-radius:10px;border:2px solid;box-shadow:0 2px 10px rgba(0,0,0,0.03)}
+.rs-head.pass{background:#ecfdf5;border-color:#10b981}
+.rs-head.fail{background:#fef2f2;border-color:#ef4444}
+.rs-verdict{font-size:18pt;font-weight:900}
+.rs-head.pass .rs-verdict{color:#065f46}
 .rs-head.fail .rs-verdict{color:#991b1b}
-.rs-score{font-size:24pt;font-weight:700;font-variant-numeric:tabular-nums;margin-left:auto}
-.rs-score small{font-size:11pt;font-weight:400;color:var(--muted)}
-.rs-why{flex-basis:100%;font-size:10.5pt;color:var(--muted);margin:0}
-.rs-saved{font-size:10pt;color:var(--muted);margin:.2em 0 1.2em}
-.rs-saved.ok{color:#15803d;font-weight:700}
-.rs-advice{border-left:4px solid #f59e0b;background:#fffbeb;padding:.7em 1em;
-  margin:.6em 0;font-size:10.5pt}
-.rs-advice b{display:block;margin-bottom:.25em}
-.rs-grid{display:flex;flex-wrap:wrap;gap:.3em;margin:.5em 0 1.2em}
-.rs-check-tools{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;
-  margin:.2em 0 .7em}
-.rs-hint{font-size:10pt;color:var(--muted);margin:0}
-.rs-all-detail{margin:.2em 0 1.4em}
+.rs-score{font-size:26pt;font-weight:900;font-variant-numeric:tabular-nums;margin-left:auto}
+.rs-score small{font-size:11pt;font-weight:500;color:var(--muted)}
+.rs-why{flex-basis:100%;font-size:10.5pt;color:var(--muted);margin:0;line-height:1.6}
+.rs-saved{font-size:9.5pt;color:var(--muted);margin:.3em 0 1.2em}
+.rs-saved.ok{color:#059669;font-weight:700}
+.rs-advice{border-left:4px solid #f59e0b;background:#fffbeb;padding:.8em 1.1em;
+  margin:.8em 0;font-size:10.5pt;border-radius:0 6px 6px 0;line-height:1.6}
+.rs-advice b{display:block;margin-bottom:.3em;color:#92400e}
+.rs-grid{display:flex;flex-wrap:wrap;gap:.35em;margin:.6em 0 1.4em}
+.rs-check-tools{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;
+  margin:.3em 0 .8em}
+.rs-hint{font-size:9.5pt;color:var(--muted);margin:0}
+.rs-all-detail{margin:.3em 0 1.6em}
 .rs-all-detail[hidden]{display:none!important}
-.rs-item{border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;
-  padding:.85em 1.05em;margin:0 0 .7em}
-.rs-detail-meta{display:flex;flex-wrap:wrap;gap:.4em 1.1em;align-items:center;
-  font-size:10.5pt;margin:0 0 .65em}
-.rs-detail-meta .tag{font-weight:700;padding:.1em .45em;border-radius:4px;
+.rs-item{border:1px solid #e2e8f0;border-radius:10px;background:#ffffff;
+  padding:1em 1.2em;margin:0 0 .85em;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
+.rs-detail-meta{display:flex;flex-wrap:wrap;gap:.5em 1.2em;align-items:center;
+  font-size:10.5pt;margin:0 0 .75em}
+.rs-detail-meta .tag{font-weight:700;padding:.15em .55em;border-radius:4px;
   border:1px solid}
-.rs-detail-meta .tag.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
-.rs-detail-meta .tag.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
-.rs-detail-meta .tag.na{background:#fff;border-color:var(--line);color:#64748b}
-.rs-detail-body{background:#fff;border:1px solid #e2e8f0;border-radius:8px;
-  padding:.75em 1em;line-height:1.75;font-size:11pt}
+.rs-detail-meta .tag.ok{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+.rs-detail-meta .tag.ng{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.rs-detail-meta .tag.na{background:#f8fafc;border-color:var(--line);color:#64748b}
+.rs-detail-body{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;
+  padding:.85em 1.1em;line-height:1.75;font-size:10.5pt}
 .rs-detail-body .qa,.rs-detail-body input{display:none!important}
 .rs-detail-body h1,.rs-detail-body h2,.rs-detail-body h3{background:none;border:0;
   padding:0;margin:.35em 0 .45em;font-size:11.5pt;color:var(--ink)}
-.rs-detail-note{font-size:10pt;color:var(--muted);margin:.55em 0 0}
-.rs-group{border:1px solid #cbd5e1;border-radius:10px;background:#eef2f7;
-  padding:.85em 1.05em;margin:0 0 .7em}
-.rs-group-shared{margin:0 0 .7em}
-.rs-group-item{margin:0 0 .5em}
+.rs-detail-note{font-size:9.5pt;color:var(--muted);margin:.65em 0 0}
+.rs-group{border:1px solid #cbd5e1;border-radius:10px;background:#f1f5f9;
+  padding:1em 1.2em;margin:0 0 .85em}
+.rs-group-shared{margin:0 0 .85em}
+.rs-group-item{margin:0 0 .6em}
 .rs-group-item:last-child{margin-bottom:0}
 .rs-script-label{font-size:9.5pt;font-weight:700;color:var(--muted);
-  margin:0 0 .3em;letter-spacing:.02em}
-.rs-script{margin:.6em 0 0;padding:.6em .8em;background:#f8fafc;
-  border:1px solid #e2e8f0;border-radius:8px;font-size:10.5pt;line-height:1.7}
-.rs-script p{margin:.15em 0}
+  margin:0 0 .35em;letter-spacing:.02em}
+.rs-script{margin:.6em 0 0;padding:.75em .95em;background:#ffffff;
+  border:1px solid #e2e8f0;border-radius:8px;font-size:10pt;line-height:1.7}
+.rs-script p{margin:.2em 0}
 @media print{#bar,#player,.rs-nav{display:none}.qa label{border-color:#666}}
-/* On screen the sheet keeps the booklet's centered 60em measure (SCREEN_CSS), so
-   the exam text and the printed booklet render identically — but the measure
-   moves OFF <body> and ONTO the screen wrappers. The bar is the app's chrome and
-   must span the window exactly as it does on screen 1, and a bar inside a
-   centered body cannot. (`width:100vw` was tried and is wrong: 100vw includes
-   the scrollbar, so the bar overflowed and the 採点する button fell off-screen.)
-   All of this is inside @media screen — the A4 @page geometry is untouched. */
 @media screen{
-  body{max-width:none;margin:0;padding:0;background:#eef1f5}
-  #screen-exam,#screen-result{max-width:60em;margin:0 auto;background:#fff;
+  body{max-width:none;margin:0;padding:0;background:#f8fafc}
+  #screen-exam,#screen-result{max-width:62em;margin:1.5em auto 4em;background:#ffffff;
+    border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 4px 16px rgba(0,0,0,0.03);
     padding:2.5em var(--gutter) 6em}
   /* The player is chrome too, so it spans its card and sticks under the bar;
      boot() sets its offset from the bar's measured height. */
   #player{margin:.2em calc(-1 * var(--gutter)) 1em;padding:.9em var(--gutter)}
 }
 @media screen and (max-width:48em){
-  #screen-exam,#screen-result{padding:1.2em var(--gutter) 4em}
+  #screen-exam,#screen-result{padding:1.2em var(--gutter) 4em;margin:0 auto;border-radius:0;border:none}
   .qa{margin:.3em 0 .8em .2em;gap:.4em .6em}
   .qa label{padding:.35em .75em;font-size:11pt;min-height:40px;min-width:40px;
     justify-content:center;box-sizing:border-box;font-weight:500}
@@ -265,18 +532,18 @@ strong { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
   .pctl button,.pctl select,.pctl .pick{min-height:36px;padding:.3em .65em;
     border-radius:6px}
   .pctl select#chap{max-width:100%;flex:1 1 auto}
-  .rs-head{flex-direction:column;align-items:flex-start;gap:.4em;padding:.85em 1em}
-  .rs-score{margin-left:0;font-size:20pt}
+  .rs-head{flex-direction:column;align-items:flex-start;gap:.4em;padding:.9em 1.1em}
+  .rs-score{margin-left:0;font-size:22pt}
   .rs-verdict{font-size:16pt}
   .rs-nav{flex-direction:column;align-items:stretch;gap:.6em}
   .rs-nav .ui-btn{width:100%;text-align:center;justify-content:center}
   .rs-grid{gap:.35em}
-  .rs-item,.rs-group{padding:.7em .85em}
+  .rs-item,.rs-group{padding:.8em .95em}
   .rs-detail-meta{gap:.3em .8em;font-size:10pt}
-  .rs-detail-body{padding:.6em .8em;font-size:10.5pt}
-  .section-title{font-size:14pt;padding:.35em .6em;margin:1.5em 0 .8em}
+  .rs-detail-body{padding:.7em .85em;font-size:10pt}
+  .section-title{font-size:13.5pt;padding:.4em .7em;margin:1.5em 0 .8em}
 }
-</style></head><body><div id="bar"><a class="back" href="/">← テスト一覧</a><b id="bar-title">テスト 20260810_1（受験）</b><span class="sub" id="where"></span><span class="grow"></span><span id="bar-controls"><span class="sub" id="done">解答済み 0 / 101</span> <button onclick="clearAll()">消去</button> <button onclick="save()" class="primary">採点する</button></span></div><div id="screen-exam"><div id="section-gengo"><h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1><h1>【文字・語彙】</h1>
+</style></head><body><div id="bar"><a class="back" href="/">← テスト一覧</a><b id="bar-title">テスト 20260810_1（受験）</b><span class="sub" id="where"></span><span class="grow"></span><span id="bar-controls"><span class="sub" id="done">解答済み 0 / 101</span> <button onclick="clearAll()">消去</button> <button onclick="save()" class="primary">採点する</button></span></div><script>if(document.documentElement.classList.contains("is-result-mode")){document.getElementById("bar-title").textContent="テスト 20260810_1（採点結果）";}</script><div id="screen-exam"><div id="section-gengo"><h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1><h1>【文字・語彙】</h1>
 <h2>問題1</h2>
 <p>＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。</p>
 <p><strong>1</strong> 彼女はその舞台で主役を<strong>演じる</strong>ことになった。<br />
@@ -968,130 +1235,130 @@ strong { font-family: "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
  ]
 };</script></div><h1>日本語能力試験 N2 模擬試験 — 聴解</h1>
 <h1>問題用紙・解答用紙</h1>
-<p><strong>時間: 約50分 問題数: 30問</strong><br />
-このファイルには<strong>スクリプトは入っていません</strong>。音声(ファイル3のスクリプトをTTSで再生)を聞きながら、この用紙だけを見て解答してください。</p>
+<p class="furi"><strong><ruby>時間<rt>じかん</rt></ruby>: <ruby>約<rt>やく</rt></ruby>50<ruby>分<rt>ふん</rt></ruby> <ruby>問題数<rt>もんだいすう</rt></ruby>: 30<ruby>問<rt>もん</rt></ruby></strong><br />
+このファイルには<strong>スクリプトは<ruby>入<rt>はい</rt></ruby>っていません</strong>。<ruby>音声<rt>おんせい</rt></ruby>(ファイル3のスクリプトをTTSで<ruby>再生<rt>さいせい</rt></ruby>)を<ruby>聞<rt>き</rt></ruby>きながら、この<ruby>用紙<rt>ようし</rt></ruby>だけを<ruby>見<rt>み</rt></ruby>て<ruby>解答<rt>かいとう</rt></ruby>してください。</p>
 <hr />
 <h1>【問題】</h1>
 <h2>問題1 課題理解</h2>
-<p>問題1では、まず質問を聞いてください。それから話を聞いて、問題用紙の1から4の中から、最もよいものを一つ選んでください。</p>
-<p><strong>例</strong><br />
- 1. 本人確認書類を郵送する<br />
- 2. 申込書に記入する<br />
- 3. キャッシュカードを受け取る<br />
- 4. 窓口に書類を見せる</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>1では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby>本人<rt>ほんにん</rt></ruby><ruby>確認書<rt>かくにんしょ</rt></ruby><ruby>類<rt>るい</rt></ruby>を<ruby>郵送<rt>ゆうそう</rt></ruby>する<br />
+ 2. <ruby style="min-width:3.50em">申込書<rt>もうしこみしょ</rt></ruby>に<ruby>記入<rt>きにゅう</rt></ruby>する<br />
+ 3. キャッシュカードを<ruby>受け取<rt>うけと</rt></ruby>る<br />
+ 4. <ruby>窓口<rt>まどぐち</rt></ruby>に<ruby>書類<rt>しょるい</rt></ruby>を<ruby>見<rt>み</rt></ruby>せる</p>
 <div class="qa ex"><span class="qid">例</span><span class="mark">1</span><span class="mark on">2</span><span class="mark">3</span><span class="mark">4</span></div>
-<p><strong>1番</strong><br />
- 1. キャンセル料を店で支払う<br />
- 2. 予約番号をメールで確認する<br />
- 3. 店に取消の書類をもらいに行く<br />
- 4. 電話でキャンセルの手続きをする</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. キャンセル<ruby style="min-width:1.50em">料<rt>りょう</rt></ruby>を<ruby>店<rt>みせ</rt></ruby>で<ruby>支払<rt>しはら</rt></ruby>う<br />
+ 2. <ruby>予約番号<rt>よやくばんごう</rt></ruby>をメールで<ruby>確認<rt>かくにん</rt></ruby>する<br />
+ 3. <ruby>店<rt>みせ</rt></ruby>に<ruby>取消<rt>とりけし</rt></ruby>の<ruby>書類<rt>しょるい</rt></ruby>をもらいに<ruby>行<rt>い</rt></ruby>く<br />
+ 4. <ruby>電話<rt>でんわ</rt></ruby>でキャンセルの<ruby>手続<rt>てつづ</rt></ruby>きをする</p>
 <div class="qa"><label><input type="radio" name="q_問1-1" value="1"><span>1</span></label><label><input type="radio" name="q_問1-1" value="2"><span>2</span></label><label><input type="radio" name="q_問1-1" value="3"><span>3</span></label><label><input type="radio" name="q_問1-1" value="4"><span>4</span></label></div>
-<p><strong>2番</strong><br />
- 1. 代金を振り込む<br />
- 2. レシートを受け取る<br />
- 3. 店で品物を受け取る<br />
- 4. 10分待って店に行く</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>代金<rt>だいきん</rt></ruby>を<ruby>振り込<rt>ふりこ</rt></ruby>む<br />
+ 2. レシートを<ruby>受け取<rt>うけと</rt></ruby>る<br />
+ 3. <ruby>店<rt>みせ</rt></ruby>で<ruby>品物<rt>しなもの</rt></ruby>を<ruby>受け取<rt>うけと</rt></ruby>る<br />
+ 4. 10<ruby>分<rt>ふん</rt></ruby><ruby>待<rt>ま</rt></ruby>って<ruby>店<rt>みせ</rt></ruby>に<ruby>行<rt>い</rt></ruby>く</p>
 <div class="qa"><label><input type="radio" name="q_問1-2" value="1"><span>1</span></label><label><input type="radio" name="q_問1-2" value="2"><span>2</span></label><label><input type="radio" name="q_問1-2" value="3"><span>3</span></label><label><input type="radio" name="q_問1-2" value="4"><span>4</span></label></div>
-<p><strong>3番</strong><br />
- 1. 問診票を返送する<br />
- 2. レントゲンを撮る<br />
- 3. 希望の日にちを伝える<br />
- 4. 問診票に記入する</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby style="min-width:3.50em">問診票<rt>もんしんひょう</rt></ruby>を<ruby>返送<rt>へんそう</rt></ruby>する<br />
+ 2. レントゲンを<ruby>撮<rt>と</rt></ruby>る<br />
+ 3. <ruby>希望<rt>きぼう</rt></ruby>の<ruby>日<rt>にち</rt></ruby>にちを<ruby>伝<rt>つた</rt></ruby>える<br />
+ 4. <ruby style="min-width:3.50em">問診票<rt>もんしんひょう</rt></ruby>に<ruby>記入<rt>きにゅう</rt></ruby>する</p>
 <div class="qa"><label><input type="radio" name="q_問1-3" value="1"><span>1</span></label><label><input type="radio" name="q_問1-3" value="2"><span>2</span></label><label><input type="radio" name="q_問1-3" value="3"><span>3</span></label><label><input type="radio" name="q_問1-3" value="4"><span>4</span></label></div>
-<p><strong>4番</strong><br />
- 1. 新しいパスワードを設定する<br />
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby style="min-width:1.50em">新<rt>あたら</rt></ruby>しいパスワードを<ruby>設定<rt>せってい</rt></ruby>する<br />
  2. メールのリンクをクリックする<br />
- 3. 上長に報告する<br />
- 4. 仮パスワードを送信する</p>
+ 3. <ruby style="min-width:3.00em">上長<rt>じょうちょう</rt></ruby>に<ruby>報告<rt>ほうこく</rt></ruby>する<br />
+ 4. <ruby>仮<rt>かり</rt></ruby>パスワードを<ruby>送信<rt>そうしん</rt></ruby>する</p>
 <div class="qa"><label><input type="radio" name="q_問1-4" value="1"><span>1</span></label><label><input type="radio" name="q_問1-4" value="2"><span>2</span></label><label><input type="radio" name="q_問1-4" value="3"><span>3</span></label><label><input type="radio" name="q_問1-4" value="4"><span>4</span></label></div>
-<p><strong>5番</strong><br />
- 1. マイクの位置を確認する<br />
- 2. 台本を読み合わせる<br />
- 3. 名刺を受け取る<br />
- 4. 隣の人とペアになる</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. マイクの<ruby>位置<rt>いち</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>する<br />
+ 2. <ruby>台本<rt>だいほん</rt></ruby>を<ruby>読み合<rt>よみあ</rt></ruby>わせる<br />
+ 3. <ruby>名刺<rt>めいし</rt></ruby>を<ruby>受け取<rt>うけと</rt></ruby>る<br />
+ 4. <ruby style="min-width:1.50em">隣<rt>となり</rt></ruby>の<ruby>人<rt>にん</rt></ruby>とペアになる</p>
 <div class="qa"><label><input type="radio" name="q_問1-5" value="1"><span>1</span></label><label><input type="radio" name="q_問1-5" value="2"><span>2</span></label><label><input type="radio" name="q_問1-5" value="3"><span>3</span></label><label><input type="radio" name="q_問1-5" value="4"><span>4</span></label></div>
 <hr />
 <h2>問題2 ポイント理解</h2>
-<p>問題2では、まず質問を聞いてください。そのあと、問題用紙を見てください。読む時間があります。それから話を聞いて、問題用紙の1から4の中から、最もよいものを一つ選んでください。</p>
-<p><strong>例</strong><br />
- 1. 入園料が安くなること<br />
- 2. 夜行性動物の様子が見られること<br />
- 3. 開園時間が大幅に伸びること<br />
- 4. 屋台の数が増えること</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>2では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。そのあと、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>を<ruby>見<rt>み</rt></ruby>てください。<ruby>読<rt>よ</rt></ruby>む<ruby>時間<rt>じかん</rt></ruby>があります。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby style="min-width:4.00em">入園料<rt>にゅうえんりょう</rt></ruby>が<ruby>安<rt>やす</rt></ruby>くなること<br />
+ 2. <ruby>夜行性<rt>やこうせい</rt></ruby><ruby>動物<rt>どうぶつ</rt></ruby>の<ruby>様子<rt>ようす</rt></ruby>が<ruby>見<rt>み</rt></ruby>られること<br />
+ 3. <ruby>開園<rt>かいえん</rt></ruby><ruby>時間<rt>じかん</rt></ruby>が<ruby>大幅<rt>おおはば</rt></ruby>に<ruby>伸<rt>の</rt></ruby>びること<br />
+ 4. <ruby>屋台<rt>やたい</rt></ruby>の<ruby>数<rt>かず</rt></ruby>が<ruby>増<rt>ふ</rt></ruby>えること</p>
 <div class="qa ex"><span class="qid">例</span><span class="mark">1</span><span class="mark on">2</span><span class="mark">3</span><span class="mark">4</span></div>
-<p><strong>1番</strong><br />
- 1. 人手不足のため<br />
- 2. プロジェクトの評価が悪かったため<br />
- 3. 給与が上がるため<br />
- 4. 新しい事業に関わりたかったため</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>人手不足<rt>ひとでぶそく</rt></ruby>のため<br />
+ 2. プロジェクトの<ruby>評価<rt>ひょうか</rt></ruby>が<ruby>悪<rt>わる</rt></ruby>かったため<br />
+ 3. <ruby>給与<rt>きゅうよ</rt></ruby>が<ruby>上<rt>あ</rt></ruby>がるため<br />
+ 4. <ruby style="min-width:1.50em">新<rt>あたら</rt></ruby>しい<ruby>事業<rt>じぎょう</rt></ruby>に<ruby>関<rt>かか</rt></ruby>わりたかったため</p>
 <div class="qa"><label><input type="radio" name="q_問2-1" value="1"><span>1</span></label><label><input type="radio" name="q_問2-1" value="2"><span>2</span></label><label><input type="radio" name="q_問2-1" value="3"><span>3</span></label><label><input type="radio" name="q_問2-1" value="4"><span>4</span></label></div>
-<p><strong>2番</strong><br />
- 1. 手数料が一番安いこと<br />
- 2. 郵送なら自宅に届くこと<br />
- 3. 待たずにすぐ受け取れること<br />
- 4. マイナンバーカードが不要なこと</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>手数料<rt>てすうりょう</rt></ruby>が<ruby>一番<rt>いちばん</rt></ruby><ruby>安<rt>やす</rt></ruby>いこと<br />
+ 2. <ruby>郵送<rt>ゆうそう</rt></ruby>なら<ruby>自宅<rt>じたく</rt></ruby>に<ruby>届<rt>とど</rt></ruby>くこと<br />
+ 3. <ruby>待<rt>ま</rt></ruby>たずにすぐ<ruby>受け取<rt>うけと</rt></ruby>れること<br />
+ 4. マイナンバーカードが<ruby>不要<rt>ふよう</rt></ruby>なこと</p>
 <div class="qa"><label><input type="radio" name="q_問2-2" value="1"><span>1</span></label><label><input type="radio" name="q_問2-2" value="2"><span>2</span></label><label><input type="radio" name="q_問2-2" value="3"><span>3</span></label><label><input type="radio" name="q_問2-2" value="4"><span>4</span></label></div>
-<p><strong>3番</strong><br />
- 1. 対局に勝つこと<br />
- 2. 準備の手間がかからないこと<br />
- 3. 一人でも練習できること<br />
- 4. 相手との駆け引きを楽しめること</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby style="min-width:2.50em">対局<rt>たいきょく</rt></ruby>に<ruby>勝<rt>か</rt></ruby>つこと<br />
+ 2. <ruby>準備<rt>じゅんび</rt></ruby>の<ruby>手間<rt>てま</rt></ruby>がかからないこと<br />
+ 3. <ruby>一人<rt>ひとり</rt></ruby>でも<ruby style="min-width:2.50em">練習<rt>れんしゅう</rt></ruby>できること<br />
+ 4. <ruby>相手<rt>あいて</rt></ruby>との<ruby>駆け引<rt>かけひ</rt></ruby>きを<ruby>楽<rt>たの</rt></ruby>しめること</p>
 <div class="qa"><label><input type="radio" name="q_問2-3" value="1"><span>1</span></label><label><input type="radio" name="q_問2-3" value="2"><span>2</span></label><label><input type="radio" name="q_問2-3" value="3"><span>3</span></label><label><input type="radio" name="q_問2-3" value="4"><span>4</span></label></div>
-<p><strong>4番</strong><br />
- 1. 駅からの距離<br />
- 2. 契約前にかかる費用の総額<br />
- 3. 家賃の安さ<br />
- 4. 保証会社を利用できるかどうか</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>駅<rt>えき</rt></ruby>からの<ruby>距離<rt>きょり</rt></ruby><br />
+ 2. <ruby>契約<rt>けいやく</rt></ruby><ruby>前<rt>まえ</rt></ruby>にかかる<ruby>費用<rt>ひよう</rt></ruby>の<ruby>総額<rt>そうがく</rt></ruby><br />
+ 3. <ruby>家賃<rt>やちん</rt></ruby>の<ruby>安<rt>やす</rt></ruby>さ<br />
+ 4. <ruby>保証<rt>ほしょう</rt></ruby><ruby>会社<rt>かいしゃ</rt></ruby>を<ruby>利用<rt>りよう</rt></ruby>できるかどうか</p>
 <div class="qa"><label><input type="radio" name="q_問2-4" value="1"><span>1</span></label><label><input type="radio" name="q_問2-4" value="2"><span>2</span></label><label><input type="radio" name="q_問2-4" value="3"><span>3</span></label><label><input type="radio" name="q_問2-4" value="4"><span>4</span></label></div>
-<p><strong>5番</strong><br />
- 1. レシートの日付が期限内かどうか<br />
- 2. 用紙のフォーマット<br />
- 3. 金額の入力ミス<br />
- 4. 交通費と他の経費を分けること</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. レシートの<ruby>日付<rt>ひづけ</rt></ruby>が<ruby>期限<rt>きげん</rt></ruby><ruby>内<rt>ない</rt></ruby>かどうか<br />
+ 2. <ruby>用紙<rt>ようし</rt></ruby>のフォーマット<br />
+ 3. <ruby>金額<rt>きんがく</rt></ruby>の<ruby style="min-width:3.00em">入力<rt>にゅうりょく</rt></ruby>ミス<br />
+ 4. <ruby>交通費<rt>こうつうひ</rt></ruby>と<ruby>他<rt>ほか</rt></ruby>の<ruby>経費<rt>けいひ</rt></ruby>を<ruby>分<rt>わ</rt></ruby>けること</p>
 <div class="qa"><label><input type="radio" name="q_問2-5" value="1"><span>1</span></label><label><input type="radio" name="q_問2-5" value="2"><span>2</span></label><label><input type="radio" name="q_問2-5" value="3"><span>3</span></label><label><input type="radio" name="q_問2-5" value="4"><span>4</span></label></div>
-<p><strong>6番</strong><br />
- 1. 当店の在庫状況<br />
- 2. 支払い方法<br />
- 3. 出版社に在庫があるかどうか<br />
- 4. 増刷にかかる期間</p>
+<p class="furi"><strong>6<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>当店<rt>とうてん</rt></ruby>の<ruby>在庫<rt>ざいこ</rt></ruby><ruby style="min-width:3.00em">状況<rt>じょうきょう</rt></ruby><br />
+ 2. <ruby>支払<rt>しはら</rt></ruby>い<ruby>方法<rt>ほうほう</rt></ruby><br />
+ 3. <ruby style="min-width:3.50em">出版社<rt>しゅっぱんしゃ</rt></ruby>に<ruby>在庫<rt>ざいこ</rt></ruby>があるかどうか<br />
+ 4. <ruby>増刷<rt>ぞうさつ</rt></ruby>にかかる<ruby>期間<rt>きかん</rt></ruby></p>
 <div class="qa"><label><input type="radio" name="q_問2-6" value="1"><span>1</span></label><label><input type="radio" name="q_問2-6" value="2"><span>2</span></label><label><input type="radio" name="q_問2-6" value="3"><span>3</span></label><label><input type="radio" name="q_問2-6" value="4"><span>4</span></label></div>
 <hr />
 <h2>問題3 概要理解</h2>
-<p>問題3では、問題用紙に何も印刷されていません。この問題は、全体としてどんな内容かを聞く問題です。話の前に質問はありません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>3では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。この<ruby>問題<rt>もんだい</rt></ruby>は、<ruby>全体<rt>ぜんたい</rt></ruby>としてどんな<ruby>内容<rt>ないよう</rt></ruby>かを<ruby>聞<rt>き</rt></ruby>く<ruby>問題<rt>もんだい</rt></ruby>です。<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<ruby>質問<rt>しつもん</rt></ruby>はありません。まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>質問<rt>しつもん</rt></ruby>とせんたくしを<ruby>聞<rt>き</rt></ruby>いて、1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
 <div class="qa ex"><span class="qid">例</span><span class="mark">1</span><span class="mark on">2</span><span class="mark">3</span><span class="mark">4</span></div>
-<p><strong>1番</strong> <div class="qa"><label><input type="radio" name="q_問3-1" value="1"><span>1</span></label><label><input type="radio" name="q_問3-1" value="2"><span>2</span></label><label><input type="radio" name="q_問3-1" value="3"><span>3</span></label><label><input type="radio" name="q_問3-1" value="4"><span>4</span></label></div><br />
-<strong>2番</strong> <div class="qa"><label><input type="radio" name="q_問3-2" value="1"><span>1</span></label><label><input type="radio" name="q_問3-2" value="2"><span>2</span></label><label><input type="radio" name="q_問3-2" value="3"><span>3</span></label><label><input type="radio" name="q_問3-2" value="4"><span>4</span></label></div><br />
-<strong>3番</strong> <div class="qa"><label><input type="radio" name="q_問3-3" value="1"><span>1</span></label><label><input type="radio" name="q_問3-3" value="2"><span>2</span></label><label><input type="radio" name="q_問3-3" value="3"><span>3</span></label><label><input type="radio" name="q_問3-3" value="4"><span>4</span></label></div><br />
-<strong>4番</strong> <div class="qa"><label><input type="radio" name="q_問3-4" value="1"><span>1</span></label><label><input type="radio" name="q_問3-4" value="2"><span>2</span></label><label><input type="radio" name="q_問3-4" value="3"><span>3</span></label><label><input type="radio" name="q_問3-4" value="4"><span>4</span></label></div><br />
-<strong>5番</strong> <div class="qa"><label><input type="radio" name="q_問3-5" value="1"><span>1</span></label><label><input type="radio" name="q_問3-5" value="2"><span>2</span></label><label><input type="radio" name="q_問3-5" value="3"><span>3</span></label><label><input type="radio" name="q_問3-5" value="4"><span>4</span></label></div></p>
-<p>(メモ欄)</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問3-1" value="1"><span>1</span></label><label><input type="radio" name="q_問3-1" value="2"><span>2</span></label><label><input type="radio" name="q_問3-1" value="3"><span>3</span></label><label><input type="radio" name="q_問3-1" value="4"><span>4</span></label></div><br />
+<strong>2<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問3-2" value="1"><span>1</span></label><label><input type="radio" name="q_問3-2" value="2"><span>2</span></label><label><input type="radio" name="q_問3-2" value="3"><span>3</span></label><label><input type="radio" name="q_問3-2" value="4"><span>4</span></label></div><br />
+<strong>3<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問3-3" value="1"><span>1</span></label><label><input type="radio" name="q_問3-3" value="2"><span>2</span></label><label><input type="radio" name="q_問3-3" value="3"><span>3</span></label><label><input type="radio" name="q_問3-3" value="4"><span>4</span></label></div><br />
+<strong>4<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問3-4" value="1"><span>1</span></label><label><input type="radio" name="q_問3-4" value="2"><span>2</span></label><label><input type="radio" name="q_問3-4" value="3"><span>3</span></label><label><input type="radio" name="q_問3-4" value="4"><span>4</span></label></div><br />
+<strong>5<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問3-5" value="1"><span>1</span></label><label><input type="radio" name="q_問3-5" value="2"><span>2</span></label><label><input type="radio" name="q_問3-5" value="3"><span>3</span></label><label><input type="radio" name="q_問3-5" value="4"><span>4</span></label></div></p>
+<p class="furi">(メモ<ruby>欄<rt>らん</rt></ruby>)</p>
 <hr />
 <h2>問題4 即時応答</h2>
-<p>問題4では、問題用紙に何も印刷されていません。まず文を聞いてください。それから、それに対する返事を聞いて、1から3の中から、最もよいものを一つ選んでください。</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>4では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby>文<rt>ぶん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、それに<ruby>対<rt>たい</rt></ruby>する<ruby>返事<rt>へんじ</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、1から3の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
 <div class="qa ex"><span class="qid">例</span><span class="mark on">1</span><span class="mark">2</span><span class="mark">3</span></div>
-<p><strong>1番</strong> <div class="qa"><label><input type="radio" name="q_問4-1" value="1"><span>1</span></label><label><input type="radio" name="q_問4-1" value="2"><span>2</span></label><label><input type="radio" name="q_問4-1" value="3"><span>3</span></label></div><br />
-<strong>2番</strong> <div class="qa"><label><input type="radio" name="q_問4-2" value="1"><span>1</span></label><label><input type="radio" name="q_問4-2" value="2"><span>2</span></label><label><input type="radio" name="q_問4-2" value="3"><span>3</span></label></div><br />
-<strong>3番</strong> <div class="qa"><label><input type="radio" name="q_問4-3" value="1"><span>1</span></label><label><input type="radio" name="q_問4-3" value="2"><span>2</span></label><label><input type="radio" name="q_問4-3" value="3"><span>3</span></label></div><br />
-<strong>4番</strong> <div class="qa"><label><input type="radio" name="q_問4-4" value="1"><span>1</span></label><label><input type="radio" name="q_問4-4" value="2"><span>2</span></label><label><input type="radio" name="q_問4-4" value="3"><span>3</span></label></div><br />
-<strong>5番</strong> <div class="qa"><label><input type="radio" name="q_問4-5" value="1"><span>1</span></label><label><input type="radio" name="q_問4-5" value="2"><span>2</span></label><label><input type="radio" name="q_問4-5" value="3"><span>3</span></label></div><br />
-<strong>6番</strong> <div class="qa"><label><input type="radio" name="q_問4-6" value="1"><span>1</span></label><label><input type="radio" name="q_問4-6" value="2"><span>2</span></label><label><input type="radio" name="q_問4-6" value="3"><span>3</span></label></div><br />
-<strong>7番</strong> <div class="qa"><label><input type="radio" name="q_問4-7" value="1"><span>1</span></label><label><input type="radio" name="q_問4-7" value="2"><span>2</span></label><label><input type="radio" name="q_問4-7" value="3"><span>3</span></label></div><br />
-<strong>8番</strong> <div class="qa"><label><input type="radio" name="q_問4-8" value="1"><span>1</span></label><label><input type="radio" name="q_問4-8" value="2"><span>2</span></label><label><input type="radio" name="q_問4-8" value="3"><span>3</span></label></div><br />
-<strong>9番</strong> <div class="qa"><label><input type="radio" name="q_問4-9" value="1"><span>1</span></label><label><input type="radio" name="q_問4-9" value="2"><span>2</span></label><label><input type="radio" name="q_問4-9" value="3"><span>3</span></label></div><br />
-<strong>10番</strong> <div class="qa"><label><input type="radio" name="q_問4-10" value="1"><span>1</span></label><label><input type="radio" name="q_問4-10" value="2"><span>2</span></label><label><input type="radio" name="q_問4-10" value="3"><span>3</span></label></div><br />
-<strong>11番</strong> <div class="qa"><label><input type="radio" name="q_問4-11" value="1"><span>1</span></label><label><input type="radio" name="q_問4-11" value="2"><span>2</span></label><label><input type="radio" name="q_問4-11" value="3"><span>3</span></label></div></p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-1" value="1"><span>1</span></label><label><input type="radio" name="q_問4-1" value="2"><span>2</span></label><label><input type="radio" name="q_問4-1" value="3"><span>3</span></label></div><br />
+<strong>2<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-2" value="1"><span>1</span></label><label><input type="radio" name="q_問4-2" value="2"><span>2</span></label><label><input type="radio" name="q_問4-2" value="3"><span>3</span></label></div><br />
+<strong>3<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-3" value="1"><span>1</span></label><label><input type="radio" name="q_問4-3" value="2"><span>2</span></label><label><input type="radio" name="q_問4-3" value="3"><span>3</span></label></div><br />
+<strong>4<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-4" value="1"><span>1</span></label><label><input type="radio" name="q_問4-4" value="2"><span>2</span></label><label><input type="radio" name="q_問4-4" value="3"><span>3</span></label></div><br />
+<strong>5<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-5" value="1"><span>1</span></label><label><input type="radio" name="q_問4-5" value="2"><span>2</span></label><label><input type="radio" name="q_問4-5" value="3"><span>3</span></label></div><br />
+<strong>6<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-6" value="1"><span>1</span></label><label><input type="radio" name="q_問4-6" value="2"><span>2</span></label><label><input type="radio" name="q_問4-6" value="3"><span>3</span></label></div><br />
+<strong>7<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-7" value="1"><span>1</span></label><label><input type="radio" name="q_問4-7" value="2"><span>2</span></label><label><input type="radio" name="q_問4-7" value="3"><span>3</span></label></div><br />
+<strong>8<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-8" value="1"><span>1</span></label><label><input type="radio" name="q_問4-8" value="2"><span>2</span></label><label><input type="radio" name="q_問4-8" value="3"><span>3</span></label></div><br />
+<strong>9<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-9" value="1"><span>1</span></label><label><input type="radio" name="q_問4-9" value="2"><span>2</span></label><label><input type="radio" name="q_問4-9" value="3"><span>3</span></label></div><br />
+<strong>10<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-10" value="1"><span>1</span></label><label><input type="radio" name="q_問4-10" value="2"><span>2</span></label><label><input type="radio" name="q_問4-10" value="3"><span>3</span></label></div><br />
+<strong>11<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問4-11" value="1"><span>1</span></label><label><input type="radio" name="q_問4-11" value="2"><span>2</span></label><label><input type="radio" name="q_問4-11" value="3"><span>3</span></label></div></p>
 <hr />
 <h2>問題5 統合理解</h2>
-<p>問題5では、長めの話を聞きます。この問題には練習はありません。問題用紙にメモをとってもかまいません。</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>5では、<ruby>長<rt>なが</rt></ruby>めの<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>きます。この<ruby>問題<rt>もんだい</rt></ruby>には<ruby style="min-width:2.50em">練習<rt>れんしゅう</rt></ruby>はありません。<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>にメモをとってもかまいません。</p>
 <h2>1番</h2>
-<p>問題用紙に何も印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。</p>
-<p><strong>1番</strong> <div class="qa"><label><input type="radio" name="q_問5-1" value="1"><span>1</span></label><label><input type="radio" name="q_問5-1" value="2"><span>2</span></label><label><input type="radio" name="q_問5-1" value="3"><span>3</span></label><label><input type="radio" name="q_問5-1" value="4"><span>4</span></label></div></p>
-<p>(メモ欄)</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>質問<rt>しつもん</rt></ruby>とせんたくしを<ruby>聞<rt>き</rt></ruby>いて、1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> <div class="qa"><label><input type="radio" name="q_問5-1" value="1"><span>1</span></label><label><input type="radio" name="q_問5-1" value="2"><span>2</span></label><label><input type="radio" name="q_問5-1" value="3"><span>3</span></label><label><input type="radio" name="q_問5-1" value="4"><span>4</span></label></div></p>
+<p class="furi">(メモ<ruby>欄<rt>らん</rt></ruby>)</p>
 <h2>2番</h2>
-<p>問題用紙に何も印刷されていません。まず話を聞いてください。それから、二つの質問とせんたくしを聞いて、それぞれ1から4の中から、最もよいものを一つ選んでください。</p>
-<p><strong>質問1</strong> <div class="qa"><label><input type="radio" name="q_問5-2-1" value="1"><span>1</span></label><label><input type="radio" name="q_問5-2-1" value="2"><span>2</span></label><label><input type="radio" name="q_問5-2-1" value="3"><span>3</span></label><label><input type="radio" name="q_問5-2-1" value="4"><span>4</span></label></div><br />
-<strong>質問2</strong> <div class="qa"><label><input type="radio" name="q_問5-2-2" value="1"><span>1</span></label><label><input type="radio" name="q_問5-2-2" value="2"><span>2</span></label><label><input type="radio" name="q_問5-2-2" value="3"><span>3</span></label><label><input type="radio" name="q_問5-2-2" value="4"><span>4</span></label></div></p>
-<p>(メモ欄)</p>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>二<rt>ふた</rt></ruby>つの<ruby>質問<rt>しつもん</rt></ruby>とせんたくしを<ruby>聞<rt>き</rt></ruby>いて、それぞれ1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>質問<rt>しつもん</rt></ruby>1</strong> <div class="qa"><label><input type="radio" name="q_問5-2-1" value="1"><span>1</span></label><label><input type="radio" name="q_問5-2-1" value="2"><span>2</span></label><label><input type="radio" name="q_問5-2-1" value="3"><span>3</span></label><label><input type="radio" name="q_問5-2-1" value="4"><span>4</span></label></div><br />
+<strong><ruby>質問<rt>しつもん</rt></ruby>2</strong> <div class="qa"><label><input type="radio" name="q_問5-2-2" value="1"><span>1</span></label><label><input type="radio" name="q_問5-2-2" value="2"><span>2</span></label><label><input type="radio" name="q_問5-2-2" value="3"><span>3</span></label><label><input type="radio" name="q_問5-2-2" value="4"><span>4</span></label></div></p>
+<p class="furi">(メモ<ruby>欄<rt>らん</rt></ruby>)</p>
 <!-- KEY --></div></div><div id="screen-result"></div><script>
 const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "問1-1", "問1-2", "問1-3", "問1-4", "問1-5", "問2-1", "問2-2", "問2-3", "問2-4", "問2-5", "問2-6", "問3-1", "問3-2", "問3-3", "問3-4", "問3-5", "問4-1", "問4-2", "問4-3", "問4-4", "問4-5", "問4-6", "問4-7", "問4-8", "問4-9", "問4-10", "問4-11", "問5-1", "問5-2-1", "問5-2-2"], TESTID = "20260810_1";
 const GENGO_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71"], CHOUKAI_KEYS = ["問1-1", "問1-2", "問1-3", "問1-4", "問1-5", "問2-1", "問2-2", "問2-3", "問2-4", "問2-5", "問2-6", "問3-1", "問3-2", "問3-3", "問3-4", "問3-5", "問4-1", "問4-2", "問4-3", "問4-4", "問4-5", "問4-6", "問4-7", "問4-8", "問4-9", "問4-10", "問4-11", "問5-1", "問5-2-1", "問5-2-2"];
@@ -1699,6 +1966,7 @@ function resultHtml(res, msg, saved){
   L.push('<div class="rs-nav">'
     + '<button class="ui-btn primary" onclick="goList()">← テスト一覧へ戻る</button>'
     + '<button class="ui-btn" onclick="showScreen(\'exam\')">解答に戻ってやり直す</button>'
+    + '<button class="ui-btn" onclick="location.href=\'模範解答.html\'">模範解答・解説</button>'
     + (STORAGE === 'local'
         ? '<button class="ui-btn" onclick="downloadCurrent()">採点結果を保存（JSON）</button>'
         : '')
@@ -1711,7 +1979,8 @@ function goList(){ location.href = LIST_HREF; }
 
 function showScreen(name){
   const exam = name === 'exam';
-  document.getElementById('screen-exam').style.display = exam ? '' : 'none';
+  document.documentElement.classList.remove('is-result-mode');
+  document.getElementById('screen-exam').style.display = exam ? 'block' : 'none';
   document.getElementById('screen-result').style.display = exam ? 'none' : 'block';
   // The bar itself never goes away — it is the same chrome on all three screens.
   // Only the solving controls (counter, 消去, 採点する) belong to screen 2.
@@ -1813,11 +2082,18 @@ async function boot(){
   fitPlayer();
   initSpy();
   window.addEventListener('resize', fitPlayer);
-  await restore();
-  // The test list links here with ?screen=result to reopen a saved result.
-  if (location.search.indexOf('screen=result') !== -1){
+  const isResult = location.search.indexOf('screen=result') !== -1;
+  if (isResult){
+    showScreen('result');
     const saved = await STORE.loadResult();
-    if (saved) showResult(saved, '保存済みの採点結果です。', true);
+    if (saved) {
+      showResult(saved, '保存済みの採点結果です。', true);
+    } else {
+      await restore();
+      showScreen('exam');
+    }
+  } else {
+    await restore();
   }
 }
 

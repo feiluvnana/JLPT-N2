@@ -162,6 +162,7 @@ def add_choukai_furigana(md_content: str) -> str:
         '番': '<ruby>番<rt>ばん</rt></ruby>',
     }
 
+    rad = re.compile(r'<div class="qa')
     out_lines = []
     in_answer_key = False
     for line in md_content.splitlines():
@@ -169,6 +170,25 @@ def add_choukai_furigana(md_content: str) -> str:
             in_answer_key = True
         if in_answer_key or line.startswith('#') or line.startswith('|') or '---' in line or '<ruby>' in line:
             out_lines.append(line)
+            continue
+
+        # 解答.html's injected radio groups are HTML, never prose: the `問` in
+        # `name="q_問3-1"` would be rewritten to <ruby>問<rt>もん</rt></ruby> here
+        # and by fit_ruby, breaking the attribute (nested quotes) and making the
+        # grader's querySelector('input[name="q_…"]') miss the group. Rubify the
+        # leading markdown part of a mixed line, leave the group untouched.
+        if rad.search(line):
+            head, sep, tail = line.partition('<div class="qa')
+            if not head:
+                out_lines.append(line)
+            else:
+                res = kks.convert(head)
+                head_out = ''
+                for item in res:
+                    orig, hira = item['orig'], item['hira']
+                    head_out += overrides[orig] if orig in overrides \
+                        else token_to_ruby(orig, hira)
+                out_lines.append(head_out + sep + tail)
             continue
 
         res = kks.convert(line)

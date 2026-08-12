@@ -40,53 +40,94 @@ SHEET = "解答.html"
 INDEX_CSS = """
 *{box-sizing:border-box}
 body{margin:0;background:#f8fafc;color:var(--ink);font-family:var(--ui)}
+header.app-header{
+  background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color:#fff;
+  padding:1.6rem 1.4rem 1.8rem;
+  box-shadow:0 4px 14px rgba(0,0,0,0.06);
+}
+.header-inner{
+  max-width:82em;
+  margin:0 auto;
+}
+.header-top-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  margin-bottom:0.65rem;
+  flex-wrap:wrap;
+}
+.header-badge{
+  display:inline-block;
+  background:rgba(255,255,255,0.12);
+  color:#93c5fd;
+  font-size:0.8rem;
+  font-weight:700;
+  padding:0.25rem 0.75rem;
+  border-radius:9999px;
+  letter-spacing:0.04em;
+}
+h1.title{
+  font-size:1.75rem;
+  font-weight:900;
+  margin:0 0 0.35rem;
+  color:#ffffff;
+}
+.subtitle{
+  color:#94a3b8;
+  font-size:0.92rem;
+}
 /* Wider than exam/result (60em): cards with many action buttons need the room. */
-main{max-width:80em;margin:0 auto;padding:1.4em 1.2em 4em}
-.lede{margin:0 0 1.4em;font-size:10.5pt;color:var(--muted)}
+main{max-width:82em;margin:0 auto;padding:1.8em 1.5em 5em}
+.lede{margin:0 0 1.6em;font-size:10.5pt;color:var(--muted);line-height:1.6}
 /* Equal card height. Meter uses display:contents so the track shares a row with
    the status chip (left-aligned); the lbl sits on the row under the track —
    flex + align-items:center was optically centering the whole meter block and
    made the bar look offset from the chip. */
-.card{display:grid;grid-template-columns:20em auto minmax(12em,1fr) auto auto;
+.card{display:grid;grid-template-columns:16em auto minmax(9em,1fr) auto auto;
   grid-template-rows:1fr auto;column-gap:1em;row-gap:.2em;align-items:center;
-  background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.55em 1.2em;
-  margin-bottom:.9em;box-sizing:border-box;height:5.1em;min-height:5.1em;
-  max-height:5.1em;overflow:hidden}
-.card h2{grid-column:1;grid-row:1/-1;margin:0;font-size:13pt;min-width:0;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;align-self:center}
+  background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.65em 1.2em;
+  margin-bottom:1em;box-sizing:border-box;height:5.4em;min-height:5.4em;
+  max-height:5.4em;overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,0,0,0.03);
+  transition:all .18s ease}
+.card:hover{border-color:#cbd5e1;box-shadow:0 4px 14px rgba(0,0,0,0.06)}
+.card h2{grid-column:1;grid-row:1/-1;margin:0;font-size:13pt;font-weight:800;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;align-self:center;color:#0f172a}
 .card .origin{grid-column:2;grid-row:1/-1;align-self:center}
 .card .meter{display:contents}
 .card .meter .track{grid-column:3;grid-row:1;align-self:center;width:100%;min-width:0}
 .card .meter .lbl{grid-column:3;grid-row:2;text-align:left;margin:0;line-height:1.2;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9.5pt}
 .card .status{grid-column:4;grid-row:1/-1;align-self:center}
-.acts{grid-column:5;grid-row:1/-1;display:flex;flex-wrap:nowrap;gap:.4em;
+.acts{grid-column:5;grid-row:1/-1;display:flex;flex-wrap:nowrap;gap:.5em;
   align-self:center}
-.acts .ui-btn{padding:.35em .75em;font-size:10.5pt;white-space:nowrap}
-.empty{background:#fff;border:1px dashed var(--line);border-radius:10px;padding:2em;
+.acts .ui-btn{padding:.4em .85em;font-size:10pt;white-space:nowrap}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:10px;padding:3em 2em;
   text-align:center;color:var(--muted)}
-code{background:#f1f5f9;padding:.1em .4em;border-radius:4px;font-size:10pt}
+code{background:#f1f5f9;padding:.15em .45em;border-radius:4px;font-size:9.5pt;border:1px solid #e2e8f0}
 .badge.origin-imp{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd}
 .badge.origin-gen{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
 /* Pages-only: localStorage is the only copy of your answers, so the list owns
    the way to get them off this browser and back onto another one. */
-.tools{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;margin:0 0 1.4em}
-.tools .note{font-size:10pt;color:var(--muted)}
+.tools{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin:0 0 1.6em}
+.tools .note{font-size:9.5pt;color:var(--muted)}
 .tools input[type=file]{display:none}
 @media screen and (max-width: 54em){
-  main{padding:1em .8em 3em}
+  main{padding:1.2em 1em 4em}
   .card{grid-template-columns:1fr auto;grid-template-rows:auto auto auto auto auto;
-    column-gap:.6em;row-gap:.4em;height:auto;min-height:auto;max-height:none;
-    padding:.85em 1em;overflow:visible}
-  .card h2{grid-column:1;grid-row:1;font-size:12pt;white-space:normal;overflow:visible}
+    column-gap:.8em;row-gap:.45em;height:auto;min-height:auto;max-height:none;
+    padding:1em 1.1em;overflow:visible}
+  .card h2{grid-column:1;grid-row:1;font-size:12.5pt;white-space:normal;overflow:visible}
   .card .origin{grid-column:2;grid-row:1;justify-self:end}
   .card .status{grid-column:1 / -1;grid-row:2;justify-self:start}
   .card .meter .track{grid-column:1 / -1;grid-row:3}
   .card .meter .lbl{grid-column:1 / -1;grid-row:4}
   .acts{grid-column:1 / -1;grid-row:5;justify-self:start;flex-wrap:wrap;
-    margin-top:.2em;width:100%}
-  .acts .ui-btn{padding:.4em .85em;font-size:10pt;min-height:36px}
-  .tools{gap:.6em}
+    margin-top:.4em;width:100%}
+  .acts .ui-btn{padding:.45em .9em;font-size:10pt;min-height:38px}
+  .tools{gap:.7em}
   .tools .ui-btn{width:100%;justify-content:center}
 }
 """
@@ -124,6 +165,7 @@ function localTests(){
     return {
       id: t.id, origin: t.origin, total: TOTAL,
       has_sheet: t.has_sheet, has_audio: t.has_audio,
+      has_explanation: t.has_explanation,
       answered: countAnswered(window.JLPTStore.answers(t.id)),
       result: summary ? {
         passed: !!summary.passed,
@@ -146,6 +188,11 @@ function sheetHref(id){
   // Pages is served from a repo subpath (/<repo>/), so every link is relative.
   var base = MODE === 'local' ? 'tests/' : '/tests/';
   return base + encodeURIComponent(id) + '/' + encodeURIComponent(SHEET);
+}
+
+function explanationHref(id){
+  var base = MODE === 'local' ? 'tests/' : '/tests/';
+  return base + encodeURIComponent(id) + '/模範解答.html';
 }
 
 /* ------------------------------------------------------------------- the cards */
@@ -174,7 +221,7 @@ function badgeHtml(t){
 }
 
 function cardHtml(t){
-  var id = esc(t.id), base = sheetHref(t.id), acts = [];
+  var id = esc(t.id), base = sheetHref(t.id), expHref = explanationHref(t.id), acts = [];
   if (!t.has_sheet){
     acts.push('<a class="ui-btn" href="#" onclick="return false" '
             + 'title="make sheet ' + id + ' を実行">受験する</a>');
@@ -186,6 +233,9 @@ function cardHtml(t){
   } else {
     acts.push('<a class="ui-btn primary" href="' + base + '">'
             + (t.answered ? '続きから' : '受験する') + '</a>');
+  }
+  if (t.has_explanation){
+    acts.push('<a class="ui-btn" href="' + expHref + '">解説を見る</a>');
   }
   // Clear progress whenever either store holds something — graded or mid-exam.
   if (t.result || t.answered){
@@ -341,9 +391,15 @@ def index_html(mode: str = "server", tests: list | None = None) -> str:
         '<title>JLPT N2 模擬試験 — テスト一覧</title>'
         f'<style>{app_style.APP_CSS}{INDEX_CSS}</style></head><body>'
         f'<script>window.LIST_MODE = "{mode}";</script>{boot}'
-        # The same #bar as screens 2 and 3, from the same stylesheet.
-        '<div id="bar"><b>JLPT N2 模擬試験</b><span class="grow"></span>'
-        '<span class="sub" id="counts">読み込み中…</span></div>'
+        '<header class="app-header">'
+        '<div class="header-inner">'
+        '<div class="header-top-row">'
+        '<span class="header-badge">JLPT N2 MOCK EXAM PORTAL</span>'
+        '<span class="sub" id="counts" style="color:#94a3b8;font-size:0.85rem;font-variant-numeric:tabular-nums;">読み込み中…</span>'
+        '</div>'
+        '<h1 class="title">日本語能力試験 N2 模擬試験</h1>'
+        '<div class="subtitle">公式過去問アーカイブ ＆ 精選模擬試験プラットフォーム ｜ 全問詳細解説付き</div>'
+        '</div></header>'
         f'<main><p class="lede">{LEDE_LOCAL if local else LEDE_SERVER}</p>'
         f'{TOOLS_LOCAL if local else ""}'
         '<div id="cards"></div></main>'

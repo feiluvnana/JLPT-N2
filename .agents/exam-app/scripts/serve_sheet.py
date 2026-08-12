@@ -35,6 +35,7 @@ TESTS = ROOT / "tests"
 # uses — imported, never copied. See index_view.py (and app_style.py, which it
 # imports for the chrome shared with screens 2 and 3).
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import app_style   # noqa: E402
 import index_view  # noqa: E402
 
 # 71 言語知識・読解 + 30 聴解. `make check` asserts 解答.html carries exactly this
@@ -108,6 +109,7 @@ def progress_of(d: Path) -> dict:
         "total": QUESTION_COUNT,
         "has_sheet": (d / SHEET).is_file(),
         "has_audio": (d / "聴解.mp3").is_file(),
+        "has_explanation": (d / "模範解答.html").is_file(),
         "result": result,
     }
 
@@ -125,6 +127,9 @@ def all_tests() -> list[dict]:
 # static GitHub Pages build renders. Here it is fed by GET /api/tests below
 # (the disk), there by localStorage; nothing else differs.
 def index_html() -> str:
+    import importlib
+    importlib.reload(app_style)
+    importlib.reload(index_view)
     return index_view.index_html("server")
 
 

@@ -184,6 +184,7 @@ def check_filename_contracts():
         ("ledger.json", ".agents/exam-blueprint/scripts/sample_items.py"),
         ("test_spec.json", ".agents/exam-blueprint/scripts/sample_items.py"),
         ("import_meta.json", ".agents/external-test-import/scripts/init_imported_test.py"),
+        ("模範解答.html", ".agents/exam-model-answer/scripts/build_model_answer.py"),
     ]
     for literal, script in contracts:
         src = (ROOT / script).read_text(encoding="utf-8")
@@ -789,6 +790,77 @@ def check_level_band_grammar(gt: str, keys: dict[int, int],
           f"({len(spec.get('items', {}).get('grammar_p8', []))} drawn)", not p8,
           "; ".join(p8) + " — the pool handed the author a banned form; delete "
           "it from pools.json and re-sample (exam-blueprint)")
+
+
+def check_grammar_p8_targets(gt: str, opts: dict[int, list[str]], test_id: str):
+    """問題8: each drawn grammar_p8 target must surface in its printed item.
+
+    20260811_1 shipped 問題8-45 with spec AND ledger recording 「〜に基づいて」
+    while the printed item tested a まず/次に/さらに sequencing scramble — the
+    author substituted the construction and left no record, and no gate line
+    looked at the assembled text (QA F1, qa/qa-report-20260811_1.md §5):
+    check_scramble_stars() proves only the ★/key mechanics, and the level-band
+    pass reads only the drawn LABEL, never the paper.
+
+    WARN, not FAIL: a target can legitimately surface inflected (「〜ずじまい」
+    as 「行かずじまい」), so absence of the literal string is evidence of a
+    silent substitution, not proof. The probe therefore also accepts each
+    segment with up to 2 trailing chars trimmed (「に基づいて」→「に基づ」 still
+    matches 「に基づき」). Resolve each hit by reading the item, and either
+    restore the drawn target or record the substitution (origin "reauthored"
+    is NOT a valid provenance for tested pool items — re-sample instead,
+    exam-blueprint 'Rotation model').
+    """
+    spec_path = ROOT / "tests" / test_id / "test_spec.json"
+    if not spec_path.is_file():
+        return
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    if str(spec.get("test_id")) != test_id:
+        return skip(f"{test_id}: 問題8 items realize their drawn grammar_p8 targets",
+                    f"spec is for test {spec.get('test_id')}, not {test_id}")
+    entries = spec.get("items", {}).get("grammar_p8", [])
+    if not entries:
+        return
+
+    m8 = re.search(r"^##\s*問題8\b.*?(?=^##\s*問題9\b)", gt, re.M | re.S)
+    sec = m8.group(0) if m8 else ""
+    blocks: dict[int, str] = {}
+    cur = None
+    for line in sec.splitlines():
+        qm = re.match(r"^\s*\*?\*?(4[3-7])[\.．、]", line)
+        if qm:
+            cur = int(qm.group(1))
+            blocks[cur] = line
+        elif cur is not None:
+            blocks[cur] += line
+    missing = []
+    for i, entry in enumerate(entries):
+        q = 43 + i
+        label = str(entry.get("item") if isinstance(entry, dict) else entry)
+        core = re.search(r"[（(]([^）)]+)[）)]", label)
+        core = core.group(1) if core else label
+        # Only the FIRST segment is the grammar marker itself; later segments
+        # (「…する」「…てしまった」) are realization placeholders that conjugate
+        # freely on the paper and would warn on every legitimate item.
+        segs = [s for s in re.split(r"[〜～…]", core) if len(s) >= 2][:1]
+        # A target may straddle two option strips in assembled order
+        # (20260811_1 問題8-47: 「…ことを」+「きっかけに」 realizes
+        # 〜をきっかけに), so probe every ordered option pair as well —
+        # '§' keeps unrelated pairs from matching across the join.
+        o = opts.get(q) or []
+        pairs = "§".join(a + b for a in o for b in o if a != b)
+        hay = re.sub(r"\s+", "", blocks.get(q, "") + "".join(o) + "§" + pairs)
+        for seg in segs:
+            probes = {seg[: len(seg) - k] for k in range(3) if len(seg) - k >= 2}
+            if not any(p in hay for p in probes):
+                missing.append(f"{q}:「{label}」 (segment 「{seg}」 absent)")
+                break
+    warn(f"{test_id}: 問題8 items realize their drawn grammar_p8 targets "
+         f"({len(entries)} drawn)", not missing,
+         "; ".join(missing) + " — the printed item does not contain its drawn "
+         "grammar point (silent substitution shipped as 20260811_1 問題8-45): "
+         "rewrite the item around the drawn target, or re-sample the slot; "
+         "never leave spec/ledger recording a construction the paper does not test")
 
 
 def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str]]):
@@ -3189,7 +3261,14 @@ def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
             v1, v2 = m.SPEAKER_MAP[l1]["voice"], m.SPEAKER_MAP[l2]["voice"]
             r1 = num(m.SPEAKER_MAP[l1].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l1] else 0.0
             r2 = num(m.SPEAKER_MAP[l2].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l2] else 0.0
-            if v1 == v2 and abs(r1 - r2) < 10:
+            # Identity comes from PITCH, not rate (choukai-audio §voices):
+            # 女(+0Hz)/職員(-14Hz)/係員(+18Hz) share NanamiNeural yet are
+            # distinct people to the ear. Ignoring pitch made this line warn
+            # on every such sanctioned pair — adjudicated GATE-WRONG in
+            # qa/qa-report-20260811_1.md §6.
+            p1 = num(m.SPEAKER_MAP[l1].get("pitch", "0")) if "pitch" in m.SPEAKER_MAP[l1] else 0.0
+            p2 = num(m.SPEAKER_MAP[l2].get("pitch", "0")) if "pitch" in m.SPEAKER_MAP[l2] else 0.0
+            if v1 == v2 and abs(r1 - r2) < 10 and abs(p1 - p2) < 10:
                 indistinct_pairs.append(f"{l1}/{l2}")
         if indistinct_pairs:
             indistinct.append(f"{lines[0][:8]} {indistinct_pairs}")
@@ -3482,6 +3561,7 @@ def check_tests():
         if origin == "generated":
             check_mondai8_chunk_lengths(gt, opts, bi)
             check_mondai8_bare_adverbs(d.name, opts)
+            check_grammar_p8_targets(gt, opts, d.name)
         check_level_band_grammar(gt, keys, opts, origin, d.name)
         check_moji4_blank_stems(d.name, gt, keys, opts)
         st_text = (d / "聴解スクリプト.txt").read_text(encoding="utf-8") if (d / "聴解スクリプト.txt").is_file() else ""

@@ -85,41 +85,51 @@ def option_run(text: str) -> int | None:
     return None
 
 # The chrome shared with screen 1 (the test list) lives in app_style.py — see the
-# note there. Everything below is sheet-only: bubbles, player, screen switching.
 EXTRA_CSS = app_style.APP_CSS + """
-.qa{display:flex;flex-wrap:wrap;gap:.2em 1.1em;margin:.15em 0 .5em 1.2em}
-.qa label{display:inline-flex;align-items:center;gap:.28em;cursor:pointer;
-  padding:.08em .45em;border:1px solid #bbb;border-radius:999px;font-size:10pt;
-  background:#fff;line-height:1.5}
-.qa label:hover{background:#eef4ff;border-color:#7aa7e8}
+html.is-result-mode #screen-exam{display:none!important}
+html.is-result-mode #screen-result{display:block!important}
+html.is-result-mode #bar-controls{display:none!important}
+html.is-result-mode #where{display:none!important}
+.qa{display:flex;flex-wrap:wrap;gap:.25em 1.1em;margin:.25em 0 .65em 1.2em}
+.qa label{display:inline-flex;align-items:center;gap:.32em;cursor:pointer;
+  padding:.15em .6em;border:1px solid #cbd5e1;border-radius:9999px;font-size:10pt;
+  background:#ffffff;line-height:1.5;transition:all .15s ease}
+.qa label:hover{background:#eff6ff;border-color:#93c5fd}
 .qa input{margin:0;cursor:pointer}
 .qa input:checked+span{font-weight:700}
-.qa label:has(input:checked){background:#1d4ed8;border-color:#1d4ed8;color:#fff}
-.qa .qid{border:none;background:none;color:#888;font-size:9pt;padding-left:0}
+.qa label:has(input:checked){background:#2563eb;border-color:#2563eb;color:#ffffff;
+  font-weight:700;box-shadow:0 2px 6px rgba(37,99,235,0.25)}
+.qa .qid{border:none;background:none;color:#64748b;font-size:9pt;padding-left:0}
 /* The 例 row is shown, not answerable — its answer is already marked, because
    the announcer says 「解答用紙の問題◯の例のところを見てください」. */
 .qa.ex .mark{display:inline-flex;align-items:center;justify-content:center;
-  min-width:2em;padding:.08em .5em;border:1px solid #bbb;border-radius:999px;
-  font-size:10pt;background:#fff;line-height:1.5;color:#777}
-.qa.ex .mark.on{background:#111;border-color:#111;color:#fff;font-weight:700}
-.opt{display:flex;align-items:flex-start;gap:.5em;margin:.1em 0}
+  min-width:2em;padding:.12em .6em;border:1px solid #cbd5e1;border-radius:9999px;
+  font-size:10pt;background:#ffffff;line-height:1.5;color:#64748b}
+.qa.ex .mark.on{background:#0f172a;border-color:#0f172a;color:#ffffff;font-weight:700}
+.opt{display:flex;align-items:flex-start;gap:.5em;margin:.15em 0}
 .opt .b{flex:0 0 auto;margin-top:.25em}
 #done{font-variant-numeric:tabular-nums}
-#player{position:sticky;top:3.4em;z-index:98;background:#f3f4f6;
-  border-top:1px solid #d1d5db;border-bottom:1px solid #d1d5db;
-  padding:.9em 1em;font-family:var(--ui)}
+#player{position:sticky;top:3.4em;z-index:98;background:#1e293b;color:#ffffff;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  padding:.9em 1.2em;font-family:var(--ui);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
 #player audio{width:100%;height:36px;display:block}
-.pctl{display:flex;flex-wrap:wrap;gap:.5em .8em;align-items:center;
-  margin-top:.7em;font-size:10pt}
-.pctl button,.pctl select{font-size:10pt;padding:.2em .5em;cursor:pointer}
-.pctl .pick{cursor:pointer;color:#1d4ed8;text-decoration:underline}
+.pctl{display:flex;flex-wrap:wrap;gap:.6em .9em;align-items:center;
+  margin-top:.7em;font-size:9.5pt}
+.pctl button,.pctl select{font-size:9.5pt;padding:.25em .65em;cursor:pointer;
+  border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);
+  color:#ffffff;font-family:var(--ui);transition:all .15s ease}
+.pctl button:hover,.pctl select:hover{background:rgba(255,255,255,0.2)}
+.pctl select option{background:#1e293b;color:#ffffff}
+.pctl .pick{cursor:pointer;color:#93c5fd;text-decoration:none;font-weight:700}
+.pctl .pick:hover{text-decoration:underline}
 .pctl .pick input{display:none}
-#player.noaudio{background:#fee2e2}
+#player.noaudio{background:#fef2f2;color:#991b1b;border-color:#fca5a5}
 #player.noaudio::after{content:"聴解.mp3 を読み込めません。「MP3を選ぶ」から指定してください。";
-  display:block;font-size:10pt;color:#991b1b;margin-top:.3em}
-.section-divider{margin:3em 0;border:0;border-top:3px double #333}
-.section-title{font-size:16pt;background:#1e293b;color:#fff;padding:.4em .8em;
-  margin:2em 0 1em;border-radius:4px}
+  display:block;font-size:9.5pt;color:#991b1b;margin-top:.3em}
+.section-divider{margin:3.5em 0;border:0;border-top:2px dashed #cbd5e1}
+.section-title{font-size:15pt;font-weight:800;background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color:#ffffff;padding:.55em 1em;margin:2em 0 1.2em;border-radius:8px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 /* Screen 3 — the result view the sheet switches to on 採点する. Screen 1 is the
    test list served by serve_sheet.py; screen 2 is #screen-exam above. Both reuse
    APP_CSS above, so the three screens share one look. */
@@ -128,76 +138,70 @@ EXTRA_CSS = app_style.APP_CSS + """
    chrome (the gray 問題 bars, the ruled rules) so it matches screen 1. */
 #screen-result h1,#screen-result h2,#screen-result h3{background:none;border:0;
   padding:0;color:var(--ink);font-family:var(--ui)}
-#screen-result h1{font-size:15pt;margin:.2em 0 .6em}
-#screen-result h2{font-size:13pt;margin:1.8em 0 .5em;border-bottom:2px solid #e2e8f0;
-  padding-bottom:.25em}
-#screen-result h3{font-size:11pt;margin:1.2em 0 .3em;color:var(--muted)}
-.rs-nav{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin:2em 0 0;
-  padding-top:1.2em;border-top:1px solid #e2e8f0}
-.rs-head{display:flex;flex-wrap:wrap;gap:1em;align-items:center;padding:1em 1.2em;
-  border-radius:10px;border:2px solid}
-.rs-head.pass{background:#f0fdf4;border-color:#16a34a}
-.rs-head.fail{background:#fef2f2;border-color:#dc2626}
-.rs-verdict{font-size:18pt;font-weight:700}
-.rs-head.pass .rs-verdict{color:#166534}
+#screen-result h1{font-size:16pt;font-weight:900;margin:.2em 0 .6em;color:#0f172a}
+#screen-result h2{font-size:13pt;font-weight:800;margin:2em 0 .6em;border-bottom:2px solid #e2e8f0;
+  padding-bottom:.35em;color:#1e293b}
+#screen-result h3{font-size:11pt;font-weight:700;margin:1.4em 0 .4em;color:var(--muted)}
+.rs-nav{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin:2.5em 0 0;
+  padding-top:1.4em;border-top:1px solid #e2e8f0}
+.rs-head{display:flex;flex-wrap:wrap;gap:1em;align-items:center;padding:1.25em 1.5em;
+  border-radius:10px;border:2px solid;box-shadow:0 2px 10px rgba(0,0,0,0.03)}
+.rs-head.pass{background:#ecfdf5;border-color:#10b981}
+.rs-head.fail{background:#fef2f2;border-color:#ef4444}
+.rs-verdict{font-size:18pt;font-weight:900}
+.rs-head.pass .rs-verdict{color:#065f46}
 .rs-head.fail .rs-verdict{color:#991b1b}
-.rs-score{font-size:24pt;font-weight:700;font-variant-numeric:tabular-nums;margin-left:auto}
-.rs-score small{font-size:11pt;font-weight:400;color:var(--muted)}
-.rs-why{flex-basis:100%;font-size:10.5pt;color:var(--muted);margin:0}
-.rs-saved{font-size:10pt;color:var(--muted);margin:.2em 0 1.2em}
-.rs-saved.ok{color:#15803d;font-weight:700}
-.rs-advice{border-left:4px solid #f59e0b;background:#fffbeb;padding:.7em 1em;
-  margin:.6em 0;font-size:10.5pt}
-.rs-advice b{display:block;margin-bottom:.25em}
-.rs-grid{display:flex;flex-wrap:wrap;gap:.3em;margin:.5em 0 1.2em}
-.rs-check-tools{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;
-  margin:.2em 0 .7em}
-.rs-hint{font-size:10pt;color:var(--muted);margin:0}
-.rs-all-detail{margin:.2em 0 1.4em}
+.rs-score{font-size:26pt;font-weight:900;font-variant-numeric:tabular-nums;margin-left:auto}
+.rs-score small{font-size:11pt;font-weight:500;color:var(--muted)}
+.rs-why{flex-basis:100%;font-size:10.5pt;color:var(--muted);margin:0;line-height:1.6}
+.rs-saved{font-size:9.5pt;color:var(--muted);margin:.3em 0 1.2em}
+.rs-saved.ok{color:#059669;font-weight:700}
+.rs-advice{border-left:4px solid #f59e0b;background:#fffbeb;padding:.8em 1.1em;
+  margin:.8em 0;font-size:10.5pt;border-radius:0 6px 6px 0;line-height:1.6}
+.rs-advice b{display:block;margin-bottom:.3em;color:#92400e}
+.rs-grid{display:flex;flex-wrap:wrap;gap:.35em;margin:.6em 0 1.4em}
+.rs-check-tools{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;
+  margin:.3em 0 .8em}
+.rs-hint{font-size:9.5pt;color:var(--muted);margin:0}
+.rs-all-detail{margin:.3em 0 1.6em}
 .rs-all-detail[hidden]{display:none!important}
-.rs-item{border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;
-  padding:.85em 1.05em;margin:0 0 .7em}
-.rs-detail-meta{display:flex;flex-wrap:wrap;gap:.4em 1.1em;align-items:center;
-  font-size:10.5pt;margin:0 0 .65em}
-.rs-detail-meta .tag{font-weight:700;padding:.1em .45em;border-radius:4px;
+.rs-item{border:1px solid #e2e8f0;border-radius:10px;background:#ffffff;
+  padding:1em 1.2em;margin:0 0 .85em;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
+.rs-detail-meta{display:flex;flex-wrap:wrap;gap:.5em 1.2em;align-items:center;
+  font-size:10.5pt;margin:0 0 .75em}
+.rs-detail-meta .tag{font-weight:700;padding:.15em .55em;border-radius:4px;
   border:1px solid}
-.rs-detail-meta .tag.ok{background:#f0fdf4;border-color:#86efac;color:#166534}
-.rs-detail-meta .tag.ng{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
-.rs-detail-meta .tag.na{background:#fff;border-color:var(--line);color:#64748b}
-.rs-detail-body{background:#fff;border:1px solid #e2e8f0;border-radius:8px;
-  padding:.75em 1em;line-height:1.75;font-size:11pt}
+.rs-detail-meta .tag.ok{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+.rs-detail-meta .tag.ng{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.rs-detail-meta .tag.na{background:#f8fafc;border-color:var(--line);color:#64748b}
+.rs-detail-body{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;
+  padding:.85em 1.1em;line-height:1.75;font-size:10.5pt}
 .rs-detail-body .qa,.rs-detail-body input{display:none!important}
 .rs-detail-body h1,.rs-detail-body h2,.rs-detail-body h3{background:none;border:0;
   padding:0;margin:.35em 0 .45em;font-size:11.5pt;color:var(--ink)}
-.rs-detail-note{font-size:10pt;color:var(--muted);margin:.55em 0 0}
-.rs-group{border:1px solid #cbd5e1;border-radius:10px;background:#eef2f7;
-  padding:.85em 1.05em;margin:0 0 .7em}
-.rs-group-shared{margin:0 0 .7em}
-.rs-group-item{margin:0 0 .5em}
+.rs-detail-note{font-size:9.5pt;color:var(--muted);margin:.65em 0 0}
+.rs-group{border:1px solid #cbd5e1;border-radius:10px;background:#f1f5f9;
+  padding:1em 1.2em;margin:0 0 .85em}
+.rs-group-shared{margin:0 0 .85em}
+.rs-group-item{margin:0 0 .6em}
 .rs-group-item:last-child{margin-bottom:0}
 .rs-script-label{font-size:9.5pt;font-weight:700;color:var(--muted);
-  margin:0 0 .3em;letter-spacing:.02em}
-.rs-script{margin:.6em 0 0;padding:.6em .8em;background:#f8fafc;
-  border:1px solid #e2e8f0;border-radius:8px;font-size:10.5pt;line-height:1.7}
-.rs-script p{margin:.15em 0}
+  margin:0 0 .35em;letter-spacing:.02em}
+.rs-script{margin:.6em 0 0;padding:.75em .95em;background:#ffffff;
+  border:1px solid #e2e8f0;border-radius:8px;font-size:10pt;line-height:1.7}
+.rs-script p{margin:.2em 0}
 @media print{#bar,#player,.rs-nav{display:none}.qa label{border-color:#666}}
-/* On screen the sheet keeps the booklet's centered 60em measure (SCREEN_CSS), so
-   the exam text and the printed booklet render identically — but the measure
-   moves OFF <body> and ONTO the screen wrappers. The bar is the app's chrome and
-   must span the window exactly as it does on screen 1, and a bar inside a
-   centered body cannot. (`width:100vw` was tried and is wrong: 100vw includes
-   the scrollbar, so the bar overflowed and the 採点する button fell off-screen.)
-   All of this is inside @media screen — the A4 @page geometry is untouched. */
 @media screen{
-  body{max-width:none;margin:0;padding:0;background:#eef1f5}
-  #screen-exam,#screen-result{max-width:60em;margin:0 auto;background:#fff;
+  body{max-width:none;margin:0;padding:0;background:#f8fafc}
+  #screen-exam,#screen-result{max-width:62em;margin:1.5em auto 4em;background:#ffffff;
+    border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 4px 16px rgba(0,0,0,0.03);
     padding:2.5em var(--gutter) 6em}
   /* The player is chrome too, so it spans its card and sticks under the bar;
      boot() sets its offset from the bar's measured height. */
   #player{margin:.2em calc(-1 * var(--gutter)) 1em;padding:.9em var(--gutter)}
 }
 @media screen and (max-width:48em){
-  #screen-exam,#screen-result{padding:1.2em var(--gutter) 4em}
+  #screen-exam,#screen-result{padding:1.2em var(--gutter) 4em;margin:0 auto;border-radius:0;border:none}
   .qa{margin:.3em 0 .8em .2em;gap:.4em .6em}
   .qa label{padding:.35em .75em;font-size:11pt;min-height:40px;min-width:40px;
     justify-content:center;box-sizing:border-box;font-weight:500}
@@ -207,16 +211,16 @@ EXTRA_CSS = app_style.APP_CSS + """
   .pctl button,.pctl select,.pctl .pick{min-height:36px;padding:.3em .65em;
     border-radius:6px}
   .pctl select#chap{max-width:100%;flex:1 1 auto}
-  .rs-head{flex-direction:column;align-items:flex-start;gap:.4em;padding:.85em 1em}
-  .rs-score{margin-left:0;font-size:20pt}
+  .rs-head{flex-direction:column;align-items:flex-start;gap:.4em;padding:.9em 1.1em}
+  .rs-score{margin-left:0;font-size:22pt}
   .rs-verdict{font-size:16pt}
   .rs-nav{flex-direction:column;align-items:stretch;gap:.6em}
   .rs-nav .ui-btn{width:100%;text-align:center;justify-content:center}
   .rs-grid{gap:.35em}
-  .rs-item,.rs-group{padding:.7em .85em}
+  .rs-item,.rs-group{padding:.8em .95em}
   .rs-detail-meta{gap:.3em .8em;font-size:10pt}
-  .rs-detail-body{padding:.6em .8em;font-size:10.5pt}
-  .section-title{font-size:14pt;padding:.35em .6em;margin:1.5em 0 .8em}
+  .rs-detail-body{padding:.7em .85em;font-size:10pt}
+  .section-title{font-size:13.5pt;padding:.4em .7em;margin:1.5em 0 .8em}
 }
 """
 
@@ -863,6 +867,7 @@ function resultHtml(res, msg, saved){
   L.push('<div class="rs-nav">'
     + '<button class="ui-btn primary" onclick="goList()">← テスト一覧へ戻る</button>'
     + '<button class="ui-btn" onclick="showScreen(\\'exam\\')">解答に戻ってやり直す</button>'
+    + '<button class="ui-btn" onclick="location.href=\\'模範解答.html\\'">模範解答・解説</button>'
     + (STORAGE === 'local'
         ? '<button class="ui-btn" onclick="downloadCurrent()">採点結果を保存（JSON）</button>'
         : '')
@@ -875,7 +880,8 @@ function goList(){ location.href = LIST_HREF; }
 
 function showScreen(name){
   const exam = name === 'exam';
-  document.getElementById('screen-exam').style.display = exam ? '' : 'none';
+  document.documentElement.classList.remove('is-result-mode');
+  document.getElementById('screen-exam').style.display = exam ? 'block' : 'none';
   document.getElementById('screen-result').style.display = exam ? 'none' : 'block';
   // The bar itself never goes away — it is the same chrome on all three screens.
   // Only the solving controls (counter, 消去, 採点する) belong to screen 2.
@@ -977,11 +983,18 @@ async function boot(){
   fitPlayer();
   initSpy();
   window.addEventListener('resize', fitPlayer);
-  await restore();
-  // The test list links here with ?screen=result to reopen a saved result.
-  if (location.search.indexOf('screen=result') !== -1){
+  const isResult = location.search.indexOf('screen=result') !== -1;
+  if (isResult){
+    showScreen('result');
     const saved = await STORE.loadResult();
-    if (saved) showResult(saved, '保存済みの採点結果です。', true);
+    if (saved) {
+      showResult(saved, '保存済みの採点結果です。', true);
+    } else {
+      await restore();
+      showScreen('exam');
+    }
+  } else {
+    await restore();
   }
 }
 
@@ -1292,6 +1305,7 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
                     out_path: Path, gdata: dict, player: str = "",
                     sources=(), storage: str = "server"):
     gengo_md = "\n".join(booklet.widen(l) for l in gengo_md.splitlines())
+    choukai_md = booklet.add_choukai_furigana(choukai_md)
     choukai_md = "\n".join(booklet.widen(l) for l in choukai_md.splitlines())
 
     gengo_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(gengo_md, extensions=["tables", "nl2br"])))
@@ -1312,7 +1326,9 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
            f'<span id="bar-controls">'
            f'<span class="sub" id="done">解答済み 0 / 101</span> '
            f'<button onclick="clearAll()">消去</button> '
-           f'<button onclick="save()" class="primary">採点する</button></span></div>')
+           f'<button onclick="save()" class="primary">採点する</button></span></div>'
+           f'<script>if(document.documentElement.classList.contains("is-result-mode")){{'
+           f'document.getElementById("bar-title").textContent="テスト {testid}（採点結果）";}}</script>')
 
     body = (
         f'<div id="screen-exam">'
@@ -1336,6 +1352,8 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
     out_path.write_text(
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f'<script>if(window.location.search&&window.location.search.indexOf("screen=result")!==-1){{'
+        f'document.documentElement.classList.add("is-result-mode");}}</script>'
         f'{booklet.FONT_TAGS}'
         f'<title>{title}</title>'
         # Staleness stamps for every source whose CONTENT is baked into this

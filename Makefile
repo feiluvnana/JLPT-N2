@@ -1,13 +1,13 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check check-tests grade sheet keyless serve pages preview-pages booklet mp3 sample \
+.PHONY: help check check-tests grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
        init-import extract-pdf extract-archive extract-keys
 
 # Positional test-id argument: "make grade 1", "make sheet 2", "make sample 5".
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
 # covers every test, so it takes no id. `pages` builds every test by default;
 # "make pages 1" (or TEST=1) narrows it to one.
-TARGET_CMDS := grade sheet keyless booklet mp3 pages sample
+TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -42,6 +42,8 @@ help:
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
 	@echo "  make mp3 1            Synthesize listening audio for test 1 (聴解.mp3)"
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
+	@echo "  make model-answer 1   Build model answer & explanation for test 1 (模範解答.html)"
+	@echo "  make explanation 1    Alias for make model-answer"
 	@echo "  make keyless 1        Blind-solve render for QA: qa/1/keyless.md (no keys)"
 	@echo "  make serve            Serve ALL tests: list -> exam -> result (no test id)"
 	@echo "  make grade 1          Grade test 1 (reads tests/1/ユーザー解答*.json)"
@@ -74,6 +76,11 @@ mp3:
 
 sheet:
 	python3 .agents/exam-app/scripts/build_interactive.py tests/$(TEST)
+
+model-answer:
+	python3 .agents/exam-model-answer/scripts/build_model_answer.py tests/$(TEST)
+
+explanation: model-answer
 
 # The QA blind-solve render: the same paper with the keys truncated away, into
 # qa/<id>/keyless.md. Not a deliverable — tests/<id>/ has a fixed file contract.

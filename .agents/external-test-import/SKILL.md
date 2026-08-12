@@ -219,7 +219,18 @@ content is whatever the official paper already contains. The gate for an
 import is `make check` plus the mechanical fidelity checklist in §4.
 
 When the official sheet and a re-solved 解説 disagree, **the sheet wins** and
-the 解説 must be rewritten to the sheet's answer.
+### 8. Model Answer & Detailed Explanation (FINAL STEP)
+
+```bash
+make model-answer imported-<slug>  # -> tests/imported-<slug>/模範解答.html
+```
+
+- **MUST always be the final step**: run only AFTER all 101 keys and questions
+  have been mechanically verified against the official source (§4), audio is
+  verified, and `make check` is completely green.
+- Generates `tests/imported-<slug>/模範解答.html` with concise, learner-friendly pedagogical
+  explanations, full option-by-option analysis, and mandatory furigana (`《...》` / `｜漢字《かんじ》`)
+  for all items. No internal metadata leaks or placeholder text.
 
 ## What not to do
 
@@ -244,6 +255,7 @@ the 解説 must be rewritten to the sheet's answer.
 | Answer sheet | `exam-app` / `make sheet <id>` |
 | Gate | `make check` |
 | Transcription QA | Mechanical fidelity checklist above (§4) — not `exam-qa-review` |
+| Model Answer (Final) | `exam-model-answer` / `make model-answer <id>` |
 
 ## Final report (required)
 

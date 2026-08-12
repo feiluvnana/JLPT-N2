@@ -100,6 +100,11 @@ def build_site(out: Path, test_id: str | None = None, with_audio: bool = True,
         # server build and would POST to an /api/ that does not exist on Pages.
         build_interactive.build(d, storage="local", out_dir=dest)
 
+        model_ans = d / "模範解答.html"
+        has_explanation = model_ans.is_file()
+        if has_explanation:
+            shutil.copy2(model_ans, dest / "模範解答.html")
+
         mp3 = d / AUDIO
         has_audio = mp3.is_file()
         if has_audio and with_audio:
@@ -116,6 +121,7 @@ def build_site(out: Path, test_id: str | None = None, with_audio: bool = True,
             "origin": serve_sheet.test_origin(d.name),
             "has_sheet": True,
             "has_audio": has_audio and with_audio,
+            "has_explanation": has_explanation,
         })
 
     (out / "index.html").write_text(index_view.index_html("local", manifest),

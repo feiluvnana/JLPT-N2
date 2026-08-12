@@ -31,7 +31,10 @@ Binding points, all from those two files:
    `exam-qa-review` with fresh eyes, looping fix → fresh re-review until
    `QA: PASS`. Apply or explicitly reject every entry in QA's root-cause
    table.
-4. **Commit** `tests/⟨test_id⟩/` and the updated `logs/` together when done.
-5. **Final report** per `AGENTS.md` §0.7: which skills you read, which stages
+4. **Model answer (FINAL STEP)**: After `QA: PASS`, run `make model-answer ⟨test_id⟩`
+   to generate `tests/⟨test_id⟩/模範解答.html` explaining all 101 items. This must
+   always be the final step after all questions and keys are locked.
+5. **Commit** `tests/⟨test_id⟩/` and the updated `logs/` together when done.
+6. **Final report** per `AGENTS.md` §0.7: which skills you read, which stages
    you ran, the seed you used, every WARN you resolved or justified, and
    anything you skipped and why.

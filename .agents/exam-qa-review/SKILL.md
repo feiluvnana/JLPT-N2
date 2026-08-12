@@ -310,6 +310,12 @@ like 治す/なおす or お金をためる, or a basic katakana loanword set li
 スカート/ジャケット/セーター/ワンピース: `20260811_1` shipped all three shapes
 in one paper, so do not assume those categories are exempt from this check just
 because they are common daily words rather than a single hard vocabulary item).
+The check also binds the OPTION SET as a whole, not just the key: a 問題4/問題6
+item whose four options are all basic N4–N5 frequency/degree adverbs
+(めったに/なかなか/とても/ちっとも — `20260811_1` 問題4-17, QA round 3 F3) has
+no N2 discrimination point anywhere in it and is TOO_EASY even if the keyed
+word alone might survive a lookup; rebuild the whole set from N2-band adverbs
+(あくまで/一概に/まんべんなく/ろくに…).
 **This is a judgment call, not a lookup verdict** — when
 `openjlpt` existed it mislabeled ordinary, correctly keyable N2 exam vocabulary
 (把握, 審査, じっくり, 依頼, 徐々に, …) as "N1" or "N3", so a single source's

@@ -41,10 +41,12 @@ survived exactly that self-review.
 | 2. Author | 文字・語彙 (問1–6) \| 文法 (問7–9) \| 読解 (問10–14) \| 聴解 (booklet §聴解 + script) | 4 subagents, **in parallel** |
 | 3. Build + gate | Booklet HTML, MP3, 解答.html, `make check`, whole-paper topic table (below) | 1 subagent |
 | 4. QA | `exam-qa-review` in full — blind-solve first, all 101 items, root-cause table | 1 **fresh** subagent |
+| 5. Model Answer (Final) | `make model-answer <id>` → `模範解答.html` — **MUST always be the final step** after QA PASS | 1 subagent |
 
 Every QA finding adds a fix + re-review round: the fix may reuse an authoring
 context; the re-review of the touched items must again be fresh eyes. The loop
-ends at `QA: PASS`, **capped at 3 fresh-eyes QA rounds total.** If round 3 still
+ends at `QA: PASS`, **capped at 3 fresh-eyes QA rounds total.** Once QA is PASS,
+proceed to Stage 5 to build `模範解答.html`. If round 3 still
 returns FAIL, the orchestrator applies that round's findings directly (same
 rigor as any other fix — root-cause each one, verify `make check`, sanity-read
 the diff) but does **not** spawn a 4th fresh-eyes QA pass; ship the paper and
@@ -72,6 +74,7 @@ never from the orchestrator's summary), and nothing else:
 | 2 聴解 | `test_spec.json` + `question-authoring/SKILL.md` + `references/choukai-items.md` + `choukai-audio/SKILL.md` + `jlpt-exam-structure/SKILL.md` | `聴解.md`, `聴解スクリプト.txt` |
 | 3 Build+gate | `exam-app/SKILL.md`, `choukai-audio/SKILL.md` (synthesis §), this file's topic-table § | `言語知識・読解.md` (merged), the HTML/MP3 artifacts, `logs/topics.json` row, gate report |
 | 4 QA | `exam-qa-review/SKILL.md` (which routes to what it needs) | `qa/qa-report-<id>.md` |
+| 5 Model Answer | `exam-model-answer/SKILL.md` | `tests/<id>/模範解答.html` |
 
 Stage-2 authors write **section fragments** to separate files
 (`tests/<id>/_sections/<問題range>.md`). Each fragment is two parts: the
@@ -208,7 +211,28 @@ Read `exam-qa-review/SKILL.md` in full and run it with fresh eyes. NOT
 optional: generated papers can ship content defects through a green gate if QA is skipped.
 A test that has not survived this pass is not done, whatever the gate says.
 
-## Taking the exam (after QA)
+## Stage 5 — Model Answer & Detailed Explanation (FINAL STEP)
+
+```bash
+make model-answer <id>             # -> tests/<id>/模範解答.html
+```
+
+- **MUST always be the final step**: run only AFTER Stage 4 QA has returned
+  `QA: PASS` and all item, option, and audio fixes are frozen.
+- Explanations must be generated from the finalized, audited exam sources
+  (`言語知識・読解.md`, `聴解.md`, `聴解スクリプト.txt`, `test_spec.json`).
+- **Pedagogical Quality & Furigana Rules**:
+  - Explanations must be concise, natural, and learner-friendly.
+  - Zero internal dataset/pipeline metadata leaks (no `[kanji-n2.json]`, `[同分野]`, `[N1]`, `〜れる一段動詞×4`, `送り仮名「れる」からは絞り込めない` etc.).
+  - All options (1, 2, 3, 4) must receive concrete individual explanations (no placeholder text like "選択肢 1 は文脈・文法制約に合致しません").
+  - Mandatory furigana (`《...》` or `｜漢字《かんじ》`) on target kanji, stems, and key vocabulary across explanations.
+- Generating `模範解答.html` earlier in the pipeline is prohibited because any
+  subsequent question, distractor, or key fixes during QA would cause explanations
+  to drift and desynchronize.
+- Re-run `make check` after generating `模範解答.html` to confirm all file contracts
+  remain green.
+
+## Taking the exam (after QA and Model Answer)
 
 `make serve` (no test id — one server lists every test), answer, press
 「採点する」: the page saves `採点結果.json` + `ユーザー解答.json` into
