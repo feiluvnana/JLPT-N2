@@ -135,6 +135,33 @@ def add_choukai_furigana(md_content: str) -> str:
 
     kks = pykakasi.kakasi()
 
+    def fix_hira(orig: str, hira: str, prev_orig: str = '') -> str:
+        """Correct known pykakasi mis-readings before ruby conversion.
+
+        Never trust kakasi's hira output as-is -- confirmed wrong on three
+        recurring patterns: (1) 小さ+い/く conjugations (小さい, 小さく,
+        小さかった, 小さすぎる, 小さくない, 小さくて) come back with a chouon
+        mark, e.g. "ちーさい" instead of "ちいさい"; (2) a bare single-kanji
+        人 token is always read にん by kakasi, but every genuine にん
+        compound (三人, 本人, 友人, 何人, ...) is already merged into one
+        multi-character token by kakasi, so a standalone 人 is always the
+        word "hito" (a/the person), never にん; (3) a 方 token immediately
+        following hiragana (a verb's renyoukei/stem: 伝わり方, 使い方, 考え方,
+        食べ方, 話し方, ...) is the "method/way" reading かた, never ほう --
+        every genuine ほう compound (一方, 先方, 双方, 四方, ...) has 方
+        attached directly to a preceding KANJI, so kakasi merges it into one
+        token and this rule never fires on those.
+        """
+        if orig.startswith('小さ') and 'ちー' in hira:
+            hira = hira.replace('ちー', 'ちい')
+        if orig == '人' and hira == 'にん':
+            hira = 'ひと'
+        if orig.startswith('方') and hira.startswith('ほう') and prev_orig \
+                and '぀' <= prev_orig[-1] <= 'ゟ' \
+                and (len(orig) == 1 or not ('一' <= orig[1] <= '鿿')):
+            hira = 'かた' + hira[2:]
+        return hira
+
     def token_to_ruby(orig: str, hira: str) -> str:
         if orig == '入っ' and hira == 'いっっ':
             return '<ruby>入<rt>はい</rt></ruby>っ'
@@ -184,22 +211,27 @@ def add_choukai_furigana(md_content: str) -> str:
             else:
                 res = kks.convert(head)
                 head_out = ''
+                prev_orig = ''
                 for item in res:
-                    orig, hira = item['orig'], item['hira']
+                    orig = item['orig']
+                    hira = fix_hira(orig, item['hira'], prev_orig)
                     head_out += overrides[orig] if orig in overrides \
                         else token_to_ruby(orig, hira)
+                    prev_orig = orig
                 out_lines.append(head_out + sep + tail)
             continue
 
         res = kks.convert(line)
         line_out = ''
+        prev_orig = ''
         for item in res:
             orig = item['orig']
-            hira = item['hira']
+            hira = fix_hira(orig, item['hira'], prev_orig)
             if orig in overrides:
                 line_out += overrides[orig]
             else:
                 line_out += token_to_ruby(orig, hira)
+            prev_orig = orig
         out_lines.append(line_out)
 
     return '\n'.join(out_lines)

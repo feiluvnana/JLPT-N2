@@ -113,6 +113,20 @@ weasyprint/wkhtmltopdf** (or poppler — no PDF toolchain at all).
    (line-height 2.1) only to blocks containing ruby.
 8. **Vocabulary notes** (`（注1）…`) use `.vocab-notes` styling (9pt,
    line-height 1.6, top dashed border) to replicate the official Dokkai layout.
+9. **`add_choukai_furigana()`'s pykakasi output is not trustworthy as-is** —
+   a 2026-08 audit of shipped `聴解.html` found real, wrong readings in it:
+   a bare `人` token came back `にん` instead of `ひと` (every genuine `にん`
+   compound like 三人/本人/友人 is long enough that kakasi already merges it
+   into one token, so a standalone `人` is always "hito"); a `方` token right
+   after hiragana (伝わり方, 使い方, …) came back `ほう` instead of `かた`
+   (genuine `ほう` compounds like 一方/先方 have `方` glued to a preceding
+   *kanji*, so this never fires on those); and `小さい`/`小さく`/`小さかった`
+   came back with a bogus chouon (`ちーさい`) — a `kks.convert()` dictionary
+   bug. All three are now corrected by `fix_hira()` inside
+   `add_choukai_furigana()`. If you touch that function again, or add a new
+   choukai test and spot another wrong reading, add the fix there (not a
+   one-off patch on the generated HTML) and rebuild every test's `聴解.html`
+   with `make booklet <id>` so the fix isn't test-specific.
 
 `SCREEN_CSS` is the screen-only shell: a centered 60 em column (an unbounded
 full-width line is unreadable on a monitor) plus a `--gutter` variable the
