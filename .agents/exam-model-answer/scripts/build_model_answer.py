@@ -353,51 +353,6 @@ h1.title {{
   box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
 }}
 
-/* Quick Jump Navigation Grid */
-.jump-section {{
-  max-width: 1050px;
-  margin: 1.25rem auto 0.8rem;
-  padding: 0.9rem 1.1rem;
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-}}
-.jump-title {{
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}}
-.jump-grid {{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-}}
-.jump-pill {{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.1rem;
-  height: 1.75rem;
-  padding: 0 0.25rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  border-radius: 4px;
-  background: var(--bg-main);
-  color: var(--text-main);
-  text-decoration: none;
-  border: 1px solid var(--border-color);
-  transition: all 0.15s ease;
-}}
-.jump-pill:hover {{
-  background: var(--primary-light);
-  color: #fff;
-  border-color: var(--primary-light);
-}}
-
 /* Main Content Container */
 .main-container {{
   max-width: 1050px;
@@ -717,7 +672,7 @@ footer {{
 }}
 
 @media print {{
-  header.app-header, .sticky-nav, .jump-section, .tab-group, .search-box, #sticky-audio, .script-audio-jump {{ display: none !important; }}
+  header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump {{ display: none !important; }}
   body {{ background: #fff; color: #000; font-size: 10pt; }}
   .q-card {{ page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }}
 }}
@@ -753,16 +708,6 @@ footer {{
 
 <div class="main-container">
   {audio_player_html}
-
-  <div class="jump-section">
-    <div class="jump-title">
-      <span>設問クイックナビゲーション</span>
-      <span style="font-size:0.78rem; font-weight:normal;">クリックで各問へジャンプ</span>
-    </div>
-    <div class="jump-grid">
-      {jump_pills}
-    </div>
-  </div>
 
   {content_html}
 </div>
@@ -892,7 +837,6 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
 
     out_file = out_path if out_path else (test_dir / "模範解答.html")
     
-    jump_pills = []
     content_blocks = []
 
     # 1. Gengo & Dokkai
@@ -911,8 +855,6 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
 
         q_start, q_end = tax_info["range"]
         for q_num in range(q_start, q_end + 1):
-            jump_pills.append(f'<a href="#q-{q_num}" class="jump-pill">{q_num}</a>')
-            
             exp_info = gengo_exps.get(q_num, {})
             ans_val = exp_info.get("ans", 1)
             raw_kaisetsu = exp_info.get("raw_kaisetsu", "")
@@ -993,7 +935,6 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         ans_val = exp_info.get("ans", 1)
         raw_kaisetsu = exp_info.get("raw_kaisetsu", "")
         safe_id = key_id.replace("問", "choukai-").replace("-", "_")
-        jump_pills.append(f'<a href="#{safe_id}" class="jump-pill">{key_id}</a>')
 
         detail = detailed_data.get(key_id, {})
         stem_text = apply_furigana(detail.get("stem") or f"{key_id} 聴解問題")
@@ -1078,7 +1019,6 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
     rendered_html = HTML_TEMPLATE.format(
         test_id=test_id,
         audio_player_html=audio_player_html,
-        jump_pills="\n".join(jump_pills),
         content_html="\n".join(content_blocks)
     )
 

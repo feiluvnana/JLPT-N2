@@ -168,51 +168,6 @@ h1.title {
   box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
 }
 
-/* Quick Jump Navigation Grid */
-.jump-section {
-  max-width: 1050px;
-  margin: 1.25rem auto 0.8rem;
-  padding: 0.9rem 1.1rem;
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-}
-.jump-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.jump-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-}
-.jump-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.1rem;
-  height: 1.75rem;
-  padding: 0 0.25rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  border-radius: 4px;
-  background: var(--bg-main);
-  color: var(--text-main);
-  text-decoration: none;
-  border: 1px solid var(--border-color);
-  transition: all 0.15s ease;
-}
-.jump-pill:hover {
-  background: var(--primary-light);
-  color: #fff;
-  border-color: var(--primary-light);
-}
-
 /* Main Content Container */
 .main-container {
   max-width: 1050px;
@@ -532,7 +487,7 @@ footer {
 }
 
 @media print {
-  header.app-header, .sticky-nav, .jump-section, .tab-group, .search-box, #sticky-audio, .script-audio-jump { display: none !important; }
+  header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump { display: none !important; }
   body { background: #fff; color: #000; font-size: 10pt; }
   .q-card { page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }
 }
@@ -574,116 +529,6 @@ footer {
           <span id="audioStatus" class="audio-status">準備完了</span>
         </div>
         
-
-  <div class="jump-section">
-    <div class="jump-title">
-      <span>設問クイックナビゲーション</span>
-      <span style="font-size:0.78rem; font-weight:normal;">クリックで各問へジャンプ</span>
-    </div>
-    <div class="jump-grid">
-      <a href="#q-1" class="jump-pill">1</a>
-<a href="#q-2" class="jump-pill">2</a>
-<a href="#q-3" class="jump-pill">3</a>
-<a href="#q-4" class="jump-pill">4</a>
-<a href="#q-5" class="jump-pill">5</a>
-<a href="#q-6" class="jump-pill">6</a>
-<a href="#q-7" class="jump-pill">7</a>
-<a href="#q-8" class="jump-pill">8</a>
-<a href="#q-9" class="jump-pill">9</a>
-<a href="#q-10" class="jump-pill">10</a>
-<a href="#q-11" class="jump-pill">11</a>
-<a href="#q-12" class="jump-pill">12</a>
-<a href="#q-13" class="jump-pill">13</a>
-<a href="#q-14" class="jump-pill">14</a>
-<a href="#q-15" class="jump-pill">15</a>
-<a href="#q-16" class="jump-pill">16</a>
-<a href="#q-17" class="jump-pill">17</a>
-<a href="#q-18" class="jump-pill">18</a>
-<a href="#q-19" class="jump-pill">19</a>
-<a href="#q-20" class="jump-pill">20</a>
-<a href="#q-21" class="jump-pill">21</a>
-<a href="#q-22" class="jump-pill">22</a>
-<a href="#q-23" class="jump-pill">23</a>
-<a href="#q-24" class="jump-pill">24</a>
-<a href="#q-25" class="jump-pill">25</a>
-<a href="#q-26" class="jump-pill">26</a>
-<a href="#q-27" class="jump-pill">27</a>
-<a href="#q-28" class="jump-pill">28</a>
-<a href="#q-29" class="jump-pill">29</a>
-<a href="#q-30" class="jump-pill">30</a>
-<a href="#q-31" class="jump-pill">31</a>
-<a href="#q-32" class="jump-pill">32</a>
-<a href="#q-33" class="jump-pill">33</a>
-<a href="#q-34" class="jump-pill">34</a>
-<a href="#q-35" class="jump-pill">35</a>
-<a href="#q-36" class="jump-pill">36</a>
-<a href="#q-37" class="jump-pill">37</a>
-<a href="#q-38" class="jump-pill">38</a>
-<a href="#q-39" class="jump-pill">39</a>
-<a href="#q-40" class="jump-pill">40</a>
-<a href="#q-41" class="jump-pill">41</a>
-<a href="#q-42" class="jump-pill">42</a>
-<a href="#q-43" class="jump-pill">43</a>
-<a href="#q-44" class="jump-pill">44</a>
-<a href="#q-45" class="jump-pill">45</a>
-<a href="#q-46" class="jump-pill">46</a>
-<a href="#q-47" class="jump-pill">47</a>
-<a href="#q-48" class="jump-pill">48</a>
-<a href="#q-49" class="jump-pill">49</a>
-<a href="#q-50" class="jump-pill">50</a>
-<a href="#q-51" class="jump-pill">51</a>
-<a href="#q-52" class="jump-pill">52</a>
-<a href="#q-53" class="jump-pill">53</a>
-<a href="#q-54" class="jump-pill">54</a>
-<a href="#q-55" class="jump-pill">55</a>
-<a href="#q-56" class="jump-pill">56</a>
-<a href="#q-57" class="jump-pill">57</a>
-<a href="#q-58" class="jump-pill">58</a>
-<a href="#q-59" class="jump-pill">59</a>
-<a href="#q-60" class="jump-pill">60</a>
-<a href="#q-61" class="jump-pill">61</a>
-<a href="#q-62" class="jump-pill">62</a>
-<a href="#q-63" class="jump-pill">63</a>
-<a href="#q-64" class="jump-pill">64</a>
-<a href="#q-65" class="jump-pill">65</a>
-<a href="#q-66" class="jump-pill">66</a>
-<a href="#q-67" class="jump-pill">67</a>
-<a href="#q-68" class="jump-pill">68</a>
-<a href="#q-69" class="jump-pill">69</a>
-<a href="#q-70" class="jump-pill">70</a>
-<a href="#q-71" class="jump-pill">71</a>
-<a href="#choukai_1_1" class="jump-pill">問1-1</a>
-<a href="#choukai_1_2" class="jump-pill">問1-2</a>
-<a href="#choukai_1_3" class="jump-pill">問1-3</a>
-<a href="#choukai_1_4" class="jump-pill">問1-4</a>
-<a href="#choukai_1_5" class="jump-pill">問1-5</a>
-<a href="#choukai_2_1" class="jump-pill">問2-1</a>
-<a href="#choukai_2_2" class="jump-pill">問2-2</a>
-<a href="#choukai_2_3" class="jump-pill">問2-3</a>
-<a href="#choukai_2_4" class="jump-pill">問2-4</a>
-<a href="#choukai_2_5" class="jump-pill">問2-5</a>
-<a href="#choukai_2_6" class="jump-pill">問2-6</a>
-<a href="#choukai_3_1" class="jump-pill">問3-1</a>
-<a href="#choukai_3_2" class="jump-pill">問3-2</a>
-<a href="#choukai_3_3" class="jump-pill">問3-3</a>
-<a href="#choukai_3_4" class="jump-pill">問3-4</a>
-<a href="#choukai_3_5" class="jump-pill">問3-5</a>
-<a href="#choukai_4_1" class="jump-pill">問4-1</a>
-<a href="#choukai_4_10" class="jump-pill">問4-10</a>
-<a href="#choukai_4_11" class="jump-pill">問4-11</a>
-<a href="#choukai_4_2" class="jump-pill">問4-2</a>
-<a href="#choukai_4_3" class="jump-pill">問4-3</a>
-<a href="#choukai_4_4" class="jump-pill">問4-4</a>
-<a href="#choukai_4_5" class="jump-pill">問4-5</a>
-<a href="#choukai_4_6" class="jump-pill">問4-6</a>
-<a href="#choukai_4_7" class="jump-pill">問4-7</a>
-<a href="#choukai_4_8" class="jump-pill">問4-8</a>
-<a href="#choukai_4_9" class="jump-pill">問4-9</a>
-<a href="#choukai_5_1" class="jump-pill">問5-1</a>
-<a href="#choukai_5_2_1" class="jump-pill">問5-2-1</a>
-<a href="#choukai_5_2_2" class="jump-pill">問5-2-2</a>
-    </div>
-  </div>
 
   <div class="section-banner" data-section="goi"><span>【文字・語彙】問題1 〜</span><small>JLPT N2 文字・語彙</small></div>
 
