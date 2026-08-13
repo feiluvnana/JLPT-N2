@@ -47,8 +47,11 @@ CHOUKAI_TAXONOMY = {
 }
 
 
-def apply_furigana(text: str) -> str:
-    """Convert Japanese furigana notation into HTML <ruby> tags and format markdown bold."""
+def apply_furigana_bold(text: str) -> str:
+    """Convert Japanese furigana notation into HTML <ruby> tags and format markdown bold.
+    No newline handling -- callers that may receive multi-line text pick their own
+    line-break treatment (apply_furigana() for short fields, format_passage_text()
+    for passages, which also has to tell paragraph breaks from table rows)."""
     if not text:
         return ""
     # 1. Convert markdown bold **word** -> <strong>word</strong>
@@ -58,6 +61,67 @@ def apply_furigana(text: str) -> str:
     # 3. 漢字《かんじ》
     text = re.sub(r"([一-龥々]+)《([^》]+)》", r"<ruby>\1<rt>\2</rt></ruby>", text)
     return text
+
+
+def apply_furigana(text: str) -> str:
+    """apply_furigana_bold() plus literal newline -> <br>. For short fields that can
+    legitimately span more than one line -- e.g. two-turn dialogue stems
+    ('A「…」\\nB「…」') -- without which the turns run together on one line."""
+    if not text:
+        return ""
+    return apply_furigana_bold(text).replace("\n", "<br>")
+
+
+_TABLE_SEP_CELL = re.compile(r"^:?-{1,}:?$")
+
+
+def _is_md_table_block(lines: list) -> bool:
+    if len(lines) < 2:
+        return False
+    if not all(l.startswith("|") and l.endswith("|") for l in lines):
+        return False
+    sep_cells = [c.strip() for c in lines[1].strip("|").split("|")]
+    return all(_TABLE_SEP_CELL.match(c) for c in sep_cells)
+
+
+def _render_md_table(lines: list) -> str:
+    rows = [[c.strip() for c in l.strip("|").split("|")] for l in lines]
+    header, _sep, *body = rows
+    thead = "<tr>" + "".join(f"<th>{c}</th>" for c in header) + "</tr>"
+    tbody = "".join("<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>" for r in body)
+    return f"<table><thead>{thead}</thead><tbody>{tbody}</tbody></table>"
+
+
+def format_passage_text(text: str) -> str:
+    """本文/資料 (reading passage) text -> HTML.
+
+    詳細解説.json passages are hand-authored straight from 言語知識・読解.md and
+    keep that source's blank-line paragraphs, single-\\n line continuations
+    (business memos, addressed notices), and occasional markdown pipe tables
+    (案内/お知らせ items) -- none of which apply_furigana() ever converted, so
+    a passage rendered as one run-on paragraph, and a table rendered as raw
+    `| pipe | text |`. This mirrors build_booklet.py's nl2br treatment of the
+    same official wording and renders real tables into <table> (the CSS for
+    .passage-box table already assumed one would exist).
+
+    Skips straight to apply_furigana_bold() for passages some earlier pass
+    already hand-patched with literal <br> tags (no bare \\n left) -- reprocessing
+    those would misread a leading '### label' as an unterminated heading line
+    spanning the whole passage.
+    """
+    if not text:
+        return ""
+    if "<br>" in text:
+        return apply_furigana_bold(text)
+    blocks = re.split(r"\n\s*\n", text.strip())
+    rendered = []
+    for block in blocks:
+        lines = block.strip().splitlines()
+        if _is_md_table_block(lines):
+            rendered.append(_render_md_table(lines))
+        else:
+            rendered.append(block.replace("\n", "<br>"))
+    return apply_furigana_bold("<br><br>".join(rendered))
 
 
 def clean_option_analysis_text(text: str) -> str:
@@ -505,6 +569,7 @@ h1.title {{
   font-size: 1rem;
   line-height: 2.0;
   color: #1e293b;
+  overflow-x: auto;
 }}
 .passage-title {{
   font-family: var(--font-sans);
@@ -870,7 +935,7 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
             
             passage_html = ""
             if detail.get("passage"):
-                passage_content = apply_furigana(detail["passage"])
+                passage_content = format_passage_text(detail["passage"])
                 passage_html = f'<div class="passage-box"><div class="passage-title">本文 / 資料</div>{passage_content}</div>'
 
             opt_items_html = []
@@ -982,7 +1047,7 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
           <div class="q-body">
             <div class="script-box">
               <div class="passage-title">音声スクリプト</div>
-              {script_snippet.replace(chr(10), '<br>')}
+              {script_snippet}
               {audio_jump_btn}
             </div>
             <div class="q-stem">{stem_text}</div>

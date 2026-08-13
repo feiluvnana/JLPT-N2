@@ -89,8 +89,18 @@ weasyprint/wkhtmltopdf** (or poppler — no PDF toolchain at all).
 1. **`nl2br` extension is mandatory.** Markdown joins consecutive lines into one
    paragraph; without nl2br every vertically-stacked option list collapses onto
    a single unreadable line. (This was a real user complaint.)
-2. **CJK fonts**: body = Noto Serif CJK JP (real booklets are serif/明朝),
-   headings/bold = Noto Sans CJK JP. Verify: `fc-list | grep -i "noto.*cjk"`.
+2. **CJK fonts**: body = YuMincho (real booklets are serif/明朝 — confirmed via
+   `pdffonts` on every booklet in `refs/JLPT_N2_NEW/`, which all embed
+   YuMincho for body text and YuGothic for headings/labels), headings/bold =
+   YuGothic. Both ship as system fonts on macOS and Windows 8.1+; the fallback
+   chain also carries Hiragino Mincho ProN/Hiragino Sans (macOS) and the
+   Google-Fonts-loaded Noto Serif JP/Noto Sans JP (via `FONT_TAGS`, works on
+   any OS with network access) for platforms where Yu* isn't installed. Do
+   not put a sans-serif font ahead of YuMincho in the body chain — that
+   regressed once already (commit `116cc88`, "remove ms mincho," accidentally
+   dropped the serif fallback along with MS Mincho and left `Noto Sans JP`
+   as body's first choice, silently rendering the whole booklet sans-serif).
+   Verify: `fc-list | grep -iE "yumincho|yugothic"`.
 3. **Option widening**: lines holding 3+ options (`1. ◯ 2. ◯ 3. ◯ 4. ◯`) get
    three IDEOGRAPHIC spaces (U+3000) inserted between options — HTML collapses
    ASCII spaces but preserves U+3000. Regular double-spaces are NOT enough.
