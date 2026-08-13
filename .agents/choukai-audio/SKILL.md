@@ -15,7 +15,8 @@ description: Single owner of the listening audio end to end — the TTS script �
 - **Chapters**: `tests/<test_id>/聴解_チャプター.json` — start offset of every
   問題 and 例/N番 item, accumulated by the assembler (exact by construction;
   never recover via `silencedetect`). Consumed by `exam-app`
-  (chapter dropdown); regenerate the MP3 to refresh. Carries `"script_sha"`.
+  (chapter dropdown); regenerate the MP3 to refresh. Carries `"script_sha"` and
+  `"pacing_sha"`.
 - **Measured pacing evidence**: `references/official_pacing.md` (this folder).
 - **Measured REGISTER evidence**: `references/official_register.md` — the
   countable difference between official dialogue and generated dialogue
@@ -65,7 +66,7 @@ against generated papers written without this section:
 |---|---|---|
 | turns that are short reactions (≤12 chars: 「はい。」「そうですか。」「うん。」) | **18 %** | 6 % |
 | turns opening with a filler/reaction (はい・うん・ああ・ええ・あの・うーん・へえ・でも…) | **35 %** | 18 % |
-| hesitation tokens per paper (あのう/えー/えっと/うーん/まあ) | **median 41**, in 31/31 sittings | 0–4 |
+| hesitation tokens per paper (`FILLERS` list) | **median 27, band 9–48** | 0–4, now 23–58 |
 | flat contradiction 「〜ではありません」 per 10 k chars | **0.4** | 17.1 |
 
 Four binding rules follow. They are not style advice: a paper that fails them
@@ -75,11 +76,20 @@ is solvable by pattern, which is a content defect.
    short reaction turn in five. They are also what makes the audio breathe:
    each one is a 0.9 s turn gap (Part 3), which is half the answer to "the
    audio just talks without stopping".
-2. **Hesitation is normal speech.** Use 「あのう」「えーと」「うーん」「まあ」
-   「あ、」 where a real speaker would stall — asking a stranger a favour,
-   weighing two options, being corrected. Zero fillers in a 45-minute recording
-   is the single loudest tell that no human wrote it. Keep them OUT of the
-   announcer's lines: the 問題N instructions and 例 confirmations are read text.
+2. **Hesitation is normal speech — but the band has a CEILING.** Use
+   「あのう」「えーと」「うーん」「まあ」「あ、」 where a real speaker would stall —
+   asking a stranger a favour, weighing two options, being corrected. Zero
+   fillers in a 45-minute recording is the loudest tell that no human wrote it.
+   Keep them OUT of the announcer's lines: the 問題N instructions and 例
+   confirmations are read text.
+   **Official measures 27 per paper [9–48]** (`official_register.md` §7.1 — the
+   old "median 41, never fewer than 13" was wrong in both halves). Papers have
+   since gone through the top: 23–58, with one at 58 and another at 44. Over the
+   ceiling reads as a script performing hesitancy, which is its own tell.
+   The deficit is elsewhere and it is not fillers: official carries `うん` 11.3
+   per paper against our 4.2, and `あ、` 12.9 against our 22.5. **Spend the
+   budget on the other speaker acknowledging (うん/そうなんだ/へえ), not on the
+   current speaker stalling.**
 3. **Match the register to the relationship, and hold it.** Casual
    (うん / 〜だけど / 〜かな / 〜じゃない) for students, family, close
    colleagues; keigo (はい / ええ / 承知しました / おっしゃる) at a counter, to a
@@ -117,8 +127,12 @@ Japanese. So:
 - **Vary who drives.** Official 問題1 is as often 「an instruction giver assigns
   tasks」 (「〜してくれる？」) as 「a customer asks and is redirected」.
 - 「まず」 is the 問題1 QUESTION's word (このあとまず何をしますか). Inside the
-  dialogue it is a crutch: official uses it 5.6 per 10 k chars, and generated
-  papers have run six times that.
+  dialogue it is a crutch that marks the answer: measured over the 問題1 span with
+  the question lines removed, official runs a median of **5.5 per 10 k chars,
+  never above 19.1**. Shipped papers run 4.1–36.3 — `20260807_1` at 36.3,
+  `20260813_1` at 22.0 and `20260813_2` at 21.2 are all above the official
+  maximum. Cap: **stay under 19**, and let the speaker order the tasks by
+  content (「その前に」「〜が終わったら」) rather than by saying まず.
 
 ### NEVER reveal an answer for a scored item (exam-breaking)
 
@@ -142,6 +156,18 @@ Japanese. So:
 ## Block conventions (parser contract)
 
 - Blocks are separated by ONE blank line. **One block = one audio unit.**
+- **One turn = ONE line. Two consecutive lines may never carry the same speaker
+  label.** A gap is inserted between every pair of lines, so a split turn asks
+  for `GAP_BETWEEN_LINES` (0.9 s) where the same speaker pausing at a 。 is a
+  within-turn pause (official same-speaker median 0.40 s, p75 0.53; capped at
+  `GAP_WITHIN_TURN_MAX`). Official has **0** consecutive same-label pairs in 31
+  sittings; `20260813_2` shipped **9** — every one a short turn placed in front
+  of a long turn by that same speaker (「係員:承知しました。」/「係員:もちろんです。
+  …」), which is how that paper reached the 15 % reaction-turn rate its QA credited
+  as fixed. Without them it is 12.2 %. **A reaction turn only counts when the
+  OTHER speaker says it** — that is what makes the previous turn land, and what
+  earns the 0.9 s gap. To have one speaker pause mid-thought, write one line and
+  put a 。 in it (`official_register.md` §7.3).
 - Item blocks start with `例。` or `N番。` + situation + question ON THE SAME
   LINE: `1番。会社で女の人と男の人が話しています。…か。`
 - Section markers (`問題1。`, with 。) and instruction text (問題1では、…) are
@@ -330,8 +356,20 @@ the examinee who is speaking. Nothing reconciles them — the author does:
 - **A two-party item whose two labels resolve to the SAME voice is a defect.**
   Same `voice` a few percent of `rate` apart is not a distinguishable second
   person — who said the deciding line is the whole task in 問題1/2/5. Avoid casting both speakers of a two-party item to the same voice. Cast one male and one
-  female label per item; `男1`/`男2` rate-splitting is for the three-person
+  female label per item; `男1`/`男2` pitch-splitting is for the three-person
   conversation only.
+- **問題5 needs a three-party item, and two voices is not a reason to skip it.**
+  `choukai-items.md` §統合理解 requires 問題5-1番 to be a ≥3-speaker discussion
+  (official has one in every sitting since 2020). edge-tts ships exactly two
+  ja-JP voices, so the only build that works is **two same-gender labels split by
+  `pitch` plus one of the other gender** — `男1` (+18 Hz) + `男2` (−16 Hz) + `女`,
+  or `女1`/`女2` + `男` — which is what `SPEAKER_MAP` already carries and what
+  this repo's first three papers used. Do **not** spend `rate` on the split
+  (it moves the paper's difficulty). If you reach for a role label instead
+  (`職員`, `店長`, `部長`…), check its `pitch` against the other same-gender label
+  in that item and keep them the documented margin apart — ~25 Hz on a female,
+  ~20 Hz on a male. `職員` (−14 Hz) beside `女` (+0 Hz) is 14 Hz, under the
+  margin: three names, two-and-a-bit voices.
 - **Scan the WHOLE block for the narration, not its first line.** 問題5's 2番
   puts the situation on the block's **second** line — scan the full block so gender assignments are not missed.
 - **Questions must name speakers unambiguously.** If they say 「男の学生は」/
@@ -396,11 +434,23 @@ no gate hears anything, so listen to one item before adopting it.
 
 ## `script_sha`: the MP3 says which script it was built from
 
-`聴解_チャプター.json` is `{"script_sha": …, "duration": …, "chapters": […]}`,
-where `script_sha` is the **first 12 hex digits of sha1 over the raw bytes of
-`聴解スクリプト.txt`** (`source_sha()`). `make check` recomputes it and fails
-on disagreement — the only mechanical evidence that the audio on disk speaks
-the script on disk. Always run `make mp3 <test_id>` whenever editing a script to ensure audio and script stay in sync.
+`聴解_チャプター.json` is
+`{"script_sha": …, "pacing_sha": …, "duration": …, "chapters": […]}`.
+
+- **`script_sha`** — the **first 12 hex digits of sha1 over the raw bytes of
+  `聴解スクリプト.txt`** (`source_sha()`): mechanical evidence that the audio on
+  disk speaks the script on disk. Always run `make mp3 <test_id>` when editing a
+  script.
+- **`pacing_sha`** — the same 12 hex digits over every `GAP_`/`PAUSE_`/`SHAPE_`
+  constant plus the source of `pause_after`/`gap_before_line`/`shape_pauses`,
+  comments and whitespace stripped (`pacing_sha()`). It exists because
+  `script_sha` covers the WORDS only: three documented gaps were wrong in the
+  code for the whole life of eight papers (§"a constant that is never REACHED"),
+  and fixing them left every MP3 on disk stale with nothing to show it — the
+  constants are not in the script bytes and mtimes are checkout-unstable. Editing
+  a constant now means `make mp3` for **every** test, or a red gate.
+
+`make check` recomputes both and fails on disagreement.
 
 - A **content** hash, deliberately not an mtime — mtimes are checkout-unstable.
 - **Never hand-edit the sha.** The only way to make it agree is `make mp3
@@ -421,6 +471,8 @@ values here and in the code together.
 | GAP_AFTER_PRE_QUESTION | 3 s | 2.80 s [2.5–4.6, bimodal ≈2.8 / ≈4.1], n=74 | 問1: question → conversation |
 | GAP_OPTION_READING | **20 s** | 20.22 s [20.19–20.81], n=139 | 問2 only: read printed options (most-missed pause) |
 | GAP_BETWEEN_SPOKEN_CHOICES | 3 s | 3.10 s [2.66–3.26], n=427 | 問3/問5 spoken choices |
+| GAP_BETWEEN_SPOKEN_RESPONSES | **2.2 s** | 2.23 s [2.14–2.31], n=795 | 問4 only: prompt→1→2→3, read continuously |
+| GAP_BEFORE_REPEATED_QUESTION | **3 s** | 2.94 s [2.81–3.19], n=74 | 問1/問2: talk → the question read again |
 | GAP_AFTER_SHITSUMON1 | 10 s | 10.0 s [7.8–12.4], n=20 | 問5: 質問1's answer time — inserted BEFORE the 質問2 line, i.e. after 質問1's four spoken choices |
 | GAP_WITHIN_TURN_MAX | 0.5 s | 0.40 s [p75 0.53, p90 0.72], n=181 same-speaker | ceiling for a pause INSIDE one turn |
 | SHAPE_PAUSE_FLOOR | 0.6 s | — (threshold, not a measurement) | only pauses above this are capped |
@@ -451,6 +503,35 @@ about 15 % of its runtime, all of it dead air.
 
 **Verify a pacing constant on the rendered MP3, never in the source.** A
 constants-only review passed this defect on every paper it had.
+
+### …and a constant that is never REACHED reads as correct too
+
+The same lesson, one level up, found 2026-08-13 by measuring the rendered MP3 of
+`20260813_2` against the archive rather than against this table. Three gaps the
+table already documented were not in the audio:
+
+| | table said | audio had | official |
+|---|---|---|---|
+| 問題4, between the three replies | "the 3 s gap belongs to 問3/5 ONLY" (no constant) | **0.900 s** | 2.23 s [2.14–2.31] n=795 |
+| 問題1/2, talk → question repeated | "(same constant)" as `GAP_AFTER_PRE_QUESTION`, verdict "inside" | **0.905 s** | 2.94 s [2.81–3.19] n=74 |
+| after an 例 | ours-not-theirs (13×12 s / 18×8 s) | 12 s / 8 s of dead air | none — 例 runs into the confirmation |
+
+`GAP_AFTER_PRE_QUESTION` is applied only at `line_index == 1`, so the repeated
+question — the block's LAST line — never saw it; the 問題4 branch was gated on
+`section in ("問題3","問題5")`, so every 問題4 gap fell through to
+`GAP_BETWEEN_LINES`. Both rows were "inside the band" in every review, because a
+review reads the value, not whether the branch is reachable. 問題4 was the
+expensive one: 即時応答 is heard once, and reading its three replies 2.5× tighter
+than official raised the section's difficulty above the real exam.
+`GAP_BETWEEN_SPOKEN_RESPONSES` and `GAP_BEFORE_REPEATED_QUESTION` now exist, and
+`pause_after()` skips the 例 (below).
+
+**A pacing change leaves every existing MP3 stale, and `script_sha` cannot see
+it** — the constants are not in the script bytes. `pacing_sha` (Part 3
+§`script_sha`) is hashed over the GAP_/PAUSE_/SHAPE_ values plus the source of
+`pause_after`/`gap_before_line`/`shape_pauses`, and `make check` fails on
+disagreement, so a constants edit without `make mp3` is now a red gate instead of
+an invisible defect.
 
 Three knowing deviations from the archive:
 
@@ -512,20 +593,30 @@ Expected pause counts, from `ANSWER_PAUSE` and the 33 item blocks (例 incl.):
 
 | Pause | Count | Source |
 |---|---|---|
-| 12 s answer | 13 | 問題1 (6) + 問題2 (7) |
-| 8 s answer | 18 | 問題3 (6) + 問題4 (12) |
+| 12 s answer | 11 | 問題1 (5) + 問題2 (6), 例 excluded |
+| 8 s answer | 16 | 問題3 (5) + 問題4 (11), 例 excluded |
 | 10 s answer | 2 | 問題5 |
 | 20 s option-reading | 7 | 問題2 only (例+6) |
 
-**These counts describe OUR build, not the official file.** `pause_after()`
-appends an answer pause after every item block, 例 included; official audio
-pauses after **scored items only** (an 例 runs straight into the
-「最もよいものは◯番です…」 confirmation), measuring 12 × 12 s and 17 × 8 s
-where the table says 13 and 18 — that histogram is also the cheapest proof of
-the official item counts (5/6/5/11/3 = 30 answers, `jlpt-exam-structure`'s
-table). `make check` asserts the table against `EXPECTED_ITEMS`/`ANSWER_PAUSE`,
-so do not "correct" it toward the official histogram — change `pause_after()`
-first. Estimated length ≈ 40–45 min; official runtime (36.6–52.1 min, median
+**One answer pause per SCORED item.** `pause_after()` gives an 例 the short
+instruction pause instead, because official runs the practice item straight into
+its 「最もよいものは◯番です…」 confirmation — there is nothing to answer, the
+announcer is about to say the answer. Until 2026-08-13 it appended a full answer
+pause there too (13 × 12 s / 18 × 8 s, ~40 s of dead air a paper) and this file
+explained the difference away as ours-not-theirs. `make check` now derives the
+table from `EXPECTED_ITEMS`/`ANSWER_PAUSE` minus one 例 per section in
+`NEEDS_EXAMPLE`; **verified on the rendered MP3** of `20260813_2`: 11 × 12.000 s,
+16 × 8.000 s, 7 × 20 s, 3 × 10 s, 48 × 2.200 s. If a future count disagrees,
+change `pause_after()` first and the table second.
+
+**Open ±1 against the archive.** `official_pacing.md`'s histogram note reports
+official at **12 × 12 s and 17 × 8 s** — one more than the 11/16 that 5+6 and
+5+11 scored items give. So official has one extra pause in each of those duration
+bands, from something not yet identified (a structural rest that lands in the
+band, or an 例 that does get answer time in some sittings). It is corroboration,
+not a constant, so nothing depends on it — but do not "fix" our counts to 12/17
+by restoring an 例 pause without first identifying where official's extra pause
+actually sits. Estimated length ≈ 40–45 min; official runtime (36.6–52.1 min, median
 43.3) is **not a calibration target** — it varies with how much the actors
 say, which is content, not pacing. Match the pause table, not the clock.
 

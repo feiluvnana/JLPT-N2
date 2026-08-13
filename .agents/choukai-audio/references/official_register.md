@@ -25,7 +25,7 @@ Turn = one speaker's uninterrupted speech, wrapped OCR lines rejoined.
 |---|---|---|---|
 | turns that are short reactions (≤12 chars) | **18 %** (589/3215) | 6 % (19/321) | ⅓ |
 | turns opening with a filler/reaction token | **35 %** (1131/3215) | 18 % (57/321) | ½ |
-| hesitation tokens per sitting (あのう/えー/えっと/うーん/まあ/ええと) | **median 41** (range 13–70, present in 31/31) | 0–4 | ~0 |
+| hesitation tokens per sitting — **corrected, see §7.1** | **median 27** (range 9–48), gate token list | 0–4 | ~0 |
 | explicit denial 「〜ではありません」 per 10 k chars | **0.4** | 17.1 | **43×** |
 | 問題3 "triple denial" close (Xの話ではありませんし…) | **0** in 31 sittings | 19.8/10 k — every item of a section | ∞ |
 | 問題4 replies opening はい / いいえ / では | **1.3 %** combined | **57 %** | 44× |
@@ -155,7 +155,7 @@ target, not the official median:
 | Measure | Baseline | Rewritten | Official | Gate |
 |---|---|---|---|---|
 | short reaction turns | 5–7 % | **12–14 %** | 18 % | WARN < 12 % |
-| hesitation tokens per paper | 3–25 | **23–31** | median 41, min 13 | WARN < 13 |
+| hesitation tokens per paper | 3–25 | **23–31** | median 27, min 9 (§7.1) | WARN < 9 **and > 48** |
 | flat denials per 10 k chars | 10.5–16.0 | **2.3–3.1** | 1.4 | WARN > 6.0 |
 | 問題4 replies opening はい/いいえ/では | 33–69 % | **0–11 %** | 1.3 % | WARN > 20 % |
 | 問題3 denial sweeps | every item | **0** | 0 | FAIL |
@@ -187,3 +187,138 @@ devices     regex per row of §2.3 over the joined turn text, per 10 k chars
 The measurement script is not committed (one-shot analysis over `refs/`), but
 every number above is reproducible from those five rules in a few lines of
 Python. Re-measure after adding sittings; do not re-derive from one paper.
+
+---
+
+## 7. Re-measurement 2026-08-13 — the register rules worked, and the tells moved
+
+Re-run of §§1–3 over the same 31 `script.md` extracts, now against **8** shipped
+papers (`tests/*/聴解スクリプト.txt`, 1 217 turns) instead of the original
+baseline. Two things came out of it: one number in §1 was wrong, and every
+measure §1 counts is now inside the band while **five measures it does not count
+are outside it**. The pattern is the finding — a counted tell gets fixed and an
+uncounted one grows in its place, so the rules below are written as
+**distributions with caps**, not as phrase bans.
+
+### 7.1 The hesitation figure was wrong (and its floor was above the archive)
+
+§1 claimed "median 41 (range 13–70, present in 31/31)". It does not reproduce:
+
+| Token list | Official median | Official range |
+|---|---|---|
+| the six §1 names (あのう/えー/えっと/うーん/まあ/ええと) | **10** | 1–28 |
+| `check_consistency.py`'s `FILLERS` (adds あの、/あ、/ああ、/まあ、) | **27** | **9–48** |
+
+Neither is 41, and the "never fewer than 13" half is false under both: 12/2024
+and 7/2025 measure **9**, 12/2025 measures **11**. The gate's floor of 13 was
+therefore set *above* three sittings — including both 2025 papers — which
+contradicts this file's own stated policy ("thresholds sit at or below the
+official minimum"). Floor corrected to **9**.
+
+Caveat that applies to every filler count here: the official side is OCR, which
+drops some 「あ、」. It is the same source the original figure came from, so the
+comparison is sound; the absolute official value may run slightly low.
+
+**A ceiling was missing, and the papers went through it.** Shipped papers now
+measure **23–58** — `20260812_1` at 58 is above the official maximum of 48 and
+`20260813_1` at 44 is above the official median. Composition is off in the same
+direction: per paper, official carries `うん` **11.3** and `あ、` **12.9**;
+the papers carry `うん` **4.2** and `あ、` **22.5**. They hesitate more than
+official while *acknowledging* less. WARN band is two-sided: **9 ≤ fillers ≤ 48**.
+
+### 7.2 What §1 counts is now fixed
+
+| Measure | Official (pooled) | Papers (pooled) | Verdict |
+|---|---|---|---|
+| short reaction turns (≤12 ch) | 14.7 % (475/3 227) | 14.4 % (175/1 217) | inside |
+| 問題4 replies opening はい/いいえ/では | 1.3 % | 0–11 % | inside |
+| flat 「〜ではありません」 /10 k | 0.4 | median 0.55 | inside |
+| turns opening with a filler/reaction | 44.4 % | 32.0 % | short, improving |
+
+The 18 % / 35 % figures in §1 come from a different turn-splitting pass than the
+§6 rule produces (§6 rejoins OCR wraps and drops 問い lines; that yields the
+pooled 14.7 % / 44.4 % above on the same corpus). **The discrepancy is not
+resolved** — do not treat either pair as authoritative until one parse owns the
+number. The gate's 12 % floor sits below both, so nothing depends on it today.
+
+### 7.3 Five uncounted tells, all outside the archive
+
+Each row is now a rule with a cap; the rule text is owned by
+`question-authoring/references/choukai-items.md` §"Section item mix".
+
+| Measure | Official | Papers | Worst paper |
+|---|---|---|---|
+| 問題1 items set at a service counter | **6 %** (9/153) | 42 % (17/40) | `20260813_2` 5/5 |
+| 問題2 items keyed by 「一番/優先」 | **6 %** (8/141) | 52 % (25/48) | `20260810_1`, `20260813_2` 5/6 |
+| 問題2 items keyed by どのように | 18 % (25/141) | 2 % (1/48) | — |
+| 問題4 items with a もう/済/さっき already-done distractor | median **1**, max **3**, of 11.4 | — | `20260813_2` 9/11, `20260810_2` 8/11 |
+| 問題3 options ending 「〜について」 | **1 %** (8/685) | 60 % (116/192) | 24/24 in four papers |
+| 問題3 talk length, spoken chars (§7.4 rule) | median **305**, p10 251, min **177**, max 709 (n=149) | median **179**, max 258 | 34 of 40 items below official p10 |
+| 問題5 items with ≥3 speakers | 1番 3-party in **every** sitting since 2020 | 0 in the last 5 papers | — |
+| consecutive same-speaker turn pairs | **0** (max 1, an OCR wrap) | 0 in 6 papers | **`20260813_2`: 9** |
+| 「まず」 inside 問題1 dialogue /10 k | median **5.5** (0–19.1) | 4.1–36.3 | `20260807_1` 36.3 |
+| 一番 token /10 k | median **1.8** | median 10.25 | `20260810_1` 21.2 |
+
+Two of these need reading, not just counting:
+
+- **The same-speaker split is a gamed metric, not a style slip.** All 9 pairs in
+  `20260813_2` are a short turn placed immediately before a long turn *by the
+  same speaker* (「職員:ありがとうございます。」 / 「職員:手数料の…」;
+  「係員:承知しました。」 / 「係員:もちろんです。…」; also 「先生:なるほど。」, itself a
+  banned formula). They lift that paper's short-reaction share to the 15 % its QA
+  report credits as fixed — it is **12.2 %** without them. In the audio each one
+  also buys a 0.9 s `GAP_BETWEEN_LINES` where official has a ≤0.5 s within-turn
+  pause, so the metric was satisfied by an artifact the metric cannot see. Rule:
+  one turn is one line (`choukai-audio` §"Block conventions").
+- **問題5 lost the two-type structure**, which no token count would ever show.
+  Shinkanzen's 問題紹介 defines 統合理解 as two shapes and the archive uses one of
+  each per sitting; the last five papers used the enumerate-four-candidates shape
+  for **both** items. Rule and evidence: `choukai-items.md` §統合理解.
+
+### 7.4 Reproducing §7
+
+Same five rules as §6, plus:
+
+```
+問題1 setting   CUST = 窓口|受付|フロント|レジ|店で|店に|店員|客|電話をかけ|問い合わせ|カウンター
+問題2 q-type    over 問い lines (official) / each item's repeated question (ours),
+                one per item: 理由 | 一番・優先 | どのように | 何・どれ
+問題4 shape     per item, any NON-KEYED ^[1-3]、 matching もう|すでに|既に|さっき
+問題3 options   ^[1-4]、(.+) inside the 問題3..問題4 span; suffix test on 「について」
+問題3 talk      item block minus lead-in, minus ^[1-4]、 lines, minus the
+                question line, minus speaker tags; count non-space chars
+問題5 voices    distinct speaker labels per item block; a paper passes if ANY
+                item has >=3 (31/31 sittings do)
+same-speaker    two consecutive speaker-tagged lines with an identical label
+まず            count in the 問題1 span with the question lines removed
+```
+
+Scored items only on both sides, throughout: official script PDFs usually omit
+the 例, so counting ours with the 例 included overstates every per-section share
+by a sixth. The earlier "問題3 median 257" figure in this file came from a
+speaker-tag-only parse that silently dropped official monologues written without
+a tag; the §7.4 rule above is parser-independent and gives 305.
+
+### 7.5 What is gated, and what a green gate does not mean
+
+`tools/check_consistency.py` §G16 gates the countable half at the archive's
+outer edge, never at its median:
+
+| Gate | FAILs at | Class |
+|---|---|---|
+| a section keying two items to the same thing | any | FAIL |
+| 問題3 options suffixed 「〜について」 | > 2 per paper | FAIL |
+| 問題3 talk length | any scored item < 175 | FAIL |
+| 問題4 already-done distractors | > 3 items | FAIL |
+| 問題5 items with ≥3 speakers | 0 | FAIL |
+| two consecutive lines, one speaker label | any | FAIL |
+| セクション構成表 covering every scored item | missing rows | FAIL |
+| 問題1 counter share, 問題2 question mix, 問題3 genre, keyed 「あ、」, まず rate | the quotas | WARN — QA settles them |
+
+The eight papers on disk on 2026-08-13 are exempt BY NAME
+(`CHOUKAI_SECTION_GRANDFATHERED`) because all of them predate these rules and
+every one lacks the 構成表; their breaches print as WARN lines carrying the same
+measurement a FAIL would. Remove an id when its 聴解 is repaired. **A green G16
+means no official sitting looks this bad — not that the section is
+official-shaped**; the authoring targets are tighter and live in
+`question-authoring/references/choukai-items.md` §"Section item mix".

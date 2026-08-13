@@ -1487,8 +1487,14 @@ def build(d: Path, storage: str = "server", out_dir: Path | None = None) -> Path
     dest.mkdir(parents=True, exist_ok=True)
     out = dest / "解答.html"
     gdata = grading_data(gam, gids, ckeys, combined_keys, choukai_scripts)
+    # 聴解_チャプター.json is stamped as a FOURTH source because player_html()
+    # embeds it verbatim: a rebuilt MP3 changes every chapter offset while the
+    # Markdown stays byte-identical, so without this stamp a sheet that seeks to
+    # the previous build's offsets is invisible to `make check`. The 2026-08-13
+    # pacing fixes moved every offset in all eight papers.
     render_combined(gmd, cmd, testid, all_keys, out, gdata, player=player_html(d),
-                    sources=[gengo_src, choukai_src, script_src], storage=storage)
+                    sources=[gengo_src, choukai_src, script_src,
+                             d / "聴解_チャプター.json"], storage=storage)
 
     has_mp3 = (d / "聴解.mp3").is_file()
     chap = d / "聴解_チャプター.json"

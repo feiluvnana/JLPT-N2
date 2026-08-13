@@ -111,6 +111,25 @@ GAP_BETWEEN_LINES = 0.9        # ordinary gap between dialogue turns
 GAP_AFTER_PRE_QUESTION = 3.0   # 問題1/2: after the question, before the talk
 GAP_OPTION_READING = 20.0      # 問題2 only: time to read printed options
 GAP_BETWEEN_SPOKEN_CHOICES = 3.0  # 問題3/5: between spoken choices 1〜4
+GAP_BETWEEN_SPOKEN_RESPONSES = 2.2  # 問題4 only: prompt→reply1→reply2→reply3
+# 問題4's three responses are read CONTINUOUSLY, at a gap of their own: official
+# measures 2.23 s [2.14-2.31] over n=795, clearly below the 3.10 s of 問題3/5
+# (official_pacing.md §2). The archive had said so since the pacing work, but no
+# constant existed and `gap_before_line()` gated its choice branch on
+# `section in ("問題3", "問題5")`, so every 問題4 gap fell through to
+# GAP_BETWEEN_LINES — 0.9 s, measured on the rendered MP3 of 20260813_2 as
+# 0.900/0.902/0.903/0.900 in 1番. 即時応答 is heard once and picked from three
+# spoken replies, so reading them 2.5x tighter than official raises the section's
+# difficulty over the real exam. Worth ~60 s per paper.
+GAP_BEFORE_REPEATED_QUESTION = 3.0  # 問題1/2: talk → the question read again
+# Same class of miss: the pacing table's row "問題1 conversation → repeat of
+# question, 2.94 s [2.81-3.19], n=74" was marked "(same constant)" as
+# GAP_AFTER_PRE_QUESTION and "inside", but that constant is applied only at
+# line_index == 1, so the repeated question — the block's LAST line — also fell
+# through to 0.9 s (rendered 20260813_2 問題1-1番: 3.00 s before the talk, then
+# 0.905 s before the question came back). Verify a pacing constant on the
+# rendered MP3, not in the source: a constants-only review cannot see a constant
+# that is never reached.
 GAP_AFTER_SHITSUMON1 = 10.0    # 問題5 two-question item: answer time for 質問1
 # Placed BEFORE the 質問2 line, not after the 質問1 line. Those were the same
 # point while 2番's options were printed and 質問1/質問2 sat adjacent. This repo
@@ -162,6 +181,31 @@ SPEAKER_RE = re.compile(r"^([^:: ]{1,6})[::](.*)$")
 # edge-tts pitch support varies by version — only pass it if accepted.
 _PITCH_OK = bool(edge_tts) and "pitch" in inspect.signature(
     edge_tts.Communicate.__init__).parameters
+
+
+def pacing_sha() -> str:
+    """12 hex digits over the values AND the logic that decide every gap.
+
+    `script_sha` proves the audio speaks the script on disk. Nothing proved it
+    was built with the PACING on disk, and that gap is not hypothetical: three
+    documented gaps (問題4's inter-reply 2.23 s, 問題1/2's repeat-of-question
+    2.94 s, the 例 answer pause official does not have) were wrong in the code
+    for the whole life of the eight papers, and every fix leaves all of their
+    MP3s stale with no other evidence — mtimes are checkout-unstable and the
+    constants are not in the script bytes.
+
+    Hashed: every GAP_/PAUSE_/SHAPE_ constant plus ANSWER_PAUSE, and the source
+    of the three functions that apply them, with comments and whitespace
+    stripped so that documenting a constant is not a reason to rebuild 45
+    minutes of audio.
+    """
+    consts = {k: v for k, v in sorted(globals().items())
+              if k.isupper() and isinstance(v, (int, float, dict))
+              and (k.startswith(("GAP_", "PAUSE_", "SHAPE_")))}
+    logic = "".join(inspect.getsource(f)
+                    for f in (pause_after, gap_before_line, shape_pauses))
+    logic = re.sub(r"#[^\n]*|\s+", "", logic)
+    return hashlib.sha1((repr(consts) + logic).encode()).hexdigest()[:12]
 
 
 def source_sha(path: Path) -> str:
@@ -334,7 +378,17 @@ def voice_for(line: str):
 
 
 def pause_after(block_first_line: str, section: str) -> float:
+    # An 例 gets NO answer pause: official runs the practice item straight into
+    # 「最もよいものは◯番です。解答用紙の…」, because there is nothing to answer —
+    # the announcer is about to give the answer. Appending one anyway put 8-12 s
+    # of dead air after each of the four 例 (~40 s a paper) and was the whole
+    # reason our pause histogram read 13 x 12 s / 18 x 8 s where the archive
+    # measures 12 and 17. That mismatch was documented as ours-not-theirs for
+    # several papers; the dry-run table in choukai-audio Part 3 now matches the
+    # official histogram because the build does.
     if ITEM_RE.match(block_first_line):
+        if block_first_line.startswith("例。"):
+            return PAUSE_AFTER_INSTRUCTION
         return ANSWER_PAUSE.get(section, 12.0)
     if block_first_line.startswith("問題"):
         return PAUSE_AFTER_INSTRUCTION
@@ -368,6 +422,15 @@ def gap_before_line(section: str, line_index: int, line: str,
     if (CHOICE_RE.match(line) and section in ("問題3", "問題5")
             and CHOICE_RE.match(prev_line or "")):
         return GAP_BETWEEN_SPOKEN_CHOICES    # spoken choices, 3 s apart
+    # 問題4 reads prompt → 1 → 2 → 3 continuously, at its own measured gap. Its
+    # replies are `1、…`-shaped like a spoken choice but are NOT read 3 s apart.
+    if section == "問題4" and is_item_block:
+        return GAP_BETWEEN_SPOKEN_RESPONSES
+    # The repeated question closing a 問題1/2 item: an untagged (narrator) line
+    # that is not the block's first, in a section whose items end that way.
+    if (is_item_block and section in ("問題1", "問題2")
+            and not SPEAKER_RE.match(line) and not CHOICE_RE.match(line)):
+        return GAP_BEFORE_REPEATED_QUESTION
     return GAP_BETWEEN_LINES
 
 
@@ -742,13 +805,14 @@ async def main():
     # only one of them — the rest shipped speaking superseded 問題N
     # instructions and no gate could see it.
     sha = source_sha(src)
+    pacing = pacing_sha()
     chapters_path = out_dir / "聴解_チャプター.json"
     chapters_path.write_text(
-        json.dumps({"script_sha": sha,
+        json.dumps({"script_sha": sha, "pacing_sha": pacing,
                     "duration": round(clock, 2), "chapters": chapters},
                    ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"Chapters -> {chapters_path} ({len(chapters)} marks, "
-          f"script_sha {sha})")
+          f"script_sha {sha}, pacing_sha {pacing})")
 
     # Cleanup temporary segments directory
     if not keep_segments and seg.exists():

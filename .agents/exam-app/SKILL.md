@@ -174,6 +174,15 @@ on; it is NOT the booklets `言語知識・読解.html` / `聴解.html`, which
 `build_booklet.py` overwrites on every build, and there are no per-section
 `*_解答.html` files.
 
+**`make mp3` obliges `make sheet`.** The player embeds
+`聴解_チャプター.json` **verbatim**, so every chapter offset in the sheet comes
+from the MP3 build that wrote that file. Rebuild the audio and the sheet is
+seeking to the previous build's offsets — while the Markdown is byte-identical,
+so the three source stamps see nothing. The 2026-08-13 choukai pacing fixes moved
+every offset in all eight papers, which is why the chapter JSON is now stamped as
+a **fourth source** of `解答.html` and `make check` fails a sheet older than its
+chapters.
+
 ## Grading — press 「採点する」 (in-page: the normal path)
 
 Pressing the button: (1) grades all 101 questions against embedded keys,

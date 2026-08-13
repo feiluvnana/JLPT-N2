@@ -76,7 +76,7 @@ never from the orchestrator's summary), and nothing else:
 | 2 文字・語彙 | `test_spec.json` + `question-authoring/SKILL.md` + its `references/moji-goi.md` + `jlpt-exam-structure/SKILL.md` | 問1–6 fragment of `言語知識・読解.md` |
 | 2 文法 | same, with `references/bunpou.md` | 問7–9 fragment |
 | 2 読解 | same, with `references/dokkai.md` | 問10–14 fragment |
-| 2 聴解 | `test_spec.json` + `question-authoring/SKILL.md` + `references/choukai-items.md` + `choukai-audio/SKILL.md` + `jlpt-exam-structure/SKILL.md` | `聴解.md`, `聴解スクリプト.txt` |
+| 2 聴解 | `test_spec.json` + `question-authoring/SKILL.md` + `references/choukai-items.md` + `choukai-audio/SKILL.md` + `jlpt-exam-structure/SKILL.md` | `聴解.md` (incl. the セクション構成表), `聴解スクリプト.txt` |
 | 3 Build+gate | `exam-app/SKILL.md`, `choukai-audio/SKILL.md` (synthesis §), this file's topic-table § | `言語知識・読解.md` (merged), the HTML/MP3 artifacts, `logs/topics.json` row, gate report |
 | 4 QA | `exam-qa-review/SKILL.md` (which routes to what it needs) | `qa/qa-report-<id>.md` |
 | 5 Model Answer | `exam-model-answer/SKILL.md` | `tests/<id>/模範解答.html` |
@@ -91,7 +91,12 @@ followed by the key tables in the same order — the sheet builder's
 `strip_key()` truncates at that single heading, so a fragment must never carry
 its own key heading. Parallel authors never write to the same file. The 聴解
 author owns both `聴解.md` and `聴解スクリプト.txt` complete (body + keys at
-end; they must stay synchronized — `choukai-audio`).
+end; they must stay synchronized — `choukai-audio`), and finishes each section by
+writing its **セクション構成表** after the key heading and checking its columns
+against the per-section quotas — the artifact and the quotas are defined in
+`question-authoring/references/choukai-items.md`, and QA reads the table first.
+Write it while the section is fresh: it is the only view in which a repeated key
+or a one-shape section is visible, and both have shipped past every other check.
 
 ### Subagent prompt template (all stages)
 

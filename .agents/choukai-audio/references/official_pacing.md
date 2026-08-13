@@ -85,7 +85,8 @@ measured, not the number of files.
 | answer pause 問題4 | **8.28** [8.19–8.43] n=267 | 8.32 [8.20–8.57] n=139 | `ANSWER_PAUSE 問題4 = 8` | inside |
 | 問題2 option-reading | **20.22** [20.19–20.38] n=139 | 20.22 [20.19–20.42] n=77 | `GAP_OPTION_READING = 20` | inside |
 | 問題1 question → conversation | **2.80** [2.74–2.91] n=74 | 2.80 [2.74–4.03] n=39 | `GAP_AFTER_PRE_QUESTION = 3` | inside |
-| 問題1 conversation → repeat of question | 2.94 [2.81–3.19] n=74 | 3.02 [2.82–4.15] n=39 | (same constant) | inside |
+| 問題1 conversation → repeat of question | 2.94 [2.81–3.19] n=74 | 3.02 [2.82–4.15] n=39 | `GAP_BEFORE_REPEATED_QUESTION = 3` | inside — but **never applied until 2026-08-13**, see §2.1 |
+| 問題4, between the three replies | 2.23 [2.14–2.31] n=795 | — | `GAP_BETWEEN_SPOKEN_RESPONSES = 2.2` | inside — **added 2026-08-13**, see §2.1 |
 | between spoken choices, 問題3 | **3.10** [2.66–3.26] n=427 | 3.13 [2.64–3.31] n=245 | `GAP_BETWEEN_SPOKEN_CHOICES = 3` | inside |
 | between spoken choices, 問題5 | 3.07 [2.62–3.26] n=220 | 3.06 [2.63–3.25] n=102 | (same constant) | inside |
 | 問題5 質問1 → 質問2 | **10.0** [range 7.8–12.4] n=20 | 10.0 | `GAP_AFTER_SHITSUMON1 = 10` | inside |
@@ -120,6 +121,40 @@ closure survives. Re-measured on the rendered MP3 after the fix:
 rendered MP3, not in the source.** A constants-only review passed this defect on
 every paper it had.
 
+### 2.1 The constants were right, reachable, and applied — check all three
+
+The section above ("The constants were right and the audio was still wrong") was
+about TTS padding defeating a correct value. Measuring the rendered MP3 of
+`20260813_2` against the archive on 2026-08-13 found the next layer: two values
+that this table already carried were **never reached by the code**, and one pause
+the archive does not have was being inserted.
+
+| | this table said | the audio had | official |
+|---|---|---|---|
+| 問題4, reply → reply | "the 3 s gap belongs to 問題3 and 問題5 ONLY" — no constant existed | **0.900 s** ×4 in 1番 | 2.23 [2.14–2.31] n=795 |
+| 問題1/2, talk → question repeated | "(same constant)", verdict "inside" | **0.905 s** | 2.94 [2.81–3.19] n=74 |
+| after an 例 | our-build deviation, 13×12 s / 18×8 s | 12 s / 8 s | none: 例 runs into 「最もよいものは◯番です…」 |
+
+`GAP_AFTER_PRE_QUESTION` is applied at `line_index == 1` only, so the repeated
+question (the block's LAST line) fell through to `GAP_BETWEEN_LINES`; the
+spoken-choice branch was gated on `section in ("問題3","問題5")`, so every 問題4 gap
+did too. Both rows read "inside" in every review, because a review checks the
+value, not whether the branch that returns it can be reached. 問題4 was the
+expensive one — 即時応答 is heard once, so reading its three replies 2.5× tighter
+than official raised that section above real-exam difficulty for eight papers.
+
+Two lessons, both now enforced rather than remembered:
+
+- **Measure the rendered MP3 against the ARCHIVE, not against the table.** The
+  table is what the code was supposed to do; only the audio says what it did.
+  A silencedetect histogram over one paper takes a minute and would have caught
+  all three.
+- **A pacing change makes every existing MP3 stale, and `script_sha` cannot see
+  it** — the constants are not in the script bytes. `pacing_sha` now stamps the
+  GAP_/PAUSE_/SHAPE_ values plus the source of
+  `pause_after`/`gap_before_line`/`shape_pauses` into `聴解_チャプター.json`, and
+  `make check` fails on disagreement.
+
 ### 問題5 is three different pauses, not one
 
 | Position | n | min | median | max |
@@ -141,8 +176,9 @@ time.
   sitting; the 1.1 s sub-gap has n≈4 per item.)
 - **問題4's three responses are read continuously** — the gaps before its answer
   pause cluster at 2.23 s [2.14–2.31] n=795, clearly below the 3.1 s of
-  問題3/5. The 3 s spoken-choice gap belongs to 問題3 and 問題5 only, as
-  `choukai-audio` Part 4 already says.
+  問題3/5. Reproduced since 2026-08-13 by `GAP_BETWEEN_SPOKEN_RESPONSES = 2.2`
+  (§2.1); before that every 問題4 gap was 0.9 s. The 3 s spoken-choice gap still
+  belongs to 問題3 and 問題5 only.
 - **A single ~10 s rest sits between 問題2 and 問題3** in 5 of 22 segmented
   sittings (9.9 / 10.3 / 10.3 / 10.3 / 10.6 s), landing after the 問題3
   instruction and before its 例. In the other sittings it is absent or

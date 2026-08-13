@@ -461,6 +461,22 @@ off-level because one source said "N1" is the mis-measurement this skill codes
 
 ### 4. 聴解 structure
 
+- **Read the セクション構成表 in `聴解.md` as COLUMNS, before any item.** The table
+  (one row per item: 場面 / 主導 / 正解 / 消去方法 / 質問型) and the per-section
+  quotas it is checked against are defined in
+  `question-authoring/references/choukai-items.md`. Fail on: the same 正解 twice
+  in a section; one 消去方法 more than twice; any quota breached
+  (問題1 counter items, 問題2 「一番/優先」 keys, 問題3 announcements, 問題4
+  already-done distractors, 問題5's two types). **A missing table is itself a
+  fail** — every defect this step catches shipped past a green gate AND a
+  fresh-eyes QA that read the items one at a time, including `20260813_2`'s
+  問題1, which keyed 「本人確認書類を提示する」 in both 1番 and 2番.
+  Verify the table against the script rather than trusting it: an author who
+  filled it in wrongly is exactly the author whose section repeats.
+- **Read the first and last spoken line of each item in a column too.** If the
+  openings or closings rhyme, the section is a template
+  (`choukai-audio` §"Banned formulas"); the gate only catches *identical*
+  closers longer than 4 chars.
 - The question type matches the 問題: 何をしますか lives in 問題1, どうして/
   何が一番 in 問題2, 何について in 問題3. Ensure question types match section definitions.
 - **Every 問題1-3 wrong option must be grounded in the script.** For each

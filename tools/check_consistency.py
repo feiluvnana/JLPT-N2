@@ -337,9 +337,15 @@ def check_pacing():
               f"doc {documented} vs code {m.ANSWER_PAUSE}")
 
     # The dry-run pause distribution is derivable; assert the doc's numbers.
+    # SCORED items only: `pause_after()` gives an 例 the short instruction pause,
+    # not answer time, because official runs the practice item straight into its
+    # 「最もよいものは◯番です…」 confirmation. Counting the 例 here is what made the
+    # documented histogram read 13 × 12 s / 18 × 8 s against the archive's 12 and
+    # 17, a mismatch the doc then explained away as ours-not-theirs.
     expected: dict[float, int] = {}
     for sec, items in m.EXPECTED_ITEMS.items():
-        expected[m.ANSWER_PAUSE[sec]] = expected.get(m.ANSWER_PAUSE[sec], 0) + items
+        scored = items - (1 if sec in m.NEEDS_EXAMPLE else 0)
+        expected[m.ANSWER_PAUSE[sec]] = expected.get(m.ANSWER_PAUSE[sec], 0) + scored
     for secs, count in re.findall(r"^\|\s*(\d+) s answer\s*\|\s*(\d+)\s*\|", doc, re.M):
         check(f"dry-run: {count} × {secs}s answer pauses",
               expected.get(float(secs)) == int(count),
@@ -2047,9 +2053,27 @@ def check_fabricated_distractors(name: str, key_section: str):
 # 言語知識・読解 — zero ○/（正解） annotations across generated papers' 文字・語彙,
 # 文法 and 読解 key tables, which state the key in prose (「…から3」) — so this
 # check is 聴解-only until that changes.
+# WENT SILENT, 2026-08-13: this check printed `ok … (0 annotated cells)` for the
+# five most recent papers — i.e. the mis-key guard has been inert on every test
+# since `20260811_1`, on two independent counts:
+#   1. the 番号 column changed form. It shipped as `| 1 |` in the first three
+#      papers and `| 1番 |` since, and the row filter was `cells[0].isdigit()`,
+#      which rejects `1番`. Now normalized via CHOUKAI_ITEM_LABEL.
+#   2. the 解説 convention drifted. Newer cells mark only the WRONG options
+#      (`1 ✗「…」／2 ✗「…」`) and name the key in prose (`…ため、4が正解。`), so
+#      `declared_correct_options` found no ○ and no （正解） and skipped the row
+#      by design. PROSE_CORRECT now reads that form too.
+# Both are the same lesson as the check's own docstring: a guard that is "silent
+# by construction where the convention is not used" turns itself off the moment
+# the convention drifts, and nothing reports that it stopped looking. The
+# annotated-cell count in the label is the tell — a 0 there is a dead check, not
+# a clean paper.
 GROUNDING_MARK = re.compile(r"([1-4])\s*([✗×✕✖☓○◯〇])")
 CORRECT_TAG = re.compile(r"[（(]正解[)）]")
+PROSE_CORRECT = re.compile(r"(?:^|[。、])(?:正解は)?([1-4])\s*(?:番)?が正解")
 CIRCLE_MARKS = "○◯〇"
+# Both 番号 column forms in use: `1`/`1番`/`例`, plus 問題5's `2番-質問1`.
+CHOUKAI_ITEM_LABEL = re.compile(r"^(例|\d+)(番)?(?:-質問[12])?$")
 
 
 def declared_correct_options(cell: str) -> tuple[set[int], int]:
@@ -2066,7 +2090,8 @@ def declared_correct_options(cell: str) -> tuple[set[int], int]:
         end = hits[i + 1].start() if i + 1 < len(hits) else len(cell)
         if h.group(2) in CIRCLE_MARKS or CORRECT_TAG.search(cell[h.end():end]):
             declared.add(int(h.group(1)))
-    return declared, len(hits)
+    prose = {int(p.group(1)) for p in PROSE_CORRECT.finditer(cell)}
+    return declared | prose, len(hits) + len(prose)
 
 
 def check_choukai_kaisetsu_keys(name: str, ct: str, bi):
@@ -2082,7 +2107,7 @@ def check_choukai_kaisetsu_keys(name: str, ct: str, bi):
         if section not in (1, 2, 3) or not line.lstrip().startswith("|"):
             continue
         cells = [c.strip() for c in line.split("|")[1:-1]]
-        if len(cells) < 3 or not (cells[0] == "例" or cells[0].isdigit()):
+        if len(cells) < 3 or not CHOUKAI_ITEM_LABEL.match(cells[0]):
             continue
         keyed = re.fullmatch(r"\**\s*([1-4])\s*\**", cells[1])
         if not keyed:
@@ -2092,7 +2117,7 @@ def check_choukai_kaisetsu_keys(name: str, ct: str, bi):
             continue
         annotated += 1
         if declared != {int(keyed.group(1))}:
-            label = cells[0] if cells[0] == "例" else f"{cells[0]}番"
+            label = cells[0] if not cells[0].isdigit() else f"{cells[0]}番"
             bad.append(f"問題{section}-{label}: 正解欄 {keyed.group(1)}, "
                        f"解説 marks {sorted(declared)} as （正解）")
     check(f"{name}: every 聴解 解説 marks the option the key column names "
@@ -3397,8 +3422,17 @@ def check_mondai5_enumeration(name: str, script_text: str, ct: str, bi):
 #
 #   short reaction turns (<=12 ch)   official 18 %   generated 6 %
 #   turns opening with a filler      official 35 %   generated 18 %
-#   hesitation tokens per paper      official 41     generated 0-4
+#   hesitation tokens per paper      official 27     generated 0-4  (band 9-48)
 #   flat 「〜ではありません」/10 k       official 0.4    generated 17.1
+#
+# Re-measured 2026-08-13 (official_register.md §7) after 8 papers had shipped
+# against these rules: every counted measure above is now inside the band, and
+# five UNCOUNTED ones are outside it — 問題1 counter settings 42 % vs 6 %, 問題2
+# 「一番/優先」 keys 52 % vs 6 %, 問題4 already-done distractors 9/11 vs 1/11.4,
+# 問題3 options suffixed 「〜について」 60 % vs 1 %, 問題5 three-party items 0 vs one
+# per sitting. Fixing a counted tell grows an uncounted one, so those five are
+# written as per-section QUOTAS in choukai-items.md §"Section item mix" and read
+# off the セクション構成表 by exam-qa-review §4; they are not yet gated here.
 #
 # The FAIL-class rows below are not style: each makes items solvable by pattern.
 # 問題3's triple denial names three of the four options aloud and rejects each;
@@ -3412,6 +3446,12 @@ def check_mondai5_enumeration(name: str, script_text: str, ct: str, bi):
 P3_DENIAL_RE = re.compile(r"(話ではありません|論じているのでもありません"
                           r"|取り上げているわけでもありません|わけでもありません)")
 FILLERS = ("あのう", "あの、", "えー", "えっと", "ええと", "うーん", "まあ、", "あ、", "ああ、")
+# Measured over the 31 archive extracts with THIS token list: median 27, range
+# 9-48 (official_register.md §7.1). Two-sided, because the papers went through
+# the top (23-58) after the one-sided floor was added: over-hesitating is a tell
+# too. The floor is the archive MINIMUM, per this file's stated threshold policy
+# — the old 13 sat above three sittings, both 2025 papers among them.
+FILLER_MIN, FILLER_MAX = 9, 48
 REACTION_MAX_CH = 12
 Q4_SHAPE_RE = re.compile(r"^(はい|いいえ|いえ|では)[、。]")
 
@@ -3508,12 +3548,17 @@ def check_script_register(name: str, script_text: str, m):
 
     fillers = sum(script_text.count(f) for f in FILLERS)
     warn(f"{name}: 聴解 dialogue hesitates like a person ({fillers} tokens)",
-         fillers >= 13,
-         f"official carries a median of 41 hesitation tokens per paper "
-         f"(あのう/えー/えっと/うーん/まあ/あ、) and never fewer than 13, in 31/31 "
-         f"sittings; generated papers have carried as few as 3. Zero fillers in "
-         f"45 minutes is the loudest tell that no human wrote it — keep them out "
-         f"of the ANNOUNCER's lines only (choukai-audio §Register)")
+         FILLER_MIN <= fillers <= FILLER_MAX,
+         f"official measures a median of {27} over this FILLERS list with a band "
+         f"of {FILLER_MIN}–{FILLER_MAX} across 31 sittings (the earlier figure "
+         f"'median 41, never fewer than 13' was wrong in both halves — 12/2024 "
+         f"and 7/2025 measure 9 — see official_register.md §7.1, which is why "
+         f"this floor is 9 and not 13). Under the floor: no human wrote it. OVER "
+         f"the ceiling is its own tell — a script performing hesitancy; papers "
+         f"have shipped at 58. The real deficit is not fillers: official carries "
+         f"うん 11.3/paper against our 4.2, so spend the budget on the OTHER "
+         f"speaker acknowledging, not the current one stalling. Keep all of it "
+         f"out of the ANNOUNCER's lines (choukai-audio §Register)")
 
     denials = len(re.findall(r"(ではありません|じゃありません|必要は?ありません"
                              r"|しなくていい)", script_text))
@@ -3539,6 +3584,325 @@ def check_script_register(name: str, script_text: str, m):
              f"papers have run over half. A set of 「はい、〜」/「いいえ、まだ〜ていません」"
              f"/「では、〜」 is solvable without hearing the prompt — write three "
              f"stances on the prompt instead (choukai-items.md §即時応答)")
+
+
+# G16. SECTION-LEVEL defects. Every 聴解 defect that has cleared both a green
+# gate AND a fresh-eyes QA was a repeat across a section's items, invisible one
+# item at a time: G15 above counts tokens, check_choukai_kaisetsu_keys reads one
+# row, nothing ever put two KEYS side by side. `20260813_2` 問題1 shipped
+# 「本人確認書類を提示する」 as the key of BOTH 1番 and 2番, reached by the same
+# interrupting line, past all of it.
+#
+# Thresholds follow this file's policy — at or beyond the archive's whole range,
+# never at its median — so a FAIL means "no official sitting looks like this",
+# while the authoring TARGETS (tighter) live in choukai-items.md §"Section item
+# mix". Measured 2026-08-13 over the 31 script.md extracts; method and per-paper
+# numbers in choukai-audio/references/official_register.md §7.
+#
+#   quantity                          official                 gate FAILs at
+#   問題3 options ending 「について」      8 of 685 (1 %)           > 2 per paper
+#   問題3 talk, spoken chars           median 305, p10 251,     any item < 175
+#                                     min 177 (n=149)
+#   問題4 items w/ an already-done      median 1, max 3          > 3
+#     (もう/すでに/さっき) distractor      of 11-12 items
+#   問題5 items with >=3 speakers      >=1 in 31/31 sittings    0
+#   two consecutive lines, one label   0 (our format contract)  any
+#
+# The judgment half — is this item a service counter, is this talk a person's
+# 主張 — cannot be decided by regex, so it is WARN-only below and belongs to
+# exam-qa-review §4, which reads the セクション構成表's columns.
+ALREADY_DONE_RE = re.compile(r"(もう|すでに|既に|さっき)")
+COUNTER_RE = re.compile(r"(窓口|受付|フロント|レジ|店で|店に|店員|客|電話をかけ"
+                        r"|問い合わせ|カウンター)")
+BROADCAST_RE = re.compile(r"(ラジオ|テレビ|ニュース|講演|講座|インタビュー|番組|広報)")
+P3_TALK_FLOOR = 175
+P3_TALK_TARGET = 220
+
+# GRANDFATHER SCOPE, stated exactly: the eight papers on disk on 2026-08-13 were
+# authored before any of these rules existed, and every one breaches at least the
+# セクション構成表 row (an artifact none of them could have written). Clearing a
+# breach means re-authoring items and rebuilding the MP3, which is a decision
+# about those papers, not about this gate — so they are exempted BY NAME and
+# their breaches print as WARN lines carrying the same measurement a FAIL would,
+# never as `ok` and never as silence. Any id not in this set FAILS. Delete an id
+# the moment that test's 聴解 is repaired; do not add one to quiet a new paper.
+CHOUKAI_SECTION_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1",
+    "20260812_1", "20260812_2", "20260813_1", "20260813_2",
+}
+GRANDFATHER_NOTE = " [pre-rule paper — a FAIL for any id not grandfathered]"
+
+
+def _gated(test_id: str, name: str, ok: bool, detail: str):
+    """FAIL for a paper authored under the rule, WARN for one that predates it."""
+    if test_id in CHOUKAI_SECTION_GRANDFATHERED:
+        return warn(name, ok, detail + GRANDFATHER_NOTE)
+    return check(name, ok, detail)
+
+
+def choukai_item_label(first_line: str) -> str:
+    return "例" if first_line.startswith("例。") else first_line.split("番。")[0] + "番"
+
+
+def choukai_key_table(ct: str, bi) -> dict[tuple[int, str], int]:
+    """{(問題, '1番'): keyed option} from the 【正解・解説】 tables.
+
+    The 番号 column has shipped in two forms — `1` in the first three papers,
+    `1番` since — so both normalize here. `check_choukai_kaisetsu_keys` read only
+    the first form, which is half of why it went silent (see its docstring).
+    """
+    cut = bi.KEY_HEADING.search(ct)
+    if not cut:
+        return {}
+    out, sec = {}, None
+    for line in ct[cut.start():].splitlines():
+        head = re.match(r"^#+\s*問題([1-5])", line)
+        if head:
+            sec = int(head.group(1))
+            continue
+        if sec is None or not line.lstrip().startswith("|"):
+            continue
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cells) < 2 or not CHOUKAI_ITEM_LABEL.match(cells[0]):
+            continue
+        keyed = re.fullmatch(r"\**\s*([1-4])\s*\**", cells[1])
+        if keyed:
+            lab = cells[0] if not cells[0].isdigit() else f"{cells[0]}番"
+            out[(sec, lab)] = int(keyed.group(1))
+    return out
+
+
+def choukai_printed_options(ct: str, bi) -> dict[tuple[int, str], dict[int, str]]:
+    """問題1/2 printed option lists, from the booklet body only."""
+    cut = bi.KEY_HEADING.search(ct)
+    body = ct[:cut.start()] if cut else ct
+    out: dict[tuple[int, str], dict[int, str]] = collections.defaultdict(dict)
+    sec = item = None
+    for line in body.splitlines():
+        head = re.match(r"^#+\s*問題([1-5])", line)
+        if head:
+            sec, item = int(head.group(1)), None
+            continue
+        lab = re.match(r"^\*\*(例|\d+番)\*\*", line)
+        if lab:
+            item = lab.group(1)
+            continue
+        opt = re.match(r"^\s*([1-4])[.．、]\s*(.+?)\s*$", line)
+        if opt and sec and item:
+            out[(sec, item)][int(opt.group(1))] = opt.group(2)
+    return out
+
+
+def choukai_span(script_text: str, n: int) -> str:
+    parts = re.split(rf"^問題{n}。$", script_text, maxsplit=1, flags=re.M)
+    if len(parts) < 2:
+        return ""
+    return (re.split(rf"^問題{n + 1}。$", parts[1], maxsplit=1, flags=re.M)[0]
+            if n < 5 else parts[1])
+
+
+def choukai_item_blocks(span: str, m, scored_only: bool = False) -> list[list[str]]:
+    out = []
+    for block in re.split(r"\n\s*\n", span):
+        lines = [l.strip() for l in block.strip().splitlines() if l.strip()]
+        if not lines or not m.ITEM_RE.match(lines[0]):
+            continue
+        if scored_only and lines[0].startswith("例。"):
+            continue
+        out.append(lines)
+    return out
+
+
+def spoken_choices(lines: list[str], top: int = 4) -> dict[int, str]:
+    hits = (re.match(rf"^([1-{top}])、(.+?)。?$", l) for l in lines)
+    return {int(h.group(1)): h.group(2) for h in hits if h}
+
+
+def p3_talk_chars(lines: list[str]) -> int:
+    """Spoken characters of a 問題3 talk: no lead-in, no choices, no question."""
+    body = []
+    for line in lines[1:]:
+        if re.match(r"^[1-4]、", line) or "何について" in line:
+            continue
+        body.append(re.sub(r"^[^\s:：]{1,6}[:：]", "", line))
+    return len(re.sub(r"\s", "", "".join(body)))
+
+
+def check_choukai_key_duplication(test_id: str, ct: str, st: str, m, bi):
+    """No two items in one section may be keyed to the same thing (G16)."""
+    keys, printed = choukai_key_table(ct, bi), choukai_printed_options(ct, bi)
+    name = f"{test_id}: no two 聴解 items in a section share a key"
+    dup, seen_any = [], 0
+    for sec in (1, 2, 3):
+        if sec == 3:
+            src = {choukai_item_label(l[0]): spoken_choices(l)
+                   for l in choukai_item_blocks(choukai_span(st, 3), m, True)}
+        else:
+            src = {lab: o for (s, lab), o in printed.items()
+                   if s == sec and lab != "例"}
+        first: dict[str, str] = {}
+        for lab, opts in src.items():
+            keyed = keys.get((sec, lab))
+            if not keyed or keyed not in opts:
+                continue
+            seen_any += 1
+            norm = re.sub(r"[\s。、・]", "", opts[keyed])
+            if norm in first:
+                dup.append(f"問題{sec}-{first[norm]}と{lab} both keyed "
+                           f"「{opts[keyed]}」")
+            first[norm] = lab
+    if not seen_any:
+        return skip(name, "no key column this gate can pair with an option list")
+    _gated(test_id, f"{name} ({seen_any} keys compared)", not dup,
+           "; ".join(dup) + " — the second item tests nothing the first did not. "
+           "Rewrite one item's task (choukai-items.md §'Write the SECTION TABLE')")
+
+
+def check_choukai_countable_mix(test_id: str, ct: str, st: str, m, bi):
+    """The section-mix rules a regex can decide (G16)."""
+    keys = choukai_key_table(ct, bi)
+    bad = []
+
+    p3 = choukai_item_blocks(choukai_span(st, 3), m, True)
+    suffixed = [f"{choukai_item_label(l[0])}-{n}" for l in p3
+                for n, t in spoken_choices(l).items() if t.endswith("について")]
+    if len(suffixed) > 2:
+        bad.append(f"問題3: {len(suffixed)} options suffixed 「〜について」, official "
+                   f"8 of 685 — write the bare noun phrase (一人旅をするよさ)")
+    short = [f"{choukai_item_label(l[0])}={p3_talk_chars(l)}" for l in p3
+             if p3_talk_chars(l) < P3_TALK_FLOOR]
+    if short:
+        bad.append(f"問題3: talk shorter than any of the archive's 149 — "
+                   f"{', '.join(short)} chars, official median 305 / p10 251 / "
+                   f"min 177, target {P3_TALK_TARGET}+")
+
+    p4 = choukai_item_blocks(choukai_span(st, 4), m, True)
+    done, akey = [], []
+    for lines in p4:
+        lab = choukai_item_label(lines[0])
+        opts = spoken_choices(lines, top=3)
+        keyed = keys.get((4, lab))
+        if any(ALREADY_DONE_RE.search(t) for n, t in opts.items() if n != keyed):
+            done.append(lab)
+        if keyed in opts and opts[keyed].startswith("あ"):
+            akey.append(lab)
+    if len(done) > 3:
+        bad.append(f"問題4: {len(done)} of {len(p4)} items carry an already-done "
+                   f"(もう/すでに/さっき) distractor ({', '.join(done)}), official "
+                   f"median 1 max 3 — the shape becomes the key")
+
+    p5 = choukai_item_blocks(choukai_span(st, 5), m)
+    voices = []
+    for lines in p5:
+        labs = {h.group(1) for h in (m.SPEAKER_RE.match(l) for l in lines)
+                if h and h.group(1) in m.SPEAKER_MAP}
+        voices.append((choukai_item_label(lines[0]), sorted(labs)))
+    if voices and not any(len(v) >= 3 for _, v in voices):
+        bad.append("問題5: no item has 3+ speakers (" +
+                   "; ".join(f"{lab} {v}" for lab, v in voices) +
+                   "), against 31/31 sittings — 統合理解 is 2人以上の意見を整理; "
+                   "cast 男1+男2+女 (choukai-items.md §統合理解)")
+
+    _gated(test_id, f"{test_id}: 聴解 section mix inside the archive's range",
+           not bad, " ⁄ ".join(bad))
+
+
+def check_choukai_same_speaker_lines(test_id: str, st: str, m):
+    """One turn is one line — no two consecutive lines share a label (G16)."""
+    bad, prev = [], None
+    for line in st.splitlines():
+        hit = m.SPEAKER_RE.match(line.strip())
+        lab = hit.group(1) if hit and hit.group(1) in m.SPEAKER_MAP else None
+        if lab and lab == prev:
+            bad.append(f"{lab}:{hit.group(2).strip()[:20]}…")
+        prev = lab
+    _gated(test_id, f"{test_id}: 聴解 script has no split turns", not bad,
+           f"{len(bad)} line(s) repeat the previous speaker — " +
+           "; ".join(f"「{b}」" for b in bad[:4]) +
+           ". One turn is one line: a split turn buys a 0.9 s turn gap where "
+           "official has a 0.40 s within-turn pause, and inflates the "
+           "reaction-turn rate without adding a reaction — only the OTHER "
+           "speaker's turn counts (choukai-audio §'Block conventions')")
+
+
+def check_choukai_section_table(test_id: str, ct: str, bi):
+    """The セクション構成表 exists and covers every scored item (G16)."""
+    name = f"{test_id}: 聴解.md carries the セクション構成表"
+    cut = bi.KEY_HEADING.search(ct)
+    tail = ct[cut.start():] if cut else ct
+    head = re.search(r"^#+\s*セクション構成表", tail, re.M)
+    if not head:
+        return _gated(test_id, name, False,
+                      "no セクション構成表 heading — one row per item "
+                      "(場面 / 主導 / 正解 / 消去方法 / 質問型), after the answer-key "
+                      "heading. QA reads its columns first "
+                      "(choukai-items.md §'Write the SECTION TABLE')")
+    rows = {c.strip() for line in tail[head.start():].splitlines()
+            if line.lstrip().startswith("|")
+            for c in [line.split("|")[1]] if CHOUKAI_ITEM_LABEL.match(c.strip())}
+    rows |= {f"{r}番" for r in rows if r.isdigit()}
+    want = {lab for (_, lab) in choukai_key_table(ct, bi) if lab != "例"}
+    missing = sorted(want - rows)
+    _gated(test_id, f"{name} ({len(rows & want)}/{len(want)} items)",
+           not missing, f"no row for {missing[:8]} — a partial table audits a "
+           f"partial section")
+
+
+def check_choukai_judgment_mix(test_id: str, st: str, ct: str, m, bi):
+    """The mix rules only a human can settle — WARN, and QA owns them (G16)."""
+    keys = choukai_key_table(ct, bi)
+    out = []
+
+    p1 = choukai_item_blocks(choukai_span(st, 1), m, True)
+    counter = [choukai_item_label(l[0]) for l in p1 if COUNTER_RE.search(l[0])]
+    if len(counter) > 2:
+        out.append(f"問題1: {len(counter)} of {len(p1)} items at a service counter "
+                   f"({', '.join(counter)}), official 6 % (9/153) — official 問題1 "
+                   f"is someone ASSIGNING work")
+
+    shapes = collections.Counter()
+    for lines in choukai_item_blocks(choukai_span(st, 2), m, True):
+        q = lines[-1]
+        shapes["理由" if re.search(r"どうして|理由|なぜ", q) else
+               "一番/優先" if re.search(r"一番|最も|優先", q) else
+               "どのように" if re.search(r"どのように|どんな", q) else "何/どれ"] += 1
+    if shapes["一番/優先"] > 2:
+        out.append(f"問題2: {shapes['一番/優先']} items keyed by 「一番/優先」, "
+                   f"official 6 % (8/141) — one answer-marking device doing the "
+                   f"whole section")
+    if shapes["理由"] < 2:
+        out.append(f"問題2: {shapes['理由']} 理由 (どうして) item(s) — official 37 % "
+                   f"(52/141), the section's largest class")
+
+    p3 = choukai_item_blocks(choukai_span(st, 3), m, True)
+    talks = [choukai_item_label(l[0]) for l in p3 if BROADCAST_RE.search(l[0])]
+    if len(talks) < 3:
+        out.append(f"問題3: only {len(talks)} of {len(p3)} items are a broadcast, "
+                   f"lecture or interview — the rest are procedure "
+                   f"announcements, i.e. 課題理解 content in a 概要理解 slot")
+
+    akey = [choukai_item_label(l[0]) for l in
+            choukai_item_blocks(choukai_span(st, 4), m, True)
+            if (lambda o, k: k in o and o[k].startswith("あ"))(
+                spoken_choices(l, top=3), keys.get((4, choukai_item_label(l[0]))))]
+    if len(akey) > 2:
+        out.append(f"問題4: {len(akey)} keyed replies open with 「あ」 "
+                   f"({', '.join(akey)}) — a shared opener on the KEY is a shape "
+                   f"to sort by (no measured band: official keys are not in the "
+                   f"extracts, so judge it)")
+
+    span = "\n".join(l for l in choukai_span(st, 1).splitlines()
+                     if not re.search(r"何をしますか|何をしなければ|まず何", l))
+    rate = span.count("まず") / max(len(span) / 10000, 1e-9)
+    if rate > 19:
+        out.append(f"問題1: 「まず」 {rate:.1f} per 10 k inside the dialogue, "
+                   f"official median 5.5 max 19.1 — it marks the answer; order "
+                   f"tasks by content (その前に / 〜が終わったら)")
+
+    warn(f"{test_id}: 聴解 section mix (judgment calls)", not out,
+         " ⁄ ".join(out) + " — quotas in choukai-items.md §'Section item mix'; no "
+         "regex settles these, so resolve or explain each and read the "
+         "セクション構成表's columns (exam-qa-review §4)")
 
 
 def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
@@ -3625,13 +3989,32 @@ def check_artifact_freshness(d):
                   f"聴解_チャプター.json records {got!r} — run `make mp3 {d.name}`; "
                   f"the shipped audio speaks a superseded script "
                   f"(jlpt-test-generation Invariants)")
+            # …and with today's PACING. script_sha covers the words only: three
+            # documented gaps (問題4 inter-reply, 問題1/2 repeat-of-question, the
+            # 例 answer pause) were wrong in the code for the whole life of the
+            # eight papers, and fixing them leaves every MP3 stale with nothing
+            # else to show it — the constants are not in the script bytes.
+            mk = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
+            want_p, got_p = mk.pacing_sha(), data.get("pacing_sha")
+            check(f"{d.name}: 聴解.mp3 was built with today's pacing "
+                  f"(pacing_sha {want_p})", got_p == want_p,
+                  f"聴解_チャプター.json records {got_p!r} — run `make mp3 "
+                  f"{d.name}`; the audio is timed by superseded constants "
+                  f"(choukai-audio Part 3 §script_sha)")
 
     # HTML: WARN on a missing stamp (no built HTML carries one yet — the rebuild
     # belongs to the paper-repair pass), FAIL when a stamp is present and stale.
     stale, unstamped = [], []
+    # 解答.html embeds 聴解_チャプター.json VERBATIM for its chapter dropdown, so a
+    # rebuilt MP3 leaves the sheet seeking to the previous build's offsets — the
+    # 2026-08-13 pacing fixes moved every offset in all eight papers. The three
+    # Markdown/script stamps could not see it, because none of those files
+    # changed. Stamping the chapter JSON as a fourth source makes `make sheet`
+    # mandatory after `make mp3`, which it always was in fact.
     html_sources = {"言語知識・読解.html": ["言語知識・読解.md"],
                     "聴解.html": ["聴解.md"],
-                    "解答.html": ["言語知識・読解.md", "聴解.md", "聴解スクリプト.txt"]}
+                    "解答.html": ["言語知識・読解.md", "聴解.md", "聴解スクリプト.txt",
+                                  "聴解_チャプター.json"]}
     for html_name, srcs in html_sources.items():
         page = d / html_name
         if not page.is_file():
@@ -4002,6 +4385,12 @@ def check_tests():
             # partly OCR, so measuring it here would flag the yardstick.
             if origin == "generated":
                 check_script_register(d.name, st, m)
+                # G16 — section-level, i.e. what item-by-item review cannot see.
+                check_choukai_key_duplication(d.name, ct, st, m, bi)
+                check_choukai_countable_mix(d.name, ct, st, m, bi)
+                check_choukai_same_speaker_lines(d.name, st, m)
+                check_choukai_section_table(d.name, ct, bi)
+                check_choukai_judgment_mix(d.name, st, ct, m, bi)
             check_spec_target_items(d, gt, st, bi)
         else:
             check("聴解スクリプト.txt present", False, "canonical name required")
