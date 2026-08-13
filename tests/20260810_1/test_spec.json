@@ -1,10 +1,10 @@
 {
- "seed": "81480636+reroll(reading_topics,81480636)+reroll(paraphrase,60851241)",
+ "seed": "81480636+reroll(reading_topics,81480636)+reroll(paraphrase,60851241)+reroll(word_formation,4827847876)",
  "generated_at": "2026-08-10 10:02:21",
  "test_id": "20260810_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 2,
+  "history_len": 6,
   "cooldown": 2
  },
  "items": {
@@ -23,9 +23,9 @@
    "救助"
   ],
   "word_formation": [
-   "〜ち(勝ち)",
-   "〜費(交通費)",
-   "当〜(当劇場)"
+   "悪〜(悪影響)",
+   "初〜(初体験)",
+   "〜立て(採れたて)"
   ],
   "context_words": [
    "ええと",

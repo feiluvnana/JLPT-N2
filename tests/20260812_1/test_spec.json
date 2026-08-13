@@ -1,379 +1,379 @@
 {
-  "seed": 11060548,
-  "generated_at": "2026-08-12 10:02:39",
-  "test_id": "20260812_1",
-  "rotation": {
-    "recency_source": "ledger",
-    "history_len": 4,
-    "cooldown": 2
-  },
-  "items": {
-    "kanji_reading": [
-      "折り曲げる(おりまげる)",
-      "具体的(ぐたいてき)",
-      "食塩(しょくえん)",
-      "埋める(うめる)",
-      "尊重(そんちょう)"
-    ],
-    "orthography": [
-      "展開",
-      "補う",
-      "会館",
-      "換気",
-      "空中"
-    ],
-    "word_formation": [
-      "自〜(自宅)",
-      "〜じみる(所帯じみる)",
-      "〜触れ(雪見)"
-    ],
-    "context_words": [
-      "通行",
-      "つりあう",
-      "ええと",
-      "該当",
-      "名場面",
-      "足を延ばす",
-      "証言"
-    ],
-    "paraphrase": [
-      "あらかじめ(事前に)",
-      "適度に",
-      "たちまち",
-      "どなる",
-      "厚かましい(失礼だ)"
-    ],
-    "usage": [
-      "融通",
-      "ボリューム",
-      "割り込む",
-      "並行",
-      "及ぶ"
-    ],
-    "grammar_p7": [
-      "〜限りでは",
-      "〜だけ(のことは)ある",
-      "〜を通じて",
-      "〜たいものだ・てほしいものだ",
-      "〜にせよ〜にせよ",
-      "〜といい〜といい",
-      "〜はずがない",
-      "〜わけではない",
-      "敬語:承る",
-      "〜ないわけにはいかない",
-      "〜ぬきにして",
-      "〜にかけては"
-    ],
-    "grammar_p8": [
-      "〜ないことには",
-      "条件限定(〜ない限りは…)",
-      "逆説対比(〜のに対して…は)",
-      "〜つつある",
-      "結果推量(〜にちがいない)"
-    ],
-    "quick_response": [
-      "部長、来週の会議の資料、印刷して机の上に置いておきました。",
-      "駐車時間が超過しております。",
-      "地震のため、一時的に閉館いたします。",
-      "部長がお呼びですので、至急会議室までお願いいたします。",
-      "〜かと思いきや",
-      "領収書の宛名、ご指定はございますか。",
-      "社長、来月のイベントの企画案、プレゼンさせていただけないでしょうか。",
-      "気が利く",
-      "本人確認のため、身分証明書を見せていただけますか。",
-      "天候によっては中止になる可能性もございますので、ご了承ください。",
-      "立て込んでいる"
-    ],
-    "listening_scenarios": [
-      {
-        "scenario": "ネイル:デザイン相談",
-        "theme": "スポーツ・余暇"
-      },
-      {
-        "scenario": "美術館:団体予約",
-        "theme": "文化・伝統"
-      },
-      {
-        "scenario": "取引先との訪問日程の再調整",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "動画配信会社:契約プラン変更の相談",
-        "theme": "メディア・情報"
-      },
-      {
-        "scenario": "語学学校:レベル分け",
-        "theme": "教育"
-      },
-      {
-        "scenario": "朝礼:新制度",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "クリニック:睡眠外来の予約",
-        "theme": "睡眠・健康"
-      },
-      {
-        "scenario": "リサイクル市での出品ルール",
-        "theme": "環境"
-      },
-      {
-        "scenario": "ITセミナーの事前課題と資料ダウンロード",
-        "theme": "デジタル化"
-      },
-      {
-        "scenario": "会社での出張旅費清算の手続き",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "ラジオ:転職の話",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "保険会社:契約内容の見直し",
-        "theme": "消費・経済"
-      },
-      {
-        "scenario": "工場:安全講習の案内",
-        "theme": "防災"
-      },
-      {
-        "scenario": "研究室の実験設備の共有スケジュール",
-        "theme": "教育"
-      },
-      {
-        "scenario": "自動車整備工場:車検の相談",
-        "theme": "交通",
-        "origin": "reauthored",
-        "note": "聴解問題1-4番 re-themed off its original pool draw (引っ越し業者との見積もり調整/住まい) to fix an automatic-fail cross-test errand repeat with 20260811_1's 聴解問題1-2番 (also 引っ越し業者, 男の人+担当者, 住まい, one test apart; qa/qa-report-20260812_1.md F1). Replacement institution/errand (自動車整備工場, 車検) checked against this paper's other 20 listening_scenarios and against 20260811_1's and 20260810_2's full 問題1/2/3/5 scenario sets (logs/topics.json) — no collision found. Same 課題理解 task shape (男の人はこのあとまず何をしなければなりませんか), key unchanged (3)."
-      },
-      {
-        "scenario": "学童:延長利用",
-        "theme": "子育て・家族"
-      },
-      {
-        "scenario": "音楽教室:レッスン",
-        "theme": "教育"
-      },
-      {
-        "scenario": "友人同士:卒業旅行の行き先決め",
-        "theme": "旅行・観光",
-        "origin": "reauthored",
-        "note": "聴解問題5-1番 re-themed off its original pool draw (サークル:合宿の計画/スポーツ・余暇) to fix a zero-tolerance headline-theme collision with 20260811_1's 聴解問題5-2番 (also スポーツ・余暇, logs/topics.json). Replacement theme costs one repeat against the 2-back paper 20260810_2 (問14=旅行・観光), the one repeat exam-blueprint rule 4(b) allows — same treatment as the F5 precedent in qa/qa-report-20260811_1.md. Same speakers (学生/女), same task shape (single-decision, decide-by-attribute), key unchanged (4)."
-      },
-      {
-        "scenario": "眼鏡店:度数変更",
-        "theme": "消費・経済"
-      },
-      {
-        "scenario": "小学校:保護者会の連絡",
-        "theme": "教育"
-      },
-      {
-        "scenario": "カスタマー:返品",
-        "theme": "働き方"
-      }
-    ],
-    "reading_topics": [
-      {
-        "topic": "15分都市",
-        "theme": "住まい"
-      },
-      {
-        "topic": "腸内細菌と食生活",
-        "theme": "睡眠・健康"
-      },
-      {
-        "topic": "伝統芸能の担い手不足",
-        "theme": "文化・伝統"
-      },
-      {
-        "topic": "ペットと社会",
-        "theme": "環境"
-      },
-      {
-        "topic": "情報社会におけるプライバシー保護",
-        "theme": "デジタル化"
-      },
-      {
-        "topic": "サプライチェーン",
-        "theme": "消費・経済"
-      },
-      {
-        "topic": "市民マラソンと沿道の負担",
-        "theme": "スポーツ・余暇"
-      },
-      {
-        "topic": "夜の街の明るさ",
-        "theme": "地域活性化"
-      },
-      {
-        "topic": "男女共同参画",
-        "theme": "人間関係"
-      },
-      {
-        "topic": "行政の避難指示・ハザードマップへの依存と個人の観察",
-        "theme": "防災",
-        "origin": "reauthored",
-        "note": "問題12 re-themed off its original pool draw (情報を疑う力/メディア・情報) to fix a zero-tolerance cross-test headline-theme repeat against the immediately previous test (20260811_1, which headlined メディア・情報 via 聴解問題5-1番, not via 問題12 itself — rule 4 is theme-level, not surface-position-level). The new theme 防災 is in neither 20260811_1's nor 20260810_2's headline set, keeps the 2-test-back repeat budget at 0, and does not collide with this paper's other 12 reading-half themes (防災 also appears as a non-headline 聴解 scenario, which the theme rules do not restrict)."
-      },
-      {
-        "topic": "高齢者の再雇用",
-        "theme": "働き方"
-      },
-      {
-        "topic": "献血バスの巡回と献血の条件のご案内",
-        "theme": "医療・福祉",
-        "origin": "reauthored",
-        "note": "問題14 re-themed off its original pool draw (情報公開請求の手続きと課題/行政・手続き) to fix a zero-tolerance cross-test headline-theme repeat against the immediately previous test (20260811_1 headlined 行政・手続き via its own 問題14). The new theme 医療・福祉 is in neither previous paper's headline set and leaves headline overlaps with 20260810_2 at zero."
-      },
-      {
-        "topic": "優先席と遠慮",
-        "theme": "交通",
-        "origin": "reauthored",
-        "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped, self-composed by the 文法 author and checked distinct against all 12 drawn reading_topics entries, all 21 listening_scenarios, and both prior papers' headline sets, per the exam-blueprint precedent set by 20260811_1's own 問題9 entry."
-      }
-    ]
-  },
-  "answer_positions": {
-    "問題1_語彙": [
-      1,
-      4,
-      2,
-      3,
-      2
-    ],
-    "問題2_語彙": [
-      2,
-      1,
-      3,
-      4,
-      1
-    ],
-    "問題3_語彙": [
-      1,
-      2,
-      4
-    ],
-    "問題4_語彙": [
-      4,
-      3,
-      3,
-      4,
-      2,
-      2,
-      1
-    ],
-    "問題5_語彙": [
-      3,
-      4,
-      1,
-      3,
-      2
-    ],
-    "問題6_語彙": [
-      3,
-      2,
-      4,
-      1,
-      2
-    ],
-    "問題7": [
-      3,
-      1,
-      2,
-      2,
-      1,
-      4,
-      3,
-      4,
-      4,
-      2,
-      1,
-      3
-    ],
-    "問題8": [
-      1,
-      4,
-      3,
-      4,
-      2
-    ],
-    "問題9": [
-      3,
-      2,
-      4,
-      1
-    ],
-    "問題10": [
-      2,
-      1,
-      3,
-      4,
-      3
-    ],
-    "問題11": [
-      3,
-      3,
-      1,
-      2,
-      1,
-      4,
-      4,
-      2
-    ],
-    "問題12": [
-      2,
-      3
-    ],
-    "問題13": [
-      4,
-      3,
-      1
-    ],
-    "問題14": [
-      3,
-      4
-    ],
-    "聴解_問題1": [
-      2,
-      1,
-      1,
-      3,
-      4
-    ],
-    "聴解_問題2": [
-      1,
-      4,
-      1,
-      4,
-      2,
-      3
-    ],
-    "聴解_問題3": [
-      3,
-      3,
-      2,
-      1,
-      4
-    ],
-    "聴解_問題4": [
-      2,
-      2,
-      1,
-      3,
-      1,
-      3,
-      1,
-      2,
-      3,
-      2,
-      1
-    ],
-    "聴解_問題5": [
-      4,
-      3,
-      2
-    ]
-  }
+ "seed": "11060548+reroll(word_formation,9830544209)",
+ "generated_at": "2026-08-12 10:02:39",
+ "test_id": "20260812_1",
+ "rotation": {
+  "recency_source": "ledger",
+  "history_len": 6,
+  "cooldown": 2
+ },
+ "items": {
+  "kanji_reading": [
+   "折り曲げる(おりまげる)",
+   "具体的(ぐたいてき)",
+   "食塩(しょくえん)",
+   "埋める(うめる)",
+   "尊重(そんちょう)"
+  ],
+  "orthography": [
+   "展開",
+   "補う",
+   "会館",
+   "換気",
+   "空中"
+  ],
+  "word_formation": [
+   "準〜(準決勝)",
+   "非〜(非公開)",
+   "〜券(回数券)"
+  ],
+  "context_words": [
+   "通行",
+   "つりあう",
+   "ええと",
+   "該当",
+   "名場面",
+   "足を延ばす",
+   "証言"
+  ],
+  "paraphrase": [
+   "あらかじめ(事前に)",
+   "適度に",
+   "たちまち",
+   "どなる",
+   "厚かましい(失礼だ)"
+  ],
+  "usage": [
+   "融通",
+   "ボリューム",
+   "割り込む",
+   "並行",
+   "及ぶ"
+  ],
+  "grammar_p7": [
+   "〜限りでは",
+   "〜だけ(のことは)ある",
+   "〜を通じて",
+   "〜たいものだ・てほしいものだ",
+   "〜にせよ〜にせよ",
+   "〜といい〜といい",
+   "〜はずがない",
+   "〜わけではない",
+   "敬語:承る",
+   "〜ないわけにはいかない",
+   "〜ぬきにして",
+   "〜にかけては"
+  ],
+  "grammar_p8": [
+   "〜ないことには",
+   "条件限定(〜ない限りは…)",
+   "逆説対比(〜のに対して…は)",
+   "〜つつある",
+   "結果推量(〜にちがいない)"
+  ],
+  "quick_response": [
+   "部長、来週の会議の資料、印刷して机の上に置いておきました。",
+   "駐車時間が超過しております。",
+   "地震のため、一時的に閉館いたします。",
+   "部長がお呼びですので、至急会議室までお願いいたします。",
+   "〜かと思いきや",
+   "領収書の宛名、ご指定はございますか。",
+   "社長、来月のイベントの企画案、プレゼンさせていただけないでしょうか。",
+   "気が利く",
+   "本人確認のため、身分証明書を見せていただけますか。",
+   "天候によっては中止になる可能性もございますので、ご了承ください。",
+   "立て込んでいる"
+  ],
+  "listening_scenarios": [
+   {
+    "scenario": "ネイル:デザイン相談",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "美術館:団体予約",
+    "theme": "文化・伝統"
+   },
+   {
+    "scenario": "取引先との訪問日程の再調整",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "動画配信会社:契約プラン変更の相談",
+    "theme": "メディア・情報"
+   },
+   {
+    "scenario": "語学学校:レベル分け",
+    "theme": "教育"
+   },
+   {
+    "scenario": "朝礼:新制度",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "クリニック:睡眠外来の予約",
+    "theme": "睡眠・健康"
+   },
+   {
+    "scenario": "リサイクル市での出品ルール",
+    "theme": "環境"
+   },
+   {
+    "scenario": "ITセミナーの事前課題と資料ダウンロード",
+    "theme": "デジタル化"
+   },
+   {
+    "scenario": "会社での出張旅費清算の手続き",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "ラジオ:転職の話",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "保険会社:契約内容の見直し",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "工場:安全講習の案内",
+    "theme": "防災"
+   },
+   {
+    "scenario": "研究室の実験設備の共有スケジュール",
+    "theme": "教育"
+   },
+   {
+    "scenario": "自動車整備工場:車検の相談",
+    "theme": "交通",
+    "origin": "reauthored",
+    "note": "聴解問題1-4番 re-themed off its original pool draw (引っ越し業者との見積もり調整/住まい) to fix an automatic-fail cross-test errand repeat with 20260811_1's 聴解問題1-2番 (also 引っ越し業者, 男の人+担当者, 住まい, one test apart; qa/qa-report-20260812_1.md F1). Replacement institution/errand (自動車整備工場, 車検) checked against this paper's other 20 listening_scenarios and against 20260811_1's and 20260810_2's full 問題1/2/3/5 scenario sets (logs/topics.json) — no collision found. Same 課題理解 task shape (男の人はこのあとまず何をしなければなりませんか), key unchanged (3)."
+   },
+   {
+    "scenario": "学童:延長利用",
+    "theme": "子育て・家族"
+   },
+   {
+    "scenario": "音楽教室:レッスン",
+    "theme": "教育"
+   },
+   {
+    "scenario": "友人同士:卒業旅行の行き先決め",
+    "theme": "旅行・観光",
+    "origin": "reauthored",
+    "note": "聴解問題5-1番 re-themed off its original pool draw (サークル:合宿の計画/スポーツ・余暇) to fix a zero-tolerance headline-theme collision with 20260811_1's 聴解問題5-2番 (also スポーツ・余暇, logs/topics.json). Replacement theme costs one repeat against the 2-back paper 20260810_2 (問14=旅行・観光), the one repeat exam-blueprint rule 4(b) allows — same treatment as the F5 precedent in qa/qa-report-20260811_1.md. Same speakers (学生/女), same task shape (single-decision, decide-by-attribute), key unchanged (4)."
+   },
+   {
+    "scenario": "眼鏡店:度数変更",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "小学校:保護者会の連絡",
+    "theme": "教育"
+   },
+   {
+    "scenario": "カスタマー:返品",
+    "theme": "働き方"
+   }
+  ],
+  "reading_topics": [
+   {
+    "topic": "15分都市",
+    "theme": "住まい"
+   },
+   {
+    "topic": "腸内細菌と食生活",
+    "theme": "睡眠・健康"
+   },
+   {
+    "topic": "伝統芸能の担い手不足",
+    "theme": "文化・伝統"
+   },
+   {
+    "topic": "ペットと社会",
+    "theme": "環境"
+   },
+   {
+    "topic": "情報社会におけるプライバシー保護",
+    "theme": "デジタル化"
+   },
+   {
+    "topic": "サプライチェーン",
+    "theme": "消費・経済"
+   },
+   {
+    "topic": "市民マラソンと沿道の負担",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "topic": "夜の街の明るさ",
+    "theme": "地域活性化"
+   },
+   {
+    "topic": "男女共同参画",
+    "theme": "人間関係"
+   },
+   {
+    "topic": "行政の避難指示・ハザードマップへの依存と個人の観察",
+    "theme": "防災",
+    "origin": "reauthored",
+    "note": "問題12 re-themed off its original pool draw (情報を疑う力/メディア・情報) to fix a zero-tolerance cross-test headline-theme repeat against the immediately previous test (20260811_1, which headlined メディア・情報 via 聴解問題5-1番, not via 問題12 itself — rule 4 is theme-level, not surface-position-level). The new theme 防災 is in neither 20260811_1's nor 20260810_2's headline set, keeps the 2-test-back repeat budget at 0, and does not collide with this paper's other 12 reading-half themes (防災 also appears as a non-headline 聴解 scenario, which the theme rules do not restrict)."
+   },
+   {
+    "topic": "高齢者の再雇用",
+    "theme": "働き方"
+   },
+   {
+    "topic": "献血バスの巡回と献血の条件のご案内",
+    "theme": "医療・福祉",
+    "origin": "reauthored",
+    "note": "問題14 re-themed off its original pool draw (情報公開請求の手続きと課題/行政・手続き) to fix a zero-tolerance cross-test headline-theme repeat against the immediately previous test (20260811_1 headlined 行政・手続き via its own 問題14). The new theme 医療・福祉 is in neither previous paper's headline set and leaves headline overlaps with 20260810_2 at zero."
+   },
+   {
+    "topic": "優先席と遠慮",
+    "theme": "交通",
+    "origin": "reauthored",
+    "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped, self-composed by the 文法 author and checked distinct against all 12 drawn reading_topics entries, all 21 listening_scenarios, and both prior papers' headline sets, per the exam-blueprint precedent set by 20260811_1's own 問題9 entry."
+   }
+  ]
+ },
+ "answer_positions": {
+  "問題1_語彙": [
+   1,
+   4,
+   2,
+   3,
+   2
+  ],
+  "問題2_語彙": [
+   2,
+   1,
+   3,
+   4,
+   1
+  ],
+  "問題3_語彙": [
+   1,
+   2,
+   4
+  ],
+  "問題4_語彙": [
+   4,
+   3,
+   3,
+   4,
+   2,
+   2,
+   1
+  ],
+  "問題5_語彙": [
+   3,
+   4,
+   1,
+   3,
+   2
+  ],
+  "問題6_語彙": [
+   3,
+   2,
+   4,
+   1,
+   2
+  ],
+  "問題7": [
+   3,
+   1,
+   2,
+   2,
+   1,
+   4,
+   3,
+   4,
+   4,
+   2,
+   1,
+   3
+  ],
+  "問題8": [
+   1,
+   4,
+   3,
+   4,
+   2
+  ],
+  "問題9": [
+   3,
+   2,
+   4,
+   1
+  ],
+  "問題10": [
+   2,
+   1,
+   3,
+   4,
+   3
+  ],
+  "問題11": [
+   3,
+   3,
+   1,
+   2,
+   1,
+   4,
+   4,
+   2
+  ],
+  "問題12": [
+   2,
+   3
+  ],
+  "問題13": [
+   4,
+   3,
+   1
+  ],
+  "問題14": [
+   3,
+   4
+  ],
+  "聴解_問題1": [
+   2,
+   1,
+   1,
+   3,
+   4
+  ],
+  "聴解_問題2": [
+   1,
+   4,
+   1,
+   4,
+   2,
+   3
+  ],
+  "聴解_問題3": [
+   3,
+   3,
+   2,
+   1,
+   4
+  ],
+  "聴解_問題4": [
+   2,
+   2,
+   1,
+   3,
+   1,
+   3,
+   1,
+   2,
+   3,
+   2,
+   1
+  ],
+  "聴解_問題5": [
+   4,
+   3,
+   2
+  ]
+ }
 }

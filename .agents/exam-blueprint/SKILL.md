@@ -335,15 +335,38 @@ tagged `睡眠・健康` were invisible to every check. So:
 items{...}}, … ]}` — one entry per draw, newest last. A v1 flat ledger migrates
 automatically into one synthetic oldest draw.
 
-- **Cooldown, not exhaustion.** An item used within the last `COOLDOWN` (=2) draws is
-  ineligible (`ago(x) >= cool`; `apply_adjunct` uses the same test). A pool that cannot
-  fill a draw relaxes the cooldown one step at a time, says so, and **the level it
-  settled on is written into the spec** — clearing a category's whole history instead
-  causes a draw to repeat multiple items from earlier papers.
+- **Cooldown, not exhaustion — and PER-CATEGORY, not a flat constant.** An item used
+  within the last `cooldown_for(cat, pool_size)` draws is ineligible (`ago(x) >= cool`;
+  `apply_adjunct` uses the same test). A single flat `COOLDOWN=2` used to apply the same
+  window to every category regardless of depth — it protected an 85-entry pool
+  (`word_formation`, 3 drawn/test, ~28 tests to exhaust) no better than a 42-entry one
+  (`grammar_p8`, 5/test, ~8 tests to exhaust), and `〜好き(猫好き)` /
+  `〜化(簡素化)` both proved it by repeating within 4-5 tests. `cooldown_for()` scales
+  the window to each pool's OWN depth (`pool_size // draws_per_test`, minus a small
+  margin) so a deep pool remembers for a long time and a thin one for less. A pool that
+  cannot fill a draw at its own ceiling relaxes the cooldown one step at a time, says so,
+  and **the level it settled on is written into the spec** — clearing a category's whole
+  history instead causes a draw to repeat multiple items from earlier papers.
+- **Weighted by recency too, not just filtered.** Once the cooldown window has excluded
+  the recently-used items, the pick among what remains is NOT uniform —
+  `weighted_sample_no_replacement()` favors items that have gone the longest since use
+  (or were never used), by weight `ago(x) + 1`. Without this, an item cools down and can
+  immediately be drawn again the moment the window clears, clustering repeats right at
+  the boundary; the weighting spreads them out further into the pool instead.
 - **One item, one 問題 per test** — categories draw against a shared `taken` set; a
   post-draw assertion aborts on any collision.
 - **Cooldown is by WORD, across categories** — recency tracks both raw string and
   `head()` identity.
+- **A reroll only re-verifies the category it touched.** `assert_rotation()` on a full
+  fresh draw may check the whole spec against `prior_history`, because every category in
+  it was drawn against the same "now" window. A `--reroll <cat>` only redrew `<cat>`;
+  every OTHER category in that spec is unchanged, drawn at some earlier point against
+  whatever window existed then — re-verifying them against "now" is not just redundant,
+  it is wrong the moment a test gets rerolled after LATER tests already exist (the
+  now-window's tail is the end of the whole ledger, not the entries that actually
+  preceded this test). Reproduces even at the old flat `COOLDOWN=2`; only surfaced once
+  cooldowns got long enough to make far-apart collisions common. Fixed by scoping the
+  post-draw check to `{cat: picked}` on the reroll path.
 - **Attribution** — pass `--test-id <id>` so each draw records its consumer.
 - **What gets RECORDED is the pool entry-string — never the paper's surface form, never a
   substitute.** `recency_map()` keys on the raw string and `head()`; neither strips a
@@ -357,16 +380,19 @@ automatically into one synthetic oldest draw.
   `check_harvest_provenance()` instead.
 
 Every `tests/<test_id>/test_spec.json` therefore carries
-`"rotation": {"recency_source": "ledger", "history_len": 2, "cooldown": 2}` —
+`"rotation": {"recency_source": "ledger", "history_len": 2, "cooldown": 6}` —
 `recency_source` is always `"ledger"` (a spec without the key predates rotation);
 `history_len` is how many **other tests'** draws the recency map covered (`0` means the
 draw proves nothing); `cooldown` is the **weakest** level actually applied to any category
-(`COOLDOWN` normally, lower under relaxation, `0` when exhausted), read as "no item here
-appears in the last `cooldown` ledger entries".
+(each category's own `cooldown_for()` ceiling normally, lower under relaxation, `0` when
+exhausted), read as "no item here appears in the last `cooldown` ledger entries". Since
+`cooldown_for()` varies by category, this single number is usually set by whichever
+category has the thinnest pool (`grammar_p8`, ceiling ~6-8), not by every category alike —
+that has always been true of "weakest level", it's just a wider spread now.
 
 `assert_rotation()` re-checks that claim against the ledger before the spec is written, on
-both raw string and `head()`. **A red line there means `draw()` is broken — never lower
-`COOLDOWN` to make it green.** Keep every pool ≥ 2.5× the per-test draw; inspect with
+both raw string and `head()`. **A red line there means `draw()` is broken — never lower a
+category's cooldown to make it green.** Keep every pool ≥ 2.5× the per-test draw; inspect with
 `sample_items.py --check-depth`.
 
 **A draw count that disagrees with `DRAW` is a ledger defect, not history.** A recorded

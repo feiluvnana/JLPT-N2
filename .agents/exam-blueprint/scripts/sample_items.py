@@ -7,9 +7,15 @@ Usage:
     python sample_items.py --test-id 4 --reroll grammar_p7 --seed 99999
 
 Outputs tests/<test_id>/test_spec.json (the authoring contract) and updates
-ledger.json (v2 LRU cooldown: an item drawn within the last COOLDOWN draws is
-ineligible; when a pool cannot fill a draw the cooldown relaxes one step at a
-time and says so — history is never reset).
+ledger.json (v2 LRU cooldown: an item drawn within the last N draws is
+ineligible, where N is PER-CATEGORY — long relative to how deep that
+category's own pool is, see `cooldown_for()` — not a single flat constant;
+when a pool cannot fill a draw the cooldown relaxes one step at a time and
+says so — history is never reset). Once the cooldown window has excluded the
+recently-used items, the pick among what remains is WEIGHTED by recency too
+(`weighted_sample_no_replacement()`), not uniform — an item that cleared the
+cooldown a moment ago is still less likely to be drawn than one unused for
+much longer, so a draw does not cluster right at the cooldown boundary.
 """
 
 import argparse
@@ -90,8 +96,29 @@ def is_katakana_headword(entry) -> bool:
     return bool(re.search(r"[゠-ヿ]", head(item_text(entry))))
 
 
+def weighted_sample_no_replacement(rng: random.Random, items: list,
+                                   weights: list[float], n: int) -> list:
+    """Weighted sample of `n` items from `items`, no replacement.
+
+    Efraimidis-Spirakis A-Res: give each item a key `u ** (1/w)` for
+    `u ~ Uniform(0,1)`, keep the top-`n` keys. This is what lets `draw()`
+    do more than exclude the cooldown window and then pick uniformly among
+    what is left — heavier weight (a larger `ago`, i.e. longer since last
+    use, or never used) makes an item more likely to win, so a draw does not
+    cluster right at the cooldown boundary the instant an item clears it.
+    `n` may equal `len(items)` — this then returns every item, weighted-shuffled
+    (`sample_distinct_theme` relies on exactly that to order its greedy pass).
+    """
+    keyed = sorted(
+        ((rng.random() ** (1.0 / w), it) for it, w in zip(items, weights)),
+        key=lambda kv: kv[0], reverse=True,
+    )
+    return [it for _, it in keyed[:n]]
+
+
 def sample_katakana_capped(rng: random.Random, eligible: list, n: int,
-                           target_rate: float, cap: int, name: str) -> list:
+                           target_rate: float, cap: int, name: str,
+                           weight_fn=None) -> list:
     """`n` entries whose katakana-headword count matches the archive's rate.
 
     §12's archive rate is near-zero per paper (0 in most sittings, 1 in a
@@ -102,16 +129,28 @@ def sample_katakana_capped(rng: random.Random, eligible: list, n: int,
     independent Bernoulli(target_rate) trials to decide how many katakana
     slots this draw gets (capped at `cap`), then fill that many from the
     katakana subset and the rest from the non-katakana subset.
+
+    `weight_fn`, when given, picks each subset by recency weight (see
+    `weighted_sample_no_replacement`) instead of uniformly.
     """
     kata = [e for e in eligible if is_katakana_headword(e)]
     plain = [e for e in eligible if not is_katakana_headword(e)]
     k = min(cap, len(kata), sum(rng.random() < target_rate for _ in range(n)))
+
+    def pick(pool: list, count: int) -> list:
+        if count <= 0:
+            return []
+        if weight_fn:
+            return weighted_sample_no_replacement(
+                rng, pool, [weight_fn(e) for e in pool], count)
+        return rng.sample(pool, count)
+
     if len(plain) < n - k:
         print(f"  warning: pool '{name}' has too few non-katakana entries "
               f"({len(plain)}) to fill {n - k} of {n} slots — falling back "
               f"to an uncapped draw; grow the non-katakana side of this pool")
-        return rng.sample(eligible, n)
-    picked = rng.sample(plain, n - k) + (rng.sample(kata, k) if k else [])
+        return pick(eligible, n)
+    picked = pick(plain, n - k) + pick(kata, k)
     rng.shuffle(picked)
     return picked
 
@@ -240,7 +279,30 @@ def balanced_position_plan(rng: random.Random,
 # so rotation is LRU (least-recently-used) and degrades smoothly instead of
 # resetting, and so each item can be attributed to the test that used it.
 
-COOLDOWN = 2  # do not redraw an item used within this many previous draws
+COOLDOWN_FLOOR = 2   # minimum cooldown even for the thinnest pool
+COOLDOWN_MARGIN = 2  # draws of headroom left below full pool exhaustion, so
+                     # the existing "relax one step when tight" path below
+                     # still has room to degrade smoothly instead of jumping
+                     # straight from a long cooldown to 0
+
+
+def cooldown_for(cat: str, pool_size: int) -> int:
+    """How many previous draws make an item in `cat` ineligible.
+
+    A single flat COOLDOWN=2 protected every category as weakly as the
+    thinnest one: word_formation's 85-entry pool (3 drawn/test, ~28 tests to
+    exhaust) rotated no better than grammar_p8's 42-entry pool (5/test, ~8
+    tests to exhaust) — proven when `〜好き(猫好き)` and `〜化(簡素化)` each
+    repeated within 4-5 tests despite a pool deep enough to go ~28 tests
+    without a repeat. Scale the window to each pool's OWN depth instead of a
+    constant: a rich pool remembers for a long time, a tight one for less,
+    and COOLDOWN_MARGIN keeps every pool's window a little short of full
+    exhaustion so it can still relax gracefully (see `draw()`) rather than
+    jump straight to cool=0 the moment the pool grows by a handful of items.
+    """
+    n = DRAW[cat]
+    depth = pool_size // n if n else 0
+    return max(COOLDOWN_FLOOR, depth - COOLDOWN_MARGIN)
 
 
 def load_staging_ready() -> dict[str, list[dict]]:
@@ -260,7 +322,7 @@ def load_staging_ready() -> dict[str, list[dict]]:
 
 def apply_adjunct(rng: random.Random, cat: str, picked: list,
                   staging_by_cat: dict[str, list[dict]], taken: set,
-                  recency: dict) -> list:
+                  recency: dict, cool_max: int) -> list:
     """Replace up to ADJUNCT_CAP of pool draws with staged N2 adjunct items."""
     n = len(picked)
     cap = int(n * ADJUNCT_CAP)
@@ -280,7 +342,7 @@ def apply_adjunct(rng: random.Random, cat: str, picked: list,
         it = e.get("item", "")
         if not it or it in taken or head(it) in {head(t) for t in taken}:
             continue
-        if ago(it) < COOLDOWN:      # used within the last COOLDOWN draws
+        if ago(it) < cool_max:      # used within this category's cooldown
             continue
         eligible.append(e)
     if not eligible:
@@ -347,7 +409,7 @@ def recency_map(history: list) -> dict:
 
 
 def sample_distinct_theme(rng: random.Random, eligible: list, n: int,
-                          name: str) -> list | None:
+                          name: str, weight_fn=None) -> list | None:
     """`n` entries, no two sharing a theme. None when the pool cannot.
 
     Greedy over a shuffle, which is uniform enough for this purpose and, unlike
@@ -355,9 +417,17 @@ def sample_distinct_theme(rng: random.Random, eligible: list, n: int,
     theme-distinct draw, not a uniformly-random one among all such draws.
     Untagged entries are treated as one shared theme so a category that lost its
     tags degrades to "one untagged entry", never to "distinctness is vacuous".
+
+    `weight_fn`, when given, orders the shuffle by recency weight (see
+    `weighted_sample_no_replacement`) so the greedy pass still favors
+    longer-unused entries, not just a plain shuffle.
     """
-    shuffled = list(eligible)
-    rng.shuffle(shuffled)
+    if weight_fn:
+        shuffled = weighted_sample_no_replacement(
+            rng, eligible, [weight_fn(e) for e in eligible], len(eligible))
+    else:
+        shuffled = list(eligible)
+        rng.shuffle(shuffled)
     picked, used = [], set()
     for e in shuffled:
         th = entry_theme(e) or ""
@@ -374,11 +444,12 @@ def sample_distinct_theme(rng: random.Random, eligible: list, n: int,
 
 
 def draw(rng: random.Random, pool: list, recency: dict, n: int,
-         name: str, taken: set) -> tuple[list, int]:
+         name: str, taken: set, cool_max: int) -> tuple[list, int]:
     """LRU draw. Returns (picked, cooldown_actually_applied).
 
-    `cool` is a number of PREVIOUS DRAWS: at cool=COOLDOWN nothing used in the
-    last COOLDOWN ledger entries can be drawn (ago 0 .. COOLDOWN-1 excluded),
+    `cool_max` is this category's own cooldown ceiling (`cooldown_for()`) —
+    a number of PREVIOUS DRAWS: at cool=cool_max nothing used in the last
+    cool_max ledger entries can be drawn (ago 0 .. cool_max-1 excluded),
     which is what the docstring, the SKILL and `rotation.cooldown` all promise.
     The old test was `ago(x) > cool`, i.e. one draw stricter than documented —
     harmless in itself, but it meant the number written into the spec was not
@@ -398,25 +469,34 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
         t = item_text(x)
         return min(recency.get(t, inf), recency.get(head(t), inf))
 
-    for cool in range(COOLDOWN, -1, -1):
+    def weight(x) -> float:
+        # +1 so an item sitting right at the cooldown boundary (ago == cool,
+        # the minimum eligible) never gets a zero/negative weight; everything
+        # past that is weighted by how much LONGER it's gone unused, so a
+        # draw does not cluster right at the boundary the moment it clears.
+        return float(ago(x)) + 1.0
+
+    for cool in range(cool_max, -1, -1):
         eligible = [x for x in pool
                     if item_text(x) not in taken and ago(x) >= cool]
         if len(eligible) >= n:
             if cool == 0:
                 print(f"  WARNING: pool '{name}' exhausted its rotation — "
                       f"drawing with NO cooldown. Grow this pool.")
-            elif cool < COOLDOWN:
+            elif cool < cool_max:
                 print(f"  note: pool '{name}' is tight — cooldown relaxed to "
-                      f"{cool} draw(s); consider growing the pool")
+                      f"{cool} draw(s) (of {cool_max}); consider growing the pool")
             if name in DISTINCT_THEME_CATS:
-                picked = sample_distinct_theme(rng, eligible, n, name)
+                picked = sample_distinct_theme(rng, eligible, n, name,
+                                               weight_fn=weight)
                 if picked is not None:
                     return picked, cool
             if name in KATAKANA_CAP:
                 return sample_katakana_capped(
                     rng, eligible, n, KATAKANA_TARGET_RATE[name],
-                    KATAKANA_CAP[name], name), cool
-            return rng.sample(eligible, n), cool
+                    KATAKANA_CAP[name], name, weight_fn=weight), cool
+            return weighted_sample_no_replacement(
+                rng, eligible, [weight(x) for x in eligible], n), cool
     remaining = len([x for x in pool if item_text(x) not in taken])
     sys.exit(f"pool '{name}' cannot supply {n} distinct items "
              f"({remaining} available after cross-category exclusion)")
@@ -525,7 +605,7 @@ def assert_rotation(spec_items: dict, history: list, cooldown: int) -> None:
     if clashes:
         sys.exit(f"rotation broken: {len(clashes)} item(s) drawn inside the "
                  f"{cooldown}-draw cooldown: {'; '.join(clashes)} — this is a "
-                 f"bug in draw(), not a reason to lower COOLDOWN")
+                 f"bug in draw(), not a reason to lower cooldown_for()")
 
 
 def check_pool_depths(pools: dict) -> None:
@@ -595,11 +675,12 @@ def main():
         taken_text = {item_text(x) for c, xs in spec["items"].items()
                       if c != cat for x in xs}
         updated_recency = recency_map(history)
+        cool_max = cooldown_for(cat, len(pools[cat]))
         picked, cool = draw(rng, pools[cat], updated_recency,
-                            DRAW[cat], cat, taken_text)
+                            DRAW[cat], cat, taken_text, cool_max)
         if staging_by_cat:
             picked = apply_adjunct(rng, cat, picked, staging_by_cat,
-                                   taken_text, updated_recency)
+                                   taken_text, updated_recency, cool_max)
         spec["items"][cat] = picked
         spec["seed"] = f"{spec.get('seed')}+reroll({cat},{seed})"
         spec["rotation"] = {
@@ -614,19 +695,32 @@ def main():
             own_entry["seed"] = spec["seed"]
         for w in check_theme_spread(picked, cat):
             print(f"  WARNING: {cat} draw is theme-heavy — {w}")
+        # Only THIS category was freshly drawn — against "now" (the full
+        # ledger's current end, via updated_recency above). Every other
+        # category in spec["items"] is untouched, drawn at some earlier point
+        # against whatever window existed then. Re-verifying the WHOLE spec
+        # here compares old, already-valid picks against a "last cooldown
+        # entries of right now" window that has nothing to do with when they
+        # were drawn — for a test rerolled after later tests already exist,
+        # that window is the tail of the ENTIRE ledger, not the entries that
+        # preceded this test, and spuriously fails on categories the reroll
+        # never touched (reproduces even at the old flat COOLDOWN=2). Verify
+        # only what actually changed.
+        rotation_check_items = {cat: picked}
     else:
         items = {}
         taken: set = set()          # cross-category: one item, one 問題 per test
         theme_warns: list[str] = []
-        effective_cool = COOLDOWN
+        effective_cool = None
         for cat, n in DRAW.items():
             if cat not in pools:
                 sys.exit(f"category '{cat}' is in DRAW but missing from pools.json")
-            picked, cool = draw(rng, pools[cat], recency, n, cat, taken)
-            effective_cool = min(effective_cool, cool)
+            cool_max = cooldown_for(cat, len(pools[cat]))
+            picked, cool = draw(rng, pools[cat], recency, n, cat, taken, cool_max)
+            effective_cool = cool if effective_cool is None else min(effective_cool, cool)
             if staging_by_cat:
                 picked = apply_adjunct(rng, cat, picked, staging_by_cat,
-                                       taken, recency)
+                                       taken, recency, cool_max)
             items[cat] = picked
             taken.update(item_text(x) for x in picked)
             theme_warns += [f"{cat}: {w}" for w in check_theme_spread(picked, cat)]
@@ -656,6 +750,10 @@ def main():
               f"  (band {POSITION_BAND[0]}-{POSITION_BAND[1]})")
         for w in theme_warns:
             print(f"  WARNING: theme-heavy draw — {w}")
+        # A fresh draw's entry sits at the true end of `history` (just
+        # appended above), so every category in it was drawn against the same
+        # "now" window — the whole spec is fair to re-verify at once.
+        rotation_check_items = spec["items"]
 
     # Invariant: no item may be tested by two different 問題 in the same paper.
     collisions = {}
@@ -673,7 +771,7 @@ def main():
     prior_history = [h for h in history
                      if str(h.get("test_id")) != str(args.test_id)]
     spec["rotation"]["history_len"] = len(prior_history)
-    assert_rotation(spec["items"], prior_history, spec["rotation"]["cooldown"])
+    assert_rotation(rotation_check_items, prior_history, spec["rotation"]["cooldown"])
 
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
     spec_path.parent.mkdir(parents=True, exist_ok=True)

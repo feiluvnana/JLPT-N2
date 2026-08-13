@@ -1,377 +1,377 @@
 {
-  "seed": 45158912,
-  "generated_at": "2026-08-12 17:22:18",
-  "test_id": "20260812_2",
-  "rotation": {
-    "recency_source": "ledger",
-    "history_len": 5,
-    "cooldown": 2
-  },
-  "items": {
-    "kanji_reading": [
-      "連続(れんぞく)",
-      "鉱山(こうざん)",
-      "列島(れっとう)",
-      "自治体(じちたい)",
-      "各々(おのおの)"
-    ],
-    "orthography": [
-      "漁業",
-      "果実",
-      "努める(努力)",
-      "下品",
-      "納入"
-    ],
-    "word_formation": [
-      "〜ずくめ(黒ずくめ)",
-      "〜好き(猫好き)",
-      "下〜(下請け)"
-    ],
-    "context_words": [
-      "大げさ",
-      "体がもたない",
-      "めざましい",
-      "手を借りる",
-      "言いつける",
-      "中でも",
-      "焼き上がる"
-    ],
-    "paraphrase": [
-      "内気だ(恥ずかしがり)",
-      "相当(かなり)",
-      "みじめだ(悲惨だ)",
-      "純粋だ(素直だ)",
-      "さっさと(すぐに/早く)"
-    ],
-    "usage": [
-      "持参",
-      "大まか",
-      "体系",
-      "同調",
-      "妨げる"
-    ],
-    "grammar_p7": [
-      "〜にくい",
-      "〜とみえる",
-      "〜ないではいられない",
-      "〜にしたがって",
-      "敬語:伺う",
-      "〜といった",
-      "〜をはじめ",
-      "〜どころではない",
-      "〜(よ)うか〜まいか",
-      "〜にかかわりなく",
-      "〜わりに",
-      "〜ではあるまいか"
-    ],
-    "grammar_p8": [
-      "変化推移(〜につれて…ていく)",
-      "〜おかげで",
-      "評価反論(〜とはいえ…)",
-      "〜に限らず",
-      "基準準拠(〜に沿って…進める)"
-    ],
-    "quick_response": [
-      "〜てばかりいる",
-      "ポイントカード、お持ちですか。",
-      "課長、体調が優れませんので、本日は早退させていただいてもよろしいでしょうか。",
-      "引けを取らない",
-      "明日の会議の件ですが、あいにく先方のご都合が悪くなりまして…",
-      "部長、先日のご指摘、真摯に受け止めております。",
-      "この度の件、ご期待に添えず、大変心苦しく思っております。",
-      "修繕のため、明日の午前中に立ち入ります。",
-      "課長、新商品のサンプルが届きましたので、お持ちいたしました。",
-      "承りました",
-      "〜ずじまい"
-    ],
-    "listening_scenarios": [
-      {
-        "scenario": "市の環境課:ごみ収集変更の説明",
-        "theme": "環境"
-      },
-      {
-        "scenario": "会社:経費精算システムの変更",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "会社:席替えとレイアウト変更",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "カフェ:テイクアウト",
-        "theme": "食"
-      },
-      {
-        "scenario": "動物園:イベントの案内",
-        "theme": "スポーツ・余暇"
-      },
-      {
-        "scenario": "ホテル:団体予約の変更",
-        "theme": "旅行・観光"
-      },
-      {
-        "scenario": "市役所:オンライン申請の操作案内",
-        "theme": "デジタル化"
-      },
-      {
-        "scenario": "タクシー:配車アプリの使い方",
-        "theme": "交通"
-      },
-      {
-        "scenario": "家具店:配達変更の電話",
-        "theme": "住まい"
-      },
-      {
-        "scenario": "マンションの設備点検のお知らせ",
-        "theme": "住まい"
-      },
-      {
-        "scenario": "天文台:観望会の受付",
-        "theme": "科学・技術"
-      },
-      {
-        "scenario": "バス会社:深夜バスの時刻確認",
-        "theme": "交通"
-      },
-      {
-        "scenario": "保育園:延長保育の予約変更とアレルギー対応",
-        "theme": "子育て・家族",
-        "origin": "reauthored",
-        "note": "QA F1 fix: re-authored off 食 (レストラン予約) to clear headline theme collision with 問題12 フードロス; kept reservation-change + special-requirement shape and answer_positions 聴解_問題5[0]=2."
-      },
-      {
-        "scenario": "家電量販:配送日",
-        "theme": "住まい"
-      },
-      {
-        "scenario": "メーカー:新技術の説明会",
-        "theme": "科学・技術"
-      },
-      {
-        "scenario": "病院:再診予約",
-        "theme": "医療・福祉"
-      },
-      {
-        "scenario": "展示会:ブースの設営分担",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "旅行代理店:プラン変更",
-        "theme": "旅行・観光"
-      },
-      {
-        "scenario": "研修会でのグループワークの進め方",
-        "theme": "働き方"
-      },
-      {
-        "scenario": "年金事務所:手続きの案内",
-        "theme": "行政・手続き"
-      },
-      {
-        "scenario": "同窓会:出欠確認の電話",
-        "theme": "人間関係",
-        "origin": "reauthored",
-        "note": "QA F4 fix: replaced eliminate-shared-list venue choice with two-attribute picks (attendance timing + who brings album) so content matches the drawn 出欠確認 scenario; keys kept 質問1=1 / 質問2=4."
-      }
-    ],
-    "reading_topics": [
-      {
-        "topic": "動物の行動学とコミュニケーション",
-        "theme": "科学・技術"
-      },
-      {
-        "topic": "シェアリングエコノミーの限界",
-        "theme": "消費・経済"
-      },
-      {
-        "topic": "時間の使い方と余白",
-        "theme": "スポーツ・余暇"
-      },
-      {
-        "topic": "タイムマネジメントと生産性の向上",
-        "theme": "働き方"
-      },
-      {
-        "topic": "戸籍制度と本人確認のデジタル化",
-        "theme": "行政・手続き"
-      },
-      {
-        "topic": "昼寝制度を導入する企業",
-        "theme": "睡眠・健康"
-      },
-      {
-        "topic": "AIによる要約記事の信頼性",
-        "theme": "メディア・情報"
-      },
-      {
-        "topic": "消費行動の変化とサブスクリプション",
-        "theme": "デジタル化"
-      },
-      {
-        "topic": "防災アプリの普及と課題",
-        "theme": "防災"
-      },
-      {
-        "topic": "フードロス削減の取り組み",
-        "theme": "食"
-      },
-      {
-        "topic": "地域猫の管理と共生",
-        "theme": "環境"
-      },
-      {
-        "topic": "分譲マンション共用施設の利用案内",
-        "theme": "住まい",
-        "origin": "reauthored",
-        "note": "QA F2 fix: replaced 語学学校/教育 flyer to clear rule-4 consecutive 教育 headline vs 20260812_1 聴解5-2; multi-constraint info-retrieval kept; answer_positions 問題14 unchanged [4,3]."
-      },
-      {
-        "topic": "手書きのあいさつ",
-        "theme": "文化・伝統",
-        "origin": "reauthored",
-        "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped, self-composed by the 文法 author (手書きのあいさつ / 文化・伝統) and checked distinct against all 12 drawn reading_topics entries, all 21 listening_scenarios, and both prior papers' headline sets, per the exam-blueprint precedent set by 20260811_1's / 20260812_1's own 問題9 entry."
-      }
-    ]
-  },
-  "answer_positions": {
-    "問題1_語彙": [
-      1,
-      3,
-      4,
-      2,
-      3
-    ],
-    "問題2_語彙": [
-      4,
-      1,
-      4,
-      3,
-      2
-    ],
-    "問題3_語彙": [
-      3,
-      2,
-      1
-    ],
-    "問題4_語彙": [
-      2,
-      3,
-      2,
-      1,
-      4,
-      3,
-      1
-    ],
-    "問題5_語彙": [
-      1,
-      4,
-      2,
-      3,
-      1
-    ],
-    "問題6_語彙": [
-      3,
-      3,
-      1,
-      4,
-      2
-    ],
-    "問題7": [
-      2,
-      3,
-      4,
-      1,
-      2,
-      4,
-      3,
-      1,
-      1,
-      4,
-      2,
-      3
-    ],
-    "問題8": [
-      4,
-      4,
-      2,
-      3,
-      1
-    ],
-    "問題9": [
-      2,
-      1,
-      3,
-      1
-    ],
-    "問題10": [
-      4,
-      2,
-      2,
-      1,
-      3
-    ],
-    "問題11": [
-      4,
-      1,
-      1,
-      2,
-      4,
-      3,
-      3,
-      2
-    ],
-    "問題12": [
-      3,
-      4
-    ],
-    "問題13": [
-      2,
-      3,
-      1
-    ],
-    "問題14": [
-      4,
-      3
-    ],
-    "聴解_問題1": [
-      4,
-      1,
-      1,
-      3,
-      2
-    ],
-    "聴解_問題2": [
-      3,
-      2,
-      1,
-      4,
-      4,
-      2
-    ],
-    "聴解_問題3": [
-      3,
-      1,
-      4,
-      2,
-      4
-    ],
-    "聴解_問題4": [
-      2,
-      2,
-      1,
-      3,
-      1,
-      1,
-      2,
-      1,
-      3,
-      3,
-      2
-    ],
-    "聴解_問題5": [
-      2,
-      1,
-      4
-    ]
-  }
+ "seed": "45158912+reroll(word_formation,2953455534)",
+ "generated_at": "2026-08-12 17:22:18",
+ "test_id": "20260812_2",
+ "rotation": {
+  "recency_source": "ledger",
+  "history_len": 6,
+  "cooldown": 2
+ },
+ "items": {
+  "kanji_reading": [
+   "連続(れんぞく)",
+   "鉱山(こうざん)",
+   "列島(れっとう)",
+   "自治体(じちたい)",
+   "各々(おのおの)"
+  ],
+  "orthography": [
+   "漁業",
+   "果実",
+   "努める(努力)",
+   "下品",
+   "納入"
+  ],
+  "word_formation": [
+   "全〜(全自動)",
+   "某〜(某所)",
+   "〜済み(記入済み)"
+  ],
+  "context_words": [
+   "大げさ",
+   "体がもたない",
+   "めざましい",
+   "手を借りる",
+   "言いつける",
+   "中でも",
+   "焼き上がる"
+  ],
+  "paraphrase": [
+   "内気だ(恥ずかしがり)",
+   "相当(かなり)",
+   "みじめだ(悲惨だ)",
+   "純粋だ(素直だ)",
+   "さっさと(すぐに/早く)"
+  ],
+  "usage": [
+   "持参",
+   "大まか",
+   "体系",
+   "同調",
+   "妨げる"
+  ],
+  "grammar_p7": [
+   "〜にくい",
+   "〜とみえる",
+   "〜ないではいられない",
+   "〜にしたがって",
+   "敬語:伺う",
+   "〜といった",
+   "〜をはじめ",
+   "〜どころではない",
+   "〜(よ)うか〜まいか",
+   "〜にかかわりなく",
+   "〜わりに",
+   "〜ではあるまいか"
+  ],
+  "grammar_p8": [
+   "変化推移(〜につれて…ていく)",
+   "〜おかげで",
+   "評価反論(〜とはいえ…)",
+   "〜に限らず",
+   "基準準拠(〜に沿って…進める)"
+  ],
+  "quick_response": [
+   "〜てばかりいる",
+   "ポイントカード、お持ちですか。",
+   "課長、体調が優れませんので、本日は早退させていただいてもよろしいでしょうか。",
+   "引けを取らない",
+   "明日の会議の件ですが、あいにく先方のご都合が悪くなりまして…",
+   "部長、先日のご指摘、真摯に受け止めております。",
+   "この度の件、ご期待に添えず、大変心苦しく思っております。",
+   "修繕のため、明日の午前中に立ち入ります。",
+   "課長、新商品のサンプルが届きましたので、お持ちいたしました。",
+   "承りました",
+   "〜ずじまい"
+  ],
+  "listening_scenarios": [
+   {
+    "scenario": "市の環境課:ごみ収集変更の説明",
+    "theme": "環境"
+   },
+   {
+    "scenario": "会社:経費精算システムの変更",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "会社:席替えとレイアウト変更",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "カフェ:テイクアウト",
+    "theme": "食"
+   },
+   {
+    "scenario": "動物園:イベントの案内",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "ホテル:団体予約の変更",
+    "theme": "旅行・観光"
+   },
+   {
+    "scenario": "市役所:オンライン申請の操作案内",
+    "theme": "デジタル化"
+   },
+   {
+    "scenario": "タクシー:配車アプリの使い方",
+    "theme": "交通"
+   },
+   {
+    "scenario": "家具店:配達変更の電話",
+    "theme": "住まい"
+   },
+   {
+    "scenario": "マンションの設備点検のお知らせ",
+    "theme": "住まい"
+   },
+   {
+    "scenario": "天文台:観望会の受付",
+    "theme": "科学・技術"
+   },
+   {
+    "scenario": "バス会社:深夜バスの時刻確認",
+    "theme": "交通"
+   },
+   {
+    "scenario": "保育園:延長保育の予約変更とアレルギー対応",
+    "theme": "子育て・家族",
+    "origin": "reauthored",
+    "note": "QA F1 fix: re-authored off 食 (レストラン予約) to clear headline theme collision with 問題12 フードロス; kept reservation-change + special-requirement shape and answer_positions 聴解_問題5[0]=2."
+   },
+   {
+    "scenario": "家電量販:配送日",
+    "theme": "住まい"
+   },
+   {
+    "scenario": "メーカー:新技術の説明会",
+    "theme": "科学・技術"
+   },
+   {
+    "scenario": "病院:再診予約",
+    "theme": "医療・福祉"
+   },
+   {
+    "scenario": "展示会:ブースの設営分担",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "旅行代理店:プラン変更",
+    "theme": "旅行・観光"
+   },
+   {
+    "scenario": "研修会でのグループワークの進め方",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "年金事務所:手続きの案内",
+    "theme": "行政・手続き"
+   },
+   {
+    "scenario": "同窓会:出欠確認の電話",
+    "theme": "人間関係",
+    "origin": "reauthored",
+    "note": "QA F4 fix: replaced eliminate-shared-list venue choice with two-attribute picks (attendance timing + who brings album) so content matches the drawn 出欠確認 scenario; keys kept 質問1=1 / 質問2=4."
+   }
+  ],
+  "reading_topics": [
+   {
+    "topic": "動物の行動学とコミュニケーション",
+    "theme": "科学・技術"
+   },
+   {
+    "topic": "シェアリングエコノミーの限界",
+    "theme": "消費・経済"
+   },
+   {
+    "topic": "時間の使い方と余白",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "topic": "タイムマネジメントと生産性の向上",
+    "theme": "働き方"
+   },
+   {
+    "topic": "戸籍制度と本人確認のデジタル化",
+    "theme": "行政・手続き"
+   },
+   {
+    "topic": "昼寝制度を導入する企業",
+    "theme": "睡眠・健康"
+   },
+   {
+    "topic": "AIによる要約記事の信頼性",
+    "theme": "メディア・情報"
+   },
+   {
+    "topic": "消費行動の変化とサブスクリプション",
+    "theme": "デジタル化"
+   },
+   {
+    "topic": "防災アプリの普及と課題",
+    "theme": "防災"
+   },
+   {
+    "topic": "フードロス削減の取り組み",
+    "theme": "食"
+   },
+   {
+    "topic": "地域猫の管理と共生",
+    "theme": "環境"
+   },
+   {
+    "topic": "分譲マンション共用施設の利用案内",
+    "theme": "住まい",
+    "origin": "reauthored",
+    "note": "QA F2 fix: replaced 語学学校/教育 flyer to clear rule-4 consecutive 教育 headline vs 20260812_1 聴解5-2; multi-constraint info-retrieval kept; answer_positions 問題14 unchanged [4,3]."
+   },
+   {
+    "topic": "手書きのあいさつ",
+    "theme": "文化・伝統",
+    "origin": "reauthored",
+    "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped, self-composed by the 文法 author (手書きのあいさつ / 文化・伝統) and checked distinct against all 12 drawn reading_topics entries, all 21 listening_scenarios, and both prior papers' headline sets, per the exam-blueprint precedent set by 20260811_1's / 20260812_1's own 問題9 entry."
+   }
+  ]
+ },
+ "answer_positions": {
+  "問題1_語彙": [
+   1,
+   3,
+   4,
+   2,
+   3
+  ],
+  "問題2_語彙": [
+   4,
+   1,
+   4,
+   3,
+   2
+  ],
+  "問題3_語彙": [
+   3,
+   2,
+   1
+  ],
+  "問題4_語彙": [
+   2,
+   3,
+   2,
+   1,
+   4,
+   3,
+   1
+  ],
+  "問題5_語彙": [
+   1,
+   4,
+   2,
+   3,
+   1
+  ],
+  "問題6_語彙": [
+   3,
+   3,
+   1,
+   4,
+   2
+  ],
+  "問題7": [
+   2,
+   3,
+   4,
+   1,
+   2,
+   4,
+   3,
+   1,
+   1,
+   4,
+   2,
+   3
+  ],
+  "問題8": [
+   4,
+   4,
+   2,
+   3,
+   1
+  ],
+  "問題9": [
+   2,
+   1,
+   3,
+   1
+  ],
+  "問題10": [
+   4,
+   2,
+   2,
+   1,
+   3
+  ],
+  "問題11": [
+   4,
+   1,
+   1,
+   2,
+   4,
+   3,
+   3,
+   2
+  ],
+  "問題12": [
+   3,
+   4
+  ],
+  "問題13": [
+   2,
+   3,
+   1
+  ],
+  "問題14": [
+   4,
+   3
+  ],
+  "聴解_問題1": [
+   4,
+   1,
+   1,
+   3,
+   2
+  ],
+  "聴解_問題2": [
+   3,
+   2,
+   1,
+   4,
+   4,
+   2
+  ],
+  "聴解_問題3": [
+   3,
+   1,
+   4,
+   2,
+   4
+  ],
+  "聴解_問題4": [
+   2,
+   2,
+   1,
+   3,
+   1,
+   1,
+   2,
+   1,
+   3,
+   3,
+   2
+  ],
+  "聴解_問題5": [
+   2,
+   1,
+   4
+  ]
+ }
 }

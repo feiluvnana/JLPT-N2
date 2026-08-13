@@ -1,10 +1,10 @@
 {
- "seed": "76797128+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,27969690)+reroll(kanji_reading,20631168)+reroll(kanji_reading,14950249)+reroll(context_words,85922550)+reroll(word_formation,76797128)+reroll(context_words,76797128)",
+ "seed": "76797128+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,27969690)+reroll(kanji_reading,20631168)+reroll(kanji_reading,14950249)+reroll(context_words,85922550)+reroll(word_formation,76797128)+reroll(context_words,76797128)+reroll(word_formation,1231562560)+reroll(word_formation,2170583024)",
  "generated_at": "2026-08-11 13:55:23",
  "test_id": "20260811_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 3,
+  "history_len": 6,
   "cooldown": 2
  },
  "items": {
@@ -23,9 +23,9 @@
    "架空"
   ],
   "word_formation": [
-   "過〜(過剰)",
-   "〜振り(話しぶり)",
-   "各〜(各分野)"
+   "当〜(当劇場)",
+   "〜がる(怖がる)",
+   "自〜(自宅)"
   ],
   "context_words": [
    "周期",

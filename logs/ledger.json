@@ -1,1456 +1,1688 @@
 {
-  "version": 2,
-  "history": [
-    {
-      "test_id": "20260807_1",
-      "seed": "15212088+reroll(usage,56459537)",
-      "generated_at": "2026-08-07 18:26:24",
-      "items": {
-        "kanji_reading": [
-          "誓う(ちかう)",
-          "惜しい(おしい)",
-          "迅速(じんそく)",
-          "漂う(ただよう)",
-          "抑える(おさえる)"
-        ],
-        "orthography": [
-          "一旦",
-          "努める(努力)",
-          "果実",
-          "歌謡",
-          "免責"
-        ],
-        "word_formation": [
-          "〜好き(猫好き)",
-          "〜立て(採れたて)",
-          "〜主(依頼主)"
-        ],
-        "context_words": [
-          "サラリーマン",
-          "抑制",
-          "ウーマン",
-          "推移",
-          "柔軟",
-          "くっつく",
-          {
-            "item": "ワンピース",
-            "origin": "adjunct",
-            "level": "N2",
-            "evidence": [
-              "pending re-verification against Shin Kanzen Master N2-Goi or 日本語総まとめ N2 語彙 (prior source corpus deleted 2026-08-11)"
-            ]
-          }
-        ],
-        "paraphrase": [
-          "案外",
-          "そのほか",
-          "そういえば",
-          "あらかじめ(事前に)",
-          "ショップ"
-        ],
-        "grammar_p7": [
-          "〜がち",
-          "〜わけにはいかない",
-          "〜たところ",
-          "〜そうにない",
-          "〜ずにはいられない",
-          "〜に沿って",
-          "〜をはじめ",
-          "〜からには",
-          "〜あげく",
-          "〜ことから",
-          "〜に基づいて",
-          "〜に伴って"
-        ],
-        "grammar_p8": [
-          "原因理由構文(〜ばかりに…てしまった)",
-          "例示指示(〜例えば…)",
-          "〜おかげで",
-          "〜からといって",
-          "条件限定(〜ない限りは…)"
-        ],
-        "quick_response": [
-          "心当たりがない",
-          "部長、来週の会議の資料、印刷して机の上に置いておきました。",
-          "部長、急なご相談で大変恐縮なのですが、10分ほどお時間をいただけますでしょうか。",
-          "かしこまりました",
-          "今日は定時で上がらせていただいてもよろしいでしょうか。",
-          "息が合う",
-          "避難経路は、各階の掲示をご確認ください。",
-          "皆さんのおかげで無事に終えることができました。",
-          "めどが立つ",
-          "この路線は本日運休しております。",
-          "部長がお呼びですので、至急会議室までお願いいたします。"
-        ],
-        "listening_scenarios": [
-          {
-            "scenario": "家具店:組立サービス",
-            "theme": "住まい"
-          },
-          {
-            "scenario": "学会:ポスター発表の準備",
-            "theme": "教育"
-          },
-          {
-            "scenario": "マンション:置き配ボックスの設置",
-            "theme": "住まい"
-          },
-          {
-            "scenario": "町内会:回覧板の内容確認",
-            "theme": "地域活性化"
-          },
-          {
-            "scenario": "タクシー:配車アプリの使い方",
-            "theme": "交通"
-          },
-          {
-            "scenario": "管理人室:騒音の相談",
-            "theme": "住まい"
-          },
-          {
-            "scenario": "美術館:写真撮影のルール説明",
-            "theme": "文化・伝統"
-          },
-          {
-            "scenario": "カスタマー:返品",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "ジム:入会相談",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "scenario": "テレビ:地域の祭りの紹介",
-            "theme": "文化・伝統"
-          },
-          {
-            "scenario": "新入社員研修の宿泊施設手配",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "店舗の改装工事期間中の営業案内",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "出張の手配",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "科学館:展示説明",
-            "theme": "科学・技術"
-          },
-          {
-            "scenario": "工場見学の集合場所と注意事項",
-            "theme": "教育"
-          },
-          {
-            "scenario": "動物園:年間パス",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "scenario": "年金事務所:手続きの案内",
-            "theme": "行政・手続き"
-          },
-          {
-            "scenario": "留守番電話:約束変更",
-            "theme": "人間関係"
-          },
-          {
-            "scenario": "大学の授業:統計の読み方",
-            "theme": "教育"
-          },
-          {
-            "scenario": "大学:履修登録の相談",
-            "theme": "教育"
-          },
-          {
-            "scenario": "税務署:確定申告の相談窓口",
-            "theme": "行政・手続き"
-          }
-        ],
-        "reading_topics": [
-          {
-            "topic": "15分都市",
-            "theme": "住まい"
-          },
-          {
-            "topic": "フードロス削減の取り組み",
-            "theme": "食"
-          },
-          {
-            "topic": "伝統工芸の継承",
-            "theme": "文化・伝統"
-          },
-          {
-            "topic": "同一労働同一賃金",
-            "theme": "働き方"
-          },
-          {
-            "topic": "読書の効用",
-            "theme": "教育"
-          },
-          {
-            "topic": "半導体と経済安保",
-            "theme": "科学・技術"
-          },
-          {
-            "topic": "サテライトオフィス",
-            "theme": "働き方"
-          },
-          {
-            "topic": "効率と創造性",
-            "theme": "働き方"
-          },
-          {
-            "topic": "買い物のかたちの変化",
-            "theme": "消費・経済"
-          },
-          {
-            "topic": "ボランティアの意義",
-            "theme": "地域活性化"
-          },
-          {
-            "topic": "インバウンドと生活者",
-            "theme": "旅行・観光"
-          },
-          {
-            "topic": "ESG投資",
-            "theme": "消費・経済"
-          }
-        ],
-        "usage": [
-          "採る",
-          "まあまあ",
-          "提示",
-          "鮮やか",
-          "ひとりでに"
-        ]
-      },
-      "draw": {
-        "kanji_reading": 5,
-        "orthography": 5,
-        "word_formation": 3,
-        "context_words": 7,
-        "paraphrase": 5,
-        "usage": 5,
-        "grammar_p7": 12,
-        "grammar_p8": 5,
-        "quick_response": 11,
-        "listening_scenarios": 21,
-        "reading_topics": 12
-      },
-      "harvest_sha": "165eb22f8fd9"
-    },
-    {
-      "test_id": "20260810_1",
-      "seed": "81480636+reroll(reading_topics,81480636)+reroll(paraphrase,60851241)",
-      "generated_at": "2026-08-10 10:02:21",
-      "items": {
-        "kanji_reading": [
-          "演じる(えんじる)",
-          "恵まれる(めぐまれる)",
-          "潔い(いさぎよい)",
-          "漠然(ばくぜん)",
-          "竹(たけ)"
-        ],
-        "orthography": [
-          "貨物",
-          "育児",
-          "王女",
-          "系統",
-          "救助"
-        ],
-        "word_formation": [
-          "〜ち(勝ち)",
-          "〜費(交通費)",
-          "当〜(当劇場)"
-        ],
-        "context_words": [
-          "ええと",
-          "逆らう",
-          "おさきに",
-          "あれこれ",
-          "しつこい",
-          "こぼれる",
-          "あくび"
-        ],
-        "usage": [
-          "順調",
-          "ファスナー",
-          "持参",
-          "ぶつける",
-          "もしかしたら"
-        ],
-        "grammar_p7": [
-          "〜ないことには",
-          "〜つつある",
-          "〜まいか",
-          "〜を通して",
-          "〜一方だ",
-          "〜にほかならない",
-          "〜を契機に",
-          "〜上は",
-          "〜か〜ないかのうちに",
-          "〜に限って",
-          "〜どころか",
-          "〜を問わず"
-        ],
-        "grammar_p8": [
-          "目的表現(〜ように…する)",
-          "変化推移(〜につれて…ていく)",
-          "換言要約(〜つまり…ということだ)",
-          "対比表現(〜一方…だ)",
-          "順接接続(〜したがって…)"
-        ],
-        "quick_response": [
-          "山田さん、来週の当番、代わってもらえないかな。",
-          "引けを取らない",
-          "存じております",
-          "保証書をお持ちでしたら、無料で修理できます。",
-          "停電のため、エレベーターは使えません。",
-          "ご遠慮なく",
-          "先方から連絡がありましたので、折り返しお電話いたします。",
-          "次回の予約、来週の同じ時間でよろしいですか。",
-          "袋は有料となっておりますが、ご利用になりますか。",
-          "迷子のお子様がいらっしゃいます。",
-          "在庫が少ないため、取り寄せとなりますがよろしいですか。"
-        ],
-        "listening_scenarios": [
-          {
-            "scenario": "パン屋:予約キャンセル",
-            "theme": "食"
-          },
-          {
-            "scenario": "部署:異動挨拶",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "スポーツクラブ:退会手続きの確認",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "scenario": "八百屋:予約取り置き",
-            "theme": "食"
-          },
-          {
-            "scenario": "文房具:法人契約",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "市役所:手続き案内",
-            "theme": "地域活性化"
-          },
-          {
-            "scenario": "動物園:イベントの案内",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "scenario": "朝礼:新制度",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "ラジオ:趣味の話",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "scenario": "歯科:定期検診",
-            "theme": "医療・福祉"
-          },
-          {
-            "scenario": "高速バス:座席指定",
-            "theme": "交通"
-          },
-          {
-            "scenario": "駐輪場:定期券",
-            "theme": "交通"
-          },
-          {
-            "scenario": "留学生センター:住居の相談",
-            "theme": "地域活性化"
-          },
-          {
-            "scenario": "社内システム変更に伴うパスワード更新",
-            "theme": "デジタル化"
-          },
-          {
-            "scenario": "展示会:ブースの設営分担",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "研修:電話応対の基本",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "経理:経費精算",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "銀行:口座開設",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "文化祭模擬店:メニュー割り当て(かき氷/ホットドッグ/たこ焼き/フルーツポンチ)",
-            "item": "文化祭模擬店:メニュー割り当て(かき氷/ホットドッグ/たこ焼き/フルーツポンチ)",
-            "theme": "食",
-            "origin": "adjunct",
-            "level": "N2",
-            "evidence": [
-              "already authored and shipped in tests/20260810_1/聴解スクリプト.txt (問題5 2番) and 聴解.md before this ledger entry was reconciled; content independently verified internally consistent and unambiguous by qa/qa-report-20260810_1.md §3 (聴解5-2番 rows) and §4 finding F1",
-              "vocabulary is N2-or-below: 模擬店/売り切れる/保存がきく/行列/冷蔵設備 are ordinary N2 daily-life words; かき氷/ホットドッグ/たこ焼き/フルーツポンチ are common food nouns with no N1 terms"
-            ]
-          },
-          {
-            "scenario": "書店:取り寄せ",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "観光案内:モデルコース",
-            "theme": "旅行・観光"
-          }
-        ],
-        "reading_topics": [
-          {
-            "topic": "無形文化財の保存",
-            "theme": "文化・伝統"
-          },
-          {
-            "topic": "防災訓練の実施要領と避難場所案内",
-            "theme": "防災"
-          },
-          {
-            "topic": "情報を疑う力",
-            "theme": "メディア・情報"
-          },
-          {
-            "topic": "選択肢の多さと満足度",
-            "theme": "科学・技術"
-          },
-          {
-            "topic": "脱炭素と企業",
-            "theme": "環境"
-          },
-          {
-            "topic": "育休取得の男性化",
-            "theme": "働き方"
-          },
-          {
-            "topic": "川と暮らしの関わり",
-            "theme": "環境"
-          },
-          {
-            "topic": "メンタルヘルスと職場",
-            "theme": "睡眠・健康"
-          },
-          {
-            "topic": "駅前再開発",
-            "theme": "住まい"
-          },
-          {
-            "topic": "宇宙探査の意義と技術波及効果",
-            "theme": "科学・技術"
-          },
-          {
-            "topic": "部活動の地域移行",
-            "theme": "教育"
-          },
-          {
-            "topic": "転職の増加",
-            "theme": "働き方"
-          }
-        ],
-        "paraphrase": [
-          "直ちに",
-          "項目",
-          "公衆",
-          "厄介だ(面倒だ)",
-          "どなる"
-        ]
-      },
-      "draw": {
-        "kanji_reading": 5,
-        "orthography": 5,
-        "word_formation": 3,
-        "context_words": 7,
-        "paraphrase": 5,
-        "usage": 5,
-        "grammar_p7": 12,
-        "grammar_p8": 5,
-        "quick_response": 11,
-        "listening_scenarios": 21,
-        "reading_topics": 12
-      },
-      "harvest_sha": "a17048ca5f3c"
-    },
-    {
-      "test_id": "20260810_2",
-      "seed": "32999628+reroll(paraphrase,43621231)+reroll(usage,61570247)",
-      "generated_at": "2026-08-10 13:05:01",
-      "items": {
-        "kanji_reading": [
-          "措置(そち)",
-          "譲る(ゆずる)",
-          "徹底(てってい)",
-          "紛れる(まぎれる)",
-          "慎重(しんちょう)"
-        ],
-        "orthography": [
-          "為替",
-          "損害",
-          "羽根",
-          "英文",
-          "加熱"
-        ],
-        "word_formation": [
-          "仮〜(仮契約)",
-          "〜化(簡素化)",
-          "再〜(再利用)"
-        ],
-        "context_words": [
-          "こうして",
-          "おだいじに",
-          "転換",
-          "うんと",
-          "おおらか",
-          "しゃぶる",
-          "カーブ"
-        ],
-        "grammar_p7": [
-          "〜に応じて",
-          "〜っぽい",
-          "〜にあたって",
-          "〜というものではない",
-          "〜を踏まえて",
-          "〜にくい",
-          "〜はともかく",
-          "〜に決まっている",
-          "〜ばかりだ",
-          "〜以上は",
-          "〜次第だ",
-          "〜ながらも"
-        ],
-        "grammar_p8": [
-          "同時進行(〜ながら…する)",
-          "〜に限らず",
-          "時間前後(〜たうえで…する)",
-          "評価反論(〜とはいえ…)",
-          "理由説明(〜のは…からだ)"
-        ],
-        "quick_response": [
-          "明日の現場、朝早いけど集合時間は大丈夫そう？",
-          "佐藤さん、そのアイデア、次の企画会議で出してみたらどうかな。",
-          "二の足を踏む",
-          "薬の説明は、調剤師から伺ってください。",
-          "山田さん、資料の作成、手伝ってくれて本当にありがとう。",
-          "来週のプレゼン、資料の準備は順調に進んでいますか。",
-          "昨日のセミナー、途中で退席してしまい、申し訳ありませんでした。",
-          "少しお待ちいただければ、担当の者を呼びますので。",
-          "〜ずじまい",
-          "お手数をおかけします",
-          "手が空く"
-        ],
-        "listening_scenarios": [
-          {
-            "scenario": "家具店:配達変更の電話",
-            "theme": "住まい"
-          },
-          {
-            "scenario": "銀行:口座開設の手続き",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "開発:仕様変更",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "図書館での資料の検索と貸出延長",
-            "theme": "教育"
-          },
-          {
-            "scenario": "薬局:服用方法の説明",
-            "theme": "医療・福祉"
-          },
-          {
-            "scenario": "企画会議でのアイデア出しと絞り込み",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "保険の契約内容の確認と見直し",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "警察署:遺失物届",
-            "theme": "行政・手続き"
-          },
-          {
-            "scenario": "セミナーの会場準備と受付担当",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "体育館:施設予約の手続き",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "scenario": "鉄道:指定席変更",
-            "theme": "交通"
-          },
-          {
-            "scenario": "花屋:配達の手配",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "会社:海外支社との時差調整",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "精肉店:注文変更",
-            "theme": "食"
-          },
-          {
-            "scenario": "アルバイトのシフト変更の相談",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "講演会:防災の心構え",
-            "theme": "防災"
-          },
-          {
-            "scenario": "水道局:検針結果の問い合わせ",
-            "theme": "住まい"
-          },
-          {
-            "scenario": "信用金庫:ローン相談",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "セミナー:プレゼンの組み立て方",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "区役所:転入届",
-            "theme": "地域活性化"
-          },
-          {
-            "scenario": "不動産屋:部屋探し",
-            "theme": "住まい"
-          }
-        ],
-        "reading_topics": [
-          {
-            "topic": "難民受け入れ",
-            "theme": "人間関係"
-          },
-          {
-            "topic": "働き方と評価",
-            "theme": "働き方"
-          },
-          {
-            "topic": "時間の使い方と余白",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "topic": "リユース市場",
-            "theme": "消費・経済"
-          },
-          {
-            "topic": "ごみ分別と環境意識",
-            "theme": "環境"
-          },
-          {
-            "topic": "昆虫食",
-            "theme": "食"
-          },
-          {
-            "topic": "天気と気分",
-            "theme": "睡眠・健康"
-          },
-          {
-            "topic": "eスポーツと体験",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "topic": "公民館の会議室利用料金改定のお知らせ",
-            "theme": "地域活性化"
-          },
-          {
-            "topic": "メール削減運動",
-            "theme": "働き方"
-          },
-          {
-            "topic": "市民プールの夏季開放案内",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "topic": "臓器移植と意思表示",
-            "theme": "医療・福祉"
-          }
-        ],
-        "paraphrase": [
-          "怠る(サボる/なまける)",
-          "すっきり",
-          "ようやく",
-          "刻む",
-          "なんとも"
-        ],
-        "usage": [
-          "引き受ける",
-          "契機",
-          "大まか",
-          "克服",
-          "反映"
-        ]
-      },
-      "draw": {
-        "kanji_reading": 5,
-        "orthography": 5,
-        "word_formation": 3,
-        "context_words": 7,
-        "paraphrase": 5,
-        "usage": 5,
-        "grammar_p7": 12,
-        "grammar_p8": 5,
-        "quick_response": 11,
-        "listening_scenarios": 21,
-        "reading_topics": 12
-      },
-      "harvest_sha": "bc1b9b9725de"
-    },
-    {
-      "test_id": "20260811_1",
-      "seed": "76797128+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,27969690)+reroll(kanji_reading,20631168)+reroll(kanji_reading,14950249)+reroll(context_words,85922550)+reroll(word_formation,76797128)+reroll(context_words,76797128)",
-      "generated_at": "2026-08-11 13:55:23",
-      "items": {
-        "orthography": [
-          "歌謡",
-          "保留",
-          "抑える(感情を)",
-          "引返す",
-          "架空"
-        ],
-        "paraphrase": [
-          "すみやかに(早く)",
-          "わずかに",
-          "妥協する(歩み寄る)",
-          "不器用だ",
-          "せいぜい(多くても)"
-        ],
-        "usage": [
-          "宣伝する",
-          "把握",
-          "落ち着く",
-          "導入する",
-          "健やか"
-        ],
-        "grammar_p7": [
-          "〜はもとより",
-          "〜末に",
-          "〜もかまわず",
-          "〜っぱなし",
-          "〜がち",
-          "〜てしかたがない・てしょうがない",
-          "〜ない限り",
-          "〜に違いない",
-          "〜限り",
-          "〜に対して",
-          "〜ようがない",
-          "敬語:お目にかかる"
-        ],
-        "grammar_p8": [
-          "限定表現(〜のみならず…も)",
-          "原因理由構文(〜ばかりに…てしまった)",
-          "〜に基づいて",
-          "〜からといって",
-          "〜をきっかけに"
-        ],
-        "quick_response": [
-          "息が合う",
-          "本日の研修、非常に有意義な内容で感銘を受けました。",
-          "あいにくですが",
-          "水を差す",
-          "大目に見る",
-          "熱があるようですので、検温をお願いします。",
-          "お会計、カードと現金、どちらがよろしいですか。",
-          "サイズ交換は一度のみ可能です。",
-          "館内では携帯電話のご利用をお控えください。",
-          "課長、この件は私の力不足でした。申し訳ございません。",
-          "腑に落ちない"
-        ],
-        "listening_scenarios": [
-          {
-            "scenario": "映画館:上映スケジュールの確認",
-            "theme": "文化・伝統"
-          },
-          {
-            "scenario": "地域センター:食品寄付の受付",
-            "theme": "地域活性化"
-          },
-          {
-            "scenario": "広報:取材対応",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "花屋:配達指定",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "病院での受診受付と注意事項の説明",
-            "theme": "医療・福祉"
-          },
-          {
-            "scenario": "居酒屋:貸切相談",
-            "theme": "食"
-          },
-          {
-            "scenario": "フィットネスジム:体調管理の相談",
-            "theme": "睡眠・健康"
-          },
-          {
-            "scenario": "講演会:食品ロス削減の工夫",
-            "theme": "食"
-          },
-          {
-            "scenario": "空港:強風による運航遅延案内",
-            "theme": "交通",
-            "origin": "reauthored",
-            "note": "Originally drawn as 空港:搭乗手続きの案内; the authored dialogue covers a weather delay, not boarding procedure. Same setting, corrected sub-errand wording (QA finding F8)."
-          },
-          {
-            "scenario": "図書館:電子書籍の利用登録",
-            "theme": "デジタル化"
-          },
-          {
-            "scenario": "農園:収穫体験の受付",
-            "theme": "食"
-          },
-          {
-            "scenario": "文化教室:講座選び（陶芸/写真/英会話/フラワーアレンジメント）",
-            "theme": "スポーツ・余暇",
-            "origin": "reauthored",
-            "note": "聴解問題5-2番 re-themed off its original pool draw (居酒屋:宴会コースの相談/食) to fix a headline-theme collision with 問題12 (both 食) within this same paper."
-          },
-          {
-            "scenario": "引っ越し業者との調整",
-            "theme": "住まい"
-          },
-          {
-            "scenario": "年金事務所:手続き",
-            "theme": "行政・手続き"
-          },
-          {
-            "scenario": "消防署:消火器点検",
-            "theme": "防災"
-          },
-          {
-            "scenario": "イベントでの台風接近に伴う対応策",
-            "theme": "防災"
-          },
-          {
-            "scenario": "事務所の省エネ対策の提案",
-            "theme": "環境"
-          },
-          {
-            "scenario": "駅:定期券の払い戻し",
-            "theme": "交通"
-          },
-          {
-            "scenario": "児童館:イベント参加申し込み",
-            "theme": "子育て・家族"
-          },
-          {
-            "scenario": "博物館:展示解説の音声ガイド",
-            "theme": "文化・伝統"
-          },
-          {
-            "scenario": "引っ越し先でのニュース確認方法選び",
-            "theme": "メディア・情報",
-            "origin": "reauthored",
-            "note": "聴解問題5-1番 re-themed off its original pool draw (家具店:組立サービス/住まい) to fix a zero-tolerance cross-test theme repeat against the immediately previous test (20260810_2 headlined 住まい too)."
-          }
-        ],
-        "reading_topics": [
-          {
-            "topic": "情報過多時代の取捨選択",
-            "theme": "メディア・情報"
-          },
-          {
-            "topic": "在宅避難という選択",
-            "theme": "防災"
-          },
-          {
-            "topic": "修理して使う文化",
-            "theme": "環境"
-          },
-          {
-            "topic": "認知症と地域支援",
-            "theme": "医療・福祉"
-          },
-          {
-            "topic": "方言の価値",
-            "theme": "文化・伝統"
-          },
-          {
-            "topic": "電子書籍と紙の本",
-            "theme": "デジタル化"
-          },
-          {
-            "topic": "異文化理解とコミュニケーションの多様性",
-            "theme": "人間関係"
-          },
-          {
-            "topic": "心理学におけるストレスとその対処法",
-            "theme": "睡眠・健康"
-          },
-          {
-            "topic": "現代建築の空間デザインと環境共生",
-            "theme": "住まい"
-          },
-          {
-            "topic": "和食の世界遺産以降",
-            "theme": "食"
-          },
-          {
-            "topic": "植物同士が化学物質でやり取りする害虫防御の合図",
-            "theme": "科学・技術",
-            "origin": "reauthored",
-            "note": "問題13 re-themed off its original pool draw (地方の隠れた観光地発掘/旅行・観光) to reduce cross-test headline-theme repeats against the paper-before-last (20260810_1, which headlined 旅行・観光 via 問題12) from three to the one rule 4 allows; the new theme 科学・技術 uses that one permitted repeat against 20260810_1's own 問題13."
-          },
-          {
-            "topic": "パスポート（旅券）申請手続きのご案内",
-            "theme": "行政・手続き",
-            "origin": "reauthored",
-            "note": "問題14 re-themed off its original pool draw (同一労働同一賃金/働き方) to reduce cross-test headline-theme repeats against the paper-before-last (20260810_1) from three to the one rule 4 allows."
-          },
-          {
-            "topic": "「関係人口」という発想",
-            "theme": "地域活性化",
-            "origin": "reauthored",
-            "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped after two independent topic re-authors (first to resolve a 問題9/問題10(1) collision, then to resolve a cross-test theme-repeat violation)."
-          }
-        ],
-        "kanji_reading": [
-          "暮れる(くれる)",
-          "国境(こっきょう)",
-          "暴れる(あばれる)",
-          "現役(げんえき)",
-          "吸収(きゅうしゅう)"
-        ],
-        "word_formation": [
-          "過〜(過剰)",
-          "〜振り(話しぶり)",
-          "各〜(各分野)"
-        ],
-        "context_words": [
-          "周期",
-          "温かみ",
-          "にらむ",
-          "付き合い",
-          "多用途",
-          "反社会的",
-          "文通"
-        ]
-      },
-      "draw": {
-        "kanji_reading": 5,
-        "orthography": 5,
-        "word_formation": 3,
-        "context_words": 7,
-        "paraphrase": 5,
-        "usage": 5,
-        "grammar_p7": 12,
-        "grammar_p8": 5,
-        "quick_response": 11,
-        "listening_scenarios": 21,
-        "reading_topics": 13
-      }
-    },
-    {
-      "test_id": "20260812_1",
-      "seed": 11060548,
-      "generated_at": "2026-08-12 10:02:39",
-      "items": {
-        "kanji_reading": [
-          "折り曲げる(おりまげる)",
-          "具体的(ぐたいてき)",
-          "食塩(しょくえん)",
-          "埋める(うめる)",
-          "尊重(そんちょう)"
-        ],
-        "orthography": [
-          "展開",
-          "補う",
-          "会館",
-          "換気",
-          "空中"
-        ],
-        "word_formation": [
-          "自〜(自宅)",
-          "〜じみる(所帯じみる)",
-          "〜触れ(雪見)"
-        ],
-        "context_words": [
-          "通行",
-          "つりあう",
-          "ええと",
-          "該当",
-          "名場面",
-          "足を延ばす",
-          "証言"
-        ],
-        "paraphrase": [
-          "あらかじめ(事前に)",
-          "適度に",
-          "たちまち",
-          "どなる",
-          "厚かましい(失礼だ)"
-        ],
-        "usage": [
-          "融通",
-          "ボリューム",
-          "割り込む",
-          "並行",
-          "及ぶ"
-        ],
-        "grammar_p7": [
-          "〜限りでは",
-          "〜だけ(のことは)ある",
-          "〜を通じて",
-          "〜たいものだ・てほしいものだ",
-          "〜にせよ〜にせよ",
-          "〜といい〜といい",
-          "〜はずがない",
-          "〜わけではない",
-          "敬語:承る",
-          "〜ないわけにはいかない",
-          "〜ぬきにして",
-          "〜にかけては"
-        ],
-        "grammar_p8": [
-          "〜ないことには",
-          "条件限定(〜ない限りは…)",
-          "逆説対比(〜のに対して…は)",
-          "〜つつある",
-          "結果推量(〜にちがいない)"
-        ],
-        "quick_response": [
-          "部長、来週の会議の資料、印刷して机の上に置いておきました。",
-          "駐車時間が超過しております。",
-          "地震のため、一時的に閉館いたします。",
-          "部長がお呼びですので、至急会議室までお願いいたします。",
-          "〜かと思いきや",
-          "領収書の宛名、ご指定はございますか。",
-          "社長、来月のイベントの企画案、プレゼンさせていただけないでしょうか。",
-          "気が利く",
-          "本人確認のため、身分証明書を見せていただけますか。",
-          "天候によっては中止になる可能性もございますので、ご了承ください。",
-          "立て込んでいる"
-        ],
-        "listening_scenarios": [
-          {
-            "scenario": "ネイル:デザイン相談",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "scenario": "美術館:団体予約",
-            "theme": "文化・伝統"
-          },
-          {
-            "scenario": "取引先との訪問日程の再調整",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "動画配信会社:契約プラン変更の相談",
-            "theme": "メディア・情報"
-          },
-          {
-            "scenario": "語学学校:レベル分け",
-            "theme": "教育"
-          },
-          {
-            "scenario": "朝礼:新制度",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "クリニック:睡眠外来の予約",
-            "theme": "睡眠・健康"
-          },
-          {
-            "scenario": "リサイクル市での出品ルール",
-            "theme": "環境"
-          },
-          {
-            "scenario": "ITセミナーの事前課題と資料ダウンロード",
-            "theme": "デジタル化"
-          },
-          {
-            "scenario": "会社での出張旅費清算の手続き",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "ラジオ:転職の話",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "保険会社:契約内容の見直し",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "工場:安全講習の案内",
-            "theme": "防災"
-          },
-          {
-            "scenario": "研究室の実験設備の共有スケジュール",
-            "theme": "教育"
-          },
-          {
-            "scenario": "自動車整備工場:車検の相談",
-            "theme": "交通",
-            "origin": "reauthored",
-            "note": "聴解問題1-4番 re-themed off its original pool draw (引っ越し業者との見積もり調整/住まい) to fix an automatic-fail cross-test errand repeat with 20260811_1's 聴解問題1-2番 (also 引っ越し業者, 男の人+担当者, 住まい, one test apart; qa/qa-report-20260812_1.md F1). Replacement institution/errand (自動車整備工場, 車検) checked against this paper's other 20 listening_scenarios and against 20260811_1's and 20260810_2's full 問題1/2/3/5 scenario sets (logs/topics.json) — no collision found. Same 課題理解 task shape (男の人はこのあとまず何をしなければなりませんか), key unchanged (3)."
-          },
-          {
-            "scenario": "学童:延長利用",
-            "theme": "子育て・家族"
-          },
-          {
-            "scenario": "音楽教室:レッスン",
-            "theme": "教育"
-          },
-          {
-            "scenario": "友人同士:卒業旅行の行き先決め",
-            "theme": "旅行・観光",
-            "origin": "reauthored",
-            "note": "聴解問題5-1番 re-themed off its original pool draw (サークル:合宿の計画/スポーツ・余暇) to fix a zero-tolerance headline-theme collision with 20260811_1's 聴解問題5-2番 (also スポーツ・余暇, logs/topics.json). Replacement theme costs one repeat against the 2-back paper 20260810_2 (問14=旅行・観光), the one repeat exam-blueprint rule 4(b) allows — same treatment as the F5 precedent in qa/qa-report-20260811_1.md. Same speakers (学生/女), same task shape (single-decision, decide-by-attribute), key unchanged (4)."
-          },
-          {
-            "scenario": "眼鏡店:度数変更",
-            "theme": "消費・経済"
-          },
-          {
-            "scenario": "小学校:保護者会の連絡",
-            "theme": "教育"
-          },
-          {
-            "scenario": "カスタマー:返品",
-            "theme": "働き方"
-          }
-        ],
-        "reading_topics": [
-          {
-            "topic": "15分都市",
-            "theme": "住まい"
-          },
-          {
-            "topic": "腸内細菌と食生活",
-            "theme": "睡眠・健康"
-          },
-          {
-            "topic": "伝統芸能の担い手不足",
-            "theme": "文化・伝統"
-          },
-          {
-            "topic": "ペットと社会",
-            "theme": "環境"
-          },
-          {
-            "topic": "情報社会におけるプライバシー保護",
-            "theme": "デジタル化"
-          },
-          {
-            "topic": "サプライチェーン",
-            "theme": "消費・経済"
-          },
-          {
-            "topic": "市民マラソンと沿道の負担",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "topic": "夜の街の明るさ",
-            "theme": "地域活性化"
-          },
-          {
-            "topic": "男女共同参画",
-            "theme": "人間関係"
-          },
-          {
-            "topic": "行政の避難指示・ハザードマップへの依存と個人の観察",
-            "theme": "防災",
-            "origin": "reauthored",
-            "note": "問題12 re-themed off its original pool draw (情報を疑う力/メディア・情報) to fix a zero-tolerance cross-test headline-theme repeat against the immediately previous test (20260811_1, which headlined メディア・情報 via 聴解問題5-1番, not via 問題12 itself — rule 4 is theme-level, not surface-position-level). The new theme 防災 is in neither 20260811_1's nor 20260810_2's headline set, keeps the 2-test-back repeat budget at 0, and does not collide with this paper's other 12 reading-half themes (防災 also appears as a non-headline 聴解 scenario, which the theme rules do not restrict)."
-          },
-          {
-            "topic": "高齢者の再雇用",
-            "theme": "働き方"
-          },
-          {
-            "topic": "献血バスの巡回と献血の条件のご案内",
-            "theme": "医療・福祉",
-            "origin": "reauthored",
-            "note": "問題14 re-themed off its original pool draw (情報公開請求の手続きと課題/行政・手続き) to fix a zero-tolerance cross-test headline-theme repeat against the immediately previous test (20260811_1 headlined 行政・手続き via its own 問題14). The new theme 医療・福祉 is in neither previous paper's headline set and leaves headline overlaps with 20260810_2 at zero."
-          },
-          {
-            "topic": "優先席と遠慮",
-            "theme": "交通",
-            "origin": "reauthored",
-            "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped, self-composed by the 文法 author and checked distinct against all 12 drawn reading_topics entries, all 21 listening_scenarios, and both prior papers' headline sets, per the exam-blueprint precedent set by 20260811_1's own 問題9 entry."
-          }
-        ]
-      },
-      "draw": {
-        "kanji_reading": 5,
-        "orthography": 5,
-        "word_formation": 3,
-        "context_words": 7,
-        "paraphrase": 5,
-        "usage": 5,
-        "grammar_p7": 12,
-        "grammar_p8": 5,
-        "quick_response": 11,
-        "listening_scenarios": 21,
-        "reading_topics": 13
-      }
-    },
-    {
-      "test_id": "20260812_2",
-      "seed": 45158912,
-      "generated_at": "2026-08-12 17:22:18",
-      "items": {
-        "kanji_reading": [
-          "連続(れんぞく)",
-          "鉱山(こうざん)",
-          "列島(れっとう)",
-          "自治体(じちたい)",
-          "各々(おのおの)"
-        ],
-        "orthography": [
-          "漁業",
-          "果実",
-          "努める(努力)",
-          "下品",
-          "納入"
-        ],
-        "word_formation": [
-          "〜ずくめ(黒ずくめ)",
-          "〜好き(猫好き)",
-          "下〜(下請け)"
-        ],
-        "context_words": [
-          "大げさ",
-          "体がもたない",
-          "めざましい",
-          "手を借りる",
-          "言いつける",
-          "中でも",
-          "焼き上がる"
-        ],
-        "paraphrase": [
-          "内気だ(恥ずかしがり)",
-          "相当(かなり)",
-          "みじめだ(悲惨だ)",
-          "純粋だ(素直だ)",
-          "さっさと(すぐに/早く)"
-        ],
-        "usage": [
-          "持参",
-          "大まか",
-          "体系",
-          "同調",
-          "妨げる"
-        ],
-        "grammar_p7": [
-          "〜にくい",
-          "〜とみえる",
-          "〜ないではいられない",
-          "〜にしたがって",
-          "敬語:伺う",
-          "〜といった",
-          "〜をはじめ",
-          "〜どころではない",
-          "〜(よ)うか〜まいか",
-          "〜にかかわりなく",
-          "〜わりに",
-          "〜ではあるまいか"
-        ],
-        "grammar_p8": [
-          "変化推移(〜につれて…ていく)",
-          "〜おかげで",
-          "評価反論(〜とはいえ…)",
-          "〜に限らず",
-          "基準準拠(〜に沿って…進める)"
-        ],
-        "quick_response": [
-          "〜てばかりいる",
-          "ポイントカード、お持ちですか。",
-          "課長、体調が優れませんので、本日は早退させていただいてもよろしいでしょうか。",
-          "引けを取らない",
-          "明日の会議の件ですが、あいにく先方のご都合が悪くなりまして…",
-          "部長、先日のご指摘、真摯に受け止めております。",
-          "この度の件、ご期待に添えず、大変心苦しく思っております。",
-          "修繕のため、明日の午前中に立ち入ります。",
-          "課長、新商品のサンプルが届きましたので、お持ちいたしました。",
-          "承りました",
-          "〜ずじまい"
-        ],
-        "listening_scenarios": [
-          {
-            "scenario": "市の環境課:ごみ収集変更の説明",
-            "theme": "環境"
-          },
-          {
-            "scenario": "会社:経費精算システムの変更",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "会社:席替えとレイアウト変更",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "カフェ:テイクアウト",
-            "theme": "食"
-          },
-          {
-            "scenario": "動物園:イベントの案内",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "scenario": "ホテル:団体予約の変更",
-            "theme": "旅行・観光"
-          },
-          {
-            "scenario": "市役所:オンライン申請の操作案内",
-            "theme": "デジタル化"
-          },
-          {
-            "scenario": "タクシー:配車アプリの使い方",
-            "theme": "交通"
-          },
-          {
-            "scenario": "家具店:配達変更の電話",
-            "theme": "住まい"
-          },
-          {
-            "scenario": "マンションの設備点検のお知らせ",
-            "theme": "住まい"
-          },
-          {
-            "scenario": "天文台:観望会の受付",
-            "theme": "科学・技術"
-          },
-          {
-            "scenario": "バス会社:深夜バスの時刻確認",
-            "theme": "交通"
-          },
-          {
-            "scenario": "保育園:延長保育の予約変更とアレルギー対応",
-            "theme": "子育て・家族",
-            "origin": "reauthored",
-            "note": "QA F1 fix: re-authored off 食 (レストラン予約) to clear headline theme collision with 問題12 フードロス; kept reservation-change + special-requirement shape and answer_positions 聴解_問題5[0]=2."
-          },
-          {
-            "scenario": "家電量販:配送日",
-            "theme": "住まい"
-          },
-          {
-            "scenario": "メーカー:新技術の説明会",
-            "theme": "科学・技術"
-          },
-          {
-            "scenario": "病院:再診予約",
-            "theme": "医療・福祉"
-          },
-          {
-            "scenario": "展示会:ブースの設営分担",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "旅行代理店:プラン変更",
-            "theme": "旅行・観光"
-          },
-          {
-            "scenario": "研修会でのグループワークの進め方",
-            "theme": "働き方"
-          },
-          {
-            "scenario": "年金事務所:手続きの案内",
-            "theme": "行政・手続き"
-          },
-          {
-            "scenario": "同窓会:出欠確認の電話",
-            "theme": "人間関係",
-            "origin": "reauthored",
-            "note": "QA F4 fix: replaced eliminate-shared-list venue choice with two-attribute picks (attendance timing + who brings album) so content matches the drawn 出欠確認 scenario; keys kept 質問1=1 / 質問2=4."
-          }
-        ],
-        "reading_topics": [
-          {
-            "topic": "動物の行動学とコミュニケーション",
-            "theme": "科学・技術"
-          },
-          {
-            "topic": "シェアリングエコノミーの限界",
-            "theme": "消費・経済"
-          },
-          {
-            "topic": "時間の使い方と余白",
-            "theme": "スポーツ・余暇"
-          },
-          {
-            "topic": "タイムマネジメントと生産性の向上",
-            "theme": "働き方"
-          },
-          {
-            "topic": "戸籍制度と本人確認のデジタル化",
-            "theme": "行政・手続き"
-          },
-          {
-            "topic": "昼寝制度を導入する企業",
-            "theme": "睡眠・健康"
-          },
-          {
-            "topic": "AIによる要約記事の信頼性",
-            "theme": "メディア・情報"
-          },
-          {
-            "topic": "消費行動の変化とサブスクリプション",
-            "theme": "デジタル化"
-          },
-          {
-            "topic": "防災アプリの普及と課題",
-            "theme": "防災"
-          },
-          {
-            "topic": "フードロス削減の取り組み",
-            "theme": "食"
-          },
-          {
-            "topic": "地域猫の管理と共生",
-            "theme": "環境"
-          },
-          {
-            "topic": "分譲マンション共用施設の利用案内",
-            "theme": "住まい",
-            "origin": "reauthored",
-            "note": "QA F2 fix: replaced 語学学校/教育 flyer to clear rule-4 consecutive 教育 headline vs 20260812_1 聴解5-2; multi-constraint info-retrieval kept; answer_positions 問題14 unchanged [4,3]."
-          },
-          {
-            "topic": "手書きのあいさつ",
-            "theme": "文化・伝統",
-            "origin": "reauthored",
-            "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped, self-composed by the 文法 author (手書きのあいさつ / 文化・伝統) and checked distinct against all 12 drawn reading_topics entries, all 21 listening_scenarios, and both prior papers' headline sets, per the exam-blueprint precedent set by 20260811_1's / 20260812_1's own 問題9 entry."
-          }
-        ]
-      },
-      "draw": {
-        "kanji_reading": 5,
-        "orthography": 5,
-        "word_formation": 3,
-        "context_words": 7,
-        "paraphrase": 5,
-        "usage": 5,
-        "grammar_p7": 12,
-        "grammar_p8": 5,
-        "quick_response": 11,
-        "listening_scenarios": 21,
-        "reading_topics": 13
-      }
-    }
-  ]
+ "version": 2,
+ "history": [
+  {
+   "test_id": "20260807_1",
+   "seed": "15212088+reroll(usage,56459537)+reroll(word_formation,124145653)",
+   "generated_at": "2026-08-07 18:26:24",
+   "items": {
+    "kanji_reading": [
+     "誓う(ちかう)",
+     "惜しい(おしい)",
+     "迅速(じんそく)",
+     "漂う(ただよう)",
+     "抑える(おさえる)"
+    ],
+    "orthography": [
+     "一旦",
+     "努める(努力)",
+     "果実",
+     "歌謡",
+     "免責"
+    ],
+    "context_words": [
+     "サラリーマン",
+     "抑制",
+     "ウーマン",
+     "推移",
+     "柔軟",
+     "くっつく",
+     {
+      "item": "ワンピース",
+      "origin": "adjunct",
+      "level": "N2",
+      "evidence": [
+       "pending re-verification against Shin Kanzen Master N2-Goi or 日本語総まとめ N2 語彙 (prior source corpus deleted 2026-08-11)"
+      ]
+     }
+    ],
+    "paraphrase": [
+     "案外",
+     "そのほか",
+     "そういえば",
+     "あらかじめ(事前に)",
+     "ショップ"
+    ],
+    "grammar_p7": [
+     "〜がち",
+     "〜わけにはいかない",
+     "〜たところ",
+     "〜そうにない",
+     "〜ずにはいられない",
+     "〜に沿って",
+     "〜をはじめ",
+     "〜からには",
+     "〜あげく",
+     "〜ことから",
+     "〜に基づいて",
+     "〜に伴って"
+    ],
+    "grammar_p8": [
+     "原因理由構文(〜ばかりに…てしまった)",
+     "例示指示(〜例えば…)",
+     "〜おかげで",
+     "〜からといって",
+     "条件限定(〜ない限りは…)"
+    ],
+    "quick_response": [
+     "心当たりがない",
+     "部長、来週の会議の資料、印刷して机の上に置いておきました。",
+     "部長、急なご相談で大変恐縮なのですが、10分ほどお時間をいただけますでしょうか。",
+     "かしこまりました",
+     "今日は定時で上がらせていただいてもよろしいでしょうか。",
+     "息が合う",
+     "避難経路は、各階の掲示をご確認ください。",
+     "皆さんのおかげで無事に終えることができました。",
+     "めどが立つ",
+     "この路線は本日運休しております。",
+     "部長がお呼びですので、至急会議室までお願いいたします。"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "家具店:組立サービス",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "学会:ポスター発表の準備",
+      "theme": "教育"
+     },
+     {
+      "scenario": "マンション:置き配ボックスの設置",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "町内会:回覧板の内容確認",
+      "theme": "地域活性化"
+     },
+     {
+      "scenario": "タクシー:配車アプリの使い方",
+      "theme": "交通"
+     },
+     {
+      "scenario": "管理人室:騒音の相談",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "美術館:写真撮影のルール説明",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "カスタマー:返品",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "ジム:入会相談",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "テレビ:地域の祭りの紹介",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "新入社員研修の宿泊施設手配",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "店舗の改装工事期間中の営業案内",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "出張の手配",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "科学館:展示説明",
+      "theme": "科学・技術"
+     },
+     {
+      "scenario": "工場見学の集合場所と注意事項",
+      "theme": "教育"
+     },
+     {
+      "scenario": "動物園:年間パス",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "年金事務所:手続きの案内",
+      "theme": "行政・手続き"
+     },
+     {
+      "scenario": "留守番電話:約束変更",
+      "theme": "人間関係"
+     },
+     {
+      "scenario": "大学の授業:統計の読み方",
+      "theme": "教育"
+     },
+     {
+      "scenario": "大学:履修登録の相談",
+      "theme": "教育"
+     },
+     {
+      "scenario": "税務署:確定申告の相談窓口",
+      "theme": "行政・手続き"
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "15分都市",
+      "theme": "住まい"
+     },
+     {
+      "topic": "フードロス削減の取り組み",
+      "theme": "食"
+     },
+     {
+      "topic": "伝統工芸の継承",
+      "theme": "文化・伝統"
+     },
+     {
+      "topic": "同一労働同一賃金",
+      "theme": "働き方"
+     },
+     {
+      "topic": "読書の効用",
+      "theme": "教育"
+     },
+     {
+      "topic": "半導体と経済安保",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "サテライトオフィス",
+      "theme": "働き方"
+     },
+     {
+      "topic": "効率と創造性",
+      "theme": "働き方"
+     },
+     {
+      "topic": "買い物のかたちの変化",
+      "theme": "消費・経済"
+     },
+     {
+      "topic": "ボランティアの意義",
+      "theme": "地域活性化"
+     },
+     {
+      "topic": "インバウンドと生活者",
+      "theme": "旅行・観光"
+     },
+     {
+      "topic": "ESG投資",
+      "theme": "消費・経済"
+     }
+    ],
+    "usage": [
+     "採る",
+     "まあまあ",
+     "提示",
+     "鮮やか",
+     "ひとりでに"
+    ],
+    "word_formation": [
+     "〜別(男女別)",
+     "〜圏(首都圏)",
+     "〜版(決定版)"
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   },
+   "harvest_sha": "165eb22f8fd9"
+  },
+  {
+   "test_id": "20260810_1",
+   "seed": "81480636+reroll(reading_topics,81480636)+reroll(paraphrase,60851241)+reroll(word_formation,4827847876)",
+   "generated_at": "2026-08-10 10:02:21",
+   "items": {
+    "kanji_reading": [
+     "演じる(えんじる)",
+     "恵まれる(めぐまれる)",
+     "潔い(いさぎよい)",
+     "漠然(ばくぜん)",
+     "竹(たけ)"
+    ],
+    "orthography": [
+     "貨物",
+     "育児",
+     "王女",
+     "系統",
+     "救助"
+    ],
+    "context_words": [
+     "ええと",
+     "逆らう",
+     "おさきに",
+     "あれこれ",
+     "しつこい",
+     "こぼれる",
+     "あくび"
+    ],
+    "usage": [
+     "順調",
+     "ファスナー",
+     "持参",
+     "ぶつける",
+     "もしかしたら"
+    ],
+    "grammar_p7": [
+     "〜ないことには",
+     "〜つつある",
+     "〜まいか",
+     "〜を通して",
+     "〜一方だ",
+     "〜にほかならない",
+     "〜を契機に",
+     "〜上は",
+     "〜か〜ないかのうちに",
+     "〜に限って",
+     "〜どころか",
+     "〜を問わず"
+    ],
+    "grammar_p8": [
+     "目的表現(〜ように…する)",
+     "変化推移(〜につれて…ていく)",
+     "換言要約(〜つまり…ということだ)",
+     "対比表現(〜一方…だ)",
+     "順接接続(〜したがって…)"
+    ],
+    "quick_response": [
+     "山田さん、来週の当番、代わってもらえないかな。",
+     "引けを取らない",
+     "存じております",
+     "保証書をお持ちでしたら、無料で修理できます。",
+     "停電のため、エレベーターは使えません。",
+     "ご遠慮なく",
+     "先方から連絡がありましたので、折り返しお電話いたします。",
+     "次回の予約、来週の同じ時間でよろしいですか。",
+     "袋は有料となっておりますが、ご利用になりますか。",
+     "迷子のお子様がいらっしゃいます。",
+     "在庫が少ないため、取り寄せとなりますがよろしいですか。"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "パン屋:予約キャンセル",
+      "theme": "食"
+     },
+     {
+      "scenario": "部署:異動挨拶",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "スポーツクラブ:退会手続きの確認",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "八百屋:予約取り置き",
+      "theme": "食"
+     },
+     {
+      "scenario": "文房具:法人契約",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "市役所:手続き案内",
+      "theme": "地域活性化"
+     },
+     {
+      "scenario": "動物園:イベントの案内",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "朝礼:新制度",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "ラジオ:趣味の話",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "歯科:定期検診",
+      "theme": "医療・福祉"
+     },
+     {
+      "scenario": "高速バス:座席指定",
+      "theme": "交通"
+     },
+     {
+      "scenario": "駐輪場:定期券",
+      "theme": "交通"
+     },
+     {
+      "scenario": "留学生センター:住居の相談",
+      "theme": "地域活性化"
+     },
+     {
+      "scenario": "社内システム変更に伴うパスワード更新",
+      "theme": "デジタル化"
+     },
+     {
+      "scenario": "展示会:ブースの設営分担",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "研修:電話応対の基本",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "経理:経費精算",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "銀行:口座開設",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "文化祭模擬店:メニュー割り当て(かき氷/ホットドッグ/たこ焼き/フルーツポンチ)",
+      "item": "文化祭模擬店:メニュー割り当て(かき氷/ホットドッグ/たこ焼き/フルーツポンチ)",
+      "theme": "食",
+      "origin": "adjunct",
+      "level": "N2",
+      "evidence": [
+       "already authored and shipped in tests/20260810_1/聴解スクリプト.txt (問題5 2番) and 聴解.md before this ledger entry was reconciled; content independently verified internally consistent and unambiguous by qa/qa-report-20260810_1.md §3 (聴解5-2番 rows) and §4 finding F1",
+       "vocabulary is N2-or-below: 模擬店/売り切れる/保存がきく/行列/冷蔵設備 are ordinary N2 daily-life words; かき氷/ホットドッグ/たこ焼き/フルーツポンチ are common food nouns with no N1 terms"
+      ]
+     },
+     {
+      "scenario": "書店:取り寄せ",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "観光案内:モデルコース",
+      "theme": "旅行・観光"
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "無形文化財の保存",
+      "theme": "文化・伝統"
+     },
+     {
+      "topic": "防災訓練の実施要領と避難場所案内",
+      "theme": "防災"
+     },
+     {
+      "topic": "情報を疑う力",
+      "theme": "メディア・情報"
+     },
+     {
+      "topic": "選択肢の多さと満足度",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "脱炭素と企業",
+      "theme": "環境"
+     },
+     {
+      "topic": "育休取得の男性化",
+      "theme": "働き方"
+     },
+     {
+      "topic": "川と暮らしの関わり",
+      "theme": "環境"
+     },
+     {
+      "topic": "メンタルヘルスと職場",
+      "theme": "睡眠・健康"
+     },
+     {
+      "topic": "駅前再開発",
+      "theme": "住まい"
+     },
+     {
+      "topic": "宇宙探査の意義と技術波及効果",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "部活動の地域移行",
+      "theme": "教育"
+     },
+     {
+      "topic": "転職の増加",
+      "theme": "働き方"
+     }
+    ],
+    "paraphrase": [
+     "直ちに",
+     "項目",
+     "公衆",
+     "厄介だ(面倒だ)",
+     "どなる"
+    ],
+    "word_formation": [
+     "悪〜(悪影響)",
+     "初〜(初体験)",
+     "〜立て(採れたて)"
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   },
+   "harvest_sha": "a17048ca5f3c"
+  },
+  {
+   "test_id": "20260810_2",
+   "seed": "32999628+reroll(paraphrase,43621231)+reroll(usage,61570247)+reroll(word_formation,6610777377)",
+   "generated_at": "2026-08-10 13:05:01",
+   "items": {
+    "kanji_reading": [
+     "措置(そち)",
+     "譲る(ゆずる)",
+     "徹底(てってい)",
+     "紛れる(まぎれる)",
+     "慎重(しんちょう)"
+    ],
+    "orthography": [
+     "為替",
+     "損害",
+     "羽根",
+     "英文",
+     "加熱"
+    ],
+    "context_words": [
+     "こうして",
+     "おだいじに",
+     "転換",
+     "うんと",
+     "おおらか",
+     "しゃぶる",
+     "カーブ"
+    ],
+    "grammar_p7": [
+     "〜に応じて",
+     "〜っぽい",
+     "〜にあたって",
+     "〜というものではない",
+     "〜を踏まえて",
+     "〜にくい",
+     "〜はともかく",
+     "〜に決まっている",
+     "〜ばかりだ",
+     "〜以上は",
+     "〜次第だ",
+     "〜ながらも"
+    ],
+    "grammar_p8": [
+     "同時進行(〜ながら…する)",
+     "〜に限らず",
+     "時間前後(〜たうえで…する)",
+     "評価反論(〜とはいえ…)",
+     "理由説明(〜のは…からだ)"
+    ],
+    "quick_response": [
+     "明日の現場、朝早いけど集合時間は大丈夫そう？",
+     "佐藤さん、そのアイデア、次の企画会議で出してみたらどうかな。",
+     "二の足を踏む",
+     "薬の説明は、調剤師から伺ってください。",
+     "山田さん、資料の作成、手伝ってくれて本当にありがとう。",
+     "来週のプレゼン、資料の準備は順調に進んでいますか。",
+     "昨日のセミナー、途中で退席してしまい、申し訳ありませんでした。",
+     "少しお待ちいただければ、担当の者を呼びますので。",
+     "〜ずじまい",
+     "お手数をおかけします",
+     "手が空く"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "家具店:配達変更の電話",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "銀行:口座開設の手続き",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "開発:仕様変更",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "図書館での資料の検索と貸出延長",
+      "theme": "教育"
+     },
+     {
+      "scenario": "薬局:服用方法の説明",
+      "theme": "医療・福祉"
+     },
+     {
+      "scenario": "企画会議でのアイデア出しと絞り込み",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "保険の契約内容の確認と見直し",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "警察署:遺失物届",
+      "theme": "行政・手続き"
+     },
+     {
+      "scenario": "セミナーの会場準備と受付担当",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "体育館:施設予約の手続き",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "鉄道:指定席変更",
+      "theme": "交通"
+     },
+     {
+      "scenario": "花屋:配達の手配",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "会社:海外支社との時差調整",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "精肉店:注文変更",
+      "theme": "食"
+     },
+     {
+      "scenario": "アルバイトのシフト変更の相談",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "講演会:防災の心構え",
+      "theme": "防災"
+     },
+     {
+      "scenario": "水道局:検針結果の問い合わせ",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "信用金庫:ローン相談",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "セミナー:プレゼンの組み立て方",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "区役所:転入届",
+      "theme": "地域活性化"
+     },
+     {
+      "scenario": "不動産屋:部屋探し",
+      "theme": "住まい"
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "難民受け入れ",
+      "theme": "人間関係"
+     },
+     {
+      "topic": "働き方と評価",
+      "theme": "働き方"
+     },
+     {
+      "topic": "時間の使い方と余白",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "topic": "リユース市場",
+      "theme": "消費・経済"
+     },
+     {
+      "topic": "ごみ分別と環境意識",
+      "theme": "環境"
+     },
+     {
+      "topic": "昆虫食",
+      "theme": "食"
+     },
+     {
+      "topic": "天気と気分",
+      "theme": "睡眠・健康"
+     },
+     {
+      "topic": "eスポーツと体験",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "topic": "公民館の会議室利用料金改定のお知らせ",
+      "theme": "地域活性化"
+     },
+     {
+      "topic": "メール削減運動",
+      "theme": "働き方"
+     },
+     {
+      "topic": "市民プールの夏季開放案内",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "topic": "臓器移植と意思表示",
+      "theme": "医療・福祉"
+     }
+    ],
+    "paraphrase": [
+     "怠る(サボる/なまける)",
+     "すっきり",
+     "ようやく",
+     "刻む",
+     "なんとも"
+    ],
+    "usage": [
+     "引き受ける",
+     "契機",
+     "大まか",
+     "克服",
+     "反映"
+    ],
+    "word_formation": [
+     "未〜(未記入)",
+     "〜主(依頼主)",
+     "多〜(多様)"
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   },
+   "harvest_sha": "bc1b9b9725de"
+  },
+  {
+   "test_id": "20260811_1",
+   "seed": "76797128+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,27969690)+reroll(kanji_reading,20631168)+reroll(kanji_reading,14950249)+reroll(context_words,85922550)+reroll(word_formation,76797128)+reroll(context_words,76797128)+reroll(word_formation,1231562560)+reroll(word_formation,2170583024)",
+   "generated_at": "2026-08-11 13:55:23",
+   "items": {
+    "orthography": [
+     "歌謡",
+     "保留",
+     "抑える(感情を)",
+     "引返す",
+     "架空"
+    ],
+    "paraphrase": [
+     "すみやかに(早く)",
+     "わずかに",
+     "妥協する(歩み寄る)",
+     "不器用だ",
+     "せいぜい(多くても)"
+    ],
+    "usage": [
+     "宣伝する",
+     "把握",
+     "落ち着く",
+     "導入する",
+     "健やか"
+    ],
+    "grammar_p7": [
+     "〜はもとより",
+     "〜末に",
+     "〜もかまわず",
+     "〜っぱなし",
+     "〜がち",
+     "〜てしかたがない・てしょうがない",
+     "〜ない限り",
+     "〜に違いない",
+     "〜限り",
+     "〜に対して",
+     "〜ようがない",
+     "敬語:お目にかかる"
+    ],
+    "grammar_p8": [
+     "限定表現(〜のみならず…も)",
+     "原因理由構文(〜ばかりに…てしまった)",
+     "〜に基づいて",
+     "〜からといって",
+     "〜をきっかけに"
+    ],
+    "quick_response": [
+     "息が合う",
+     "本日の研修、非常に有意義な内容で感銘を受けました。",
+     "あいにくですが",
+     "水を差す",
+     "大目に見る",
+     "熱があるようですので、検温をお願いします。",
+     "お会計、カードと現金、どちらがよろしいですか。",
+     "サイズ交換は一度のみ可能です。",
+     "館内では携帯電話のご利用をお控えください。",
+     "課長、この件は私の力不足でした。申し訳ございません。",
+     "腑に落ちない"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "映画館:上映スケジュールの確認",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "地域センター:食品寄付の受付",
+      "theme": "地域活性化"
+     },
+     {
+      "scenario": "広報:取材対応",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "花屋:配達指定",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "病院での受診受付と注意事項の説明",
+      "theme": "医療・福祉"
+     },
+     {
+      "scenario": "居酒屋:貸切相談",
+      "theme": "食"
+     },
+     {
+      "scenario": "フィットネスジム:体調管理の相談",
+      "theme": "睡眠・健康"
+     },
+     {
+      "scenario": "講演会:食品ロス削減の工夫",
+      "theme": "食"
+     },
+     {
+      "scenario": "空港:強風による運航遅延案内",
+      "theme": "交通",
+      "origin": "reauthored",
+      "note": "Originally drawn as 空港:搭乗手続きの案内; the authored dialogue covers a weather delay, not boarding procedure. Same setting, corrected sub-errand wording (QA finding F8)."
+     },
+     {
+      "scenario": "図書館:電子書籍の利用登録",
+      "theme": "デジタル化"
+     },
+     {
+      "scenario": "農園:収穫体験の受付",
+      "theme": "食"
+     },
+     {
+      "scenario": "文化教室:講座選び（陶芸/写真/英会話/フラワーアレンジメント）",
+      "theme": "スポーツ・余暇",
+      "origin": "reauthored",
+      "note": "聴解問題5-2番 re-themed off its original pool draw (居酒屋:宴会コースの相談/食) to fix a headline-theme collision with 問題12 (both 食) within this same paper."
+     },
+     {
+      "scenario": "引っ越し業者との調整",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "年金事務所:手続き",
+      "theme": "行政・手続き"
+     },
+     {
+      "scenario": "消防署:消火器点検",
+      "theme": "防災"
+     },
+     {
+      "scenario": "イベントでの台風接近に伴う対応策",
+      "theme": "防災"
+     },
+     {
+      "scenario": "事務所の省エネ対策の提案",
+      "theme": "環境"
+     },
+     {
+      "scenario": "駅:定期券の払い戻し",
+      "theme": "交通"
+     },
+     {
+      "scenario": "児童館:イベント参加申し込み",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "博物館:展示解説の音声ガイド",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "引っ越し先でのニュース確認方法選び",
+      "theme": "メディア・情報",
+      "origin": "reauthored",
+      "note": "聴解問題5-1番 re-themed off its original pool draw (家具店:組立サービス/住まい) to fix a zero-tolerance cross-test theme repeat against the immediately previous test (20260810_2 headlined 住まい too)."
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "情報過多時代の取捨選択",
+      "theme": "メディア・情報"
+     },
+     {
+      "topic": "在宅避難という選択",
+      "theme": "防災"
+     },
+     {
+      "topic": "修理して使う文化",
+      "theme": "環境"
+     },
+     {
+      "topic": "認知症と地域支援",
+      "theme": "医療・福祉"
+     },
+     {
+      "topic": "方言の価値",
+      "theme": "文化・伝統"
+     },
+     {
+      "topic": "電子書籍と紙の本",
+      "theme": "デジタル化"
+     },
+     {
+      "topic": "異文化理解とコミュニケーションの多様性",
+      "theme": "人間関係"
+     },
+     {
+      "topic": "心理学におけるストレスとその対処法",
+      "theme": "睡眠・健康"
+     },
+     {
+      "topic": "現代建築の空間デザインと環境共生",
+      "theme": "住まい"
+     },
+     {
+      "topic": "和食の世界遺産以降",
+      "theme": "食"
+     },
+     {
+      "topic": "植物同士が化学物質でやり取りする害虫防御の合図",
+      "theme": "科学・技術",
+      "origin": "reauthored",
+      "note": "問題13 re-themed off its original pool draw (地方の隠れた観光地発掘/旅行・観光) to reduce cross-test headline-theme repeats against the paper-before-last (20260810_1, which headlined 旅行・観光 via 問題12) from three to the one rule 4 allows; the new theme 科学・技術 uses that one permitted repeat against 20260810_1's own 問題13."
+     },
+     {
+      "topic": "パスポート（旅券）申請手続きのご案内",
+      "theme": "行政・手続き",
+      "origin": "reauthored",
+      "note": "問題14 re-themed off its original pool draw (同一労働同一賃金/働き方) to reduce cross-test headline-theme repeats against the paper-before-last (20260810_1) from three to the one rule 4 allows."
+     },
+     {
+      "topic": "「関係人口」という発想",
+      "theme": "地域活性化",
+      "origin": "reauthored",
+      "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped after two independent topic re-authors (first to resolve a 問題9/問題10(1) collision, then to resolve a cross-test theme-repeat violation)."
+     }
+    ],
+    "kanji_reading": [
+     "暮れる(くれる)",
+     "国境(こっきょう)",
+     "暴れる(あばれる)",
+     "現役(げんえき)",
+     "吸収(きゅうしゅう)"
+    ],
+    "context_words": [
+     "周期",
+     "温かみ",
+     "にらむ",
+     "付き合い",
+     "多用途",
+     "反社会的",
+     "文通"
+    ],
+    "word_formation": [
+     "当〜(当劇場)",
+     "〜がる(怖がる)",
+     "自〜(自宅)"
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 13
+   }
+  },
+  {
+   "test_id": "20260812_1",
+   "seed": "11060548+reroll(word_formation,9830544209)",
+   "generated_at": "2026-08-12 10:02:39",
+   "items": {
+    "kanji_reading": [
+     "折り曲げる(おりまげる)",
+     "具体的(ぐたいてき)",
+     "食塩(しょくえん)",
+     "埋める(うめる)",
+     "尊重(そんちょう)"
+    ],
+    "orthography": [
+     "展開",
+     "補う",
+     "会館",
+     "換気",
+     "空中"
+    ],
+    "context_words": [
+     "通行",
+     "つりあう",
+     "ええと",
+     "該当",
+     "名場面",
+     "足を延ばす",
+     "証言"
+    ],
+    "paraphrase": [
+     "あらかじめ(事前に)",
+     "適度に",
+     "たちまち",
+     "どなる",
+     "厚かましい(失礼だ)"
+    ],
+    "usage": [
+     "融通",
+     "ボリューム",
+     "割り込む",
+     "並行",
+     "及ぶ"
+    ],
+    "grammar_p7": [
+     "〜限りでは",
+     "〜だけ(のことは)ある",
+     "〜を通じて",
+     "〜たいものだ・てほしいものだ",
+     "〜にせよ〜にせよ",
+     "〜といい〜といい",
+     "〜はずがない",
+     "〜わけではない",
+     "敬語:承る",
+     "〜ないわけにはいかない",
+     "〜ぬきにして",
+     "〜にかけては"
+    ],
+    "grammar_p8": [
+     "〜ないことには",
+     "条件限定(〜ない限りは…)",
+     "逆説対比(〜のに対して…は)",
+     "〜つつある",
+     "結果推量(〜にちがいない)"
+    ],
+    "quick_response": [
+     "部長、来週の会議の資料、印刷して机の上に置いておきました。",
+     "駐車時間が超過しております。",
+     "地震のため、一時的に閉館いたします。",
+     "部長がお呼びですので、至急会議室までお願いいたします。",
+     "〜かと思いきや",
+     "領収書の宛名、ご指定はございますか。",
+     "社長、来月のイベントの企画案、プレゼンさせていただけないでしょうか。",
+     "気が利く",
+     "本人確認のため、身分証明書を見せていただけますか。",
+     "天候によっては中止になる可能性もございますので、ご了承ください。",
+     "立て込んでいる"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "ネイル:デザイン相談",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "美術館:団体予約",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "取引先との訪問日程の再調整",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "動画配信会社:契約プラン変更の相談",
+      "theme": "メディア・情報"
+     },
+     {
+      "scenario": "語学学校:レベル分け",
+      "theme": "教育"
+     },
+     {
+      "scenario": "朝礼:新制度",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "クリニック:睡眠外来の予約",
+      "theme": "睡眠・健康"
+     },
+     {
+      "scenario": "リサイクル市での出品ルール",
+      "theme": "環境"
+     },
+     {
+      "scenario": "ITセミナーの事前課題と資料ダウンロード",
+      "theme": "デジタル化"
+     },
+     {
+      "scenario": "会社での出張旅費清算の手続き",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "ラジオ:転職の話",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "保険会社:契約内容の見直し",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "工場:安全講習の案内",
+      "theme": "防災"
+     },
+     {
+      "scenario": "研究室の実験設備の共有スケジュール",
+      "theme": "教育"
+     },
+     {
+      "scenario": "自動車整備工場:車検の相談",
+      "theme": "交通",
+      "origin": "reauthored",
+      "note": "聴解問題1-4番 re-themed off its original pool draw (引っ越し業者との見積もり調整/住まい) to fix an automatic-fail cross-test errand repeat with 20260811_1's 聴解問題1-2番 (also 引っ越し業者, 男の人+担当者, 住まい, one test apart; qa/qa-report-20260812_1.md F1). Replacement institution/errand (自動車整備工場, 車検) checked against this paper's other 20 listening_scenarios and against 20260811_1's and 20260810_2's full 問題1/2/3/5 scenario sets (logs/topics.json) — no collision found. Same 課題理解 task shape (男の人はこのあとまず何をしなければなりませんか), key unchanged (3)."
+     },
+     {
+      "scenario": "学童:延長利用",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "音楽教室:レッスン",
+      "theme": "教育"
+     },
+     {
+      "scenario": "友人同士:卒業旅行の行き先決め",
+      "theme": "旅行・観光",
+      "origin": "reauthored",
+      "note": "聴解問題5-1番 re-themed off its original pool draw (サークル:合宿の計画/スポーツ・余暇) to fix a zero-tolerance headline-theme collision with 20260811_1's 聴解問題5-2番 (also スポーツ・余暇, logs/topics.json). Replacement theme costs one repeat against the 2-back paper 20260810_2 (問14=旅行・観光), the one repeat exam-blueprint rule 4(b) allows — same treatment as the F5 precedent in qa/qa-report-20260811_1.md. Same speakers (学生/女), same task shape (single-decision, decide-by-attribute), key unchanged (4)."
+     },
+     {
+      "scenario": "眼鏡店:度数変更",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "小学校:保護者会の連絡",
+      "theme": "教育"
+     },
+     {
+      "scenario": "カスタマー:返品",
+      "theme": "働き方"
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "15分都市",
+      "theme": "住まい"
+     },
+     {
+      "topic": "腸内細菌と食生活",
+      "theme": "睡眠・健康"
+     },
+     {
+      "topic": "伝統芸能の担い手不足",
+      "theme": "文化・伝統"
+     },
+     {
+      "topic": "ペットと社会",
+      "theme": "環境"
+     },
+     {
+      "topic": "情報社会におけるプライバシー保護",
+      "theme": "デジタル化"
+     },
+     {
+      "topic": "サプライチェーン",
+      "theme": "消費・経済"
+     },
+     {
+      "topic": "市民マラソンと沿道の負担",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "topic": "夜の街の明るさ",
+      "theme": "地域活性化"
+     },
+     {
+      "topic": "男女共同参画",
+      "theme": "人間関係"
+     },
+     {
+      "topic": "行政の避難指示・ハザードマップへの依存と個人の観察",
+      "theme": "防災",
+      "origin": "reauthored",
+      "note": "問題12 re-themed off its original pool draw (情報を疑う力/メディア・情報) to fix a zero-tolerance cross-test headline-theme repeat against the immediately previous test (20260811_1, which headlined メディア・情報 via 聴解問題5-1番, not via 問題12 itself — rule 4 is theme-level, not surface-position-level). The new theme 防災 is in neither 20260811_1's nor 20260810_2's headline set, keeps the 2-test-back repeat budget at 0, and does not collide with this paper's other 12 reading-half themes (防災 also appears as a non-headline 聴解 scenario, which the theme rules do not restrict)."
+     },
+     {
+      "topic": "高齢者の再雇用",
+      "theme": "働き方"
+     },
+     {
+      "topic": "献血バスの巡回と献血の条件のご案内",
+      "theme": "医療・福祉",
+      "origin": "reauthored",
+      "note": "問題14 re-themed off its original pool draw (情報公開請求の手続きと課題/行政・手続き) to fix a zero-tolerance cross-test headline-theme repeat against the immediately previous test (20260811_1 headlined 行政・手続き via its own 問題14). The new theme 医療・福祉 is in neither previous paper's headline set and leaves headline overlaps with 20260810_2 at zero."
+     },
+     {
+      "topic": "優先席と遠慮",
+      "theme": "交通",
+      "origin": "reauthored",
+      "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped, self-composed by the 文法 author and checked distinct against all 12 drawn reading_topics entries, all 21 listening_scenarios, and both prior papers' headline sets, per the exam-blueprint precedent set by 20260811_1's own 問題9 entry."
+     }
+    ],
+    "word_formation": [
+     "準〜(準決勝)",
+     "非〜(非公開)",
+     "〜券(回数券)"
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 13
+   }
+  },
+  {
+   "test_id": "20260812_2",
+   "seed": "45158912+reroll(word_formation,2953455534)",
+   "generated_at": "2026-08-12 17:22:18",
+   "items": {
+    "kanji_reading": [
+     "連続(れんぞく)",
+     "鉱山(こうざん)",
+     "列島(れっとう)",
+     "自治体(じちたい)",
+     "各々(おのおの)"
+    ],
+    "orthography": [
+     "漁業",
+     "果実",
+     "努める(努力)",
+     "下品",
+     "納入"
+    ],
+    "context_words": [
+     "大げさ",
+     "体がもたない",
+     "めざましい",
+     "手を借りる",
+     "言いつける",
+     "中でも",
+     "焼き上がる"
+    ],
+    "paraphrase": [
+     "内気だ(恥ずかしがり)",
+     "相当(かなり)",
+     "みじめだ(悲惨だ)",
+     "純粋だ(素直だ)",
+     "さっさと(すぐに/早く)"
+    ],
+    "usage": [
+     "持参",
+     "大まか",
+     "体系",
+     "同調",
+     "妨げる"
+    ],
+    "grammar_p7": [
+     "〜にくい",
+     "〜とみえる",
+     "〜ないではいられない",
+     "〜にしたがって",
+     "敬語:伺う",
+     "〜といった",
+     "〜をはじめ",
+     "〜どころではない",
+     "〜(よ)うか〜まいか",
+     "〜にかかわりなく",
+     "〜わりに",
+     "〜ではあるまいか"
+    ],
+    "grammar_p8": [
+     "変化推移(〜につれて…ていく)",
+     "〜おかげで",
+     "評価反論(〜とはいえ…)",
+     "〜に限らず",
+     "基準準拠(〜に沿って…進める)"
+    ],
+    "quick_response": [
+     "〜てばかりいる",
+     "ポイントカード、お持ちですか。",
+     "課長、体調が優れませんので、本日は早退させていただいてもよろしいでしょうか。",
+     "引けを取らない",
+     "明日の会議の件ですが、あいにく先方のご都合が悪くなりまして…",
+     "部長、先日のご指摘、真摯に受け止めております。",
+     "この度の件、ご期待に添えず、大変心苦しく思っております。",
+     "修繕のため、明日の午前中に立ち入ります。",
+     "課長、新商品のサンプルが届きましたので、お持ちいたしました。",
+     "承りました",
+     "〜ずじまい"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "市の環境課:ごみ収集変更の説明",
+      "theme": "環境"
+     },
+     {
+      "scenario": "会社:経費精算システムの変更",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "会社:席替えとレイアウト変更",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "カフェ:テイクアウト",
+      "theme": "食"
+     },
+     {
+      "scenario": "動物園:イベントの案内",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "ホテル:団体予約の変更",
+      "theme": "旅行・観光"
+     },
+     {
+      "scenario": "市役所:オンライン申請の操作案内",
+      "theme": "デジタル化"
+     },
+     {
+      "scenario": "タクシー:配車アプリの使い方",
+      "theme": "交通"
+     },
+     {
+      "scenario": "家具店:配達変更の電話",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "マンションの設備点検のお知らせ",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "天文台:観望会の受付",
+      "theme": "科学・技術"
+     },
+     {
+      "scenario": "バス会社:深夜バスの時刻確認",
+      "theme": "交通"
+     },
+     {
+      "scenario": "保育園:延長保育の予約変更とアレルギー対応",
+      "theme": "子育て・家族",
+      "origin": "reauthored",
+      "note": "QA F1 fix: re-authored off 食 (レストラン予約) to clear headline theme collision with 問題12 フードロス; kept reservation-change + special-requirement shape and answer_positions 聴解_問題5[0]=2."
+     },
+     {
+      "scenario": "家電量販:配送日",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "メーカー:新技術の説明会",
+      "theme": "科学・技術"
+     },
+     {
+      "scenario": "病院:再診予約",
+      "theme": "医療・福祉"
+     },
+     {
+      "scenario": "展示会:ブースの設営分担",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "旅行代理店:プラン変更",
+      "theme": "旅行・観光"
+     },
+     {
+      "scenario": "研修会でのグループワークの進め方",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "年金事務所:手続きの案内",
+      "theme": "行政・手続き"
+     },
+     {
+      "scenario": "同窓会:出欠確認の電話",
+      "theme": "人間関係",
+      "origin": "reauthored",
+      "note": "QA F4 fix: replaced eliminate-shared-list venue choice with two-attribute picks (attendance timing + who brings album) so content matches the drawn 出欠確認 scenario; keys kept 質問1=1 / 質問2=4."
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "動物の行動学とコミュニケーション",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "シェアリングエコノミーの限界",
+      "theme": "消費・経済"
+     },
+     {
+      "topic": "時間の使い方と余白",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "topic": "タイムマネジメントと生産性の向上",
+      "theme": "働き方"
+     },
+     {
+      "topic": "戸籍制度と本人確認のデジタル化",
+      "theme": "行政・手続き"
+     },
+     {
+      "topic": "昼寝制度を導入する企業",
+      "theme": "睡眠・健康"
+     },
+     {
+      "topic": "AIによる要約記事の信頼性",
+      "theme": "メディア・情報"
+     },
+     {
+      "topic": "消費行動の変化とサブスクリプション",
+      "theme": "デジタル化"
+     },
+     {
+      "topic": "防災アプリの普及と課題",
+      "theme": "防災"
+     },
+     {
+      "topic": "フードロス削減の取り組み",
+      "theme": "食"
+     },
+     {
+      "topic": "地域猫の管理と共生",
+      "theme": "環境"
+     },
+     {
+      "topic": "分譲マンション共用施設の利用案内",
+      "theme": "住まい",
+      "origin": "reauthored",
+      "note": "QA F2 fix: replaced 語学学校/教育 flyer to clear rule-4 consecutive 教育 headline vs 20260812_1 聴解5-2; multi-constraint info-retrieval kept; answer_positions 問題14 unchanged [4,3]."
+     },
+     {
+      "topic": "手書きのあいさつ",
+      "theme": "文化・伝統",
+      "origin": "reauthored",
+      "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records what 問題9 actually shipped, self-composed by the 文法 author (手書きのあいさつ / 文化・伝統) and checked distinct against all 12 drawn reading_topics entries, all 21 listening_scenarios, and both prior papers' headline sets, per the exam-blueprint precedent set by 20260811_1's / 20260812_1's own 問題9 entry."
+     }
+    ],
+    "word_formation": [
+     "全〜(全自動)",
+     "某〜(某所)",
+     "〜済み(記入済み)"
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 13
+   }
+  },
+  {
+   "test_id": "20260813_1",
+   "seed": 55976159,
+   "generated_at": "2026-08-13 10:01:46",
+   "items": {
+    "kanji_reading": [
+     "実(み)",
+     "関心(かんしん)",
+     "相互(そうご)",
+     "抜ける(ぬける)",
+     "物価(ぶっか)"
+    ],
+    "orthography": [
+     "系統",
+     "育児",
+     "回数券",
+     "仮定",
+     "推薦"
+    ],
+    "word_formation": [
+     "〜化(簡素化)",
+     "〜連れ(家族連れ)",
+     "〜的(根本的)"
+    ],
+    "context_words": [
+     "どうにか",
+     "本気",
+     "親しみ",
+     "ちかう",
+     "人違い",
+     "ふさがる",
+     "もどす"
+    ],
+    "paraphrase": [
+     "豪華だ",
+     "差し支えない(問題ない)",
+     "あきれる(驚く)",
+     "せめて(最低でも)",
+     "丈夫だ"
+    ],
+    "usage": [
+     "切実",
+     "経緯",
+     "抱える",
+     "宣伝する",
+     "負う"
+    ],
+    "grammar_p7": [
+     "〜わけにもいかない",
+     "〜として〜ない",
+     "〜ものだから・もので",
+     "〜てたまらない",
+     "〜がたい",
+     "〜にしたら・にすれば・にしてみれば",
+     "〜上は",
+     "〜あげく",
+     "〜ことだろう・ことか",
+     "〜にしては",
+     "〜というと",
+     "〜といっても"
+    ],
+    "grammar_p8": [
+     "限定表現(〜のみならず…も)",
+     "義務当然(〜ねばならない)",
+     "〜をきっかけに",
+     "〜ほど〜はない",
+     "〜に基づいて"
+    ],
+    "quick_response": [
+     "見当がつかない",
+     "席を外しております",
+     "熱があるようですので、検温をお願いします。",
+     "見合わせる",
+     "とんでもない",
+     "恐れ入りますが、こちらの用紙は控えとしてお持ち帰りください。",
+     "顔が広い",
+     "このプロジェクト、君が中心になって進めてくれないか。",
+     "お子様連れの方は、こちらの車両をご利用ください。",
+     "ペットの飼育は規約で禁止されています。",
+     "山本さん、その件でしたら私のほうで引き継ぎます。"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "クリーニング:仕上げ時間",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "農園:収穫体験の受付",
+      "theme": "食"
+     },
+     {
+      "scenario": "精肉店:注文変更",
+      "theme": "食"
+     },
+     {
+      "scenario": "不動産屋:ペット可物件の相談",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "保育園:送迎時間の相談",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "通信講座の受講申込と教材発送",
+      "theme": "教育"
+     },
+     {
+      "scenario": "レンタカー:保険オプション",
+      "theme": "交通"
+     },
+     {
+      "scenario": "リフォーム会社:見積もり打ち合わせ",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "会社:会議の準備",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "アルバイトの引き継ぎ",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "家具店:組立サービス",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "経理:経費精算",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "動物園:年間パス",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "ヨガ:レッスン振替",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "ケーキ店:デコレーション",
+      "theme": "食"
+     },
+     {
+      "scenario": "児童館:イベント参加申し込み",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "観光案内:モデルコース",
+      "theme": "旅行・観光"
+     },
+     {
+      "scenario": "着物レンタル店:着付け予約",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "大学の事務窓口での手続き案内",
+      "theme": "教育"
+     },
+     {
+      "scenario": "ベビー用品店:レンタルサービスの説明",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "ボードゲームカフェ:貸切予約",
+      "theme": "スポーツ・余暇"
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "コワーキングスペース",
+      "theme": "働き方"
+     },
+     {
+      "topic": "スタジアム観戦のバリアフリー化",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "topic": "リユース市場",
+      "theme": "消費・経済"
+     },
+     {
+      "topic": "カルチャーセンター秋期講座の受講案内",
+      "theme": "教育"
+     },
+     {
+      "topic": "駅前の放置自転車問題",
+      "theme": "交通"
+     },
+     {
+      "topic": "SNSと人間関係",
+      "theme": "デジタル化"
+     },
+     {
+      "topic": "睡眠と学習効率",
+      "theme": "睡眠・健康"
+     },
+     {
+      "topic": "新しいエネルギー技術と脱炭素社会",
+      "theme": "環境"
+     },
+     {
+      "topic": "旅の目的地より過程を楽しむ旅",
+      "theme": "旅行・観光"
+     },
+     {
+      "topic": "再生医療の実用化",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "家族の介護と仕事の両立",
+      "theme": "子育て・家族"
+     },
+     {
+      "topic": "防災訓練の実施要領と避難場所案内",
+      "theme": "防災"
+     }
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   }
+  }
+ ]
 }

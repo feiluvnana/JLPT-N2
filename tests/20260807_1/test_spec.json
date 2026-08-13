@@ -1,10 +1,10 @@
 {
- "seed": "15212088+reroll(usage,56459537)",
+ "seed": "15212088+reroll(usage,56459537)+reroll(word_formation,124145653)",
  "generated_at": "2026-08-07 18:26:24",
  "test_id": "20260807_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 2,
+  "history_len": 6,
   "cooldown": 2
  },
  "items": {
@@ -23,9 +23,9 @@
    "免責"
   ],
   "word_formation": [
-   "〜好き(猫好き)",
-   "〜立て(採れたて)",
-   "〜主(依頼主)"
+   "〜別(男女別)",
+   "〜圏(首都圏)",
+   "〜版(決定版)"
   ],
   "context_words": [
    "サラリーマン",

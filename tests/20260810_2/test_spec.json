@@ -1,10 +1,10 @@
 {
- "seed": "32999628+reroll(paraphrase,43621231)+reroll(usage,61570247)",
+ "seed": "32999628+reroll(paraphrase,43621231)+reroll(usage,61570247)+reroll(word_formation,6610777377)",
  "generated_at": "2026-08-10 13:05:01",
  "test_id": "20260810_2",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 2,
+  "history_len": 6,
   "cooldown": 2
  },
  "items": {
@@ -23,9 +23,9 @@
    "加熱"
   ],
   "word_formation": [
-   "仮〜(仮契約)",
-   "〜化(簡素化)",
-   "再〜(再利用)"
+   "未〜(未記入)",
+   "〜主(依頼主)",
+   "多〜(多様)"
   ],
   "context_words": [
    "こうして",
