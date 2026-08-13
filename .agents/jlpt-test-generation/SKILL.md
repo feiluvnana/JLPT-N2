@@ -101,6 +101,11 @@ end; they must stay synchronized — `choukai-audio`).
 > `answer_positions` are the contract; do not substitute, and treat every
 > `origin` field as binding. Report at the end: what you read, what you ran,
 > what you wrote, and anything you skipped and why.
+>
+> (読解 subagent only) Your assigned closing-move shape for each surface in
+> your range is: [surface → shape, from the orchestrator's pre-spawn
+> distribution above]. Write to that shape; note in your report if a draft
+> genuinely cannot fit its assignment and why.
 
 ## Stage 1 — blueprint rules
 
@@ -132,6 +137,16 @@ reference file from the reading map). Binding here:
   (`exam-blueprint` Part II — no external source).
 - Answer keys go at the END of each Markdown source, never inline
   (`jlpt-exam-structure` owns the key-table format).
+- **Before spawning the 4 subagents, pre-assign each of the 13 読解/cloze
+  surfaces (問題9 cloze + 問題10×5 + 問題11×4 + 問題12 + 問題13 + 問題14) a
+  closing-move shape**, distributing `question-authoring/references/dokkai.md`'s
+  named shape list across all 13 without exceeding its per-shape cap. Left to
+  4 subagents blind to each other's choices, closings converge on the same
+  "safe" default shape — a recurring failure (`dokkai.md` §"Thirteen surfaces,
+  thirteen different essays" documents it 3 times over). Pass the 読解
+  subagent its assigned shapes for its own surfaces as part of its prompt;
+  this makes shape variety an authoring-time constraint instead of a
+  post-hoc QA catch.
 
 ## Stage 3 — build + gate
 

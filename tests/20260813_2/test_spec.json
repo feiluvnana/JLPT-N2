@@ -1,0 +1,375 @@
+{
+ "seed": "60914921+reroll(listening_scenarios,88250848)",
+ "generated_at": "2026-08-13 13:09:40",
+ "test_id": "20260813_2",
+ "rotation": {
+  "recency_source": "ledger",
+  "history_len": 7,
+  "cooldown": 6
+ },
+ "items": {
+  "kanji_reading": [
+   "童話(どうわ)",
+   "浅ましい(あさましい)",
+   "今晩中(こんばんじゅう)",
+   "潜む(ひそむ)",
+   "頻繁(ひんぱん)"
+  ],
+  "orthography": [
+   "下降",
+   "険しい",
+   "苦心",
+   "計る(時間)",
+   "形容詞"
+  ],
+  "word_formation": [
+   "〜並み(プロ並み)",
+   "〜めく(謎めく)",
+   "超〜(超満員)"
+  ],
+  "context_words": [
+   "取引",
+   "乗り越える",
+   "だるい",
+   "見かけ",
+   "引っかかる",
+   "気が短い",
+   "絶滅"
+  ],
+  "paraphrase": [
+   "くやしい(残念だ)",
+   "うぬぼれる",
+   "盛大だ",
+   "ひょっとすると",
+   "さわやかだ(すっきりした)"
+  ],
+  "usage": [
+   "めぐまれる",
+   "推定",
+   "行方",
+   "確保する",
+   "着々"
+  ],
+  "grammar_p7": [
+   "〜ばかりに",
+   "〜としたら",
+   "〜をめぐって",
+   "〜ざるを得ない",
+   "〜ずじまいだ",
+   "〜ことになっている",
+   "〜に先立って",
+   "〜とは",
+   "〜と仮定すると",
+   "〜だけに",
+   "〜あまり",
+   "敬語:お越しになる"
+  ],
+  "grammar_p8": [
+   "〜として",
+   "〜たびに",
+   "仮定帰結(〜ならば…だろう)",
+   "目的結果(〜ために…なった)",
+   "〜次第"
+  ],
+  "quick_response": [
+   "落とし物を拾いました。心当たりはありますか。",
+   "出口はこちらではなく、反対側です。",
+   "課長、出張の経費の清算ですが、領収書はこちらでよろしいでしょうか。",
+   "社長、本日の懇親会ですが、少し遅れて参加してもよろしいでしょうか。",
+   "契約更新の時期が近づいております。",
+   "〜がいがない",
+   "お客様、只今の時間帯は大変混み合っておりまして…",
+   "先輩、この作業のコツ、教えていただけませんか。",
+   "救急の方は、こちらからお進みください。",
+   "恐れ入りますが",
+   "お手数をおかけします"
+  ],
+  "listening_scenarios": [
+   {
+    "scenario": "百貨店:ギフト包装の相談",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "スーパー:ポイントカード",
+    "theme": "食"
+   },
+   {
+    "scenario": "学術学会の発表順序と時間制限",
+    "theme": "教育"
+   },
+   {
+    "scenario": "市役所での住民票申請と必要書類",
+    "theme": "地域活性化"
+   },
+   {
+    "scenario": "ホテル:チェックイン時間の変更",
+    "theme": "旅行・観光"
+   },
+   {
+    "scenario": "大学の授業:情報リテラシー",
+    "theme": "メディア・情報"
+   },
+   {
+    "scenario": "コンビニ:新サービスの案内",
+    "theme": "食"
+   },
+   {
+    "scenario": "防災用品店:備蓄リストの相談",
+    "theme": "防災"
+   },
+   {
+    "scenario": "修理の依頼電話",
+    "theme": "住まい"
+   },
+   {
+    "scenario": "友人宅:引っ越し祝いの相談",
+    "theme": "人間関係"
+   },
+   {
+    "scenario": "クラブ活動の予算配分と購入品目",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "店舗:季節商品の入れ替え",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "民泊:ハウスルール",
+    "theme": "旅行・観光"
+   },
+   {
+    "scenario": "旅館:食事場所の希望確認",
+    "theme": "食"
+   },
+   {
+    "scenario": "商業施設での遺失物のお問い合わせ",
+    "theme": "行政・手続き"
+   },
+   {
+    "scenario": "自動車教習所:高齢者講習の案内",
+    "theme": "交通"
+   },
+   {
+    "scenario": "保育園:空き状況",
+    "theme": "子育て・家族"
+   },
+   {
+    "scenario": "伝統工芸館:体験教室の予約",
+    "theme": "文化・伝統"
+   },
+   {
+    "scenario": "地域のお祭り:実行委員会の打ち合わせ",
+    "theme": "文化・伝統"
+   },
+   {
+    "scenario": "就職課:面接対策の助言",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "会社での業務指示と優先順位の確認",
+    "theme": "働き方"
+   }
+  ],
+  "reading_topics": [
+   {
+    "topic": "働き方改革とワークライフバランス",
+    "theme": "働き方"
+   },
+   {
+    "topic": "商店街の看板",
+    "theme": "地域活性化"
+   },
+   {
+    "topic": "無人店舗",
+    "theme": "デジタル化"
+   },
+   {
+    "topic": "観光公害とマナー",
+    "theme": "旅行・観光"
+   },
+   {
+    "topic": "職場の仮眠制度と作業効率の関係",
+    "theme": "睡眠・健康",
+    "origin": "reauthored",
+    "note": "QA fix (check_theme_repeat_cross_test, new gate): 問題9=睡眠・健康 (「気合い」が通用しない睡眠の話) also headlined 20260813_1 via its 聴解問題5-1番, a zero-tolerance rule 4 violation against the immediately-previous paper. Fix is a theme SWAP between 問題9 and this slot (問題11(3)): this entry's old content (地域包括ケアシステム/医療・福祉) moved to 問題9's cloze, and this slot takes a fresh 睡眠・健康 topic instead — 職場の仮眠制度と作業効率の関係 (workplace napping systems), distinct from the moved-out 「気合い」...話 string so no duplicate topic string ships. 睡眠・健康 is safe here because 問題11(3) is NOT one of the 5 headline surfaces (問題9/12/13/14/聴解問題5) — rule 4 only restricts those. Verified: this swap does not touch 問題12=食 (this paper's one already-spent repeat against 20260812_2), does not create any within-paper theme duplicate (checked against all 13 読解 surfaces), and 医療・福祉 (now on 問題9) is absent from both 20260813_1's headline set (メディア・情報, 消費・経済, スポーツ・余暇, 防災, 睡眠・健康, 地域活性化) and 20260812_2's headline set (文化・伝統, 食, 環境, 住まい, 子育て・家族, 人間関係). Passage rewritten on the new topic keeping answer_positions 問題11 items 61/62 unchanged ([1,2])."
+   },
+   {
+    "topic": "自転車通勤者向け駐輪場利用登録 → 敷地内カーシェアリング利用ルール改定（QA round 2, second re-theming）",
+    "theme": "交通",
+    "origin": "reauthored",
+    "note": "QA fix (qa-report-20260813_2.md F-THEME2BACK): manually replaced the original pool draw (賃貸住宅のペット飼育規制緩和/住まい, used for 問題14) because 住まい repeated 20260812_2's own 問題14 headline theme; combined with 問題12=食 (also a repeat against 20260812_2), the paper carried two repeats against the paper-two-back, over exam-blueprint rule 4's 'at most one' cap. New theme 交通 is absent from 20260813_1's headline set (メディア・情報, 消費・経済, スポーツ・余暇, 防災, 睡眠・健康, 地域活性化 — zero-tolerance, immediately-previous paper) and from 20260812_2's headline set (文化・伝統, 食, 環境, 住まい, 子育て・家族, 人間関係 — 食 already spends this paper's one allowed repeat), and does not collide with any of this paper's other 13 読解-half surface themes. Checked against logs/ledger.json for rotation cooldown: of pools.json's 13 交通-themed reading_topics entries, only 駅前の放置自転車問題 is recently drawn (20260813_1); picked the unused 自転車通勤 as the base and authored a fresh 駐輪場利用ルール改定 flyer from scratch (pet-keeping rules → bicycle-parking rules), same two-constraint 情報検索 structure as before, answer_positions 問題14 unchanged ([1,4]).\n\nQA round 2 fix (qa-report-20260813_2.md F-THEME-SUBJECT, second re-theming of this same slot): the 駐輪場 flyer above still shared its core SUBJECT/setting (a bicycle-parking facility) with 20260813_1's own 問題10(2) passage (駅前の放置自転車減少の理由, also centrally about a bicycle-parking facility) — a subject collision that survives even though the pool THEME tags differ (交通 here vs 20260813_1's own tag) and no pool-entry label was reused. Theme-matching alone is not what rule 4 protects; the shipped subject/setting must also differ across tests. Re-authored 問題14 from scratch on a different 交通 topic with no bicycle- or parking-facility content at all: さくら台レジデンスの敷地内カーシェアリングサービス利用ルール改定 (vehicle-plan categories コンパクト/ファミリー/商用/大型車 replace the old vehicle-class table; a returning-member grandfather clause for the discontinued 大型車 plan replaces the old large-motorcycle one). Kept: theme 交通 (unchanged — only the subject/setting changes), the same two-constraint 情報検索 structure (item 70 = new-resident vehicle type + a footnote condition; item 71 = existing-member grandfather clause + a renewal-timing footnote), answer_positions 問題14 unchanged ([1,4]), and no absolute-quantifier-eliminable distractor in either item's wrong options (all four require checking the flyer table/footnotes, per dokkai.md's abs-quantifier rule). Verified: the new topic shares no subject with any of this paper's other 13 読解 surfaces, with 20260813_1's headline set, or with 20260812_2's headline set. 言語知識・読解.md's 問題14 section (instruction line, flyer, footnotes, items 70/71, and the two matching 解説 rows) was rewritten in full; logs/ledger.json's matching reading_topics entry and logs/topics.json's 問題14 surfaces entry were updated in the same pass."
+   },
+   {
+    "topic": "デザイン思考とイノベーション",
+    "theme": "科学・技術"
+   },
+   {
+    "topic": "パスポート申請の電子化",
+    "theme": "行政・手続き"
+   },
+   {
+    "topic": "読書体験が子どもの成長に与える影響",
+    "theme": "教育"
+   },
+   {
+    "topic": "再生可能エネルギーの普及",
+    "theme": "環境"
+   },
+   {
+    "topic": "祖父母世代との同居と距離感",
+    "theme": "子育て・家族"
+   },
+   {
+    "topic": "給食の無償化議論",
+    "theme": "食"
+   },
+   {
+    "topic": "「人手不足の切り札」とされる介護ロボットの実態",
+    "theme": "医療・福祉",
+    "origin": "reauthored",
+    "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records the topic the 文法 author composed for 問題9. UPDATED by the check_theme_repeat_cross_test QA fix: the original 問題9 topic (「気合い」が通用しない睡眠の話, theme 睡眠・健康) also headlined 20260813_1 via its 聴解問題5-1番 — a zero-tolerance rule 4 violation against the immediately-previous paper. Fixed by swapping themes with 問題11(3): 問題9 now carries a fresh 医療・福祉 topic (介護ロボット導入と現場の負担の実態 — distinct from 問題11(3)'s old 地域包括ケアシステム string, which is not reused verbatim), and 問題11(3) takes the vacated 睡眠・健康 slot instead (that surface is not headline, so rule 4 does not apply there). 医療・福祉 is absent from both 20260813_1's headline set (メディア・情報, 消費・経済, スポーツ・余暇, 防災, 睡眠・健康, 地域活性化) and 20260812_2's headline set (文化・伝統, 食, 環境, 住まい, 子育て・家族, 人間関係), and does not duplicate any of this paper's other 13 読解-half surface themes. Grammar blanks/keys for 48-51 unchanged (しかし/わけだ/のである/ものだ)."
+   }
+  ]
+ },
+ "answer_positions": {
+  "問題1_語彙": [
+   2,
+   3,
+   1,
+   2,
+   4
+  ],
+  "問題2_語彙": [
+   4,
+   3,
+   1,
+   2,
+   3
+  ],
+  "問題3_語彙": [
+   2,
+   3,
+   4
+  ],
+  "問題4_語彙": [
+   3,
+   1,
+   4,
+   1,
+   3,
+   4,
+   2
+  ],
+  "問題5_語彙": [
+   2,
+   1,
+   4,
+   3,
+   1
+  ],
+  "問題6_語彙": [
+   1,
+   1,
+   4,
+   2,
+   3
+  ],
+  "問題7": [
+   2,
+   3,
+   2,
+   2,
+   3,
+   1,
+   3,
+   4,
+   1,
+   1,
+   4,
+   4
+  ],
+  "問題8": [
+   1,
+   3,
+   2,
+   4,
+   4
+  ],
+  "問題9": [
+   1,
+   4,
+   3,
+   2
+  ],
+  "問題10": [
+   3,
+   2,
+   1,
+   2,
+   4
+  ],
+  "問題11": [
+   3,
+   1,
+   4,
+   3,
+   1,
+   2,
+   2,
+   4
+  ],
+  "問題12": [
+   1,
+   3
+  ],
+  "問題13": [
+   2,
+   1,
+   4
+  ],
+  "問題14": [
+   1,
+   4
+  ],
+  "聴解_問題1": [
+   4,
+   2,
+   3,
+   3,
+   1
+  ],
+  "聴解_問題2": [
+   4,
+   3,
+   1,
+   2,
+   4,
+   2
+  ],
+  "聴解_問題3": [
+   4,
+   1,
+   2,
+   3,
+   1
+  ],
+  "聴解_問題4": [
+   2,
+   2,
+   1,
+   1,
+   3,
+   1,
+   1,
+   2,
+   3,
+   2,
+   3
+  ],
+  "聴解_問題5": [
+   2,
+   4,
+   3
+  ]
+ }
+}

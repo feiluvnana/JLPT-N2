@@ -1146,17 +1146,34 @@ REFRAME_CLOSING = re.compile(
 # dodges these specific tokens while keeping the same argument can still slip
 # through; the mandatory human read of all 13 closings against dokkai.md's six
 # named shapes (exam-qa-review) is what actually enforces the rule.
-REFRAME_CLOSING_SPAN = 150   # JP chars from the end of a passage's prose
+REFRAME_CLOSING_SPAN = 2000  # JP chars from the end of a passage's prose
+# Was 150. qa-report-20260813_2.md ROUND 2 (F-CLOSING-2): 問題11(4) and 問題13
+# both carried a literal override phrase (ではなく / だけでは) well before their
+# final sentence — 問題11(4)'s sat ~225 JP chars before the passage's end — so
+# a fix (or an author) could relocate the phrase earlier in the closing
+# paragraph, keep the final sentence phrased as a correlation, and dodge this
+# check entirely while the true dokkai.md-forced shape was still 主張. 2000 JP
+# chars comfortably exceeds every passage in this repo (問題13, the longest
+# non-cloze passage class, runs ~800-1070; 問題11 ~500-2700 for all 4 combined,
+# each individual passage well under 1000) and every current-era official
+# sitting (問題13 max ~1000, `references/official_calibration.md`), so in
+# practice this now scans each passage's FULL prose, not just its tail — the
+# root-cause table's "scan the whole passage body" option, implemented by
+# widening the existing window rather than adding a second code path.
 REFRAME_SHAPE_CAP = 2        # dokkai.md's own stated per-shape ceiling
 
 
 def check_dokkai_closing_reframe(name: str, body: str, bi):
     """No more than 2 読解 passages may close on the same reframe shape.
 
-    Scans only the LAST `REFRAME_CLOSING_SPAN` JP characters of each passage's
-    own prose (via `passage_prose`, which already strips stems/options), so a
-    hit means the shape sits in the CLOSING, not scattered through the body or
-    inside a distractor's own text.
+    Scans the last `REFRAME_CLOSING_SPAN` JP characters of each passage's own
+    prose (via `passage_prose`, which already strips stems/options and
+    distractor text, so a hit is never scattered through the body or inside
+    an option's own printed text). `REFRAME_CLOSING_SPAN` is set wide enough
+    to cover any passage's full prose in practice (see its own comment) —
+    scanning only a short tail let an override phrase escape detection by
+    sitting earlier in the closing paragraph while the final sentence still
+    read as a correlation (qa-report-20260813_2.md ROUND 2, F-CLOSING-2).
     """
     hits: dict[str, str] = {}
     m9 = re.search(r"^##\s*問題9\b.*?(?=^##\s*問題10\b)", body, re.M | re.S)
@@ -1209,6 +1226,53 @@ def jp_tail(text: str, n: int) -> str:
     return "".join(chars[-n:])
 
 
+# F-ABS-QUANT (qa-report-20260813_2.md). A 読解 distractor eliminable purely by
+# spotting an absolute quantifier or categorical denial — before the passage is
+# even opened — is an automatic QA fail per exam-qa-review/SKILL.md's own
+# ground-rule list, but nothing on the authoring or gate side ever told an
+# author to avoid writing one, and all 8 generated papers on disk shipped at
+# least one. WARN only, never check()/FAIL: the scan cannot tell an
+# on-sight-eliminable use (「同居の問題はすべて解決する」) apart from a
+# content-dependent one that merely CONTAINS the token
+# (「戸籍謄本もすべてオンライン提出できる」, real 20260813_1 text, judged NOT a
+# violation) — that call is a human's (question-authoring/references/dokkai.md
+# §"読解 distractors — no free eliminations"). Closed set, matching
+# exam-qa-review's own parenthetical exactly (「全く」 added as the same word's
+# kanji spelling, not a new marker).
+ABS_QUANT_MARKERS = {
+    "すべて": re.compile(r"すべて"),
+    "まったく/全く": re.compile(r"まったく|全く"),
+    "のみ": re.compile(r"のみ"),
+    "だけで十分": re.compile(r"だけで十分"),
+    "無関係": re.compile(r"無関係"),
+    "存在しない": re.compile(r"存在しない"),
+}
+ABS_QUANT_QRANGE = range(52, 72)  # 問題10-14, per gengo_option_sets' numbering
+
+
+def check_dokkai_abs_quantifiers(name: str, opts: dict[int, list[str]]):
+    """WARN: flag 問題10-14 options carrying an absolute-quantifier/categorical-
+    denial marker as CANDIDATES for the F-ABS-QUANT ground rule — a human must
+    still judge whether each hit is truly eliminable on sight or merely
+    contains the token in a content-dependent sentence (see constant comment
+    above and dokkai.md).
+    """
+    hits = []
+    for q in ABS_QUANT_QRANGE:
+        for opt in opts.get(q, []):
+            found = sorted(k for k, pat in ABS_QUANT_MARKERS.items() if pat.search(opt))
+            if found:
+                hits.append(f"問{q} {found}: 「{opt}」")
+    warn(f"{name}: 問題10-14 options carry no on-sight absolute-quantifier/"
+         f"categorical-denial marker ({len(hits)} candidate(s) to judge by hand)",
+         not hits,
+         "; ".join(hits) + " — eliminable purely by this marker, without "
+         "checking the passage, is an automatic QA fail (exam-qa-review); a "
+         "content-dependent use is fine — judge each by hand against the "
+         "passage (question-authoring/references/dokkai.md "
+         "§'読解 distractors — no free eliminations')")
+
+
 # The 読解 surfaces of a logs/topics.json row, and which of them are headline
 # surfaces (exam-blueprint §"The four theme rules").
 READING_SURFACE = re.compile(r"^問題(9|1[0-4])(\(|$)")
@@ -1218,6 +1282,29 @@ HEADLINE_READING = ("問題9", "問題12", "問題13", "問題14")
 def surface_group(key: str) -> str:
     """`問題12(A)` and `問題12(B)` are ONE surface; `問題10(3)` is its own."""
     return key.split("(")[0] if key.startswith("問題12") else key
+
+
+def _headline_parts(themes: dict) -> tuple[set[str], set[str]]:
+    """(reading-headline themes, 聴解問題5 themes) — the two halves of the
+    5-surface headline set (`exam-blueprint` §"The four theme rules": 問題9
+    cloze, 問題12 A/B as ONE surface, 問題13, 問題14, 聴解問題5). `問題12` only
+    ever appears as `問題12(A)`/`問題12(B)` keys, never the bare literal
+    `問題12` — folding through `surface_group()` is required, or 問題12 silently
+    never enters the headline set at all (the bug this helper fixes; verified
+    against every row on disk, no test's own-paper clash check changes).
+    Shared by `check_topics_themes()` (same-test clash, rule 1) and
+    `check_theme_repeat_cross_test()` (cross-test repeat, rule 4) so the
+    5-surface list has one owner.
+    """
+    head = {v for k, v in themes.items() if surface_group(k) in HEADLINE_READING}
+    m5 = {v for k, v in themes.items() if k.startswith("聴解問題5")}
+    return head, m5
+
+
+def headline_theme_set(themes: dict) -> set[str]:
+    """The paper's 5-surface headline theme set, flattened to one set."""
+    head, m5 = _headline_parts(themes)
+    return head | m5
 
 
 def check_topics_themes():
@@ -1277,14 +1364,58 @@ def check_topics_themes():
                 "against 13 surfaces, so a repeat is a re-angle or a re-draw, "
                 "never a pool limit")
 
-        head = {themes[k] for k in HEADLINE_READING if k in themes}
-        m5 = {themes[k] for k in themes if k.startswith("聴解問題5")}
+        head, m5 = _headline_parts(themes)
         clash = sorted(head & m5)
         check(f"{tid}: headline surfaces take five different themes",
               not clash,
               f"聴解問題5 shares {clash} with a 読解 headline surface — the five "
               f"headline surfaces (問題9/12/13/14/聴解問題5) are the paper's "
               f"spine and must not double up (exam-blueprint rule 1)")
+
+
+# Cross-test rule 4 (exam-blueprint §"The four theme rules"): zero
+# headline-theme repeat against the immediately-previous generated paper, and
+# at most ONE repeat against the paper two back. This recurred once already
+# (20260811_1) and again at 20260813_2 (qa-report-20260813_2.md F-THEME2BACK)
+# because no automated check ever compared the 5-surface headline SET across a
+# pair of tests — check_topics_themes() above only checks the clash WITHIN one
+# test's own five surfaces (rule 1), never against another test (rule 4).
+def check_theme_repeat_cross_test():
+    print("\ncross-test headline theme repeat (rule 4)")
+    path = ROOT / "logs" / "topics.json"
+    if not path.is_file():
+        return skip("cross-test headline theme repeat (rule 4)",
+                     "no logs/topics.json on disk")
+    rows = json.loads(path.read_text(encoding="utf-8")).get("history", [])
+    history = [r for r in rows if not ORIGIN.is_imported(str(r.get("test_id")))]
+
+    for prev, cur in zip(history, history[1:]):
+        pid, cid = str(prev.get("test_id")), str(cur.get("test_id"))
+        pthemes, cthemes = prev.get("themes"), cur.get("themes")
+        if not pthemes or not cthemes:
+            continue  # check_topics_themes() already WARNs the missing map
+        overlap = sorted(headline_theme_set(pthemes) & headline_theme_set(cthemes))
+        warn(f"{cid}: no headline theme repeats {pid}'s (immediately previous, rule 4)",
+             not overlap,
+             f"{overlap} shared with {pid} — exam-blueprint 'The four theme "
+             f"rules' rule 4 allows ZERO headline-theme repeat against the "
+             f"immediately-previous paper; re-draw one of the two surfaces "
+             f"carrying the shared theme")
+
+    for back2, cur in zip(history, history[2:]):
+        bid, cid = str(back2.get("test_id")), str(cur.get("test_id"))
+        bthemes, cthemes = back2.get("themes"), cur.get("themes")
+        if not bthemes or not cthemes:
+            continue
+        overlap = sorted(headline_theme_set(bthemes) & headline_theme_set(cthemes))
+        warn(f"{cid}: at most one headline theme repeats {bid}'s (two papers back, rule 4)",
+             len(overlap) <= 1,
+             f"{overlap} shared with {bid} — exam-blueprint rule 4 allows at "
+             f"most ONE headline-theme repeat against the paper two back, not "
+             f"{len(overlap)}; re-draw one of the repeated headline surfaces "
+             f"(this exact miss recurred at 20260813_2 against 20260812_2 — "
+             f"問題12=食, 問題14=住まい — after the same failure mode at "
+             f"20260811_1; qa-report-20260813_2.md F-THEME2BACK)")
 
 
 def check_dokkai_lengths(name: str, body: str, bi):
@@ -3762,6 +3893,7 @@ def check_tests():
             check_dokkai_lengths(d.name, gengo_prose, bi)
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
             check_dokkai_closing_reframe(d.name, gengo_prose, bi)
+            check_dokkai_abs_quantifiers(d.name, opts)
             check_chuuryaku(d.name, gengo_prose)
             check_mondai11_stems(d.name, gengo_prose)
             check_mondai13_closer(d.name, gengo_prose)
@@ -4030,6 +4162,7 @@ def main():
         check_harvest_hygiene()
         check_harvest_provenance()
         check_topics_themes()
+        check_theme_repeat_cross_test()
         check_cross_test_listening_subjects()
         check_draw_provenance()
     check_tests()

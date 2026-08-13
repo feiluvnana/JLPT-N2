@@ -1787,12 +1787,16 @@
       "theme": "旅行・観光"
      },
      {
-      "topic": "地域包括ケアシステム",
-      "theme": "医療・福祉"
+      "topic": "職場の仮眠制度と作業効率の関係",
+      "theme": "睡眠・健康",
+      "origin": "reauthored",
+      "note": "QA fix (check_theme_repeat_cross_test, new gate): 問題9=睡眠・健康 (「気合い」が通用しない睡眠の話) also headlined 20260813_1 via its 聴解問題5-1番, a zero-tolerance rule 4 violation against the immediately-previous paper. Fix is a theme SWAP between 問題9 and this slot (問題11(3)): this entry's old content (地域包括ケアシステム/医療・福祉) moved to 問題9's cloze, and this slot takes a fresh 睡眠・健康 topic instead — 職場の仮眠制度と作業効率の関係 (workplace napping systems), distinct from the moved-out 「気合い」...話 string so no duplicate topic string ships. 睡眠・健康 is safe here because 問題11(3) is NOT one of the 5 headline surfaces (問題9/12/13/14/聴解問題5) — rule 4 only restricts those. Verified: this swap does not touch 問題12=食 (this paper's one already-spent repeat against 20260812_2), does not create any within-paper theme duplicate (checked against all 13 読解 surfaces), and 医療・福祉 (now on 問題9) is absent from both 20260813_1's headline set (メディア・情報, 消費・経済, スポーツ・余暇, 防災, 睡眠・健康, 地域活性化) and 20260812_2's headline set (文化・伝統, 食, 環境, 住まい, 子育て・家族, 人間関係). Passage rewritten on the new topic keeping answer_positions 問題11 items 61/62 unchanged ([1,2])."
      },
      {
-      "topic": "賃貸住宅のペット飼育規制緩和",
-      "theme": "住まい"
+      "topic": "自転車通勤者向け駐輪場利用登録 → 敷地内カーシェアリング利用ルール改定（QA round 2, second re-theming）",
+      "theme": "交通",
+      "origin": "reauthored",
+      "note": "QA fix (qa-report-20260813_2.md F-THEME2BACK): manually replaced the original pool draw (賃貸住宅のペット飼育規制緩和/住まい, used for 問題14) because 住まい repeated 20260812_2's own 問題14 headline theme; combined with 問題12=食 (also a repeat against 20260812_2), the paper carried two repeats against the paper-two-back, over exam-blueprint rule 4's 'at most one' cap. New theme 交通 is absent from 20260813_1's headline set (メディア・情報, 消費・経済, スポーツ・余暇, 防災, 睡眠・健康, 地域活性化 — zero-tolerance, immediately-previous paper) and from 20260812_2's headline set (文化・伝統, 食, 環境, 住まい, 子育て・家族, 人間関係 — 食 already spends this paper's one allowed repeat), and does not collide with any of this paper's other 13 読解-half surface themes. Checked against logs/ledger.json for rotation cooldown: of pools.json's 13 交通-themed reading_topics entries, only 駅前の放置自転車問題 is recently drawn (20260813_1); picked the unused 自転車通勤 as the base and authored a fresh 駐輪場利用ルール改定 flyer from scratch (pet-keeping rules → bicycle-parking rules), same two-constraint 情報検索 structure as before, answer_positions 問題14 unchanged ([1,4]).\n\nQA round 2 fix (qa-report-20260813_2.md F-THEME-SUBJECT, second re-theming of this same slot): the 駐輪場 flyer above still shared its core SUBJECT/setting (a bicycle-parking facility) with 20260813_1's own 問題10(2) passage (駅前の放置自転車減少の理由, also centrally about a bicycle-parking facility) — a subject collision that survives even though the pool THEME tags differ and no pool-entry label was reused. Re-authored 問題14 from scratch on a different 交通 topic with no bicycle- or parking-facility content at all: さくら台レジデンスの敷地内カーシェアリングサービス利用ルール改定 (vehicle-plan categories コンパクト/ファミリー/商用/大型車; a returning-member grandfather clause for the discontinued 大型車 plan replaces the old large-motorcycle one). Kept theme 交通, the same two-constraint 情報検索 structure, answer_positions 問題14 unchanged ([1,4]), and no absolute-quantifier-eliminable distractor. See tests/20260813_2/test_spec.json's matching reading_topics entry for the full rationale."
      },
      {
       "topic": "デザイン思考とイノベーション",
@@ -1819,10 +1823,10 @@
       "theme": "食"
      },
      {
-      "topic": "「気合い」が通用しない睡眠の話",
-      "theme": "睡眠・健康",
+      "topic": "「人手不足の切り札」とされる介護ロボットの実態",
+      "theme": "医療・福祉",
       "origin": "reauthored",
-      "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records the topic the 文法 author composed for 問題9 (睡眠不足下での自己評価と実際の作業能力低下のずれ), verified distinct from all 12 pool topics and all 21 listening scenarios in this test."
+      "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records the topic the 文法 author composed for 問題9. UPDATED by the check_theme_repeat_cross_test QA fix: the original 問題9 topic (「気合い」が通用しない睡眠の話, theme 睡眠・健康) also headlined 20260813_1 via its 聴解問題5-1番 — a zero-tolerance rule 4 violation against the immediately-previous paper. Fixed by swapping themes with 問題11(3): 問題9 now carries a fresh 医療・福祉 topic (介護ロボット導入と現場の負担の実態 — distinct from 問題11(3)'s old 地域包括ケアシステム string, which is not reused verbatim), and 問題11(3) takes the vacated 睡眠・健康 slot instead (that surface is not headline, so rule 4 does not apply there). 医療・福祉 is absent from both 20260813_1's headline set (メディア・情報, 消費・経済, スポーツ・余暇, 防災, 睡眠・健康, 地域活性化) and 20260812_2's headline set (文化・伝統, 食, 環境, 住まい, 子育て・家族, 人間関係), and does not duplicate any of this paper's other 13 読解-half surface themes. Grammar blanks/keys for 48-51 unchanged (しかし/わけだ/のである/ものだ)."
      }
     ],
     "listening_scenarios": [

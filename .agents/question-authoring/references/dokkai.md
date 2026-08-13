@@ -87,6 +87,27 @@ therefore vary in kind across the section (see the core `SKILL.md` distractor
 rules); a section whose wrong options are uniformly overstatements is
 strategy-solvable however well each item reads on its own.
 
+## 読解 distractors — no free eliminations
+
+A 読解 distractor must be eliminable only by checking it against the
+passage's actual content — never on sight, with the passage still closed, by
+spotting an absolute quantifier or categorical denial. `exam-qa-review`'s
+ground rules already treat this as an automatic fail (すべて/まったく/のみ/
+だけで十分/無関係/存在しない); `check_consistency.py` WARNs a candidate for a
+human to judge, because the scan cannot tell an on-sight-eliminable use apart
+from a content-dependent one that merely contains the token (「戸籍謄本も
+すべてオンライン提出できる」 is fine — the passage still has to be checked to
+know it). Shipped in all 8 prior generated papers before 20260813_2's QA
+caught it (`qa/qa-report-20260813_2.md` F-ABS-QUANT).
+
+- **Don't:** 「台所を使う時間を厳密に決めれば、同居の問題は**すべて**解決する
+  ということ」 — rejected without opening the passage: no single
+  household-schedule fix ever resolves "everything".
+- **Do:** 「台所の使用時間を交代制で固定するのが同居の理想的な解決策だという
+  こと」 — plausible until checked against what the passage actually argues
+  (mutual acknowledgment, not a forced shared schedule), so eliminating it
+  requires reading the passage.
+
 ## Length bands — the single copy in this repo
 
 These numbers once lived in three files at once, hand-synced, and 4/4 generated
