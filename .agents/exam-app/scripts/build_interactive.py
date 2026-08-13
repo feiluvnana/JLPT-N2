@@ -1304,11 +1304,13 @@ LIST_HREF = {"server": "/", "local": "../../index.html"}
 def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
                     out_path: Path, gdata: dict, player: str = "",
                     sources=(), storage: str = "server"):
+    gengo_md = booklet.box_passages(gengo_md)
     gengo_md = "\n".join(booklet.widen(l) for l in gengo_md.splitlines())
     choukai_md = booklet.add_choukai_furigana(choukai_md)
     choukai_md = "\n".join(booklet.widen(l) for l in choukai_md.splitlines())
 
     gengo_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(gengo_md, extensions=["tables", "nl2br"])))
+    gengo_body = booklet.box_passages_html(gengo_body)
     choukai_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(choukai_md, extensions=["tables", "nl2br"])))
 
     if storage not in LIST_HREF:

@@ -90,6 +90,12 @@ th, td { border: 1px solid #888; padding: 4px 9px; font-size: 10pt;
 th { background: #f0f0f0; font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
 blockquote { border: 1px solid #999; background: #fafafa; margin: 10px 0;
              padding: 10px 14px; page-break-inside: avoid; }
+/* 問題9-14: the passage/notice text official booklets print inside a ruled
+   box, separate from the questions below it. See box_passages(). */
+.passage-box { border: 1px solid #999; background: #fafafa; margin: 10px 0 16px;
+                padding: 10px 16px; page-break-inside: avoid; overflow-x: auto; }
+.passage-box > *:first-child { margin-top: 0; }
+.passage-box > *:last-child { margin-bottom: 0; }
 hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
 strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
 """
@@ -315,6 +321,65 @@ def widen(line: str) -> str:
     return line
 
 
+BOX_START = "JLPTPASSAGEBOXSTART"
+BOX_END = "JLPTPASSAGEBOXEND"
+KEY_SPLIT = re.compile(r"^#+\s*(?:解答|【?正解)", re.M)
+SECTION_RE = re.compile(r"^(## 問題(?:9|10|11|12|13|14)[ \t]*\n)(.*?)(?=^## |\Z)", re.M | re.S)
+SUBSECTION_RE = re.compile(r"^(### [^\n]*\n)(.*?)(?=^### |\Z)", re.M | re.S)
+FIRST_STEM_RE = re.compile(r"\n\*\*\d+\*\*")
+FIRST_PARA_GAP_RE = re.compile(r"\n[ \t]*\n")
+
+
+def _box_upto_stem(body: str) -> str:
+    """Wrap `body` up to its first **NN** question marker in BOX_START/END
+    sentinels (converted to a real <div> after markdown rendering -- see
+    box_passages()). A body with no marker at all (問題12's "### A") is
+    boxed in full."""
+    m = FIRST_STEM_RE.search(body)
+    passage, rest = (body[: m.start()], body[m.start():]) if m else (body, "")
+    passage = passage.strip("\n")
+    if not passage:
+        return body
+    return f"\n\n{BOX_START}\n\n{passage}\n\n{BOX_END}\n\n{rest.strip(chr(10))}\n"
+
+
+def _process_section(m: re.Match) -> str:
+    heading, body = m.group(1), m.group(2)
+    if SUBSECTION_RE.search(body):
+        # ### (1)/### A subsections: the box wraps each subsection's own
+        # passage, so the section's instruction line (before the first ###)
+        # sits outside every box, matching official layout.
+        body = SUBSECTION_RE.sub(lambda sm: sm.group(1) + _box_upto_stem(sm.group(2)), body)
+    else:
+        # No subsections (問題9/13/14): skip the leading instruction
+        # sentence -- the box starts at the next paragraph (the passage's
+        # own title/text).
+        pm = FIRST_PARA_GAP_RE.search(body)
+        instr, passage_block = (body[: pm.start()], body[pm.start():]) if pm else ("", body)
+        body = instr + _box_upto_stem(passage_block)
+    return heading + body
+
+
+def box_passages(text: str) -> str:
+    """Wrap each 問題9-14 passage/notice in a BOX_START/END sentinel pair so
+    it renders inside a ruled box, the way official booklets separate the
+    reading text from the questions under it (`.passage-box` in CSS).
+    Operates on raw markdown, before `markdown.markdown()`, so the sentinels
+    -- plain text, no markdown-special characters -- become their own
+    paragraph and box_passages_html() below can swap them for a real <div>
+    without disturbing nl2br/tables parsing of what's inside."""
+    exam_body, *rest = KEY_SPLIT.split(text, maxsplit=1)
+    boxed = SECTION_RE.sub(_process_section, exam_body)
+    return boxed if not rest else boxed + text[len(exam_body):]
+
+
+def box_passages_html(html_text: str) -> str:
+    """Swap box_passages()'s rendered sentinel paragraphs for the real div."""
+    html_text = re.sub(rf"<p>\s*{BOX_START}\s*</p>", '<div class="passage-box">', html_text)
+    html_text = re.sub(rf"<p>\s*{BOX_END}\s*</p>", "</div>", html_text)
+    return html_text
+
+
 FONT_TAGS = (
     '<link rel="preconnect" href="https://fonts.googleapis.com">'
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
@@ -328,13 +393,18 @@ def build(src: Path) -> Path:
     No PDF toolchain — browser `@page` geometry layout renders identical A4
     and the same CSS prints correctly straight from the browser."""
     md = src.read_text(encoding="utf-8")
-    if "聴解" in src.name or "choukai" in src.name.lower():
+    is_choukai = "聴解" in src.name or "choukai" in src.name.lower()
+    if is_choukai:
         md = add_choukai_furigana(md)
+    else:
+        md = box_passages(md)
     md = "\n".join(widen(l) for l in md.splitlines())
     md = format_vocab_notes(md)
     # nl2br is MANDATORY: keeps stacked answer options on separate lines.
     body = markdown.markdown(md, extensions=["tables", "nl2br"])
     body = mark_vocab_notes(mark_furigana_blocks(fit_ruby(body)))
+    if not is_choukai:
+        body = box_passages_html(body)
     html_path = src.with_suffix(".html")
     html_path.write_text(
         f'<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">'

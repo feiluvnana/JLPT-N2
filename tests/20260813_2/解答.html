@@ -56,6 +56,12 @@ th, td { border: 1px solid #888; padding: 4px 9px; font-size: 10pt;
 th { background: #f0f0f0; font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
 blockquote { border: 1px solid #999; background: #fafafa; margin: 10px 0;
              padding: 10px 14px; page-break-inside: avoid; }
+/* 問題9-14: the passage/notice text official booklets print inside a ruled
+   box, separate from the questions below it. See box_passages(). */
+.passage-box { border: 1px solid #999; background: #fafafa; margin: 10px 0 16px;
+                padding: 10px 16px; page-break-inside: avoid; overflow-x: auto; }
+.passage-box > *:first-child { margin-top: 0; }
+.passage-box > *:last-child { margin-bottom: 0; }
 hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
 strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
 
@@ -725,6 +731,7 @@ html.is-result-mode #where{display:none!important}
 <div class="qa"><label><input type="radio" name="q_47" value="1"><span>1</span></label><label><input type="radio" name="q_47" value="2"><span>2</span></label><label><input type="radio" name="q_47" value="3"><span>3</span></label><label><input type="radio" name="q_47" value="4"><span>4</span></label></div>
 <h2>問題9</h2>
 <h3>問題 9　次の文章を読んで、文章全体の内容を考えて、 48 から 51 の中に入る最もよいものを、1・2・3・4 から一つ選びなさい。</h3>
+<div class="passage-box">
 <p>以下は、ある雑誌のコラムの一部である。</p>
 <p>「人手不足の切り札」とされる介護ロボットの実態</p>
 <p>介護の現場では人手不足が深刻化しており、見守りや移乗（注1）を補助するロボットの導入が急速に進んでいる。メーカーの宣伝文句では、職員の負担が大幅に減り、離職者も減るはずだとされてきた。 48 、導入した施設を対象にした調査では、職員の身体的な負担は減った一方、精神的な負担はほとんど変化していないという結果が出ている。</p>
@@ -733,6 +740,7 @@ html.is-result-mode #where{display:none!important}
 <p>もっとも、体力的な負担の軽減そのものは、職員の腰痛などの職業病を防ぐうえで意味がある。導入の成果を測るときは、身体的な負担だけでなく判断や記録にかかる精神的な負担も含めて評価するほうが、数字の減少だけを見るよりもよほど現実的な 51 。</p>
 <p>（注1）移乗：ベッドや車いすなどの間で、体を持ち上げて位置を変えること<br />
 （注2）早計：十分に確かめないまま結論を出すこと</p>
+</div>
 <p><strong>48</strong> 1. しかし　　　2. そのうえ　　　3. つまり　　　4. なぜなら</p>
 <div class="qa"><label><input type="radio" name="q_48" value="1"><span>1</span></label><label><input type="radio" name="q_48" value="2"><span>2</span></label><label><input type="radio" name="q_48" value="3"><span>3</span></label><label><input type="radio" name="q_48" value="4"><span>4</span></label></div>
 
@@ -744,11 +752,12 @@ html.is-result-mode #where{display:none!important}
 
 <p><strong>51</strong> 1. はずだ　　　2. ものだ　　　3. わけだ　　　4. つもりだ</p>
 <div class="qa"><label><input type="radio" name="q_51" value="1"><span>1</span></label><label><input type="radio" name="q_51" value="2"><span>2</span></label><label><input type="radio" name="q_51" value="3"><span>3</span></label><label><input type="radio" name="q_51" value="4"><span>4</span></label></div>
-
 <h2>問題10</h2>
 <p>次の(1)から(5)の文章を読んで、後の質問に対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</p>
 <h3>(1)</h3>
+<div class="passage-box">
 <p>ある商店街は、老朽化した看板を一斉に新しくし、色や書体をそろえる工事を行った。景観が整えば来街者が増えると期待されていたが、工事直後の来客数調査ではほとんど変化がなかった。意外なことに、効果が表れたのは、看板の高さを歩行者の目線に合わせ、店名だけでなく営業時間まで一目で読めるように書き直した通りだけだった。通り過ぎる一瞬で情報を読み取れるかどうかが、来街者の行動を左右していたのである。</p>
+</div>
 <p><strong>52</strong> この文章によると、来街者の行動を左右していたのは何か。<br />
  1. 看板の色や書体を商店街全体でそろえたこと。<br />
  2. 老朽化した看板を一斉に新しくする工事を行ったこと。<br />
@@ -756,7 +765,9 @@ html.is-result-mode #where{display:none!important}
  4. 来街者数の調査を工事直後に実施したこと。</p>
 <div class="qa"><label><input type="radio" name="q_52" value="1"><span>1</span></label><label><input type="radio" name="q_52" value="2"><span>2</span></label><label><input type="radio" name="q_52" value="3"><span>3</span></label><label><input type="radio" name="q_52" value="4"><span>4</span></label></div>
 <h3>(2)</h3>
+<div class="passage-box">
 <p>無人店舗は、レジに人を置かず、来店者が自分でスマートフォンや専用端末を使って会計を済ませる仕組みである。人件費を抑えられる一方、万引きなどの不正をどう防ぐかが課題になる。ある運営会社は、店内に多数のカメラを設置し、棚から商品を取る動きを追跡することで対応している。ただし監視の強さを上げるほど、客が「見張られている」と感じて居心地を悪くする恐れもある。効率化と快適さを両立させる線引きは、業態ごとに模索が続いている。</p>
+</div>
 <p><strong>53</strong> 無人店舗について、この文章で述べられている課題は何か。<br />
  1. スマートフォンの操作方法を来店者に教えること。<br />
  2. 不正を防ぐ監視の強さと、客の居心地とのバランスをとること。<br />
@@ -764,7 +775,9 @@ html.is-result-mode #where{display:none!important}
  4. 専用端末の設置費用を来店者に負担させること。</p>
 <div class="qa"><label><input type="radio" name="q_53" value="1"><span>1</span></label><label><input type="radio" name="q_53" value="2"><span>2</span></label><label><input type="radio" name="q_53" value="3"><span>3</span></label><label><input type="radio" name="q_53" value="4"><span>4</span></label></div>
 <h3>(3)</h3>
+<div class="passage-box">
 <p>祖母と同じ屋根の下で暮らし始めて半年になる。最初は生活のリズムの違いに戸惑うことが多かった。祖母は朝が早く、私は夜型で、台所を使う時間も食事の好みもずれていた。譲り合いというより、互いの領域に踏み込みすぎない距離を探る日々だった。ある晩、祖母が「無理に合わせなくていい、すれ違う時間があってもいい」と言ってくれたことで、肩の力が抜けた。同居とは、同じ時間を共有することよりも、別々の時間があってもかまわないと認め合うことなのかもしれない、と近ごろ思うようになった。</p>
+</div>
 <p><strong>54</strong> この文章で筆者が感じたことはどのようなことか。<br />
  1. 同居とは、同じ時間を共有することよりも、別々の時間を認め合うことだということ。<br />
  2. 祖母の生活リズムに完全に合わせることが同居の理想だということ。<br />
@@ -772,6 +785,7 @@ html.is-result-mode #where{display:none!important}
  4. 同居を始めた当初から、祖母との距離感に戸惑いはなかったということ。</p>
 <div class="qa"><label><input type="radio" name="q_54" value="1"><span>1</span></label><label><input type="radio" name="q_54" value="2"><span>2</span></label><label><input type="radio" name="q_54" value="3"><span>3</span></label><label><input type="radio" name="q_54" value="4"><span>4</span></label></div>
 <h3>(4)</h3>
+<div class="passage-box">
 <p>件名：時差出勤制度の本格導入について</p>
 <p>営業部各位</p>
 <p>お疲れ様です。人事部の田中です。<br />
@@ -780,6 +794,7 @@ html.is-result-mode #where{display:none!important}
 出勤時刻の希望は、来週金曜日までに人事部専用フォームで提出してください。</p>
 <p>人事部　田中</p>
 <p>（注1）在席：自分の席にいること</p>
+</div>
 <p><strong>55</strong> このメールによると、時差出勤制度についてただしいものはどれか。<br />
  1. 出勤時刻は毎日自由に変更してよい。<br />
  2. 一度選んだ出勤時刻は、1か月の間は固定される。<br />
@@ -787,6 +802,7 @@ html.is-result-mode #where{display:none!important}
  4. 出勤時刻の希望は毎週金曜日に提出する。</p>
 <div class="qa"><label><input type="radio" name="q_55" value="1"><span>1</span></label><label><input type="radio" name="q_55" value="2"><span>2</span></label><label><input type="radio" name="q_55" value="3"><span>3</span></label><label><input type="radio" name="q_55" value="4"><span>4</span></label></div>
 <h3>(5)</h3>
+<div class="passage-box">
 <p>＜みなと区役所　旅券窓口からのお知らせ＞</p>
 <p>パスポートの新規申請について、来月より一部の手続きをオンラインで行えるようになります。申請書の入力と必要書類のアップロードを自宅のパソコンやスマートフォンから済ませることができます。</p>
 <p>※オンライン入力後も、本人確認と写真の原本（注1）確認のため、窓口への来庁が1回必要です。<br />
@@ -794,6 +810,7 @@ html.is-result-mode #where{display:none!important}
 ※有効期限が切れて5年以上経過した方の申請は、オンライン受付の対象外です。<br />
 ※未成年の方が申請する場合は、保護者の同意書を窓口で提出してください。</p>
 <p>（注1）原本：コピーではない、最初に作られた文書そのもの</p>
+</div>
 <p><strong>56</strong> このお知らせによると、パスポート申請のオンライン手続きについて正しいものはどれか。<br />
  1. オンラインで入力すれば、窓口へ行かずに申請を完了できる。<br />
  2. 有効期限切れから5年以上たった人も、オンライン受付の対象になる。<br />
@@ -803,6 +820,7 @@ html.is-result-mode #where{display:none!important}
 <h2>問題11</h2>
 <p>次の(1)から(4)の文章を読んで、後の質問に対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</p>
 <h3>(1)</h3>
+<div class="passage-box">
 <p>観光客の増加にともない、有名な観光地では、ゴミの放置や大声での会話、私有地への無断立ち入りといった行為が目立つようになった。こうした行為は「観光公害」と呼ばれ、地元住民の生活に負担をかけている。行儀の悪さは観光客本人の意識の低さが原因だ、という批判（注1）がしばしば聞かれる。</p>
 <p>（中略）</p>
 <p>しかし、現地を丁寧に調べた研究では、①<strong>問題の多くは、案内の不備によって引き起こされていた</strong>ことが分かってきた。ゴミ箱の位置を示す案内板がなく、持ち帰りのルールも多言語で説明されていないため、悪意なくルールを破ってしまう観光客が少なくなかったのだ。ある地域では、ゴミ箱の場所と分別方法を4か国語で示した簡単な地図を配布したところ、放置ゴミの量が目に見えて減ったという。窓口で配布するだけでなく、宿泊施設のロビーや駅の案内板にも同じ地図を掲示したところ、効果はさらに広がったと報告されている。観光客の意識の低さを責める批判もあるが、実際に苦情が減った地域に共通していたのは、受け入れ側の説明責任（注2）を果たすように案内や表示を分かりやすく整える取り組みだった。私有地への立ち入りについても、境界（注3）を示す表示が乏しい場所ほど苦情が多いという調査結果があり、住民側の掲示の工夫にも改善の余地が残されている。案内が杜撰（注4）な地域ほど、住民との軋轢（注5）も大きくなる傾向が見られた。行政と住民が案内の分かりやすさを点検し合う仕組みを持つ地域ほど、翌年の苦情件数が減っているという傾向も確認されている。</p>
@@ -811,6 +829,7 @@ html.is-result-mode #where{display:none!important}
 （注3）境界：土地と土地の境目<br />
 （注4）杜撰：いいかげんで、注意が行き届かないこと<br />
 （注5）軋轢：人間関係でのもめごとや対立</p>
+</div>
 <p><strong>57</strong> ①<strong>問題の多くは、案内の不備によって引き起こされていた</strong>とあるが、どういうことか。<br />
  1. 観光客の多くが、意図的にルールを破っていたということ。<br />
  2. 案内板の設置費用を、観光客に負担させていたということ。<br />
@@ -824,6 +843,7 @@ html.is-result-mode #where{display:none!important}
  4. 地図を配布すれば、私有地への無断立ち入りに関する苦情も同様に減少する。</p>
 <div class="qa"><label><input type="radio" name="q_58" value="1"><span>1</span></label><label><input type="radio" name="q_58" value="2"><span>2</span></label><label><input type="radio" name="q_58" value="3"><span>3</span></label><label><input type="radio" name="q_58" value="4"><span>4</span></label></div>
 <h3>(2)</h3>
+<div class="passage-box">
 <p>「デザイン思考」とは、利用者の体験を出発点に、試作と検証を繰り返しながら製品やサービスを改良していく発想法である。従来の開発手法が仕様を固めてから作り始めるのに対し、デザイン思考はまず①<strong>簡単な試作品を早い段階で作り、利用者に触れてもらう</strong>ことを重視する。作り込みの完成度よりも、想定外の使い方や不満を早く見つけることを優先する考え方だ。</p>
 <p>ある家電メーカーでは、新型の掃除機を開発する際、性能を数値で詰める前に、段ボールで作った模型を高齢者の家庭に持ち込み、実際のユーザビリティ（注1）を観察した。その結果、②<strong>取っ手の高さよりも、収納場所への出し入れのしやすさが不満の中心だった</strong>ことが判明し、設計の優先順位が大きく変わったという。開発チームは当初、取っ手の角度や重さの数値目標ばかりを議論していたが、模型を実際の生活空間に置いてみて初めて、収納棚の奥行きとの相性という盲点（注4）に気づいたのだという。拙速（注2）に数値上の性能だけを固めていたら、見過ごされていた点である。数値だけを詰める議論は、机上の空論（注5）に陥りやすい。デザイン思考は、試作と検証（注3）を繰り返しながら、少しずつ正解に近づいていく進め方だと言える。</p>
 <p>（注1）ユーザビリティ：使いやすさ<br />
@@ -831,6 +851,7 @@ html.is-result-mode #where{display:none!important}
 （注3）検証：実際に確かめて、正しいかどうかを調べること<br />
 （注4）盲点：気づかれずに見落とされている点<br />
 （注5）机上の空論：実行を伴わない、頭の中だけの理屈</p>
+</div>
 <p><strong>59</strong> ①<strong>簡単な試作品を早い段階で作り、利用者に触れてもらう</strong>とあるが、それはなぜか。<br />
  1. 仕様書を作る手間を省き、開発期間を短縮するため。<br />
  2. 高齢者向けの家電だけを優先的に開発するため。<br />
@@ -844,11 +865,13 @@ html.is-result-mode #where{display:none!important}
  4. 収納場所は、家電の性能とは無関係だということ。</p>
 <div class="qa"><label><input type="radio" name="q_60" value="1"><span>1</span></label><label><input type="radio" name="q_60" value="2"><span>2</span></label><label><input type="radio" name="q_60" value="3"><span>3</span></label><label><input type="radio" name="q_60" value="4"><span>4</span></label></div>
 <h3>(3)</h3>
+<div class="passage-box">
 <p>慢性的な睡眠不足は、集中力の低下や判断ミスにつながることが知られており、日中の短い仮眠（注1）を制度として認める企業が増えている。制度自体はどの企業も似たような内容だが、実際に社員の作業効率が上がったかどうかには差が大きい。効果が上がっている企業を調べると、①<strong>仮眠室の利用状況を上司が把握し、必要な社員に声をかけて仮眠を促していた</strong>という共通点が浮かび上がる。</p>
 <p>（中略）</p>
 <p>ある製造業の工場では、午後の眠気が強まる時間帯に、班長が仮眠室の空き状況を確認し、前夜の勤務が遅かった社員などに個別に仮眠を勧める運用を続けている。この運用を続けている班ほど、午後の作業でのミスの件数が少ないという記録が残っている。仮眠室を作っただけの職場では、利用するかどうかは社員任せになり、遠慮（注2）して使わない人や、逆に長く眠りすぎて夜の睡眠に影響が出る人も見られた。声かけを担う班長がいる班では、仮眠の長さも15分から20分程度にそろい、利用後の作業への戻りもスムーズだったという。設備を整えるだけでなく、使い方まで調整する役割を誰かが担っている職場ほど、仮眠制度が作業効率の改善に結びついているのである。</p>
 <p>（注1）仮眠：短い時間、眠ること<br />
 （注2）遠慮：気を使って、行動や発言を控えること</p>
+</div>
 <p><strong>61</strong> ①<strong>仮眠室の利用状況を上司が把握し、必要な社員に声をかけて仮眠を促していた</strong>とあるが、これはどのような企業の特徴か。<br />
  1. 仮眠制度の効果が上がっている企業の特徴。<br />
  2. 仮眠室の設置費用が最も少ない企業の特徴。<br />
@@ -862,6 +885,7 @@ html.is-result-mode #where{display:none!important}
  4. 社員個人の自己管理能力の高さ。</p>
 <div class="qa"><label><input type="radio" name="q_62" value="1"><span>1</span></label><label><input type="radio" name="q_62" value="2"><span>2</span></label><label><input type="radio" name="q_62" value="3"><span>3</span></label><label><input type="radio" name="q_62" value="4"><span>4</span></label></div>
 <h3>(4)</h3>
+<div class="passage-box">
 <p>太陽光や風力といった再生可能エネルギーの導入を後押しするため、多くの自治体が設備の設置費用を補助する制度を設けている。補助額を手厚くすれば普及は進むはずだ、という前提でこれまで政策が組まれてきた。ところが、複数の自治体のデータを比較すると、意外なことに、①<strong>補助額の多さと普及率のあいだには、はっきりした相関が見られなかった</strong>。</p>
 <p>（中略）</p>
 <p>普及率が高かった自治体に共通していたのは、設置業者を探す手間や、故障時の相談窓口を一本化していたことだった。住民が「どこに頼めばよいか分からない」という段階で頓挫（注1）する例が多く、相談体制を整えることが申請への後押しになっていたとみられる。設置後に不具合が起きた際、どこに連絡すればよいか分からず放置してしまい、結局取り外してしまったという例も、担当者への聞き取りの中で複数報告されている。手続きが煩雑（注3）な自治体ほど、住民は申請に二の足を踏む（注4）傾向があった。ある町では、相談窓口を新設しただけで、翌年の設置件数が補助額を据え置いた（注2）まま倍増したという記録も残っている。相談窓口を新設するなど手続きを分かりやすくした自治体ほど、補助額を据え置いた（注2）ままでも普及率が伸びているのである。</p>
@@ -869,6 +893,7 @@ html.is-result-mode #where{display:none!important}
 （注2）据え置く：変更せず、そのままにしておくこと<br />
 （注3）煩雑：手続きなどが込み入っていて面倒なこと<br />
 （注4）二の足を踏む：実行をためらうこと</p>
+</div>
 <p><strong>63</strong> ①<strong>補助額の多さと普及率のあいだには、はっきりした相関が見られなかった</strong>とあるが、これはどのようなことを示す調査結果か。<br />
  1. 補助額を減らした自治体ほど、普及率が上がったということ。<br />
  2. 補助額の大きさだけでは、普及率の高さを説明できなかったということ。<br />
@@ -884,9 +909,13 @@ html.is-result-mode #where{display:none!important}
 <h2>問題12</h2>
 <p>次のAとBの文章を読んで、後の質問に対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</p>
 <h3>A</h3>
+<div class="passage-box">
 <p>学校給食の無償化は、子育て世帯の経済的な負担を直接減らす、即効性のある政策だと私は考える。給食費を払えないことを苦にして子どもが引け目を感じる例や、経済的な理由で品数を減らさざるを得ない家庭があることを考えれば、まず費用の壁を取り除くことを優先すべきだ。ある市では、無償化の実施後、給食費の未払いをめぐる学校側の対応業務がなくなり、教員が本来の指導に充てられる時間も増えたという報告がある。財源は、他の事業の見直しや段階的な導入によって確保できる。子どもの食の権利を保障することは、教育の機会均等の一部であり、先送りにすべきではない。</p>
+</div>
 <h3>B</h3>
+<div class="passage-box">
 <p>給食を無償化する前に、まず内容の質を見直すべきだと私は考える。無償化を急いだ自治体の中には、財源の確保が追いつかず、結果として食材費を切り詰め、献立の質が下がった例がある。栄養士が工夫を重ねても、限られた予算の中では旬の食材を減らさざるを得ず、子どもたちから「量は変わらないのに、なんとなく味気ない」という声が上がった学校もあるという。無償化は歓迎すべき方向だが、財源の裏付けなしに広げれば、栄養バランスの取れた食事という給食本来の目的が揺らぎかねない。まず安定した財源を確保し、質を維持できる見通しが立ってから、無償化の範囲を広げていくのが現実的な順序だと考える。</p>
+</div>
 <p><strong>65</strong> AとBは、学校給食の無償化についてどのような点で共通した考えを述べているか。<br />
  1. 学校給食の無償化は望ましい方向性であるという点。<br />
  2. 給食費の滞納は、教員の督促業務を増やすだけの問題だという点。<br />
@@ -901,6 +930,7 @@ html.is-result-mode #where{display:none!important}
 <div class="qa"><label><input type="radio" name="q_66" value="1"><span>1</span></label><label><input type="radio" name="q_66" value="2"><span>2</span></label><label><input type="radio" name="q_66" value="3"><span>3</span></label><label><input type="radio" name="q_66" value="4"><span>4</span></label></div>
 <h2>問題13</h2>
 <p>次の文章を読んで、後の質問に対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</p>
+<div class="passage-box">
 <p>子どもの読書体験が成長にどう関わるかについては、「読めば読むほど良い」という見方が根強い。冊数を競わせる読書運動や、多読を促す家庭も少なくない。しかし、長期にわたって子どもの読書習慣を追った調査は、①<strong>単純な読書量の多さが、そのまま語彙力や読解力の伸びに直結するわけではない</strong>ことを示している。</p>
 <p>ある調査では、小学校高学年の児童数百人を対象に、年間の読書冊数と、数年後の語彙テスト・読解テストの得点との関係を追跡した。単純に冊数だけで比較すると、多読の子どもと平均的な子どもの得点差はわずかで、統計的にはっきりした差とは言いにくかったという。読書量という分かりやすい指標だけを見ていては、成長の実態を見誤る恐れがある。</p>
 <p>（中略）</p>
@@ -912,6 +942,7 @@ html.is-result-mode #where{display:none!important}
 （注4）示唆：それとなく気づかせること<br />
 （注5）仕掛け：ある結果を生み出すための工夫や仕組み<br />
 （注6）対話：互いに考えを述べ合うやり取り</p>
+</div>
 <p><strong>67</strong> ①<strong>単純な読書量の多さが、そのまま語彙力や読解力の伸びに直結するわけではない</strong>とあるが、どういうことか。<br />
  1. 本を読む子どもは、読まない子どもより必ず語彙力が高い。<br />
  2. 読んだ冊数だけを比べても、語彙力や読解力の伸びに明確な差は見られなかった。<br />
@@ -932,6 +963,7 @@ html.is-result-mode #where{display:none!important}
 <div class="qa"><label><input type="radio" name="q_69" value="1"><span>1</span></label><label><input type="radio" name="q_69" value="2"><span>2</span></label><label><input type="radio" name="q_69" value="3"><span>3</span></label><label><input type="radio" name="q_69" value="4"><span>4</span></label></div>
 <h2>問題14</h2>
 <p>右のページは、さくら台レジデンスにおける敷地内カーシェアリング利用ルール改定についての案内である。これを読んで、下の質問に対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。</p>
+<div class="passage-box">
 <p><strong>さくら台レジデンス　敷地内カーシェアリング利用ルール改定のお知らせ</strong></p>
 <p>このたび、居住者の皆様からのご要望を受け、敷地内カーシェアリングサービスの利用に関するルールを来月より改定します。改定後の条件は下表のとおりです。</p>
 <p><strong>利用可能なプランの区分</strong></p>
@@ -981,6 +1013,7 @@ html.is-result-mode #where{display:none!important}
 ※コンパクトプラン・ファミリープランの車両は、共用の受け渡しスペースでの乗り降りを徹底してください。<br />
 ※すでに大型車プランの車両を登録している既存の会員は、来月以降も継続して利用できますが、次回の会員更新時にファミリープラン以下への切り替えが必要です。<br />
 ※登録料・利用料金は、改定日以降に新たに登録する場合に適用されます。既存の会員は、次回更新まで旧料金が適用されます。</p>
+</div>
 <p><strong>70</strong> ハンさん（新規入居者。5人乗り以上の乗用車を1台利用したい）が、来月から入居してカーシェアリングを利用する場合、正しいものはどれか。<br />
  1. ファミリープランで登録し、車両返却時にカメラの記録データの提出が求められる。<br />
  2. コンパクトプランとして登録すれば、利用料金は30分400円で済む。<br />
