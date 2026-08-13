@@ -68,6 +68,16 @@ actually ships, so no more than **two** passages share one:
 - 随筆 — a personal observation that generalises without prescribing
 - 条件提示 — a concrete, checkable condition (「〜した自治体ほど〜」), no exhortation
 
+If the passage's closing explicitly REJECTS a stated single-factor view
+(「〜という見方/考え方には無理がある」, 「〜だけでは…」, 「〜そのものではない」)
+before its conclusion, classify it as 主張 regardless of whether the conclusion
+uses the literal marker 「こそが」 — 条件提示 never opens with an explicit
+rejection, it only reports a correlation. Two independent QA passes on
+20260813_1 split on exactly this paragraph (one read it as 条件提示 because it
+lacked 「こそが」, the other read it as 主張 because it opened with 「という見方
+には無理がある」); this sentence exists to make that call mechanical instead of
+a coin flip between reviewers.
+
 **The answerability consequence, which is the real damage.** When nine
 passages close the same way, their keys close the same way too: 20260810_1's
 52/54/56/58/60/62/64/69 were all the "human/attitude" option beside three

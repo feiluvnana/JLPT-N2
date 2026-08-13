@@ -1611,12 +1611,16 @@
       "theme": "教育"
      },
      {
-      "scenario": "ベビー用品店:レンタルサービスの説明",
-      "theme": "子育て・家族"
+      "scenario": "家電レンタル店:快眠グッズのレンタル相談",
+      "theme": "睡眠・健康",
+      "origin": "reauthored",
+      "note": "QA fix (qa/qa-report-20260813_1.md F7): replaces the original 子育て・家族 draw (ベビー用品店:レンタルサービスの説明), which repeated 20260812_2's 聴解問題5-1番 theme under rule 4's zero-tolerance clause. See test_spec.json's matching entry for the full rationale. Key unchanged (聴解_問題5[0]=4)."
      },
      {
-      "scenario": "ボードゲームカフェ:貸切予約",
-      "theme": "スポーツ・余暇"
+      "scenario": "商店会:活性化イベントの貸しスペース選び",
+      "theme": "地域活性化",
+      "origin": "reauthored",
+      "note": "QA fix (qa/qa-report-20260813_1.md F5): replaces the original スポーツ・余暇 draw (ボードゲームカフェ:貸切予約), which collided with 問題13's headline theme (also スポーツ・余暇) under rule 1. See test_spec.json's matching entry for the full rationale. Keys unchanged (聴解_問題5[1]=1, 聴解_問題5[2]=3)."
      }
     ],
     "reading_topics": [
@@ -1682,6 +1686,244 @@
     "quick_response": 11,
     "listening_scenarios": 21,
     "reading_topics": 12
+   }
+  },
+  {
+   "test_id": "20260813_2",
+   "seed": "60914921+reroll(listening_scenarios,88250848)",
+   "generated_at": "2026-08-13 13:09:40",
+   "items": {
+    "kanji_reading": [
+     "童話(どうわ)",
+     "浅ましい(あさましい)",
+     "今晩中(こんばんじゅう)",
+     "潜む(ひそむ)",
+     "頻繁(ひんぱん)"
+    ],
+    "orthography": [
+     "下降",
+     "険しい",
+     "苦心",
+     "計る(時間)",
+     "形容詞"
+    ],
+    "word_formation": [
+     "〜並み(プロ並み)",
+     "〜めく(謎めく)",
+     "超〜(超満員)"
+    ],
+    "context_words": [
+     "取引",
+     "乗り越える",
+     "だるい",
+     "見かけ",
+     "引っかかる",
+     "気が短い",
+     "絶滅"
+    ],
+    "paraphrase": [
+     "くやしい(残念だ)",
+     "うぬぼれる",
+     "盛大だ",
+     "ひょっとすると",
+     "さわやかだ(すっきりした)"
+    ],
+    "usage": [
+     "めぐまれる",
+     "推定",
+     "行方",
+     "確保する",
+     "着々"
+    ],
+    "grammar_p7": [
+     "〜ばかりに",
+     "〜としたら",
+     "〜をめぐって",
+     "〜ざるを得ない",
+     "〜ずじまいだ",
+     "〜ことになっている",
+     "〜に先立って",
+     "〜とは",
+     "〜と仮定すると",
+     "〜だけに",
+     "〜あまり",
+     "敬語:お越しになる"
+    ],
+    "grammar_p8": [
+     "〜として",
+     "〜たびに",
+     "仮定帰結(〜ならば…だろう)",
+     "目的結果(〜ために…なった)",
+     "〜次第"
+    ],
+    "quick_response": [
+     "落とし物を拾いました。心当たりはありますか。",
+     "出口はこちらではなく、反対側です。",
+     "課長、出張の経費の清算ですが、領収書はこちらでよろしいでしょうか。",
+     "社長、本日の懇親会ですが、少し遅れて参加してもよろしいでしょうか。",
+     "契約更新の時期が近づいております。",
+     "〜がいがない",
+     "お客様、只今の時間帯は大変混み合っておりまして…",
+     "先輩、この作業のコツ、教えていただけませんか。",
+     "救急の方は、こちらからお進みください。",
+     "恐れ入りますが",
+     "お手数をおかけします"
+    ],
+    "reading_topics": [
+     {
+      "topic": "働き方改革とワークライフバランス",
+      "theme": "働き方"
+     },
+     {
+      "topic": "商店街の看板",
+      "theme": "地域活性化"
+     },
+     {
+      "topic": "無人店舗",
+      "theme": "デジタル化"
+     },
+     {
+      "topic": "観光公害とマナー",
+      "theme": "旅行・観光"
+     },
+     {
+      "topic": "地域包括ケアシステム",
+      "theme": "医療・福祉"
+     },
+     {
+      "topic": "賃貸住宅のペット飼育規制緩和",
+      "theme": "住まい"
+     },
+     {
+      "topic": "デザイン思考とイノベーション",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "パスポート申請の電子化",
+      "theme": "行政・手続き"
+     },
+     {
+      "topic": "読書体験が子どもの成長に与える影響",
+      "theme": "教育"
+     },
+     {
+      "topic": "再生可能エネルギーの普及",
+      "theme": "環境"
+     },
+     {
+      "topic": "祖父母世代との同居と距離感",
+      "theme": "子育て・家族"
+     },
+     {
+      "topic": "給食の無償化議論",
+      "theme": "食"
+     },
+     {
+      "topic": "「気合い」が通用しない睡眠の話",
+      "theme": "睡眠・健康",
+      "origin": "reauthored",
+      "note": "問題9 has no pool allocation in DRAW['reading_topics'] (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info for 問題10-14 only); this entry records the topic the 文法 author composed for 問題9 (睡眠不足下での自己評価と実際の作業能力低下のずれ), verified distinct from all 12 pool topics and all 21 listening scenarios in this test."
+     }
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "百貨店:ギフト包装の相談",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "スーパー:ポイントカード",
+      "theme": "食"
+     },
+     {
+      "scenario": "学術学会の発表順序と時間制限",
+      "theme": "教育"
+     },
+     {
+      "scenario": "市役所での住民票申請と必要書類",
+      "theme": "地域活性化"
+     },
+     {
+      "scenario": "ホテル:チェックイン時間の変更",
+      "theme": "旅行・観光"
+     },
+     {
+      "scenario": "大学の授業:情報リテラシー",
+      "theme": "メディア・情報"
+     },
+     {
+      "scenario": "コンビニ:新サービスの案内",
+      "theme": "食"
+     },
+     {
+      "scenario": "防災用品店:備蓄リストの相談",
+      "theme": "防災"
+     },
+     {
+      "scenario": "修理の依頼電話",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "友人宅:引っ越し祝いの相談",
+      "theme": "人間関係"
+     },
+     {
+      "scenario": "クラブ活動の予算配分と購入品目",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "店舗:季節商品の入れ替え",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "民泊:ハウスルール",
+      "theme": "旅行・観光"
+     },
+     {
+      "scenario": "旅館:食事場所の希望確認",
+      "theme": "食"
+     },
+     {
+      "scenario": "商業施設での遺失物のお問い合わせ",
+      "theme": "行政・手続き"
+     },
+     {
+      "scenario": "自動車教習所:高齢者講習の案内",
+      "theme": "交通"
+     },
+     {
+      "scenario": "保育園:空き状況",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "伝統工芸館:体験教室の予約",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "地域のお祭り:実行委員会の打ち合わせ",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "就職課:面接対策の助言",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "会社での業務指示と優先順位の確認",
+      "theme": "働き方"
+     }
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 13
    }
   }
  ]

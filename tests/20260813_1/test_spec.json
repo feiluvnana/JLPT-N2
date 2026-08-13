@@ -1,0 +1,369 @@
+{
+ "seed": 55976159,
+ "generated_at": "2026-08-13 10:01:46",
+ "test_id": "20260813_1",
+ "rotation": {
+  "recency_source": "ledger",
+  "history_len": 6,
+  "cooldown": 2
+ },
+ "items": {
+  "kanji_reading": [
+   "実(み)",
+   "関心(かんしん)",
+   "相互(そうご)",
+   "抜ける(ぬける)",
+   "物価(ぶっか)"
+  ],
+  "orthography": [
+   "系統",
+   "育児",
+   "回数券",
+   "仮定",
+   "推薦"
+  ],
+  "word_formation": [
+   "〜化(簡素化)",
+   "〜連れ(家族連れ)",
+   "〜的(根本的)"
+  ],
+  "context_words": [
+   "どうにか",
+   "本気",
+   "親しみ",
+   "ちかう",
+   "人違い",
+   "ふさがる",
+   "もどす"
+  ],
+  "paraphrase": [
+   "豪華だ",
+   "差し支えない(問題ない)",
+   "あきれる(驚く)",
+   "せめて(最低でも)",
+   "丈夫だ"
+  ],
+  "usage": [
+   "切実",
+   "経緯",
+   "抱える",
+   "宣伝する",
+   "負う"
+  ],
+  "grammar_p7": [
+   "〜わけにもいかない",
+   "〜として〜ない",
+   "〜ものだから・もので",
+   "〜てたまらない",
+   "〜がたい",
+   "〜にしたら・にすれば・にしてみれば",
+   "〜上は",
+   "〜あげく",
+   "〜ことだろう・ことか",
+   "〜にしては",
+   "〜というと",
+   "〜といっても"
+  ],
+  "grammar_p8": [
+   "限定表現(〜のみならず…も)",
+   "義務当然(〜ねばならない)",
+   "〜をきっかけに",
+   "〜ほど〜はない",
+   "〜に基づいて"
+  ],
+  "quick_response": [
+   "見当がつかない",
+   "席を外しております",
+   "熱があるようですので、検温をお願いします。",
+   "見合わせる",
+   "とんでもない",
+   "恐れ入りますが、こちらの用紙は控えとしてお持ち帰りください。",
+   "顔が広い",
+   "このプロジェクト、君が中心になって進めてくれないか。",
+   "お子様連れの方は、こちらの車両をご利用ください。",
+   "ペットの飼育は規約で禁止されています。",
+   "山本さん、その件でしたら私のほうで引き継ぎます。"
+  ],
+  "listening_scenarios": [
+   {
+    "scenario": "クリーニング:仕上げ時間",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "農園:収穫体験の受付",
+    "theme": "食"
+   },
+   {
+    "scenario": "精肉店:注文変更",
+    "theme": "食"
+   },
+   {
+    "scenario": "不動産屋:ペット可物件の相談",
+    "theme": "住まい"
+   },
+   {
+    "scenario": "保育園:送迎時間の相談",
+    "theme": "子育て・家族"
+   },
+   {
+    "scenario": "通信講座の受講申込と教材発送",
+    "theme": "教育"
+   },
+   {
+    "scenario": "レンタカー:保険オプション",
+    "theme": "交通"
+   },
+   {
+    "scenario": "リフォーム会社:見積もり打ち合わせ",
+    "theme": "住まい"
+   },
+   {
+    "scenario": "会社:会議の準備",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "アルバイトの引き継ぎ",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "家具店:組立サービス",
+    "theme": "住まい"
+   },
+   {
+    "scenario": "経理:経費精算",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "動物園:年間パス",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "ヨガ:レッスン振替",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "ケーキ店:デコレーション",
+    "theme": "食"
+   },
+   {
+    "scenario": "児童館:イベント参加申し込み",
+    "theme": "子育て・家族"
+   },
+   {
+    "scenario": "観光案内:モデルコース",
+    "theme": "旅行・観光"
+   },
+   {
+    "scenario": "着物レンタル店:着付け予約",
+    "theme": "文化・伝統"
+   },
+   {
+    "scenario": "大学の事務窓口での手続き案内",
+    "theme": "教育"
+   },
+   {
+    "scenario": "家電レンタル店:快眠グッズのレンタル相談",
+    "theme": "睡眠・健康",
+    "origin": "reauthored",
+    "note": "QA fix (qa/qa-report-20260813_1.md F7): re-authored off the original 子育て・家族 draw (ベビー用品店:レンタルサービスの説明), which repeated 20260812_2's 聴解問題5-1番 theme (子育て・家族) under exam-blueprint rule 4's zero-tolerance clause for the immediately-previous paper. Recomposed onto a home sleep-aid rental scenario (工事の音対策の快眠グッズ). 睡眠・健康 does not appear in either 20260812_2's or 20260812_1's headline sets, and while it repeats this paper's own 問題10(3) theme, that is permitted by exam-blueprint's rule 2 (headline-vs-reading distinctness governs reading headlines only; listening headlines are governed by rule 3's ≤5 cap alone) — of the 5 themes left after excluding this paper's own headline set and both prior papers' headline sets, only 地域活性化 (used for the paired 聴解問題5-2番 fix) was unused anywhere else in this paper, so one of the two new themes had to reuse a non-headline surface's theme; 睡眠・健康 was chosen as the least disruptive option. Key unchanged (聴解_問題5[0]=4).\n\nFollow-up QA fix (same round, qa/qa-report-20260813_1.md F1/F7, rebuild agent's close reading): the theme fix above still shipped the same 'sequential elimination of N candidates down to 1' decision structure as 20260812_1's own 聴解問題5-1番 (friends narrowing trip destinations one by one) — a same-slot archetype repeat one test apart, undetected by any mechanical check. Re-authored the DECISION STRUCTURE (theme 睡眠・健康 and all four rental-item candidates unchanged): the couple now briefly waves off two candidates as a group, quickly commits to a third (耳栓, the cheapest) as if the choice were settled, then a piece of NEW INFORMATION (a review noting earplugs do not block low-frequency noise) reverses that pick, landing on ホワイトノイズマシン (whose own review specifically praises handling low-frequency noise) — a commit-then-reverse-on-new-information arc, not a checklist-style one-by-one narrowing. Key unchanged (聴解_問題5[0]=4)."
+   },
+   {
+    "scenario": "商店会:活性化イベントの貸しスペース選び",
+    "theme": "地域活性化",
+    "origin": "reauthored",
+    "note": "QA fix (qa/qa-report-20260813_1.md F5): re-authored off the original スポーツ・余暇 draw (ボードゲームカフェ:貸切予約), which collided with 問題13's headline theme (also スポーツ・余暇, スタジアム観戦のバリアフリー化) under exam-blueprint rule 1 (five headline surfaces need five different themes) — the prior Stage-3 fix had only relabeled 問題13's theme in logs/topics.json without changing either passage, which a sibling agent already reverted back to the true スポーツ・余暇 per this same finding. Kept the joint-decision shape (two people's plan choice shifts from an initial cheapest/safety-first lean to a final group-fit choice decided by a named plan attribute, with 質問1/質問2 enumeration order preserved), recomposed onto a shopping-district revitalization event's venue-plan selection. 地域活性化 was unused anywhere else in this paper (the only fully free theme once this paper's headline set and both 20260812_2's and 20260812_1's headline sets are excluded), so it also cleanly satisfies rule 4 against both prior papers. Keys unchanged (聴解_問題5[1]=1, 聴解_問題5[2]=3)."
+   }
+  ],
+  "reading_topics": [
+   {
+    "topic": "コワーキングスペース",
+    "theme": "働き方"
+   },
+   {
+    "topic": "スタジアム観戦のバリアフリー化",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "topic": "リユース市場",
+    "theme": "消費・経済"
+   },
+   {
+    "topic": "カルチャーセンター秋期講座の受講案内",
+    "theme": "教育"
+   },
+   {
+    "topic": "駅前の放置自転車問題",
+    "theme": "交通"
+   },
+   {
+    "topic": "SNSと人間関係",
+    "theme": "デジタル化"
+   },
+   {
+    "topic": "睡眠と学習効率",
+    "theme": "睡眠・健康"
+   },
+   {
+    "topic": "新しいエネルギー技術と脱炭素社会",
+    "theme": "環境"
+   },
+   {
+    "topic": "旅の目的地より過程を楽しむ旅",
+    "theme": "旅行・観光"
+   },
+   {
+    "topic": "再生医療の実用化",
+    "theme": "科学・技術"
+   },
+   {
+    "topic": "家族の介護と仕事の両立",
+    "theme": "子育て・家族"
+   },
+   {
+    "topic": "防災訓練の実施要領と避難場所案内",
+    "theme": "防災"
+   }
+  ]
+ },
+ "answer_positions": {
+  "問題1_語彙": [
+   3,
+   1,
+   2,
+   1,
+   4
+  ],
+  "問題2_語彙": [
+   1,
+   2,
+   4,
+   3,
+   2
+  ],
+  "問題3_語彙": [
+   4,
+   3,
+   2
+  ],
+  "問題4_語彙": [
+   4,
+   3,
+   3,
+   1,
+   2,
+   2,
+   1
+  ],
+  "問題5_語彙": [
+   1,
+   4,
+   2,
+   3,
+   4
+  ],
+  "問題6_語彙": [
+   4,
+   2,
+   3,
+   1,
+   1
+  ],
+  "問題7": [
+   3,
+   4,
+   1,
+   1,
+   4,
+   2,
+   3,
+   3,
+   1,
+   2,
+   2,
+   4
+  ],
+  "問題8": [
+   2,
+   1,
+   3,
+   3,
+   4
+  ],
+  "問題9": [
+   4,
+   3,
+   1,
+   2
+  ],
+  "問題10": [
+   4,
+   1,
+   4,
+   3,
+   2
+  ],
+  "問題11": [
+   4,
+   3,
+   1,
+   2,
+   1,
+   2,
+   4,
+   3
+  ],
+  "問題12": [
+   2,
+   4
+  ],
+  "問題13": [
+   1,
+   3,
+   2
+  ],
+  "問題14": [
+   4,
+   2
+  ],
+  "聴解_問題1": [
+   3,
+   2,
+   4,
+   1,
+   2
+  ],
+  "聴解_問題2": [
+   3,
+   4,
+   1,
+   3,
+   2,
+   4
+  ],
+  "聴解_問題3": [
+   1,
+   3,
+   4,
+   2,
+   1
+  ],
+  "聴解_問題4": [
+   3,
+   2,
+   1,
+   2,
+   2,
+   3,
+   3,
+   1,
+   1,
+   2,
+   1
+  ],
+  "聴解_問題5": [
+   4,
+   1,
+   3
+  ]
+ }
+}

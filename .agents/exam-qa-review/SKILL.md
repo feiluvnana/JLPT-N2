@@ -128,7 +128,26 @@ then name what let each defect through.
   **any passage, dialogue, 例, stem, or option copied verbatim from `refs/` or
   from an `imported-*` paper** — `jlpt-test-generation` §Invariants allows reference material for
   calibration only. Check this
-  against the imported papers directly, not just test-against-test.
+  against the imported papers directly, not just test-against-test;
+  **a surface's `theme` in `tests/<test_id>/test_spec.json` disagreeing with
+  that same surface's `theme` in `logs/topics.json`** — a Stage-3 fix that
+  relabels a theme in one file to dodge a same-paper headline collision
+  without re-authoring the passage or updating the other file's mirrored
+  entry hides the collision instead of resolving it (`20260813_1`'s 問題13 was
+  relabeled 医療・福祉 in `logs/topics.json` to avoid a headline clash with
+  聴解問題5-2番, while `test_spec.json` still recorded the original
+  スポーツ・余暇 for the identical topic string, and the shipped passage's own
+  content — スタジアム観戦のバリアフリー化, with zero medical/welfare content —
+  never stopped being スポーツ・余暇; the collision the relabel was meant to
+  avoid was real and stayed real). No check compares these two files' `theme`
+  fields against each other — confirm this yourself before trusting either;
+  **a headline theme (問題9/12/13/14/聴解問題5-1番/聴解問題5-2番) repeating the
+  immediately-previous generated test's headline theme in ANY slot** —
+  `exam-blueprint` rule 4's zero-tolerance clause, which no script checks (the
+  only automated cross-test 聴解 check compares SUBJECT strings, not themes;
+  confirmed absent from `tools/check_consistency.py` by direct search). Build
+  the 6-slot headline theme set yourself from the SHIPPED content (not the
+  recorded tags) and diff it against the previous test's own recorded set.
 - **An option SET reused from an official paper, even when no line is
   byte-identical.** Compare the *sets* of proper nouns per 問題, against
   `tests/imported-*`, not just the sentences.
@@ -155,7 +174,12 @@ then name what let each defect through.
   Markdown/script sources, then booklet HTML + `解答.html` (+ MP3 if the script
   changed) are regenerated and `make check` re-run. Then the changed items AND
   their whole 問題 go back through steps 1–4, and step 5's table is rebuilt if
-  any topic moved. Fixes introduce defects at the same rate as authoring —
+  any topic moved. **Exception (owned by `jlpt-test-generation/SKILL.md`'s
+  stage-4 loop rule): a FAIL round with 3 or fewer findings total may be fixed
+  directly, skipping this step's re-review** — the orchestrator applies the
+  same rigor as any other fix (root-cause each finding, verify `make check`,
+  sanity-read the diff) instead of spawning steps 1–4 again. Fixes introduce
+  defects at the same rate as authoring —
   a prior round of repairs was itself re-reviewed and one had to be redone.
   A fix-and-approve in the same breath is a rubber stamp, not a review.
   **A closing-move-shape fix (dokkai.md §"Thirteen surfaces, thirteen

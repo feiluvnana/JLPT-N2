@@ -1122,7 +1122,8 @@ def check_dokkai_rhetorical_monotony(name: str, body: str):
 # documented purpose (qa-report F2's root-cause table, option 2).
 REFRAME_CLOSING = re.compile(
     r"だけでは|だけのものではなく|にとどまらない|にすぎない.{0,20}ではなく"
-    r"|である前に.{0,20}だ|の中にこそ")
+    r"|である前に.{0,20}だ|の中にこそ"
+    r"|こそが?.{0,15}(だ|になっている|を作り上げている|が要る|にほかならない)")
 # Bare 「ではなく」 was tried and dropped: it is an ordinary contrastive
 # connector that appears in unrelated argumentative and descriptive prose
 # (measured: it alone fires this check on EVERY one of the 4 prior generated
@@ -1135,6 +1136,12 @@ REFRAME_CLOSING = re.compile(
 # very check while shipping the identical shape — confirmed absent from all 4
 # prior papers before adding, so this extension does not reproduce the
 # bare-「ではなく」 cry-wolf mistake (qa/qa-report-20260812_1.md F3 root-cause).
+# The bare 「こそが」 alternative was added after 20260813_1 QA round 2 (F1):
+# the check's only 「こそ」 variant was the narrow 「の中にこそ」 phrase, which
+# missed ordinary 「〜こそが〜だ/になっている/を作り上げている」 closings — the
+# shape's OWN named example phrasing in dokkai.md ("Cこそが") — and reported a
+# false "0 matched" on two passages that genuinely shared the 主張 shape
+# (qa-report-20260813_1.md F1 root-cause).
 # This marker family is a proxy, not a shape-classification proof — a fix that
 # dodges these specific tokens while keeping the same argument can still slip
 # through; the mandatory human read of all 13 closings against dokkai.md's six

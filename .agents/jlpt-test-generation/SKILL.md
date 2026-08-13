@@ -44,7 +44,12 @@ survived exactly that self-review.
 | 5. Model Answer (Final) | `make model-answer <id>` → `模範解答.html` — **MUST always be the final step** after QA PASS | 1 subagent |
 
 Every QA finding adds a fix + re-review round: the fix may reuse an authoring
-context; the re-review of the touched items must again be fresh eyes. The loop
+context; the re-review of the touched items must again be fresh eyes.
+**Exception: if a QA round returns FAIL with 3 or fewer findings total, the
+orchestrator may apply the fixes directly without spawning a fresh re-review
+round** — same rigor as the round-3 fallback below (root-cause each finding,
+verify `make check`, sanity-read the diff), and state in the final report that
+the low-count exception applied and how each finding was resolved. The loop
 ends at `QA: PASS`, **capped at 3 fresh-eyes QA rounds total.** Once QA is PASS,
 proceed to Stage 5 to build `模範解答.html`. If round 3 still
 returns FAIL, the orchestrator applies that round's findings directly (same
