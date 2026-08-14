@@ -1,13 +1,13 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
 .PHONY: help check check-tests grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
-       init-import extract-pdf extract-archive extract-keys
+       init-import extract-pdf extract-archive extract-keys lint-draft lint verify-scramble scaffold-explanations irt
 
 # Positional test-id argument: "make grade 1", "make sheet 2", "make sample 5".
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
 # covers every test, so it takes no id. `pages` builds every test by default;
 # "make pages 1" (or TEST=1) narrows it to one.
-TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample
+TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -44,6 +44,11 @@ help:
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
 	@echo "  make model-answer 1   Build model answer & explanation for test 1 (模範解答.html)"
 	@echo "  make explanation 1    Alias for make model-answer"
+	@echo "  make scaffold-explanations 1 Scaffold explanation JSON template directly from markdown"
+	@echo "  make lint-draft 1     Fast pre-linter for contractions, reaction turns, abs-quantifiers"
+	@echo "  make lint 1           Alias for make lint-draft"
+	@echo "  make verify-scramble 1 Permutation & topological validator for 問題8 scrambles"
+	@echo "  make irt 1            Simulate 2PL Item Response Theory (IRT) scaled scores"
 	@echo "  make keyless 1        Blind-solve render for QA: qa/1/keyless.md (no keys)"
 	@echo "  make serve            Serve ALL tests: list -> exam -> result (no test id)"
 	@echo "  make grade 1          Grade test 1 (reads tests/1/ユーザー解答*.json)"
@@ -81,6 +86,20 @@ model-answer:
 	python3 .agents/exam-model-answer/scripts/build_model_answer.py tests/$(TEST)
 
 explanation: model-answer
+
+scaffold-explanations:
+	python3 tools/scaffold_explanations.py tests/$(TEST)
+
+lint-draft:
+	python3 tools/lint_draft.py tests/$(TEST)
+
+lint: lint-draft
+
+verify-scramble:
+	python3 tools/verify_scramble.py tests/$(TEST)
+
+irt:
+	python3 tools/irt_scorer.py tests/$(TEST)
 
 # The QA blind-solve render: the same paper with the keys truncated away, into
 # qa/<id>/keyless.md. Not a deliverable — tests/<id>/ has a fixed file contract.

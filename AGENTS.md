@@ -161,6 +161,10 @@ restate them here or in a skill; fix them there.
 | `make mp3 <id>`           | `make_choukai_mp3.py` on `聴解スクリプト.txt` | `choukai-audio` |
 | `make sheet <id>`         | `build_interactive.py` → `解答.html` | `exam-app` |
 | `make model-answer <id>`  | `build_model_answer.py` → `模範解答.html` | `exam-model-answer` |
+| `make scaffold-explanations <id>` | `scaffold_explanations.py` → scaffolds `詳細解説.json` template | `exam-model-answer` |
+| `make lint-draft <id>`    | `lint_draft.py` — fast deterministic pre-lint before QA | `exam-qa-review` |
+| `make verify-scramble <id>` | `verify_scramble.py` — topological & permutation validator for 問題8 | `question-authoring` |
+| `make irt <id>`           | `irt_scorer.py` — 2PL Item Response Theory scaled score simulation | `exam-app` |
 | `make keyless <id>`       | the QA blind-solve render → `qa/<id>/keyless.md` | `exam-app` |
 | `make serve`              | `serve_sheet.py` — ONE server for every test (no id) | `exam-app` |
 | `make grade <id>`         | `grade_answers.py --test-dir tests/<id>` | `exam-app` |

@@ -900,6 +900,19 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         except Exception:
             detailed_data = {}
 
+    # Derive raw stems, options, passages, and scripts as fallback for lean explanation formats
+    gengo_raw, choukai_raw = {}, {}
+    try:
+        vf_path = Path(__file__).resolve().parent / "verify_fidelity.py"
+        if vf_path.is_file():
+            _spec = importlib.util.spec_from_file_location("verify_fidelity", vf_path)
+            vf = importlib.util.module_from_spec(_spec)
+            _spec.loader.exec_module(vf)
+            gengo_raw = vf.derive_gengo_raw(gengo_md)
+            choukai_raw = vf.derive_choukai_raw(choukai_md, script_text)
+    except Exception:
+        pass
+
     out_file = out_path if out_path else (test_dir / "模範解答.html")
     
     content_blocks = []
@@ -925,17 +938,20 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
             raw_kaisetsu = exp_info.get("raw_kaisetsu", "")
 
             detail = detailed_data.get(str(q_num), {})
+            raw_q = gengo_raw.get(q_num, {})
             
-            raw_stem = detail.get("stem") or f"第 {q_num} 問"
+            raw_stem = detail.get("stem") or raw_q.get("stem") or f"第 {q_num} 問"
             stem_text = apply_furigana(raw_stem)
-            options = [apply_furigana(opt) for opt in (detail.get("options") or [f"選択肢 {i}" for i in range(1, 5)])]
+            raw_opts = detail.get("options") or raw_q.get("options") or [f"選択肢 {i}" for i in range(1, 5)]
+            options = [apply_furigana(opt) for opt in raw_opts]
             why_correct = apply_furigana(detail.get("why_correct") or raw_kaisetsu)
             options_analysis = detail.get("options_analysis") or []
             points = [apply_furigana(p) for p in (detail.get("points") or [])]
             
             passage_html = ""
-            if detail.get("passage"):
-                passage_content = format_passage_text(detail["passage"])
+            passage_text = detail.get("passage") if "passage" in detail else raw_q.get("passage")
+            if passage_text:
+                passage_content = format_passage_text(passage_text)
                 passage_html = f'<div class="passage-box"><div class="passage-title">本文 / 資料</div>{passage_content}</div>'
 
             opt_items_html = []
@@ -1002,9 +1018,13 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         safe_id = key_id.replace("問", "choukai-").replace("-", "_")
 
         detail = detailed_data.get(key_id, {})
-        stem_text = apply_furigana(detail.get("stem") or f"{key_id} 聴解問題")
-        options = [apply_furigana(opt) for opt in (detail.get("options") or [f"選択肢 {i}" for i in range(1, 5)])]
-        script_snippet = apply_furigana(detail.get("script") or scripts.get(key_id, "（音声スクリプト参照）"))
+        raw_c = choukai_raw.get(key_id, {})
+        raw_stem = detail.get("stem") or raw_c.get("stem") or f"{key_id} 聴解問題"
+        stem_text = apply_furigana(raw_stem)
+        raw_opts = detail.get("options") or raw_c.get("options") or [f"選択肢 {i}" for i in range(1, 5)]
+        options = [apply_furigana(opt) for opt in raw_opts]
+        raw_script = detail.get("script") if "script" in detail else (raw_c.get("script") or scripts.get(key_id, "（音声スクリプト参照）"))
+        script_snippet = apply_furigana(raw_script or "（音声スクリプト参照）")
         why_correct = apply_furigana(detail.get("why_correct") or raw_kaisetsu)
         options_analysis = detail.get("options_analysis") or []
         points = [apply_furigana(p) for p in (detail.get("points") or [])]

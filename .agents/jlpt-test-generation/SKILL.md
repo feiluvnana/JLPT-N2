@@ -156,9 +156,10 @@ reference file from the reading map). Binding here:
 ## Stage 3 — build + gate
 
 ```bash
-make booklet <id> && make mp3 <id> && make sheet <id> && make check
+make lint-draft <id> && make verify-scramble <id> && make booklet <id> && make mp3 <id> && make sheet <id> && make check
 ```
 
+- Run `make lint-draft <id>` first: instantly catches contractions, reaction turns, abs-quantifiers, and missing blanks with zero tokens before invoking QA.
 - `make check` validates every test on disk; **read every line, including
   WARN** — resolve each warning or justify it in the report. Fix failures
   before stage 4: a mis-keyed item is invisible once the MP3 is built.
@@ -239,13 +240,13 @@ A test that has not survived this pass is not done, whatever the gate says.
 ## Stage 5 — Model Answer & Detailed Explanation (FINAL STEP)
 
 ```bash
+make scaffold-explanations <id>    # -> auto-scaffold tests/<id>/詳細解説.json from markdown (saves ~75% tokens)
 make model-answer <id>             # -> tests/<id>/模範解答.html
 ```
 
 - **MUST always be the final step**: run only AFTER Stage 4 QA has returned
   `QA: PASS` and all item, option, and audio fixes are frozen.
-- Explanations must be generated from the finalized, audited exam sources
-  (`言語知識・読解.md`, `聴解.md`, `聴解スクリプト.txt`, `test_spec.json`).
+- Scaffold `詳細解説.json` with `make scaffold-explanations <id>`, then author the explanations (`why_correct`, `options_analysis`, `points`). Stems, options, reading passages, and audio scripts are automatically populated from the finalized markdown.
 - **Pedagogical Quality & Furigana Rules**:
   - Explanations must be concise, natural, and learner-friendly.
   - Zero internal dataset/pipeline metadata leaks (no `[kanji-n2.json]`, `[同分野]`, `[N1]`, `〜れる一段動詞×4`, `送り仮名「れる」からは絞り込めない` etc.).

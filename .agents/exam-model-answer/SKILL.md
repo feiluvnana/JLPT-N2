@@ -30,11 +30,17 @@ While `解答.html` is designed for taking the test and grading score, `模範�
    - **Easy-to-Understand Japanese (`わかりやすい日本語`)**: `why_correct`, `options_analysis`, and `points` are explanations *for* N2 learners, not native-level literary prose *about* the item. Prefer short, plain sentences and common vocabulary over difficult synonyms; when a technical term (文法用語, 品詞名) is unavoidable, keep it and furigana it rather than inventing a vaguer paraphrase. This does not apply to `stem`/`options`/`passage`/`script` — those are the exam's actual wording and must never be reworded, only furigana'd.
    - **Emoji-Free Design**: All UI elements, badges, and text use clean, professional typography without emojis.
 
-## Authoring `詳細解説.json` — one shared tool, never a per-test script
+## Authoring `詳細解説.json` — scaffold directly, never type passages from scratch
 
-Author and edit `tests/<test_id>/詳細解説.json` directly — read it, edit it in
-place, validate it parses (`python3 -c "import json,sys; json.load(open(sys.argv[1]))" tests/<id>/詳細解説.json`),
-then run `make model-answer <id>`.
+To save AI tokens and prevent drift, **first scaffold the template** from the finalized Markdown sources:
+
+```bash
+make scaffold-explanations <id>   # -> scaffolds tests/<id>/詳細解説.json with stems/options/passages pre-populated
+```
+
+Then edit `tests/<test_id>/詳細解説.json` to complete `why_correct`, `options_analysis`, and `points` for each item.
+Validate it parses (`python3 -c "import json,sys; json.load(open(sys.argv[1]))" tests/<id>/詳細解説.json`),
+and run `make model-answer <id>`.
 
 **Do not write a per-test "compiler" script** (a one-off Python file that
 builds a literal `details = {...}` dict and dumps it to
@@ -46,7 +52,7 @@ historical scratch that had already drifted from the JSON it once produced.
 `詳細解説.json` is the artifact; a script that happened to produce it once is
 not.
 
-Instead, use the one shared, standing tool every test runs the same way:
+Instead, use the shared fidelity verification tool:
 
 ```bash
 python3 .agents/exam-model-answer/scripts/verify_fidelity.py tests/<id>
