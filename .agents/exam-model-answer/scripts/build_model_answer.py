@@ -139,6 +139,7 @@ def clean_option_analysis_text(text: str) -> str:
 def parse_gengo_markdown(gengo_md_text: str):
     """
     Parse questions, options, passages, and explanation table from 言語知識・読解.md.
+    Supports 3-column (| 問 | 答 | 解説 |), 4-column, and 5-column (| 問題 | 番号 | 正解 | 出題語 | 解説 |) tables.
     """
     key_split = re.split(r"^#+\s*(?:解答|【?正解)", gengo_md_text, flags=re.M)
     exam_body = key_split[0]
@@ -149,16 +150,29 @@ def parse_gengo_markdown(gengo_md_text: str):
     for line in key_body.splitlines():
         line = line.strip()
         if line.startswith("|") and line.endswith("|"):
-            parts = [p.strip() for p in line.split("|")[1:-1]]
-            if len(parts) >= 3:
-                q_str = re.sub(r"[^\d]", "", parts[0])
-                ans_str = re.sub(r"[^\d]", "", parts[1])
-                if q_str.isdigit() and ans_str.isdigit():
-                    q_num = int(q_str)
-                    explanations[q_num] = {
-                        "ans": int(ans_str),
-                        "raw_kaisetsu": parts[2]
-                    }
+            cells = [c.strip() for c in line.split("|")[1:-1]]
+            if len(cells) < 2:
+                continue
+            # Skip separator rows like |---|---|
+            if all(re.match(r"^:?-+:?$", c) for c in cells):
+                continue
+
+            # Look for adjacent (q_num, ans_val) cell pair
+            for i in range(len(cells) - 1):
+                q_clean = re.sub(r"[\*\s]", "", cells[i])
+                a_clean = re.sub(r"[\*\s]", "", cells[i+1])
+                if q_clean.isdigit() and a_clean.isdigit():
+                    q_num = int(q_clean)
+                    a_num = int(a_clean)
+                    if 1 <= q_num <= 75 and 1 <= a_num <= 4:
+                        kaisetsu = cells[-1] if len(cells) > (i + 1) else ""
+                        if kaisetsu == cells[i] or kaisetsu == cells[i+1]:
+                            kaisetsu = ""
+                        explanations[q_num] = {
+                            "ans": a_num,
+                            "raw_kaisetsu": kaisetsu
+                        }
+                        break
 
     return exam_body, explanations
 
@@ -181,14 +195,14 @@ def parse_choukai_markdown(choukai_md_text: str):
             continue
         if current_mondai and line.startswith("|") and line.endswith("|"):
             parts = [p.strip() for p in line.split("|")[1:-1]]
-            if len(parts) >= 3:
+            if len(parts) >= 2:
                 q_label = parts[0].replace("*", "").strip()
                 ans_str = re.sub(r"[^\d]", "", parts[1])
-                if q_label in ("例", "番号", "問"):
+                if q_label in ("例", "番号", "問", "項目"):
                     continue
                 if ans_str.isdigit():
                     ans_val = int(ans_str)
-                    kaisetsu = parts[2]
+                    kaisetsu = parts[2] if len(parts) >= 3 else ""
                     key_id = None
                     if current_mondai in (1, 2, 3, 4):
                         m_digit = re.search(r"(\d+)", q_label)
@@ -196,12 +210,14 @@ def parse_choukai_markdown(choukai_md_text: str):
                             key_id = f"問{current_mondai}-{m_digit.group(1)}"
                     elif current_mondai == 5:
                         if "質問1" in q_label:
-                            key_id = "問5-2-1"
+                            key_id = "問5-3-1" if ("3" in q_label or "3番" in q_label) else "問5-2-1"
                         elif "質問2" in q_label:
-                            key_id = "問5-2-2"
-                        elif "1" in q_label:
+                            key_id = "問5-3-2" if ("3" in q_label or "3番" in q_label) else "問5-2-2"
+                        elif re.search(r"^1$|^1番$|1番(?!.*質問)", q_label) or (
+                                "1" in q_label and "質問" not in q_label and "2" not in q_label):
                             key_id = "問5-1"
-                        elif "2" in q_label:
+                        elif re.search(r"^2$|^2番$|2番(?!.*質問)", q_label) or (
+                                "2" in q_label and "質問" not in q_label and "3" not in q_label):
                             key_id = "問5-2"
                     if key_id:
                         explanations[key_id] = {
@@ -869,6 +885,19 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
     _, choukai_exps = parse_choukai_markdown(choukai_text)
     scripts = parse_choukai_scripts(script_text)
 
+    # Canonical answer keys from grade_answers module
+    canonical_gengo_keys = {}
+    canonical_choukai_keys = {}
+    try:
+        exam_app_scripts = ROOT / ".agents/exam-app/scripts"
+        if exam_app_scripts.is_dir() and str(exam_app_scripts) not in sys.path:
+            sys.path.insert(0, str(exam_app_scripts))
+        import grade_answers as ga
+        canonical_gengo_keys = ga.parse_gengo_keys(gengo_md_path)
+        canonical_choukai_keys = ga.parse_choukai_keys(choukai_md_path)
+    except Exception:
+        pass
+
     # Chapters
     chapters_data = {}
     if chapter_path.is_file():
@@ -934,7 +963,9 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         q_start, q_end = tax_info["range"]
         for q_num in range(q_start, q_end + 1):
             exp_info = gengo_exps.get(q_num, {})
-            ans_val = exp_info.get("ans", 1)
+            ans_val = exp_info.get("ans")
+            if ans_val not in (1, 2, 3, 4):
+                ans_val = canonical_gengo_keys.get(q_num, 1)
             raw_kaisetsu = exp_info.get("raw_kaisetsu", "")
 
             detail = detailed_data.get(str(q_num), {})
@@ -1012,8 +1043,12 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         f'<small>JLPT N2 Choukai</small></div>'
     )
 
-    for key_id, exp_info in sorted(choukai_exps.items()):
-        ans_val = exp_info.get("ans", 1)
+    all_choukai_keys = sorted(set(list(choukai_exps.keys()) + list(canonical_choukai_keys.keys()) + list(choukai_raw.keys())))
+    for key_id in all_choukai_keys:
+        exp_info = choukai_exps.get(key_id, {})
+        ans_val = exp_info.get("ans")
+        if ans_val not in (1, 2, 3, 4):
+            ans_val = canonical_choukai_keys.get(key_id, 1)
         raw_kaisetsu = exp_info.get("raw_kaisetsu", "")
         safe_id = key_id.replace("問", "choukai-").replace("-", "_")
 
