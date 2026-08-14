@@ -3628,7 +3628,12 @@ P3_TALK_TARGET = 220
 # the moment that test's 聴解 is repaired; do not add one to quiet a new paper.
 CHOUKAI_SECTION_GRANDFATHERED = {
     "20260807_1", "20260810_1", "20260810_2", "20260811_1",
-    "20260812_1", "20260812_2", "20260813_1", "20260813_2",
+    "20260812_1", "20260812_2", "20260813_1",
+    # 20260813_2 removed 2026-08-14: its 聴解 was re-authored against the G16/G17
+    # rules (duplicate key, split turns, 問題3 talks and options, 問題4 distractor
+    # shapes, 問題5 three-party, contractions, paraphrased keys, 構成表) and it
+    # now clears them un-grandfathered. This set shrinks one repaired paper at a
+    # time; never add an id back to quiet a regression.
 }
 GRANDFATHER_NOTE = " [pre-rule paper — a FAIL for any id not grandfathered]"
 
@@ -3893,7 +3898,14 @@ def check_choukai_key_paraphrase(test_id: str, ct: str, st: str, m, bi):
     """A keyed option restates the deciding line; it does not copy it (G17)."""
     keys, printed = choukai_key_table(ct, bi), choukai_printed_options(ct, bi)
     verbatim, total = [], 0
-    for sec in (1, 2):
+    # 問題2 ONLY. 言い換え is Shin Kanzen's ポイント理解 chapter (IV-2), and
+    # 課題理解 keys legitimately reuse the script's words — official 7/2025
+    # 問題1 keys 「本のデータをとうろくする」 against 「本のデータを登録してくれる？」,
+    # 「当日のしりょうをいんさつする」 against 「当日配る資料の印刷は」. In 問題1 the
+    # discrimination is WHICH action and WHEN, not vocabulary, so scoring it for
+    # paraphrase would flag the official paper. Caught while authoring against
+    # this check's first draft, which covered 問題1 and 問題2 together.
+    for sec in (2,):
         blocks = {choukai_item_label(l[0]): "".join(l)
                   for l in choukai_item_blocks(choukai_span(st, sec), m, True)}
         for (s, lab), opts in printed.items():

@@ -152,7 +152,13 @@ exactly that — 7/2025 問題2-1番 says 「植物専門の本を作ってる�
 **そこに入りたいんだ**」 and keys 「しゅっぱんしゃで**働く**」. 入りたい → 働く *is*
 the item.
 
-So, for 問題1/2/5:
+**Scope: 問題2 and 問題5** — 言い換え is Shin Kanzen's ポイント理解 chapter. In
+課題理解 (問題1) the discrimination is WHICH action and WHEN, not vocabulary, and
+official 問題1 keys do reuse the script's words (7/2025 keys
+「本のデータをとうろくする」 against 「本のデータを登録してくれる？」). Do not paraphrase
+a 問題1 key for its own sake; there, the paraphrase load sits on WHO is doing it.
+
+So, for 問題2/5:
 
 - **The keyed option paraphrases the deciding line** — at least one content word
   of the key must NOT appear in the script (a verb swapped for its result, a
