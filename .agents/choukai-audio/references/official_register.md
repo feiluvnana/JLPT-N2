@@ -275,6 +275,70 @@ Two of these need reading, not just counting:
   each per sitting; the last five papers used the enumerate-four-candidates shape
   for **both** items. Rule and evidence: `choukai-items.md` §統合理解.
 
+### 7.6 The WRITING itself, measured 2026-08-14 (Shin Kanzen 実力養成編)
+
+§§1–3 measured how often speakers react and how options get killed. This pass
+measured the sentences — against the three 実力養成編 chapters that name what N2
+listening actually tests. Same corpora (31 sittings / 8 papers), spoken text
+only, speaker tags stripped.
+
+**(a) 縮約形 — Shin Kanzen I-2, p.16.** The book opens 実力養成編 with a table of
+contracted forms because parsing them is the skill. Per 10 k spoken chars:
+
+| form | official | ours | ratio |
+|---|---|---|---|
+| 〜てる / 〜でる | 29.6 | 9.3 | 0.31× |
+| 〜とく / 〜どく | 1.8 | 0.2 | 0.12× |
+| 〜なきゃ / 〜なくちゃ | 2.3 | **0.0** | 0 |
+| 〜ちゃう / 〜じゃう | 5.2 | 2.4 | 0.47× |
+| って | 92.4 | 64.5 | 0.70× |
+| 終助詞 よ / な / ね | 29.5 / 11.1 / 65.7 | 16.8 / 5.5 / 48.8 | 0.57× / 0.50× / 0.74× |
+
+Combined (the six-form regex the gate uses): official **37.3 per sitting
+[22.4–67.4], n=31**; ours 0.0 / 1.5 / 3.8 / 6.4 / 11.1 / 15.8 / 18.0 / 23.9 —
+**seven of eight below the archive minimum**, one paper at zero.
+
+The obvious explanation is wrong. Split by whether an item has a service-role
+speaker (店員/職員/係員/担当者/…), where keigo would suppress contractions:
+
+| | official | ours |
+|---|---|---|
+| items WITH a service-role speaker | 37.5 | **8.4** |
+| items WITHOUT one | 45.5 | **13.2** |
+| share of items with one | 10 of 378 (2.6 %) | 53 of 104 (51 %) |
+
+Official keeps contracting at a counter; our casual items are still 3.4× below
+official's casual items. It is a writing habit
+(「〜ています」「〜ておきます」「〜なければなりません」), not a consequence of setting —
+though the last row is independent corroboration of §7.3's 問題1 setting quota,
+on a cleaner denominator.
+
+**(b) 言い換え — Shin Kanzen IV-2, p.52.** 「選択肢では、話の中の長い説明を、別の
+言い方で簡単に短くまとめている」「2人の話を1つにしている場合もあります」. Measured
+within our corpus only: of 53 keyed 問題1/2 options, **40 (75 %) have every
+2-char kanji/katakana token already present in their own script block**. Worked
+official contrast, 7/2025 問題2-1番: 「そこに入りたいんだ」 → key 「しゅっぱんしゃで
+働く」.
+
+*No official percentage is given on purpose.* Official booklet options are
+kana-leaning (see (d)), so matching their tokens against a kanji script
+understates their overlap and would fabricate a flattering gap. Ours is an
+absolute against a rule the book states.
+
+**(c) 間接的な答え方 — Shin Kanzen II-2-B, p.29.** Replies that are questions:
+official **13 %** of 973; ours **0 of 264**. Keyed replies opening with an
+explicit acceptance marker: ours 15 %. Per sitting, official question-replies
+range **0–15, median 4** — so the archive minimum is 0 and this cannot be gated
+at the usual threshold; it stays a reading task.
+
+**(d) Option orthography.** 297 official 問題1/2 options: mean kanji ratio
+**0.298**, 32 % above 0.35. Our 416: **0.472**, 73 % above 0.35, every paper
+denser than any official sitting that parses. Owner and reasoning:
+`jlpt-exam-structure` §"Printed options are kana-LEANING". Per-sitting
+distribution is NOT measured — only 2–6 of 31 `booklet.md` extracts expose their
+listening option blocks to a parser, so no per-paper threshold is defensible
+until `extract_jlpt_n2_new.py` reads those pages reliably.
+
 ### 7.4 Reproducing §7
 
 Same five rules as §6, plus:

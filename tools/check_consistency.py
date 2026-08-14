@@ -3848,6 +3848,85 @@ def check_choukai_section_table(test_id: str, ct: str, bi):
            f"partial section")
 
 
+# G17. THE WRITING. G15 counts how often people react, G16 how the section is
+# built; this is the sentences themselves, measured against the three Shin Kanzen
+# 実力養成編 chapters that name what N2 listening tests
+# (official_register.md §7.6). Two of the four findings are gateable:
+#
+#   縮約形 per 10 k spoken chars   official 37.3 [22.4-67.4] n=31   ours 0.0-23.9
+#   keyed 問題1/2 option is a       (not measurable on official:     ours 75 %
+#     verbatim token-match          their options are kana-leaning)
+#
+# The other two are recorded and NOT gated, on purpose. 問題4 question-replies:
+# official's per-sitting range is 0-15, so a threshold at the archive minimum is
+# 0 and catches nothing. Option kanji ratio: only 2-6 of 31 booklet.md extracts
+# expose their listening option blocks, so no per-sitting distribution exists to
+# threshold against. Inventing either number would be the exact failure this file
+# keeps a §7.1 about.
+CONTRACTION_RE = re.compile(r"(ちゃう|ちゃっ|じゃう|じゃっ|とく[。、]|とい[てた]"
+                            r"|なきゃ|なくちゃ|てる|でる|てた|てない|とけ)")
+CONTRACTION_MIN = 22.4          # the archive MINIMUM, not its median (37.3)
+KEY_VERBATIM_MAX = 0.50         # design threshold — see the note above
+
+
+def check_choukai_contractions(test_id: str, st: str, m):
+    """Dialogue is spoken Japanese, not written Japanese (G17)."""
+    spoken = "".join(h.group(2) for h in
+                     (m.SPEAKER_RE.match(l.strip()) for l in st.splitlines())
+                     if h and h.group(1) in m.SPEAKER_MAP)
+    if not spoken:
+        return skip(f"{test_id}: 聴解 dialogue contracts like speech", "no turns")
+    rate = 10000 * len(CONTRACTION_RE.findall(spoken)) / len(spoken)
+    warn(f"{test_id}: 聴解 dialogue contracts like speech ({rate:.1f}/10k)",
+         rate >= CONTRACTION_MIN,
+         f"official runs {CONTRACTION_MIN}-67.4 with a median of 37.3, in 31/31 "
+         f"sittings; seven of the eight papers on disk sit BELOW the archive "
+         f"minimum and one contains no contracted form at all. 〜てる/〜とく/"
+         f"〜ちゃう/〜なきゃ are the first chapter of Shin Kanzen's 実力養成編 "
+         f"(p.16) because parsing them IS the tested skill — a script written in "
+         f"「〜ています」「〜ておきます」「〜なければなりません」 stops testing it. Keigo "
+         f"is no excuse: official service-counter items still measure 37.5 "
+         f"(choukai-audio §Register rule 3)")
+
+
+def check_choukai_key_paraphrase(test_id: str, ct: str, st: str, m, bi):
+    """A keyed option restates the deciding line; it does not copy it (G17)."""
+    keys, printed = choukai_key_table(ct, bi), choukai_printed_options(ct, bi)
+    verbatim, total = [], 0
+    for sec in (1, 2):
+        blocks = {choukai_item_label(l[0]): "".join(l)
+                  for l in choukai_item_blocks(choukai_span(st, sec), m, True)}
+        for (s, lab), opts in printed.items():
+            if s != sec or lab == "例" or lab not in blocks:
+                continue
+            keyed = keys.get((sec, lab))
+            if not keyed or keyed not in opts:
+                continue
+            tokens = set(re.findall(r"[一-鿿]{2,}|[゠-ヿ]{3,}", opts[keyed]))
+            if not tokens:
+                continue
+            total += 1
+            if all(t in blocks[lab] for t in tokens):
+                verbatim.append(f"問題{sec}-{lab}「{opts[keyed]}」")
+    if not total:
+        return skip(f"{test_id}: 聴解 keys paraphrase the script",
+                    "no key/option pair this gate can compare")
+    share = len(verbatim) / total
+    warn(f"{test_id}: 聴解 keys paraphrase the script "
+         f"({len(verbatim)}/{total} are verbatim token-matches)",
+         share <= KEY_VERBATIM_MAX,
+         "; ".join(verbatim[:4]) + f" — every content word of these keys is "
+         f"already in their own dialogue, so the item is answerable by catching "
+         f"one noun. Shin Kanzen IV-2 (p.52): 「選択肢では、話の中の長い説明を、別の"
+         f"言い方で簡単に短くまとめている」. Swap one content word for its result or "
+         f"category, or merge two speakers' turns into one option. The 解説 still "
+         f"quotes the script verbatim — quotable is not copyable. Threshold "
+         f"{KEY_VERBATIM_MAX:.0%} is a DESIGN choice, not a measured band: "
+         f"official options are kana-leaning, so token-matching them against a "
+         f"kanji script would understate their overlap "
+         f"(choukai-items.md §'The 解説 QUOTES the script')")
+
+
 def check_choukai_judgment_mix(test_id: str, st: str, ct: str, m, bi):
     """The mix rules only a human can settle — WARN, and QA owns them (G16)."""
     keys = choukai_key_table(ct, bi)
@@ -4391,6 +4470,9 @@ def check_tests():
                 check_choukai_same_speaker_lines(d.name, st, m)
                 check_choukai_section_table(d.name, ct, bi)
                 check_choukai_judgment_mix(d.name, st, ct, m, bi)
+                # G17 — the sentences themselves, vs Shin Kanzen 実力養成編.
+                check_choukai_contractions(d.name, st, m)
+                check_choukai_key_paraphrase(d.name, ct, st, m, bi)
             check_spec_target_items(d, gt, st, bi)
         else:
             check("聴解スクリプト.txt present", False, "canonical name required")

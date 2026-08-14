@@ -68,9 +68,11 @@ against generated papers written without this section:
 | turns opening with a filler/reaction (はい・うん・ああ・ええ・あの・うーん・へえ・でも…) | **35 %** | 18 % |
 | hesitation tokens per paper (`FILLERS` list) | **median 27, band 9–48** | 0–4, now 23–58 |
 | flat contradiction 「〜ではありません」 per 10 k chars | **0.4** | 17.1 |
+| 縮約形 (〜てる/〜とく/〜ちゃう/〜なきゃ) per 10 k chars | **37.3 [22.4–67.4]**, 31/31 sittings | 0.0–23.9 — **7 of 8 papers below the archive minimum** |
 
-Four binding rules follow. They are not style advice: a paper that fails them
-is solvable by pattern, which is a content defect.
+Five binding rules follow. They are not style advice: a paper that fails them
+is solvable by pattern, or stops testing a skill the exam tests, which is a
+content defect either way.
 
 1. **Every item gets reaction turns.** Aim for the official rate — roughly one
    short reaction turn in five. They are also what makes the audio breathe:
@@ -90,11 +92,34 @@ is solvable by pattern, which is a content defect.
    per paper against our 4.2, and `あ、` 12.9 against our 22.5. **Spend the
    budget on the other speaker acknowledging (うん/そうなんだ/へえ), not on the
    current speaker stalling.**
-3. **Match the register to the relationship, and hold it.** Casual
+3. **Contract the verbs — 縮約形 is a TESTED skill, not flavour.** The first
+   chapter of Shin Kanzen's 実力養成編 is 「音の変化や縮約形」 (p.16), because
+   parsing them IS part of N2 listening. Its inventory is the writing target:
+
+   | write | not |
+   |---|---|
+   | 〜てる / 〜でる | 〜ている / 〜でいる |
+   | 〜とく / 〜どく | 〜ておく / 〜でおく |
+   | 〜ちゃう / 〜じゃう | 〜てしまう / 〜でしまう |
+   | 〜なきゃ / 〜なくちゃ | 〜なければ / 〜なくては |
+   | 〜てく / 〜でく | 〜ていく / 〜でいく |
+   | 〜ちゃ / 〜じゃ | 〜ては / 〜では |
+
+   **Official runs 22.4–67.4 per 10 k spoken chars, median 37.3, in 31/31
+   sittings. Seven of our eight papers are below the archive MINIMUM** — 0.0,
+   1.5, 3.8, 6.4, 11.1, 15.8, 18.0, 23.9. One paper contains not a single
+   contracted form in 45 minutes.
+   **Keigo is not the excuse it looks like**: official items with a service-role
+   speaker still measure **37.5**, ours 8.4 — and our own non-service items
+   measure 13.2 against official's 45.5. This is a writing habit
+   (「〜ています」「〜ておきます」「〜なければなりません」), independent of who is
+   speaking. Keep them out of the ANNOUNCER's lines, which are read text — the
+   same carve-out as fillers.
+4. **Match the register to the relationship, and hold it.** Casual
    (うん / 〜だけど / 〜かな / 〜じゃない) for students, family, close
    colleagues; keigo (はい / ええ / 承知しました / おっしゃる) at a counter, to a
    部長, from a 医者. One speaker must not drift between them mid-item.
-4. **Kill a wrong option the way official does.** Official order of preference
+5. **Kill a wrong option the way official does.** Official order of preference
    is **reassign** it to a named third party, **defer** it (その前に / 先に /
    あとで / 後回しになってました), **refuse** it (難しい / 無理 / 見送), or note
    it is **already done** (もう〜てある) — flat 「〜ではありません」 is the last

@@ -152,6 +152,39 @@ review):
 
 問題5 shape: **2 item blocks, 3 answers** — `1番` + `2番` (二つの質問), **all choices spoken**. Keys are `問5-1`, `問5-2-1`, `問5-2-2`.
 
+### Printed options are kana-LEANING — the booklet is not a reading test
+
+The 問題1/2 options official prints are deliberately light on kanji:
+
+```
+1 ページがぬけていないか かくにんする      1 食品かんれんの仕事をする
+2 本のデータをとうろくする                2 大学院に進む
+3 本にカバーをつける                     3 研究の仕事をする
+4 イベントで使う本を選ぶ                  4 しゅっぱんしゃで働く
+```
+
+確認 → かくにん, 登録 → とうろく, 照明 → しょうめい, 間隔 → かんかく,
+印刷 → いんさつ, 出版社 → しゅっぱんしゃ — while 本, 選ぶ, 進む, 広く stay in
+kanji. It is editorial, not extraction noise: the same option mixes both
+(「絵と絵のかんかくを広くする」). Measured over **297 official options**, mean
+kanji ratio **0.298**, and only 32 % of options exceed 0.35. Our eight papers
+run **0.472** across 416 options, with 73 % above 0.35 — every paper denser than
+any official sitting that parses.
+
+**Why it is a format fact and not a style preference:** 問題2 gives the examinee
+exactly 20 s (`GAP_OPTION_READING`) to read four options before the talk starts.
+Kanji spent there is decoding time not spent listening, so a kanji-dense option
+set converts a 聴解 item into a 漢字 item — the one thing the section must not
+test. Target **≤0.35 kanji**, and reach for kana on the *tested* content word
+(the thing the audio says) rather than on grammar.
+
+**Not gated, and here is why:** a per-paper threshold needs a per-sitting
+official distribution, and only 2–6 of the 31 `booklet.md` extracts expose their
+問題1/2 option blocks to a parser (the listening pages OCR inconsistently). The
+pooled 297-option figure is sound; the per-sitting range is not measured. Fixing
+the listening-page extraction in `extract_jlpt_n2_new.py` is what would let this
+become a WARN.
+
 ### 問題5 prints nothing — a deliberate divergence from official
 
 **This repo prints NO options anywhere in 問題5**, for 1番 and 2番 alike. The

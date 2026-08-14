@@ -137,6 +137,42 @@ the *official* paper (official distractors are often paraphrased). The
 mechanical check cannot tell "reassigned" from "never said"; the written
 grounding line is what does.
 
+## The 解説 QUOTES the script; the OPTION restates it
+
+These are two different jobs, and collapsing them is why **40 of our 53 keyed
+問題1/2 options (75 %) contain no content word that is not already in the
+script** — every 漢字/カタカナ token of the key appears verbatim in its own
+dialogue. Such an item is answerable by catching one noun; nothing has to be
+understood, tracked, or held.
+
+Shin Kanzen teaches the opposite as the ポイント理解 skill (実力養成編 IV-2,
+p.52): 「選択肢では、話の中の長い説明を、**別の言い方で簡単に短くまとめている**
+ことがあります。また、**2人の話を1つにしている**場合もあります。」 Official does
+exactly that — 7/2025 問題2-1番 says 「植物専門の本を作ってる出版社があって、
+**そこに入りたいんだ**」 and keys 「しゅっぱんしゃで**働く**」. 入りたい → 働く *is*
+the item.
+
+So, for 問題1/2/5:
+
+- **The keyed option paraphrases the deciding line** — at least one content word
+  of the key must NOT appear in the script (a verb swapped for its result, a
+  concrete action summed up as a category, two turns merged into one clause).
+- **The 解説 still quotes the script verbatim**, exactly as
+  §"Construction order" requires. Quotable ≠ copyable: the quote proves the
+  option is grounded, the paraphrase is what makes it an item.
+- **Reach for 「2人の話を1つにする」.** Official merges what A proposes with what B
+  accepts into a single option; we have never once done it, and it is the
+  cheapest way to make an option unmatchable to any single line.
+- Distractors keep sharing vocabulary with the script — that is what makes them
+  tempting, and `make check`'s token-overlap WARN exists to catch the opposite
+  failure (an option nobody says). **Only the KEY carries the paraphrase load.**
+
+Not gated as a FAIL: official listening options are kana-leaning
+(`jlpt-exam-structure` §"Printed options are kana-LEANING"), so token matching
+against a kanji script would understate official overlap and manufacture a
+flattering comparison. `make check` reports our own share as a WARN against a
+design threshold, not a measured band.
+
 ## 問題3 (概要理解): the narration names the SETTING, never the topic
 
 Official 問題3 item lines are 「1番 ラジオで女の人が話しています。」/「2番 講演会で
@@ -278,6 +314,32 @@ reads as a public announcement, recast it as a specific staff member speaking
 directly to the specific customer in front of them before scripting it (e.g.
 `係員:お客様、館内では携帯電話のご利用をお控えください。`) — same tested
 phrase/register, but now addressed to someone who can answer.
+
+### The answer is often INDIRECT — 間接的な答え方
+
+Shin Kanzen gives 即時応答 a whole section for this (実力養成編 II-2-B, p.29). Its
+worked example: 男「一緒に行きませんか。」 → the pattern answers are (1)「ええ、
+行きましょう。」 = 受け and (2)「ごめんなさい、今日は行けないんです。」 = 断り, but
+the real one is (3)「ちょっと、熱があるんです。」 — a fact with no direct relation to
+the question, from which the listener must infer 出かけられない → 断り. The book's
+rule: 「断ったり反論したりするなど、相手にとって残念な答えの場合には、特に(3)の
+ような間接的な答え方が多く使われます」.
+
+Our 264 replies contain **zero** questions; official's 973 contain **13 %**
+(「私、ちょっと食べてあげようか？」「他のも注文する？」). And 15 % of our keys open
+with an explicit acceptance marker (はい／わかりました／承知), i.e. they take the
+prompt head-on — the 2-A pattern the book teaches you to move *past*.
+
+- **Write some keys as inferences, not answers.** State the obstacle, the
+  consequence, or the counter-fact and let it imply the reply. This is
+  especially the right shape when the honest answer is 断り or 反論.
+- **A reply may be a question.** Aim for the official median of ~4 per paper;
+  returning a question is the most natural indirect form in Japanese.
+- **Not gated**, and the reason is instructive: official's per-sitting range for
+  question-replies is **0–15 (median 4)**, so a floor at the archive minimum
+  would be 0 and would catch nothing. Papers with none are inside the archive;
+  papers with none *and* every key an explicit acceptance are not, and only a
+  reader can tell those apart (`exam-qa-review` §4).
 
 ### The three replies must not be はい / いいえ / では
 
