@@ -16,7 +16,13 @@ Every defect this repo has shipped came from an agent that had the rule
 available and did not read it. Not from a hard problem. From skipping.
 (Past defects: duplicated options and mis-keyed 問題8 items despite the rules
 already being written; a skipped harvest step that reused a previous seed and
-shipped a re-skin of an earlier paper with every automated gate green.)
+shipped a re-skin of an earlier paper with every automated gate green; a QA
+fix hand-substituted an undrawable 問題1 target instead of running
+`--reroll <category>` as `question-authoring`/`exam-blueprint` already said
+to, shipping a pool-item repeat — `make check`'s own rotation gate would not
+have caught it anyway, since it checked every category against one spec-wide
+weakest-cooldown number instead of each category's own window; see
+`exam-blueprint/SKILL.md` "Rotation model", 2026-08-17.)
 
 1. **Read `AGENTS.md` end to end before your first tool call.** All of it.
    It is short on purpose.

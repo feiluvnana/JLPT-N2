@@ -1,0 +1,371 @@
+{
+ "seed": "91572330+reroll(kanji_reading,91572330)+reroll(kanji_reading,22083132)",
+ "generated_at": "2026-08-17 10:05:39",
+ "test_id": "20260817_1",
+ "rotation": {
+  "recency_source": "ledger",
+  "history_len": 9,
+  "cooldown": 6
+ },
+ "items": {
+  "kanji_reading": [
+   "制限(せいげん)",
+   "協力(きょうりょく)",
+   "公演(こうえん)",
+   "お歳暮(おせいぼ)",
+   "未満(みまん)"
+  ],
+  "orthography": [
+   "宴会",
+   "警備",
+   "形式",
+   "苦情",
+   "雨戸"
+  ],
+  "word_formation": [
+   "高〜(高気圧)",
+   "〜観(人生観)",
+   "〜料(送料)"
+  ],
+  "context_words": [
+   "曲げる",
+   "同程度",
+   "会計",
+   "堅い",
+   "焼き立て",
+   "眺め",
+   "防犯対策"
+  ],
+  "paraphrase": [
+   "急激だ(急速だ)",
+   "強引だ(無理やり)",
+   "生意気だ(偉そうだ)",
+   "いい加減だ",
+   "あわれだ"
+  ],
+  "usage": [
+   "連携",
+   "ニーズ",
+   "揃える",
+   "遭う",
+   "取る"
+  ],
+  "grammar_p7": [
+   "〜といったら",
+   "〜に相違ない",
+   "〜とはいうものの",
+   "〜につけて",
+   "〜といえば",
+   "〜をもとに(して)",
+   "〜というわけではない",
+   "〜につき",
+   "〜に応えて",
+   "〜としても・にしても・にしろ・にせよ",
+   "〜に関して",
+   "〜限りは"
+  ],
+  "grammar_p8": [
+   "〜でなければ",
+   "目的達成(〜ように努力する)",
+   "補足追加(〜なお…)",
+   "否定強調(〜などあろうはずがない)",
+   "感情強調(〜てたまらない)"
+  ],
+  "quick_response": [
+   "こちらの不手際でご迷惑をおかけし、誠に申し訳ございません。",
+   "ゴミの分別方法、ご存知ですか。",
+   "耳が痛い",
+   "部長、先ほどお電話をいただいた件ですが、折り返しご連絡いたしましょうか。",
+   "先日の件、せっかくご提案いただいたのに、お役に立てず申し訳ありません。",
+   "お言葉に甘えて",
+   "予約時間の15分前にお越しください。",
+   "手が空く",
+   "この度のプロジェクト、私にお任せいただけますでしょうか。",
+   "あの企画、思ったより反応がよくてびっくりしたよ。",
+   "お構いなく"
+  ],
+  "listening_scenarios": [
+   {
+    "scenario": "会社:社内報の記事依頼",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "公民館:サークル発表会の準備",
+    "theme": "地域活性化"
+   },
+   {
+    "scenario": "社労士:手続相談",
+    "theme": "行政・手続き"
+   },
+   {
+    "scenario": "100均:大口注文",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "科学イベント:体験コーナーの案内",
+    "theme": "科学・技術"
+   },
+   {
+    "scenario": "工場見学:安全講習の説明",
+    "theme": "科学・技術"
+   },
+   {
+    "scenario": "書店:取り寄せの依頼",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "マンション管理組合:宅配ボックス設置数維持の合意形成",
+    "theme": "住まい",
+    "origin": "reauthored",
+    "note": "Originally drawn as 商店街のスタンプラリーイベント企画 (theme 地域活性化); QA finding F3 (qa/qa-report-20260817_1.md) found zero occurrences of this scenario in the shipped 聴解スクリプト.txt via grep. Per logs/topics.json's Stage-3 notes, 聴解問題5-1番 first drafted at theme 地域活性化 (matching this draw) drifted to 消費・経済 during an earlier fix pass, then was re-themed a second time because the resulting 聴解問題5 headline theme set repeated 20260814_1's under the union-of-subitems reading of cross-test rule 4 (exam-blueprint/SKILL.md 'The four theme rules'). The surface was rewritten to マンション管理組合の宅配ボックス設置数維持の合意形成 (theme 住まい) — same 3-speaker 担当者/男1/男2 opinion-integration archetype and same keep-as-is outcome; key unchanged (1番=1). Recorded here per the 20260811_1 precedent (exam-blueprint/SKILL.md Part II, and the kanji_reading[0] entry in this same file) for reauthored-scenario spec/ledger provenance."
+   },
+   {
+    "scenario": "総務:備品申請",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "出版社:原稿の締切確認",
+    "theme": "メディア・情報"
+   },
+   {
+    "scenario": "靴修理:引取日",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "資格試験の受験会場と持ち物案内",
+    "theme": "教育"
+   },
+   {
+    "scenario": "自転車店:防犯登録の手続き",
+    "theme": "交通"
+   },
+   {
+    "scenario": "ラジオ:食生活の話",
+    "theme": "食"
+   },
+   {
+    "scenario": "税務署:確定申告",
+    "theme": "行政・手続き"
+   },
+   {
+    "scenario": "大学:研究室の配属説明",
+    "theme": "教育"
+   },
+   {
+    "scenario": "料理教室:材料の持ち物案内",
+    "theme": "食"
+   },
+   {
+    "scenario": "仮眠カフェ:会員プラン選定",
+    "theme": "睡眠・健康",
+    "origin": "reauthored",
+    "note": "Originally drawn as 空港:搭乗手続きの案内 (theme 交通); QA finding F3 (qa/qa-report-20260817_1.md) found zero occurrences of this scenario in the shipped 聴解スクリプト.txt via grep. Stage 3 initially authored 聴解問題5-2番 as an airport-lounge-plan sequential-elimination dialogue matching this draw, then rewrote it during theme-collision repair (this paper's 聴解問題5 headline theme set repeated 20260814_1's headline set under the union-of-subitems convention recorded in logs/topics.json) to 仮眠カフェの会員プラン選定 (theme 睡眠・健康) — same single-decision-maker sequential-elimination archetype (係員/男/女), same keys (質問1=4, 質問2=2). Recorded here per the 20260811_1 precedent (exam-blueprint/SKILL.md Part II, and the kanji_reading[0] entry in this same file) for reauthored-scenario spec/ledger provenance."
+   },
+   {
+    "scenario": "会社:人事面談",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "契約:解除条件と違約金の確認",
+    "theme": "働き方",
+    "origin": "reauthored",
+    "note": "Originally drawn as 人事部からの健康診断のお知らせ (theme 睡眠・健康); QA finding F3 (qa/qa-report-20260817_1.md) found zero occurrences of this scenario in the shipped 聴解スクリプト.txt via grep, and identified 聴解問題2-3番 (『契約を解除するときの条件と違約金の規定…気になる』, 聴解.md:198) as the shipped-but-undrawn counterpart by elimination — this is the third of three drawn-not-shipped entries paired against the third of three shipped-not-drawn scenarios that QA's grep found. logs/topics.json records this surface's shipped content and theme (働き方) but, unlike the two 聴解問題5 substitutions above, does not separately narrate this swap's cause; recorded here as a provenance repair per the 20260811_1 precedent (exam-blueprint/SKILL.md Part II, and the kanji_reading[0] entry in this same file) so the spec/ledger stop pointing at an entry with zero occurrences in the shipped script."
+   },
+   {
+    "scenario": "カルチャースクールの受講手続き",
+    "theme": "教育"
+   }
+  ],
+  "reading_topics": [
+   {
+    "topic": "待つことの意味",
+    "theme": "人間関係"
+   },
+   {
+    "topic": "ライドシェアの解禁と課題",
+    "theme": "交通"
+   },
+   {
+    "topic": "子育て世代の通勤と保育",
+    "theme": "子育て・家族"
+   },
+   {
+    "topic": "地方議会のオープン化",
+    "theme": "行政・手続き"
+   },
+   {
+    "topic": "マーケティング戦略と顧客満足度",
+    "theme": "消費・経済"
+   },
+   {
+    "topic": "SNSと青少年",
+    "theme": "デジタル化"
+   },
+   {
+    "topic": "リサイクル自転車の販売会案内",
+    "theme": "環境"
+   },
+   {
+    "topic": "量子コンピュータ",
+    "theme": "科学・技術"
+   },
+   {
+    "topic": "地方移住",
+    "theme": "地域活性化"
+   },
+   {
+    "topic": "趣味のシェアリングサービス",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "topic": "アルゴリズムが作る情報の偏り",
+    "theme": "メディア・情報"
+   },
+   {
+    "topic": "防災備蓄の見直し",
+    "theme": "防災"
+   }
+  ]
+ },
+ "answer_positions": {
+  "問題1_語彙": [
+   3,
+   1,
+   4,
+   2,
+   4
+  ],
+  "問題2_語彙": [
+   3,
+   4,
+   1,
+   1,
+   2
+  ],
+  "問題3_語彙": [
+   3,
+   4,
+   2
+  ],
+  "問題4_語彙": [
+   1,
+   3,
+   2,
+   4,
+   3,
+   2,
+   4
+  ],
+  "問題5_語彙": [
+   3,
+   2,
+   2,
+   4,
+   1
+  ],
+  "問題6_語彙": [
+   2,
+   1,
+   1,
+   4,
+   3
+  ],
+  "問題7": [
+   1,
+   4,
+   2,
+   1,
+   3,
+   3,
+   4,
+   1,
+   3,
+   2,
+   2,
+   4
+  ],
+  "問題8": [
+   4,
+   1,
+   2,
+   3,
+   4
+  ],
+  "問題9": [
+   4,
+   3,
+   1,
+   2
+  ],
+  "問題10": [
+   2,
+   4,
+   2,
+   1,
+   3
+  ],
+  "問題11": [
+   2,
+   4,
+   1,
+   3,
+   3,
+   4,
+   2,
+   1
+  ],
+  "問題12": [
+   3,
+   1
+  ],
+  "問題13": [
+   2,
+   4,
+   3
+  ],
+  "問題14": [
+   1,
+   2
+  ],
+  "聴解_問題1": [
+   2,
+   1,
+   4,
+   3,
+   3
+  ],
+  "聴解_問題2": [
+   3,
+   4,
+   3,
+   1,
+   2,
+   1
+  ],
+  "聴解_問題3": [
+   3,
+   2,
+   4,
+   1,
+   1
+  ],
+  "聴解_問題4": [
+   1,
+   1,
+   2,
+   3,
+   1,
+   3,
+   2,
+   2,
+   3,
+   2,
+   1
+  ],
+  "聴解_問題5": [
+   1,
+   4,
+   2
+  ]
+ }
+}

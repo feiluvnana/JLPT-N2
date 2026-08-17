@@ -124,6 +124,17 @@ only ロウ/いたわ(る)/ねぎら(う) and no look-alike gives a ～わる ve
 every real ～わる verb (ことわる・かわる・くわわる・まじわる・さわる…) is in an
 unrelated field, so (b)={}. Avoid shipping invented non-words or unrelated-kanji sets on an undrawable target.
 
+**"Ask exam-blueprint to re-draw it" means run `sample_items.py --reroll <category>`
+— never hand-pick a replacement, even one that is itself a real, well-formed N2
+word.** `20260817_1` found `居酒屋(いざかや)` undrawable exactly this way and then
+swapped in `潔い(いさぎよい)` — this doc's own example word two paragraphs up — by
+hand instead of rerolling; it shipped a repeat of an item drawn only 7 tests
+earlier, deep inside `kanji_reading`'s real 303-draw cooldown, because a hand
+substitution never touches the ledger `--reroll` updates (`exam-blueprint`
+"Rotation model", 2026-08-17). A hand-picked word is unverifiable against
+rotation no matter how sound its distractor set is — the reroll is not
+bureaucracy, it is the only path that checks the pool's memory at all.
+
 ### All four readings must RESOLVE — check them against the books, do not judge them
 
 **2026-08-11: this procedure used to run as a scripted lookup against `openjlpt`,

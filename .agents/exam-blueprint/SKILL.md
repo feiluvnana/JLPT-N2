@@ -395,6 +395,31 @@ both raw string and `head()`. **A red line there means `draw()` is broken — ne
 category's cooldown to make it green.** Keep every pool ≥ 2.5× the per-test draw; inspect with
 `sample_items.py --check-depth`.
 
+**2026-08-17: both `assert_rotation()` and `make check`'s `check_spec_rotation()` checked
+every category against ONE spec-wide scalar — a real bug, found alongside a separate
+one-shot process violation.** `spec["rotation"]["cooldown"]` is documented as "the WEAKEST
+level actually applied to any category" (below), i.e. whichever category's pool was thin
+enough to force relaxation that draw — `grammar_p8`/`word_formation` relaxing to 2-6 while
+`kanji_reading` (305× headroom, real window ~300 draws) needed 303. Both checks compared
+EVERY category's items against that one weak number, so anything with a deeper pool than
+the draw's thinnest category was never actually re-verified. Separately, `20260817_1`'s QA
+pass found the drawn 問題1 target `居酒屋(いざかや)` undrawable (empty branch-(b) distractor
+set) and swapped in `潔い(いさぎよい)` — the exact word `moji-goi.md`'s own example
+names — by hand instead of `--reroll kanji_reading`, which the rule already said to do
+("Build the set BEFORE you accept the target" in `question-authoring`). Because the
+substitution never touched the sampler, the single-scalar check would have passed it
+anyway even if it HAD run again — it shipped a `kanji_reading` repeat only 7 draws after
+`20260810_1`, comfortably inside the 303-draw window and comfortably outside the buggy
+6-draw one the gate actually checked. Fixed both functions to verify per category via
+`cooldown_for(cat, len(pools[cat]))` — the same ceiling `draw()` itself enforces — instead
+of one shared number. The 9 tests shipped before this fix (`20260807_1` through
+`20260814_1`) carry real, unverifiable-after-the-fact rotation claims from the pre-fix
+checks; they are marked `"rotation": {"legacy": true}` and `check_spec_rotation()` skips
+them by design (never re-sample an already-authored test to clear a legacy skip). Any
+new test is held to the per-category check with no exemption. **The standing rule is
+unchanged and was never the gap: an undrawable target still means `--reroll <category>`,
+never a hand-picked substitute** — the gap was that nothing enforced it after the fact.
+
 **A draw count that disagrees with `DRAW` is a ledger defect, not history.** A recorded
 item burns cooldown whether or not the paper asked about it; entries written under
 superseded `DRAW` values over-record items no question used. **Trim over-recorded items;

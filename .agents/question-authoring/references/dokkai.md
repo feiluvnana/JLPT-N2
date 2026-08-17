@@ -78,6 +78,27 @@ lacked 「こそが」, the other read it as 主張 because it opened with 「�
 には無理がある」); this sentence exists to make that call mechanical instead of
 a coin flip between reviewers.
 
+**Genre carve-out (20260817_1 QA G-NEW-1):** the override above does not apply
+when the rejection targets the AUTHOR'S OWN prior self-understanding inside a
+first-person, non-argumentative essay — a memoir realising "this was never
+just X, it's part of who I am" is 随筆 (a personal reframe), not 主張 (a
+societal/policy claim aimed at persuading the reader), even though both use
+the same 「…ではなく…だ」 surface grammar. Before applying the override, check
+whether the passage's OTHER paragraphs argue FOR a course of action addressed
+to the reader (主張) or simply narrate a personal realisation with no
+prescription (随筆) — the override fires only on the former.
+
+**Thirteen surfaces do not force thirteen instances of the six shapes above.**
+6 shapes × cap 2 = 12 < 13, so at least one surface must sit OUTSIDE this
+taxonomy rather than forcing a 3rd instance into any shape (a self-granted
+"sanctioned exception" is not a valid resolution — 20260817_1's first QA round
+correctly rejected one). 問題14 is normally that surface: a flyer/notice has no
+authorial voice, argument, or personal reflection, and no closing move in the
+narrative sense these six shapes describe — it simply ends where its
+conditions list ends. Treat it as outside the taxonomy by default, and reserve
+the six shapes for the twelve essay-type surfaces (問9, 問10×5, 問11×4, 問12,
+問13), each shape capped at exactly 2.
+
 **The answerability consequence, which is the real damage.** When nine
 passages close the same way, their keys close the same way too: 20260810_1's
 52/54/56/58/60/62/64/69 were all the "human/attitude" option beside three

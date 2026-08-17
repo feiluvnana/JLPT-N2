@@ -578,34 +578,45 @@ def check_theme_spread(picked: list, cat: str) -> list[str]:
             for th, xs in counts.items() if len(xs) > cap]
 
 
-def assert_rotation(spec_items: dict, history: list, cooldown: int) -> None:
-    """R10 proof: nothing drawn may appear in the last `cooldown` ledger draws.
-
-    The filter lives in draw(); this is the independent re-check, in the same
-    spirit as the same-test collision assertion below. It compares on both the
-    raw text and head(), which is how recency_map keys them.
+def assert_rotation(spec_items: dict, history: list, pools: dict) -> None:
+    """R10 proof: nothing drawn may appear inside ITS OWN category's cooldown
+    window (`cooldown_for(cat, len(pools[cat]))`) — never a single spec-wide
+    scalar. `spec["rotation"]["cooldown"]` records only the WEAKEST cooldown
+    any category relaxed to (documented as such), so checking every category
+    against that one number under-checks every category deeper than the
+    thinnest one: a thin category relaxing to 2 made this check accept a
+    kanji_reading item (real window ~300 draws, 305x headroom) repeating only
+    7 draws back. `20260817_1` shipped exactly that — a hand-substitution
+    during QA that never went through `--reroll`, so this check never even
+    ran on it, and would have passed it anyway under the old single-scalar
+    form. Fixed 2026-08-17 (see exam-blueprint SKILL.md 'Rotation model').
     """
-    if cooldown <= 0 or not history:
+    if not history:
         return
-    recent: dict[str, str] = {}
-    for entry in history[-cooldown:]:
-        tid = str(entry.get("test_id"))
-        for xs in entry.get("items", {}).values():
-            for x in xs:
-                t = item_text(x)
-                recent.setdefault(t, tid)
-                recent.setdefault(head(t), tid)
     clashes = []
     for cat, xs in spec_items.items():
+        cool = cooldown_for(cat, len(pools.get(cat, [])))
+        if cool <= 0:
+            continue
+        recent: dict[str, str] = {}
+        for entry in history[-cool:]:
+            tid = str(entry.get("test_id"))
+            for cat_items in entry.get("items", {}).values():
+                for x in cat_items:
+                    t = item_text(x)
+                    recent.setdefault(t, tid)
+                    recent.setdefault(head(t), tid)
         for x in xs:
             t = item_text(x)
             tid = recent.get(t) or recent.get(head(t))
             if tid:
-                clashes.append(f"{cat}:「{t}」 (test {tid})")
+                clashes.append(f"{cat}:「{t}」 (test {tid}, needs its own "
+                                f"{cool}-draw cooldown)")
     if clashes:
-        sys.exit(f"rotation broken: {len(clashes)} item(s) drawn inside the "
-                 f"{cooldown}-draw cooldown: {'; '.join(clashes)} — this is a "
-                 f"bug in draw(), not a reason to lower cooldown_for()")
+        sys.exit(f"rotation broken: {len(clashes)} item(s) drawn inside their "
+                 f"own category's cooldown window: {'; '.join(clashes)} — "
+                 f"this is a bug in draw(), not a reason to lower "
+                 f"cooldown_for()")
 
 
 def check_pool_depths(pools: dict) -> None:
@@ -764,14 +775,14 @@ def main():
     if collisions:
         sys.exit(f"same-test collision (a bug in draw()): {collisions}")
 
-    # R10: prove the cooldown the spec claims, against the ledger it claims it
-    # from — everything recorded under a DIFFERENT test id. Do not reach for
-    # history[-1] here: on the reroll path this test's entry can sit anywhere
-    # in the list.
+    # R10: prove EVERY category's OWN cooldown_for() window against the
+    # ledger — everything recorded under a DIFFERENT test id. Do not reach
+    # for history[-1] here: on the reroll path this test's entry can sit
+    # anywhere in the list.
     prior_history = [h for h in history
                      if str(h.get("test_id")) != str(args.test_id)]
     spec["rotation"]["history_len"] = len(prior_history)
-    assert_rotation(rotation_check_items, prior_history, spec["rotation"]["cooldown"])
+    assert_rotation(rotation_check_items, prior_history, pools)
 
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
     spec_path.parent.mkdir(parents=True, exist_ok=True)

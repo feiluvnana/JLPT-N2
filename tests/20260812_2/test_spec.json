@@ -4,8 +4,10 @@
  "test_id": "20260812_2",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 6,
-  "cooldown": 2
+  "history_len": 5,
+  "cooldown": 2,
+  "legacy": true,
+  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17)."
  },
  "items": {
   "kanji_reading": [

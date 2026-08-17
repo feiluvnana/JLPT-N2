@@ -89,6 +89,15 @@ def load(rel: str):
 # The imported-/generated folder-name flag, owned by external-test-import.
 ORIGIN = load(".agents/external-test-import/scripts/origin.py")
 
+# Reuse lint_draft.py's contraction pattern list rather than maintaining a
+# second, narrower copy — the two diverged (this file's own set missed とど-,
+# ちゃえ, なくちゃ and the trailing-particle context on てる/でる etc.), which
+# let a script pass lint_draft's PASS-banded measurement while still WARNing
+# here on the same text (20260817_1 QA G9: 34.2/10k via lint_draft vs.
+# 18.6/10k via this file, both claiming to measure the same official band).
+_LINT_DRAFT = load("tools/lint_draft.py")
+CONTRACTION_RE = _LINT_DRAFT.CONTRACTION_RE
+
 
 def check(name: str, ok: bool, detail: str = "") -> bool:
     print(f"  {'ok  ' if ok else 'FAIL'}  {name}" + (f" — {detail}" if detail and not ok else ""))
@@ -864,6 +873,14 @@ def check_grammar_p8_targets(gt: str, opts: dict[int, list[str]], test_id: str):
         hay = re.sub(r"\s+", "", blocks.get(q, "") + "".join(o) + "§" + pairs)
         for seg in segs:
             probes = {seg[: len(seg) - k] for k in range(3) if len(seg) - k >= 2}
+            # な-adjective/noun stems take で, not て, before a て-form marker
+            # (心配でたまらない, 残念でたまらない) — probe that variant too, or
+            # every such target WARNs on its own most textbook-standard use
+            # (20260817_1 QA G5: 問題8-47 感情強調〜てたまらない realized as
+            # 心配でたまらない, a real false positive).
+            if seg.startswith("て") and len(seg) > 1:
+                de = "で" + seg[1:]
+                probes |= {de[: len(de) - k] for k in range(3) if len(de) - k >= 2}
             if not any(p in hay for p in probes):
                 missing.append(f"{q}:「{label}」 (segment 「{seg}」 absent)")
                 break
@@ -1632,6 +1649,16 @@ def check_note_band(name: str, gt: str):
     What remains machinable without any corpus: a definition assembled from
     the term's own kanji (洗髪：髪の毛を洗うこと) teaches nothing, regardless of
     what inventory the term is in.
+
+    This is a per-character substring heuristic, not a semantic one — it also
+    fires on a compound term whose definition legitimately reuses one of its
+    own characters while adding real new content (20260817_1 QA G6: 量子ビット
+    glossed via 量子コンピュータ, 顧客ロイヤルティ glossed via 顧客 as its own
+    necessary grammatical subject — both hand-judged non-circular, since each
+    definition supplies a predicate/mechanism the term's own kanji do not).
+    Treat every hit here as READ-BOTH-AND-DECIDE, not an automatic reword: true
+    circularity is "the definition's only content is the headword's own
+    kanji restated" (needs 調整 defining 調整), not "shares a character."
     """
     self_ref = []
     for ln in gt.splitlines():
@@ -1644,8 +1671,9 @@ def check_note_band(name: str, gt: str):
             self_ref.append(f"{term}：{defn[:12]}…")
     warn(f"{name}: （注N） definitions introduce words the term does not contain",
          not self_ref,
-         f"circular: {self_ref} — a definition built from the term's own kanji "
-         f"teaches nothing (question-authoring)")
+         f"candidates (read each, do not reword on sight): {self_ref} — flag "
+         f"only if the definition's sole content is the headword's own kanji "
+         f"restated with no added predicate/mechanism (question-authoring)")
 
 
 # 問題11. The four banned pure-retrieval shapes appear ZERO times across the
@@ -2844,7 +2872,22 @@ def check_harvest_provenance():
 ROTATION_GRANDFATHERED = {"1"}
 
 
-def check_spec_rotation(d, spec: dict, sample):
+def check_spec_rotation(d, spec: dict, sample, pools: dict):
+    """R10: every item must clear ITS OWN category's cooldown window.
+
+    Previously this checked every category against the single
+    `rotation.cooldown` scalar the spec records — documented as "the WEAKEST
+    level applied to any category" (exam-blueprint 'Rotation model'), i.e.
+    whichever category's pool was thin enough to force relaxation that draw.
+    That under-checks every category deeper than the thinnest one: a
+    grammar_p8/word_formation relaxation down to 2 let this gate accept a
+    kanji_reading item (305x headroom, real window ~300 draws) that repeated
+    only 7 draws back. `20260817_1` shipped exactly that via a hand
+    substitution during QA that never ran `--reroll` — this gate re-reads
+    `spec["items"]` fresh off disk regardless of how an item got there, so a
+    per-category check catches a silent substitution the same as a bad draw.
+    Fixed 2026-08-17; see exam-blueprint SKILL.md 'Rotation model'.
+    """
     name = f"{d.name}: test_spec records the rotation it was drawn under"
     rot = spec.get("rotation")
     if not isinstance(rot, dict):
@@ -2862,40 +2905,55 @@ def check_spec_rotation(d, spec: dict, sample):
           f"recency_source={rot.get('recency_source')!r} — only 'ledger' names "
           f"a source this gate can re-check (exam-blueprint)")
 
-    cool = rot.get("cooldown")
-    if not isinstance(cool, int) or cool <= 0:
-        return skip(f"{d.name}: rotation claim holds against logs/ledger.json",
-                    f"cooldown={cool!r} — the draw claims no rotation, so "
-                    f"there is nothing to verify")
+    per_cat_name = f"{d.name}: rotation claim holds — nothing drawn appears " \
+                   "inside its own category's cooldown window"
+    if rot.get("legacy"):
+        return skip(per_cat_name,
+                    "spec is grandfathered legacy — generated before this "
+                    "gate checked each category against its OWN "
+                    "cooldown_for() window instead of the spec's single "
+                    "weakest-category scalar; never re-sample an "
+                    "already-authored test to clear this "
+                    "(exam-blueprint 'Rotation model')")
+
     hist = ledger_history()
     self_idx = next((i for i, h in enumerate(hist)
                       if str(h.get("test_id")) == d.name), None)
     prior = hist[:self_idx] if self_idx is not None else \
         [h for h in hist if str(h.get("test_id")) != d.name]
     if not prior:
-        return skip(f"{d.name}: rotation claim holds against logs/ledger.json",
-                    "no other draws in the ledger to rotate against")
-    recent: dict[str, str] = {}
-    for entry in prior[-cool:]:
-        tid = str(entry.get("test_id")) # leaving the previous harvest in place causes a test to become a re-skin of a previous paper.
-        for xs in (entry.get("items") or {}).values():
-            for x in xs:
-                t = pool_entry_text(x)
-                recent.setdefault(t, tid)
-                recent.setdefault(sample.head(t), tid)
+        return skip(per_cat_name, "no other draws in the ledger to rotate against")
+
     clashes = []
     for cat, xs in (spec.get("items") or {}).items():
+        if cat not in sample.DRAW or cat not in pools:
+            continue
+        cool = sample.cooldown_for(cat, len(pools[cat]))
+        if cool <= 0:
+            continue
+        recent: dict[str, str] = {}
+        for entry in prior[-cool:]:
+            tid = str(entry.get("test_id"))
+            for xs2 in (entry.get("items") or {}).values():
+                for x2 in xs2:
+                    t2 = pool_entry_text(x2)
+                    recent.setdefault(t2, tid)
+                    recent.setdefault(sample.head(t2), tid)
         for x in xs:
             t = pool_entry_text(x)
+            if not t:
+                continue
             tid = recent.get(t) or recent.get(sample.head(t))
             if tid:
-                clashes.append(f"{cat}:「{t}」 (test {tid})")
-    check(f"{d.name}: rotation claim holds — nothing drawn appears in the last "
-          f"{cool} ledger draw(s)", not clashes,
-          "; ".join(clashes[:6]) + " — the spec claims a cooldown the ledger "
-          "contradicts, so either draw() is broken or the spec was edited "
-          "after sampling. Never lower COOLDOWN to make this green "
-          "(exam-blueprint 'Rotation is proved in the spec')")
+                clashes.append(f"{cat}:「{t}」 (test {tid}, needs its own "
+                                f"{cool}-draw cooldown)")
+    check(per_cat_name, not clashes,
+          "; ".join(clashes[:6]) + " — an item was drawn, or hand-substituted, "
+          "inside its OWN category's cooldown window (cooldown_for(cat, "
+          "current pool depth), never the spec's single weakest-category "
+          "scalar). If a target proves undrawable mid-authoring, "
+          "`--reroll <category>` — never substitute an item from memory "
+          "(exam-blueprint 'Rotation model')")
 
 
 def check_rotation_inputs():
@@ -2962,11 +3020,13 @@ def check_rotation_inputs():
         return skip("test_spec blend contract", "no generated test_spec.json files")
 
     sample = load(".agents/exam-blueprint/scripts/sample_items.py")
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    pools = json.loads(pools_path.read_text(encoding="utf-8")) if pools_path.is_file() else {}
     for d, spec in specs:
         print(f"  {d.name}/test_spec.json")
         check_spec_blend(spec)
         check_spec_adjunct(spec)
-        check_spec_rotation(d, spec, sample)
+        check_spec_rotation(d, spec, sample, pools)
         check_spec_pool_kanji_reading(d, spec)
         if not harvest:
             continue
@@ -3868,8 +3928,6 @@ def check_choukai_section_table(test_id: str, ct: str, bi):
 # expose their listening option blocks, so no per-sitting distribution exists to
 # threshold against. Inventing either number would be the exact failure this file
 # keeps a §7.1 about.
-CONTRACTION_RE = re.compile(r"(ちゃう|ちゃっ|じゃう|じゃっ|とく[。、]|とい[てた]"
-                            r"|なきゃ|なくちゃ|てる|でる|てた|てない|とけ)")
 CONTRACTION_MIN = 22.4          # the archive MINIMUM, not its median (37.3)
 KEY_VERBATIM_MAX = 0.50         # design threshold — see the note above
 
@@ -4455,7 +4513,15 @@ def check_tests():
             st = script.read_text(encoding="utf-8")
             ccut = bi.KEY_HEADING.search(ct)
             if ccut:
-                check_explanation_quotes(choukai.name, ct[ccut.start():],
+                key_region = ct[ccut.start():]
+                # The セクション構成表's free-text audit notes (e.g. a cross-test
+                # comparison quoting a PRIOR test's old structure) sit after the
+                # key tables and are not claims about THIS script — stop the
+                # quote-traceability scan at that heading (20260817_1 QA G8).
+                sec_table = re.search(r"^#+\s*セクション構成表", key_region, re.M)
+                if sec_table:
+                    key_region = key_region[:sec_table.start()]
+                check_explanation_quotes(choukai.name, key_region,
                                          st + ct[: ccut.start()])
                 check_fabricated_distractors(choukai.name, ct[ccut.start():])
                 check_choukai_kaisetsu_keys(d.name, ct, bi)

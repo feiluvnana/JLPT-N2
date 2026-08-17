@@ -204,6 +204,15 @@ then name what let each defect through.
   re-review cannot see, because the mismatch is BETWEEN files. Check this
   explicitly whenever a fix round changes a topic/scenario, not just when a
   paper first ships.
+- **The same fix must also update every relevant field in that surface's OWN
+  `logs/topics.json` entry** (`surfaces`, `themes`, `shapes`, `closing_moves`
+  where applicable) — not only `test_spec.json`/`logs/ledger.json`. 20260817_1
+  shipped a fix round that correctly updated `聴解問題5-1番`'s `surfaces` and
+  `themes` fields to the shipped 宅配ボックス scenario but left its `shapes`
+  field describing the discarded pre-fix draw (G-NEW-3) — a partial update
+  that passes every gate silently because no check reads `shapes` against
+  `surfaces` for internal consistency. Update all four fields together, in the
+  same pass, whenever any one of them changes.
 - **The reviewer does not negotiate the bar.** No waiving a rule because the
   test is "mostly fine", the deadline is close, or the author already ran the
   gate. If a rule here seems wrong, propose the change in the report; apply the

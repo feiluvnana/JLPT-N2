@@ -57,7 +57,7 @@ STEM_BLOCK_RE = re.compile(
 )
 OPT_ITEM_RE = re.compile(r"[1-4][.．][ \t]*(.*?)(?=[ \t\n]*[1-4][.．][ \t]|\Z)", re.S)
 SUBSECTION_RE = re.compile(r"^###[ \t]*(.+?)[ \t]*$", re.M)
-SECTION_RE = re.compile(r"^##[ \t]*問題(\d+)[ \t]*$", re.M)
+SECTION_RE = re.compile(r"^##[ \t]*問題(\d+)(?:[ \t]+\S.*)?$", re.M)
 
 
 def strip_markup(text: str) -> str:

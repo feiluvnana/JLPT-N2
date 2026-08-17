@@ -135,8 +135,19 @@ def analyze_scramble(item: dict, verbose: bool = False):
             (opts[perm[3]], T)
         ]
         for left, right in junction_pairs:
-            pair_str = left[-4:] + right[:4]
-            if JUNCTION_RE.search(pair_str):
+            lseg = left[-4:]
+            pair_str = lseg + right[:4]
+            boundary = len(lseg)
+            # A junction defect is a clash AT THE SEAM between two adjacent
+            # option strings — a match that lands entirely inside one side's
+            # own text (e.g. こと's own と + a real trailing object/subject
+            # particle: 「会議のことを」, 「両親のことが」) is not a junction at
+            # all, and previously self-triggered a FAIL on both option's own
+            # tail regardless of what actually sits next to it (20260817_1 QA
+            # G-NEW-2: items 46/47, a common, grammatical ことを/ことが
+            # construction, both flagged "0 valid permutations").
+            if any(mo.start() < boundary < mo.end()
+                   for mo in JUNCTION_RE.finditer(pair_str)):
                 has_clash = True
                 break
 
