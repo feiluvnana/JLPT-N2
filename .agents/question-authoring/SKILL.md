@@ -301,3 +301,16 @@ before calling any authoring work done.
 `make check` reads the 問題9 tags, the 問題14 quote pairs, and the marked-span
 bold/marker pairing, and FAILs on them; the other three artifacts are read by
 `exam-qa-review`.
+
+**読解 quality — three more rule clusters live in `references/dokkai.md`, not
+duplicated here** (2026-08-17 note/key audit): (1) a （注N） gloss must never
+leak the fact its own item tests, and its headword must clear a same-paper
+reuse check that `make check`'s `check_note_band_reuse()` now enforces
+mechanically; (2) a keyed 読解
+option must never be answerable purely from the stem's own quoted marked span,
+and a short option is not exempt from the verbatim-lift check just because it
+can't reach the 50-char floor; (3) the correct answer must not habitually be
+the longest option — the corpus ran 73.5% vs. an official 29% baseline. Read
+`references/dokkai.md` §"（注N） glosses" and §"読解 keys — paraphrase" in full
+before authoring or reviewing any 問題9–14 content; do not rely on this
+one-paragraph summary while drafting.

@@ -347,7 +347,57 @@ sentence needs a reader (`exam-qa-review` step 3).
     implicit claim that it needs explaining. Before finalizing any （注N）
     target, check it against every 問題1–6 stem/option/key already drawn for
     this test; a word tested elsewhere in the same paper as plain N2
-    vocabulary can never also be a （注N） target here.
+    vocabulary can never also be a （注N） target here. **This is no longer
+    author-honor-system only** — `check_note_band_reuse()` FAILs a same-paper
+    match mechanically (a plain string search, no wordlist needed), because
+    the 2026-08-17 note audit found the identical defect shipped independently
+    in three more papers with nobody catching it by eye: `20260811_1`
+    抑える（読解注1）doubling as `問題2`'s own item-8 key, and `20260813_1`
+    負担（読解注2）doubling as `問題4`'s own item-11 stem word. A THIRD shape
+    from the same audit — `20260813_2` glossed 仮眠 once via （注1） then
+    reused it unglossed ~6 more times in the very same passage — looked
+    machinable the same way (repeats inside its own passage, not another 問題)
+    but is NOT: a passage's own genuinely specialized subject noun
+    (ライドシェア, フィルターバブル, 推薦アルゴリズム…) legitimately repeats
+    just as often precisely because it IS the passage's topic, so a raw
+    repeat-count check flags nearly every passage and teaches nobody to trust
+    it. Treat repetition as a prompt for the human reader, not proof: if a
+    glossed word keeps reappearing unglossed, ask whether that is because it's
+    the passage's specialized subject (fine) or because it never needed
+    explaining in the first place (仮眠's case) — the same operational test
+    (①above-band, ②non-circular) decides it either way, repeat count is only
+    a reason to look twice.
+  - **The band call is still mostly manual, and it undershoots as often as it
+    overshoots.** The same 2026-08-17 audit hand-reviewed every （注N） in ten
+    generated papers and found roughly a THIRD of all glosses (18–52% per
+    paper, no paper clean) target ordinary N2-or-easier vocabulary with no
+    figurative/technical excuse at all — words like クレーム, 議会,
+    アーカイブ, 懸念, 検証, 遠慮, 対話, 委ねる, 沈黙, 示唆, 発酵食品, こつ,
+    相談役, 培養, 水素, 実感, 化学物質, 摩擦, 妥当, 助成, 共生, 栞, 衰退,
+    端末, 安否, 代替, 郷土料理, 解明する, 惣菜, 厄介, 障壁, 検証, 対話 —
+    none of these are N1, onomatopoeic, domain-jargon, or figurative; they are
+    everyday or textbook-standard N2 words that any prepared examinee already
+    knows. Treat this list as worked examples of the failure mode, not a
+    closed enumeration (same caveat as the BANNED list above) — the test is
+    still the two conditions, not membership in either list.
+  - **A note can leak the answer even when its band and its circularity are
+    both fine.** A gloss's job is meaning-only; if its definition also states
+    the fact, cause, or comparison the item is testing, the reader can answer
+    from the glossary without engaging the passage at all. Confirmed cases:
+    `20260817_1` glossed 重ね合わせ as 「複数の状態を同時に併せ持つこと」 and
+    item 57 asks exactly what 重ね合わせ means — the note IS the answer; the
+    same paper's デコヒーレンス note answers item 58 the same way, and its
+    フィルターバブル note opens with the item 67 key's own first clause.
+    `20260814_1` glossed 物理的環境 as 「人々の意識や規則ではなく、実際の
+    道路や建物などの具体的な空間構造」 for the paper's 筆者の最も言いたいこと
+    item — the note states the passage's whole thesis contrast before the
+    reader reaches the final paragraph. Before finalizing a gloss, read the
+    item(s) anchored on that word/span and ask: does my definition already
+    answer this? If yes, generalize the definition (state only what the word
+    MEANS, never why it matters or what follows from it) or gloss a
+    different, less load-bearing word instead. No mechanical check can catch
+    this reliably (it requires reading the item against the note); flag it in
+    QA the way `exam-qa-review` already flags the two-answer hunt.
 - **「ここでは」 is not the defect.** Official uses it freely in definition
   lines (July 2025 glosses 像を結ぶ as 「ここでは、姿がわかる」) — the ban is
   about glossing a *basic* word circularly, not about the phrase. A
@@ -408,3 +458,44 @@ turns 主張理解 into string matching. `make check` FAILs a keyed 読解 optio
 the mean of the other three — against 138 official keyed options the longest is
 61 chars and the highest ratio 1.55, so no official item trips the pair. That
 gate constant survives the archive; keep it.
+
+**A short option can still be a pure lift — the 50-char floor was blind to
+it.** `20260817_1` item 59's key is only 17 JP chars ("問い合わせやクレームへの
+対応の速さ。") and is a 100%-verbatim clause straight from the passage — it
+never trips the ≥50-char check because the whole answerable fact happens to be
+short, not because it was paraphrased. `check_verbatim_keys()` now ALSO FAILs
+any keyed option whose longest-common-substring against the passage is ≥90% of
+the option's own length, with no length floor — a short key is not exempt from
+paraphrasing just because it can't reach 50 chars.
+
+**A key must never be answerable purely from the stem's own quoted marked
+span.** When a stem anchors on `①**quoted clause**とあるが`, the key must
+require synthesizing something OUTSIDE that quoted clause (its cause, its
+consequence, a term it defines) — never just restate the clause the stem
+already handed the reader with a synonym or two swapped in. Confirmed shape,
+independently found in three papers: `20260810_2` items 61/63, `20260811_1`
+items 59/63/68 — each stem quotes a finding in full, and the key is that same
+finding lightly reworded, so a reader answers by string-matching the stem
+against the four options without engaging the sentences around it. This is a
+NEW risk the marked-span-bolding convention (`references/dokkai.md`
+§"Marked-span quoting") makes easier to fall into, not one it causes — the
+span is now pre-isolated, tempting an author to paste it straight into the
+key. Draft the key from the passage's surrounding reasoning, then check: does
+this option's wording depend on anything the stem itself didn't already show
+the reader? If not, rewrite it.
+
+**The correct answer is not allowed to be the longest option out of habit.**
+Measured over 200 items across ten generated papers (2026-08-17 audit): the
+key was the longest of the four options **73.5%** of the time, and strictly
+longer than all three distractors **58.5%** of the time — against an official
+baseline of **29%** longest (`official_calibration.md` §9, restated above). A
+test-taker who always picks the longest option would score roughly 74% on
+読解 without reading a single passage. This is a DISTRIBUTIONAL bias no
+per-item threshold can see — no single item needs to be egregious for the
+aggregate tendency to be exploitable. Write distractors to the SAME length
+band as the key by default (don't let a key run long because "the correct
+idea just needs more words" — it rarely does once paraphrased tightly), and
+treat "is my key noticeably the longest option again" as a running tally to
+watch across a paper's twenty 読解 items, the same way `question-authoring`
+already asks you to tally 事実把握/考え counts and closing-move shapes while
+drafting.

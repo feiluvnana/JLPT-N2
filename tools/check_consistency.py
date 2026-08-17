@@ -1712,6 +1712,39 @@ def check_note_band(name: str, gt: str):
          f"restated with no added predicate/mechanism (question-authoring)")
 
 
+def check_note_band_reuse(name: str, gt: str):
+    """A （注N） headword must never also be tested as ordinary vocabulary
+    elsewhere in this SAME paper's 問題1–6 (items 1–30) — a same-paper
+    self-contradiction the paper proves against itself, not a judgment call.
+
+    Until 2026-08-17 this rule (question-authoring/references/dokkai.md
+    §'（注N） glosses') existed only as author-honor-system prose, and it kept
+    shipping anyway: `20260811_1` glossed 抑える in 読解 while it was
+    `問題2` item 8's own key (仰える/迎える/抑える/押える); `20260813_1` glossed
+    負担 in 読解 while `問題4` item 11's own stem used it unglossed
+    ("住民の負担を軽減する"). Both prove the term is ordinary, already-tested
+    N2 vocabulary — the note's own implicit claim that it needs explaining is
+    falsified by the paper itself. This check is a plain substring search
+    against 問題1–6's own stems and options, no wordlist required.
+    """
+    m7 = re.search(r"^##\s*問題7\b", gt, re.M)
+    p16_text = gt[: m7.start()] if m7 else ""
+    hits = []
+    for ln in gt.splitlines():
+        m = NOTE_DEF.match(ln)
+        if not m:
+            continue
+        term = m.group(2).strip()
+        if len(term) >= 2 and term in p16_text:
+            hits.append(term)
+    check(f"{name}: no （注N） headword is reused as plain vocabulary in 問題1-6",
+          not sorted(set(hits)),
+          f"{sorted(set(hits))} — glossed in 読解 but ALSO appears as a "
+          f"stem/option word in this same paper's 問題1-6, which proves it is "
+          f"ordinary N2 vocabulary and must not be glossed "
+          f"(question-authoring/references/dokkai.md §'（注N） glosses')")
+
+
 # 問題11. The four banned pure-retrieval shapes appear ZERO times across the
 # last 15 sittings — not in 問題11 and not in 問題10/12/13/14 either
 # (official_calibration §4). Fully corroborated at n=15; this one stays a FAIL.
@@ -2021,13 +2054,25 @@ def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
 
         is_long_key = (kl >= LONG_KEY_MIN and mean > 0 and kl >= LONG_KEY_RATIO * mean)
         is_verbatim_lift = (lcs_len >= 20 and lcs_len >= 0.60 * len(flat_opt))
+        # A SHORT key is not exempt from paraphrasing just because it can't
+        # reach LONG_KEY_MIN: 20260817_1 item 59 is a 17-char key that is a
+        # 100% verbatim clause ("問い合わせやクレームへの対応の速さ。"), and
+        # both conditions above miss it (kl<50, lcs_len=17<20). 問題14 (70/71)
+        # is EXCLUDED — dokkai.md requires its keys to quote flyer cells
+        # verbatim by design (§'問題14 (情報検索)'), so high overlap there is
+        # correct, not a defect.
+        is_short_pure_lift = (q not in (70, 71) and flat_opt
+                               and lcs_len >= 0.90 * len(flat_opt))
 
-        if is_long_key or is_verbatim_lift:
+        if is_long_key or is_verbatim_lift or is_short_pure_lift:
             reason = []
             if is_long_key:
                 reason.append(f"{kl} chars vs {mean:.0f} mean")
             if is_verbatim_lift:
                 reason.append(f"LCS={lcs_len} chars ({lcs_len/len(flat_opt):.0%}) in passage")
+            if is_short_pure_lift and not is_verbatim_lift:
+                reason.append(f"short key is {lcs_len/len(flat_opt):.0%} verbatim "
+                              f"({lcs_len} of {len(flat_opt)} chars) — no length floor exempts this")
             hits.append(f"{q}({', '.join(reason)})")
 
     check(f"{name}: no 読解 key is far longer than its distractors or a verbatim lift", not hits,
@@ -2035,9 +2080,48 @@ def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
           f"keys top out at 61) and keep the four options close in length; a "
           f"key MAY be the longest (29% of official ones are), it may not be "
           f"long AND {LONG_KEY_RATIO}× the others (official max ratio 1.55). "
-          f"Flagged at ≥{LONG_KEY_MIN} JP chars and ≥{LONG_KEY_RATIO}× mean, or "
-          f"LCS ≥20 chars and ≥60% of key (question-authoring 問題10–14; "
+          f"Flagged at ≥{LONG_KEY_MIN} JP chars and ≥{LONG_KEY_RATIO}× mean, "
+          f"LCS ≥20 chars and ≥60% of key, or (any length, 問題10–13 only) "
+          f"LCS ≥90% of the whole key (question-authoring 問題10–14; "
           f"official_calibration §9)")
+
+
+# A per-item length/verbatim threshold (above) cannot see a DISTRIBUTIONAL
+# habit: measured over 200 読解 items across ten generated papers (2026-08-17
+# audit), the key was the longest of the four options 73.5% of the time
+# (58.5% strictly longer than all three distractors) against an official
+# baseline of 29% (official_calibration §9) — a test-taker who always guesses
+# the longest option would score ~74% without reading anything. No single
+# item in that measurement was egregious enough to trip LONG_KEY_RATIO; the
+# bias only shows up averaged across a whole paper. WARN, not FAIL: a paper
+# of 20 items is a small enough sample that a rate in the 30s-40s could be
+# noise, but every one of the ten measured papers sat at 60-90%, so a real
+# paper trips this with room to spare.
+LONGEST_KEY_RATE_WARN = 0.45
+
+
+def check_dokkai_longest_key_rate(name: str, keys: dict[int, int],
+                                   opts: dict[int, list[str]]):
+    n = n_longest = 0
+    for q in range(52, 72):
+        a, o = keys.get(q), opts.get(q) or []
+        if a is None or len(o) != 4 or not 1 <= a <= 4:
+            continue
+        lens = [jp_char_count(x) for x in o]
+        n += 1
+        if lens[a - 1] == max(lens):
+            n_longest += 1
+    if n == 0:
+        return skip(f"{name}: 読解 longest-key rate", "no keyed 読解 items")
+    rate = n_longest / n
+    warn(f"{name}: correct answer is not habitually the longest option "
+         f"({n_longest}/{n} = {rate:.0%})",
+         rate <= LONGEST_KEY_RATE_WARN,
+         f"{n_longest} of {n} keyed 読解 items ({rate:.0%}) are the (tied-)"
+         f"longest of their four options — official baseline is 29% "
+         f"(question-authoring/references/dokkai.md §'読解 keys — paraphrase'); "
+         f"rewrite distractors toward the key's length instead of letting the "
+         f"key run long by habit")
 
 
 # 解説 cells decide items, so a quote inside one is load-bearing. When it is
@@ -4458,6 +4542,7 @@ def check_tests():
         check_dokkai_span_anchor_bold(gengo.name, gengo_prose)
         check_note_pairing(d.name, gengo_prose)
         check_note_band(d.name, gt)
+        check_note_band_reuse(d.name, gt)
         if origin == "generated":
             check_dokkai_lengths(d.name, gengo_prose, bi)
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
@@ -4467,6 +4552,7 @@ def check_tests():
             check_mondai11_stems(d.name, gengo_prose)
             check_mondai13_closer(d.name, gengo_prose)
         check_verbatim_keys(d.name, gengo_prose, keys, opts, bi)
+        check_dokkai_longest_key_rate(d.name, keys, opts)
 
         # Only the 読解 key table quotes running text; the 文字・語彙 and 文法
         # tables put grammar glosses in 「」 by design, which is not a quote.
