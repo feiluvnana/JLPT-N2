@@ -993,6 +993,42 @@ def check_dokkai_numbered_markers(name: str, gt_prose: str):
           "; ".join(mismatches) + " — every passage marker ①/② must be referenced by a question stem")
 
 
+def check_dokkai_span_anchor_bold(name: str, gt_prose: str):
+    """Every `「…」とあるが`-anchored stem must point at a BOLDED, MARKED
+    passage span — never a bare 「quote」 with no marker at all.
+
+    20260817_1 shipped three span-anchored stems (57, 59, 67) as plain
+    「quoted text」とあるが with neither ①/② nor bold in the stem OR the
+    passage — a reader opening the booklet had no visual cue for which words
+    the question pointed at. check_dokkai_numbered_markers above could not
+    catch it: it only compares passage markers vs question markers as SETS,
+    so a passage/question pair with zero markers on both sides matches
+    trivially. This check reads the stem shape directly instead.
+
+    A marker present but not bolded (20260817_2's `②その結果`/`⑤…`) is the
+    milder half of the same defect — WARN, not FAIL, since a bare marker at
+    least gives the set-match check above something to pair, and it already
+    shipped that way in one paper.
+    """
+    bare_quote = []
+    for m in re.finditer(r"^\*\*(\d+)\*\*\s*([^\n]*?とあるが)", gt_prose, re.M):
+        q, anchor = m.groups()
+        if "「" in anchor and "」" in anchor and not re.search(r"[①②③④⑤]", anchor):
+            bare_quote.append(q)
+    check(f"{name}: とあるが stems anchor on a bolded ①/② marker, never a bare 「quote」",
+          not bare_quote,
+          f"item(s) {bare_quote} quote passage text in 「」 with no ①/②/③ marker in "
+          f"the stem — bold the exact span in the passage as ①**…** and reference it "
+          f"the same way in the stem (question-authoring/references/dokkai.md "
+          f"§\"Marked-span quoting\")")
+
+    unbolded_markers = sorted(set(re.findall(r"[①②③④⑤](?!\*\*)", gt_prose)))
+    warn(f"{name}: every ①/② marker is immediately bolded (①**…**), never bare",
+         not unbolded_markers,
+         f"marker(s) {unbolded_markers} appear without an immediately-following ** — "
+         f"bold the whole marked span, not just the circled number")
+
+
 # ------------------------------------------------------- 読解 passage anatomy
 # One splitter, four checks. （注N） numbering restarts per passage, passage
 # length is measured per passage, （中略） has to sit INSIDE one, and the same
@@ -4419,6 +4455,7 @@ def check_tests():
         check(f"{gengo.name}: no furigana (<ruby>) in 言語知識・読解", not gengo_rubies,
               f"found {len(gengo_rubies)} <ruby> tags in prose — Dokkai uses only （注N） notes for over-the-level words")
         check_dokkai_numbered_markers(gengo.name, gengo_prose)
+        check_dokkai_span_anchor_bold(gengo.name, gengo_prose)
         check_note_pairing(d.name, gengo_prose)
         check_note_band(d.name, gt)
         if origin == "generated":

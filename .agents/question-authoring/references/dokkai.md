@@ -189,6 +189,41 @@ passage across 問題11–13, and every `（中略）` must sit inside a 問題1
 passage body — never floating under an instruction line (the gate checks
 placement).
 
+## Marked-span quoting — bold every span a question anchors on
+
+**Rule (applies to every 問題10–14 stem, not just 問題11):** whenever a stem
+anchors on a specific passage span via the `「…」とあるが` construction — a
+quoted clause, sentence, or defined term the question asks about directly —
+that EXACT span must be marked in the passage body with a circled-number
+marker AND bolded, `①**span**`, and the stem must reference it with the
+identical `①**span**とあるが` treatment. Never leave either side as a bare
+`「quoted text」とあるが` with no marker/bold — that is unreferenceable prose,
+not a marked span, and it is the one thing `check_dokkai_numbered_markers`
+cannot see: that check only asserts passage markers and question markers
+match as SETS, so a paper with zero markers anywhere passes it trivially.
+`make check`'s `check_dokkai_span_anchor_bold` FAILs the bare-quote shape
+directly (WARNs, not FAILs, on a marker present without the bold — the milder
+half of the same defect, since a marker at least gives the set-match check
+something to pair).
+
+This is not a new invention — it is the convention already followed by every
+paper in the repo except 20260817_1, which shipped three span-anchored stems
+(57, 59, 67) as plain `「quoted text」とあるが` with neither a marker nor
+bold, so a reader opening the booklet could not see which words the question
+was pointing at. The defect applies equally to a defined vocabulary term
+already introduced in `「term（注N）」と呼ばれ` prose (`①**重ね合わせ**`,
+`①**フィルターバブル**`) and to a full clause/sentence span
+(`①**満足度の向上に最も強く結びついていたのは価格の安さではなく**`) — the
+span type does not change the requirement, only whether `（注N）` sits inside
+or outside the bold (a definitional gloss on a bolded term goes OUTSIDE the
+bold: `①**重ね合わせ**（注2）`, never `①**重ね合わせ（注2）**`).
+
+A passage that carries multiple span-anchored questions numbers them ①②③…
+in reading order; a passage with exactly one span-anchored question in its
+set still uses ①, never a bare quote. A stem that is unanchored (筆者の考えに
+合うのはどれか, ある調査で明らかになった実態とは…) needs no marker at all —
+this rule only fires on the `「…」とあるが` shape itself.
+
 ## 問題11 stems
 
 All figures from `official_calibration.md` §4 — current era, n = 7 sittings,

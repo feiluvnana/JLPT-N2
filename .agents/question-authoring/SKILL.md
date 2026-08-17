@@ -143,6 +143,12 @@ before calling any authoring work done.
 
 1. **Numbered markers pair 1-to-1 with stems.** Every `①**…**`/`②**…**` in a
    passage must be referenced by a question in that passage's set — no orphans.
+   The reverse direction is just as binding and easier to skip: every stem that
+   anchors on a quoted passage span (`「…」とあるが`) must point at a span that
+   is ITSELF marked and bolded — never a bare `「quoted text」とあるが` with no
+   `①**…**` in either the stem or the passage (20260817_1 shipped three: 57,
+   59, 67). `references/dokkai.md` §"Marked-span quoting" owns the rule;
+   `make check`'s `check_dokkai_span_anchor_bold` FAILs the bare-quote shape.
 2. **Four DIFFERENT options.** The same string twice in one set is a second
    correct answer (t2 shipped `1. 削減 2. 削減`). Read the four back aloud.
 3. **The key goes where `answer_positions` says — a SILENT spec means STOP.**
@@ -290,6 +296,8 @@ before calling any authoring work done.
 | 問題9 category tag | the four 問題9 rows, opening the 解説 cell | four distinct bracketed tags, exactly one `[内容推論]` | `references/bunpou.md` |
 | 問題14 two-cell quotes | `## 読解` rows 70 and 71 | two distinct `「…」` spans present in the flyer | `references/dokkai.md` |
 | 聴解 option grounding | `聴解.md` 問題1/2/3 解説 cells | `1 ✗「script line」→ 理由`, one line per wrong option | `references/choukai-items.md` |
+| Marked-span bold+marker | 問題10–14 passage AND its stem, wherever a stem uses `「…」とあるが` | `①**span**とあるが` on both sides, never a bare quote | `references/dokkai.md` §"Marked-span quoting" |
 
-`make check` reads the 問題9 tags and the 問題14 quote pairs and FAILs on them;
-the other four artifacts are read by `exam-qa-review`.
+`make check` reads the 問題9 tags, the 問題14 quote pairs, and the marked-span
+bold/marker pairing, and FAILs on them; the other three artifacts are read by
+`exam-qa-review`.
