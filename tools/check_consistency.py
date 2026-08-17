@@ -2053,16 +2053,12 @@ def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
             lcs_len = match.size
 
         is_long_key = (kl >= LONG_KEY_MIN and mean > 0 and kl >= LONG_KEY_RATIO * mean)
-        is_verbatim_lift = (lcs_len >= 20 and lcs_len >= 0.60 * len(flat_opt))
-        # A SHORT key is not exempt from paraphrasing just because it can't
-        # reach LONG_KEY_MIN: 20260817_1 item 59 is a 17-char key that is a
-        # 100% verbatim clause ("問い合わせやクレームへの対応の速さ。"), and
-        # both conditions above miss it (kl<50, lcs_len=17<20). 問題14 (70/71)
-        # is EXCLUDED — dokkai.md requires its keys to quote flyer cells
-        # verbatim by design (§'問題14 (情報検索)'), so high overlap there is
-        # correct, not a defect.
+        # For items 52–69 (問題10–13), key must be genuinely paraphrased:
+        # LCS >= 15 chars and >= 50% of option, or LCS >= 20 chars
+        is_verbatim_lift = (q not in (70, 71) and ((lcs_len >= 15 and lcs_len >= 0.50 * len(flat_opt)) or lcs_len >= 20))
+        # Short keys must not be pure verbatim lifts:
         is_short_pure_lift = (q not in (70, 71) and flat_opt
-                               and lcs_len >= 0.90 * len(flat_opt))
+                               and lcs_len >= 0.85 * len(flat_opt))
 
         if is_long_key or is_verbatim_lift or is_short_pure_lift:
             reason = []
@@ -2072,7 +2068,7 @@ def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
                 reason.append(f"LCS={lcs_len} chars ({lcs_len/len(flat_opt):.0%}) in passage")
             if is_short_pure_lift and not is_verbatim_lift:
                 reason.append(f"short key is {lcs_len/len(flat_opt):.0%} verbatim "
-                              f"({lcs_len} of {len(flat_opt)} chars) — no length floor exempts this")
+                              f"({lcs_len} of {len(flat_opt)} chars) — must be paraphrased")
             hits.append(f"{q}({', '.join(reason)})")
 
     check(f"{name}: no 読解 key is far longer than its distractors or a verbatim lift", not hits,
@@ -2081,27 +2077,65 @@ def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
           f"key MAY be the longest (29% of official ones are), it may not be "
           f"long AND {LONG_KEY_RATIO}× the others (official max ratio 1.55). "
           f"Flagged at ≥{LONG_KEY_MIN} JP chars and ≥{LONG_KEY_RATIO}× mean, "
-          f"LCS ≥20 chars and ≥60% of key, or (any length, 問題10–13 only) "
-          f"LCS ≥90% of the whole key (question-authoring 問題10–14; "
+          f"LCS ≥15 chars and ≥50% of key, LCS ≥20 chars, or "
+          f"LCS ≥85% of key (question-authoring 問題10–14; "
           f"official_calibration §9)")
 
 
-# A per-item length/verbatim threshold (above) cannot see a DISTRIBUTIONAL
-# habit: measured over 200 読解 items across ten generated papers (2026-08-17
-# audit), the key was the longest of the four options 73.5% of the time
-# (58.5% strictly longer than all three distractors) against an official
-# baseline of 29% (official_calibration §9) — a test-taker who always guesses
-# the longest option would score ~74% without reading anything. No single
-# item in that measurement was egregious enough to trip LONG_KEY_RATIO; the
-# bias only shows up averaged across a whole paper. WARN, not FAIL: a paper
-# of 20 items is a small enough sample that a rate in the 30s-40s could be
-# noise, but every one of the ten measured papers sat at 60-90%, so a real
-# paper trips this with room to spare.
-LONGEST_KEY_RATE_WARN = 0.45
+# A per-item length/verbatim threshold set at the official 1.8-ratio band
+# (check_verbatim_keys, LONG_KEY_RATIO) cannot see a DISTRIBUTIONAL habit:
+# measured over 200 読解 items across ten generated papers (2026-08-17 audit),
+# the key was the longest of the four options 73.5% of the time (58.5%
+# strictly longer than all three distractors) against an official baseline of
+# 29% (official_calibration §9) — a test-taker who always guesses the longest
+# option would score ~74% without reading anything. No single item in that
+# measurement was egregious enough to trip LONG_KEY_RATIO; the bias only
+# showed up averaged across a whole paper, and recurred in every one of the
+# ten papers (60-90% each) despite the softer per-item gate already existing.
+# Fix (2026-08-17, this repo's own house policy — stricter than the official
+# archive on this one axis, on purpose): a hard per-item cap at max/min <=1.3,
+# FAIL not WARN. See check_dokkai_option_length_balance() and
+# question-authoring/references/dokkai.md §'読解 keys — all four options
+# within ~30% of each other, no exceptions'. This distributional check ensures
+# that keys are unpredictable (~20–35% longest, matching official baseline).
+DOKKAI_OPTION_RATIO_MAX = 1.3
+
+
+def check_dokkai_option_length_balance(name: str, opts: dict[int, list[str]]):
+    bad = []
+    for q in range(52, 72):
+        o = opts.get(q) or []
+        if len(o) != 4:
+            continue
+        lens = [jp_char_count(x) for x in o]
+        mx, mn = max(lens), min(lens)
+        if mn == 0:
+            continue
+        ratio = mx / mn
+        if ratio > DOKKAI_OPTION_RATIO_MAX:
+            bad.append(f"{q}({lens}, {ratio:.2f}x)")
+    check(f"{name}: every 読解 item's four options sit within "
+          f"max/min <= {DOKKAI_OPTION_RATIO_MAX} JP chars of each other",
+          not bad,
+          f"{'; '.join(bad)} — lengthen the short distractors (a real, "
+          f"passage-groundable clause, not filler) toward the key, or tighten "
+          f"an over-long key; a length outlier is answerable by string length "
+          f"alone without reading the passage (question-authoring/references/"
+          f"dokkai.md §'読解 keys — all four options within ~30% of each "
+          f"other, no exceptions')")
+
+
+LONGEST_KEY_RATE_MAX = 0.35
+DOKKAI_LENGTH_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1",
+    "20260812_1", "20260812_2", "20260813_1", "20260813_2",
+    "20260814_1"
+}
 
 
 def check_dokkai_longest_key_rate(name: str, keys: dict[int, int],
-                                   opts: dict[int, list[str]]):
+                                   opts: dict[int, list[str]],
+                                   origin: str = "generated"):
     n = n_longest = 0
     for q in range(52, 72):
         a, o = keys.get(q), opts.get(q) or []
@@ -2114,14 +2148,27 @@ def check_dokkai_longest_key_rate(name: str, keys: dict[int, int],
     if n == 0:
         return skip(f"{name}: 読解 longest-key rate", "no keyed 読解 items")
     rate = n_longest / n
-    warn(f"{name}: correct answer is not habitually the longest option "
-         f"({n_longest}/{n} = {rate:.0%})",
-         rate <= LONGEST_KEY_RATE_WARN,
-         f"{n_longest} of {n} keyed 読解 items ({rate:.0%}) are the (tied-)"
-         f"longest of their four options — official baseline is 29% "
-         f"(question-authoring/references/dokkai.md §'読解 keys — paraphrase'); "
-         f"rewrite distractors toward the key's length instead of letting the "
-         f"key run long by habit")
+    if origin == "generated":
+        if name in DOKKAI_LENGTH_GRANDFATHERED:
+            warn(f"{name}: correct answer is not predictably the longest option "
+                 f"({n_longest}/{n} = {rate:.0%}, target <= 35%)",
+                 rate <= LONGEST_KEY_RATE_MAX,
+                 f"{n_longest} of {n} keyed 読解 items ({rate:.0%}) are the (tied-)"
+                 f"longest of their four options [pre-rule paper — a FAIL for any id not grandfathered]")
+        else:
+            check(f"{name}: correct answer is not predictably the longest option "
+                  f"({n_longest}/{n} = {rate:.0%}, target <= 35%)",
+                  rate <= LONGEST_KEY_RATE_MAX,
+                  f"{n_longest} of {n} keyed 読解 items ({rate:.0%}) are the (tied-)"
+                  f"longest of their four options — official baseline is 29% "
+                  f"(target 20%–35%, question-authoring/references/dokkai.md §'読解 keys — unpredictable option lengths'); "
+                  f"lengthen distractors so that distractors are often longer than the key, "
+                  f"and vary key length rank across items (rank 1: ~4-6, rank 2: ~4-6, rank 3: ~4-6, rank 4: ~4-6)")
+    else:
+        warn(f"{name}: correct answer is not habitually the longest option "
+             f"({n_longest}/{n} = {rate:.0%})",
+             rate <= 0.45,
+             f"{n_longest} of {n} keyed 読解 items ({rate:.0%}) are longest")
 
 
 # 解説 cells decide items, so a quote inside one is load-bearing. When it is
@@ -4548,11 +4595,12 @@ def check_tests():
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
             check_dokkai_closing_reframe(d.name, gengo_prose, bi)
             check_dokkai_abs_quantifiers(d.name, opts)
+            check_dokkai_option_length_balance(d.name, opts)
             check_chuuryaku(d.name, gengo_prose)
             check_mondai11_stems(d.name, gengo_prose)
             check_mondai13_closer(d.name, gengo_prose)
         check_verbatim_keys(d.name, gengo_prose, keys, opts, bi)
-        check_dokkai_longest_key_rate(d.name, keys, opts)
+        check_dokkai_longest_key_rate(d.name, keys, opts, origin=origin)
 
         # Only the 読解 key table quotes running text; the 文字・語彙 and 文法
         # tables put grammar glosses in 「」 by design, which is not a quote.

@@ -351,11 +351,11 @@ pass owns it.
   this pass measures 1249/2451/572/989/604 (JP) and 1348/2604/572/1042/793
   (all-char). Three numbers for one paper means at least two measurement
   methods are undocumented. Fix by naming the method next to the number.
-- **「keep all four 読解 options within ±40% of each other」** — 133 of 140
-  current-era items (95%) satisfy max/min ≤ 1.8, so the rule is *mostly* right,
-  but official ships items at 2.10 (12/2025-66) and 2.09 (12/2023-65), and 29%
-  of official keys are the longest of their four options. State it as a target
-  with the measured 95th percentile, not an invariant.
+- **「keep all four 読解 options within max/min ≤ 1.30 and unpredictable key length」** —
+  Official archive baseline shows 29% of keys are the longest option (evenly distributed across ranks).
+  This repo enforces a per-item cap at max/min ≤ 1.30 and paper-level longest-key rate in the 20%–35%
+  band, preventing the artificial tell where the correct answer was the longest option in 75% of items.
+  Keys in 問題10–13 must be genuinely paraphrased, not verbatim text lifts.
 - **「問題1 の 4 択はすべて実在語」 / 「音読みは非語」** — neither is universal; see §5.
 - **「no bare adverb on a 問題8 card」** — contradicted; see §7. The real
   invariant is single-solution uniqueness, which a bare adverb endangers but

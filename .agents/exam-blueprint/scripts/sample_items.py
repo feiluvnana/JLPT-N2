@@ -184,12 +184,14 @@ ANSWER_SECTIONS = [
 ]
 
 
-# R17: per-section evenness is not paper-level evenness. The old plan built
-# each section as [(i % width) + 1 ...], so every section's REMAINDER always
-# landed on the lowest positions: summed over the 18 four-choice sections that
-# is +15 on position 1, +7 on 2, +4 on 3, +0 on 4, and a paper has shipped 31
-# keys on position 1 against 17 on position 4. The remainders are now
-# allocated across sections instead of inside them.
+# R17: key arrangement must be unpredictable across sections.
+# Do NOT force each individual section/mondai to have floor(count/4) of each
+# position 1..4 (which made small sections completely predictable, e.g. every 4-item
+# section having {1,2,3,4} and every 2-item section having distinct numbers).
+# Instead, the 90 four-choice items are globally balanced across the whole paper
+# (each position 1..4 receives 22 or 23 items to satisfy POSITION_BAND = (19, 27)),
+# shuffled with no 3 identical answers in a row anywhere (no 1-1-1), and then
+# sliced into sections in order — matching official JLPT past exams.
 #
 # PROVISIONAL BAND — retune, don't reinterpret. 90 four-choice items / 4 = 22.5,
 # and ±4 is the working tolerance until the measured spread of the official
@@ -228,47 +230,47 @@ def balanced_positions(rng: random.Random, count: int, width: int) -> list[int]:
 def balanced_position_plan(rng: random.Random,
                            sections: list[tuple[str, int, int]]
                            ) -> tuple[dict[str, list[int]], dict[int, int]]:
-    """Answer positions for every section, balanced ACROSS the four-choice ones.
+    """Answer positions for every section, globally balanced ACROSS the paper.
 
-    Each section still gets floor(count/4) of every position, so no section is
-    itself lopsided; only the leftover `count % 4` slots are contested, and they
-    go to whichever positions are furthest behind paper-wide. Returns the plan
-    and the realised per-position totals over the four-choice items.
+    Instead of forcing each section to contain equal quotas of 1..4 (which made
+    answers predictable within each mondai), the full paper sequence of 90
+    four-choice items is generated with balanced global totals (22/23 each),
+    shuffled with no 3-in-a-row repeats, and sliced into sections.
     """
     quad = [s for s in sections if s[2] == 4]
     total = sum(c for _, c, _ in quad)
     lo, hi = POSITION_BAND
-    alloc: dict[str, list[int]] = {}
-    running: dict[int, int] = {}
-    for _ in range(200):
-        running = {p: 0 for p in (1, 2, 3, 4)}
-        alloc = {}
-        for name, count, _w in sorted(quad, key=lambda s: -s[1]):
-            base, rem = divmod(count, 4)
-            for p in running:
-                running[p] += base
-            # remainder -> the positions with the smallest running total,
-            # ties broken randomly so the plan is not the same every seed
-            extras = sorted((1, 2, 3, 4),
-                            key=lambda p: (running[p], rng.random()))[:rem]
-            for p in extras:
-                running[p] += 1
-            alloc[name] = [p for p in (1, 2, 3, 4)
-                           for _ in range(base + (1 if p in extras else 0))]
-        if all(lo <= running[p] <= hi for p in running):
+
+    base_count = total // 4
+    rem = total % 4
+    counts = [base_count] * 4
+    for p_idx in rng.sample(range(4), rem):
+        counts[p_idx] += 1
+
+    deck = []
+    for pos, cnt in zip([1, 2, 3, 4], counts):
+        deck.extend([pos] * cnt)
+
+    for _ in range(10_000):
+        rng.shuffle(deck)
+        if all(not (deck[i] == deck[i + 1] == deck[i + 2])
+               for i in range(len(deck) - 2)):
             break
     else:
-        sys.exit(f"balanced_position_plan: cannot keep all four positions "
-                 f"inside {POSITION_BAND} over {total} four-choice items "
-                 f"(got {running}) — the section table changed; retune "
-                 f"POSITION_BAND or the section counts")
+        sys.exit(f"balanced_position_plan: no valid arrangement after 10000 shuffles")
 
-    plan = {}
+    plan: dict[str, list[int]] = {}
+    idx = 0
     for name, count, width in sections:
-        base = alloc[name] if width == 4 else [(i % width) + 1
-                                               for i in range(count)]
-        assert len(base) == count, (name, len(base), count)
-        plan[name] = shuffle_no_triple(rng, base, name)
+        if width == 4:
+            plan[name] = deck[idx:idx + count]
+            idx += count
+        else:
+            plan[name] = balanced_positions(rng, count, width)
+
+    running = {p: deck.count(p) for p in (1, 2, 3, 4)}
+    if not all(lo <= running[p] <= hi for p in running):
+        sys.exit(f"balanced_position_plan: totals {running} outside {POSITION_BAND}")
     return plan, running
 
 

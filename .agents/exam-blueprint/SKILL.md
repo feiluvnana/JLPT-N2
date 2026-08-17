@@ -428,18 +428,17 @@ paper actually used. `make check` asserts every history entry except `legacy` ma
 `sample_items.DRAW`; a red line means repair the ledger, never widen the check. (Ledger
 repair is paper-repair work, not pool work.)
 
-## Answer positions are balanced across sections, not only inside them
+## Answer positions are balanced globally across the paper, unpredictable inside sections
 
-Per-section `[(i % width) + 1 …]` filling is even *within* a section but hands every
-`count % 4` remainder to the lowest positions — a structural +15/+7/+4/+0 on positions
-1/2/3/4 over the 18 four-choice sections (e.g. an unmanaged distribution yielding 31 keys on position 1).
-`balanced_position_plan()` keeps the per-section floor allocation and gives each remainder
-to whichever positions are furthest behind **paper-wide** (realised 22/23/23/22). Never 3+
-identical positions in a row; 即時応答 keys are uniform over 1-3.
+Do not force each small section/mondai to have equal quotas of positions 1..4 (which makes key
+distribution within each mondai predictable and artificially scattered across all 1,2,3,4).
+`balanced_position_plan()` generates a globally balanced sequence of the 90 four-choice items
+(realised 22/23/23/22, strictly within `POSITION_BAND = (19, 27)`), shuffles it with no 3+ identical
+positions in a row anywhere across the paper, and slices into sections in order. Individual sections
+can naturally have repeated positions (e.g. `[2, 4, 2, 1]` or `[3, 3]`), matching official JLPT papers.
+即時応答 keys (聴解 問題4, 3-choice) are balanced section-locally over 1-3.
 
-`POSITION_BAND = (19, 27)` — each of positions 1-4, over the 90 four-choice items. **The
-band is PROVISIONAL** (90/4 = 22.5 ± a working tolerance). If measurement of the official
-archive disagrees, **change the two numbers** — never reinterpret the band to fit a draw.
+`POSITION_BAND = (19, 27)` — each of positions 1-4, over the 90 four-choice items.
 The sampler exits rather than emit a plan outside it. 聴解 問題4 (3-choice) is balanced
 section-locally and is not part of the 90.
 

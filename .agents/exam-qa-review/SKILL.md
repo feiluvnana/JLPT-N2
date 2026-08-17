@@ -425,6 +425,8 @@ off-level because one source said "N1" is the mis-measurement this skill codes
   — fail it. If a paper ships 問題4 stems with the key word in the sentence
   (e.g. 「才能ある若手が集まり、**コンクール**で世界一を目指す。」with コンクール = option 2),
   this directly contradicts the paper's own instruction 「（　）に入れるのに最もよいもの」and official sittings, which blank every 問題4 stem.
+- **読解 Option Length Balance & Unpredictability:** Confirm all 20 読解 items (問題10–14, items 52–71) satisfy `max/min ≤ 1.30` JP chars. The key must NOT predictably be the longest option: the paper-level longest-key rate must land in the **20%–35% band** (approx 4–7 items out of 20, matching official ~29% baseline). Key length ranks must be varied across items (~4-6 rank 1, ~4-6 rank 4, ~8-12 rank 2/3), achieved by lengthening distractors with genuine, passage-groundable clauses.
+- **読解 Key Paraphrasing:** For every key in 問題10–13 (items 52–69), confirm the option is genuinely paraphrased (synonyms, conceptual synthesis, structural rephrasing) and NOT a verbatim or near-verbatim text lift from the passage (no LCS ≥ 15 chars and ≥ 50% of option; no LCS ≥ 20 chars; no pure lifts).
 - **問題14:** confirm the correct answer requires combining **at least two**
   constraints from the table/flyer (never a single-field lookup), and that
   every scenario detail the question references (a role, category, condition)

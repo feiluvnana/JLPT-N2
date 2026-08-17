@@ -301,6 +301,19 @@ def lint_gengo_dokkai(gengo_text: str, report: LintReport, fix: bool = False) ->
                 if word in line and re.match(r"^[1-4][.．]", line.strip()):
                     report.warn("DOKKAI-ABS-QUANT", f"Dokkai choice contains '{word}': {line.strip()[:60]}")
 
+    # Check Dokkai option length balance (max/min <= 1.30)
+    for m in re.finditer(r"\*\*(\d+)\*\*[ \t]*(.*?)(?=\n\*\*\d+\*\*|\n#|\Z)", gengo_text, re.S):
+        q_num = int(m.group(1))
+        if 52 <= q_num <= 71:
+            block = m.group(2)
+            opts = re.findall(r"[1-4][.．][ \t]*(.+?)(?=[ \t]+[1-4][.．]|\n|\Z)", block)
+            if len(opts) == 4:
+                lens = [len(re.sub(r"[\s\d\.\(\)（）「」『』【】、。・/]", "", o)) for o in opts]
+                mx, mn = max(lens), min(lens)
+                if mn > 0 and mx / mn > 1.30:
+                    report.error("DOKKAI-OPTION-RATIO",
+                                 f"Question {q_num} option length ratio {mx/mn:.2f}x ({lens}) exceeds 1.30 cap.")
+
     return gengo_text
 
 

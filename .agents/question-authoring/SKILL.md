@@ -306,11 +306,11 @@ bold/marker pairing, and FAILs on them; the other three artifacts are read by
 duplicated here** (2026-08-17 note/key audit): (1) a （注N） gloss must never
 leak the fact its own item tests, and its headword must clear a same-paper
 reuse check that `make check`'s `check_note_band_reuse()` now enforces
-mechanically; (2) a keyed 読解
-option must never be answerable purely from the stem's own quoted marked span,
-and a short option is not exempt from the verbatim-lift check just because it
-can't reach the 50-char floor; (3) the correct answer must not habitually be
-the longest option — the corpus ran 73.5% vs. an official 29% baseline. Read
-`references/dokkai.md` §"（注N） glosses" and §"読解 keys — paraphrase" in full
+mechanically; (2) a keyed 読解 option in 問題10–13 must be genuinely paraphrased
+(no verbatim lifts from the passage), and must never be answerable purely from the
+stem's own quoted marked span; (3) key length must be unpredictable — all 4 options
+within max/min ≤ 1.30, and the paper-level longest-key rate must land in the 20%–35% band
+(official baseline ~29%). Read `references/dokkai.md` §"（注N） glosses" and
+§"読解 keys — unpredictable option lengths and strict paraphrasing" in full
 before authoring or reviewing any 問題9–14 content; do not rely on this
 one-paragraph summary while drafting.

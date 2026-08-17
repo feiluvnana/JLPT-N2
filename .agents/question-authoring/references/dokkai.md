@@ -454,61 +454,35 @@ single-field lookup.
   the flyer does not require for this row, a fee/deadline that does not match),
   never by just leaving a requirement out.
 
-## 読解 keys — paraphrase, and keep the four lengths close
+## 読解 keys — unpredictable option lengths and strict paraphrasing
 
-**Paraphrase every 読解 key to option length (~25–40 JP chars) and keep the
-four options close in length**, or the key is findable by string length alone —
-without reading the passage (t3 shipped items 67/68/69 as consecutive keys of
-91/101/61 chars, lifted verbatim, beside ~31–34 char distractors; t4 item 66 at
-55 vs 31). "Within ±40% of each other" is a target, not an invariant: over 140
-current-era items, 95% satisfy **max/min ≤ 1.8** — author to that — but
-official ships 2.10 (12/2025-66) and 2.09 (12/2023-65). Two consequences the
-older wording got wrong: an item at 1.9 is not automatically a defect, and the
-key being the longest of the four is not either (29% of official keys are).
-**The defect is a key that is long AND a verbatim span of the passage** — that
-turns 主張理解 into string matching. `make check` FAILs a keyed 読解 option
-(52–71) that is ≥50 JP chars, present verbatim in the passage, **and** ≥1.7×
-the mean of the other three — against 138 official keyed options the longest is
-61 chars and the highest ratio 1.55, so no official item trips the pair. That
-gate constant survives the archive; keep it.
+### 1. Option length balance and unpredictable key length (longest answer rate ~20–35%)
 
-**A short option can still be a pure lift — the 50-char floor was blind to
-it.** `20260817_1` item 59's key is only 17 JP chars ("問い合わせやクレームへの
-対応の速さ。") and is a 100%-verbatim clause straight from the passage — it
-never trips the ≥50-char check because the whole answerable fact happens to be
-short, not because it was paraphrased. `check_verbatim_keys()` now ALSO FAILs
-any keyed option whose longest-common-substring against the passage is ≥90% of
-the option's own length, with no length floor — a short key is not exempt from
-paraphrasing just because it can't reach 50 chars.
+**BINDING RULE: Key length must be unpredictable, and all four options within ~30% of each other (max/min ≤ 1.30).**
 
-**A key must never be answerable purely from the stem's own quoted marked
-span.** When a stem anchors on `①**quoted clause**とあるが`, the key must
-require synthesizing something OUTSIDE that quoted clause (its cause, its
-consequence, a term it defines) — never just restate the clause the stem
-already handed the reader with a synonym or two swapped in. Confirmed shape,
-independently found in three papers: `20260810_2` items 61/63, `20260811_1`
-items 59/63/68 — each stem quotes a finding in full, and the key is that same
-finding lightly reworded, so a reader answers by string-matching the stem
-against the four options without engaging the sentences around it. This is a
-NEW risk the marked-span-bolding convention (`references/dokkai.md`
-§"Marked-span quoting") makes easier to fall into, not one it causes — the
-span is now pre-isolated, tempting an author to paste it straight into the
-key. Draft the key from the passage's surrounding reasoning, then check: does
-this option's wording depend on anything the stem itself didn't already show
-the reader? If not, rewrite it.
+1. **Per-item option ratio**: For every keyed 読解 item (問題10–14, items 52–71), the four options' JP-char lengths must satisfy **max/min ≤ 1.30**. Enforced by `make check` as a **FAIL** (`check_dokkai_option_length_balance`).
+2. **Unpredictable key length rank**: The correct answer (key) must **NOT** be predictably the longest option.
+   - Across a paper's 20 読解 items, the key being the longest option must land in the **20%–35% band** (approx 4–7 items out of 20, matching the official JLPT baseline of ~29%). `make check` FAILs any paper with a longest-key rate > 35%.
+   - Authors must actively vary key length ranks across the 20 items:
+     - **Rank 1 (Longest)**: ~4–6 items
+     - **Rank 2 (2nd longest)**: ~4–6 items
+     - **Rank 3 (3rd longest)**: ~4–6 items
+     - **Rank 4 (Shortest)**: ~4–6 items
+   - To achieve this: Lengthen distractors by adding genuine, passage-groundable clauses (conditions, consequences, qualifications — never empty filler words) so that distractors are frequently longer than the key. In items where the key is rank 3 or 4 (shortest), the distractors provide plausible, detailed alternate interpretations.
 
-**The correct answer is not allowed to be the longest option out of habit.**
-Measured over 200 items across ten generated papers (2026-08-17 audit): the
-key was the longest of the four options **73.5%** of the time, and strictly
-longer than all three distractors **58.5%** of the time — against an official
-baseline of **29%** longest (`official_calibration.md` §9, restated above). A
-test-taker who always picks the longest option would score roughly 74% on
-読解 without reading a single passage. This is a DISTRIBUTIONAL bias no
-per-item threshold can see — no single item needs to be egregious for the
-aggregate tendency to be exploitable. Write distractors to the SAME length
-band as the key by default (don't let a key run long because "the correct
-idea just needs more words" — it rarely does once paraphrased tightly), and
-treat "is my key noticeably the longest option again" as a running tally to
-watch across a paper's twenty 読解 items, the same way `question-authoring`
-already asks you to tally 事実把握/考え counts and closing-move shapes while
-drafting.
+### 2. Strict key paraphrasing — keys must NEVER be verbatim text lifts
+
+**BINDING RULE: Every 読解 key in 問題10–13 (items 52–69) must be genuinely paraphrased, not original content copied from the passage.**
+
+1. **No verbatim lifts**: A key must not copy/paste sentences or clauses from the reading text.
+   - Any contiguous verbatim substring match (LCS) against the passage of **≥15 JP characters that constitutes ≥50% of the key length** is a **FAIL** (`check_verbatim_keys`).
+   - Any contiguous verbatim substring of **≥20 JP characters** is an automatic **FAIL**.
+   - Any short key with **≥85% verbatim text** is an automatic **FAIL**.
+   (問題14 items 70–71 are excluded from this substring cap because flyer info lookup tests exact conditions/fees/dates printed on the flyer).
+2. **How to paraphrase**:
+   - Rephrase the author's logic using synonyms, abstract summaries, or grammatical restructuring (e.g. turning a multi-clause description into a concise conceptual noun phrase, or rewording a passive experience into an active realization).
+   - Test: Can a test-taker find the answer simply by searching for identical character sequences from the passage? If yes, the key is defective and must be rewritten.
+
+### 3. Stems quoting marked spans
+
+**A key must never be answerable purely from the stem's own quoted marked span.** When a stem anchors on `①**quoted clause**とあるが`, the key must require synthesizing something OUTSIDE that quoted clause (its cause, its consequence, a term it defines) — never just restate the clause the stem already handed the reader with a synonym or two swapped in. Draft the key from the passage's surrounding reasoning, then check: does this option's wording depend on anything the stem itself didn't already show the reader? If not, rewrite it.
