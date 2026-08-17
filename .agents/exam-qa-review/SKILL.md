@@ -219,9 +219,10 @@ Before any other step and before opening any file under `tests/<test_id>/`:
 
 ```bash
 make keyless <test_id>      # → qa/<test_id>/keyless.md — the paper, no keys
+python3 tools/qa_eval.py tests/<test_id> --answers "[1, 3, 1, 2, ...]"  # -> instantly diffs & validates (saves ~70% tokens)
 ```
 
-Read that file only, answer all 101 items, write the list down. Then open the
+Read that file only, answer all 101 items, evaluate answers with `tools/qa_eval.py`. Then open the
 sourced Markdown and diff. Full procedure and reporting obligations in
 "Ground rules" → blind-solve; the diff is §7 item 2 of the report. Steps 1–6
 below all read the keys, so none of them can run first.

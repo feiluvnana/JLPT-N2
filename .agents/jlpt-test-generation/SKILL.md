@@ -133,9 +133,14 @@ make sample <id> SEED=<n>          # -> tests/<id>/test_spec.json + ledger
 ## Stage 2 — authoring rules
 
 The construction rules live in `question-authoring` (core + the per-section
-reference file from the reading map). Binding here:
+reference file from the reading map).
+
+```bash
+make scaffold-sections <id>        # -> pre-scaffolds tests/<id>/_sections/ templates (saves ~40% tokens)
+```
 
 - Author ONLY items in `test_spec.json`; keys go where `answer_positions` says.
+- For 問題1 & 問題2 2×2 Cartesian matrices, use `python3 tools/matrix_helper.py` to ensure valid phonological/orthographic pairings with zero tokens.
 - Tested items (grammar/vocab/kanji) are ALWAYS the pool-sampled ones; the
   assigned `reading_topics`/`listening_scenarios` entry supplies scene and
   content only, and you write the passage/dialogue from it yourself
@@ -156,10 +161,10 @@ reference file from the reading map). Binding here:
 ## Stage 3 — build + gate
 
 ```bash
-make lint-draft <id> && make verify-scramble <id> && make booklet <id> && make mp3 <id> && make sheet <id> && make check
+make autofix <id> && make lint-draft <id> && make verify-scramble <id> && make booklet <id> && make mp3 <id> && make sheet <id> && make check
 ```
 
-- Run `make lint-draft <id>` first: instantly catches contractions, reaction turns, abs-quantifiers, and missing blanks with zero tokens before invoking QA.
+- Run `make autofix <id> && make lint-draft <id>` first: auto-applies conversational contractions in dialogue and instantly catches contractions, reaction turns, abs-quantifiers, and missing blanks with zero tokens before invoking QA.
 - `make check` validates every test on disk; **read every line, including
   WARN** — resolve each warning or justify it in the report. Fix failures
   before stage 4: a mis-keyed item is invisible once the MP3 is built.

@@ -207,6 +207,7 @@ before calling any authoring work done.
     「値段の比較的美味しい」 — unanswerable as printed). A meaning match is not
     enough; the frame must accept the word.
 13. **問題1 & 問題2: 2×2 Cartesian product matrix ({A, B} × {C, D} → {AC, AD, BC, BD}).**
+    - Generate and validate deterministically with `python3 tools/matrix_helper.py` (zero token cost).
     - **問題1 on-reading compounds (矛盾, 縮小, 概要, 効率):** options follow the
       2×2 reading matrix {A, B} × {C, D} (e.g. 矛盾 {む, ぶ} × {じゅん, じゅう} →
       {むじゅん, むじゅう, ぶじゅん, ぶじゅう}). Never break the grid with an

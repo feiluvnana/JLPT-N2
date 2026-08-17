@@ -1,13 +1,14 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
 .PHONY: help check check-tests grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
-       init-import extract-pdf extract-archive extract-keys lint-draft lint verify-scramble scaffold-explanations irt
+       init-import extract-pdf extract-archive extract-keys lint-draft lint verify-scramble scaffold-explanations irt \
+       scaffold-sections matrix qa-eval autofix
 
 # Positional test-id argument: "make grade 1", "make sheet 2", "make sample 5".
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
 # covers every test, so it takes no id. `pages` builds every test by default;
 # "make pages 1" (or TEST=1) narrows it to one.
-TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt
+TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt scaffold-sections matrix qa-eval autofix
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -39,6 +40,8 @@ help:
 	@echo "  make check-tests      Same gate, per-test contracts only (skips doc/code checks)"
 	@echo "  make sample 5 SEED=n  Sample question pool -> tests/5/test_spec.json + ledger"
 	@echo "                        (SEED required, from an RNG: python3 -c 'import secrets; print(secrets.randbelow(10**8))')"
+	@echo "  make scaffold-sections 1 Scaffold section authoring templates into tests/1/_sections/"
+	@echo "  make matrix           2x2 Cartesian matrix generator for 問題1 & 問題2"
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
 	@echo "  make mp3 1            Synthesize listening audio for test 1 (聴解.mp3)"
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
@@ -46,9 +49,11 @@ help:
 	@echo "  make explanation 1    Alias for make model-answer"
 	@echo "  make scaffold-explanations 1 Scaffold explanation JSON template directly from markdown"
 	@echo "  make lint-draft 1     Fast pre-linter for contractions, reaction turns, abs-quantifiers"
+	@echo "  make autofix 1        Auto-fix conversational contractions and stem formatting"
 	@echo "  make lint 1           Alias for make lint-draft"
 	@echo "  make verify-scramble 1 Permutation & topological validator for 問題8 scrambles"
 	@echo "  make irt 1            Simulate 2PL Item Response Theory (IRT) scaled scores"
+	@echo "  make qa-eval 1        Structured blind-solve evaluator & QA report generator"
 	@echo "  make keyless 1        Blind-solve render for QA: qa/1/keyless.md (no keys)"
 	@echo "  make serve            Serve ALL tests: list -> exam -> result (no test id)"
 	@echo "  make grade 1          Grade test 1 (reads tests/1/ユーザー解答*.json)"
@@ -73,6 +78,12 @@ sample:
 	  echo 'the seed must be an RNG output, never a number an agent picked (exam-blueprint/SKILL.md)'; exit 1)
 	python3 .agents/exam-blueprint/scripts/sample_items.py --seed $(SEED) --test-id $(TEST)
 
+scaffold-sections:
+	python3 tools/scaffold_sections.py tests/$(TEST)
+
+matrix:
+	python3 tools/matrix_helper.py --help
+
 booklet:
 	python3 .agents/exam-app/scripts/build_booklet.py tests/$(TEST)/言語知識・読解.md tests/$(TEST)/聴解.md
 
@@ -93,6 +104,9 @@ scaffold-explanations:
 lint-draft:
 	python3 tools/lint_draft.py tests/$(TEST)
 
+autofix:
+	python3 tools/lint_draft.py tests/$(TEST) --fix
+
 lint: lint-draft
 
 verify-scramble:
@@ -100,6 +114,9 @@ verify-scramble:
 
 irt:
 	python3 tools/irt_scorer.py tests/$(TEST)
+
+qa-eval:
+	python3 tools/qa_eval.py tests/$(TEST) --scaffold-report
 
 # The QA blind-solve render: the same paper with the keys truncated away, into
 # qa/<id>/keyless.md. Not a deliverable — tests/<id>/ has a fixed file contract.
