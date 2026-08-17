@@ -48,13 +48,22 @@ def load_keys(test_dir: Path) -> dict:
         text = choukai_path.read_text(encoding="utf-8")
         cut = re.search(r"^#+\s*(?:解答|【?正解)", text, re.M)
         if cut:
+            # Row labels ("1番", "2番") repeat across 問題1-5's separate key
+            # tables, so a bare label collides across sections (問題1's 1番
+            # overwrites/is overwritten by 問題2's 1番, etc.). The document
+            # order within the key section is 問題1 -> 問題5, each table in
+            # 番 order, which is exactly the official continuous numbering
+            # (72, 73, ...) — so a running counter reproduces the real
+            # question numbers without needing to know each 問題's item
+            # count up front.
+            next_qid = 72
             for line in text[cut.start():].splitlines():
                 line = line.strip()
                 if line.startswith("|") and line.endswith("|"):
                     parts = [p.strip() for p in line.split("|")[1:-1]]
-                    if len(parts) >= 2 and parts[1].isdigit():
-                        qid = parts[0]
-                        keys[qid] = int(parts[1])
+                    if len(parts) >= 2 and parts[1].isdigit() and re.search(r"\d+番", parts[0]):
+                        keys[str(next_qid)] = int(parts[1])
+                        next_qid += 1
 
     return keys
 
@@ -68,11 +77,13 @@ def evaluate_answers(test_dir: Path, user_answers: dict | list, reviewer_name: s
     # Format answers into dict if list provided
     ans_map = {}
     if isinstance(user_answers, list):
+        # Continuous official numbering: 1-71 language knowledge/reading,
+        # 72-101 listening (whatever each 問題's actual item count is —
+        # load_keys() derives listening qids the same way, by running count
+        # through 聴解.md's key tables in order, so a positional list lines
+        # up with load_keys()'s output regardless of per-test item counts).
         for i, val in enumerate(user_answers, 1):
-            if i <= 71:
-                ans_map[str(i)] = val
-            # Map choukai answers
-            # Choukai item ordering: 問1(1..5), 問2(1..6), 問3(1..5), 問4(1..12), 問5(1, 2-1, 2-2)
+            ans_map[str(i)] = val
     elif isinstance(user_answers, dict):
         ans_map = {str(k): int(v) for k, v in user_answers.items()}
 

@@ -193,7 +193,9 @@
    },
    {
     "topic": "音楽と記憶",
-    "theme": "文化・伝統"
+    "theme": "医療・福祉",
+    "origin": "reauthored",
+    "note": "theme corrected from 文化・伝統 to 医療・福祉 — topic string unchanged, theme-only correction. The pool's own hardwired tag (文化・伝統) never matched the actually-authored passage content (問題10(3): dementia/memory-neuroscience content, 記憶障害/認知症の患者/脳の領域, zero cultural/tradition content). logs/topics.json already recorded 医療・福祉 correctly for this surface; test_spec.json and logs/ledger.json were stale. Same failure mode as the 20260813_1 incident named in exam-qa-review/SKILL.md's ground rules — QA 20260817_2 F1."
    },
    {
     "topic": "マイナンバーカードの普及と行政手続きの効率化",
@@ -216,8 +218,10 @@
     "theme": "消費・経済"
    },
    {
-    "topic": "高齢者の運転免許返納",
-    "theme": "交通"
+    "topic": "観光地における入場者数の上限設定（オーバーツーリズム対策）",
+    "theme": "旅行・観光",
+    "origin": "reauthored",
+    "note": "問題12 re-themed off its original pool draw (高齢者の運転免許返納/交通) to resolve a rule-4 headline-theme violation — this paper's 6-slot headline set shared {交通(問12), 教育(問14)} = 2 themes with 20260814_1's headline set, over rule 4's 'at most ONE' cap. New theme 旅行・観光 is absent from 20260814_1's headline set, absent from this paper's other 5 headline themes, absent from any of this paper's other 12 read/聴 surfaces, and also absent from 20260817_1's (the immediately preceding test's) full theme list except alongside 医療・福祉 — QA 20260817_2 F2."
    }
   ]
  },

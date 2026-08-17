@@ -2399,6 +2399,242 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    }
+  },
+  {
+   "test_id": "20260817_2",
+   "seed": 36017970,
+   "generated_at": "2026-08-17 15:03:48",
+   "items": {
+    "kanji_reading": [
+     "電柱(でんちゅう)",
+     "溶ける(とける)",
+     "悪口(わるぐち)",
+     "伝わる(つたわる)",
+     "分類(ぶんるい)"
+    ],
+    "orthography": [
+     "衣食住",
+     "継続",
+     "園芸",
+     "承認",
+     "監督"
+    ],
+    "word_formation": [
+     "〜触れ(前触れ)",
+     "下〜(下請け)",
+     "〜振り(話しぶり)"
+    ],
+    "context_words": [
+     "真っ青",
+     "建て直す",
+     "生命力",
+     "やっかい",
+     "初公開",
+     "飼育",
+     "態度"
+    ],
+    "paraphrase": [
+     "ためらう(迷う)",
+     "ばてる",
+     "まともだ(普通だ)",
+     "活気がある(賑やかだ)",
+     "くたくただ"
+    ],
+    "usage": [
+     "募る",
+     "独立する",
+     "民間",
+     "普及",
+     "展示する"
+    ],
+    "grammar_p7": [
+     "〜に即して",
+     "〜おかげで/せいで",
+     "〜と同時に",
+     "〜得る/得ない",
+     "〜に限り",
+     "〜からして",
+     "〜きり",
+     "〜たとたん",
+     "〜にしても〜にしても",
+     "〜際に",
+     "〜つつも",
+     "〜かねる"
+    ],
+    "grammar_p8": [
+     "同時進行(〜ながら…する)",
+     "例示指示(〜例えば…)",
+     "順接接続(〜したがって…)",
+     "原因理由構文(〜ばかりに…てしまった)",
+     "〜からといって"
+    ],
+    "quick_response": [
+     "田中さん、さっき頼んだ件、進み具合はどう？",
+     "お待たせいたしました。担当の者が参りますので、少々お待ちください。",
+     "この度の障害について、取り急ぎ状況をご報告いたします。",
+     "お荷物、こちらでお預かりしてもよろしいでしょうか。",
+     "鈴木さん、久しぶりだね。相変わらず忙しそうだけど、体は大丈夫？",
+     "お客様、あいにく商品は完売となっております。",
+     "お客様、只今担当者が席を外しておりますので、少々お待ちください。",
+     "キャンセル料が発生しますが、それでも変更なさいますか。",
+     "気に留める",
+     "先生、本日の講演、大変勉強になりました。後ほど質問をさせていただいてもよろしいでしょうか。",
+     "面会時間は午後2時から4時までです。"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "会社:来客対応の引き継ぎ",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "弁当店:法人注文",
+      "theme": "食"
+     },
+     {
+      "scenario": "塾:体験授業",
+      "theme": "教育"
+     },
+     {
+      "scenario": "テレビ:天気と農作物の解説",
+      "theme": "食"
+     },
+     {
+      "scenario": "会社:テレワーク用機器の配布",
+      "theme": "デジタル化"
+     },
+     {
+      "scenario": "居酒屋:宴会コースの相談",
+      "theme": "食"
+     },
+     {
+      "scenario": "講演会:学習法",
+      "theme": "教育"
+     },
+     {
+      "scenario": "社内食堂のメニューリニューアルアンケート",
+      "theme": "食"
+     },
+     {
+      "scenario": "引っ越し業者との見積もり調整",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "ベビー用品店:レンタルサービスの説明",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "携帯ショップ:料金プランの見直し",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "営業:クレーム対応",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "人事部からの健康診断のお知らせ",
+      "theme": "睡眠・健康"
+     },
+     {
+      "scenario": "スーパー:てまえどり運動の説明",
+      "theme": "食"
+     },
+     {
+      "scenario": "サークル:新入部員の歓迎会準備",
+      "theme": "人間関係"
+     },
+     {
+      "scenario": "コンサート会場:入場方法の案内",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "会社:在宅勤務制度の説明",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "スポーツセンター:プール利用",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "カーシェア:返却場所",
+      "theme": "交通"
+     },
+     {
+      "scenario": "家庭支援センター:相談予約",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "イベント会場:準備の分担",
+      "theme": "働き方"
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "耐震改修と老朽化",
+      "theme": "防災"
+     },
+     {
+      "topic": "多世代同居のメリットと課題",
+      "theme": "子育て・家族"
+     },
+     {
+      "topic": "大学の奨学金申請手続きのお知らせ",
+      "theme": "教育"
+     },
+     {
+      "topic": "AIの発展と人間の雇用の未来",
+      "theme": "働き方"
+     },
+     {
+      "topic": "睡眠の質と健康・作業効率の関係",
+      "theme": "睡眠・健康"
+     },
+     {
+      "topic": "音楽と記憶",
+      "theme": "医療・福祉",
+      "origin": "reauthored",
+      "note": "theme corrected from 文化・伝統 to 医療・福祉 — topic string unchanged, theme-only correction. The pool's own hardwired tag (文化・伝統) never matched the actually-authored passage content (問題10(3): dementia/memory-neuroscience content, 記憶障害/認知症の患者/脳の領域, zero cultural/tradition content). logs/topics.json already recorded 医療・福祉 correctly for this surface; test_spec.json and logs/ledger.json were stale. Same failure mode as the 20260813_1 incident named in exam-qa-review/SKILL.md's ground rules — QA 20260817_2 F1."
+     },
+     {
+      "topic": "マイナンバーカードの普及と行政手続きの効率化",
+      "theme": "行政・手続き"
+     },
+     {
+      "topic": "譲り合いの文化",
+      "theme": "人間関係"
+     },
+     {
+      "topic": "商店街の再生",
+      "theme": "地域活性化"
+     },
+     {
+      "topic": "空き家対策",
+      "theme": "住まい"
+     },
+     {
+      "topic": "円安と輸入コスト",
+      "theme": "消費・経済"
+     },
+     {
+      "topic": "観光地における入場者数の上限設定（オーバーツーリズム対策）",
+      "theme": "旅行・観光",
+      "origin": "reauthored",
+      "note": "問題12 re-themed off its original pool draw (高齢者の運転免許返納/交通) to resolve a rule-4 headline-theme violation — this paper's 6-slot headline set shared {交通(問12), 教育(問14)} = 2 themes with 20260814_1's headline set, over rule 4's 'at most ONE' cap. New theme 旅行・観光 is absent from 20260814_1's headline set, absent from this paper's other 5 headline themes, absent from any of this paper's other 12 read/聴 surfaces, and also absent from 20260817_1's (the immediately preceding test's) full theme list except alongside 医療・福祉 — QA 20260817_2 F2."
+     }
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   }
   }
  ]
 }

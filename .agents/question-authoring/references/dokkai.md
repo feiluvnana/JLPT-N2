@@ -68,6 +68,19 @@ actually ships, so no more than **two** passages share one:
 - 随筆 — a personal observation that generalises without prescribing
 - 条件提示 — a concrete, checkable condition (「〜した自治体ほど〜」), no exhortation
 
+**The shape cap (≤2 per shape) is not enough on its own — the two passages
+sharing a shape must also differ at the SENTENCE-TEMPLATE level, not just
+swap content words into the same skeleton.** `20260817_2` shipped three such
+pairs in one paper (問11(3)/問11(4): 「Xとは〜というより〜なのかもしれない」;
+問10(2)/問10(3): 「〜ことに…のためだと考えられている」; 問10(1)/問11(1):
+「逆に言えば〜直ちに/ただちに〜わけではない」) — each pair passed the shape
+cap and the marker-family scan, because both checks classify by CATEGORY, not
+by the literal sentence skeleton. If two passages assigned the same closing
+shape end up sharing a template like this while drafting, rewrite one to a
+structurally different sentence pattern for that shape (e.g. a second 随筆
+closing should not reuse the first's 「AとはBというよりCなのかもしれない」
+frame — try a plain declarative musing instead) before finalizing.
+
 If the passage's closing explicitly REJECTS a stated single-factor view
 (「〜という見方/考え方には無理がある」, 「〜だけでは…」, 「〜そのものではない」)
 before its conclusion, classify it as 主張 regardless of whether the conclusion

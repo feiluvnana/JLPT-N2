@@ -392,3 +392,11 @@ A mixed word-form set is not itself a second-answer risk, but it is a
 tell — a reader can spot the odd-shaped option before evaluating its domain,
 which is the same "solvable without reading" failure step 2b guards against
 elsewhere in this file.
+
+The same rule binds bare-noun headwords, not just suru-verbs: if the headword
+is a plain noun (民間), every option must use that identical printed word (or
+a bare inflection of it) — never let one option alone derive a `〜的/〜化/〜性`
+adjectival or nominal form of it while the other three stay bare. `20260817_2`
+shipped 問題6-28 (民間) with option 1 alone reading 民間**的な**選挙 against three
+bare-民間 options — the same shape-tell as `20260811_1`'s suru-verb case, just
+on a noun headword instead of a verb one.
