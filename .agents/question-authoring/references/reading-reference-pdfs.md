@@ -21,16 +21,15 @@ generated files into each `refs/JLPT_N2_NEW/` sitting directory:
 
 `script.md` is the one to be careful with. Thirty of the 31 script PDFs draw
 their dialogue as 1-bit stencil bitmaps, so no extractor can reach it — only
-the 問題/N番 setup lines and `（正解:N）` are real text. The dialogue is filled
-in by OCR and fenced `[OCR ▼]` … `[OCR ▲]`. Those runs are ~98%
-character-accurate, **not exact**, and the errors land on exactly the kanji
+the 問題/N番 setup lines and `（正解:N）` are real text. OCR fills the
+dialogue in, fenced `[OCR ▼]` … `[OCR ▲]`. Those runs are ~98%
+character-accurate, **not exact**, and errors land on exactly the kanji
 that carry furigana (整理→軽理, 一応→一思). Read fenced runs for content and
-structure, but **open the PDF before quoting one as official wording, and never
-derive a calibration number from inside a fence**. Everything outside the
-fences is the exact text layer and is safe to measure. Only the 12/2023,
-7/2024 and 12/2024 script PDFs have a text layer, so spoken-option length
-statistics are not derivable from text — rasterize, or measure the MP3s via
-`choukai-audio`.
+structure, but **open the PDF before quoting one as official wording, and
+never derive a calibration number from inside a fence** — everything
+outside the fences is the exact text layer and safe to measure. Only
+12/2023, 7/2024, and 12/2024 script PDFs have a text layer, so spoken-option
+length isn't derivable from text — rasterize, or measure the MP3s via `choukai-audio`.
 
 ## Step 1 — Diagnose before reading
 

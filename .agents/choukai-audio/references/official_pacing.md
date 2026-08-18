@@ -1,195 +1,170 @@
 # Official N2 listening pacing — measured across 31 sittings (2010-07 … 2025-12)
 
-Source corpus: **`refs/JLPT_N2_NEW/`**, 31 official N2 listening MP3s — every
-sitting from July 2010 to December 2025 except July 2020 (cancelled). The five
-files in the older `refs/JLPT/` folder are **byte-identical duplicates** of the
-2023-07 / 2023-12 / 2024-12 / 2025-07 / 2025-12 entries here (verified by
-sha1), so they are not counted twice.
+Source corpus: `refs/JLPT_N2_NEW/`, 31 official N2 listening MP3s — every
+sitting from July 2010 to December 2025 except July 2020 (cancelled). The
+five files in the older `refs/JLPT/` folder are byte-identical duplicates
+of the 2023-07/2023-12/2024-12/2025-07/2025-12 entries here (verified by
+sha1) — not counted twice.
 
-This file is the evidence behind the pacing table in
-`choukai-audio/SKILL.md` (Part 3), which is the copy `make check` diffs against
-the code. Change values there and in the code first, then mirror here.
+This file is the evidence behind the pacing table in `choukai-audio/SKILL.md`
+Part 3, which is the copy `make check` diffs against the code. Change values
+there and in the code first, then mirror here.
 
-Measured 2026-08-06 with ffmpeg 8.1.2 / ffprobe on macOS. Nothing under
-`tests/` or `logs/` was touched; `refs/` was only read. No dialogue content was
+Measured 2026-08-06 with ffmpeg 8.1.2/ffprobe on macOS. Nothing under
+`tests/`/`logs/` was touched; `refs/` was only read. No dialogue content was
 transcribed — every number below comes from the amplitude envelope.
 
 ---
 
 ## 1. Method
 
-**Why a naive `silencedetect` is not enough.** The distributed recordings are
-not engineered alike. At a fixed `noise=-35dB` the 2023-12 and 2024-12 files
-report their 12 s answer pause as 9 s and their 8 s pause as 5 s. Inspecting
-the envelope shows why: those sittings lay a **soft ~-34 dBFS marker tone**
-over the last ~2.5 s of every answer pause. The tone is not speech and takes
-no answer time away, but it sits above the threshold. Reading the constants off
-a single fixed-threshold run would have shortened two sittings by 3 s each and
-made the archive look inconsistent when it is not.
+**Why a naive `silencedetect` is not enough.** At a fixed `noise=-35dB` the
+2023-12/2024-12 files report their 12s answer pause as 9s and their 8s pause
+as 5s — those sittings lay a **soft ~-34 dBFS marker tone** over the last
+~2.5s of every answer pause. Not speech, takes no answer time, but sits
+above the threshold — a fixed-threshold run would have shortened two
+sittings by 3s each and made the archive look inconsistent when it isn't.
 
-So each file is decoded once to a 16 kHz mono, 20/10 ms RMS envelope, and
-pauses are found with **two thresholds**:
+So each file decodes to a 16kHz mono, 20/10ms RMS envelope, and pauses are
+found with **two thresholds**:
 
 | Threshold | Value | Role |
 |---|---|---|
-| core | −60 dBFS | literal silence. Every file is strongly bimodal — 33–41 % of frames are digital silence and speech sits above −40 dBFS — so −60 is inside the valley of all 31. |
-| extended | min(−25, LUFS − 8) dBFS | the real speech offset→onset extent. Includes the marker tone; excludes nothing that is spoken. |
+| core | −60 dBFS | literal silence — 33–41% of frames sit here, speech above −40 dBFS, so −60 is inside every file's valley |
+| extended | min(−25, LUFS−8) dBFS | the real speech offset→onset extent, includes the marker tone, excludes nothing spoken |
 
-A pause = a maximal run below the extended threshold that contains ≥0.30 s of
-core silence (so an inter-syllable dip can never become a pause). Reported
-values are the extended ones. **Cost of the extension**: it also swallows very
-quiet speech tails, so extended values run slightly long — but only slightly:
-for the 問題1/2 answer pause the core median is 12.14 s against an extended
-median of 12.23 s, i.e. **the bias is ≈0.1 s**, not the 0.5 s one might fear.
+A pause = a maximal run below the extended threshold containing ≥0.30s of
+core silence. Reported values are the extended ones — the extension
+swallows very quiet speech tails, but only slightly (問1/2 answer pause:
+core median 12.14s vs extended 12.23s, bias ≈0.1s).
 
-**Section attribution is structural, never content-based.** 問題2 is the only
-section with a long option-READING pause before every item, so the run of
-~20 s pauses brackets it; what precedes is 問題1; after it come 問題3 (items
-1.5–2 min apart), 問題4 (the dense run, items 0.5–0.8 min apart) and 問題5 (the
-trailing pauses). A file whose derived shape is not a sane N2 is reported
-**NOT SEGMENTED** rather than folded in with guessed numbers — see §6.
+**Section attribution is structural, never content-based** — 問題2 is the
+only section with a long option-reading pause before every item, so the
+~20s run brackets it; before it is 問題1, after it 問題3 (1.5–2min apart),
+問題4 (dense, 0.5–0.8min apart), 問題5. A file whose shape isn't a sane N2
+is reported NOT SEGMENTED rather than folded in with guessed numbers (§6).
 
-**Turn gaps needed a third method.** Official dialogue carries room tone, not
-digital silence, so the pause detector above cannot see turn boundaries at all
-(a 44 s conversation registers as one continuous run). Turn gaps were measured
-separately over the 問題1/問題2 dialogue spans of the 2018–2025 sittings: every
-gap below the extended threshold was taken, and each was labelled
-speaker-change / same-speaker by comparing median F0 (autocorrelation) over the
-0.6 s of speech either side. Japanese male (~110–150 Hz) and female
-(~200–260 Hz) separate cleanly, which is what two-party 問題1/2 items are built
-from.
+**Turn gaps needed a third method** — official dialogue carries room tone,
+not digital silence, so the pause detector can't see turn boundaries at
+all. Measured separately over 問題1/2 dialogue spans (2018–2025): every gap
+below the extended threshold, labelled speaker-change/same-speaker by
+median F0 (autocorrelation) over 0.6s either side — Japanese male
+(~110–150Hz)/female (~200–260Hz) separate cleanly.
 
-**Speech rate.** The script PDFs in the archive are **scans** — text extraction
-yields only the typed situation/問い headers (~2.7 k chars over 20 pages) — so
-a transcript mora count is *not available* for official audio. Rate is measured
-acoustically by counting syllable nuclei (intensity peaks with a 2 dB dip
-criterion), which in mora-timed Japanese tracks morae. The detector was
-calibrated against this repo's own TTS output, where the text is known exactly
-(`tests/1` and `tests/2`: 8 924 and 6 941 morae → 0.595 and 0.582 nuclei per
-mora). Because that ratio is derived from synthetic speech and human speech
-reduces more, **the absolute morae/min figures below are estimates**; the
-raw nuclei/min comparison between official and our own audio is the sound one.
+**Speech rate** — the script PDFs are scans (~2.7k chars of headers only,
+no transcript for mora counts), so rate is acoustic: syllable nuclei
+(intensity peaks, 2dB dip) per minute, calibrated against this repo's own
+TTS output where text is known exactly (`tests/1`/`tests/2`: 0.595/0.582
+nuclei per mora). That ratio is synthetic-derived and human speech reduces
+more, so **absolute morae/min figures are estimates** — the raw nuclei/min
+comparison is the sound one.
 
 ---
 
 ## 2. The band — this is what the constants must sit inside
 
-Medians with the interquartile band; n is the number of individual pauses
-measured, not the number of files.
+Medians with interquartile band; n = individual pauses measured.
 
-| Parameter | All 22 segmented sittings | Recent 12 (2018–2025) | Current constant | Verdict |
+| Parameter | All 22 segmented | Recent 12 (2018–2025) | Current constant | Verdict |
 |---|---|---|---|---|
-| answer pause 問題1 | **12.23** [12.17–12.49] n=106 | 12.43 [12.21–12.58] n=57 | `ANSWER_PAUSE 問題1 = 12` | inside |
-| answer pause 問題2 | **12.22** [12.09–12.50] n=136 | 12.36 [12.15–12.57] n=73 | `ANSWER_PAUSE 問題2 = 12` | inside |
-| answer pause 問題3 | **8.32** [8.17–8.57] n=110 | 8.38 [8.15–8.69] n=64 | `ANSWER_PAUSE 問題3 = 8` | inside |
-| answer pause 問題4 | **8.28** [8.19–8.43] n=267 | 8.32 [8.20–8.57] n=139 | `ANSWER_PAUSE 問題4 = 8` | inside |
-| 問題2 option-reading | **20.22** [20.19–20.38] n=139 | 20.22 [20.19–20.42] n=77 | `GAP_OPTION_READING = 20` | inside |
-| 問題1 question → conversation | **2.80** [2.74–2.91] n=74 | 2.80 [2.74–4.03] n=39 | `GAP_AFTER_PRE_QUESTION = 3` | inside |
-| 問題1 conversation → repeat of question | 2.94 [2.81–3.19] n=74 | 3.02 [2.82–4.15] n=39 | `GAP_BEFORE_REPEATED_QUESTION = 3` | inside — but **never applied until 2026-08-13**, see §2.1 |
-| 問題4, between the three replies | 2.23 [2.14–2.31] n=795 | — | `GAP_BETWEEN_SPOKEN_RESPONSES = 2.2` | inside — **added 2026-08-13**, see §2.1 |
-| between spoken choices, 問題3 | **3.10** [2.66–3.26] n=427 | 3.13 [2.64–3.31] n=245 | `GAP_BETWEEN_SPOKEN_CHOICES = 3` | inside |
-| between spoken choices, 問題5 | 3.07 [2.62–3.26] n=220 | 3.06 [2.63–3.25] n=102 | (same constant) | inside |
-| 問題5 質問1 → 質問2 | **10.0** [range 7.8–12.4] n=20 | 10.0 | `GAP_AFTER_SHITSUMON1 = 10` | inside |
-| **dialogue turn gap** | **0.51** [p25 0.30, p75 0.75, p90 1.08, max 2.56] n=465 | (2018–2025 only) | `GAP_BETWEEN_LINES` was 1.3 | **outside → changed to 0.9** |
+| answer pause 問題1 | **12.23** [12.17–12.49] n=106 | 12.43 n=57 | `ANSWER_PAUSE 問1 = 12` | inside |
+| answer pause 問題2 | **12.22** [12.09–12.50] n=136 | 12.36 n=73 | `= 12` | inside |
+| answer pause 問題3 | **8.32** [8.17–8.57] n=110 | 8.38 n=64 | `= 8` | inside |
+| answer pause 問題4 | **8.28** [8.19–8.43] n=267 | 8.32 n=139 | `= 8` | inside |
+| 問題2 option-reading | **20.22** [20.19–20.38] n=139 | 20.22 n=77 | `GAP_OPTION_READING = 20` | inside |
+| 問題1 question→conversation | **2.80** [2.74–2.91] n=74 | 2.80 n=39 | `GAP_AFTER_PRE_QUESTION = 3` | inside |
+| 問題1 conversation→repeated question | 2.94 [2.81–3.19] n=74 | 3.02 n=39 | `GAP_BEFORE_REPEATED_QUESTION = 3` | inside — never applied until 2026-08-13, §2.1 |
+| 問題4, between three replies | 2.23 [2.14–2.31] n=795 | — | `GAP_BETWEEN_SPOKEN_RESPONSES = 2.2` | inside — added 2026-08-13, §2.1 |
+| between spoken choices, 問題3 | **3.10** [2.66–3.26] n=427 | 3.13 n=245 | `GAP_BETWEEN_SPOKEN_CHOICES = 3` | inside |
+| between spoken choices, 問題5 | 3.07 [2.62–3.26] n=220 | 3.06 n=102 | same constant | inside |
+| 問題5 質問1→質問2 | **10.0** [7.8–12.4] n=20 | 10.0 | `GAP_AFTER_SHITSUMON1 = 10` | inside |
+| **dialogue turn gap** | **0.51** [p25 0.30, p75 0.75, p90 1.08, max 2.56] n=465 | 2018–2025 only | was 1.3 | **outside → changed to 0.9** |
 
-Same-speaker (within-turn) pauses, for contrast: median 0.40, p75 0.53,
-p90 0.72, n=181. Turn boundaries really are the longer class, and they are
-still only half a second.
+Same-speaker (within-turn) pauses, for contrast: median 0.40, p75 0.53, p90
+0.72, n=181 — turn boundaries are the longer class, still only half a second.
 
 ### The constants were right and the audio was still wrong
 
 Every value above was inside its band while the shipped audio was **2× too
-slow at every turn boundary**, because a gap is inserted BETWEEN segments and
-both TTS engines pad each segment: edge-tts writes ~0.22 s of lead and
-~0.85 s of tail silence into every utterance (Gemini ~0.26 s either side).
-Measured in a shipped paper's 問題1 before the fix: turn gaps **1.88–2.09 s**
-against `GAP_BETWEEN_LINES = 0.9`, and a mid-turn 。 running 0.97–1.04 s against
-an official same-speaker p75 of 0.53.
+slow at every turn boundary** — a gap is inserted BETWEEN segments, and
+both TTS engines pad each segment (edge-tts ~0.22s lead + ~0.85s tail
+silence per utterance). Measured before the fix: turn gaps 1.88–2.09s
+against `GAP_BETWEEN_LINES = 0.9`, mid-turn 。 running 0.97–1.04s against
+official's 0.53 p75.
 
-`shape_pauses()` now trims each segment's leading/trailing silence to zero and
-caps internal pauses above `SHAPE_PAUSE_FLOOR` (0.6 s) at
-`GAP_WITHIN_TURN_MAX` (0.5 s), leaving shorter ones untouched so a ~0.1 s 促音
-closure survives. Re-measured on the rendered MP3 after the fix:
+`shape_pauses()` now trims each segment's lead/tail silence to zero and caps
+internal pauses above `SHAPE_PAUSE_FLOOR` (0.6s) at `GAP_WITHIN_TURN_MAX`
+(0.5s), leaving shorter ones untouched (a ~0.1s 促音 closure survives).
+Re-measured after the fix:
 
 | | before | after | official |
 |---|---|---|---|
-| turn gap, median | 1.88–2.09 s | **0.93 s** | 0.51 [p75 0.75, p90 1.08] |
-| within-turn pause, median | 0.30 s, with 。 at 0.97 | **0.38–0.44 s** | 0.40 [p75 0.53] |
-| runtime of one item, same lines | 87.1 s | **74.3 s** | — |
+| turn gap, median | 1.88–2.09s | **0.93s** | 0.51 [p75 0.75, p90 1.08] |
+| within-turn pause, median | 0.30s, with 。 at 0.97 | **0.38–0.44s** | 0.40 [p75 0.53] |
+| runtime of one item, same lines | 87.1s | **74.3s** | — |
 
 **The lesson is a method, not a number: verify a pacing constant on the
-rendered MP3, not in the source.** A constants-only review passed this defect on
-every paper it had.
+rendered MP3, not in the source.** A constants-only review passed this
+defect on every paper it had.
 
 ### 2.1 The constants were right, reachable, and applied — check all three
 
-The section above ("The constants were right and the audio was still wrong") was
-about TTS padding defeating a correct value. Measuring the rendered MP3 of
-`20260813_2` against the archive on 2026-08-13 found the next layer: two values
-that this table already carried were **never reached by the code**, and one pause
-the archive does not have was being inserted.
+Measuring `20260813_2`'s rendered MP3 against the archive on 2026-08-13
+found the next layer: two values this table already carried were **never
+reached by the code**, and one pause the archive doesn't have was inserted.
 
 | | this table said | the audio had | official |
 |---|---|---|---|
-| 問題4, reply → reply | "the 3 s gap belongs to 問題3 and 問題5 ONLY" — no constant existed | **0.900 s** ×4 in 1番 | 2.23 [2.14–2.31] n=795 |
-| 問題1/2, talk → question repeated | "(same constant)", verdict "inside" | **0.905 s** | 2.94 [2.81–3.19] n=74 |
-| after an 例 | our-build deviation, 13×12 s / 18×8 s | 12 s / 8 s | none: 例 runs into 「最もよいものは◯番です…」 |
+| 問題4, reply→reply | "belongs to 問3/5 ONLY" — no constant existed | **0.900s** ×4 in 1番 | 2.23 [2.14–2.31] n=795 |
+| 問題1/2, talk→question repeated | "(same constant)", verdict inside | **0.905s** | 2.94 [2.81–3.19] n=74 |
+| after an 例 | our deviation, 13×12s/18×8s | 12s/8s | none — 例 runs into the confirmation |
 
-`GAP_AFTER_PRE_QUESTION` is applied at `line_index == 1` only, so the repeated
-question (the block's LAST line) fell through to `GAP_BETWEEN_LINES`; the
-spoken-choice branch was gated on `section in ("問題3","問題5")`, so every 問題4 gap
-did too. Both rows read "inside" in every review, because a review checks the
-value, not whether the branch that returns it can be reached. 問題4 was the
-expensive one — 即時応答 is heard once, so reading its three replies 2.5× tighter
-than official raised that section above real-exam difficulty for eight papers.
+`GAP_AFTER_PRE_QUESTION` was applied only at `line_index == 1`, so the
+repeated question (the block's LAST line) fell through to
+`GAP_BETWEEN_LINES`; the spoken-choice branch was gated on
+`section in ("問題3","問題5")`, so every 問題4 gap did too. Both read
+"inside" in every review, because a review checks the value, not whether
+the branch can be reached — 問題4 was the expensive one (即時応答 is heard
+once; 2.5× tighter replies raised the section above real-exam difficulty
+for eight papers).
 
-Two lessons, both now enforced rather than remembered:
-
-- **Measure the rendered MP3 against the ARCHIVE, not against the table.** The
-  table is what the code was supposed to do; only the audio says what it did.
-  A silencedetect histogram over one paper takes a minute and would have caught
-  all three.
-- **A pacing change makes every existing MP3 stale, and `script_sha` cannot see
-  it** — the constants are not in the script bytes. `pacing_sha` now stamps the
-  GAP_/PAUSE_/SHAPE_ values plus the source of
-  `pause_after`/`gap_before_line`/`shape_pauses` into `聴解_チャプター.json`, and
-  `make check` fails on disagreement.
+Two lessons, now enforced rather than remembered: **measure the rendered
+MP3 against the ARCHIVE, not the table** (a silencedetect histogram over
+one paper takes a minute and would have caught all three); and **a pacing
+change makes every existing MP3 stale, and `script_sha` can't see it** — the
+constants aren't in the script bytes. `pacing_sha` now stamps the GAP_/
+PAUSE_/SHAPE_ values plus the source of `pause_after`/`gap_before_line`/
+`shape_pauses` into `聴解_チャプター.json`; `make check` fails on disagreement.
 
 ### 問題5 is three different pauses, not one
 
 | Position | n | min | median | max |
 |---|---|---|---|---|
-| 1番 (has spoken choices, like 問題3) | 16 | 6.1 | **8.3** | 8.9 |
-| 質問1 → 質問2 | 20 | 7.8 | **10.0** | 12.4 |
+| 1番 (spoken choices, like 問題3) | 16 | 6.1 | **8.3** | 8.9 |
+| 質問1→質問2 | 20 | 7.8 | **10.0** | 12.4 |
 | 質問2, the last pause of the paper | 20 | 8.4 | **11.2** | 19.8 |
 
-`ANSWER_PAUSE` is one number per 問題, so 10 s remains the right compromise:
-exact for the 質問1 gap, between the other two. The long tail on the final
-pause is the recording running on into the closing announcement, not answer
-time.
+`ANSWER_PAUSE` is one number per 問題, so 10s is the right compromise —
+exact for 質問1, between the other two. The long tail on the final pause is
+the recording running into the closing announcement, not answer time.
 
 ### Structure the generator does not reproduce
 
-- **Spoken choices are read as 「1、」 + ~1.1 s + the option text**, then ~3.1 s
-  before the next number. We speak each choice as one utterance, so only the
-  ~3 s inter-choice gap exists in our audio. (Consistent in every segmented
-  sitting; the 1.1 s sub-gap has n≈4 per item.)
-- **問題4's three responses are read continuously** — the gaps before its answer
-  pause cluster at 2.23 s [2.14–2.31] n=795, clearly below the 3.1 s of
-  問題3/5. Reproduced since 2026-08-13 by `GAP_BETWEEN_SPOKEN_RESPONSES = 2.2`
-  (§2.1); before that every 問題4 gap was 0.9 s. The 3 s spoken-choice gap still
-  belongs to 問題3 and 問題5 only.
-- **A single ~10 s rest sits between 問題2 and 問題3** in 5 of 22 segmented
-  sittings (9.9 / 10.3 / 10.3 / 10.3 / 10.6 s), landing after the 問題3
-  instruction and before its 例. In the other sittings it is absent or
-  absorbed into the item run. Not reproduced by our build; low priority.
+- Official reads spoken choices as 「1、」+ ~1.1s + the option text, then
+  ~3.1s before the next number — we speak each choice as one utterance, so
+  only the ~3s inter-choice gap exists in our audio.
+- 問題4's three responses are read continuously — gaps cluster at 2.23s
+  [2.14–2.31] n=795, well below 問題3/5's 3.1s. Reproduced since 2026-08-13
+  by `GAP_BETWEEN_SPOKEN_RESPONSES = 2.2`; before that every 問題4 gap was 0.9s.
+- A single ~10s rest sits between 問題2 and 問題3 in 5 of 22 segmented
+  sittings, landing after the 問題3 instruction and before its 例 — absent
+  or absorbed elsewhere in the rest. Not reproduced; low priority.
 
 ---
 
 ## 3. Drift 2010 → 2025: there is none
 
-Correlation between sitting date and the measured value, over the 22 segmented
-sittings:
+Correlation between sitting date and measured value, over 22 segmented sittings:
 
 | Quantity | r |
 |---|---|
@@ -200,10 +175,10 @@ sittings:
 | total runtime | +0.34 |
 | integrated LUFS (all 31) | −0.01 |
 
-The 問題2 reading pause is 20.2 s in **every single sitting from 2010 to 2025**;
-the 問題1/2 answer pause never leaves 11.8–12.9 s; 問題3/4 never leaves
-7.8–8.8 s. So "calibrate to recent practice" and "calibrate to the whole
-archive" give the same answer, and a 2026 mock has no drift to chase.
+The 問題2 reading pause is 20.2s in every single sitting 2010–2025; 問1/2
+answer pause never leaves 11.8–12.9s; 問3/4 never leaves 7.8–8.8s. So
+"calibrate to recent practice" and "calibrate to the whole archive" give
+the same answer.
 
 ---
 
@@ -219,91 +194,82 @@ archive" give the same answer, and a 2026 mock has no drift to chase.
 | speech time (min) | 14.8 | 17.3 | **18.7** | 20.2 | 23.1 |
 | syllable nuclei / min of speech | 250 | — | **271** | — | 281 |
 
-**The narrator is female in all 31 recordings** — the lowest opening F0 in the
-archive is 176 Hz (2018-12) and the median is 216 Hz, nowhere near a male range.
-The `NARRATOR = FEMALE` rule in `choukai-audio` is confirmed on the
-whole archive, not on one file.
+**The narrator is female in all 31 recordings** — lowest opening F0 is
+176Hz (2018-12), median 216Hz — confirming `NARRATOR = FEMALE` on the whole
+archive, not one file.
 
-**Runtime is NOT "consistently ~50–52 min".** That claim (previously in what
-is now `choukai-audio` Part 4 step 1, measured on one file) is wrong even for the
-old five, which run 42.2–51.4 min. Across the archive the spread is
-36.6–52.1 min. Runtime is not a calibration target; the pauses are.
+**Runtime is NOT "consistently ~50–52 min"** — that old claim (measured on
+one file) is wrong even for the old five (42.2–51.4min); the archive spread
+is 36.6–52.1min. Runtime is not a calibration target; the pauses are.
 
 ### The loudness target was a unit error
 
-`volumedetect`'s `mean_volume` on official audio reads −19 to −20 dB — which is
-where the old `I=-17` target came from, via the note "mean volume averages −17
-to −18 dB (target −17 LUFS)". `mean_volume` is **ungated flat RMS over the
-whole file, silence included**; `loudnorm`'s `I` is **gated and K-weighted**.
-On the same recordings the two differ by ~4 dB, and the figure `loudnorm`
-actually controls has a median of **−15.0 LUFS**, with 27 of 31 sittings above
-−17. `I=-17` therefore shipped every generated exam ~2 dB quieter than the
-reference material. Now `I=-15`.
+`volumedetect`'s `mean_volume` on official audio reads −19 to −20dB — where
+the old `I=-17` target came from. `mean_volume` is ungated flat RMS over the
+whole file, silence included; `loudnorm`'s `I` is gated and K-weighted — on
+the same recordings they differ by ~4dB, and the figure `loudnorm` actually
+controls has a median of **−15.0 LUFS** (27 of 31 above −17). `I=-17`
+therefore shipped every generated exam ~2dB quieter than reference. Now `I=-15`.
 
-True peak stays at −1.0 dBTP: the official median is −0.86 and several sittings
-clip above 0 dBTP, which is not worth copying. LRA stays 11 — it is a ceiling
-and official material (7.5–9.8) never reaches it.
+True peak stays −1.0 dBTP (official median −0.86, several sittings clip
+above 0). LRA stays 11 — a ceiling official material (7.5–9.8) never reaches.
 
 ---
 
 ## 5. Speech rate — our TTS is already inside the official band
 
-Measured with one detector applied identically to both sides, so no calibration
-constant is involved in the comparison:
+One detector applied identically both sides, so no calibration constant is
+involved in the comparison:
 
 | Audio | syllable nuclei / min of speech |
 |---|---|
-| official archive, 31 sittings | 250 – 281, median **271** |
+| official archive, 31 sittings | 250–281, median **271** |
 | `tests/2/聴解.mp3` | 270.6 |
 | `tests/1/聴解.mp3` | 279.7 |
 
-Our synthesized audio sits at the top of the official band but inside it. The
-`SPEAKER_MAP` rates need no change on this evidence, and the caution in
-`choukai-audio` Part 4 step 5 stands: N2's 認定の目安 is 「自然に**近い**」
-speed, so do not push rates up.
+Our synthesized audio sits at the top of the band but inside it —
+`SPEAKER_MAP` rates need no change on this evidence; N2's 認定の目安 is
+「自然に**近い**」 speed, not natural speed, so don't push rates up.
 
-Converted through the TTS-derived 0.589 nuclei/mora ratio the archive estimates
-at 425–478 morae/min, which is above the 300–400 "natural conversation" figure
-quoted in the skill — that gap is the calibration ratio not transferring from
-synthetic to human speech, so treat the converted number as indicative only and
-prefer the nuclei comparison above.
+Converted through the 0.589 nuclei/mora TTS-derived ratio, the archive
+estimates 425–478 morae/min — above the 300–400 "natural conversation"
+figure elsewhere, because that ratio doesn't transfer from synthetic to
+human speech; treat it as indicative only, prefer the nuclei comparison.
 
-Per-section rate (estimated morae/min, medians over segmented sittings):
-問題1 467, 問題2 457, 問題3 466, 問題4 449, 問題5 466; the announcer's opening
-25 s measures **432**, i.e. the narrator is consistently more measured than the
-dialogue. Our −10 % narrator rate reproduces that relationship.
+Per-section rate (estimated morae/min, medians): 問題1 467, 問題2 457,
+問題3 466, 問題4 449, 問題5 466; the announcer's opening 25s measures 432 —
+the narrator is consistently more measured than the dialogue, which our
+−10% narrator rate reproduces.
 
-Section runtimes, median [range] over segmented sittings: 問題1 6.1 [4.3–6.9],
-問題2 9.8 [7.6–11.0], 問題3 6.5 [4.6–9.2], 問題4 6.3 [4.6–8.0], 問題5 5.1
-[2.6–6.2] min, measured from a section's first answer pause to the end of its
-last.
+Section runtimes, median [range]: 問題1 6.1 [4.3–6.9], 問題2 9.8
+[7.6–11.0], 問題3 6.5 [4.6–9.2], 問題4 6.3 [4.6–8.0], 問題5 5.1 [2.6–6.2]
+min (first answer pause to end of last).
 
 ---
 
 ## 6. Coverage — what was measured and what was not
 
-Loudness, true peak, LRA, runtime, speech time, narrator F0 and speech rate:
-**all 31 files**, no failures — every recording decoded cleanly.
+Loudness, true peak, LRA, runtime, speech time, narrator F0, speech rate:
+all 31 files, no failures.
 
 Pause/section segmentation: **22 of 31**. The nine below are reported
-unavailable rather than estimated, because a fabricated pause constant
-silently mis-times every future exam. All nine are pre-2018 or duplicate a
-neighbouring sitting's structure; excluding them does not move any median
-(the recent-12 column in §2 agrees with the all-22 column to within 0.2 s).
+unavailable rather than estimated — a fabricated pause constant silently
+mis-times every future exam. All nine are pre-2018 or duplicate a
+neighbouring sitting's structure; excluding them moves no median (recent-12
+agrees with all-22 to within 0.2s).
 
 | Sitting | Why it was not segmented |
 |---|---|
-| 2010-07, 2011-12, 2012-12, 2013-12, 2017-12, 2018-07, 2024-07 | 8–9 answer pauses attributed to 問題2 — an extra structural pause inside the option-reading run that the shape rules cannot safely assign |
-| 2012-07 | densest item run is only 5 — no 問題4 signature (36.9 min, the most heavily edited copy in the archive) |
+| 2010-07, 2011-12, 2012-12, 2013-12, 2017-12, 2018-07, 2024-07 | 8–9 answer pauses attributed to 問題2 — an extra structural pause the shape rules can't safely assign |
+| 2012-07 | densest item run is only 5 — no 問題4 signature (most heavily edited copy in the archive) |
 | 2022-12 | only 3 pauses in 問題1's answer class |
 
 ---
 
 ## 7. Reproducing this
 
-The measurement scripts are not committed (they are one-shot analysis, and the
-inputs are 2 GB of `refs/` audio). The pipeline is four steps and is fully
-described above; the operative parameters are:
+Not committed (one-shot analysis, inputs are 2GB of `refs/` audio). Four
+steps:
 
 ```
 decode      ffmpeg -ac 1 -ar 16000 -f s16le          (20 ms RMS frames for pauses,

@@ -190,41 +190,97 @@ ANSWER_SECTIONS = [
 # section having {1,2,3,4} and every 2-item section having distinct numbers).
 # Instead, the 90 four-choice items are globally balanced across the whole paper
 # (each position 1..4 receives 22 or 23 items to satisfy POSITION_BAND = (19, 27)),
-# shuffled with no 3 identical answers in a row anywhere (no 1-1-1), and then
+# shuffled with no 4 identical answers in a row anywhere, and then
 # sliced into sections in order — matching official JLPT past exams.
+#
+# 2026-08-18: the shuffle cap was a run of 3 (no 1-1-1) until this line, which
+# turned out to over-correct the R17 fix above for the four SMALL 聴解 slices
+# specifically (5/6/5/3 items) — even a properly balanced global deck reads as
+# suspiciously even once cut into a window that small. Measured against the
+# official archive's own key.md answer keys (refs/JLPT_N2_NEW/16. N2 7-2025 and
+# 17.N2 12-2025's 聴解問題1, 5 items each): 7/2025 keys 2,3,3,3,2 — a real run of
+# THREE, and only 2 of the 4 positions used at all; 12/2025 keys 2,2,3,1,1 —
+# again only 3 of 4 positions. Every one of this repo's first 11 tests'
+# 聴解問題1 sections used all 4 positions with no repeats beyond one pair,
+# and 聴解問題5 (3 answers) landed on 3 DISTINCT positions in all 8 tests
+# checked — both artifacts of the pre-R17 per-section-quota algorithm those
+# tests were drawn under (see the "legacy_position_quota" marker below), but
+# the leftover run-of-3 ban in THIS algorithm was independently pushing new
+# draws toward the same suspiciously-even shape the R17 fix was supposed to
+# remove. A run of 3 is real official behavior; a run of 4 has not been
+# observed anywhere in the 31-sitting archive, so that is the cap now, not 3.
 #
 # PROVISIONAL BAND — retune, don't reinterpret. 90 four-choice items / 4 = 22.5,
 # and ±4 is the working tolerance until the measured spread of the official
 # papers (refs/JLPT_N2_NEW answer keys) replaces it. If that measurement
 # disagrees, change these two numbers; the algorithm does not care what they are.
 POSITION_BAND = (19, 27)
+MAX_POSITION_RUN = 3   # longest same-position run allowed anywhere in the deck;
+                       # see the note above — 3 is observed in the archive, 4 is not.
 
 
-def shuffle_no_triple(rng: random.Random, base: list[int], name: str) -> list[int]:
-    """Shuffle `base` until no position repeats three times in a row."""
+def shuffle_no_triple(rng: random.Random, base: list[int], name: str,
+                      max_run: int = 2) -> list[int]:
+    """Shuffle `base` until no position repeats more than `max_run` times running.
+
+    `max_run` defaults to 2 (no 3-in-a-row) for the small section-local draws
+    (聴解 問題4's 3-choice items via `balanced_positions` below). The 90-item
+    four-choice deck in `balanced_position_plan` calls this with
+    `max_run=MAX_POSITION_RUN` (3) instead — see the note above `POSITION_BAND`
+    for why a run of 3 is correct there and a run of 2 was not.
+    """
     base = list(base)
-    if len(set(base)) < 2 and len(base) >= 3:
-        # No arrangement can satisfy the no-3-in-a-row rule; fail loudly rather
+    window = max_run + 1
+    if len(set(base)) < 2 and len(base) >= window:
+        # No arrangement can satisfy the run-length cap; fail loudly rather
         # than spin forever in the shuffle loop.
         sys.exit(f"shuffle_no_triple: impossible constraint for {name} "
                  f"({len(base)} items over {len(set(base))} position(s))")
     for _ in range(10_000):
         rng.shuffle(base)
-        if all(not (base[i] == base[i + 1] == base[i + 2])
-               for i in range(len(base) - 2)):
+        if all(len(set(base[i:i + window])) > 1
+               for i in range(len(base) - window + 1)):
             return base
     sys.exit(f"shuffle_no_triple: no valid arrangement after 10000 shuffles "
              f"for {name} ({len(base)} items)")
 
 
+POSITION_BAND_3 = (2, 6)   # per-position count band for width-3 draws (聴解
+                           # 問題4, 11 items). Official's own count split is
+                           # not an even quota — 7/2025 keys 3/5/3 over 11
+                           # items, 12/2025 keys 4/4/3 — so a fixed
+                           # floor(count/width) split, reshuffled or not,
+                           # always reproduces the SAME per-position counts
+                           # every draw (found 2026-08-18: every one of this
+                           # repo's shipped 問題4 sections ran exactly 4/4/3,
+                           # because the old `[(i % width) + 1 ...]` base list
+                           # only ever gets reordered, never re-counted).
+
+
 def balanced_positions(rng: random.Random, count: int, width: int) -> list[int]:
-    """Near-uniform distribution over 1..width, never 3 identical in a row.
+    """Randomly distributed over 1..width — no fixed per-position quota.
 
     Section-local: used for the width-3 section (聴解 問題4), which does not
-    take part in the cross-section balancing below.
+    take part in the cross-section balancing below. Draws each item's
+    position independently (not a reshuffled even split) and rejects until
+    every position's count sits inside `POSITION_BAND_3` and no position
+    repeats 3 times running, so the per-position COUNTS vary draw to draw
+    the way official's do, not just their order.
     """
-    return shuffle_no_triple(rng, [(i % width) + 1 for i in range(count)],
-                             f"{count}x{width}")
+    if width != 3:
+        # only 聴解_問題4 calls this today; keep the previous even-split
+        # shape for any other width so this fix stays scoped to that section.
+        return shuffle_no_triple(rng, [(i % width) + 1 for i in range(count)],
+                                 f"{count}x{width}")
+    lo, hi = POSITION_BAND_3
+    for _ in range(10_000):
+        deck = [rng.randrange(1, width + 1) for _ in range(count)]
+        counts = {p: deck.count(p) for p in range(1, width + 1)}
+        if all(lo <= c <= hi for c in counts.values()) and \
+           all(len(set(deck[i:i + 3])) > 1 for i in range(len(deck) - 2)):
+            return deck
+    sys.exit(f"balanced_positions: no valid {count}x{width} arrangement "
+             f"inside {POSITION_BAND_3} after 10000 draws")
 
 
 def balanced_position_plan(rng: random.Random,
@@ -251,13 +307,7 @@ def balanced_position_plan(rng: random.Random,
     for pos, cnt in zip([1, 2, 3, 4], counts):
         deck.extend([pos] * cnt)
 
-    for _ in range(10_000):
-        rng.shuffle(deck)
-        if all(not (deck[i] == deck[i + 1] == deck[i + 2])
-               for i in range(len(deck) - 2)):
-            break
-    else:
-        sys.exit(f"balanced_position_plan: no valid arrangement after 10000 shuffles")
+    deck = shuffle_no_triple(rng, deck, "90-item deck", max_run=MAX_POSITION_RUN)
 
     plan: dict[str, list[int]] = {}
     idx = 0

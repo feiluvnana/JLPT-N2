@@ -4120,7 +4120,18 @@ def check_choukai_contractions(test_id: str, st: str, m):
 
 
 def check_choukai_key_paraphrase(test_id: str, ct: str, st: str, m, bi):
-    """A keyed option restates the deciding line; it does not copy it (G17)."""
+    """A keyed option restates the deciding line; it does not copy it (G17).
+
+    KNOWN BLIND SPOT (found 2026-08-18): tokens require 2+ kanji or 3+
+    katakana chars, so a key written mostly in hiragana (a verb reused as its
+    own kana spelling, e.g. 説明する -> せつめいする) yields zero tokens and
+    silently skips this check entirely — `total` never counts it. A key can
+    also dodge a match by swapping only the register of ONE katakana word
+    (スマホ -> スマートフォン) while keeping the deciding verb (見せる)
+    unchanged. Neither is caught here; both are real, shipped defects — see
+    choukai-items.md §'The 解説 QUOTES the script; the OPTION restates it'.
+    This gate is a coarse WARN, not proof of a genuine paraphrase.
+    """
     keys, printed = choukai_key_table(ct, bi), choukai_printed_options(ct, bi)
     verbatim, total = [], 0
     # 問題2 ONLY. 言い換え is Shin Kanzen's ポイント理解 chapter (IV-2), and

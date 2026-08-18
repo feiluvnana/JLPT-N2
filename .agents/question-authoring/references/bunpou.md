@@ -1,11 +1,11 @@
 # 文法 (問題7–9) — construction rules
 
-Section reference for the `question-authoring` skill. Read the core `SKILL.md`
-alongside this file — it carries the N2-band rule, distractor discipline, and
-item integrity (the 問題8 assembly, ★-position, glue, and uniqueness link-table
-rules are Item integrity #4–#8 there). This file adds the 問題7–9-specific
-rules and benchmark lengths, measured on `refs/JLPT_N2_NEW/` (per-sitting
-figures: `references/official_calibration.md` §7).
+Section reference for the `question-authoring` skill. Read the core
+`SKILL.md` alongside this file — it carries the N2-band rule, distractor
+discipline, and item integrity (問題8 assembly/★-position/glue/uniqueness
+link-table rules are Item integrity #4–8 there). This file adds the
+問題7–9-specific rules and benchmark lengths, measured on
+`refs/JLPT_N2_NEW/` (per-sitting figures: `official_calibration.md` §7).
 
 ## Inventory — N2-list items only
 
@@ -20,37 +20,35 @@ include one FAKE form like 参られます as a distractor). Pool draws come fro
   〜前に/〜後で as the sole point — full list:
   `references/level_band_grammar.txt` `## TOO_EASY`.
 - **BANNED too hard (N1):** 〜にあって, 〜をもって, 〜ともなると, 〜までもなく
-  (except the set phrase 言うまでもなく as running text, not a productive key),
-  〜を皮切りに, 〜がてら/〜かたわら as keys, 〜ずにはおかない, 〜余儀なくされる
-  as the tested form — `## TOO_HARD` in the same file. Avoid shipping
-  these as 問題7 keys.
-- **One grammar point may be the KEY only once per paper**, and a tested form
-  stays out of the reading passages — core Item integrity #15.
+  (except the set phrase 言うまでもなく as running text, not a productive
+  key), 〜を皮切りに, 〜がてら/〜かたわら as keys, 〜ずにはおかない,
+  〜余儀なくされる as the tested form — `## TOO_HARD` in the same file.
+- **One grammar point may be the KEY only once per paper**, and a tested
+  form stays out of the reading passages — core Item integrity #15.
 
 ## 問題7 — stem length and shape
 
-Official stems average **~43 JP chars** (median ~41; interquartile ~33–54). A
-paper whose 12 stems average under ~35, or that ships many under ~30, reads as
-textbook-drill short. Target: **each stem ≥30 JP chars, paper average ≥40**,
-most items in the **35–55** band. (Note the band's honesty check: 21% of
-official 問題7 stems are themselves under 30 — the floor is an authoring
-target, not an official per-item invariant; `official_calibration.md` §9.)
+Official stems average **~43 JP chars** (median ~41; interquartile
+~33–54). A paper whose 12 stems average under ~35, or ships many under
+~30, reads as textbook-drill short. Target: each stem ≥30 JP chars, paper
+average ≥40, most items in **35–55**. (21% of official stems are
+themselves under 30 — the floor is an authoring target, not a per-item
+invariant; `official_calibration.md` §9.)
 
-Build length with scene-setting (職場・電話・掲示・インタビュー), a subordinate
-clause, or a short dialogue lead-in — never by padding the tested form.
-Official items often open with `(会社で)` / `(電話で)` / a named role. Avoid short
-20–34 char stem averages with the right grammar points where the carrier is too short.
-Lengthen the *situation*:
-「このまま働きすぎると、体を壊し(　)よ。」 fails the band even when かねない is
-the correct key; rewrite toward
+Build length with scene-setting (職場・電話・掲示・インタビュー), a
+subordinate clause, or a short dialogue lead-in — never by padding the
+tested form. Official items often open with `(会社で)`/`(電話で)`/a named
+role. Lengthen the *situation*: 「このまま働きすぎると、体を壊し(　)よ。」
+fails the band even with the correct key かねない; rewrite toward
 「最近残業が続き休日もほとんど取れない。このまま働きすぎると、体を壊し(　)よ。」
 (scene + consequence). Same rule for 問題8 frames and 問題9 cloze prose.
 
 **Shape:** every official paper includes several 問題7 items with dialogue
-turns or a setting label (`（会社で）`/`（電話で）`/`（インタビューで）`/homepage
-notice). Include **at least 2** (prefer 2–4) per paper among the 12 (`make check` WARNs on a set with none).
+turns or a setting label (`（会社で）`/`（電話で）`/`（インタビューで）`/
+homepage notice). Include at least 2 (prefer 2–4) of the 12 (`make check`
+WARNs on a set with none).
 
-**Dialogue / setting Markdown layout** — do NOT crush the stem onto one line.
+**Dialogue/setting Markdown layout** — do NOT crush the stem onto one line.
 Official booklets put the place label first, then each speaker on its own line:
 
 ```
@@ -60,124 +58,105 @@ B「経験がないのに引き受けた(　)、大変な目にあってしま�
  1. どころか  2. ばかりに  3. ながらに  4. おきに
 ```
 
-Rules: (1) `（会社で）` etc. alone on the stem's first line after `**N**`;
-(2) each speaker turn (`A「…」` / `山田「…」`) on its own following line;
-(3) the horizontal option row still on ONE line under the turns. Collapsing to
-`**40** （会社で）A「…」B「…」` is forbidden — it reads as a drill line. The
-sheet builder keeps its question context across those stem lines, so radios
-still attach; do not "fix" a sheet by flattening the dialogue (rendering:
-`exam-app`).
+Rules: (1) `（会社で）` alone on the stem's first line after `**N**`; (2)
+each speaker turn on its own following line; (3) the option row still on
+ONE line under the turns. Collapsing to `**40** （会社で）A「…」B「…」` is
+forbidden — reads as a drill line. The sheet builder keeps its question
+context across those stem lines, so radios still attach — don't "fix" a
+sheet by flattening the dialogue (`exam-app`).
 
 ## 問題8 (文の組み立て) — length is mostly in the OPTIONS
 
-Measured on `refs/JLPT_N2_NEW/` papers + the official 2018 sample (jlpt.jp
-N2G.pdf) and the July 2025 booklet
-(`refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`):
+Measured on `refs/JLPT_N2_NEW/` + the official 2018 sample + July 2025:
 
-- **Sum of the four options** typically **16–29 JP chars** (2018 sample has
-  chunks like 「山を下りて何日かすると」「二度としたくないと」).
-- **Per option:** a mix is fine (a 2–3 char particle next to an 8–12 char
-  clause), but **≥2 options ≥5 JP chars** and the longest usually **≥7**. Four
-  scraps of 2–4 chars (e.g. `わりに/ケーキは/とても/値段の`) read as drill
-  chunks, not N2 scramble chunks.
-- **Assembled sentence** (stem frame + four options) **≥45 JP chars**; prefer
-  ~50–75. Stem context before/after the blank run is required when the options
-  alone cannot fund that length.
-- Prefer **nested/phrase chunks** (複文フレーム) over isolated particles when
+- **Sum of the four options**: typically 16–29 JP chars.
+- **Per option:** a mix is fine (a particle next to a clause), but ≥2
+  options ≥5 JP chars and the longest usually ≥7 — four 2–4 char scraps
+  read as drill chunks, not N2 scramble chunks.
+- **Assembled sentence** (stem frame + four options) ≥45 JP chars, prefer
+  ~50–75. Fund the length with stem context when the options alone can't.
+- Prefer nested/phrase chunks (複文フレーム) over isolated particles when
   the grammar point allows.
 
-**Treat all of the above as authoring targets, not rejection grounds.** §9 of
-`official_calibration.md` measured the gate's three 問題8 constants against the
-archive and they reject **20% / 38% / 34%** of official items (`P8_OPT_SUM_MIN`
-16 vs an official band of 9–41; `P8_LONG_OPTS_MIN` 2 vs 0–4; `P8_ASSEMBLED_MIN`
-45 vs 30–78); 51% of all official options are under 5 chars, and a bare adverb
-or particle on a card is official practice. Chunk-size intuitions do not
-survive contact with the archive — **the invariant is ★-uniqueness** (core Item
-integrity #8, the link table), and length is calibration.
+**Treat all of the above as authoring targets, not rejection grounds.**
+`official_calibration.md` §9 measured the gate's three 問題8 constants
+against the archive and they reject 20%/38%/34% of official items
+(`P8_OPT_SUM_MIN` 16 vs an official band of 9–41; `P8_LONG_OPTS_MIN` 2 vs
+0–4; `P8_ASSEMBLED_MIN` 45 vs 30–78) — 51% of official options are under 5
+chars, and a bare adverb/particle on a card is official practice. Chunk-size
+intuitions don't survive contact with the archive — **the invariant is
+★-uniqueness** (Item integrity #8, the link table); length is calibration only.
 
 ### Register mix across the 5 items — the archive varies SCENE, not grammar band
 
-A paper whose 問題8 items are all correctly N2-band grammar but all set in the
-same dense, formal register still reads as uniformly hard — because "hard"
-here is a register/scene effect, not a grammar-band one, and it is invisible
-to `level_band_grammar.txt`. Measured over the same 35 current-era items
-(`official_calibration.md` §13), classifying each stem's setting:
+A paper whose 問題8 items are all correctly N2-band grammar but all set in
+the same dense formal register still reads as uniformly hard — a
+register/scene effect, invisible to `level_band_grammar.txt`. Measured over
+35 current-era items (`official_calibration.md` §13):
 
 | register | share |
 |---|---|
 | personal/casual (family, friends, first-person daily life, casual dialogue) | **63%** |
 | neutral/factual (trivia, weather, plain description) | 23% |
-| formal/institutional (workplace policy, business, administrative notice, technical) | **14%** |
+| formal/institutional (workplace policy, business, admin notice, technical) | **14%** |
 
-**Personal/casual is the majority register in every one of the 7 sittings, and
-two sittings (12/2024, 12/2025) ship ZERO formal/institutional items** — an
-all-personal paper is normal; no sitting exceeds 2 of 5 formal/institutional
-items. Three generated papers checked before this rule existed skewed the
-opposite way — 11/15 items (73%) corporate/formal (契約書 negotiation, system
-procurement, price negotiation, workplace manuals), one paper 5/5 formal — a
-shape that never occurs in the archive.
+Personal/casual is the majority in every one of the 7 sittings; two
+sittings (12/2024, 12/2025) ship ZERO formal/institutional items — no
+sitting exceeds 2 of 5. Three generated papers checked before this rule
+existed skewed the opposite way (73% corporate/formal, one paper 5/5 — a
+shape that never occurs in the archive).
 
 **Binding target: at most 2 of the 5 問題8 items may be
 formal/institutional; at least 2 should be personal/casual** (family, a
-friend, first-person daily life, a casual dialogue quote — `A「…」`/`B「…」`
-same layout as 問題7). This is independent of which grammar point was drawn —
-a formal-sounding grammar form can still carry a personal-register sentence
-(`〜わりに` about a family dinner, not a quarterly budget), and the reverse.
-Do not let every item default to the same office/business setting just
-because 問題7's carrier seeds or the test's web topics lean corporate; 問題8's
-register is a separate authoring decision from 問題7's.
+friend, first-person daily life, a casual `A「…」`/`B「…」` dialogue — same
+layout as 問題7). Independent of which grammar point was drawn — a
+formal-sounding form can still carry a personal-register sentence (`〜わりに`
+about a family dinner, not a quarterly budget), and the reverse. Don't let
+every item default to office/business setting just because 問題7's seeds or
+the test's web topics lean corporate — 問題8's register is a separate
+authoring decision.
 
 ## 問題9 (cloze)
 
-- Official cloze passages run **~500–700 JP chars** (title + body, excluding
-  the four option lists). Never a 150–200 char mini-paragraph — that is N3
-  drill length. Four blanks; the prose must feel like a short magazine/column
-  piece.
-- **Every option stays grammar/phrase scale — never 読解-length paraphrases.**
-  Across the 7 current-era sittings (12/2022–12/2025, 112 options), official
-  問題9 options run **1–14 JP chars** (median 6, mean 6.1; longest observed
-  「試してみてはいかがでしょうか」「感じられるところだと思います」= 14).
-  Author to **≤14**; `make check` FAILs any option **>16**. A blank whose four
-  choices look like 問題10–13 主張/内容 options (「〜ことにある」 mini-summaries
-  of the thesis, 20–40 char paraphrases) is off-format even when the blank is
-  tagged `[内容推論]` — that defect shipped in every generated paper until the
-  length gate existed.
-- **The four blanks must test four DIFFERENT categories** — assign each blank a
+- Official cloze passages run ~500–700 JP chars (title+body, excluding the
+  option lists) — never a 150–200 char mini-paragraph (N3 drill length).
+  Four blanks; the prose should read like a short magazine/column piece.
+- **Every option stays grammar/phrase scale — never 読解-length
+  paraphrases.** Across 7 current-era sittings (112 options), official
+  問題9 options run 1–14 JP chars (median 6, mean 6.1). Author to ≤14;
+  `make check` FAILs any option >16. A blank whose four choices look like
+  問題10–13 主張/内容 options (「〜ことにある」 mini-summaries, 20–40 char
+  paraphrases) is off-format even tagged `[内容推論]` — shipped in every
+  generated paper until the length gate existed.
+- **The four blanks must test four DIFFERENT categories** — assign each a
   distinct type BEFORE writing, then check no type repeats:
   - **(a) 論理接続表現** — sentence-initial discourse connective
-    (しかし/そのうえ/つまり…);
-  - **(b) 文末モーダル表現** — a modal/inference family attached to the previous
+    (しかし/そのうえ/つまり…).
+  - **(b) 文末モーダル表現** — a modal/inference family on the previous
     clause (わけだ/わけがない/わけではない/わけにはいかない, はずだ/はずがない,
-    のも無理はない…) — ONE such family per paper, never two blanks drawing on
-    the same family;
-  - **(c) 内容推論** — the *choice* requires tracking the whole passage's
-    argument, not just the local sentence (the passage-level trap — at least
-    one blank must be this type). Options remain short grammar/phrase forms
-    of the same kind as (a)(b)(d): conjugations, short predicates, particles,
-    demonstratives (official examples: 利用してもいい / 試してみてはいかがで
-    しょうか / いいものだと思います / 感じるようになりました / 供給網の厚みに
-    ある-scale noun phrases ≤14). **Do not** write four mini-要約 of the
-    thesis — that is 読解 問題10–13, not 文章の文法;
+    のも無理はない…) — ONE such family per paper, never two blanks on the same family.
+  - **(c) 内容推論** — the choice requires tracking the whole passage's
+    argument, not just the local sentence (at least one blank must be
+    this). Options stay short grammar/phrase forms like (a)(b)(d)
+    (conjugations, short predicates, particles, demonstratives, ≤14 chars).
+    **Do not** write four mini-要約 of the thesis — that's 読解 問題10–13,
+    not 文章の文法.
   - **(d) 慣用/形式名詞** — a set phrase or formal noun (つもり, 元も子もない,
     願ってもない…).
 
-  Category collision shipped in **4/4** papers with this rule already written
-  (t1 48/51; t2 49/50/51; t3 48/50; t4 48/51), because a blank's category was
-  recorded nowhere.
+  Category collision shipped in 4/4 papers with this rule already written,
+  because a blank's category was recorded nowhere.
 - **The category tag is mandatory OUTPUT** (core §Answer keys): each of the
-  four 問題9 rows in the `## 文法` key table must OPEN its 解説 cell with the
-  tag in brackets — `[論理接続]` `[文末モーダル]` `[内容推論]`
-  `[慣用・形式名詞]`, these four strings verbatim. `make check` matches them
-  literally and FAILs unless the four cells carry four distinct tags including
-  **exactly one `[内容推論]`**. Example cell:
-  `[文末モーダル] 前の文の「…はずだった」を受け、…`. Assign the tags *before*
-  writing the blanks and write each blank to its tag — tagging afterwards, to
-  whatever you happened to write, is how t1/t2/t4 ended up with two modal
-  blanks. The `[内容推論]` blank is the one that cannot be chosen from the
-  local sentence alone; its options stay short (see length rule above).
+  four 問題9 rows in the `## 文法` key table must OPEN its 解説 cell with
+  the tag in brackets — `[論理接続]` `[文末モーダル]` `[内容推論]`
+  `[慣用・形式名詞]`, verbatim. `make check` FAILs unless the four cells
+  carry four distinct tags including **exactly one `[内容推論]`**. Example:
+  `[文末モーダル] 前の文の「…はずだった」を受け、…`. Assign tags *before*
+  writing the blanks — tagging afterward is how earlier papers ended up
+  with two modal blanks.
 
 ## Counting
 
-Count Japanese characters only (hiragana/katakana/kanji/JP punctuation); ignore
-spaces and the `(　)` / `＿＿` / `★` markers themselves when eyeballing, but do
-not strip scene-setting just to hit a number.
+Count Japanese characters only (hiragana/katakana/kanji/JP punctuation);
+ignore spaces and the `(　)`/`＿＿`/`★` markers when eyeballing, but don't
+strip scene-setting just to hit a number.
