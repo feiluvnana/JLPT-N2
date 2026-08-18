@@ -140,8 +140,14 @@ it before calling any authoring work done.
    binding, easier to skip: every stem anchoring on a quoted span
    (`「…」とあるが`) must point at a span that is ITSELF marked and bolded —
    never a bare quote with no `①**…**` on either side (`20260817_1` shipped
-   three). `dokkai.md` §"Marked-span quoting" owns the rule; `make check`'s
-   `check_dokkai_span_anchor_bold` FAILs the bare-quote shape.
+   three). The two sides must then be the SAME characters and short enough to
+   point rather than highlight — a bold running over the sentence the key
+   restates hands the item away (`20260817_2` bolded 72 chars against a
+   12-char stem quote; 19 spans across nine papers were over band).
+   `dokkai.md` §"Marked-span quoting" owns the rule and both numbers;
+   `make check`'s `check_dokkai_span_anchor_bold` FAILs the bare-quote shape
+   and `check_dokkai_span_anchor_identity` FAILs a mismatch, a （注N） gloss
+   inside the bold, and an over-length span.
 2. **Four DIFFERENT options.** The same string twice is a second correct
    answer. Read the four back aloud.
 3. **The key goes where `answer_positions` says — a SILENT spec means
@@ -266,7 +272,7 @@ it before calling any authoring work done.
 | 問題9 category tag | the four 問題9 rows, opening the 解説 cell | four distinct bracketed tags, exactly one `[内容推論]` | `bunpou.md` |
 | 問題14 two-cell quotes | `## 読解` rows 70 and 71 | two distinct `「…」` spans present in the flyer | `dokkai.md` |
 | 聴解 option grounding | `聴解.md` 問題1/2/3 解説 cells | `1 ✗「script line」→ 理由`, one per wrong option | `choukai-items.md` |
-| Marked-span bold+marker | 問題10–14 passage AND its stem, wherever `「…」とあるが` | `①**span**とあるが` on both sides | `dokkai.md` §"Marked-span quoting" |
+| Marked-span bold+marker | 問題10–14 passage AND its stem, wherever `「…」とあるが` | `①**span**とあるが` — same characters both sides, pointer-sized, gloss outside the bold | `dokkai.md` §"Marked-span quoting" |
 
 `make check` reads the 問題9 tags, 問題14 quote pairs, and marked-span
 bold/marker pairing, and FAILs on them; the other three are read by `exam-qa-review`.

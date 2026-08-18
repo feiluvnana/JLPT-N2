@@ -281,7 +281,11 @@ as "N1"/"N3", so a single source's label was never sufficient.
   N1+/rare/literary/specialized terms or contextual metaphors only. **Fail
   any `<ruby>` in `言語知識・読解.md`** — N2 kanji get no furigana; over-level
   terms use `（注N）` only. **Fail mismatched passage markers** (`①`/`②`) — every
-  marker must match 1-to-1 with a question stem in that block.
+  marker must match 1-to-1 with a question stem in that block, and the span
+  it bolds must be the same characters as the stem's quote, pointer-sized,
+  with any `（注N）` outside the bold (`dokkai.md` §"Marked-span quoting";
+  gated, but read the span against the key too — a bold long enough to cover
+  the reasoning has already answered the item).
 - **問題11:** 4 passages × 2 questions, instruction `(1)から(4)`. No per-pair
   事実/考え pairing requirement (the archive doesn't support one — stem-shape
   rules and the paper-level 考え/主張 floor live in `dokkai.md`). Every

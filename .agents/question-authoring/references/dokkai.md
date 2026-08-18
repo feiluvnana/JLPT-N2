@@ -182,13 +182,68 @@ half, since a marker at least gives the set-match check something to pair).
 Every paper in the repo follows this except `20260817_1`, which shipped
 three span-anchored stems as plain bare quotes. The rule applies equally to
 a defined vocabulary term (`①**重ね合わせ**`) and to a full clause/sentence
-span — a definitional gloss on a bolded term goes OUTSIDE the bold
-(`①**重ね合わせ**（注2）`, never `①**重ね合わせ（注2）**`).
+span.
 
 A passage with multiple span-anchored questions numbers them ①②③… in
 reading order; one question still uses ①, never a bare quote. An unanchored
 stem (筆者の考えに合うのはどれか) needs no marker — this rule only fires on
 the `「…」とあるが` shape.
+
+### The two sides must be the SAME characters
+
+**BINDING: the bolded span in the passage and the span quoted in the stem
+are character-identical.** Not "the same idea", not "the stem's span inside
+the passage's span" — the same string.
+`check_dokkai_span_anchor_identity` FAILs a mismatch.
+
+`20260817_2`'s item 57 bolded 72 JP chars of passage —
+「特定空き家に指定されると、所有者に修繕や解体の指導・勧告が行われ、これに従わ
+ない場合は、住宅用地に対する固定資産税の軽減措置（注4）が打ち切られる」 — while
+its stem quoted only 「特定空き家に指定されると」, 12 chars (2026-08-18, user
+report). `check_dokkai_span_anchor_bold` could not see it: that check proves a
+marker and a bold EXIST on each side and never compares what they enclose.
+
+**Repair direction is fixed: shorten the PASSAGE bold to the stem's span,
+never lengthen the stem to the passage's.** Told only "make the two match",
+an author lengthens whichever is easier, and lengthening is the wrong
+direction — see the length band below. After re-cutting, re-check §3: the key
+must still need something the span alone does not show.
+
+**A （注N） gloss never sits inside the bold**, wherever the glossed word
+falls in the span — `①**重ね合わせ**（注2）`, never `①**重ね合わせ（注2）**`.
+The stem drops the gloss when it quotes the span, so a gloss inside the bold
+makes the two sides differ *by construction*: that is exactly how
+`20260810_2` (自律神経（注3）) and `20260812_1` (高揚感（注2）) shipped
+mismatched. When the glossed term sits mid-span, move the span off it rather
+than move the gloss — 20260810_2's ① became 「体調や気分の波を生み出す」, leaving
+「気圧の変化が自律神経（注3）に影響し、」 outside the bold. A separate check,
+`no （注N） gloss inside a bolded marked span`, FAILs this on its own so the
+repair is unambiguous.
+
+### Length band — the span is a pointer, not a highlighter
+
+Measured over the 31-sitting archive, 55 spans quoted in 問題10–13 stems:
+
+| | official | gate |
+|---|---|---|
+| min / median / max | 2 / **8** / 34 JP chars | — |
+| p95 | 23 | **WARN above 25** (54 of 55 sit at or below) |
+| ceiling | 34 | **FAIL above 35** |
+
+`check_dokkai_span_anchor_identity` gates both. **Author to the median, ~8–15
+chars** — a phrase, not a sentence.
+
+Before this band existed, generated papers ran median 22, max 72, with 19 of
+57 spans (33 %) past the official p95 against official's 1 of 55 (1.8 %) —
+nine papers, so the defect was systemic, not a slip. The damage is not
+cosmetic: 20260817_2's 72-char bold ran a highlighter over the exact sentence
+its key restates, so item 57 is keyable by eye without reading the paragraph,
+and 20260810_2's item 61 bolded a 58-char clause whose key is a near-copy of
+it. A long span also collapses §3 automatically — once the bold covers the
+reasoning, the stem has already shown the reader the answer. All 19 were
+re-cut on 2026-08-18; the fix is always the same move, sliding the `**`
+delimiters onto the clause the question actually turns on, on both sides,
+with **no change to the passage prose itself**.
 
 ## 問題11 stems
 

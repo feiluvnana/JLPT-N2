@@ -1030,6 +1030,121 @@ def check_dokkai_span_anchor_bold(name: str, gt_prose: str):
          f"bold the whole marked span, not just the circled number")
 
 
+# The marked span is a POINTER into the passage, not a highlighter over the
+# answer. Both numbers are measured on the 31-sitting archive (55 spans quoted
+# in 問題10–13 stems, `[①-⑦]…(とあるが|とは|のはなぜ|について、筆者)`): min 2,
+# median 8, p95 23, max 34. Generated papers ran median 22, max 72, with 19 of
+# 57 spans (33%) over the official p95 against official's 1 of 55 (1.8%).
+SPAN_JP_MAX = 35        # FAIL above — official max 34 plus one char of headroom
+SPAN_JP_WARN = 25       # WARN above — 54 of 55 official spans sit at or below
+SPAN_MARK = re.compile(r"([①-⑦])\*\*(.+?)\*\*")
+SPAN_NOTE = re.compile(r"[（(]注\d*[）)]")
+
+
+def dokkai_span_pairs(gt_prose: str):
+    """Every `[①-⑦]**span**` in 問題10–14, in reading order, passage side paired
+    with the stem that references it.
+
+    Yields `(passage_occurrence, stem_occurrence_or_None)`. A marker char is
+    reused by every passage (each numbers its own spans ①②③…), so pairing is
+    positional, not by character: a passage span pairs with the NEXT stem
+    bearing the same marker, and the search stops at the next passage span
+    bearing it — that boundary is what keeps 問題10's five ①s apart.
+    """
+    start = re.search(r"^##\s*問題10\b", gt_prose, re.M)
+    region = gt_prose[start.start():] if start else gt_prose
+    occ = []
+    for lineno, line in enumerate(region.splitlines(), 1):
+        stem = re.match(r"^\*\*(\d+)\*\*", line)
+        for m in SPAN_MARK.finditer(line):
+            occ.append({"line": lineno, "mark": m.group(1), "span": m.group(2),
+                        "stem": stem.group(1) if stem else None})
+    for i, o in enumerate(occ):
+        if o["stem"]:
+            continue
+        partner = None
+        for cand in occ[i + 1:]:
+            if cand["mark"] != o["mark"]:
+                continue
+            if cand["stem"] is None:
+                break
+            partner = cand
+            break
+        yield o, partner
+
+
+def check_dokkai_span_anchor_identity(name: str, gt_prose: str):
+    """A marked span must be the SAME characters in the passage and in the stem,
+    and short enough to be a pointer rather than the answer itself.
+
+    `check_dokkai_span_anchor_bold` above proves a marker and bold EXIST on both
+    sides; it never compares what they enclose. 20260817_2's item 57 bolded 72
+    JP chars of passage — 「特定空き家に指定されると、所有者に修繕や解体の指導・
+    勧告が行われ、これに従わない場合は、住宅用地に対する固定資産税の軽減措置（注4）
+    が打ち切られる」 — while its stem quoted only the 12-char opening clause. Both
+    defects at once: the reader sees two different spans for one ①, and the bold
+    runs a highlighter over the sentence that IS the key, so the item is keyable
+    by eye without reading the paragraph (2026-08-18, user report).
+
+    A （注N） gloss inside the bold is the same rule's other half — dokkai.md
+    already says the gloss sits OUTSIDE the bold, and 20260810_2/20260812_1 both
+    shipped one inside, which is why their two sides differed by exactly the
+    gloss. Reported separately so the repair is obvious.
+
+    Lengths are gated because the identity rule alone picks no winner: told only
+    "make the two sides match", an author can as easily lengthen the stem as
+    shorten the bold, and lengthening is the wrong direction.
+    """
+    mismatched, gloss_in_bold, orphan, too_long, long_warn = [], [], [], [], []
+    for passage, stem in dokkai_span_pairs(gt_prose):
+        if SPAN_NOTE.search(passage["span"]):
+            gloss_in_bold.append(f"{passage['mark']}「{passage['span']}」")
+        if stem is None:
+            orphan.append(f"{passage['mark']}「{passage['span'][:20]}…」")
+        elif SPAN_NOTE.sub("", passage["span"]) != stem["span"]:
+            mismatched.append(
+                f"item {stem['stem']} {passage['mark']}: passage bolds "
+                f"[{jp_char_count(passage['span'])} chars]「{passage['span']}」 but the stem quotes "
+                f"[{jp_char_count(stem['span'])} chars]「{stem['span']}」")
+        n = jp_char_count(SPAN_NOTE.sub("", passage["span"]))
+        where = f"item {stem['stem']}" if stem else f"line {passage['line']}"
+        if n > SPAN_JP_MAX:
+            too_long.append(f"{where} {passage['mark']} = {n} JP chars")
+        elif n > SPAN_JP_WARN:
+            long_warn.append(f"{where} {passage['mark']} = {n} JP chars")
+
+    check(f"{name}: passage span and stem quote are the same characters",
+          not mismatched,
+          "; ".join(mismatched) + " — the two sides of one ① must be "
+          "character-identical; shorten the PASSAGE bold to the stem's span "
+          "(never lengthen the stem), then re-check the key is still not "
+          "answerable from the span alone (question-authoring/references/"
+          "dokkai.md §\"Marked-span quoting\")")
+
+    check(f"{name}: no （注N） gloss inside a bolded marked span",
+          not gloss_in_bold,
+          "; ".join(gloss_in_bold) + " — move the gloss outside the bold "
+          "(①**重ね合わせ**（注2）, never ①**重ね合わせ（注2）**); inside, it makes "
+          "the passage and stem spans differ by construction")
+
+    check(f"{name}: every marked passage span is quoted by a stem",
+          not orphan,
+          "; ".join(orphan) + " — an ① with no stem referencing it points the "
+          "reader at nothing")
+
+    check(f"{name}: marked spans stay pointer-sized (≤{SPAN_JP_MAX} JP chars)",
+          not too_long,
+          "; ".join(too_long) + f" — official spans run 2–34 JP chars (median 8, "
+          f"n=55 over 31 sittings); past {SPAN_JP_MAX} the bold stops pointing at "
+          "a phrase and starts underlining the answer. Move the span onto the "
+          "clause the question actually turns on, in BOTH the passage and the stem")
+
+    warn(f"{name}: marked spans near the official median (≤{SPAN_JP_WARN} JP chars)",
+         not long_warn,
+         "; ".join(long_warn) + f" — 54 of 55 official spans are ≤{SPAN_JP_WARN} "
+         "(median 8); author to a phrase, not a sentence")
+
+
 # ------------------------------------------------------- 読解 passage anatomy
 # One splitter, four checks. （注N） numbering restarts per passage, passage
 # length is measured per passage, （中略） has to sit INSIDE one, and the same
@@ -2237,8 +2352,16 @@ QUOTE_ELLIPSIS = re.compile(r"[…‥]+")
 def _flat(s: str) -> str:
     """Strip what varies between a quote and its source but carries no meaning:
     whitespace, table/emphasis markup, and the quote marks themselves (a nested
-    quote is 『』 inside 「」 but 「」 in the passage)."""
-    return re.sub(r"[\s「」『』]|\*\*|<[^>]+>", "", s)
+    quote is 『』 inside 「」 but 「」 in the passage).
+
+    The circled span markers ①〜⑦ go with the `**` they always sit beside: both
+    are the marked-span apparatus, and where the marker falls inside a sentence
+    is a typographic decision, not prose. Stripping only `**` made every 解説
+    quote spanning a marker's position look missing the moment the span was
+    re-cut (2026-08-18, the marked-span shrink pass across eight papers) —
+    a quote whose text never changed reported as not found in the source.
+    """
+    return re.sub(r"[\s「」『』①-⑦]|\*\*|<[^>]+>", "", s)
 
 
 # An in-word annotation: 「（注3）」, 「（タイムパフォーマンス）」, 「（約4割）」 —
@@ -4875,6 +4998,7 @@ def check_tests():
               f"found {len(gengo_rubies)} <ruby> tags in prose — Dokkai uses only （注N） notes for over-the-level words")
         check_dokkai_numbered_markers(gengo.name, gengo_prose)
         check_dokkai_span_anchor_bold(gengo.name, gengo_prose)
+        check_dokkai_span_anchor_identity(gengo.name, gengo_prose)
         check_note_pairing(d.name, gengo_prose)
         check_note_band(d.name, gt)
         check_note_band_reuse(d.name, gt)
