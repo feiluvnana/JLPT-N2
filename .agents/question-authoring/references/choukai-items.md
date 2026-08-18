@@ -118,6 +118,69 @@ in papers written without this rule (archive: `official_register.md` §2.3).
   times that. Mark the answer by **contrast** (「〜も大事ですけど、やっぱり…」)
   or **concede-then-correct**, and vary it item to item.
 
+## Key length carries no information — the option a guesser picks must be wrong
+
+**BINDING, every 聴解 section.** Found 2026-08-18 from a user report ("it tends
+to make the longer key the correct answer"). Measured over the 11 papers then
+on disk, the key was the **uniquely longest** of its options in:
+
+| 問題 | Ours (before) | Official | Official key ÷ distractor mean |
+|---|---|---|---|
+| 1 (printed, 4 opts) | 52 % | 19 % (n=26) | 0.99 |
+| 2 (printed, 4 opts) | 72 % | 25 % (n=71) | 1.00 |
+| 3 (spoken, 4 opts) | 60 % | 27 % (n=130) | 1.02 |
+| 4 (spoken, 3 opts) | 50 % | 29 % (n=241) | 1.00 |
+| 5 (spoken, 4 opts) | 45 % | — | — |
+| **whole 聴解** | **39–79 % per paper** | **28 %** (n=460, 31 sittings; per-sitting 13–29 %) | **1.00** |
+
+A candidate who understood nothing, read the printed 問題1/2 list and marked the
+longest line scored better than one who understood half the audio. That is the
+whole defect: **the paper answered itself.**
+
+**The bug is not that options vary in length — official varies MORE than we do**
+(median max/min 2.55 in 問題1, against the 読解 rule's 1.30). Official option
+sets are wildly uneven and the key sits anywhere in the order; 7/2025 問題3-3番
+keys the SHORTEST of its four (「店をやる喜び」, 6 chars, against 13 and 15).
+So **never equalise the four options** — that is a different, equally readable
+tell, and it flattens the specificity that makes a distractor tempting.
+
+**The cause is a length that varies WITH correctness**, and it comes from the
+rule one section down: the key carries the paraphrase load, so it got written as
+a full proposition while its distractors were left as bare topic labels.
+`20260812_2` 問題2-2番 keyed 「雨の日は車がなかなかつかまらないこと」 (18 JP
+chars) against 「料金の見方」(5) / 「クーポンの使い方」(8) /
+「支払い方法の登録」(8) — three labels and one sentence, and only one of those
+four shapes can be the answer.
+
+**Repair, and the authoring rule: raise the DISTRACTORS, never trim the key.**
+
+1. **All four options take the same grammatical shape and the same grade of
+   specificity.** If the key is 「〜が〜で〜こと」, every distractor is too. If
+   the key names a condition, the distractors name conditions. Official 7/2025
+   問題2-1番: 食品かんれんの仕事をする / 大学院に進む / 研究の仕事をする /
+   しゅっぱんしゃで働く — four of one shape, 7–12 chars, key 10.
+2. **Grow a distractor with content the script actually gives it.** Every wrong
+   option is already MENTIONED then ELIMINATED (§ above) and its 解説 cell
+   already quotes the line that kills it — that quote is the material. Expand
+   the label into the proposition the script states, then keep the 解説 cell
+   pointed at the same line. Never pad with filler (「〜など」「しっかり」) and
+   never invent a fact: a longer option that says nothing new is the same defect
+   wearing the opposite sign.
+3. **Vary the key's length RANK across a section** — roughly a quarter of items
+   at each rank. One section whose keys are all rank 2 is still a pattern.
+4. **Trimming the key is the last resort, not the first**, in 問題2 and
+   問題5-1番: the key there must stay a genuine paraphrase (§"The 解説 QUOTES
+   the script; the OPTION restates it"), and shortening is how a paraphrase
+   collapses back into the script's own words. Fix the distractors instead.
+
+`make check` (`check_choukai_longest_key_rate`, G16) FAILs a paper above **35 %**
+uniquely-longest across the whole 聴解 section, and WARNs when the median key ÷
+distractor-mean exceeds 1.15 — a paper can slip under the rate while every key
+is still habitually the second-longest, which the ratio catches and the rate
+does not. Both are measured over the whole section, not per 問題: five or six
+items cannot separate a bias from noise. **Author to the official 28 %, not to
+the 35 % ceiling.**
+
 ## Construction order is binding: dialogue FIRST, then harvest the options
 
 Never draft an option set before the script line exists. Write the dialogue,

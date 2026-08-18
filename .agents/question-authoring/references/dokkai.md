@@ -339,12 +339,34 @@ of each other (max/min ≤ 1.30).**
 
 1. Every keyed item (問題10–14, 52–71): four options' JP-char lengths satisfy
    max/min ≤1.30 — `make check` FAILs (`check_dokkai_option_length_balance`).
-2. The key must NOT be predictably the longest option — across a paper's 20
-   items, longest-key rate must land in **20–35%** (~4–7 of 20, matching
-   official's ~29%); `make check` FAILs above 35%. Vary key length rank
-   across items (~4–6 each of rank 1/2/3/4) by lengthening distractors with
-   genuine, passage-groundable clauses (conditions, consequences,
-   qualifications — never filler).
+2. The key must NOT be predictably the longest option. **Two rates, not one**
+   — measured over 219 official items in 31 sittings:
+
+   | measure | official | FAIL above |
+   |---|---|---|
+   | key is (tied-)longest | 30 % | 35 % |
+   | key is the UNIQUELY longest | **20 %** | **30 %** |
+
+   Both are gated (`check_dokkai_longest_key_rate`). The pair exists because
+   the tied rate alone is gameable, and was gamed: nine of the eleven papers
+   on disk sat at exactly 6/20 = 30 % tied — authored straight at the top of
+   the old "20–35 %" target — but reached it with the key the UNIQUELY longest
+   every time, where official reaches the same 30 % partly through ties
+   (2026-08-18, user report). Since rule 1 clusters all four options into a
+   ±30 % band, "a hair longer than all three" is a reliable tiebreak inside
+   it: `20260810_2` keyed 37 vs [31,31,32], 41 vs [33,33,34], 38 vs [31,31,32]
+   and three more like them, every item inside every per-item rule.
+   **Author to 20 % uniquely-longest, not to the ceiling.**
+3. Vary key length rank across items (~4–6 each of rank 1/2/3/4) by
+   lengthening distractors with genuine, passage-groundable clauses
+   (conditions, consequences, qualifications — never filler). Letting the key
+   TIE the longest distractor is a legitimate repair — official does it — and
+   a one-character trim is usually all a tie needs. Do not shorten a key to
+   fix rank: 問題10–13 keys carry the paraphrase load (§2 below), and
+   shortening is how a paraphrase collapses back into the passage's wording.
+4. The same tell is gated in 聴解, where it was far worse (39–79 % per paper):
+   `question-authoring/references/choukai-items.md` §"Key length carries no
+   information".
 
 ### 2. Strict key paraphrasing — keys must NEVER be verbatim text lifts
 

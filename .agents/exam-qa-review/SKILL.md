@@ -299,10 +299,24 @@ as "N1"/"N3", so a single source's label was never sufficient.
 - **問題4 文脈規定:** every stem must carry a （　）blank. A key word printed
   in the stem itself is trivially answerable — fail it.
 - **読解 length/predictability:** all 20 items (52–71) satisfy `max/min ≤
-  1.30` JP chars. Paper-level longest-key rate must land in **20–35%** (~4–7
-  of 20, official ~29%); rank varied across items. **読解 paraphrasing:** every
-  key in 52–69 must be genuinely paraphrased (no LCS ≥15 chars and ≥50% of
-  option; no LCS ≥20 chars; no pure lifts).
+  1.30` JP chars. **Two longest-key rates, both gated** — (tied-)longest
+  ≤35 % (official 30 %) AND **uniquely** longest ≤30 % (official 20 %); rank
+  varied across items. Check the uniquely-longest one by hand: a paper can sit
+  inside the tied target while every key is the sole longest option, which is
+  what nine of eleven shipped papers did (dokkai.md §'読解 keys' rule 2).
+  **読解 paraphrasing:** every key in 52–69 must be genuinely paraphrased (no
+  LCS ≥15 chars and ≥50% of option; no LCS ≥20 chars; no pure lifts).
+- **聴解 length/predictability:** the key must not be findable by length in ANY
+  section — whole-section uniquely-longest rate ≤35 % (official 28 %), median
+  key ÷ distractor-mean ≤1.15 (official 1.00). Both gated
+  (`check_choukai_longest_key_rate`). Read the option sets for the shape that
+  caused it: short topic labels against one full-proposition key
+  (choukai-items.md §'Key length carries no information').
+- **模範解答 ↔ 問題冊子:** `詳細解説.json` stores its own copy of every option and
+  `build_model_answer.py` PREFERS it over the booklet, so a rewritten option
+  leaves the model answer explaining wording the paper does not contain — 722
+  options were stale at once (`check_model_answer_option_sync`). Whenever an
+  option changes, re-sync the `options` array AND any 解説 prose quoting it.
 - **問題14:** the answer must combine **≥2** constraints (never single-field);
   every scenario detail the question references must be describable from the
   source as printed — fail an invented detail (a role the flyer never names).

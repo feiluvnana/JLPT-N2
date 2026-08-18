@@ -62,6 +62,7 @@ import importlib.util
 import json
 import re
 import shutil
+import statistics
 import subprocess
 import sys
 import tempfile
@@ -2126,6 +2127,35 @@ def check_dokkai_option_length_balance(name: str, opts: dict[int, list[str]]):
 
 
 LONGEST_KEY_RATE_MAX = 0.35
+
+# The (tied-)longest rate above is only half the measurement, and on its own it
+# is gameable — which is what shipped. Re-measured 2026-08-18 (user report: "the
+# longest key applies to both dokkai and choukai"), over 219 official 読解 items
+# in 31 sittings parsed out of booklet.md:
+#
+#            official   the 11 papers on disk
+#   strict     20 %          25 %
+#   tied       30 %          30 %
+#   key/mean   1.00          1.02
+#
+# The tied rates MATCH. The strict rates do not, and the reason is visible in the
+# per-paper numbers: nine of the eleven papers sit at exactly 6/20 = 30 % tied,
+# i.e. authored straight at the top of the "20–35 %" target this file's own
+# message printed — but they reach it by making the key the UNIQUELY longest
+# option, where official reaches the same 30 % partly through ties. Official is
+# 20 % strict / 30 % tied; a paper at 30 % / 30 % has no ties at all.
+#
+# That distinction matters because max/min <=1.30 (above) deliberately clusters
+# the four options into a narrow band: inside a narrow band, "the key is a
+# hair longer than all three" is a reliable tiebreak, so 20260810_2 keying
+# 37 vs [31,31,32], 41 vs [33,33,34], 37 vs [29,30,31], 38 vs [31,31,32],
+# 36 vs [28,28,31] and 38 vs [30,30,31] is a readable pattern even though every
+# single item is inside every per-item rule.
+#
+# So: FAIL above 35 % tied (unchanged) AND above 30 % strict, and author to the
+# official 20 %. One paper at 30 % strict is unremarkable (binomial p~0.11 at
+# n=20); six of eleven at 30 % is the paper-generator's habit, not chance.
+DOKKAI_STRICT_LONGEST_MAX = 0.30
 DOKKAI_LENGTH_GRANDFATHERED = {
     "20260807_1", "20260810_1", "20260810_2", "20260811_1",
     "20260812_1", "20260812_2", "20260813_1", "20260813_2",
@@ -2136,7 +2166,8 @@ DOKKAI_LENGTH_GRANDFATHERED = {
 def check_dokkai_longest_key_rate(name: str, keys: dict[int, int],
                                    opts: dict[int, list[str]],
                                    origin: str = "generated"):
-    n = n_longest = 0
+    n = n_longest = n_strict = 0
+    strict_items: list[str] = []
     for q in range(52, 72):
         a, o = keys.get(q), opts.get(q) or []
         if a is None or len(o) != 4 or not 1 <= a <= 4:
@@ -2145,9 +2176,32 @@ def check_dokkai_longest_key_rate(name: str, keys: dict[int, int],
         n += 1
         if lens[a - 1] == max(lens):
             n_longest += 1
+            if lens.count(lens[a - 1]) == 1:
+                n_strict += 1
+                others = sorted(l for i, l in enumerate(lens, 1) if i != a)
+                strict_items.append(f"{q}({lens[a - 1]} vs {others})")
     if n == 0:
         return skip(f"{name}: 読解 longest-key rate", "no keyed 読解 items")
     rate = n_longest / n
+    strict_rate = n_strict / n
+    strict_name = (f"{name}: 読解 key is not UNIQUELY the longest option "
+                   f"({n_strict}/{n} = {strict_rate:.0%}, official 20%, target <= 30%)")
+    strict_detail = (
+        f"{n_strict} of {n} keyed 読解 items ({strict_rate:.0%}) key the option that is "
+        f"longer than all three distractors: {', '.join(strict_items)} — official is "
+        f"20% strict / 30% tied over 219 items in 31 sittings, ours 25% / 30%. "
+        f"Reaching the tied target by making the key uniquely longest is the same "
+        f"tell the tied rate was meant to stop, and max/min <=1.30 makes a "
+        f"one-character lead readable. Lengthen the longest DISTRACTOR to meet or "
+        f"pass the key (a passage-groundable clause, never filler), or let them tie "
+        f"(question-authoring/references/dokkai.md §'読解 keys')")
+    if origin != "generated":
+        warn(strict_name, strict_rate <= 0.40, strict_detail)
+    elif name in DOKKAI_LENGTH_GRANDFATHERED:
+        warn(strict_name, strict_rate <= DOKKAI_STRICT_LONGEST_MAX,
+             strict_detail + GRANDFATHER_NOTE)
+    else:
+        check(strict_name, strict_rate <= DOKKAI_STRICT_LONGEST_MAX, strict_detail)
     if origin == "generated":
         if name in DOKKAI_LENGTH_GRANDFATHERED:
             warn(f"{name}: correct answer is not predictably the longest option "
@@ -4175,6 +4229,229 @@ def check_choukai_key_paraphrase(test_id: str, ct: str, st: str, m, bi):
          f"(choukai-items.md §'The 解説 QUOTES the script')")
 
 
+# 聴解 keys carry no length information (G16). Measured 2026-08-18 after the
+# user reported "it tends to make the longer key the correct answer": across the
+# 11 papers on disk the key was the UNIQUELY LONGEST of its options in 52 % of
+# 問題1, 72 % of 問題2, 60 % of 問題3, 50 % of 問題4 (3 options) and 45 % of
+# 問題5 — so a candidate who understood nothing, read the printed 問題1/2 lists
+# and always marked the longest line scored better than one who understood half
+# the audio. 問題2 at 72 % is the worst surface this repo has shipped.
+#
+# The official archive, measured the same way over 460 length-varying items in
+# 31 sittings (問題1/2 printed options from booklet.md, 問題3/4 spoken options
+# from script.md): 28 % uniquely longest, and the key's length divided by its
+# distractors' mean is 1.00 at the median — official keys are AVERAGE length.
+# Per-sitting rate over the six sittings with >=20 parsed items: 13/20/24/24/26/29 %.
+# Ours ran 1.24 (問題1) to 1.36 (問題2).
+#
+# The defect is NOT that our options vary in length — official varies MORE
+# (median max/min 2.55 in 問題1, against a 読解 rule of 1.30). It is that the
+# length varies WITH correctness, because the key was written as a full
+# proposition while its distractors were left as short topic labels:
+# 20260812_2 問題2-2番 keyed 「雨の日は車がなかなかつかまらないこと」 (18 JP chars)
+# against 「料金の見方」(5) / 「クーポンの使い方」(8) / 「支払い方法の登録」(8).
+# So this gate measures rank, never spread, and the repair is to raise the
+# DISTRACTORS to the key's grammatical shape (choukai-items.md §'Key length
+# carries no information'), not to trim every option to one size.
+#
+# Strictly-longest, not (tied-)longest as check_dokkai_longest_key_rate counts:
+# 聴解 options are short enough that all-four-equal sets are common (they are
+# excluded here as carrying no signal), and a tie does not hand the item to
+# "mark the longest". The two baselines land in the same place anyway — 28 %
+# here against 読解's 29 %, so the 35 % ceiling is the same number.
+CHOUKAI_LONGEST_KEY_MAX = 0.35
+CHOUKAI_KEY_RATIO_MAX = 1.15    # WARN: median key/distractor-mean; official 1.00
+
+# Pre-rule papers: every paper on disk failed this the day it was written, so
+# the gate would have nothing to protect if it failed them all. Each id comes
+# off this list as its 聴解 is repaired; the set must reach empty.
+CHOUKAI_LENGTH_GRANDFATHERED: set[str] = set()
+
+
+def choukai_all_option_sets(ct: str, st: str, m, bi) -> dict[tuple[int, str], dict[int, str]]:
+    """Every keyable 聴解 option list: 問題1/2 printed, 問題3/4/5 spoken.
+
+    One dict so the length gate measures the whole section the way a candidate
+    meets it, rather than one 問題 at a time (n=5 or 6 per section is too small
+    to separate a real bias from noise — the whole section is ~27 items).
+    """
+    out: dict[tuple[int, str], dict[int, str]] = {}
+    out.update(choukai_printed_options(ct, bi))
+    for sec, top in ((3, 4), (4, 3), (5, 4)):
+        for lines in choukai_item_blocks(choukai_span(st, sec), m, True):
+            ch = spoken_choices(lines, top)
+            if len(ch) == top:
+                out[(sec, choukai_item_label(lines[0]))] = ch
+    return out
+
+
+def check_choukai_longest_key_rate(test_id: str, ct: str, st: str, m, bi):
+    """The key must not be findable by length alone, in any 聴解 section (G16)."""
+    keys = choukai_key_table(ct, bi)
+    opts = choukai_all_option_sets(ct, st, m, bi)
+    n = n_longest = 0
+    worst: list[str] = []
+    ratios: list[float] = []
+    for (sec, label), a in sorted(keys.items()):
+        om = opts.get((sec, label))
+        # 問題5-2番 reads ONE list under both 質問 — the key table has two rows
+        # for it and both point at that list, which is correct, not a duplicate.
+        if not om:
+            continue
+        lens = [jp_char_count(om[i]) for i in sorted(om)]
+        if a not in om or len(set(lens)) < 2:
+            continue          # all-equal sets carry no length signal at all
+        n += 1
+        kl = lens[a - 1]
+        others = [l for i, l in enumerate(lens, 1) if i != a]
+        ratios.append(kl / (sum(others) / len(others)))
+        if kl == max(lens) and lens.count(kl) == 1:
+            n_longest += 1
+            worst.append(f"問題{sec}-{label}(key {kl} vs {sorted(others)})")
+    if n == 0:
+        return skip(f"{test_id}: 聴解 longest-key rate", "no keyed 聴解 option list")
+    rate = n_longest / n
+    med = statistics.median(ratios)
+    name = (f"{test_id}: 聴解 key is not findable by length "
+            f"({n_longest}/{n} = {rate:.0%} uniquely longest, target <= 35%)")
+    detail = (f"{n_longest} of {n} length-varying 聴解 items ({rate:.0%}) key the "
+              f"UNIQUELY LONGEST option: {', '.join(worst[:8])}"
+              f"{' …' if len(worst) > 8 else ''} — official is 28% over 460 items "
+              f"in 31 sittings, per-sitting 13–29%. Raise the DISTRACTORS to the "
+              f"key's grammatical shape and specificity (a full proposition, not a "
+              f"topic label), harvested from the script and grounded in the 解説 "
+              f"cell; do not trim all four to one length — official option spread "
+              f"is WIDER than ours (choukai-items.md §'Key length carries no "
+              f"information')")
+    if test_id in CHOUKAI_LENGTH_GRANDFATHERED:
+        warn(name, rate <= CHOUKAI_LONGEST_KEY_MAX, detail + GRANDFATHER_NOTE)
+    else:
+        check(name, rate <= CHOUKAI_LONGEST_KEY_MAX, detail)
+    warn(f"{test_id}: 聴解 keyed option is average length "
+         f"(median key/distractor-mean {med:.2f}, official 1.00)",
+         med <= CHOUKAI_KEY_RATIO_MAX,
+         f"the median 聴解 key is {med:.2f}x its distractors' mean length over "
+         f"{n} items — official sits at 1.00, i.e. the key is neither longer nor "
+         f"shorter than what surrounds it. A rate under 35% with a ratio this "
+         f"high means the key is still habitually long, just not quite top rank "
+         f"(choukai-items.md §'Key length carries no information')")
+
+
+# 模範解答 explains the options the candidate actually saw (G18). 詳細解説.json stores its
+# own copy of every option's text — hand-authored, furigana included — and
+# build_model_answer.py PREFERS that copy over the one it parses out of the booklet
+# (`detail.get("options") or raw_q.get("options")`). So when an option is rewritten in
+# 言語知識・読解.md or 聴解.md and the JSON is not updated, 模範解答.html keeps explaining
+# the OLD wording: the answer document and the exam disagree, and nothing said so.
+#
+# Measured 2026-08-18 while repairing the longest-key bias: 722 of the ~1100 stored
+# options were ALREADY stale at HEAD, before that pass touched anything — every paper
+# affected, up to 138 in one. Two separate defects hide in there: an explanation that
+# argues against wording the booklet no longer has, and a 選択肢 list in 模範解答.html
+# that a candidate cannot match to the paper they just sat.
+#
+# There is no way to catch this by reading either file alone, which is why it rotted for
+# as long as it did. Trailing 。 is normalized: 問題5's spoken labels carry it in the
+# script and not in the stored option, and that difference is not drift.
+def check_model_answer_option_sync(test_id: str, gt: str, ct: str, st: str, m, bi):
+    path = ROOT / "tests" / test_id / "詳細解説.json"
+    if not path.is_file():
+        return skip(f"{test_id}: 詳細解説.json options match the booklet",
+                    "no 詳細解説.json (run make scaffold-explanations)")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        return check(f"{test_id}: 詳細解説.json parses", False, str(e))
+    gopts = gengo_option_sets(gt, bi)
+    copts = choukai_all_option_sets(ct, st, m, bi)
+
+    def norm(x: str) -> str:
+        return re.sub(r"《[^》]*》", "", x).strip().rstrip("。")
+
+    stale, compared = [], 0
+    for key, entry in sorted(data.items()):
+        stored = entry.get("options") if isinstance(entry, dict) else None
+        if not stored:
+            continue
+        if key.isdigit():
+            src = gopts.get(int(key))
+        else:
+            mm = re.match(r"^問([1-5])-(.+)$", key)
+            if not mm:
+                continue
+            label = mm.group(2)
+            if not (label.startswith("例") or label.endswith("番")):
+                label += "番"
+            om = copts.get((int(mm.group(1)), label))
+            src = [om[i] for i in sorted(om)] if om else None
+        if not src or len(src) != len(stored):
+            continue
+        compared += 1
+        for i, (a, b) in enumerate(zip(stored, src), 1):
+            if norm(a) != norm(b):
+                stale.append(f"{key}-{i}(模範解答「{norm(a)[:24]}」vs 問題冊子「{norm(b)[:24]}」)")
+    if not compared:
+        return skip(f"{test_id}: 詳細解説.json options match the booklet",
+                    "no option list could be paired with the booklet")
+    check(f"{test_id}: 詳細解説.json options match the booklet ({compared} items)",
+          not stale,
+          f"{len(stale)} stored option(s) differ from the printed paper: "
+          f"{'; '.join(stale[:5])}{' …' if len(stale) > 5 else ''} — build_model_answer.py "
+          f"prefers the STORED text, so 模範解答.html is explaining wording this test does "
+          f"not contain. Re-sync the `options` arrays (and any 解説 prose quoting them) "
+          f"whenever an option is rewritten (exam-model-answer)")
+
+
+# 文字・語彙 keys carry no length information either (G18). The same 2026-08-18 sweep
+# found the tell in a third place, measured against the archive's own 問題4/5/6 (parsed
+# from booklet.md), counting only items whose four options are not all the same length:
+#
+#              official          ours (before)
+#   問題4        4 % (n=194)      21 %   <- already below the 25 % chance line
+#   問題5       15 % (n=123)      36 %
+#   問題6       16 % (n=124)      31 %
+#
+# 問題4 is excluded from the gate on purpose: single-word 文脈規定 options are near-equal
+# by construction, ours already sits under chance, and official's 4 % is a property of
+# same-part-of-speech word sets rather than a fairness rule — gating it would push
+# authors to pad words. 問題5/6 are gated together (10 items a paper; each alone is too
+# small to separate habit from noise) at 30 %, against a 15–16 % official baseline.
+#
+# The cause was the shape this repo now names in choukai-items.md: in 問題5 the key was
+# written as a PHRASE while its distractors stayed bare single words — 20260810_1 keyed
+# 「一般の人々」 against 専門家 / 関係者 / 会員, and 20260810_2 keyed 「細かく切って」
+# against 茹でて / 焼いて / 煮て. Raise the distractors to the key's grain.
+MOJI_LONGEST_KEY_MAX = 0.30
+
+
+def check_moji_longest_key_rate(test_id: str, gt: str, keys: dict[int, int], bi):
+    opts = gengo_option_sets(gt, bi)
+    n = n_longest = 0
+    worst = []
+    for q in list(range(23, 28)) + list(range(28, 33)):   # 問題5 + 問題6
+        a, o = keys.get(q), opts.get(q) or []
+        if a is None or len(o) != 4 or not 1 <= a <= 4:
+            continue
+        lens = [jp_char_count(x) for x in o]
+        if len(set(lens)) < 2:
+            continue
+        n += 1
+        if lens[a - 1] == max(lens) and lens.count(max(lens)) == 1:
+            n_longest += 1
+            worst.append(f"問{q}({lens[a-1]} vs {sorted(l for i,l in enumerate(lens,1) if i!=a)})")
+    if n == 0:
+        return skip(f"{test_id}: 問題5/6 longest-key rate", "no length-varying items")
+    rate = n_longest / n
+    check(f"{test_id}: 問題5/6 key is not the longest option "
+          f"({n_longest}/{n} = {rate:.0%}, official 15–16%, target <= 30%)",
+          rate <= MOJI_LONGEST_KEY_MAX,
+          f"{n_longest} of {n} length-varying 問題5/6 items ({rate:.0%}) key the uniquely "
+          f"longest option: {', '.join(worst[:6])}{' …' if len(worst) > 6 else ''} — "
+          f"official is 15% (問題5, n=123) and 16% (問題6, n=124) over 31 sittings. In 問題5 "
+          f"this is usually a PHRASE key against bare single-word distractors; give all "
+          f"four the same grain (question-authoring/references/moji-goi.md)")
+
+
 def check_choukai_judgment_mix(test_id: str, st: str, ct: str, m, bi):
     """The mix rules only a human can settle — WARN, and QA owns them (G16)."""
     keys = choukai_key_table(ct, bi)
@@ -4730,6 +5007,9 @@ def check_tests():
                 check_choukai_same_speaker_lines(d.name, st, m)
                 check_choukai_section_table(d.name, ct, bi)
                 check_choukai_judgment_mix(d.name, st, ct, m, bi)
+                check_choukai_longest_key_rate(d.name, ct, st, m, bi)
+                check_model_answer_option_sync(d.name, gt, ct, st, m, bi)
+                check_moji_longest_key_rate(d.name, gt, keys, bi)
                 # G17 — the sentences themselves, vs Shin Kanzen 実力養成編.
                 check_choukai_contractions(d.name, st, m)
                 check_choukai_key_paraphrase(d.name, ct, st, m, bi)
