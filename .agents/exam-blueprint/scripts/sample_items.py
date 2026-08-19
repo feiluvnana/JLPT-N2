@@ -36,7 +36,7 @@ STAGING = LOGS_DIR / "adjunct_staging.json"
 
 sys.path.insert(0, str(HERE))
 from level_data import (  # noqa: E402
-    THEMED_CATS, THEMES, entry_text as item_text, entry_theme,
+    THEMED_CATS, THEMES, entry_text as item_text, entry_key, entry_theme,
 )
 
 ADJUNCT_CAP = 0.20  # max share of each category draw filled from staging
@@ -439,6 +439,87 @@ def head(item: str) -> str:
     return str(item).split("(")[0].split("（")[0].strip()
 
 
+# --- errand identity (R14, 2026-08-19) -----------------------------------
+# The cooldown used to compare DISPLAY STRINGS, so three pool entries spelling
+# one errand three ways (`引越し:見積もり` / `引っ越し業者との見積もり調整` /
+# `引っ越し業者との調整`) were three separate items to it, and two of them went
+# out in consecutive papers with every gate green (qa-report-20260817_3 F6).
+# `pools.json` now carries an optional `key` on those entries — the institution
+# and errand — and everything that decides "have we used this recently" resolves
+# it through `errand_key()` first. The duplicate ENTRIES stay: four shipped
+# tests name them in logs/ledger.json and check_draw_provenance() requires every
+# recorded draw to resolve to a pool entry, so deleting them would break the
+# gate on papers that are already out.
+#
+# Key tokens live in their own namespace so a key can never be confused with a
+# pool string in the recency/taken maps.
+KEY_NS = "key»"
+_KEY_BY_TEXT: dict[str, str] = {}
+
+
+def build_key_index(pools: dict) -> dict[str, str]:
+    """display string -> errand key, for every pool entry that carries one."""
+    idx: dict[str, str] = {}
+    for cat in THEMED_CATS:
+        for e in pools.get(cat, []):
+            k = entry_key(e)
+            if k:
+                idx[item_text(e)] = k
+    return idx
+
+
+def errand_key(entry) -> str | None:
+    """The entry's errand key, from the entry itself or from the pool index.
+
+    Ledger and spec rows record `{"scenario": …, "theme": …}` with no `key`, so
+    recorded history has to be resolved through the index built off the current
+    pool — that is what makes the rule retroactive over the draws already made.
+    """
+    return entry_key(entry) or _KEY_BY_TEXT.get(item_text(entry))
+
+
+def affix_marker_free(t: str) -> str:
+    """`内〜(国内)` and `〜内(国内)` are one item under two notations, or ''.
+
+    Only for the `word_formation` shape — an affix marker OUTSIDE a
+    parenthetical gloss. `pools.json` corrected 「内〜(国内)」 to 「〜内(国内)」
+    (qa-report-20260817_3-round3 R3-2) and without this the corrected string
+    would look like an item nothing has ever drawn, so its cooldown would
+    restart. Grammar entries whose 〜 sits inside the gloss (`相対比較(〜ば〜ほど)`)
+    are excluded: folding those would collide short kana tails across the pool.
+    """
+    if "(" not in t and "（" not in t:
+        return ""
+    if not re.search(r"[〜～]", re.split(r"[(（]", t)[0]):
+        return ""
+    return t.replace("〜", "").replace("～", "")
+
+
+def identity_tokens(entry) -> set[str]:
+    """Every token that makes this entry 'the same item' for RECENCY."""
+    t = item_text(entry)
+    toks = {t, head(t)} - {""}
+    flat = affix_marker_free(t)
+    if flat:
+        toks |= {flat, head(flat)}
+    k = errand_key(entry)
+    if k:
+        toks.add(KEY_NS + k)
+    return toks
+
+
+def taken_tokens(entry) -> set[str]:
+    """The in-test exclusion tokens: the display string and the errand key.
+
+    Deliberately NOT head() — cross-category head folding is recency's job
+    (`recency_map`), and widening the in-test set would change draws that have
+    nothing to do with the errand-key defect this was added for.
+    """
+    t = item_text(entry)
+    k = errand_key(entry)
+    return ({t} if t else set()) | ({KEY_NS + k} if k else set())
+
+
 def recency_map(history: list) -> dict:
     """item -> how many draws ago it was last used (0 = most recent draw).
 
@@ -448,15 +529,16 @@ def recency_map(history: list) -> dict:
     again in the next paper's 問題5 — consecutive papers testing the same word,
     with every gate green. `taken` stops that inside one test; this stops it
     across tests.
-    Keys are both the raw string and its head(), so either spelling matches.
+    Keys are the raw string, its head(), and — for a themed entry whose pool row
+    carries one — its `KEY_NS`-prefixed errand key, so an errand that the pool
+    spells three ways cools down once (see `errand_key`).
     """
     rec: dict = {}
     for ago, entry in enumerate(reversed(history)):
         for items in entry.get("items", {}).values():
             for item in items:
-                t = item_text(item)
-                rec.setdefault(t, ago)
-                rec.setdefault(head(t), ago)
+                for tok in identity_tokens(item):
+                    rec.setdefault(tok, ago)
     return rec
 
 
@@ -518,8 +600,11 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
     inf = 10 ** 9
 
     def ago(x) -> int:
-        t = item_text(x)
-        return min(recency.get(t, inf), recency.get(head(t), inf))
+        # Every identity token, not just the display string: an entry whose
+        # errand key was drawn recently is as recently used as the entry that
+        # drew it, however differently the pool spells the two (R14).
+        return min((recency.get(tok, inf) for tok in identity_tokens(x)),
+                   default=inf)
 
     def weight(x) -> float:
         # +1 so an item sitting right at the cooldown boundary (ago == cool,
@@ -530,7 +615,7 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
 
     for cool in range(cool_max, -1, -1):
         eligible = [x for x in pool
-                    if item_text(x) not in taken and ago(x) >= cool]
+                    if not (taken_tokens(x) & taken) and ago(x) >= cool]
         if len(eligible) >= n:
             if cool == 0:
                 print(f"  WARNING: pool '{name}' exhausted its rotation — "
@@ -611,6 +696,31 @@ def check_pool_themes(pools: dict) -> None:
                  "entry, never widen the vocabulary to fit it)")
 
 
+def report_key_clusters(pools: dict) -> None:
+    """Print the errand-key clusters so pool depth is not read off len(pool).
+
+    A cluster of 3 entries sharing one `key` is ONE drawable errand, not three:
+    after this change the cooldown treats them as one, so `cooldown_for()`'s
+    headroom arithmetic is optimistic by (cluster size − 1) per cluster. Not a
+    failure — the clusters are deliberate, and merging them away is what
+    `check_draw_provenance()` forbids (see `errand_key`) — but it must be
+    visible at draw time.
+    """
+    clusters: dict[str, list[str]] = {}
+    for cat in THEMED_CATS:
+        for e in pools.get(cat, []):
+            k = entry_key(e)
+            if k:
+                clusters.setdefault(f"{cat}/{k}", []).append(item_text(e))
+    dupes = {k: v for k, v in clusters.items() if len(v) > 1}
+    if not dupes:
+        return
+    extra = sum(len(v) - 1 for v in dupes.values())
+    print(f"  note: {len(dupes)} errand-key cluster(s) cover {extra} duplicate "
+          f"pool entr(ies) — they cool down as ONE item each (R14). "
+          f"Effective depth is len(pool) − {extra}.")
+
+
 def check_theme_spread(picked: list, cat: str) -> list[str]:
     """Warn when one theme takes too much of a themed draw.
 
@@ -655,12 +765,12 @@ def assert_rotation(spec_items: dict, history: list, pools: dict) -> None:
             tid = str(entry.get("test_id"))
             for cat_items in entry.get("items", {}).values():
                 for x in cat_items:
-                    t = item_text(x)
-                    recent.setdefault(t, tid)
-                    recent.setdefault(head(t), tid)
+                    for tok in identity_tokens(x):
+                        recent.setdefault(tok, tid)
         for x in xs:
             t = item_text(x)
-            tid = recent.get(t) or recent.get(head(t))
+            tid = next((recent[tok] for tok in identity_tokens(x)
+                        if tok in recent), None)
             if tid:
                 clashes.append(f"{cat}:「{t}」 (test {tid}, needs its own "
                                 f"{cool}-draw cooldown)")
@@ -697,6 +807,11 @@ def main():
 
     pools = json.loads(POOLS.read_text(encoding="utf-8"))
     check_pool_themes(pools)
+    # Built once, read by errand_key() everywhere below (R14). It has to exist
+    # before the first recency_map() call, or history resolves without keys.
+    global _KEY_BY_TEXT
+    _KEY_BY_TEXT = build_key_index(pools)
+    report_key_clusters(pools)
 
     if args.check_depth:
         check_pool_depths(pools)
@@ -735,8 +850,8 @@ def main():
                 break
         if own_entry is not None:
             own_entry.setdefault("items", {}).pop(cat, None)
-        taken_text = {item_text(x) for c, xs in spec["items"].items()
-                      if c != cat for x in xs}
+        taken_text = {tok for c, xs in spec["items"].items()
+                      if c != cat for x in xs for tok in taken_tokens(x)}
         updated_recency = recency_map(history)
         cool_max = cooldown_for(cat, len(pools[cat]))
         picked, cool = draw(rng, pools[cat], updated_recency,
@@ -785,7 +900,7 @@ def main():
                 picked = apply_adjunct(rng, cat, picked, staging_by_cat,
                                        taken, recency, cool_max)
             items[cat] = picked
-            taken.update(item_text(x) for x in picked)
+            taken.update(tok for x in picked for tok in taken_tokens(x))
             theme_warns += [f"{cat}: {w}" for w in check_theme_spread(picked, cat)]
         positions, pos_totals = balanced_position_plan(rng, ANSWER_SECTIONS)
         spec = {

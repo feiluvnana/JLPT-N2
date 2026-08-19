@@ -26,44 +26,88 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+# An answer key is one of four options. Anything else parsed out of a key
+# column is a parser defect, never a paper defect, and must stop the run rather
+# than be reported as a blind-solve discrepancy: run against 20260817_3 this
+# evaluator reported 106 scored items and five discrepancies at items 102-106
+# with "keys" 306 / 325 / 337 / 318 / 295 — the 問題3 per-talk character counts
+# printed in the セクション構成表, read as key rows. A blind solve is the one
+# thing standing between a mis-key and shipping, and an evaluator that emits
+# impossible discrepancies teaches reviewers to discount it
+# (qa-report-20260817_3 round 2, N4).
+VALID_KEYS = {1, 2, 3, 4}
+MAX_ITEMS = 107          # 75 言語知識・読解 + 32 聴解, the widest format on disk
+EXPECTED_ITEMS = 101     # the standard N2 paper this repo generates
+SECTION_TABLE = re.compile(r"^#+\s*セクション構成表", re.M)
+KEY_HEADING = re.compile(r"^#+\s*(?:解答|【?正解)", re.M)
+
+
+def _key_region(text: str) -> str:
+    """The answer-key tables only: after the key heading, before the 構成表.
+
+    The セクション構成表 is an AUDIT artifact that sits after the key tables and
+    is full of numbers (character counts, row tallies) in table cells. It is not
+    a key table and must never be read as one.
+    """
+    cut = KEY_HEADING.search(text)
+    if not cut:
+        return ""
+    region = text[cut.start():]
+    table = SECTION_TABLE.search(region)
+    return region[:table.start()] if table else region
+
+
 def load_keys(test_dir: Path) -> dict:
     """Extract answer keys from 言語知識・読解.md and 聴解.md."""
     test_dir = Path(test_dir)
     gengo_path = test_dir / "言語知識・読解.md"
     choukai_path = test_dir / "聴解.md"
 
-    keys = {}
+    keys: dict[str, int] = {}
+    bad: list[str] = []
     if gengo_path.is_file():
-        text = gengo_path.read_text(encoding="utf-8")
-        cut = re.search(r"^#+\s*(?:解答|【?正解)", text, re.M)
-        if cut:
-            for line in text[cut.start():].splitlines():
-                line = line.strip()
-                if line.startswith("|") and line.endswith("|"):
-                    parts = [p.strip() for p in line.split("|")[1:-1]]
-                    if len(parts) >= 2 and parts[0].isdigit() and parts[1].isdigit():
-                        keys[str(parts[0])] = int(parts[1])
+        for line in _key_region(gengo_path.read_text(encoding="utf-8")).splitlines():
+            line = line.strip()
+            if line.startswith("|") and line.endswith("|"):
+                parts = [p.strip() for p in line.split("|")[1:-1]]
+                if len(parts) >= 2 and parts[0].isdigit() and parts[1].isdigit():
+                    if int(parts[1]) not in VALID_KEYS:
+                        bad.append(f"言語知識・読解.md item {parts[0]}: key {parts[1]}")
+                        continue
+                    keys[str(parts[0])] = int(parts[1])
 
     if choukai_path.is_file():
-        text = choukai_path.read_text(encoding="utf-8")
-        cut = re.search(r"^#+\s*(?:解答|【?正解)", text, re.M)
-        if cut:
-            # Row labels ("1番", "2番") repeat across 問題1-5's separate key
-            # tables, so a bare label collides across sections (問題1's 1番
-            # overwrites/is overwritten by 問題2's 1番, etc.). The document
-            # order within the key section is 問題1 -> 問題5, each table in
-            # 番 order, which is exactly the official continuous numbering
-            # (72, 73, ...) — so a running counter reproduces the real
-            # question numbers without needing to know each 問題's item
-            # count up front.
-            next_qid = 72
-            for line in text[cut.start():].splitlines():
-                line = line.strip()
-                if line.startswith("|") and line.endswith("|"):
-                    parts = [p.strip() for p in line.split("|")[1:-1]]
-                    if len(parts) >= 2 and parts[1].isdigit() and re.search(r"\d+番", parts[0]):
-                        keys[str(next_qid)] = int(parts[1])
-                        next_qid += 1
+        # Row labels ("1番", "2番") repeat across 問題1-5's separate key
+        # tables, so a bare label collides across sections (問題1's 1番
+        # overwrites/is overwritten by 問題2's 1番, etc.). The document
+        # order within the key section is 問題1 -> 問題5, each table in
+        # 番 order, which is exactly the official continuous numbering
+        # (72, 73, ...) — so a running counter reproduces the real
+        # question numbers without needing to know each 問題's item
+        # count up front. It starts after the LAST 言語知識 item rather than at
+        # a hardcoded 72, so a 75-item 言語知識 half does not overlap it.
+        next_qid = (max((int(q) for q in keys), default=71) + 1)
+        for line in _key_region(choukai_path.read_text(encoding="utf-8")).splitlines():
+            line = line.strip()
+            if line.startswith("|") and line.endswith("|"):
+                parts = [p.strip() for p in line.split("|")[1:-1]]
+                if len(parts) >= 2 and parts[1].isdigit() and re.search(r"\d+番", parts[0]):
+                    if int(parts[1]) not in VALID_KEYS:
+                        bad.append(f"聴解.md row {parts[0]}: key {parts[1]}")
+                        continue
+                    keys[str(next_qid)] = int(parts[1])
+                    next_qid += 1
+
+    over = sorted(int(q) for q in keys if int(q) > MAX_ITEMS)
+    if bad or over:
+        raise SystemExit(
+            "qa_eval: the key parse produced impossible rows — this is a "
+            "PARSER defect, not a paper defect, so nothing is reported as a "
+            "discrepancy:\n  "
+            + "\n  ".join(bad + [f"item index {q} > {MAX_ITEMS}" for q in over])
+            + "\n  A key is 1-4 and an item index fits the format. Check that "
+              "the key tables have not grown a non-key table between the "
+              "答え heading and the セクション構成表.")
 
     return keys
 
@@ -106,6 +150,17 @@ def evaluate_answers(test_dir: Path, user_answers: dict | list, reviewer_name: s
     print(f"\n=======================================================")
     print(f"  QA Blind-Solve Evaluation: {test_dir.name}")
     print(f"=======================================================")
+    if total != EXPECTED_ITEMS:
+        # Under-reporting is the same defect class as N4's phantom items and is
+        # harder to notice: 4 of the 12 papers on disk parse to 71 keys because
+        # their key tables are laid out differently, and the evaluator used to
+        # print "Total Scored Items : 71" for a 101-item paper with no comment,
+        # so 30 items went unevaluated and read as a clean run.
+        print(f"  !! PARSED {total} KEYS, EXPECTED {EXPECTED_ITEMS} — "
+              f"{EXPECTED_ITEMS - total} item(s) were NOT evaluated. Missing: "
+              f"{sorted(set(range(1, EXPECTED_ITEMS + 1)) - {int(q) for q in keys})[:12]}"
+              f" … The key tables are not in the layout this parser reads; fix "
+              f"the parse before trusting the agreement figure below.")
     print(f"  Total Scored Items : {total}")
     print(f"  Agreement with Key : {n_match} / {total} ({(n_match/total*100):.1f}%)")
     print(f"  Discrepancies      : {n_mismatch}")

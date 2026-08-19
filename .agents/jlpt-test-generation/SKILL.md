@@ -53,6 +53,16 @@ re-verification, and why. PASS closes the *paper*, not the *generator*: an
 open entry in QA's root-cause table blocks the next generation run until
 applied or rejected with a reason.
 
+**`make sample <next>` may not run while any test's QA is open** — not while a
+round is being written, not while its findings are being applied. The ledger it
+writes, `logs/ledger.json`, is the same file the open review is auditing, so
+sampling underneath a reviewer invalidates the provenance half of the pass it is
+reading (step 6) and reds `make check` for every finished paper on disk while it
+does. `20260818_1` was sampled at 11:31 during round 3 of `20260817_3` and did
+exactly that (R3-6). The next paper starts when the open paper's findings are
+applied or rejected — that is the same gate the sentence above names, stated as
+a command instead of as a principle.
+
 **Fallback with no subagents:** approximate the table with new sessions,
 one stage per session, handing off through disk. The one split that
 survives every fallback: **authoring and QA in different contexts.**
@@ -112,6 +122,9 @@ make sample <id> SEED=<n>          # -> tests/<id>/test_spec.json + ledger
 - No harvest/merge step. `test_spec.json`'s `reading_topics` and
   `listening_scenarios` are what every 読解/聴解 surface is authored from
   (`exam-blueprint` Part II).
+- **Do not run this while another test's QA is open** — `make sample` writes
+  `logs/ledger.json`, which the open review is auditing (§"The 4-stage
+  pipeline"). Check for an unresolved `qa/qa-report-*.md` before sampling.
 
 ## Stage 2 — authoring rules
 
@@ -175,6 +188,19 @@ closing-move column, and check:
 - **No topic appears twice in this paper**, even in a different register.
   Avoid e.g. a 問題14 flyer spelling out a 聴解 item's keyed answer, or one
   subject serving both 問題9 and 問題10(1).
+- **The drawn `quick_response` phrases are content too — put every one of them
+  in the table as a row** (`test_spec.json["items"]["quick_response"]`, 11 in a
+  current paper = 聴解問題4-1番〜11番), with the setting you invented for each. They are the surfaces nobody thinks of as
+  topics because nobody *chose* their subject: the sampler hands over an idiom
+  and the author invents a scene around it, so the scene never gets tagged and
+  never gets compared. `20260817_3` wrote a 問題9 cloze whose thesis was
+  「何をどう書けばよいのか分からないまま紙に向かう心細さ」 while its own drawn
+  聴解問題4-1番 stimulus was 「この申請書の書き方がよく分からないのですが」 — an
+  in-paper echo, and the 12 rows would have shown it in one read. A
+  quick_response scene that restates another surface's subject is a repeat
+  even though nobody chose it. Check them against 問題9's subject
+  specifically — the cloze is the other unpooled surface (`exam-blueprint`
+  §"The four theme rules" rule 4b).
 - **No topic repeats the previous test**, especially in the same 聴解 slots.
 - **A topic/domain match in the 2-tests-back column is a minor finding**,
   not an automatic fail — note it so a domain doesn't become a recurring

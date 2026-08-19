@@ -187,6 +187,14 @@ it before calling any authoring work done.
    parenthesised single digit** in the suffix (`make check` reads every
    `(1)`–`(4)` as word order). Add no further numeric limits — chunk-size
    floors reject 20–38% of official items (`bunpou.md`).
+   **The uniqueness note must prove the LAST slot too.** Name, per card, why
+   it cannot be the FINAL card before the fixed tail — not only why it cannot
+   precede the tested connective. `20260817_3` 問題8-44 argued 「テ形『見て』は
+   『うえで』に接続できない」, which blocks 見て *before* うえで and says nothing
+   about 見て *last*; the rival ordering 2-3-4-1 was fully grammatical and
+   keyed ★=4 instead of 3. `make verify-scramble` prints the same
+   `RESULT: WARNING (24 permutations possible)` for a sound item and a broken
+   one, so it cannot supply this — the written per-card bar is the proof.
 9. **A cloze blank must not repeat what the stem already says.** Read
    stem-plus-option aloud as one sentence for all four.
 10. **Exactly ONE option may be defensible — three WRONG answers, not three

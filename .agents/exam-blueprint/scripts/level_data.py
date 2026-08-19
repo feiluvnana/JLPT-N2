@@ -58,6 +58,26 @@ def entry_theme(entry) -> str | None:
     return entry.get("theme") if isinstance(entry, dict) else None
 
 
+def entry_key(entry) -> str | None:
+    """The ERRAND IDENTITY of a themed pool entry (institution + errand), or None.
+
+    Optional field on `listening_scenarios`/`reading_topics`, added 2026-08-19.
+    Two entries whose display strings differ but whose errand is the same carry
+    the same `key`, and the sampler's cooldown compares `key` before it compares
+    the display string — 「引越し:見積もり」, 「引っ越し業者との見積もり調整」 and
+    「引っ越し業者との調整」 are three strings for one errand, and the
+    string-keyed cooldown handed two of them to consecutive papers
+    (qa-report-20260817_3 F6). Deleting the duplicates was not available: four
+    shipped tests record them in `logs/ledger.json` and
+    `check_draw_provenance()` requires every recorded draw to resolve to a pool
+    entry, so the fix has to make the SAMPLER see through them instead.
+
+    An entry with no `key` is its own key — most of the pool is genuinely
+    distinct and does not need one.
+    """
+    return entry.get("key") if isinstance(entry, dict) else None
+
+
 def head(item: str) -> str:
     """Normalized identity ignoring disambiguating gloss."""
     s = str(item).strip()

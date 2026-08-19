@@ -126,7 +126,13 @@ defect through.
   option may be an adverb alone, exactly one of 24 orderings may be
   grammatical.
 - **A 解説 cell that itself declares a distractor ungrounded** — any
-  「言及なし」/「未言及」 in a 問題1–3 解説 is a confession, not an explanation.
+  「言及なし」/「未言及」 in a **問題1–2** 解説 is a confession, not an
+  explanation. **問題3 (概要理解) is exempt, by design:** its distractors are
+  topic-level summaries and the monologue must NOT mention its own wrong
+  options (`question-authoring/references/choukai-items.md` §問題3, the owner;
+  `make check` FAILs a 問題3 talk that mentions 2+ of them). 「〜の話は出てこない」
+  is the correct 問題3 解説. This rule spanned 問題1–3 until 2026-08-19, which
+  made every compliant 問題3 解説 an automatic fail on paper.
 - **`logs/ledger.json` disagreeing with `test_spec.json`, or a hand-written
   `harvest_sha`** — compare field for field; a date-shaped sha is fabricated.
 - **An item redrawn from a test inside the rotation cooldown** — `sample_items.py`
@@ -154,10 +160,19 @@ defect through.
   original draws through a whole QA pass — a mismatch a same-file re-review
   cannot see, because it's BETWEEN files.
 - **The same fix must also update every relevant field in that surface's OWN
-  `logs/topics.json` entry** (`surfaces`, `themes`, `shapes`, `closing_moves`)
-  — `20260817_1` updated `surfaces`/`themes` but left `shapes` describing the
-  discarded pre-fix draw; no check compares `shapes` against `surfaces`.
-  Update all four together.
+  `logs/topics.json` entry** — **all FIVE: `surfaces`, `themes`, `shapes`,
+  `closing_moves`, `notes`** — `20260817_1` updated `surfaces`/`themes` but
+  left `shapes` describing the discarded pre-fix draw; no check compares
+  `shapes` against `surfaces`. Update all five together.
+  **`notes` is verifiable, and must be verified: every claim in `notes` that
+  quotes a paper string must quote a string that is still in the paper.** The
+  four-field list above stood until 2026-08-19, so `notes` was the one field
+  nobody re-read — `20260817_3` shipped a note saying 「願ってもない is a printed
+  distractor at 問題9-51」 (0 occurrences after the fix) and another saying the
+  聴解問題2-2番 key still shared 「よそ」 with the script (0 occurrences).
+  `notes` is the hand-off the NEXT paper's blueprint stage plans around; a note
+  naming an artifact the fix removed is worse than no note. `grep` each quoted
+  string before you leave it there.
 - **The reviewer does not negotiate the bar** — no waiving a rule because the
   test is "mostly fine" or the deadline is close. Propose a change in the
   report if a rule seems wrong; apply it as written to this test.
@@ -263,10 +278,15 @@ as "N1"/"N3", so a single source's label was never sufficient.
 
 ### 3. Mechanical reads
 
-- **問題7 stems:** official averages ~43 JP chars (band ~33–54). Fail if the
-  12-stem average is under ~35, or several sit under ~30 — rewrite the
-  situation, not the keyed form. Also fail zero dialogue/setting-label stems
-  in the set (official always has a few).
+- **問題7 stems — measure the DISTRIBUTION, both directions.** The three
+  binding numbers are `question-authoring/references/bunpou.md` §問題7's (mean
+  inside 36–52 JP chars, ≥2 stems under 34, max−min ≥25); compute all three
+  and print them in the report, never just the mean. This bullet stated the
+  rule as a floor only until 2026-08-19, and all 12 papers on disk answered by
+  optimising the floor: means 47.7–57.4 and **zero** stems under 30, against
+  official 7/2025's 26 and 12/2025's 23. Repair by compressing stems, not
+  lengthening them. Also fail zero dialogue/setting-label stems in the set
+  (official always has a few).
 - **問題8/9 length:** 問題8 shouldn't read as three-word drills; 問題9 cloze
   body should land ~500–700 JP chars, not a 150–200 char stub.
 - **読解 apparatus & formatting** (bar: `refs/JLPT_N2_NEW/16. N2 7-2025/booklet.md`):
@@ -296,10 +316,14 @@ as "N1"/"N3", so a single source's label was never sufficient.
   single-kanji-with-okurigana stems, all 4 options share the okurigana and
   use real radical/homophone sets. Fail any stem whose kana matches none of
   the options' readings (unanswerable as printed).
-- **問題3 語形成:** every option must be a real, productive affix that could
-  plausibly attach to THIS stem — not just plausible in the abstract. Fail a
-  nonsense affix (迷〜; the real four negations are 非/無/未/不) or one that
-  doesn't suffix onto the stem at all.
+- **問題3 語形成:** every option must be a real, standard, productive affix of
+  the same functional family. Fail a nonsense affix (迷〜; the real four
+  negations are 非/無/未/不). **Official does NOT require all four to attach to
+  the stem** — official's 教育 item offers 則/理/論/規 beside the key, and only
+  教育観 attaches (`question-authoring/references/moji-goi.md` §問題3, the
+  owner, which carries the rule and this example). Until
+  2026-08-19 this bullet demanded plausible attachment to THIS stem, directly
+  contradicting the owner; a paper cannot satisfy both.
 - **問題4 文脈規定:** every stem must carry a （　）blank. A key word printed
   in the stem itself is trivially answerable — fail it.
 - **読解 length/predictability:** all 20 items (52–71) satisfy `max/min ≤
@@ -341,8 +365,16 @@ as "N1"/"N3", so a single source's label was never sufficient.
   valid 清濁/長短 derivation, and none uniquely selected by conjugation/
   okurigana (cover the kanji, keep okurigana visible — if only one option
   still fits, fail it).
-- **One grammar point, one KEY per paper** — check 問題7/8/9 keys against
-  each other AND the reading passages' running text.
+- **One grammar point, one KEY per paper — as a count, not as "exposure".**
+  No form may be keyed twice across 問題7/8/9. Then, for each 問題7/8/9 keyed
+  connective or modal, `grep` it across 問題10–14: **at most ONE occurrence in
+  the 読解 prose, and never in the same syntactic frame as the stem.**
+  `20260817_3` keyed 「そうとは限らない」 at 問題9-51 while 問題11(4) printed
+  「〜とは限らない」 in the identical 文末 frame, and keyed 「ところが」 at
+  問題9-48 while the prose used it 3×. Until 2026-08-19 this bullet said only
+  "check the keys against the running text", with no statement of what a hit
+  was — so it was unactionable and got skipped. A 連体 use of a form keyed in a
+  文末 frame (「姿を消したはずの種が」 against a keyed 「〜はずだ」) is not a hit.
 - **Every sentence is Japanese** — read the whole paper aloud once, watching
   for broken constructions (especially inside CORRECT options).
 
@@ -466,6 +498,25 @@ number/template replacing a judgment call, (2) a construction procedure at
 authoring time (a rule verifiable only *after* writing gets skipped), (3) a
 gate check when string-decidable. State plainly when a rule can't be
 mechanized and must stay human judgment.
+
+**A new gate check must be RUN against the incident that motivated it before
+it is committed — a check that would not have caught its own founding case is
+not evidence.** Print the founding paper's measurement and paste it into the
+root-cause row; if the incident predates the paper on disk, reconstruct the
+offending string and run the predicate on it directly. This is not
+belt-and-braces: three checks written in the 2026-08-19 root-cause pass shipped
+mis-scoped in exactly this way, all from one cause — each was written from the
+incident NARRATIVE and never re-read against the rule text it cites.
+`check_key_grammar_exposure` claimed 問題7/8/9 and looped over 問題7/9 (R3-7);
+`check_dokkai_final_sentence_templates` read 12 finals where `dokkai.md` counts
+13 essay surfaces, so 問題12A's closing was never measured (R3-8); and
+`check_mondai9_option_reuse` cited a **two**-shared-option incident under a
+threshold that fires at three, i.e. it could not have caught the case it was
+written for (R3-9). A fourth, `check_note_band`, ran for three papers on a
+predicate whose entire history was ten false positives, under a warn name that
+stated the *passing* condition (R3-10). The same rule binds a check whose
+threshold or scope you CHANGE: re-run it over every paper on disk and state
+which ids move, so a widened rule cannot quietly re-classify shipped work.
 
 **Boundaries.** The reviewer *proposes* skill edits, never applies them to
 generation skills mid-review. The one file the reviewer may edit directly is

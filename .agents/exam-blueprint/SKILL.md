@@ -45,6 +45,16 @@ N2-Kanji or 日本語総まとめ N2 語彙/漢字.** 問題1 tests a reading of
 spelling, so okurigana is part of the item (`労わる` vs the dictionary's
 `労る`). Fix the pool, never just the paper.
 
+**An `orthography` entry containing a 表外漢字 is a pool defect — delete it and
+re-draw (`sample_items.py --reroll orthography`), never patch the sentence.**
+問題2 prints all four options, so every glyph in the grid must be standard
+常用/N2 kanji (`question-authoring/references/moji-goi.md` §問題2 owns the
+option-set rule); an entry whose own headword is outside 常用 cannot produce
+one. `飢饉` shipped from this pool and survived three QA rounds: 饉 is not a
+常用漢字, and 飢 occurs **zero times** across all 31 official sittings in
+`refs/JLPT_N2_NEW/`. Same shape as 問題1's 表外音訓 rule below — the defect is
+the entry, and re-spelling the stem leaves the pool to re-draw it next test.
+
 ### The `kanji_reading` validity rule (audited 2026-08-06)
 
 Unanswerable 問題1 items (`領(えり)`, `線(すじ)`, `爆(は.ぜる)`) ship when
@@ -171,6 +181,49 @@ WARN is only a backstop for a hand-edited spec. Listening keeps the WARN-vs-
 defect asymmetry deliberately — the sampler can't see which scenario maps to
 which 問題.
 
+### `key` — the errand identity, and the rule for near-duplicate entries
+
+A themed entry is `{"topic"|"scenario": …, "theme": …}` plus an **optional
+`"key"`**: the entry's errand identity, written `institution:errand`
+(`引っ越し業者:見積もり`, `カルチャースクール:受講申し込み`). Two entries whose
+display strings differ but whose errand is the same carry the **same** `key`,
+and `sample_items.py` resolves rotation through `errand_key()` before it
+compares display strings, so one errand cools down once however many ways the
+pool spells it. An entry with no `key` is its own key — most of the pool is
+genuinely distinct and needs none. Currently 40 entries carry one, in 19
+clusters.
+
+**The incident (2026-08-19, R14):** the cooldown compared display strings, so
+`引越し:見積もり` / `引っ越し業者との見積もり調整` / `引っ越し業者との調整` were
+three separate items to it and two of them went out in consecutive papers with
+every gate green (`qa-report-20260817_3` F6). Re-measured across the whole
+ledger once the keys landed: **nine of the twelve papers on disk** had drawn an
+errand a recent predecessor drew, every one of them invisible to the string
+comparison.
+
+**The authoring rule — key it, never re-spell it.** A new `listening_scenarios`
+/`reading_topics` entry naming an errand an existing entry already names must
+carry **that entry's `key`, verbatim**, not a new string and not a new
+paraphrase of the errand. Adding the near-duplicate unkeyed re-opens the hole
+by construction: the pool grows, the cooldown does not.
+
+**And never delete a duplicate to solve it.** Four shipped tests name those
+strings in `logs/ledger.json`, and `check_draw_provenance()` requires every
+recorded draw to resolve to a pool entry — deleting a duplicate FAILs the gate
+on papers that are already out. Add the `key`; a shared `key` is correct data,
+never a defect.
+
+**What the gate does with it.** `check_pool_errand_keys()` FAILs a blank or
+non-string `key` (drop the field rather than leave it empty — a blank key is an
+identity shared with every other blank one) and WARNs the **effective depth**
+the clusters cost: 19 clusters currently cost 21 entries, so `cooldown_for()`'s
+headroom is optimistic by that many. Resolve that by **growing** the pool, never
+by unsharing a key. `check_spec_errand_rotation()` FAILs a draw whose errand a
+paper inside its own cooldown window already drew; the nine papers that already
+breached it are exempted by name and print the same measurement as a WARN.
+Repair a hit with `sample_items.py --reroll <category>`, never a hand
+substitution (§"Rotation model").
+
 ### The four theme rules
 
 A paper authors 12 reading + 21 listening = 33 themed surfaces against a
@@ -188,6 +241,27 @@ binds only the **headline set** = 問題9 cloze, 問題12 A/B (one surface),
 4. **Cross-test: no theme headlines two consecutive papers, and across the
    previous two papers together at most ONE headline theme may repeat**
    (only against the paper-before-last, only once).
+
+**Rule 4b — the cloze's SUBJECT, not its theme, is bound against the whole
+previous paper.** 問題9 is the one scored surface with no pool entry, no draw
+and no cooldown, so rules 1–4 reach it only through its headline THEME tag —
+and a theme tag is too coarse to stop the actual repeat. `20260817_3`'s cloze
+(申請書を書かせない窓口) carried a headline theme that cleared rule 4 while
+repeating the SUBJECT of `20260817_2`'s 問題10(4) (窓口ごとに住所氏名を書き直す
+負担) — a non-headline surface, one paper back.
+
+Procedure, at blueprint time: (1) write the cloze's subject as a concrete
+noun phrase, 5–15 JP chars (`書かない窓口`, `内容量を減らす値上げ`), not a theme
+label; (2) list the previous paper's **thirteen** 読解 subjects from its
+`logs/topics.json` `surfaces` field, headline and non-headline alike; (3) no
+match — same institution plus same issue is a match even under different theme
+tags. A hit means re-subject the cloze before authoring, not re-label it.
+
+Bind the SUBJECT, never the theme: two consecutive papers each spend 13
+distinct themes out of a 20-value vocabulary, so theme overlap between them is
+forced by arithmetic and "no 読解 theme may match the previous paper's" is
+unsatisfiable — proposed after round 1 of `20260817_3` QA and rejected on
+those grounds, 2026-08-19.
 
 **These rules bind pool-origin and web-origin surfaces alike** — an offline
 all-pool paper is not exempt. The pools are lopsided (`働き方` holds 44 of
@@ -243,7 +317,9 @@ flat ledger migrates automatically.
 - **One item, one 問題 per test** — categories draw against a shared `taken`
   set; a post-draw assertion aborts on collision.
 - **Cooldown is by WORD, across categories** — recency tracks both raw
-  string and `head()` identity.
+  string and `head()` identity, **plus a themed entry's `key`** when it has
+  one, so near-duplicate errands cool down as one item (§"`key` — the errand
+  identity", which owns the field and the rule for adding entries).
 - **A reroll only re-verifies the category it touched** — every OTHER
   category in the spec was drawn at some earlier point against a different
   "now" window, so re-verifying them against the current window is wrong the

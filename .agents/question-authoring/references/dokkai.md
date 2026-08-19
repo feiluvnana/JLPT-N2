@@ -64,6 +64,18 @@ marker scan, since both classify by CATEGORY, not literal skeleton — if two
 passages assigned the same shape share a template, rewrite one to a
 structurally different pattern for that shape before finalizing.
 
+**Do it as a column, not as a judgement: write the thirteen FINAL SENTENCES
+out in one column before finalising and read them down the column.** The
+shape label is not the check — the sentence is. `20260817_3` labelled its
+thirteen surfaces across six shapes, ≤2 each, every label defensible, and
+still shipped **five** finals on one skeleton (「〜のは、A そのものではなく B
+だ」 — 問題9, 問題10(3), 問題10(4), 問題11(1), 問題13), three of them on the
+same 「〜そのもの…ではなく」 sub-skeleton, because nobody put the sentences side
+by side. Normalise each final to its template as you write it down
+(`〜のは、A ではなく B だ` / `A より B のほうが〜` / `A だけではない。B こそが〜`),
+and rewrite until **no template appears more than twice** — regardless of
+what the shape labels say. Keep the column; it is the artifact QA re-reads.
+
 If a closing explicitly REJECTS a stated single-factor view
 (「〜という見方には無理がある」, 「〜だけでは…」) before its conclusion,
 classify it as 主張 regardless of whether it uses the literal marker
@@ -328,6 +340,26 @@ never re-label a stem to make the tally look right.
     necessary, neither sufficient** — a term absent from Shinkanzen/Soumatome
     isn't automatically over-level (準備, 技術, 選択 plausibly are too, and
     are still banned).
+  - 🚫 **Condition (2), as a procedure you run while writing — the
+    delete-the-headword-characters test.** "Avoid circular definitions" is a
+    judgement, so it was decided ad hoc every paper and `20260817_3` shipped
+    a circular gloss past three readers. Instead: **write the gloss, then
+    delete from it every character that also appears in the headword, and
+    read what is left for CONTENT** (not for fluency — the remainder is
+    ungrammatical by construction). What remains must still identify the
+    term.
+    - 「菜っ葉：食用にする葉物の野菜」 → 「食用にする物の野」. Only "a thing that
+      is eaten" survives; the leaf and the vegetable both came from the
+      headword. **Insufficient** — reword (「ほうれん草や小松菜など、葉の部分を
+      食べる野菜」 survives the deletion as the examples plus 部分を食べる).
+    - 「触診：体に手を触れて状態を確かめる診察の方法」 → 「体に手をれて状態を確かめる
+      察の方法」. The mechanism and the purpose both survive. **Sufficient.**
+    - 「農泊：農家に泊まり、その土地の暮らしや仕事に触れる旅行の形」 → the whole
+      second clause survives. **Sufficient.**
+    This is the same test the gate's WARN approximates, moved to where it can
+    be acted on. A well-glossed 漢語 naturally unpacks its own kanji, so the
+    gate will keep listing candidates — run this test on each and record the
+    verdict rather than dismissing the list.
   - ✅ **TARGETS**: N1-level/rare/literary words (委ねる, 雄弁, 死守する,
     顧みる, 飼いならす, 抑圧, その場しのぎ); onomatopoeic/colloquial
     (むきむきの); specialized/domain jargon (大脳辺縁系, 起業, 機動性);

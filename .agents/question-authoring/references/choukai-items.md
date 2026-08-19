@@ -20,8 +20,8 @@ written. Append to `聴解.md`, **after the answer-key heading** (so
 ### 問題1
 | 項目 | 場面 | 主導 | 正解 | 消去方法 | 質問型 |
 |---|---|---|---|---|---|
-| 1番 | スーパーのレジ | 店員→客 | 本人確認書類を提示 | 割り込み「その前に」 | この後まず |
-| 2番 | 会社の朝会 | 部長→部下 | 見積書を送る | 第三者に割り当て | この後まず |
+| 1番 | スーパーのレジ | 店員→客 | 本人確認書類を提示 | 順番待ち（先に会員登録）／不要／実行不可 | この後まず |
+| 2番 | 会社の朝会 | 部長→部下 | 見積書を送る | 別の人に割り当て／既に完了／条件不足 | この後まず |
 ```
 
 Then read it **as columns, not as rows**:
@@ -32,6 +32,87 @@ Then read it **as columns, not as rows**:
 
 If a column repeats, rewrite the ITEM, not the table. QA reads this table first
 (`exam-qa-review` §4 聴解); a section with no table is not shippable.
+
+### 場面 — one establishment type per 大問
+
+**No two items of one 問題 may sit at the same KIND of counter**, 例 counted.
+`20260817_3` 問題2 opened its 例 at 「ビジネスホテルのフロント」 and set 5番 at
+「ホステルの受付」: a listener hears the same errand twice in one section, and
+every automated gate was green — both entries are tagged 旅行 (theme caps pass),
+their errand keys differ (cooldown passes), and `sample_items.py`'s
+domain-collision WARN compares the literal prefix, for which 「ホテル」 and
+「ホステル」 are two domains. Nothing upstream can catch it: the sampler draws all
+21 `listening_scenarios` without knowing which 大問 each will land in — **you do
+that mapping, so it is yours to check.** Synonyms count as one type
+(ホテル/旅館/ホステル/民宿, 病院/クリニック, 美容院/理髪店, レストラン/カフェ/食堂,
+市役所/区役所 …); different establishments of a broad domain do not
+(大学の研究室 vs 専門学校の事務室 is fine, and so is 郵便局の窓口 vs
+ハローワークの窓口 inside 問題1's ≤2 サービスカウンター quota).
+
+Fix a collision by **placing the two scenes in different 大問, or re-angling one
+onto another establishment** — never with `--reroll listening_scenarios`, which
+re-draws all 21 entries to repair one placement you control.
+
+`check_choukai_setting_adjacency()` reads this column and FAILs a repeat —
+**except for the papers named in its `SETTING_ADJACENCY_GRANDFATHERED` set,
+which print the same measurement as a WARN.** That set holds the papers that
+already breached the rule the day the check landed (2026-08-19); clearing one
+means re-writing a 場面 and re-synthesising its MP3, i.e. a decision about that
+paper, and an id leaves the set the moment that paper's 聴解 is repaired.
+**Read the set in `tools/check_consistency.py`, not this sentence, for who is
+currently exempt** — as of 2026-08-19 it is `20260817_3` alone (問題2 例
+ビジネスホテルのフロント / 5番 ホステルの受付, the incident above), pending the
+re-angle of its 例.
+
+This paragraph exists because the rule and the gate disagreed for one day: §場面
+said the check "fails on a repeat" while the only paper that repeats was
+exempted by name, so the section read as enforced and measured as advisory
+(round 3, R3-4). **A doc that says "fails" beside a gate that warns is worse
+than either — it is the shape where green stops being evidence.** Any exemption
+the gate carries is named here, the way §消去方法 names its four.
+
+### 消去方法 uses a CLOSED vocabulary — mandatory
+
+Free text in this column is how a device count comes out wrong: `20260817_3`
+wrote 「順番待ち／順序が逆」, 「登録後に係員」 and 「第三者に割り当て」 in one
+問題1, and its own tally then read four reassignments as two — the over-cap
+shipped and QA found it, not the author. **Every 消去方法 cell is one token per
+distractor, in the item's option order, each token EXACTLY one of these nine,
+verbatim:**
+
+`既に完了` · `別の人に割り当て` · `順番待ち` · `後回し` · `実行不可` ·
+`規則で不可` · `条件不足` · `不要` · `明確に否定`
+
+**Separator: 「／」.** Each token may carry a parenthetical quoting the script
+line that earns it (`順番待ち（「分け終わった順番どおりに出したいから、そのあとでね」）`)
+— strongly preferred, since the quote is what makes the row re-derivable — and
+that evidence usually contains 「、」, which is why the slash is the boundary
+mark. 「、」 is accepted too, so no existing table needs rewriting; the token
+itself is what is not flexible.
+
+No token may appear in more than **2 rows of one 問題**, 例 included, and the cap
+counts ROWS, not occurrences — a row that kills two distractors the same way
+still counts once. Counting is then `grep`, not judgement. If a distractor's
+elimination fits none of the nine, the distractor is not eliminated by a device
+official uses: rewrite the line, don't invent a tenth label.
+
+**Scope today: 問題1.** `check_choukai_elimination_tokens()` reads the 問題1 表
+only — that is where the incident happened and where a paper has demonstrated
+the vocabulary working. 問題2's 消去方法 column is still free text in all 12
+papers on disk and stays QA's to read as prose (`exam-qa-review` §4); write it
+in the closed vocabulary when you can, and expect 問題2 to adopt the rule once a
+paper has shipped a compliant 問題2 表. Four papers with a pre-vocabulary 構成表
+(`20260813_2`, `20260814_1`, `20260817_1`, `20260817_2`) are grandfathered by
+name and print the measurement as a WARN; any other id FAILs.
+
+**When a fix rewrites a script line, RE-DERIVE that row's 消去方法 token from the
+NEW line.** A label that survives the rewrite of the line it describes is the
+defect, not the fix. `20260817_3` fixed its over-cap by rewriting the 例's line
+from 「場所が決まってからでいいよ」 (a real dependency → `順番待ち`) to
+「それは、あとで一緒に書き込もう」 (no dependency → `後回し`) and left the cell
+reading `順番待ち` — the second QA round found the table describing a line the
+paper no longer contains. Re-derive from the script every time; the table is
+evidence, and evidence is re-read, not carried forward.
 
 ## Section item mix — quotas measured against the 31-sitting archive
 
@@ -46,7 +127,7 @@ binding; write it into the 構成表 and check it there.
 | 1 | ≤2 of 6 items at a service counter; **≥3 must be someone assigning work** (「〜してくれる？」) | 6 % at a counter (9/153) | 42 % (17/40); 5/5 in `20260813_2` |
 | 2 | ≤2 of 6 keyed by 「一番/優先」; **≥2 理由 (どうして)**; ≥1 どのように | 6 % / 37 % / 18 % | 52 % / 38 % / 2 % |
 | 3 | ≤2 of 6 institutional announcements; **≥3 must be a person's 主張・意図・経験** | Shinkanzen: 「話し手の意図、主張などを判断する」 | 6/6 announcements, last two papers |
-| 4 | ≤2 of 12 items may carry an already-done distractor; ≤2 may key a reply opening 「あ、」 | median 1, max 3 of 11.4 | 9/11, 8/11 |
+| 4 | ≤2 of 12 items may carry an already-done distractor (**target**; the archive's ceiling is 3, the gate FAILs at 4 — §即時応答); ≤2 may key a reply opening 「あ、」 | median 1, max 3 of 11.4 | 9/11, 8/11 |
 | 5 | 1番 ≥3 speakers; 2番 the OTHER official type; no shared template | one of each type, every sitting | last 5 papers: same template twice |
 
 **Target vs gate.** These quotas are what you author to; `make check` (§G16)
@@ -359,15 +440,41 @@ median. `make check` WARNs above the official opener rate.
 **No reply SHAPE may be the key** (the already-done trap): when almost every
 「もう〜た」 option is wrong, もう **is** the key and the item scores without
 Japanese (archive averages 1.0 such item in 11.4; shipped papers have run
-9/11 and 8/11 before this rule). Caps for a paper's 問題4 (12 items incl. 例):
+9/11 and 8/11 before this rule). Bounds for a paper's 問題4 (12 items incl. 例):
 
-- ≤2 items may carry an already-done (もう/すでに/さっき + 〜た) distractor;
-- no other single shape (misread tense, inverted polarity, wrong addressee,
-  answering a different question) may be the wrong answer in >2 items;
+- **Already-done distractors: author to ≤2, three is the archive's ceiling,
+  four fails.** The archive runs a **median of 1** such item in 11.4 and a
+  **maximum of 3**, so the three numbers are: write 1–2; a third is inside what
+  official ships and is allowed only when the 構成表 names the three rows and
+  says why each needs the shape; a fourth is beyond anything official ships and
+  `make check` FAILs it. This is §"Target vs gate" applied — the quota table's
+  「≤2 of 12」 is the authoring target, the archive's range is the bar — and it
+  is written out here because the flat 「≤2」 read as a hard cap and left
+  `20260817_3` sitting at 3, in the gap between two numbers **in this same
+  file** (round 3, R3-5). Do not read the ceiling as the target: the median is
+  1, and a generator that writes to the maximum every paper reproduces the
+  distribution official does not have (see `bunpou.md` §問題7 for the same
+  failure on a different number).
+- **Count the SHAPE, not the word: もう / すでに / さっき / 先ほど / 今しがた /
+  たった今 + 〜た**, and any other wording that says the task is finished.
+  `20260817_3` shipped three (「もう受け付けました」「もう全部消しときました」
+  「先ほど郵便で送りました」) and counted two, correctly under the old token list,
+  because 先ほど was outside it. `make check`'s regex now carries all six words
+  as a **lower bound** on the count — it is the reading aid, not the rule; a
+  finished-task reply worded around all six still counts.
+- **Concentration bound on the other shapes** (misread tense, inverted
+  polarity, wrong addressee, answering a different question): no single shape
+  may account for more than **40 %** of the paper's 22 scored distractors, and
+  **no two items may share BOTH of their distractor shapes**. This replaces
+  the ">2 items per shape" form, which was arithmetically unsatisfiable and so
+  was ignored rather than obeyed: 22 distractors over 5 named shapes at ≤2
+  items × 2 distractors = 20 slots < 22 (`20260817_3` QA, round 1).
 - the KEYED reply may open with 「あ、」 in ≤2 items.
 
-List the 12 keys in one column and the 24 distractors in another — if either
-sorts by form, the section is broken (same read the 構成表 demands above).
+List the 12 keys in one column and the 24 distractors in another, **writing
+each distractor's shape beside it** — if either sorts by form, the section is
+broken (same read the 構成表 demands above). The shape column is what makes
+both caps above countable instead of impressionistic.
 
 Tests idioms/keigo (目を通す, お言葉に甘えて, 〜かと思いきや, 〜ようがない,
 席を外しております, 在庫を切らしております): invent the SETTING yourself, keep

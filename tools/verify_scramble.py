@@ -2,9 +2,35 @@
 """
 Topological & Permutation Verifier for JLPT N2 問題8 (文の組み立て).
 
-Extracts 問題8 scramble sentences (43..47) from 言語知識・読解.md,
-evaluates all 24 permutations (4!), analyzes card junction glue (L -> i -> j -> T),
-and verifies that the keyed answer is the UNIQUE valid ordering.
+Extracts 問題8 scramble sentences (43..47) from 言語知識・読解.md, enumerates all
+24 orderings, filters them through a SMALL list of impossible junctions, and
+checks the keyed ★ against whatever survives.
+
+WHAT THIS TOOL CAN AND CANNOT DECIDE — read before trusting a line of output.
+
+`IMPOSSIBLE_JUNCTIONS` knows four patterns (stacked case particles, a handful of
+conjugation clashes, a dangling particle before punctuation). Japanese
+word-order uniqueness turns on semantics and on connective subcategorisation,
+neither of which is in that list, so a surviving permutation is NOT a
+grammatical sentence and 「24 permutations possible」 is NOT a finding. Until
+2026-08-19 the tool printed exactly that line for every item of every paper —
+`RESULT: WARNING (24 permutations possible)` — and returned success, so it read
+the same for a sound item and for a broken one and decided nothing. A genuine
+second defensible answer at 20260817_3 問題8-44 went straight through it
+(qa-report-20260817_3 F1).
+
+So the tool now decides TWO things, and says which is which:
+
+  1. NEGATIVE evidence it really has: the keyed ★ is not among the surviving
+     orderings, or the junction filter killed every ordering. Both are FAIL.
+  2. The AUTHOR'S ARTIFACT: the item's 解説 must carry a per-card uniqueness
+     proof that includes the LAST SLOT — for each card, why it cannot be the
+     final card before the fixed tail. That is what 問題8-44's author never
+     wrote and what the reviewer had to reconstruct by hand; it is required
+     here, and a missing one is a FAIL.
+
+Uniqueness itself is still the 解説's claim, not this tool's finding. When more
+than one ordering survives the filter, the verdict is UNDECIDED, never WARNING.
 
 Usage:
     python3 tools/verify_scramble.py tests/20260813_2
@@ -103,6 +129,35 @@ def parse_mondai8_items(gengo_md: str) -> list:
     return items
 
 
+# The 解説's uniqueness proof has to cover the LAST slot, not just the tested
+# connective's own junction. 問題8-44 shipped with a proof that 「テ形『見て』は
+# 『うえで』に接続できない」 — true, and it only blocks 見て BEFORE うえで; it
+# never rules out 見て as the FINAL card, which is exactly the rival ordering QA
+# found. One of these phrases must appear, and every card must be named.
+LAST_SLOT_MARKERS = ("最終スロット", "最後のスロット", "末尾スロット", "最終位置",
+                     "最後には立て", "最後に立て", "末尾に立て", "文末に置け",
+                     "最終スロットの証明", "最後のカード")
+PROOF_PREFIX = 4        # chars of a card that count as "the 解説 names it"
+
+
+def missing_proof(item: dict) -> str:
+    """'' when the 解説 carries a last-slot proof naming every card."""
+    text = re.sub(r"\s", "", item.get("kaisetsu", ""))
+    if not text:
+        return "no 解説 cell for this item"
+    gaps = []
+    if not any(mk in text for mk in LAST_SLOT_MARKERS):
+        gaps.append("no last-slot proof (say, per card, why it cannot be the "
+                    "FINAL card before the fixed tail — a junction argument "
+                    "about the tested connective does not cover slot 4)")
+    unnamed = [o for o in item["options"]
+               if re.sub(r"\s", "", o)[:PROOF_PREFIX] not in text]
+    if unnamed:
+        gaps.append("cards never named in the proof: "
+                    + " / ".join(f"「{o}」" for o in unnamed))
+    return "; ".join(gaps)
+
+
 def analyze_scramble(item: dict, verbose: bool = False):
     qn = item["num"]
     opts = item["options"]
@@ -163,20 +218,37 @@ def analyze_scramble(item: dict, verbose: bool = False):
         if verbose:
             print(f"      Full: 「{sentence}」")
 
-    # Verification result
-    matching_perms = [p for p in valid_perms if p[1] == key]
-    if len(valid_perms) == 1 and matching_perms:
-        print(f"  => RESULT: PASS (Unique grammatical path matches ★={key})")
-        return True
-    elif len(valid_perms) > 1:
-        print(f"  => RESULT: WARNING ({len(valid_perms)} permutations possible. Check for floating adverbs or multiple valid orders)")
-        return True
-    elif not valid_perms:
-        print(f"  => RESULT: FAIL (0 valid permutations found - junction filter flagged all)")
-        return False
+    # The author's artifact, checked before the permutation verdict because it
+    # is the only uniqueness EVIDENCE that exists (see the module docstring).
+    missing = missing_proof(item)
+    if missing:
+        print(f"  => ARTIFACT: MISSING — {missing}")
     else:
-        print(f"  => RESULT: FAIL (Keyed ordering not found among candidates)")
+        print(f"  => ARTIFACT: ok (解説 carries a last-slot proof naming every card)")
+
+    matching_perms = [p for p in valid_perms if p[1] == key]
+    if not valid_perms:
+        print(f"  => RESULT: FAIL (0 orderings survive the junction filter — "
+              f"the filter is crude, so this usually means a card was "
+              f"mis-transcribed, not that the item is unsolvable)")
         return False
+    if not matching_perms:
+        print(f"  => RESULT: FAIL (the keyed ★={key} is not among the "
+              f"{len(valid_perms)} surviving orderings — the key names a card "
+              f"the tool cannot place in slot 3)")
+        return False
+    if len(valid_perms) == 1:
+        print(f"  => RESULT: PASS (one ordering survives and its ★={key} "
+              f"matches; uniqueness is still the 解説's claim, not this "
+              f"tool's finding)")
+        return not missing
+    others = sorted({p[1] for p in valid_perms} - {key})
+    print(f"  => RESULT: UNDECIDED — {len(valid_perms)} of 24 orderings survive "
+          f"a filter that knows {len(IMPOSSIBLE_JUNCTIONS)} junction patterns, "
+          f"so this tool has NOT verified uniqueness. Rival ★ values among the "
+          f"survivors: {others or 'none'}. The 解説's per-card proof, including "
+          f"the LAST slot, is the evidence — read it against these orderings.")
+    return not missing
 
 
 def main():
@@ -203,6 +275,11 @@ def main():
         if not ok:
             all_ok = False
 
+    print("\n-------------------------------------------------------------")
+    print("This tool decides two things: whether the keyed ★ survives its own "
+          "junction filter, and whether the 解説 carries the per-card "
+          "last-slot proof. It does NOT decide uniqueness — read the module "
+          "docstring before quoting an UNDECIDED line as a pass.")
     sys.exit(0 if all_ok else 1)
 
 

@@ -514,7 +514,7 @@ def jp_char_count(s: str) -> int:
     return len(JP_CHAR.findall(re.sub(r"\s+", "", s)))
 
 
-def check_grammar_stem_lengths(gt: str, bi):
+def check_grammar_stem_lengths(gt: str, bi, test_id: str = "", origin: str = ""):
     """問題7/9 carrier lengths must sit near the official JLPT band.
 
     Generated papers have shipped 問題7 stems averaging 20–34 JP chars against an official
@@ -572,6 +572,12 @@ def check_grammar_stem_lengths(gt: str, bi):
           f"(official per-paper 36–51, mean 43.1; got {avg:.1f})",
           len(stems7) == 12 and avg >= P7_PAPER_AVG_MIN,
           "paper still reads as drill-length — lengthen scene-setting")
+    # The two-sided DISTRIBUTION rule (N5). The floor above is the low side of
+    # the same measurement and stays as its own line, because it is what
+    # official papers are measured against; this is the high side plus spread,
+    # and it only applies to papers this repo wrote.
+    if origin == "generated":
+        check_p7_stem_distribution(test_id, [n for _, n in stems7])
 
     if m9:
         # Drop the instruction header and the option lists (from **48** / 48 onward).
@@ -585,6 +591,78 @@ def check_grammar_stem_lengths(gt: str, bi):
               f"(official ~500–700; got {p9})",
               p9 >= P9_PASSAGE_MIN,
               "expand the cloze prose around the four blanks")
+
+
+# 問題7 stem DISTRIBUTION, not just its floor (N5, qa-report-20260817_3 round 2).
+# The three bars are the ones written into question-authoring/references/
+# bunpou.md §問題7 on 2026-08-19; the doc and the gate must state one set of
+# numbers, so change them in both or in neither.
+P7_MEAN_BAND = (36, 52)     # official per-paper means 36-51 (official_calibration §7)
+P7_SHORT_MAX = 34           # "a short stem": no background clause
+P7_SHORT_MIN_COUNT = 2      # official ships ~21% of stems under 30 (n=180)
+P7_SPREAD_MIN = 25          # official ranges: 7/2025 = 48, 12/2025 = 42
+# Every paper on disk fails at least the short-stem clause the day it was
+# written — all 12 ship ZERO stems under 30 chars, means 47.7-57.4, and three of
+# them have a range under 25. That is the finding, not a reason to soften the
+# rule, so they are exempted BY NAME and print the same measurement a FAIL would
+# carry; any id not in this set FAILS. Delete an id when that paper's 問題7 is
+# recompressed (bunpou.md: compress 3-4 stems to 25-34 chars, never lengthen).
+P7_DISTRIBUTION_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1", "20260812_1",
+    "20260812_2", "20260813_1", "20260813_2", "20260814_1", "20260817_1",
+    "20260817_2",
+    # 20260817_3 removed 2026-08-19: its 問題7 was recompressed and now passes
+    # on merit (mean 46.2, 3 stems under 34, spread 29), so leaving it here
+    # would have downgraded a future regression from FAIL to WARN — the exact
+    # thing this list is not for (qa-report-20260817_3-round3 R3-3).
+}
+
+
+def check_p7_stem_distribution(test_id: str, stems: list[int]):
+    """問題7's twelve stems must be SPREAD, not twelve of one length (N5).
+
+    THE RULE (bunpou.md §問題7, the same three numbers): the 12-stem mean sits
+    inside 36-52 JP chars, at least 2 stems are under 34, and max−min is at
+    least 25.
+
+    THE INCIDENT: the old rule was one-directional — a paper average floor plus
+    a per-stem floor — so twelve papers optimised the floor and nothing ever
+    pushed back. `20260817_3` shipped mean 52.8, min 46, range 12: twelve
+    two-clause narrative sentences with a background clause, one template across
+    the whole 大問, against official 7/2025's 26…74 (mean 40.8, range 48) and
+    12/2025's 23…65. Same defect class as a repeated closing move — not one bad
+    item, but one voice writing all twelve. `make check` was silent because its
+    rule had no high side (qa-report-20260817_3 round 2, N5/RC-N5).
+
+    THE REPAIR: compress 3-4 stems into 25-34 chars by dropping the background
+    clause. Never lengthen the others — that moves the mean the wrong way and
+    leaves the range unchanged.
+    """
+    name = f"{test_id}: 問題7 stem distribution"
+    if len(stems) != 12:
+        return skip(name, f"{len(stems)} stems parsed, need 12")
+    mean = sum(stems) / len(stems)
+    short = [n for n in stems if n < P7_SHORT_MAX]
+    spread = max(stems) - min(stems)
+    bad = []
+    if not P7_MEAN_BAND[0] <= mean <= P7_MEAN_BAND[1]:
+        bad.append(f"mean {mean:.1f} outside {P7_MEAN_BAND[0]}-{P7_MEAN_BAND[1]}")
+    if len(short) < P7_SHORT_MIN_COUNT:
+        bad.append(f"{len(short)} stem(s) under {P7_SHORT_MAX} chars, "
+                   f"need {P7_SHORT_MIN_COUNT}")
+    if spread < P7_SPREAD_MIN:
+        bad.append(f"max−min {spread} under {P7_SPREAD_MIN}")
+    detail = ("; ".join(bad) + f" — measured {sorted(stems)}. Official 7/2025 "
+              f"runs 26…74 (mean 40.8, range 48); ~21% of official stems sit "
+              f"under 30 chars. Compress 3-4 stems to 25-34 JP chars by "
+              f"dropping the background clause — do NOT lengthen the rest "
+              f"(question-authoring/references/bunpou.md §問題7)")
+    full = (f"{name} (mean {mean:.1f} in {P7_MEAN_BAND[0]}-{P7_MEAN_BAND[1]}, "
+            f"{len(short)} under {P7_SHORT_MAX} (need {P7_SHORT_MIN_COUNT}), "
+            f"spread {spread} ≥ {P7_SPREAD_MIN})")
+    if test_id in P7_DISTRIBUTION_GRANDFATHERED:
+        return warn(full, not bad, detail + GRANDFATHER_NOTE)
+    check(full, not bad, detail)
 
 
 def check_mondai8_chunk_lengths(gt: str, opts: dict[int, list[str]], bi):
@@ -1386,6 +1464,120 @@ def check_dokkai_closing_reframe(name: str, body: str, bi):
          f"§'Thirteen surfaces, thirteen different essays')")
 
 
+# F3 (qa-report-20260817_3). `REFRAME_CLOSING` above scans a passage's whole
+# prose and deliberately excludes bare 「ではなく」, because at passage scope that
+# token alone fires on 100 % of the papers on disk — and that exclusion is the
+# hole 20260817_3 fell through: FIVE of its thirteen closings ended on
+# 「〜のは、A（そのもの）ではなく B だ」, three of them on the same sub-skeleton,
+# with the gate green.
+#
+# Restricting the scan to the passage's FINAL SENTENCE is what makes the bare
+# token usable: measured over the 12 papers on disk, the three templates below
+# fire on 0-2 finals per paper on eleven of them, and 3 on exactly one
+# (20260817_1: 「だけでは/こそが」 on 問題10(4), 問題11(1), 問題12). So the
+# cry-wolf rate that made 「ではなく」 unusable at passage scope is 1 paper in 12
+# at sentence scope. Do NOT re-add bare 「ではなく」 to REFRAME_CLOSING itself.
+FINAL_SENTENCE_TEMPLATES = {
+    "〜のは A ではなく B": re.compile(r"(では|じゃ)なく"),
+    "A よりも B のほう": re.compile(r"より(も|は)?、?[^。]{0,30}(ほう|方)が?"),
+    "A だけでは〜、B こそが": re.compile(r"だけで(は|も)?(ない|なく)|こそが?"),
+}
+FINAL_TEMPLATE_CAP = 2       # dokkai.md's own per-shape ceiling
+# Measured 2026-08-19, the day this check was written: one paper on disk
+# breaches it. Its 読解 half would have to be re-closed to clear the line, which
+# is a decision about that paper; it is exempted BY NAME and prints the same
+# measurement as a WARN. Any id not in this set FAILS.
+FINAL_TEMPLATE_GRANDFATHERED = {
+    "20260817_1",   # だけでは/こそが ×3: 問題10(4), 問題11(1), 問題12(B)
+    # Added 2026-08-19 when the 問題12 A/B split (R3-8) put a 13th final under
+    # measurement for the first time: A's closing had never been read, and it
+    # is A's that makes this paper's third hit.
+    "20260810_1",   # ではなく ×3: 問題11(1), 問題11(4), 問題12(A)
+}
+
+
+def passage_final_sentence(prose: str) -> str:
+    """The passage's last sentence — glossary lines and headings removed."""
+    kept = [ln for ln in prose.splitlines()
+            if not re.match(r"^\s*[（(]注\d*[）)]", ln)
+            and not ln.lstrip().startswith("#")]
+    txt = re.sub(r"\s+", "", "".join(kept))
+    parts = [p for p in re.split(r"(?<=。)", txt) if p.strip()]
+    return parts[-1] if parts else ""
+
+
+def check_dokkai_final_sentence_templates(test_id: str, body: str, bi):
+    """No more than 2 読解 passages may CLOSE on the same sentence template (F3).
+
+    THE RULE: dokkai.md caps one closing shape at 2 shared passages AND requires
+    the two that share it to differ at sentence-template level. This measures
+    the second half, which nothing measured before: each passage's FINAL
+    SENTENCE only, normalised against three templates.
+
+    THE INCIDENT: `20260817_3` closed five of thirteen passages on
+    「〜のは、A（そのもの）ではなく B だ」 — 問題9, 問題10(3), 問題10(4), 問題11(1),
+    問題13 — one skeleton, five surfaces, and the keys inherited it. Five earlier
+    papers shipped the same class, each answered by widening
+    `check_dokkai_closing_reframe`'s marker family by one more phrase
+    (20260810_1, 20260812_1, 20260813_1, 20260813_2). Widening a
+    whole-passage proxy was the wrong axis: the defect lives in the last
+    sentence.
+
+    THE REPAIR: rewrite the extra closings onto a different catalogued shape
+    (説明 / 意外な観察 / 反論応答 / 随筆 / 条件提示 / 主張) and re-check that no key
+    depended on the old one. Writing the thirteen final sentences in one column
+    and reading them as a column is the authoring-side version of this check.
+    """
+    hits: dict[str, list[str]] = {}
+    scopes: list[tuple[str, str]] = []
+    m9 = re.search(r"^##\s*問題9\b.*?(?=^##\s*問題10\b|^#\s*【?読解)",
+                   body, re.M | re.S)
+    if m9:
+        scopes.append(("問題9", passage_prose(m9.group(0), bi)))
+    for n in (10, 11, 12, 13):
+        sec = dokkai_section(body, n)
+        if not sec:
+            continue
+        parts = passage_scopes(sec, n)
+        # 問題12 is ONE （注N） scope (official numbers its notes once across A
+        # and B, which is why passage_scopes returns it whole) but TWO essays,
+        # and dokkai.md counts thirteen closings, not twelve. Reading the joint
+        # scope took only B's final sentence, so A's closing — sitting directly
+        # beside another closing, the one place the shape is most likely to
+        # rhyme — was never measured (qa-report-20260817_3-round3 R3-8).
+        if n == 12 and len(parts) == 1:
+            ab = re.split(r"^(?:\*\*|###\s*)([AB])(?:\*\*)?\s*$", parts[0], flags=re.M)
+            if len(ab) >= 5:            # [pre, 'A', bodyA, 'B', bodyB, …]
+                parts = ab[2::2]
+                labels = ab[1::2]
+                for lab, scope in zip(labels, parts):
+                    scopes.append((f"問題12({lab})", passage_prose(scope, bi)))
+                continue
+        for i, scope in enumerate(parts, 1):
+            lab = f"問題{n}" if len(parts) == 1 else f"問題{n}({i})"
+            scopes.append((lab, passage_prose(scope, bi)))
+    finals: dict[str, str] = {}
+    for lab, prose in scopes:
+        fs = passage_final_sentence(prose)
+        if not fs:
+            continue
+        finals[lab] = fs
+        for name, pat in FINAL_SENTENCE_TEMPLATES.items():
+            if pat.search(fs):
+                hits.setdefault(name, []).append(lab)
+    over = {k: v for k, v in hits.items() if len(v) > FINAL_TEMPLATE_CAP}
+    name = (f"{test_id}: no more than {FINAL_TEMPLATE_CAP} 読解 passages close on "
+            f"one sentence template ({len(finals)} finals read)")
+    detail = ("; ".join(f"{k} ×{len(v)} {v}" for k, v in over.items())
+              + " — these passages END on the same skeleton, whatever their "
+              "subjects and their labelled closing MOVES. Rewrite the extras "
+              "onto another catalogued shape; a label change is not a fix "
+              "(question-authoring/references/dokkai.md §'Thirteen surfaces')")
+    if test_id in FINAL_TEMPLATE_GRANDFATHERED:
+        return warn(name, not over, detail + GRANDFATHER_NOTE)
+    check(name, not over, detail)
+
+
 def jp_tail(text: str, n: int) -> str:
     """Last `n` JP characters of a passage's CLOSING (JP_CHAR class), order preserved.
 
@@ -1786,46 +1978,91 @@ def check_spec_pool_kanji_reading(d, spec: dict):
           f"(exam-blueprint)")
 
 
+# R3-10 (qa-report-20260817_3-round3). The old predicate — "every kanji of the
+# headword also occurs in the definition" — produced TEN candidates across three
+# papers and TEN false positives, judged independently by three reviewers, and
+# its warn line stated the PASSING condition, printing identically whether it
+# passed or flagged. A warn whose entire history is false positives is how
+# reviewers learn to skip warns, which is the failure AGENTS.md §0.5 exists to
+# prevent.
+#
+# `dokkai.md` §（注N） now documents a decidable test, and this implements it:
+# delete from the definition every character that also occurs in the headword,
+# and read what is left. The kanji-recycling filter stays — but as the
+# CANDIDATE selector it always was, not as the verdict. The verdict is whether
+# the remainder still carries a predicate.
+#
+# The 用言 detector is deliberately GENEROUS (a kanji followed by non-particle
+# okurigana, or a kana predicate of 3+ characters that is not a light verb). A
+# false "this has a predicate" costs nothing but a missed flag; a false "this
+# has none" is the cry-wolf this check is being repaired for.
+NOTE_PARTICLE_KANA = set("はがをにでともの やへからっ、。・「」（）()")
+NOTE_LIGHT_KANA = ("すること", "する", "した", "して", "こと", "もの")
+NOTE_KANJI_OKURI = re.compile(r"[一-鿿]([ぁ-ゖ])")
+NOTE_KANA_RUN = re.compile(r"[ぁ-ゖ]{3,10}")
+
+
+def note_content_predicate(remainder: str) -> str:
+    """The first content 用言 in a subtracted definition, or '' if there is none."""
+    for m in NOTE_KANJI_OKURI.finditer(remainder):
+        if m.group(1) not in NOTE_PARTICLE_KANA:
+            return m.group(0)
+    for m in NOTE_KANA_RUN.finditer(remainder):
+        core = m.group(0)
+        for light in NOTE_LIGHT_KANA:
+            core = core.replace(light, "")
+        if len(core) >= 3 and core[-1] in "うくぐすつぬぶむるいえ":
+            return m.group(0)
+    return ""
+
+
 def check_note_band(name: str, gt: str):
-    """（注N） definitions must not be circular (G2a).
+    """A （注N） definition may not be the headword's own characters restated (G2a).
 
-    2026-08-11: the above-band half of this check (a term glossed by （注N）
-    that a vendored N2 vocabulary file also lists as standard N2) was retired
-    with openjlpt — there is no remaining grep-able word/level index to check
-    it against (Shinkanzen/Soumatome are scanned PDFs, no text layer), and the
-    repo has moved off openjlpt as an authority by design (exam-blueprint
-    SKILL.md). Catching an above-band gloss is now on the author/QA reading
-    against Shinkanzen/Soumatome and the official archive, same as every
-    other 問題1–6 band judgment call question-authoring already asks for.
+    THE RULE (dokkai.md §（注N）, the subtraction test): strip from the definition
+    every character that also occurs in the headword. What remains must still
+    identify the term — operationally, it must still carry a 用言.
 
-    What remains machinable without any corpus: a definition assembled from
-    the term's own kanji (洗髪：髪の毛を洗うこと) teaches nothing, regardless of
-    what inventory the term is in.
+    THE INCIDENT: 「菜っ葉：食用にする葉物の野菜」 shipped past three readers.
+    Subtracted it leaves 「食用にする物の野」 — 「a thing that is eaten」, with the
+    leaf and the vegetable both borrowed back from the headword. The repaired
+    gloss 「ほうれん草や小松菜など、葉の部分を食べる野菜」 leaves the two exemplars
+    and 食べる, and clears.
 
-    This is a per-character substring heuristic, not a semantic one — it also
-    fires on a compound term whose definition legitimately reuses one of its
-    own characters while adding real new content (20260817_1 QA G6: 量子ビット
-    glossed via 量子コンピュータ, 顧客ロイヤルティ glossed via 顧客 as its own
-    necessary grammatical subject — both hand-judged non-circular, since each
-    definition supplies a predicate/mechanism the term's own kanji do not).
-    Treat every hit here as READ-BOTH-AND-DECIDE, not an automatic reword: true
-    circularity is "the definition's only content is the headword's own
-    kanji restated" (needs 調整 defining 調整), not "shares a character."
+    2026-08-11: the above-band half (a glossed term that a vendored N2
+    vocabulary file also lists as standard N2) was retired with openjlpt —
+    there is no remaining grep-able word/level index (Shinkanzen/Soumatome are
+    scanned PDFs), and the repo has moved off openjlpt as an authority by
+    design. Catching an above-band gloss is the author's and QA's read against
+    the archive, same as every other 問題1–6 band judgement.
+
+    Verified 2026-08-19 over all 274 （注N） definitions on disk: 10 candidates,
+    all 10 cleared, and the pre-repair 菜っ葉 gloss flagged. That is the
+    reproduction of the numbers in the R3-10 root-cause row.
     """
-    self_ref = []
+    circular = []
     for ln in gt.splitlines():
         m = NOTE_DEF.match(ln)
         if not m:
             continue
         term, defn = m.group(2).strip(), m.group(3).strip()
         kanji = [c for c in term if "一" <= c <= "鿿"]
-        if len(kanji) >= 2 and all(c in defn for c in kanji):
-            self_ref.append(f"{term}：{defn[:12]}…")
-    warn(f"{name}: （注N） definitions introduce words the term does not contain",
-         not self_ref,
-         f"candidates (read each, do not reword on sight): {self_ref} — flag "
-         f"only if the definition's sole content is the headword's own kanji "
-         f"restated with no added predicate/mechanism (question-authoring)")
+        # Candidate selector, unchanged: a definition that reuses every one of
+        # the headword's kanji is where circularity can hide. It is NOT the
+        # verdict — a compound legitimately reuses its own characters while
+        # adding a mechanism (量子ビット via 量子コンピュータ).
+        if not (len(kanji) >= 2 and all(c in defn for c in kanji)):
+            continue
+        remainder = "".join(c for c in defn if c not in set(term))
+        if not note_content_predicate(remainder):
+            circular.append(f"{term}：{defn} → 残り「{remainder}」")
+    check(f"{name}: （注N） definitions survive the subtraction test",
+          not circular,
+          "; ".join(circular) + " — delete from the definition every character "
+          "the headword contains; what is left carries no 用言, so the gloss "
+          "restates the headword instead of explaining it. Reword with a "
+          "mechanism, a purpose, or two concrete exemplars "
+          "(question-authoring/references/dokkai.md §（注N）)")
 
 
 def check_note_band_reuse(name: str, gt: str):
@@ -2145,6 +2382,215 @@ def check_mondai9_option_lengths(name: str, opts: dict[int, list[str]]):
 # official items sit at max/min ≤1.8 but 12/2025-66 reaches 2.10.
 LONG_KEY_MIN = 50
 LONG_KEY_RATIO = 1.7
+
+
+# 問題9 is the only scored surface the sampler does not draw: its four blanks'
+# sixteen option strings have no pool entry, no ledger row, no cooldown, and
+# until 2026-08-19 nothing compared them across papers at all. `20260817_3`
+# shipped three collisions from it — two options recycled from `20260817_2`'s
+# 問題9-51 at the same item number, and one colliding with its own paper's drawn
+# 聴解問題4 stimulus (qa-report-20260817_3 round 2).
+#
+# THE THRESHOLD IS MEASURED, not chosen: a single repeated connective is
+# unavoidable (問題9-48's [論理接続] blank draws on a closed class — しかし /
+# つまり / なぜなら recur across almost every paper on disk and are not a
+# defect). What is a defect is a recycled SET: 3 of one blank's 4 options coming
+# back at the same blank. Measured over the 12 papers, that fires on 5 of them
+# and on none of the 7 others, and 20260817_3 (post-fix) is clean.
+P9_BLANKS = (48, 49, 50, 51)
+# TWO thresholds, keyed on the blank's own 解説 tag. The first draft used one
+# threshold of 2 for every blank — and its own founding incident was
+# 20260817_3 recycling TWO options from the previous paper's 問題9-51, which a
+# cap of 2 does not catch. A check that would not catch the case it was written
+# for is not evidence (qa-report-20260817_3-round3 R3-9).
+#
+#   [論理接続]  cap 2 — しかし / つまり / なぜなら / そのうえ ARE the class; there
+#               are perhaps twenty usable connectives and every paper on disk
+#               reuses some. Two in common is arithmetic, not recycling.
+#   every other cap 1 — 文末モーダル, 慣用句 and 内容推論 options are composed for
+#               the passage, so two identical strings at the same blank one or
+#               two papers apart is a recycled set.
+# Re-measured over the 12 papers after the split: it adds exactly one paper
+# (20260813_1, 2/4 at its [文末モーダル] blank — the founding shape), leaves the
+# other breaches unchanged, and keeps 20260817_3 clean.
+P9_SET_REUSE_MAX = {"論理接続": 2, None: 2}
+P9_SET_REUSE_DEFAULT = 1
+P9_LOOKBACK = 2               # papers, per jlpt-test-generation §topic table
+# Papers breaching the set-reuse bar the day it was written. Clearing one means
+# re-authoring a cloze blank's option set; delete an id when that lands.
+P9_REUSE_GRANDFATHERED = {
+    "20260812_2",   # 問50 4/4 from 20260812_1
+    "20260813_2",   # 問48 4/4 from 20260813_1
+    "20260814_1",   # 問48 4/4 from both, 問51 4/4 from 20260813_2
+    "20260817_1",   # 問49 4/4 from 20260814_1
+    "20260817_2",   # 問48 3/4 from 20260814_1
+    # Added 2026-08-19 with the per-tag thresholds (R3-9): at cap 1 for a
+    # non-connective blank this paper's 問49 shares 2/4 with 20260812_1
+    # (のも無理はない / わけがない) — the exact shape the founding incident had.
+    "20260813_1",
+}
+
+
+def mondai9_tags(gt: str, bi) -> dict[int, str | None]:
+    """{blank: 解説 category tag} — the blank's own class, for the reuse caps."""
+    cut = bi.KEY_HEADING.search(gt)
+    region = gt[cut.start():] if cut else gt
+    out: dict[int, str | None] = {}
+    for q, expl in re.findall(r"\|\s*(4[89]|5[01])\s*\|\s*[1-4]\s*\|\s*([^|]+)\|",
+                              region):
+        t = re.match(r"\s*\[([^\]]+)\]", expl)
+        out[int(q)] = t.group(1) if t else None
+    return out
+
+
+def normalize_option(s: str) -> str:
+    return re.sub(r"[\s。、・「」（）()]", "", str(s)).strip()
+
+
+def mondai9_options(gt: str, bi) -> dict[int, set[str]]:
+    opts = gengo_option_sets(gt, bi)
+    return {q: {normalize_option(o) for o in opts.get(q, []) if normalize_option(o)}
+            for q in P9_BLANKS}
+
+
+def check_mondai9_option_reuse(test_id: str, gt: str, spec: dict,
+                               previous: list[tuple[str, dict[int, set[str]]]],
+                               bi):
+    """問題9's sixteen options are content too — they may not be recycled.
+
+    THE RULE, two halves:
+      (a) a blank may share at most `P9_SET_REUSE_MAX` of its four options with
+          the SAME blank in either of the previous `P9_LOOKBACK` papers;
+      (b) no 問題9 option may equal a `quick_response`/`grammar_p7`/`grammar_p8`
+          string this same paper drew — that word is already being tested,
+          with a printed option or a 聴解 stimulus of its own.
+
+    THE INCIDENT: `20260817_3` recycled two options from the previous paper's
+    問題9-51 at the same item number, and printed 「願ってもない」 at 問題9-51 while
+    its own 聴解問題4-9番 was built on the drawn 「願ってもない」. Nothing could see
+    either: the cloze is authored, not sampled, so no cooldown covers it.
+
+    THE REPAIR: (a) re-author the blank's distractors — the previous two papers
+    are on disk, read their 問題9 option lists before writing; (b) pick another
+    form: half (b) is pure string comparison against `test_spec.json` and fires
+    on none of the 12 papers, so a hit is always fresh and always fixable.
+    """
+    mine = mondai9_options(gt, bi)
+    if not any(mine.values()):
+        return skip(f"{test_id}: 問題9 options are not recycled",
+                    "no 問題9 option lists parsed")
+    tags = mondai9_tags(gt, bi)
+    reused = []
+    for q in P9_BLANKS:
+        tag = tags.get(q)
+        cap = P9_SET_REUSE_MAX.get(tag, P9_SET_REUSE_DEFAULT)
+        for prev_id, prev in previous:
+            shared = sorted(mine[q] & prev.get(q, set()))
+            if len(shared) > cap:
+                reused.append(f"問{q}[{tag or 'untagged'}]: {len(shared)}/4 "
+                              f"also in {prev_id}問{q} {shared} (cap {cap})")
+    drawn = {normalize_option(pool_entry_text(e))
+             for cat in ("quick_response", "grammar_p7", "grammar_p8")
+             for e in (spec.get("items") or {}).get(cat) or []}
+    drawn.discard("")
+    same_paper = sorted({f"「{o}」" for q in P9_BLANKS for o in mine[q]
+                         if o in drawn or o.lstrip("〜～") in
+                         {d.lstrip("〜～") for d in drawn}})
+    check(f"{test_id}: no 問題9 option is also a drawn item of this same paper",
+          not same_paper,
+          ", ".join(same_paper) + " — the form is already tested by the item "
+          "that drew it (問題7/8 or a 聴解問題4 stimulus); a candidate meets it "
+          "twice in one paper. Rewrite the cloze option (exam-blueprint: the "
+          "cloze is authored, so nothing rotates it for you)")
+    name = (f"{test_id}: 問題9 blanks reuse no option set from the previous "
+            f"{P9_LOOKBACK} papers (cap {P9_SET_REUSE_DEFAULT} shared option, "
+            f"{P9_SET_REUSE_MAX['論理接続']} for a [論理接続] blank)")
+    detail = ("; ".join(reused) + " — a blank whose option set comes back is "
+              "the same item in new prose. Individual connectives recur "
+              "legitimately (the [論理接続] class is small); a majority of the "
+              "set does not. Read the previous two papers' 問題9 before "
+              "authoring (jlpt-test-generation §'One topic, one surface')")
+    if test_id in P9_REUSE_GRANDFATHERED:
+        return warn(name, not reused, detail + GRANDFATHER_NOTE)
+    check(name, not reused, detail)
+
+
+# F10 (qa-report-20260817_3). "One grammar point, one KEY per paper" was written
+# as prose about "exposure" with no statement of what a hit was, so it was
+# unactionable and got skipped. exam-qa-review §3 now states it as a number and
+# it belongs here: a form keyed in 問題7/8/9 may occur AT MOST ONCE in the
+# 問題10–14 prose. 20260817_3 keyed 「ところが」 at 問題9-48 and used it 3× in the
+# reading half, and keyed 「そうとは限らない」 while 問題11(4) printed 「〜とは
+# 限らない」 in the identical 文末 frame.
+#
+# Matching the FULL keyed option string is what implements the doc's 連体
+# exemption without a parser: a keyed 「はずだ」 does not match 「姿を消したはずの
+# 種が」, because the 連体 use is not the same string. Measured over the 12
+# papers: 9 breach, 3 are clean.
+KEY_EXPOSURE_MAX = 1
+KEY_EXPOSURE_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1", "20260812_2",
+    "20260813_1", "20260813_2", "20260814_1", "20260817_2",
+}
+
+
+def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
+                               opts: dict[int, list[str]], spec: dict, bi):
+    """A form keyed in 問題7/8/9 appears at most once in the 読解 prose (F10).
+
+    問題8 is read through the SPEC, not through the key: its keyed option is a
+    content card (「自分の足で確かめた」), while the form actually tested is the
+    `grammar_p8` target the blueprint drew. The first draft's docstring claimed
+    問題7/8/9 and its loop covered 問題7/9 only — the 問題8 third of the rule was
+    silently unenforced (qa-report-20260817_3-round3 R3-7). Adding it costs no
+    new grandfathered id: the two papers it catches (20260807_1 「からといって」×2,
+    20260813_2 「として」×10) were already on the list.
+
+    THE INCIDENT: a candidate who has just been keyed on 「ところが」 meets it
+    three more times as ordinary running text a few pages later; the 問題9-51 key
+    「そうとは限らない」 was printed inside 問題11(4) in its own 文末 frame. The
+    rule existed and named no threshold, so every reviewer skipped it.
+
+    THE REPAIR: rewrite the reading occurrence (a connective always has a
+    synonym) or re-key the grammar item. A 連体 use of a form keyed 文末 is NOT a
+    hit — matching the whole keyed string is what encodes that.
+    """
+    cut = bi.KEY_HEADING.search(gt)
+    body = gt[:cut.start()] if cut else gt
+    prose = re.sub(r"\s+", "", "".join(
+        passage_prose(dokkai_section(body, n), bi) for n in range(10, 15)))
+    if not prose:
+        return skip(f"{test_id}: keyed grammar is not also 読解 running text",
+                    "no 問題10-14 passage prose parsed")
+    hits = []
+    for q in list(range(31, 43)) + list(P9_BLANKS):
+        row, k = opts.get(q) or [], keys.get(q)
+        if not row or not k or k > len(row):
+            continue
+        keyed = normalize_option(row[k - 1])
+        if len(keyed) < 2:
+            continue
+        n = prose.count(keyed)
+        if n > KEY_EXPOSURE_MAX:
+            hits.append(f"問{q}「{keyed}」×{n}")
+    for e in (spec.get("items") or {}).get("grammar_p8") or []:
+        form = re.sub(r"[（(].*?[）)]", "", pool_entry_text(e))
+        form = form.replace("〜", "").replace("～", "").strip()
+        if len(form) < 2:
+            continue
+        n = prose.count(form)
+        if n > KEY_EXPOSURE_MAX:
+            hits.append(f"問題8 target「{form}」×{n}")
+    name = (f"{test_id}: no 問題7/8/9 keyed form appears more than "
+            f"{KEY_EXPOSURE_MAX}× in the 問題10-14 prose")
+    detail = ("; ".join(hits) + " — the tested form is ordinary running text a "
+              "few pages later, so the item measures recall of a word the "
+              "paper itself keeps teaching. Rewrite the reading occurrences or "
+              "re-key the item; a 連体 use of a 文末 key is not a hit "
+              "(exam-qa-review §3 'One grammar point, one KEY per paper')")
+    if test_id in KEY_EXPOSURE_GRANDFATHERED:
+        return warn(name, not hits, detail + GRANDFATHER_NOTE)
+    check(name, not hits, detail)
 
 
 def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
@@ -2853,6 +3299,221 @@ def check_pool_grammar_band():
           "draws both and the test keys it twice (exam-blueprint)")
 
 
+def pool_errand_clusters() -> dict[str, dict[str, list[str]]]:
+    """{category: {errand key: [display strings]}} from pools.json."""
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    if not pools_path.is_file():
+        return {}
+    pools = json.loads(pools_path.read_text(encoding="utf-8"))
+    out: dict[str, dict[str, list[str]]] = {}
+    for cat in ("listening_scenarios", "reading_topics"):
+        for e in pools.get(cat, []):
+            if isinstance(e, dict) and e.get("key"):
+                out.setdefault(cat, {}).setdefault(
+                    str(e["key"]), []).append(pool_entry_text(e))
+    return out
+
+
+def check_pool_errand_keys():
+    """`key` marks the pool's near-duplicate errands so the cooldown sees them (R14).
+
+    THE RULE: two `listening_scenarios`/`reading_topics` entries that name the
+    same institution and the same errand must carry the same `key`, and
+    `sample_items.py`'s cooldown compares `key` before the display string.
+
+    THE INCIDENT: `pools.json` held 「引越し:見積もり」, 「引っ越し業者との見積もり
+    調整」 and 「引っ越し業者との調整」 as three entries, so the string-keyed
+    cooldown was blind to them and `20260817_3` shipped a moving-quote item one
+    paper after `20260817_2` did (qa-report-20260817_3 F6). Re-measured over the
+    whole ledger after the keys landed: NINE of the twelve papers on disk drew
+    an errand another paper had drawn inside its own cooldown window, and every
+    one of them was invisible to the string comparison.
+
+    THE REPAIR: add the `key`, do not delete the entry. Four shipped tests name
+    those strings in `logs/ledger.json` and `check_draw_provenance()` requires
+    every recorded draw to resolve to a pool entry, so deleting a duplicate
+    breaks the gate on papers that are already out. A shared `key` is therefore
+    CORRECT DATA, never a failure — what this check fails is a malformed key,
+    and what it WARNs is the pool depth those clusters quietly cost.
+    """
+    print("\npools.json errand keys (R14 near-duplicate cooldown)")
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    if not pools_path.is_file():
+        return skip("pools.json errand keys", "no pools.json")
+    pools = json.loads(pools_path.read_text(encoding="utf-8"))
+    bad = []
+    for cat in ("listening_scenarios", "reading_topics"):
+        for e in pools.get(cat, []):
+            if not isinstance(e, dict) or "key" not in e:
+                continue
+            k = e.get("key")
+            if not isinstance(k, str) or not k.strip():
+                bad.append(f"{cat}: 「{pool_entry_text(e)}」 key={k!r}")
+    check("every pools.json `key` is a non-empty string", not bad,
+          "; ".join(bad[:6]) + " — `key` is the entry's errand identity "
+          "(institution+errand, e.g. 「引っ越し業者:見積もり」); drop the field "
+          "rather than leave it blank, or the entry cools down under an empty "
+          "identity shared with every other blank one (exam-blueprint R14)")
+    clusters = pool_errand_clusters()
+    multi = {f"{cat}/{k}": v for cat, ks in clusters.items()
+             for k, v in ks.items() if len(v) > 1}
+    extra = sum(len(v) - 1 for v in multi.values())
+    warn(f"pools.json errand-key clusters cost {extra} entr(ies) of effective "
+         f"pool depth ({len(multi)} cluster(s))",
+         extra == 0,
+         "; ".join(f"{k}: {v}" for k, v in sorted(multi.items())[:6])
+         + (" …" if len(multi) > 6 else "")
+         + " — each cluster is ONE drawable errand however many strings spell "
+         "it, so cooldown_for()'s headroom is optimistic by that many entries. "
+         "This is expected while the duplicates exist (they cannot be deleted: "
+         "shipped ledger entries name them — see check_pool_errand_keys). "
+         "Resolve it by GROWING the pool, never by unsharing a key")
+
+
+def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
+    """No paper may redraw an errand its own recent predecessors drew (R14).
+
+    Same rule as `check_spec_rotation`, one level up: that check compares the
+    pool's DISPLAY STRINGS, this one compares the `key` — the institution and
+    errand — so three spellings of one moving-company quote cool down once.
+
+    THE INCIDENT: qa-report-20260817_3 F6. The paper shipped a moving-quote
+    聴解 item one paper after the previous one did, with the rotation gate green
+    on both, because the pool spells that errand three ways.
+
+    THE REPAIR: `--reroll listening_scenarios` (never a hand substitution), or
+    give the surface a genuinely different errand. NINE of the twelve papers on
+    disk breach this the day it was written, so they are exempted BY NAME below
+    and print the same measurement as a WARN; any id not in that set FAILS.
+    """
+    exempt = ERRAND_ROTATION_GRANDFATHERED
+    hist = ledger_history()
+    self_idx = next((i for i, h in enumerate(hist)
+                     if str(h.get("test_id")) == d.name), None)
+    prior = hist[:self_idx] if self_idx is not None else \
+        [h for h in hist if str(h.get("test_id")) != d.name]
+    name = f"{d.name}: no drawn errand repeats inside its own cooldown window"
+    if not prior:
+        return skip(name, "no other draws in the ledger to rotate against")
+
+    cross, inpaper = [], []
+    for cat in ("listening_scenarios", "reading_topics"):
+        xs = (spec.get("items") or {}).get(cat) or []
+        if not xs or cat not in pools:
+            continue
+        cool = sample.cooldown_for(cat, len(pools[cat]))
+        recent: dict[str, str] = {}
+        for entry in prior[-cool:] if cool > 0 else []:
+            tid = str(entry.get("test_id"))
+            for x in (entry.get("items") or {}).get(cat) or []:
+                k = sample.errand_key(x)
+                if k:
+                    recent.setdefault(k, tid)
+        seen: dict[str, str] = {}
+        for x in xs:
+            k = sample.errand_key(x)
+            if not k:
+                continue
+            t = pool_entry_text(x)
+            if k in recent:
+                cross.append(f"{cat} 「{t}」 = errand 「{k}」 (test "
+                             f"{recent[k]}, {cool}-draw cooldown)")
+            if k in seen:
+                inpaper.append(f"{cat} 「{seen[k]}」 + 「{t}」 = errand 「{k}」")
+            seen[k] = t
+
+    # In-paper: zero occurrences across all 12 papers, so it fails un-exempted.
+    check(f"{d.name}: no two drawn surfaces share one errand key",
+          not inpaper, "; ".join(inpaper) + " — one paper cannot run the same "
+          "errand twice however differently the pool spells it; "
+          "`--reroll <category>` (exam-blueprint R14)")
+    detail = ("; ".join(cross) + " — the display strings differ, the errand "
+              "does not. `--reroll <category>`; never hand-substitute "
+              "(exam-blueprint 'Rotation model' / R14)")
+    if d.name in exempt:
+        warn(name, not cross, detail + GRANDFATHER_NOTE)
+    else:
+        check(name, not cross, detail)
+
+
+# Papers that already breach the errand-key rotation rule, measured over the
+# whole ledger the day the `key` field landed (2026-08-19). Every one of them
+# drew an errand a recent predecessor had drawn under a different spelling, and
+# no gate could see it. Clearing a breach means re-drawing and re-authoring a
+# 聴解 item, which is a decision about those papers, not about this gate. Delete
+# an id the moment that test's draw is repaired; never add one to quiet a new
+# paper.
+ERRAND_ROTATION_GRANDFATHERED = {
+    "20260810_2",   # 銀行:口座開設        (vs 20260810_1)
+    "20260811_1",   # 年金事務所:手続き案内 (vs 20260807_1)
+    "20260812_1",   # 保険会社:契約内容の見直し (vs 20260810_2)
+    "20260812_2",   # 年金事務所:手続き案内 (vs 20260807_1)
+    "20260813_1",   # 観光案内所:モデルコース (vs 20260810_1)
+    "20260814_1",   # 図書館:電子書籍の利用 (vs 20260811_1)
+    "20260817_1",   # 工場:安全講習 / 書店:取り寄せ / 税務署:確定申告
+    "20260817_2",   # 引っ越し業者:見積もり (vs 20260811_1)
+    "20260817_3",   # 引っ越し業者:見積もり + カルチャースクール + クリーニング店
+}
+
+
+# `word_formation` entries notate the affix's SIDE: `X〜(例)` is a prefix and
+# `〜X(例)` a suffix. The example is the entry's own proof, so the two must
+# agree — and when they disagree the blueprint hands the author a target whose
+# notation contradicts the item it produces. `20260817_3` drew 「内〜(国内)」,
+# notated prefix, whose example 国内 is a suffix use; the paper then correctly
+# tested the SUFFIX 建物内 and no gate read the contradiction, because nothing
+# has ever looked at a 問題3 word-formation target
+# (qa-report-20260817_3-round3 R3-2).
+WORD_FORMATION_ENTRY = re.compile(
+    r"^(?:(?P<pre>[^〜～()（）]+)[〜～]|[〜～](?P<suf>[^〜～()（）]+))"
+    r"[(（](?P<ex>[^)）]+)[)）]$")
+
+
+def check_pool_word_formation_notation():
+    """A `word_formation` entry's example must show the affix on the side it claims.
+
+    THE RULE: `X〜(例)` → the example STARTS with X; `〜X(例)` → it ENDS with X.
+    Nothing else parses.
+
+    THE INCIDENT: 「内〜(国内)」 — prefix notation, suffix example, suffix item.
+    Swept 2026-08-19 over all 85 entries: 5 breached (内〜(国内), 外〜(国外),
+    〜振り(話しぶり), 〜立て(採れたて), and the garbled 〜ご事(事)). All five are
+    repaired in `pools.json`; this check keeps the class closed.
+
+    THE REPAIR: correct the ENTRY when the item class is wrong (内〜 → 〜内);
+    correct the EXAMPLE when only the spelling drifted (話しぶり → 久し振り, so
+    the example actually shows 振り). Changing a parenthetical is always safe for
+    provenance; changing the marker's side is safe only because `_pool_forms()`
+    now folds the marker away — see its comment.
+    """
+    print("\npools.json word_formation notation (affix side ↔ example)")
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    if not pools_path.is_file():
+        return skip("word_formation entries notate the right affix side",
+                    "no pools.json")
+    entries = json.loads(pools_path.read_text(encoding="utf-8")).get(
+        "word_formation", [])
+    bad = []
+    for e in entries:
+        m = WORD_FORMATION_ENTRY.match(str(e).strip())
+        if not m:
+            bad.append(f"「{e}」 is not `X〜(例)` or `〜X(例)`")
+            continue
+        ex = m.group("ex")
+        if m.group("pre") and not ex.startswith(m.group("pre")):
+            bad.append(f"「{e}」 notates the prefix 「{m.group('pre')}」 but "
+                       f"「{ex}」 does not start with it")
+        if m.group("suf") and not ex.endswith(m.group("suf")):
+            bad.append(f"「{e}」 notates the suffix 「{m.group('suf')}」 but "
+                       f"「{ex}」 does not end with it")
+    check(f"word_formation entries notate the right affix side "
+          f"({len(entries)} entries)", not bad,
+          "; ".join(bad[:6]) + " — the example is the entry's own proof of "
+          "which side the affix attaches to; an entry that contradicts its "
+          "example hands the author a target whose class is undecidable "
+          "(exam-blueprint; qa-report-20260817_3-round3 R3-2)")
+
+
 def check_ledger_draw_counts(sample):
     """Every ledger entry must record exactly DRAW[cat] items (G11).
 
@@ -2977,8 +3638,19 @@ def generated_specs() -> list[tuple[Path, dict]]:
 def _pool_forms(text: str) -> set[str]:
     t = str(text).strip()
     bare = t.lstrip("〜～")
-    return {t, bare, t.split("(")[0].split("（")[0].strip(),
-            bare.split("(")[0].split("（")[0].strip()} - {""}
+    # The 〜 marker's POSITION is notation, not identity. `word_formation` held
+    # 「内〜(国内)」 — notated as a prefix while its own example and the item that
+    # drew it are suffixes — and correcting it to 「〜内(国内)」 would have
+    # orphaned 20260817_3's recorded draw, i.e. the gate would punish the fix
+    # (qa-report-20260817_3-round3 R3-2). Dropping the marker entirely folds the
+    # two notations together WITHOUT weakening the rule this check exists for:
+    # a paper's inflected surface form still fails to resolve (「行かずじまい」
+    # against the pool's 「〜ずじまい」 → 「ずじまい」, no match).
+    marker_free = t.replace("〜", "").replace("～", "")
+    return {t, bare, marker_free,
+            t.split("(")[0].split("（")[0].strip(),
+            bare.split("(")[0].split("（")[0].strip(),
+            marker_free.split("(")[0].split("（")[0].strip()} - {""}
 
 
 def check_draw_provenance():
@@ -3366,11 +4038,16 @@ def check_rotation_inputs():
     sample = load(".agents/exam-blueprint/scripts/sample_items.py")
     pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
     pools = json.loads(pools_path.read_text(encoding="utf-8")) if pools_path.is_file() else {}
+    # sample_items builds this index in main(), which never runs here. Ledger
+    # and spec rows record no `key`, so without it every errand resolves to
+    # None and the R14 rotation check silently passes everything.
+    sample._KEY_BY_TEXT = sample.build_key_index(pools)
     for d, spec in specs:
         print(f"  {d.name}/test_spec.json")
         check_spec_blend(spec)
         check_spec_adjunct(spec)
         check_spec_rotation(d, spec, sample, pools)
+        check_spec_errand_rotation(d, spec, sample, pools)
         check_spec_pool_kanji_reading(d, spec)
         if not harvest:
             continue
@@ -3493,6 +4170,157 @@ MOJI4_SEC = re.compile(r"^##\s*問題4\b(.*?)(?=^##\s*問題5\b)", re.M | re.S)
 KANA_RUN = re.compile(r"[ぁ-ゔァ-ヴー]+")
 
 
+# F2 (qa-report-20260817_3), the cheap half. The proposal on the table was a
+# `src` provenance field on all ~1400 vocabulary pool entries plus a gate FAIL
+# on an empty one; that is rejected as written (see the report accompanying this
+# change): there is no harvest record to back-fill from, both N2 volumes are
+# scanned images with no text layer, and a FAIL on empty `src` would block every
+# generation run until a weeks-long manual back-fill finished — a check that
+# fails 100 % of papers, which this file exists to prevent.
+#
+# What the 影 incident actually looked like, measurably: the whole 問題4 option
+# set (姿 / 跡 / 光 / 影) was four bare single-kanji nouns. Official 問題4 sets are
+# compounds, verbs, adverbs and katakana (誓う / 一時的 / 関与 / べたべた / 反則 /
+# 追い払う / スタイル). Measured 2026-08-19: this shape occurs in 0 of the 31
+# official 問題4 option rows extractable from the archive and in 0 of the 12
+# papers on disk — the one instance it does describe is the item QA failed. So
+# it is a rare, specific shape worth a WARN. It stays a WARN and not a FAIL
+# because level is a judgement (隅 / 縁 / 幅 / 塊 would be a defensible N2 set)
+# and exam-qa-review §2.5 owns the verdict.
+MONO_KANJI = re.compile(r"^[一-鿿]$")
+
+
+def check_moji4_option_set_level(name: str, opts: dict[int, list[str]]):
+    """WARN: a 問題4 option set of four bare single-kanji nouns is off-band (F2)."""
+    hits = [f"問{q}: {opts[q]}" for q in range(14, 21)
+            if len(opts.get(q, [])) == 4
+            and all(MONO_KANJI.match(o.strip()) for o in opts[q])]
+    warn(f"{name}: no 問題4 option set is four bare single-kanji nouns "
+         f"({len(hits)} candidate(s) to judge by hand)", not hits,
+         "; ".join(hits) + " — 姿/跡/光/影 is the shape that shipped an N3–N4 "
+         "item through every gate (qa-report-20260817_3 F2). Official 問題4 "
+         "runs compounds, verbs, adverbs and katakana. Judge the SET, not the "
+         "key (exam-qa-review §2.5); if it is off-band, "
+         "`sample_items.py --reroll context_words` — never hand-substitute")
+
+
+# R3-1 (qa-report-20260817_3-round3). `20260817_3` shipped 問題2-8 keyed 「飢饉」
+# through THREE QA rounds: 「饉」 is not 常用 and occurs in 0 of the 31 official
+# sittings. `moji-goi.md` §問題2 already required every constituent glyph to be a
+# standard 常用/N2 kanji — but no gate had ever read a 問題1–6 option's glyph
+# inventory, so the rule lived only in a reviewer's eye and three reviewers'
+# eyes missed it (the paper's own 解説 confessed it: rows 6/7/9/10 all end
+# 「四字とも常用漢字」 and row 8 alone does not).
+#
+# This is the string-decidable half of the level problem and nothing more: a
+# glyph being 常用 does not make a WORD N2 (exam-qa-review §2.5 owns that). The
+# list is a flat 2136-character data file with no readings and no corpus.
+JOYO_PATH = (AGENTS / "question-authoring" / "references" / "joyo_kanji.txt")
+KANJI_CHAR = re.compile(r"[一-鿿]")
+# 20260811_1 shipped 問題2-9 with 「曳帰す」/「曳返す」 — invented non-words built on
+# 表外 「曳」 — the day before this rule existed. Repairing it means re-drawing
+# and re-authoring that item, a decision about that paper, so it is exempted BY
+# NAME and prints the same measurement as a WARN. Any id not in this set FAILS.
+# 20260817_3 is deliberately NOT exempt: its 飢饉 is the open automatic finding
+# R3-1, under repair now, and this gate is what confirms the repair.
+MOJI_GLYPH_GRANDFATHERED = {"20260811_1"}
+
+
+def joyo_set() -> set[str]:
+    """The 2136 常用漢字 as a flat set, or an empty set if the file is missing."""
+    if not JOYO_PATH.is_file():
+        return set()
+    return {c for line in JOYO_PATH.read_text(encoding="utf-8").splitlines()
+            if not line.startswith("#") for c in line.strip()}
+
+
+def check_moji2_option_glyphs(test_id: str, gt: str, opts: dict[int, list[str]], bi):
+    """Every kanji printed in a 問題2 option (and a 問題1 target) must be 常用 (R3-1).
+
+    THE RULE: 問題2 is the one item type whose options MUST be printed in kanji,
+    so a 表外 glyph there is not a spelling choice — it is a glyph an N2
+    candidate has never been taught, in a set where three of the four options
+    are non-words by construction. Same bar for 問題1's printed target.
+
+    THE INCIDENT: 「飢饉」/「基饉」 at 20260817_3 問題2-8, and 「曳帰す」/「曳返す」 at
+    20260811_1 問題2-9. Both are pool-origin: the repair is
+    `sample_items.py --reroll orthography`, never a hand-substituted target
+    (exam-blueprint rotation model).
+
+    NOT a level check: 「飢」 itself is 常用 (grade 8) and still N1-band
+    vocabulary. This decides only whether the glyph may be printed at all.
+    """
+    joyo = joyo_set()
+    name = f"{test_id}: every 問題1/2 printed kanji is 常用"
+    if not joyo:
+        return skip(name, f"no {JOYO_PATH.relative_to(ROOT)}")
+    bad = []
+    for q in range(6, 11):
+        for o in opts.get(q, []):
+            off = sorted({c for c in o if KANJI_CHAR.match(c) and c not in joyo})
+            if off:
+                bad.append(f"問題2-{q}「{o}」: {''.join(off)}")
+    cut = bi.KEY_HEADING.search(gt)
+    body = gt[:cut.start()] if cut else gt
+    m1 = re.search(r"^##\s*問題1\b.*?(?=^##\s*問題2\b)", body, re.M | re.S)
+    if m1:
+        for line in m1.group(0).splitlines():
+            q = bi.GENGO_Q.match(line)
+            if not q or not 1 <= int(q.group(1)) <= 5:
+                continue
+            for span in re.findall(r"\*\*([^*]+)\*\*", line[q.end():]):
+                off = sorted({c for c in span
+                              if KANJI_CHAR.match(c) and c not in joyo})
+                if off:
+                    bad.append(f"問題1-{q.group(1)}「{span}」: {''.join(off)}")
+    detail = ("; ".join(bad) + f" — not in the 常用漢字表 "
+              f"({JOYO_PATH.relative_to(ROOT)}, 2136 glyphs). 問題2 must print "
+              f"its options in kanji, so a 表外 glyph cannot be spelled around: "
+              f"the entry is a pool defect — delete it and "
+              f"`sample_items.py --reroll orthography`, never hand-substitute "
+              f"(moji-goi.md §問題2; qa-report-20260817_3-round3 R3-1)")
+    if test_id in MOJI_GLYPH_GRANDFATHERED:
+        return warn(name, not bad, detail + GRANDFATHER_NOTE)
+    check(name, not bad, detail)
+
+
+def check_pool_glyph_inventory():
+    """WARN: pool entries whose standard spelling needs a 表外 glyph (R3-1).
+
+    Not a FAIL and not a deletion list. 「繋がる」「揃える」「詫びる」「几帳面だ」 are
+    N2 words; what is off-band is only their KANJI spelling, and the repair in
+    問題4/5/6 is to print them in kana. But in 問題2 there is no kana escape —
+    the item type prints kanji — so an `orthography` entry carrying a 表外 glyph
+    is a straight data defect (「蕎麦」, and 「飢饉」 until its reroll lands).
+    Reported as a standing list so the class stays visible.
+    """
+    print("\npools.json glyph inventory (常用漢字表)")
+    joyo = joyo_set()
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    if not joyo or not pools_path.is_file():
+        return skip("pool entries stay inside the 常用漢字表",
+                    "no joyo_kanji.txt or no pools.json")
+    pools = json.loads(pools_path.read_text(encoding="utf-8"))
+    hits: dict[str, list[str]] = {}
+    for cat in ("orthography", "kanji_reading", "context_words", "usage",
+                "paraphrase", "word_formation"):
+        for e in pools.get(cat, []):
+            head = pool_entry_text(e).split("(")[0].split("（")[0]
+            off = sorted({c for c in head
+                          if KANJI_CHAR.match(c) and c not in joyo})
+            if off:
+                hits.setdefault(cat, []).append(f"{head}[{''.join(off)}]")
+    flat = [f"{cat}: {', '.join(v)}" for cat, v in sorted(hits.items())]
+    warn(f"pools.json entries needing a 表外 glyph "
+         f"({sum(len(v) for v in hits.values())} across {len(hits)} categor(ies))",
+         not flat,
+         " ⁄ ".join(flat) + " — in 問題4/5/6 the repair is to print the word in "
+         "KANA (official does); in `orthography` there is no kana escape, so "
+         "such an entry is undrawable and should be deleted. Judge per "
+         "category; do not bulk-delete N2 words for their spelling "
+         "(qa-report-20260817_3-round3 R3-1)")
+
+
 def check_moji4_blank_stems(name: str, gt: str, keys: dict[int, int],
                             opts: dict[int, list[str]]):
     """Every 問題4 stem is a printed （　） and prints no answer word (G16/F1).
@@ -3527,6 +4355,29 @@ def check_moji4_blank_stems(name: str, gt: str, keys: dict[int, int],
           "; ".join(missing + leaking) + " — the 問題4 instruction asks for the "
           "best word to put in （　）; a stem that prints the blank's answer is "
           "self-answering (question-authoring 問題4)")
+
+
+_NUMERAL_DIGIT = {"〇": 0, "一": 1, "二": 2, "三": 3, "四": 4,
+                "五": 5, "六": 6, "七": 7, "八": 8, "九": 9}
+_KANJI_NUM_RE = re.compile(r"[〇一二三四五六七八九]?十[〇一二三四五六七八九]?"
+                           r"|[〇一二三四五六七八九]")
+
+
+def normalize_numerals(text: str) -> str:
+    """Rewrite kanji numerals 0-99 as ASCII digits, for comparison only.
+
+    The pools spell some numbers with ASCII digits and the TTS script must
+    spell them in kanji; neither side is wrong, so a comparison between them
+    has to normalize. Never use this on text that gets written to disk.
+    """
+    def repl(m):
+        s = m.group(0)
+        if "十" in s:
+            tens, _, ones = s.partition("十")
+            return str((_NUMERAL_DIGIT[tens] if tens else 1) * 10
+                       + (_NUMERAL_DIGIT[ones] if ones else 0))
+        return str(_NUMERAL_DIGIT[s])
+    return _KANJI_NUM_RE.sub(repl, text)
 
 
 def check_spec_target_items(d, gt: str, st: str, bi):
@@ -3576,7 +4427,15 @@ def check_spec_target_items(d, gt: str, st: str, bi):
             probes = [item, base, base.rstrip("。")]
             if len(base) >= 4:
                 probes.append(base.rstrip("。")[:-1])
-            if any(p and p in hay for p in probes):
+            # A NUMERAL spelled the other way is not a substitution. 8 of the 200
+            # `quick_response` entries carry ASCII digits (「到着予定は3日後です」),
+            # but `聴解スクリプト.txt` must spell numbers in kanji — Edge-TTS reads
+            # a bare digit in English (choukai-audio §'TTS spelling'), so a
+            # correctly authored item can never match its own pool string.
+            # 20260818_1 read as an unrecorded substitution for the item it does
+            # test, 2026-08-19. Compare both sides digit-normalized.
+            if any(p and normalize_numerals(p) in normalize_numerals(hay)
+                   for p in probes):
                 continue
             # G6. 問題1/2 print the target CONJUGATED — 慌てる as 「**慌てて**」,
             # 潔い as 「**潔く**」 — which official papers do freely (7/2025 marks
@@ -4015,7 +4874,15 @@ def check_script_register(name: str, script_text: str, m):
 # The judgment half — is this item a service counter, is this talk a person's
 # 主張 — cannot be decided by regex, so it is WARN-only below and belongs to
 # exam-qa-review §4, which reads the セクション構成表's columns.
-ALREADY_DONE_RE = re.compile(r"(もう|すでに|既に|さっき)")
+# Widened 2026-08-19 (F15): 先ほど / 今しがた / たった今 were outside the list, so
+# `20260817_3` shipped three already-done distractors (「もう受け付けました」
+# 「もう全部消しときました」「先ほど郵便で送りました」) and its 構成表 counted two —
+# correctly, under the old list. choukai-items.md §即時応答 now binds all six
+# words and says the count is of the SHAPE, not the word; this regex is the
+# reading aid, and it must not disagree with the doc it implements. Re-measured
+# over the 12 papers: the counts move only for 20260814_1 (2→3) and 20260817_3
+# (2→3), and neither crosses this gate's own >3 bar.
+ALREADY_DONE_RE = re.compile(r"(もう|すでに|既に|さっき|先ほど|今しがた|たった今)")
 COUNTER_RE = re.compile(r"(窓口|受付|フロント|レジ|店で|店に|店員|客|電話をかけ"
                         r"|問い合わせ|カウンター)")
 BROADCAST_RE = re.compile(r"(ラジオ|テレビ|ニュース|講演|講座|インタビュー|番組|広報)")
@@ -4178,6 +5045,17 @@ def check_choukai_countable_mix(test_id: str, ct: str, st: str, m, bi):
     if len(suffixed) > 2:
         bad.append(f"問題3: {len(suffixed)} options suffixed 「〜について」, official "
                    f"8 of 685 — write the bare noun phrase (一人旅をするよさ)")
+    # F14(b): PRINT the per-talk measurement the floor already computes. The
+    # 構成表 has to state these numbers and the author was measuring them by
+    # hand — 20260817_3 self-reported 「311〜353」 for talks this function measures
+    # at 295–337, and the wrong table is what a section repeat hides behind.
+    # Copy this line into the 構成表 and name the measure (`p3_talk_chars`).
+    if p3:
+        print("        問題3 talk chars (p3_talk_chars, spoken only): "
+              + ", ".join(f"{choukai_item_label(l[0])}={p3_talk_chars(l)}"
+                          for l in p3)
+              + f"  [floor {P3_TALK_FLOOR}, target {P3_TALK_TARGET}+, "
+                f"official median 305]")
     short = [f"{choukai_item_label(l[0])}={p3_talk_chars(l)}" for l in p3
              if p3_talk_chars(l) < P3_TALK_FLOOR]
     if short:
@@ -4197,8 +5075,11 @@ def check_choukai_countable_mix(test_id: str, ct: str, st: str, m, bi):
             akey.append(lab)
     if len(done) > 3:
         bad.append(f"問題4: {len(done)} of {len(p4)} items carry an already-done "
-                   f"(もう/すでに/さっき) distractor ({', '.join(done)}), official "
-                   f"median 1 max 3 — the shape becomes the key")
+                   f"(もう/すでに/さっき/先ほど/今しがた/たった今 + 〜た) distractor "
+                   f"({', '.join(done)}), official median 1 max 3 — the shape "
+                   f"becomes the key. The token list is a reading aid: "
+                   f"choukai-items.md §即時応答 caps the SHAPE at 2 items, "
+                   f"however it is worded")
 
     p5 = choukai_item_blocks(choukai_span(st, 5), m)
     voices = []
@@ -4257,6 +5138,235 @@ def check_choukai_section_table(test_id: str, ct: str, bi):
            f"partial section")
 
 
+# F4 / N2 (qa-report-20260817_3, both rounds). The 構成表's 消去方法 column is
+# the author's own audit of how each distractor dies, and while it was free text
+# the count could not be checked: 20260817_3 wrote 「順番待ち／順序が逆」,
+# 「登録後に係員」 and 「第三者に割り当て」 in one 問題1 and its own tally then read
+# four reassignments as two. Round 2 found the second half of the same class —
+# a fix rewrote the 例's line and left the label describing the old one.
+#
+# The closed vocabulary is choukai-items.md §"消去方法 uses a CLOSED vocabulary".
+# Nine tokens, verbatim, one per distractor; a 「（…）」 parenthetical after a
+# token is evidence for the reader and is stripped before matching.
+ELIMINATION_TOKENS = {
+    "既に完了", "別の人に割り当て", "順番待ち", "後回し", "実行不可",
+    "規則で不可", "条件不足", "不要", "明確に否定",
+}
+ELIMINATION_ROW_CAP = 2          # per token, per 問題, 例 counted
+# The doc writes the separator as 「、」; the paper that demonstrated the
+# vocabulary (20260817_3) uses 「／」, and both read the same to a human, so the
+# split accepts either. What is NOT flexible is the token itself.
+ELIMINATION_SPLIT = re.compile(r"[、，,／/・＋+]+")
+# The four papers with a 構成表 that predate the closed vocabulary. Their cells
+# are free text ("割り込み「その前に」", "先着順という理由付け"), which is exactly
+# the shape the rule forbids — rewriting them means re-auditing four shipped
+# 聴解 sections, so they are exempted BY NAME and print the same measurement as a
+# WARN. Any id not in this set FAILS. (The seven older papers have no 構成表 at
+# all and are already covered by CHOUKAI_SECTION_GRANDFATHERED.)
+ELIMINATION_VOCAB_GRANDFATHERED = {
+    "20260813_2", "20260814_1", "20260817_1", "20260817_2",
+}
+
+
+def strip_parentheticals(s: str) -> str:
+    """Drop 「（…）」/「(…)」 groups, innermost first, so nesting cannot survive."""
+    prev = None
+    while prev != s:
+        prev = s
+        s = re.sub(r"[（(][^（()）]*[)）]", "", s)
+    return s
+
+
+def section_table_rows(ct: str, mondai: int, column: str,
+                       bi) -> list[tuple[str, str]]:
+    """[(item label, cell)] for one 問題's 構成表 table and one named column."""
+    cut = bi.KEY_HEADING.search(ct)
+    tail = ct[cut.start():] if cut else ct
+    head = re.search(r"^#+\s*セクション構成表", tail, re.M)
+    if not head:
+        return []
+    block = re.search(rf"^#+\s*問題{mondai}\b.*?(?=^#+\s*問題\d|\Z)",
+                      tail[head.start():], re.M | re.S)
+    if not block:
+        return []
+    rows, col = [], None
+    for line in block.group(0).splitlines():
+        if not line.lstrip().startswith("|"):
+            continue
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if col is None:
+            hit = [i for i, c in enumerate(cells) if column in c]
+            if hit:
+                col = hit[0]
+            continue
+        if not cells or not CHOUKAI_ITEM_LABEL.match(cells[0]):
+            continue
+        if col < len(cells):
+            rows.append((cells[0], cells[col]))
+    return rows
+
+
+def check_choukai_elimination_tokens(test_id: str, ct: str, bi):
+    """問題1's 消去方法 column is a closed vocabulary, and no token twice over (F4).
+
+    THE RULE: every 消去方法 cell of the 問題1 表 is one token per distractor from
+    `ELIMINATION_TOKENS`, verbatim; no token may appear in more than
+    `ELIMINATION_ROW_CAP` rows of the 問題, 例 counted.
+
+    THE INCIDENT: `20260817_3` killed a distractor by reassigning it to another
+    person in FOUR of six 問題1 rows and its own free-text tally read that as
+    two, so the over-cap shipped and QA found it (F4/F14(a)); round 2 then found
+    a label that had survived the rewrite of the very line it described (N2).
+    Free text is what makes an over-cap uncountable — with the closed vocabulary
+    the count is `grep`, not judgement.
+
+    THE REPAIR: re-derive each row's token FROM THE SCRIPT LINE (never from the
+    previous version of the table) and rewrite whichever line pushes a token
+    past 2. If a distractor's elimination fits none of the nine, it is not
+    eliminated by a device official uses — rewrite the line, do not invent a
+    tenth label.
+
+    SCOPE: 問題1 only, deliberately. That is where the incident happened and
+    where a paper has demonstrated the vocabulary working; 問題2's own 消去方法
+    column is still free text in every paper on disk and stays QA's to read
+    (exam-qa-review §4).
+    """
+    rows = section_table_rows(ct, 1, "消去方法", bi)
+    name = f"{test_id}: 問題1 消去方法 uses the closed vocabulary ({len(rows)} rows)"
+    if not rows:
+        return skip(name, "no 問題1 消去方法 column in the セクション構成表")
+    unknown: list[str] = []
+    # ROWS, not occurrences: a row may kill two distractors the same way
+    # (20260817_3's 4番 does), and the cap counts rows — that is what makes the
+    # count reproducible from the table by eye.
+    rows_per_token: dict[str, list[str]] = {}
+    for lab, cell in rows:
+        for raw in set(ELIMINATION_SPLIT.split(strip_parentheticals(cell))):
+            tok = raw.strip().strip("「」*　")
+            if not tok:
+                continue
+            if tok in ELIMINATION_TOKENS:
+                rows_per_token.setdefault(tok, []).append(lab)
+            else:
+                unknown.append(f"{lab}「{tok}」")
+    over = [f"{t}×{len(v)}行 {v}" for t, v in rows_per_token.items()
+            if len(v) > ELIMINATION_ROW_CAP]
+    bad = []
+    if unknown:
+        bad.append(f"{len(unknown)} token(s) outside the nine: "
+                   + "; ".join(unknown[:6]))
+    if over:
+        bad.append(f"over the {ELIMINATION_ROW_CAP}-row cap: " + ", ".join(over))
+    detail = ("; ".join(bad) + " — the nine are "
+              + " / ".join(sorted(ELIMINATION_TOKENS))
+              + ". One token per distractor, 「（…）」 evidence allowed after it. "
+              "Re-derive every cell from the CURRENT script line — a label that "
+              "outlives the line it describes is the defect, not the fix "
+              "(question-authoring/references/choukai-items.md §消去方法)")
+    if test_id in ELIMINATION_VOCAB_GRANDFATHERED:
+        return warn(name, not bad, detail + GRANDFATHER_NOTE)
+    check(name, not bad, detail)
+
+
+# N7 (qa-report-20260817_3 round 2). Two lodging-reception scenes inside one
+# 聴解 大問 — 問題2's 例 at 「ビジネスホテルのフロント」 and its 5番 at
+# 「ホステルの受付」. The sampler could not see it: it draws all 21
+# `listening_scenarios` without knowing which 大問 each will land in (the author
+# maps them), and its own `check_domain_collisions()` compares the literal
+# prefix before the colon, for which ホテル and ホステル are two domains. The
+# 大問 assignment exists in exactly one artifact — the 構成表's 場面 column —
+# so the rule is checkable here and nowhere upstream.
+#
+# SCOPE, deliberately narrow: this fails only a repeated ESTABLISHMENT TYPE,
+# i.e. two rows of one 問題 set at the same kind of counter. It does NOT fold
+# broad domains together, because QA read and accepted both 大学の研究室 vs
+# 専門学校の事務室 (a lab and an office) and 郵便局の窓口 vs ハローワークの窓口
+# (two service counters, inside 問題1's own ≤2 サービスカウンター quota) in the
+# same paper. Anything wider than synonymy re-litigates decisions a reviewer
+# already made by hand.
+SETTING_CLASSES = {
+    "宿泊施設": ("ホテル", "ビジネスホテル", "旅館", "ホステル", "民宿",
+                 "ゲストハウス", "ペンション", "宿"),
+    "郵便局": ("郵便局", "郵便窓口"),
+    "銀行": ("銀行", "信用金庫"),
+    "病院": ("病院", "医院", "クリニック", "診療所"),
+    "美容室": ("美容院", "美容室", "理髪店", "理容室", "床屋"),
+    "飲食店": ("レストラン", "カフェ", "喫茶店", "食堂", "居酒屋"),
+    "役所": ("市役所", "区役所", "町役場", "村役場"),
+    "図書館": ("図書館",),
+    "不動産屋": ("不動産屋", "不動産会社", "不動産店"),
+    "クリーニング店": ("クリーニング店", "クリーニング屋"),
+    "ジム": ("ジム", "スポーツクラブ", "フィットネスクラブ", "トレーニングセンター"),
+    "駅": ("駅",),
+    "空港": ("空港",),
+    "美術館": ("美術館",),
+    "博物館": ("博物館",),
+    "薬局": ("薬局", "ドラッグストア"),
+    "スーパー": ("スーパー", "スーパーマーケット"),
+    "コンビニ": ("コンビニ", "コンビニエンスストア"),
+}
+# Papers breaching the day the check was written (2026-08-19); N7 itself is one
+# of them. Clearing an id means re-writing a 場面 and re-synthesising its MP3,
+# i.e. a decision about that paper. Delete an id when its 聴解 is repaired.
+SETTING_ADJACENCY_GRANDFATHERED = {
+    "20260817_3",   # 問題2 例 ビジネスホテルのフロント / 5番 ホステルの受付 (N7 itself)
+}
+
+
+def setting_class(scene: str) -> str:
+    """The establishment type named in a 場面 cell, or '' — longest match wins."""
+    best = ""
+    for cls, aliases in SETTING_CLASSES.items():
+        for a in aliases:
+            if a in scene and len(a) > len(best):
+                best, hit = a, cls
+    if not best:
+        return ""
+    return hit
+
+
+def check_choukai_setting_adjacency(test_id: str, ct: str, bi):
+    """No two items of one 聴解 大問 sit at the same kind of counter (N7).
+
+    THE RULE: fold every row's 場面 to its establishment type; no type may
+    appear twice inside one 問題, 例 counted.
+
+    THE INCIDENT: `20260817_3` 問題2 opened its 例 at a business-hotel front
+    desk and set 5番 at a hostel reception — the same errand shape twice in six
+    items, which a listener hears as one item repeated. Every automated gate was
+    green: the theme caps passed (both tagged 旅行), the errand-key cooldown
+    passed (different keys), and `sample_items.py`'s domain-collision WARN
+    compares the literal prefix, where 「ホテル」 and 「ホステル」 differ.
+
+    THE REPAIR: re-angle one of the two scenes onto a different establishment
+    when authoring — not a synonym of the same one. `--reroll
+    listening_scenarios` re-draws all 21 entries and is the wrong instrument
+    for a single collision the author can place around.
+    """
+    hits = []
+    for mondai in (1, 2, 3, 5):
+        rows = section_table_rows(ct, mondai, "場面", bi)
+        seen: dict[str, list[str]] = {}
+        for lab, cell in rows:
+            cls = setting_class(cell)
+            if cls:
+                seen.setdefault(cls, []).append(f"{lab}「{cell}」")
+        for cls, labs in seen.items():
+            if len(labs) > 1:
+                hits.append(f"問題{mondai} {cls}: " + " / ".join(labs))
+    name = f"{test_id}: no two 聴解 items of one 大問 share an establishment type"
+    detail = ("; ".join(hits) + " — two rows of one 問題 set at the same kind of "
+              "counter is one item written twice, whatever their themes and "
+              "errand keys say (ホテル and ホステル are one 宿泊施設). Re-angle one "
+              "scene onto a different establishment; do NOT --reroll "
+              "listening_scenarios, which re-draws all 21 entries to fix one "
+              "placement the author controls "
+              "(question-authoring/references/choukai-items.md §場面)")
+    if test_id in SETTING_ADJACENCY_GRANDFATHERED:
+        return warn(name, not hits, detail + GRANDFATHER_NOTE)
+    check(name, not hits, detail)
+
+
 # G17. THE WRITING. G15 counts how often people react, G16 how the section is
 # built; this is the sentences themselves, measured against the three Shin Kanzen
 # 実力養成編 chapters that name what N2 listening tests
@@ -4296,6 +5406,179 @@ def check_choukai_contractions(test_id: str, st: str, m):
          f"(choukai-audio §Register rule 3)")
 
 
+# F5 (qa-report-20260817_3). Two defects in one place, both fully
+# string-decidable, neither checked before:
+#   (a) three of 問題1's six items closed on 「はい、〜ます。」 — one template
+#       across half a section, against `choukai-audio` §"Banned formulas"
+#       ("no two items in a section may share their opening move, probe shape or
+#       closing turn"). Official 7/2025 問題1 closes on bare 「はい。」/
+#       「はい、わかりました。」 and varies everything else.
+#   (b) in three items the LAST spoken line carried the one keyword that picks
+#       the key out of the printed options (ノート→3, はがき→2, 家に取りに戻る→1),
+#       so the item was answerable from its final line without following the
+#       dialogue at all.
+# Measured over the 12 papers on disk: (a) fires on 5 sections in 4 papers,
+# (b) on 8 papers. Both are the defect, not noise — the ids that breach are
+# grandfathered below, so the rule bites the next paper.
+CLOSING_OPENERS = ("承知しました", "かしこまりました", "わかりました", "そうですね",
+                   "ありがとうございます", "すみません", "それでは", "じゃあ", "じゃ",
+                   "はい", "ええ", "うん", "あ、")
+CLOSING_ENDINGS = ("ましょうか", "ましょう", "ますね", "ますか", "ますが", "ました",
+                   "ません", "ます", "てください", "です", "だよ", "かな", "のよ",
+                   "よ", "ね")
+CLOSING_SHAPE_CAP = 2
+# Papers breaching either half the day the check was written (2026-08-19).
+# Clearing one means re-writing closing lines and re-synthesising the MP3, i.e.
+# a decision about that paper. Delete an id when its 聴解 is repaired.
+CLOSING_SHAPE_GRANDFATHERED = {
+    "20260807_1",   # 問題1 じゃあ〜ます ×3; key leak 3番/4番/5番
+    "20260810_1",   # 問題1 —〜ます ×5, 問題2 —〜ます ×3; key leak 1番/4番
+    "20260810_2",   # key leak 例/1番/2番
+    "20260812_1",   # 問題2 —〜ます ×6; key leak 5番
+    "20260812_2",   # key leak 1番/2番/4番/5番 (問題1), 1番 (問題2)
+    "20260813_2",   # key leak 問題2-2番
+    "20260814_1",   # 問題1 はい〜ます ×3
+    "20260817_1",   # key leak 2番/3番
+    "20260817_2",   # key leak 2番/5番
+}
+
+
+def closing_skeleton(line: str) -> str:
+    """A last turn reduced to (opening formula 〜 sentence ending).
+
+    Content is deliberately dropped: 「はい、ノートを持ってきます。」 and
+    「はい、はがきから始めます。」 are ONE closing turn wearing two nouns, and it
+    is the turn, not the noun, that `choukai-audio` §"Banned formulas" caps.
+    """
+    body = re.sub(r"^[^:：]{1,8}[:：]", "", line).strip()
+    op = next((o.rstrip("、") for o in CLOSING_OPENERS if body.startswith(o)), "—")
+    tail = re.sub(r"[。！？!?]+$", "", body)
+    end = next((e for e in CLOSING_ENDINGS if tail.endswith(e)), "—")
+    return f"{op}〜{end}"
+
+
+def check_choukai_closing_turn_shape(test_id: str, ct: str, st: str, m, bi):
+    """問題1/2 items may not rhyme at the close, or be answerable from it (F5).
+
+    THE RULE, both halves measured on the LAST SPOKEN LINE of each item:
+      (a) no more than `CLOSING_SHAPE_CAP` items of one 問題 reduce to the same
+          `closing_skeleton()`;
+      (b) that line may not contain a ≥2-char kanji/katakana token that occurs
+          in exactly one printed option AND that option is the key — the
+          "answerable from the last line" defect.
+
+    THE INCIDENT: `20260817_3` 問題1 closed 1番/2番/3番 on 「はい、〜ます。」, and
+    2番/3番/4番's closing lines each named the single keyword that selects the
+    key (ノート / はがき / 家に取りに戻る). `choukai-audio` §"Banned formulas"
+    already forbade the first; nothing measured either.
+
+    THE REPAIR: close on the official's own bare 「はい、わかりました。」 in at most
+    two items and give the rest genuinely different last turns (a deferral, a
+    thanks, a send-off); move the deciding keyword out of the final line —
+    official puts the deciding line first or mid-dialogue.
+
+    A token matching exactly one DISTRACTOR is reported but does not decide:
+    it misleads rather than gives the item away, and 問題1 keys legitimately
+    reuse the script's action words (see `check_choukai_key_paraphrase`).
+    """
+    keys, printed = choukai_key_table(ct, bi), choukai_printed_options(ct, bi)
+    rhymes, leaks, misleads = [], [], []
+    for sec in (1, 2):
+        blocks = choukai_item_blocks(choukai_span(st, sec), m)
+        shapes: dict[str, list[str]] = {}
+        for lines in blocks:
+            lab = choukai_item_label(lines[0])
+            spoken = [l for l in lines
+                      if (h := m.SPEAKER_RE.match(l.strip()))
+                      and h.group(1) in m.SPEAKER_MAP]
+            if not spoken:
+                continue
+            last = spoken[-1]
+            shapes.setdefault(closing_skeleton(last), []).append(lab)
+            opts = printed.get((sec, lab), {})
+            if not opts:
+                continue
+            body = re.sub(r"^[^:：]{1,8}[:：]", "", last).strip()
+            keyed = keys.get((sec, lab))
+            for tok in sorted(set(re.findall(r"[一-鿿]{2,}|[゠-ヿ]{2,}", body))):
+                hit = [n for n, o in opts.items() if tok in o]
+                if len(hit) != 1:
+                    continue
+                where = f"問題{sec}-{lab}「{tok}」→選択肢{hit[0]}"
+                (leaks if hit[0] == keyed else misleads).append(where)
+        rhymes += [f"問題{sec} {k} ×{len(v)} {v}"
+                   for k, v in shapes.items() if len(v) > CLOSING_SHAPE_CAP]
+    if not printed:
+        return skip(f"{test_id}: 聴解問題1/2 closing turns",
+                    "no printed option lists to compare")
+    bad = []
+    if rhymes:
+        bad.append("shared closing turn: " + "; ".join(rhymes))
+    if leaks:
+        bad.append("key named in the last spoken line: " + "; ".join(leaks))
+    detail = ("; ".join(bad)
+              + (f" (also pointing at a distractor, not decisive: "
+                 f"{'; '.join(misleads[:4])})" if misleads else "")
+              + " — vary the last turn (official closes on a bare "
+              "「はい、わかりました。」 and never twice the same way in one section), "
+              "and move the deciding keyword out of the final line "
+              "(choukai-audio §'Banned formulas'; choukai-items.md)")
+    name = (f"{test_id}: 聴解問題1/2 closing turns differ and give nothing away "
+            f"({len(rhymes)} rhyme(s), {len(leaks)} leak(s))")
+    if test_id in CLOSING_SHAPE_GRANDFATHERED:
+        return warn(name, not bad, detail + GRANDFATHER_NOTE)
+    check(name, not bad, detail)
+
+
+# F11. The key's last verb, in dictionary form, plus its stem.
+# `から/ため/ので/こと/の/ん/よう` and a trailing 「だ/です」 are peeled off first —
+# they are the option's frame, not its content. The stem is only used when it is
+# 2+ characters, so 「回す」 compares as 「回す」 alone (its 1-char stem 「回」 would
+# match anything) while 「あずける」 also catches 「あずけて/あずけた」 — inflection
+# is not paraphrase.
+KEY_PREDICATE_TAIL = re.compile(
+    r"(?:から|ため|ので|こと|ところ|よう|ん|の)?(?:だ|です|である)?[。、]?$")
+VERB_ENDINGS = "うくぐすつぬぶむる"
+# Case particles only, and only the ones that do not occur word-internally in a
+# verb: 「か」「と」「も」「や」「の」「は」 were tried and lifted 「りする」 out of
+# 「しっかりする」 and 「じめる」 out of 「はじめる」 — a fragment matches a script by
+# accident, which is the one thing a WARN cannot afford.
+PARTICLES = ("に", "を", "が", "で", "へ")
+
+
+def key_predicate(option: str) -> tuple[str, str]:
+    """(dictionary-form final verb, its stem) of an option, or ('', '').
+
+    A backward scan, not a regex: read the kana tail (stopping at a particle,
+    max 4 kana) and then at most 3 preceding kanji/katakana. A lazy regex
+    anchored at the end is what a first draft used, and it lifted 「ぶの業者に回す」
+    out of 「がいぶの業者に回す」 — the engine takes the earliest possible START,
+    which is the opposite of the shortest predicate.
+    """
+    body = KEY_PREDICATE_TAIL.sub("", re.sub(r"\s", "", option))
+    if not body or body[-1] not in VERB_ENDINGS:
+        return "", ""
+    j = len(body) - 1                     # index of the final kana
+    # 6, not 4: a kana-written サ変 (せつめいする) is six kana long, and cutting
+    # the scan at four lifted 「りする」 out of 「しっかりする」 — a fragment that
+    # matches by accident. The particle stop is what keeps the scan honest.
+    while (j - 1 >= 0 and re.match(r"[ぁ-ゖ]", body[j - 1])
+           and body[j - 1] not in PARTICLES and len(body) - j <= 6):
+        j -= 1
+    k = j
+    while (k - 1 >= 0 and re.match(r"[一-鿿゠-ヿー]", body[k - 1])
+           and j - (k - 1) <= 3):
+        k -= 1
+    lemma = body[k:]
+    # A bare 2-kana lemma (「きる」 lifted out of 「〜ができる」, 「する」) is a
+    # substring of half the verbs in Japanese and would match any script by
+    # accident, so it carries no evidence: require a kanji/katakana or 3+ kana.
+    if len(lemma) < 2 or (len(lemma) < 3 and not re.search(r"[一-鿿゠-ヿ]", lemma)):
+        return "", ""
+    stem = lemma[:-1]
+    return lemma, stem if len(stem) >= 2 else ""
+
+
 def check_choukai_key_paraphrase(test_id: str, ct: str, st: str, m, bi):
     """A keyed option restates the deciding line; it does not copy it (G17).
 
@@ -4308,6 +5591,15 @@ def check_choukai_key_paraphrase(test_id: str, ct: str, st: str, m, bi):
     unchanged. Neither is caught here; both are real, shipped defects — see
     choukai-items.md §'The 解説 QUOTES the script; the OPTION restates it'.
     This gate is a coarse WARN, not proof of a genuine paraphrase.
+
+    CLOSED HALF (F11, 2026-08-19): the key's FINAL PREDICATE is now checked
+    whether or not it tokenises. `20260817_3` keyed 「がいぶの業者に回すから」
+    against the script's 「あちらに回す分だけ日にちがかかる」 — 「回す」 is one
+    kanji plus kana, so it produced no token and the item was exempted
+    outright; the same shape shipped in `20260817_2` (せつめい). The deciding
+    verb is exactly the word a paraphrase has to replace, so `key_predicate()`
+    lifts it and a hit counts the key as verbatim on its own
+    (qa-report-20260817_3 F11).
     """
     keys, printed = choukai_key_table(ct, bi), choukai_printed_options(ct, bi)
     verbatim, total = [], 0
@@ -4328,10 +5620,16 @@ def check_choukai_key_paraphrase(test_id: str, ct: str, st: str, m, bi):
             if not keyed or keyed not in opts:
                 continue
             tokens = set(re.findall(r"[一-鿿]{2,}|[゠-ヿ]{3,}", opts[keyed]))
-            if not tokens:
+            pred, stem = key_predicate(opts[keyed])
+            pred_hit = bool(pred and (pred in blocks[lab]
+                                      or (stem and stem in blocks[lab])))
+            if not tokens and not pred:
                 continue
             total += 1
-            if all(t in blocks[lab] for t in tokens):
+            if pred_hit:
+                verbatim.append(f"問題{sec}-{lab}「{opts[keyed]}」"
+                                f"(final predicate 「{pred}」 is in the script)")
+            elif tokens and all(t in blocks[lab] for t in tokens):
                 verbatim.append(f"問題{sec}-{lab}「{opts[keyed]}」")
     if not total:
         return skip(f"{test_id}: 聴解 keys paraphrase the script",
@@ -4899,6 +6197,16 @@ def check_tests():
         skip("tests/", "no test directories on disk")
         return
 
+    # 問題9's option sets, in paper order, for the cross-test reuse check. The
+    # ids are date-shaped (20260817_2), so sorted order IS chronological order —
+    # the same assumption `logs/ledger.json` records explicitly.
+    p9_history: list[tuple[str, dict[int, set[str]]]] = []
+    for p in dirs:
+        gp = p / "言語知識・読解.md"
+        if ORIGIN.test_origin(p.name) == "generated" and gp.is_file():
+            p9_history.append(
+                (p.name, mondai9_options(gp.read_text(encoding="utf-8"), bi)))
+
     # Reuse across tests can only be seen with every test in hand (G15).
     reuse: dict[str, dict[str, set[str]]] = {}
     for p in dirs:
@@ -4941,8 +6249,23 @@ def check_tests():
 
         gengo, choukai = d / "言語知識・読解.md", d / "聴解.md"
         if not (gengo.is_file() and choukai.is_file()):
-            check("both Markdown sources present", False,
-                  f"missing {[f.name for f in (gengo, choukai) if not f.is_file()]}")
+            missing_md = [f.name for f in (gengo, choukai) if not f.is_file()]
+            # A folder holding only test_spec.json is a paper between stage 1
+            # (`make sample`) and stage 2 (authoring) — a legitimate,
+            # unavoidable moment, not a defect. It used to FAIL, which reddened
+            # `make check` for every OTHER paper on disk the instant a next
+            # blueprint was drawn: 20260818_1's spec was written mid-QA and the
+            # gate went from exit 0 to exit 2 with nothing wrong in any
+            # finished paper (qa-report-20260817_3-round3 R3-6). A folder with
+            # neither the spec nor the Markdown is still a FAIL — that is an
+            # empty or half-deleted test, not a pipeline stage.
+            if (d / "test_spec.json").is_file() and len(missing_md) == 2:
+                skip(f"{d.name}: per-test contracts",
+                     "blueprint only (test_spec.json, no Markdown yet) — "
+                     "stage 1 done, stage 2 not started")
+            else:
+                check("both Markdown sources present", False,
+                      f"missing {missing_md}")
             continue
 
         gt, ct = gengo.read_text(encoding="utf-8"), choukai.read_text(encoding="utf-8")
@@ -4974,7 +6297,7 @@ def check_tests():
         wrong_n = {q: len(v) for q, v in opts.items() if len(v) != 4}
         check("every gengo question parses to exactly 4 options", not wrong_n, f"{wrong_n}")
         check_scramble_stars(gt, keys, opts)
-        check_grammar_stem_lengths(gt, bi)
+        check_grammar_stem_lengths(gt, bi, d.name, origin)
         # Official papers include short particle strips; the drill-length defect
         # is a generation failure mode — do not fail imported transcriptions.
         if origin == "generated":
@@ -4983,6 +6306,9 @@ def check_tests():
             check_grammar_p8_targets(gt, opts, d.name)
         check_level_band_grammar(gt, keys, opts, origin, d.name)
         check_moji4_blank_stems(d.name, gt, keys, opts)
+        if origin == "generated":
+            check_moji4_option_set_level(d.name, opts)
+            check_moji2_option_glyphs(d.name, gt, opts, bi)
         st_text = (d / "聴解スクリプト.txt").read_text(encoding="utf-8") if (d / "聴解スクリプト.txt").is_file() else ""
         check_banned_collocations(d, gt, ct, st_text, origin)
         check_answer_positions(d, keys, ck, g)
@@ -5006,6 +6332,7 @@ def check_tests():
             check_dokkai_lengths(d.name, gengo_prose, bi)
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
             check_dokkai_closing_reframe(d.name, gengo_prose, bi)
+            check_dokkai_final_sentence_templates(d.name, gengo_prose, bi)
             check_dokkai_abs_quantifiers(d.name, opts)
             check_dokkai_option_length_balance(d.name, opts)
             check_chuuryaku(d.name, gengo_prose)
@@ -5028,6 +6355,15 @@ def check_tests():
             check_fabricated_distractors(gengo.name, gt[gcut.start():])
         bunpou = re.search(r"^##\s*文法\s*$(.*?)(?=^##\s|\Z)",
                            gt[gcut.start():] if gcut else "", re.M | re.S)
+        if origin == "generated":
+            idx = next((i for i, (n, _) in enumerate(p9_history)
+                        if n == d.name), None)
+            prev9 = p9_history[max(0, idx - P9_LOOKBACK):idx] if idx else []
+            spec_path = d / "test_spec.json"
+            spec_json = (json.loads(spec_path.read_text(encoding="utf-8"))
+                         if spec_path.is_file() else {})
+            check_mondai9_option_reuse(d.name, gt, spec_json, prev9, bi)
+            check_key_grammar_exposure(d.name, gt, keys, opts, spec_json, bi)
         if bunpou and origin == "generated":
             check_mondai9_tags(d.name, bunpou.group(1))
             check_mondai9_option_lengths(d.name, opts)
@@ -5130,6 +6466,9 @@ def check_tests():
                 check_choukai_countable_mix(d.name, ct, st, m, bi)
                 check_choukai_same_speaker_lines(d.name, st, m)
                 check_choukai_section_table(d.name, ct, bi)
+                check_choukai_elimination_tokens(d.name, ct, bi)
+                check_choukai_setting_adjacency(d.name, ct, bi)
+                check_choukai_closing_turn_shape(d.name, ct, st, m, bi)
                 check_choukai_judgment_mix(d.name, st, ct, m, bi)
                 check_choukai_longest_key_rate(d.name, ct, st, m, bi)
                 check_model_answer_option_sync(d.name, gt, ct, st, m, bi)
@@ -5290,6 +6629,9 @@ def main():
         check_pool_infrastructure()
         check_pool_grammar_band()
         check_pool_kanji_reading_shape()
+        check_pool_errand_keys()
+        check_pool_word_formation_notation()
+        check_pool_glyph_inventory()
         print("\nrotation inputs (why a new test is actually new)")
         check_rotation_inputs()
         check_ledger_draw_counts(load(".agents/exam-blueprint/scripts/sample_items.py"))

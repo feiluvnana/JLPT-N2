@@ -174,12 +174,41 @@ they need not be dictionary headwords (official ships `支接/施接/支設`,
 `液って/温って/汗って`).
 
 - **げひん(下品):** A=下,B=不; C=品,D=晶 → {下品,下晶,不品,不晶}. *Defect:* mixing in `等`, omitting B+D.
-- **うんが(運河):** A=運,B=雲; C=河,D=海 → {運河,運海,雲河,雲海}. *Defect:* an arbitrary 3rd kanji like `転`.
+- **うんが(運河):** A=運,B=雲; C=河,D=賀 → {運河,運賀,雲河,雲賀} — 運=ウン, 雲=ウン, 河=ガ, 賀=ガ, so all four parse as the printed うんが. *Defect:* an arbitrary 3rd kanji like `転`. **Do NOT use D=海:** {運海,雲海} read うんかい, not うんが, so two options die on reading alone and the item collapses to 運 vs 雲 (`20260817_3` 問題2-9 shipped exactly that — and this file taught it as the model set until 2026-08-19). A complete component grid is NOT the check; the kana skeleton is.
 - **げた(下駄):** A=下,B=不; C=駄,D=太 → {下駄,下太,不駄,不太}. *Defect:* a non-standard glyph like `楪`.
 - **かいこう(開港):** {開,回}×{港,向}. **のうこう(濃厚):** {濃,農}×{厚,高}.
 
+### Every printed glyph must be 常用 — `references/joyo_kanji.txt` decides it
+
 **Every constituent kanji glyph must be a legitimate, standard 常用/N2
-kanji** — banned: obscure/alien glyphs (`惰楪`'s `楪`).
+kanji** — banned: obscure/alien glyphs (`惰楪`'s `楪`). **The authority is
+`references/joyo_kanji.txt`**, the 2136 characters of the 2010 常用漢字表, the
+way `level_band_grammar.txt` is the authority for 問題7–9's band. Check the key
+and all three distractors against it, character by character, before the item
+is written. `check_moji2_option_glyphs()` reads the same file and FAILs any
+問題2 option — and any 問題1 **printed target** — carrying a glyph outside it.
+
+The file settles a question judgement kept getting wrong: `20260817_3` shipped
+問題2-8 keyed 「飢饉」 through **three** QA rounds under the prose rule above, and
+it was caught only when a fresh reviewer checked the glyph inventory by hand
+(round 3, R3-1). 「饉」 is not 常用, and 「飢」 occurs zero times across all 31
+official sittings. `20260811_1` is exempted **by name**
+(`MOJI_GLYPH_GRANDFATHERED`) for 問題2-9's 「曳帰す」/「曳返す」 — invented
+non-words on 表外 「曳」, shipped the day before the rule existed — and prints the
+same measurement as a WARN; repairing it means re-drawing and re-authoring that
+item. Read the set in `tools/check_consistency.py` for who is currently exempt,
+not this sentence.
+
+**A 表外 glyph is a POOL defect only in `orthography`.** 問題2 is the one item
+type that must print its options in kanji, so there is no kana escape: an
+`orthography` entry whose spelling needs a 表外 character is undrawable — delete
+it and `sample_items.py --reroll orthography`, never hand-substitute a target
+(`exam-blueprint` §pool hygiene). **Everywhere else, the repair is kana, not
+deletion.** `check_pool_glyph_inventory()` currently WARNs 14 pool entries
+(蕎麦, 凌ぐ, 汲む, 繋がる, 呑気, 卑怯, 儲ける, 揃える, 詫びる, 几帳面だ …) — those
+are legitimate N2 **words** whose *kanji spelling* is off-band, and in 問題4/5/6
+you print them in kana, as official does. That WARN is a standing list, not a
+deletion list: judge it per category.
 
 **Single-kanji stems with okurigana** (けわしい→険しい): all four share the
 exact okurigana, and the kanji options come from the same phonetic
@@ -191,6 +220,14 @@ items** (やぬし→家主): every option must be legitimate standard kanji
 option's reading, verify every non-key option parses as the same kana
 skeleton (かいこう → 開港/開向/回港/回向). A stem kana no option reads is an
 automatic-fail class.
+
+**Procedure — write the reading of each COMPONENT before you accept the
+grid.** Two columns, one line per component: `A=運(ウン) B=雲(ウン)` /
+`C=河(ガ) D=賀(ガ)`. Every column must be readings-identical; if any
+component's on-reading differs from its partner's, the grid is dead
+regardless of how good the lookalike is. Then read the four products back
+against the stem kana. Doing this on paper is the check — "the grid is
+complete" is not, and neither is "the kanji look alike."
 
 ## 問題3 (語形成)
 
@@ -220,6 +257,16 @@ stem — never defend the item.
 
 The stem contains the HARD word (あいにく, 妥当, ありふれた, くたくた, 重宝);
 options are simpler, never the reverse (Item integrity #12).
+
+**Each option must be idiomatic ON ITS OWN, not merely survivable in the
+stem.** The swap test only asks whether the sentence still parses; read each
+of the four options as a bare phrase with the stem covered and ask whether a
+native writer would produce it unprompted. **When the target IS the natural
+collocate of the frame, do not build options by substituting into that
+frame — change the frame.** `20260817_3` 問題5-21 keyed 器用だ and shipped
+「手先が上手だ」: the idiomatic phrase is 手先が**器用**, which is unusable
+because it is the target, so substituting into 「手先が〜」 can only produce
+marked wordings. The fix was a different frame — 「細かい作業が得意だ」.
 
 **Katakana headwords are rare on purpose** — the archive draws one in only
 3/35 current-era 問題5 items (`official_calibration.md` §12);

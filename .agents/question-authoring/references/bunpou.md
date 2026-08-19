@@ -26,14 +26,39 @@ include one FAKE form like 参られます as a distractor). Pool draws come fro
 - **One grammar point may be the KEY only once per paper**, and a tested
   form stays out of the reading passages — core Item integrity #15.
 
-## 問題7 — stem length and shape
+## 問題7 — stem length is a DISTRIBUTION, not a floor
 
-Official stems average **~43 JP chars** (median ~41; interquartile
-~33–54). A paper whose 12 stems average under ~35, or ships many under
-~30, reads as textbook-drill short. Target: each stem ≥30 JP chars, paper
-average ≥40, most items in **35–55**. (21% of official stems are
-themselves under 30 — the floor is an authoring target, not a per-item
-invariant; `official_calibration.md` §9.)
+Official stems average **~43 JP chars** (median ~41; interquartile ~33–54),
+and — the part that matters — they are **spread**: 7/2025 runs 26…74
+(mean 40.8, range 48), 12/2025 opens 23…65. About 21% of official stems sit
+under 30 chars (`official_calibration.md` §9). A set written to one length
+reads as one authorial voice, however idiomatic each sentence is.
+
+**Three binding numbers, all measured over the 12 stems, JP chars only:**
+
+| | bar |
+|---|---|
+| 12-stem mean | inside **36–52** |
+| stems under **34** JP chars | **at least 2** |
+| max − min | **at least 25** |
+
+Until 2026-08-19 this rule was written in the low direction only ("average
+≥40, each stem ≥30"), so twelve papers optimised the floor and **every one
+of the 12 on disk shipped ZERO stems under 30 chars** (means 47.7–57.4);
+`20260817_3` shipped mean 52.8, min 46, range 12 — twelve two-clause
+narrative sentences, one template. Nothing pushed back because nothing was
+written in the high direction.
+
+**Construction instruction — write the two SHORT stems FIRST.** Before any
+of the other ten: pick two grammar points whose form is testable with no
+scene at all, and write those stems at **25–34 chars, no background clause**
+(official: 「今度の旅行、費用は一人三万円(　)。」). Then write the long ones
+around them. A rule you can only verify after writing all twelve gets
+skipped — this one is verifiable when two sentences exist.
+
+Repairing a set that came out flat means **compressing** stems (drop the
+background clause), never lengthening the rest: lengthening moves the mean
+the wrong way and leaves the range unchanged.
 
 Build length with scene-setting (職場・電話・掲示・インタビュー), a
 subordinate clause, or a short dialogue lead-in — never by padding the
@@ -142,7 +167,9 @@ authoring decision.
     **Do not** write four mini-要約 of the thesis — that's 読解 問題10–13,
     not 文章の文法.
   - **(d) 慣用/形式名詞** — a set phrase or formal noun (つもり, 元も子もない,
-    願ってもない…).
+    願ってもない…). 四字熟語 used as a sentence-final evaluative predicate
+    (本末転倒だ, 言語道断だ) count as set phrases and belong here; what (d)
+    excludes is a content noun standing in for the thesis.
 
   Category collision shipped in 4/4 papers with this rule already written,
   because a blank's category was recorded nowhere.
@@ -154,6 +181,48 @@ authoring decision.
   `[文末モーダル] 前の文の「…はずだった」を受け、…`. Assign tags *before*
   writing the blanks — tagging afterward is how earlier papers ended up
   with two modal blanks.
+
+### 問題9's sixteen options have NO pool — measure them by hand or repeat them
+
+問題9 is the only scored surface `sample_items.py` does not draw. Its four
+blanks have no pool entry, no ledger row, no cooldown, and no gate: **nothing
+has ever compared a paper's 問題9 options against any other paper's.** So the
+author reaches for whatever set phrase comes to mind — which is the same
+short list every time, and often this file's own worked examples.
+
+`20260817_3` shipped three collisions from that single gap in one run:
+元も子もない and やむを得ない both recycled from `20260817_2`'s 問題9-51 — same
+item number, one paper apart — and 願ってもない printed as a 問題9 option while
+the paper's own drawn `quick_response` list gave it to 聴解問題4-9番 as the
+stimulus idiom. All three are examples written into this file above.
+
+**Mandatory, before the key table is written — a WRITTEN measurement, not a
+recollection.** Put all sixteen option strings in one column and check them
+against two sources:
+
+1. **The previous two papers' 問題9 — every blank, not just the matching
+   slot.** `grep -A4 '^\*\*4[89]\*\*\|^\*\*5[01]\*\*' tests/<prev>/言語知識・読解.md`,
+   or read the 問題9 block of each. Zero exact repeats, and no repeat of a
+   distinctive set phrase (慣用句・四字熟語・modal family) in any position.
+   Ordinary connectives (しかし, つまり) and bare formal nouns recur in the
+   archive too and are exempt.
+2. **This paper's own `test_spec.json`** — the drawn `quick_response`
+   phrases, `bunpou` targets and `listening_scenarios`. A 問題9 option that
+   is also a drawn item is an in-paper echo the ledger cannot see, because
+   the option was never an item.
+
+Record the comparison in the build notes (`logs/topics.json` `notes`) so the
+next paper's author has the last set to diff against. If a collision turns up,
+change the option — 問題9 has no `--reroll`.
+
+`check_mondai9_option_reuse()` now covers the two halves a regex can decide:
+**≤2 of a blank's four options may recur in the SAME blank of either of the
+previous 2 papers** (it reads their 問題9 option lists straight out of
+`tests/<id>/言語知識・読解.md` — there is no new ledger or `logs/` field to
+maintain), and **no 問題9 option may equal a `quick_response`/`grammar_p7`/
+`grammar_p8` string this paper drew.** The hand measurement above is still the
+rule: the gate compares slot against matching slot, so a distinctive set phrase
+moved from 51 to 49 clears it, and only the column catches that.
 
 ## Counting
 
