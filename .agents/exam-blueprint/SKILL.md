@@ -226,8 +226,10 @@ display strings differ but whose errand is the same carry the **same** `key`,
 and `sample_items.py` resolves rotation through `errand_key()` before it
 compares display strings, so one errand cools down once however many ways the
 pool spells it. An entry with no `key` is its own key — most of the pool is
-genuinely distinct and needs none. Currently 40 entries carry one, in 19
-clusters.
+genuinely distinct and needs none. Currently 41 themed entries carry one in 19
+clusters, plus 9 `quick_response` phrases in 4 (§"`quick_response` has keys
+too") — 23 clusters in all, which is the number `check_pool_errand_keys()`
+prints; re-read it there rather than trusting this sentence.
 
 **The incident (2026-08-19, R14):** the cooldown compared display strings, so
 `引越し:見積もり` / `引っ越し業者との見積もり調整` / `引っ越し業者との調整` were
@@ -261,6 +263,20 @@ Four clusters exist today (`窓口:記名依頼`, `店:在庫照会`, `窓口:�
 already carries. `check_spec_quick_response_errand_pair()` FAILs a paper drawing
 two phrases from one cluster.
 
+**`quick_response` is also inside the CROSS-paper cooldown now (F1,
+2026-08-19).** The pair check above is in-paper only, and
+`check_spec_errand_rotation()` — the cross-paper half — looped
+`listening_scenarios`/`reading_topics` and nothing else, so for 13 papers a
+16-draw `quick_response` cooldown was enforced by no gate at all: `20260818_1`
+drew 窓口:記名依頼 one paper after `20260817_3` did, plus 職場:進捗確認 and
+店:在庫照会 inside their windows, with every line green. The check now loops all
+three keyed categories (`ERRAND_ROTATION_CATEGORIES` in
+`tools/check_consistency.py`), prints how many keyed draws it compared, and
+`skip`s a paper whose draws carry no key — `20260818_1` had **zero** keyed
+themed draws, so its old green line had compared nothing (F5). Repair a
+`quick_response` hit with `--reroll-one quick_response:<index>`, which costs one
+問題4 item instead of eleven.
+
 **And never delete a duplicate to solve it.** Four shipped tests name those
 strings in `logs/ledger.json`, and `check_draw_provenance()` requires every
 recorded draw to resolve to a pool entry — deleting a duplicate FAILs the gate
@@ -270,11 +286,16 @@ never a defect.
 **What the gate does with it.** `check_pool_errand_keys()` FAILs a blank or
 non-string `key` (drop the field rather than leave it empty — a blank key is an
 identity shared with every other blank one) and WARNs the **effective depth**
-the clusters cost: 19 clusters currently cost 21 entries, so `cooldown_for()`'s
+the clusters cost, currently 23 clusters over 27 entries, so `cooldown_for()`'s
 headroom is optimistic by that many. Resolve that by **growing** the pool, never
 by unsharing a key. `check_spec_errand_rotation()` FAILs a draw whose errand a
-paper inside its own cooldown window already drew; the nine papers that already
-breached it are exempted by name and print the same measurement as a WARN.
+paper inside its own cooldown window already drew, across all three keyed
+categories; the papers that already breached it are exempted by name and print
+the same measurement as a WARN — **read the set in
+`tools/check_consistency.py`** (`ERRAND_ROTATION_GRANDFATHERED`) for who and how
+many, and note that each id carries the date of the key that put it in breach,
+which is a different date for `quick_response` than for the two themed
+categories.
 Repair a hit with `sample_items.py --reroll <category>`, never a hand
 substitution (§"Rotation model").
 
@@ -316,6 +337,22 @@ distinct themes out of a 20-value vocabulary, so theme overlap between them is
 forced by arithmetic and "no 読解 theme may match the previous paper's" is
 unsatisfiable — proposed after round 1 of `20260817_3` QA and rejected on
 those grounds, 2026-08-19.
+
+**The subject check is for EVERY headline surface, not just the cloze (R2,
+2026-08-19).** Written for 問題9 alone, it left 問題12/13/14 and 聴解問題5 landing
+on a one- or two-paper-old SUBJECT with every theme rule green: `20260818_1`'s
+問題12 headlined 通勤の一時間の使い方 (交通) one paper after `20260817_3` spent
+自転車通勤の危険度 (交通) on a NON-headline 問題10 surface, and its 聴解問題5-1番
+ran 空き店舗の活用 two papers after `20260817_2`'s 問題10(5) did
+(`qa-report-20260818_1-round3` F3/F4). Rule 4 could not see either, because it
+compares headline against headline. So: **every headline surface (問題9, 問題12,
+問題13, 問題14, 聴解問題5-1番, 聴解問題5-2番) gets a 5–15 JP-char SUBJECT written
+at blueprint time, and each is diffed against the previous paper's THIRTEEN 読解
+subjects AND its 21 聴解 subjects in `logs/topics.json` `surfaces` — headline or
+not.** Same setting + a different issue is allowed and must be written into
+`notes` as such; same setting + same issue is a redraw (or, for the cloze,
+re-subject it — rule 4c). Subject identity is judgment, so this stays a blueprint
+procedure and no gate measures it.
 
 **Rule 4c — the cloze is the designated release valve for a rule-4 collision.**
 When the headline set breaches rule 4, 問題9 is the ONE headline surface with no

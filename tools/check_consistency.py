@@ -3640,6 +3640,26 @@ def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
     asserted in prose where nothing could check it. Both halves are now PROVEN
     per id at run time, below: an exemption holds only while the paper's draw
     predates the key that puts it in breach AND the breach is still there.
+
+    SCOPE (F1, qa-report-20260818_1-round3): the loop covers all THREE keyed
+    categories. It ran over `listening_scenarios`/`reading_topics` only, so
+    `quick_response` — 11 stimuli per paper, four errand clusters, a 16-draw
+    cooldown — had never been compared across papers at all. Re-measured over
+    the 13 papers on disk when the scope landed, the third category adds breaches
+    on exactly two ids: `20260818_1` (3 — 窓口:記名依頼 vs `20260817_3`, the
+    IMMEDIATELY previous paper; 職場:進捗確認 vs `20260817_2`; 店:在庫照会 vs
+    `20260810_1`) and `20260817_2` (1 — 窓口:担当者不在 vs `20260813_1`). Both are
+    pre-rule draws and are exempted by name below; every other id is unmoved.
+
+    COUNT (F5, same report): the check used to print
+    「<id>: no drawn errand repeats inside its own cooldown window」 with no
+    measurement. `20260818_1` is the only paper of 13 whose themed draws carry
+    ZERO errand keys, so for the two categories it then looped over it compared
+    nothing and still printed `ok` — a green line asserting more than it
+    measured, which is the shape `exam-qa-review` lists as an automatic finding
+    ("the gate prints '0 prescribed' and passes, verifying nothing"). The name
+    now carries the per-category keyed-draw count, and a paper with nothing to
+    compare `skip`s instead of passing.
     """
     exempt = ERRAND_ROTATION_GRANDFATHERED
     hist = ledger_history()
@@ -3647,15 +3667,17 @@ def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
                      if str(h.get("test_id")) == d.name), None)
     prior = hist[:self_idx] if self_idx is not None else \
         [h for h in hist if str(h.get("test_id")) != d.name]
-    name = f"{d.name}: no drawn errand repeats inside its own cooldown window"
+    stem = f"{d.name}: no drawn errand repeats inside its own cooldown window"
     if not prior:
-        return skip(name, "no other draws in the ledger to rotate against")
+        return skip(stem, "no other draws in the ledger to rotate against")
 
     cross, inpaper = [], []
-    for cat in ("listening_scenarios", "reading_topics"):
+    keyed: dict[str, int] = {}
+    for cat in ERRAND_ROTATION_CATEGORIES:
         xs = (spec.get("items") or {}).get(cat) or []
         if not xs or cat not in pools:
             continue
+        keyed[cat] = 0
         cool = sample.cooldown_for(cat, len(pools[cat]))
         recent: dict[str, str] = {}
         for entry in prior[-cool:] if cool > 0 else []:
@@ -3669,6 +3691,7 @@ def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
             k = sample.errand_key(x)
             if not k:
                 continue
+            keyed[cat] += 1
             t = pool_entry_text(x)
             if k in recent:
                 cross.append(f"{cat} 「{t}」 = errand 「{k}」 (test "
@@ -3677,8 +3700,22 @@ def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
                 inpaper.append(f"{cat} 「{seen[k]}」 + 「{t}」 = errand 「{k}」")
             seen[k] = t
 
-    # In-paper: zero occurrences across all 12 papers, so it fails un-exempted.
-    check(f"{d.name}: no two drawn surfaces share one errand key",
+    # What the two lines below actually compared, printed in their own names (F5):
+    # a paper whose draws carry no errand key at all compares nothing, and must
+    # say `skip`, not `ok`.
+    tally = ", ".join(f"{cat} {n}" for cat, n in keyed.items()) or "no keyed category"
+    total = sum(keyed.values())
+    inpaper_name = (f"{d.name}: no two drawn surfaces share one errand key "
+                    f"({total} keyed draw(s) compared: {tally})")
+    name = f"{stem} ({total} keyed draw(s) compared: {tally})"
+    if total == 0:
+        skip(inpaper_name, "no drawn entry carries an errand key, so there is "
+                           "nothing to compare — see the docstring (F5)")
+        return skip(name, "no drawn entry carries an errand key, so there is "
+                          "nothing to compare — see the docstring (F5)")
+
+    # In-paper: zero occurrences across all 13 papers, so it fails un-exempted.
+    check(inpaper_name,
           not inpaper, "; ".join(inpaper) + " — one paper cannot run the same "
           "errand twice however differently the pool spells it; "
           "`--reroll <category>` (exam-blueprint R14)")
@@ -3693,11 +3730,13 @@ def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
         check(name, not cross, detail)
 
 
-# Papers that already breach the errand-key rotation rule, measured over the
-# whole ledger the day the `key` field landed. Every one of them drew an errand a
-# recent predecessor had drawn under a different spelling, and no gate could see
-# it. Clearing a breach means re-drawing and re-authoring a 聴解 item, which is a
-# decision about those papers, not about this gate.
+# Papers that already breach the errand-key rotation rule, each measured over the
+# whole ledger the day the `key` that puts it in breach landed — the `key` FIELD
+# for the two themed categories, the later `quick_response_keys` map for 問題4.
+# Every one of them drew an errand a recent predecessor had drawn under a
+# different spelling, and no gate could see it. Clearing a breach means
+# re-drawing and re-authoring a 聴解 item, which is a decision about those papers,
+# not about this gate.
 #
 # THE CRITERION FOR ADDING AN ID, stated because "never add one to quiet a new
 # paper" was read as "never add one" (F12, qa-report-20260818_1): an id belongs
@@ -3717,6 +3756,13 @@ def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
 # 2026-08-19 15:18:21 is commit 327912e, where the `key` field itself landed:
 # every id carrying that timestamp was drawn before any key existed at all.
 ERRAND_KEY_FIELD_LANDED = "2026-08-19 15:18:21"
+# `quick_response_keys` is a SEPARATE, later map (exam-blueprint §'`quick_response`
+# has keys too'), so a breach it creates has its own date. It is absent from
+# `pools.json` at commit 327912e (2026-08-19 15:18:21) and present at that file's
+# next write (mtime 2026-08-19 17:35:31, committed as 4273b17 19:12:03), so it
+# entered some time after 15:18:21 — and both ids below were drawn hours before
+# that lower bound, which is what `prove_grandfather()` re-asserts per run.
+QUICK_RESPONSE_KEYS_LANDED = "2026-08-19 17:35:31"
 ERRAND_ROTATION_GRANDFATHERED = {
     "20260810_2": ERRAND_KEY_FIELD_LANDED,   # 銀行:口座開設        (vs 20260810_1)
     "20260811_1": ERRAND_KEY_FIELD_LANDED,   # 年金事務所:手続き案内 (vs 20260807_1)
@@ -3725,18 +3771,43 @@ ERRAND_ROTATION_GRANDFATHERED = {
     "20260813_1": ERRAND_KEY_FIELD_LANDED,   # 観光案内所:モデルコース (vs 20260810_1)
     "20260814_1": ERRAND_KEY_FIELD_LANDED,   # 図書館:電子書籍の利用 (vs 20260811_1)
     "20260817_1": ERRAND_KEY_FIELD_LANDED,   # 工場:安全講習 / 書店:取り寄せ / 税務署
+    # + 窓口:担当者不在 (quick_response, vs 20260813_1) — the second breach became
+    # visible only when the loop grew the third category (F1, round 3); this id was
+    # already exempt for its listening_scenarios breach and its draw
+    # (2026-08-17 15:03:48) precedes both key dates, so the entry stands unchanged.
     "20260817_2": ERRAND_KEY_FIELD_LANDED,   # 引っ越し業者:見積もり (vs 20260811_1)
     "20260817_3": ERRAND_KEY_FIELD_LANDED,   # 引っ越し業者:見積もり + カルチャースクール
-    # `20260818_1` sat here from 2026-08-19 16:31 (F12/R2-F3) and is GONE, which is
-    # what an exemption leaving the set looks like: its 聴解問題5-2番 scenario
+    # `20260818_1` is here for `quick_response` ONLY, and for the reason the
+    # criterion names: its 問題4 stimuli 窓口:記名依頼 (vs 20260817_3, the paper
+    # immediately before it), 職場:進捗確認 (vs 20260817_2) and 店:在庫照会 (vs
+    # 20260810_1) were drawn at 2026-08-19 11:29:18 — before `quick_response_keys`
+    # existed, so no key bound them and `draw()` could not have refused the picks.
+    # All three are KEPT entries of that original draw; the one entry redrawn later
+    # (`--reroll-one quick_response:8`) carries no key and is not in breach. F1,
+    # qa-report-20260818_1-round3: the check had never looked at this category, so
+    # for 13 papers a 16-draw cooldown was enforced by nothing.
+    "20260818_1": QUICK_RESPONSE_KEYS_LANDED,
+    # That id's `listening_scenarios` breach is a separate, CLEARED story, and it
+    # is what an exemption leaving the set looks like: 聴解問題5-2番's scenario
     # 「陶芸教室:初心者コースの説明」 — errand 「カルチャースクール:受講申し込み」, drawn by
-    # 20260817_1 and 20260817_3 inside the same 11-draw window — was REDRAWN with
+    # 20260817_1 and 20260817_3 inside the same 11-draw window — sat here from
+    # 2026-08-19 16:31 (F12/R2-F3) and was REDRAWN with
     # `--reroll-one listening_scenarios:16` (seed 74989867 → 「テレビ:専門家の解説」)
-    # and the item re-authored, so the paper measures 0 breaches and passes
-    # `check_spec_errand_rotation` as a CHECK. `prove_grandfather()`'s stale half
-    # is what reported it: the id FAILED here for one run with "it no longer
-    # breaches the rule", exactly as designed.
+    # and the item re-authored, so that category measures 0 breaches.
+    # `prove_grandfather()`'s stale half is what reported the exemption had become
+    # unnecessary: the id FAILED here for one run with "it no longer breaches the
+    # rule", exactly as designed — and it would fail the same way again the moment
+    # the three quick_response stimuli above are redrawn.
 }
+
+# The keyed categories `check_spec_errand_rotation` compares. `quick_response`
+# joined 2026-08-19 (F1, qa-report-20260818_1-round3) — its keys live in a
+# separate map, `build_key_index()` already folds them into `errand_key()`, and
+# the check had simply never looped over it. Keep this list and
+# `build_key_index()`'s inputs in step: a keyed category missing here is a
+# cooldown nothing enforces, which is exactly how 13 papers' 問題4 shipped.
+ERRAND_ROTATION_CATEGORIES = ("listening_scenarios", "reading_topics",
+                              "quick_response")
 
 
 # `word_formation` entries notate the affix's SIDE: `X〜(例)` is a prefix and

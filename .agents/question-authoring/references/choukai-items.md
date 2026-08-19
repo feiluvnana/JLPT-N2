@@ -355,6 +355,21 @@ Verbatim distance is gated; propositional identity is human judgment, so it is
 QA's step-1 read (`exam-qa-review`) and the author's own arrow, and a clean
 `make check` proves only the near half.
 
+**A paraphrased key may not assert MORE than its deciding line does** (R3,
+`qa-report-20260818_1-round3` F2 — the same one-directional hole, one notch
+milder). `20260818_1` 問題2-3番 keyed 「子どもが学校を休まずにすむこと」 off
+「子ども、次の日の朝から授業があるので」: going to a Wednesday **evening**
+performance would not require an absence, so 欠席 is a state of affairs the script
+never puts on the table. The key was tightened to
+「子どもの翌日の授業にさしつかえないこと」. The item still had one answer (all three
+distractors are explicitly denied on air), which is why it shipped — being keyed
+by elimination hides an overstated paraphrase exactly as it hides a mis-keyed one.
+**QA/authoring procedure, not gatable:** set the key beside the decider and point
+at every noun that exists only in the key (欠席・休む・遅刻・無料 …); for each one,
+name the script word it corresponds to. If you cannot, the key has added a
+proposition — trim the key to what the line asserts, or move the deciding line so
+it asserts what the key says.
+
 ## 問題3 (概要理解): the narration names the SETTING, never the topic
 
 Official 問題3 item lines are setting plus speaker only — 「1番 ラジオで女の人が
