@@ -112,6 +112,74 @@ chars, and a bare adverb/particle on a card is official practice. Chunk-size
 intuitions don't survive contact with the archive — **the invariant is
 ★-uniqueness** (Item integrity #8, the link table); length is calibration only.
 
+### The uniqueness proof is a TWO-PART procedure, and two structural legs are illegal
+
+Item integrity #8 requires the 解説's uniqueness note to prove, per card, why
+that card cannot be the FINAL card before the fixed tail. Write it in this order,
+because the order is what makes it checkable:
+
+1. **Compute the forced blocks first.** For each card, name the card that must
+   immediately precede or follow it, and why (a connective's subcategorisation:
+   「限らず」 wants a bare 「に」 before it; 「〜つつある」 wants a ます形; 「おかげで」
+   wants a 連体形; 「自慢している」 wants a quotative 「と」). Write the blocks out —
+   ［A→B］ — before excluding anything.
+2. **Then enumerate ONLY the orderings the blocks permit**, and exclude each
+   survivor. A survivor that is ungrammatical is excluded structurally; a
+   survivor that PARSES is excluded by naming the reading it produces and the
+   contradiction that reading creates. Never by "it connects to nothing".
+
+**Two legs are false by construction and `make verify-scramble` now FAILs on
+both** (`illegal_legs()`; run it after every 問題8 edit):
+
+- **"placing X last leaves Y in the middle, where it connects to neither
+  neighbour / loses its receiver"**, applied to a card that can sit
+  mid-sentence. Two shapes always can: **(a) a card ending in a plain-form
+  predicate** is a 連体修飾句 of whatever noun follows it, and **(b) a card that is
+  a bare adverbial phrase (に/にも/でも/は/も/まで/から…) whose receiving predicate is
+  printed AFTER the blanks** can be fronted over any number of clauses, so it
+  never needs an adjacent receiver. **If such an adverbial card exists and the
+  other three form one contiguous block, the item has TWO ★ answers and must be
+  re-cut** — that is not a proof defect, it is an item defect.
+- **"that ordering stacks two particles, so it is impossible."** Only stacked
+  CASE particles are impossible (を+が). 「観光客にも地元の人に…」 is everyday
+  Japanese (「私にも彼に似たところがある」).
+
+Structural legs stay legal for cards that genuinely cannot attach — a bare
+particle tail before the printed tail (nothing to predicate), a テ形 or ます形 with
+no host, a 連用 form the tail cannot receive, a card that is not the form the
+printed tail demands.
+
+The class has now shipped **three times in one paper's five items**, which is why
+the procedure above replaced the old one-paragraph rule:
+
+- `20260818_1` 問題8-47 argued 「『紙で出したがる』を最後に置くと『高齢の利用者が今も
+  多い』が途中に入って前後のどのカードとも結べない」. It can: 4→3→1→2 reads
+  「高齢の利用者が今も多い電子申請の利用が増えたとはいえ、紙で出したがるそうだ」 and keys
+  ★=1. The key still stood — the rival makes elderly users numerous *inside*
+  e-application, contradicting the sentence's own point — but that is a SEMANTIC
+  argument the 解説 never made (`qa-report-20260818_1` F9). Repaired at that item,
+  and **the other four proofs were not re-read**, which is the process half of
+  the finding.
+- Round 2 then found 問題8-45 with the same leg 「『おかげで』を最後に置くと『子どもの
+  急な熱にも』が受け手を失う」 — false, because 「子どもの急な熱にも」's receiver
+  「慌てずに済んでいる」 was printed AFTER the blanks. Here the rival WAS grammatical
+  and natural (「子どもの急な熱にも祖母が近くに住んでいてくれるおかげで慌てずに済んでいる」),
+  so the item had two ★ answers and was re-cut: the adverbial moved into the stem
+  and the predicate became the fourth card, leaving no frontable card at all
+  (`qa-report-20260818_1-round2` R2-F1).
+- The same re-read then found 問題8-44 leaning on the identical leg and 問題8-43
+  on the particle-stacking one. Both proofs were rewritten; both items were
+  already unique on other grounds.
+
+**An invalid leg in one proof implies nothing about the other four — re-read all
+five against this section whenever you repair one.**
+
+**Blanks may end the sentence.** When a re-cut needs the printed tail gone,
+`＿＿ ＿＿ ★ ＿＿。` is official practice (12/2025 問題8-44 「そんなに ★ 。」 and
+問題8-46 「…初対面とは思えない ★ 。」, `refs/JLPT_N2_NEW/17.N2 12-2025/booklet.md`),
+and it removes leg (b)'s whole precondition: with no predicate after the blanks,
+no card can be fronted over one.
+
 ### Register mix across the 5 items — the archive varies SCENE, not grammar band
 
 A paper whose 問題8 items are all correctly N2-band grammar but all set in

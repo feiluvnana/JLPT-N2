@@ -1785,6 +1785,98 @@ def check_theme_repeat_cross_test():
              f"20260811_1; qa-report-20260813_2.md F-THEME2BACK)")
 
 
+SLOT_THEME_LOOKBACK = 2
+
+
+def check_slot_theme_repeat():
+    """No 聴解 SLOT may carry the same theme as the same slot one or two papers
+    back (F11, qa-report-20260818_1).
+
+    THE RULE: `jlpt-test-generation` §"One topic, one surface" — "No topic
+    repeats the previous test, **especially in the same 聴解 slots**". That
+    bullet named no procedure, so it was read as advice: the cross-test 聴解
+    check above compares errand KEYS across the whole draw and never asks which
+    slot an errand landed in.
+
+    THE INCIDENT: `20260818_1` 聴解問題3-4番 was 自動車学校の危険予測運転 directly
+    after `20260817_3`'s 問題3-4番 整備担当が運転の癖を伝える話 — same slot,
+    consecutive papers, same domain; 問題2-1番 was a house-move gas appointment
+    after a house-move quote in the same slot. The errand keys differ, so
+    `check_spec_errand_rotation` was green.
+
+    WARN, not FAIL: a theme tag is a floor (`exam-blueprint` §"How to comply"),
+    two papers legitimately spend 21 listening scenarios over a 20-value
+    vocabulary, and the reviewer settles whether a shared tag is actually a
+    shared domain by reading the two rows. `logs/topics.json` already stores the
+    table, so the read is a lookup, not a re-derivation.
+
+    SCOPE, narrowed 2026-08-19 (R2-F7): 問題1 is excluded for exactly the reason
+    問題4 always was. `choukai-items.md` §"Section item mix" makes work-assignment
+    the MANDATED majority shape of 問題1 (≥3 of 6 items), so 働き方 fills ~15 of
+    the ~65 問題1 scored slots across the papers on disk and a repeat there
+    measures the quota, not the paper: **16 of the 36 hits this check produced
+    over 13 papers were 問題1 rows**, three of them in one paper, all three ruled
+    false positives by a reviewer who had to read four unrelated subjects
+    (倉庫の棚卸し / 資料印刷 / 試作品借用 / 受付欠員の電話) to say so. Measured over
+    the 13 papers when the pattern was narrowed, hits fall 36 → 20 and
+    `20260818_1`'s 5 rows → 2. The remaining slots (問題2/3/5) are the ones whose
+    subject the author actually chooses.
+
+    WHAT IT STILL CANNOT SEE, stated rather than implied: this compares TAGS, so a
+    domain repeat across two DIFFERENT tags is invisible to it — and that is half
+    of its own founding incident. `20260818_1`'s 問題3-4番 (自動車学校の危険予測運転,
+    tagged 教育) followed `20260817_3`'s 問題3-4番 (整備担当が運転の癖を伝える話,
+    tagged 交通): same slot, consecutive papers, one domain, two tags, no hit.
+    (That paper was repaired before its round 3 — the driving talk was re-slotted
+    to 問題3-2番, R2-F4 — so the founding case is history, not a live example; this
+    check never saw it either way, which is the point.) A
+    content-word intersection over the `surfaces` strings was considered and
+    rejected as a gate: the two surfaces here share no token either (運転 appears
+    in neither noun phrase as recorded), so it would not have caught the founding
+    case while it WOULD have fired on unrelated pairs — a check that
+    mis-measures counts for less than none. **The reviewer owns that half**, via
+    the mandatory slot × 3-paper row read in `jlpt-test-generation` §"One topic,
+    one surface", which is written as a procedure precisely because no tag test
+    can do it.
+    """
+    print("\ncross-test 聴解 slot × theme repeat (same slot, previous 2 papers)")
+    path = ROOT / "logs" / "topics.json"
+    if not path.is_file():
+        return skip("no 聴解 slot repeats its own theme across papers",
+                    "no logs/topics.json on disk")
+    rows = json.loads(path.read_text(encoding="utf-8")).get("history", [])
+    history = [r for r in rows if not ORIGIN.is_imported(str(r.get("test_id")))]
+    for i, cur in enumerate(history):
+        cid = str(cur.get("test_id"))
+        cthemes = cur.get("themes") or {}
+        hits = []
+        for prev in history[max(0, i - SLOT_THEME_LOOKBACK):i]:
+            pid = str(prev.get("test_id"))
+            pthemes = prev.get("themes") or {}
+            for slot, theme in sorted(cthemes.items()):
+                # 問題2/3/5 only. 問題4's scenes are invented around a drawn
+                # `quick_response` idiom and their tags are author-assigned, so
+                # comparing them measures the tagger, not the paper — 働き方 alone
+                # produced 5-8 rows per paper. 問題1 is excluded for the same
+                # reason one level up: its item MIX is quota-bound (≥3 of 6 items
+                # must be someone assigning work), so 働き方 in that slot is
+                # forced by the rule, not chosen by the author (R2-F7 —
+                # docstring §SCOPE carries the measurement).
+                if not re.match(r"聴解問題[235]-\d+番$", slot):
+                    continue
+                if pthemes.get(slot) == theme:
+                    hits.append(f"{slot}={theme} (also {pid})")
+        warn(f"{cid}: no 聴解 slot repeats its own theme in the previous "
+             f"{SLOT_THEME_LOOKBACK} papers ({len(hits)} slot(s))", not hits,
+             "; ".join(hits[:8]) + (" …" if len(hits) > 8 else "")
+             + " — read those rows of the slot × paper table side by side "
+               "(logs/topics.json already stores it): a shared tag in one ROW "
+               "is a domain becoming a crutch one slot apart. Re-angle or "
+               "re-slot the scenario, or say in the report why the two "
+               "subjects are genuinely unrelated "
+               "(jlpt-test-generation §'One topic, one surface')")
+
+
 def check_dokkai_lengths(name: str, body: str, bi):
     """読解 passages must reach the official length band (G8).
 
@@ -2065,10 +2157,10 @@ def check_note_band(name: str, gt: str):
           "(question-authoring/references/dokkai.md §（注N）)")
 
 
-def check_note_band_reuse(name: str, gt: str):
-    """A （注N） headword must never also be tested as ordinary vocabulary
-    elsewhere in this SAME paper's 問題1–6 (items 1–30) — a same-paper
-    self-contradiction the paper proves against itself, not a judgment call.
+def check_note_band_reuse(name: str, gt: str, st: str = ""):
+    """A （注N） headword must never also appear as plain text elsewhere in this
+    SAME paper's 問題1–9 or its 聴解 script — a same-paper self-contradiction the
+    paper proves against itself, not a judgment call.
 
     Until 2026-08-17 this rule (question-authoring/references/dokkai.md
     §'（注N） glosses') existed only as author-honor-system prose, and it kept
@@ -2078,23 +2170,52 @@ def check_note_band_reuse(name: str, gt: str):
     ("住民の負担を軽減する"). Both prove the term is ordinary, already-tested
     N2 vocabulary — the note's own implicit claim that it needs explaining is
     falsified by the paper itself. This check is a plain substring search
-    against 問題1–6's own stems and options, no wordlist required.
+    against 問題1–9's own stems and options plus the 聴解 script, no wordlist
+    required.
+
+    SCOPE WIDENED 2026-08-19 (F6, qa-report-20260818_1). The check read
+    問題1–6 only, and its own name said so — so green was never evidence for
+    問題7–9 or for the listening script, and `20260818_1` glossed 改修 in 問題13
+    while printing it bare in the 問題7-41 stem
+    (「今回の駅の**改修**工事は、（　）、…」). A term glossed in 読解 and printed
+    unglossed in a 問題7 stem or in a spoken line is the identical defect: the
+    paper demonstrates the word is ordinary N2 vocabulary. Re-run over the 13
+    papers on disk when the scope moved: only `20260818_1` changed verdict
+    (改修), which was then repaired by deleting the gloss.
     """
-    m7 = re.search(r"^##\s*問題7\b", gt, re.M)
-    p16_text = gt[: m7.start()] if m7 else ""
+    # Section spans, so a note's OWN passage can be excluded from the haystack:
+    # a term glossed in the 問題9 cloze necessarily occurs in the 問題9 prose, and
+    # counting that as reuse false-failed 20260807_1 and 20260813_2 the first
+    # time this scope was widened.
+    heads = [(int(m.group(1)), m.start()) for m in
+             re.finditer(r"^##\s*問題(\d+)\b", gt, re.M)]
+    spans = {n: (s, heads[i + 1][1] if i + 1 < len(heads) else len(gt))
+             for i, (n, s) in enumerate(heads)}
+
+    def section_of(offset: int) -> int | None:
+        return next((n for n, (a, b) in spans.items() if a <= offset < b), None)
+
+    def haystack(exclude: int | None) -> str:
+        parts = [gt[a:b] for n, (a, b) in sorted(spans.items())
+                 if 1 <= n <= 9 and n != exclude]
+        text = "\n".join(parts) + "\n" + (st or "")
+        return "\n".join(ln for ln in text.splitlines()
+                         if not NOTE_DEF.match(ln))
+
     hits = []
-    for ln in gt.splitlines():
-        m = NOTE_DEF.match(ln)
-        if not m:
+    for m in re.finditer(r"^.*$", gt, re.M):
+        nm = NOTE_DEF.match(m.group(0))
+        if not nm:
             continue
-        term = m.group(2).strip()
-        if len(term) >= 2 and term in p16_text:
+        term = nm.group(2).strip()
+        if len(term) >= 2 and term in haystack(section_of(m.start())):
             hits.append(term)
-    check(f"{name}: no （注N） headword is reused as plain vocabulary in 問題1-6",
+    check(f"{name}: no （注N） headword is reused as plain text in 問題1-9 or the "
+          f"聴解 script",
           not sorted(set(hits)),
-          f"{sorted(set(hits))} — glossed in 読解 but ALSO appears as a "
-          f"stem/option word in this same paper's 問題1-6, which proves it is "
-          f"ordinary N2 vocabulary and must not be glossed "
+          f"{sorted(set(hits))} — glossed in 読解 but ALSO printed bare in this "
+          f"same paper's 問題1-9 or spoken in 聴解スクリプト.txt, which proves it "
+          f"is ordinary N2 vocabulary and must not be glossed "
           f"(question-authoring/references/dokkai.md §'（注N） glosses')")
 
 
@@ -3311,6 +3432,12 @@ def pool_errand_clusters() -> dict[str, dict[str, list[str]]]:
             if isinstance(e, dict) and e.get("key"):
                 out.setdefault(cat, {}).setdefault(
                     str(e["key"]), []).append(pool_entry_text(e))
+    # `quick_response` entries are bare strings, so their errand keys sit in a
+    # separate top-level map (F4) — making them objects would orphan every
+    # recorded draw, which check_draw_provenance() resolves by string.
+    for text, k in (pools.get("quick_response_keys") or {}).items():
+        out.setdefault("quick_response", {}).setdefault(
+            str(k), []).append(str(text))
     return out
 
 
@@ -3349,6 +3476,16 @@ def check_pool_errand_keys():
             k = e.get("key")
             if not isinstance(k, str) or not k.strip():
                 bad.append(f"{cat}: 「{pool_entry_text(e)}」 key={k!r}")
+    qr = pools.get("quick_response_keys") or {}
+    if not isinstance(qr, dict):
+        bad.append(f"quick_response_keys is {type(qr).__name__}, not an object")
+        qr = {}
+    for text, k in qr.items():
+        if not isinstance(k, str) or not k.strip():
+            bad.append(f"quick_response: 「{text[:20]}」 key={k!r}")
+        elif text not in (pools.get("quick_response") or []):
+            bad.append(f"quick_response_keys names 「{text[:24]}」, which is not "
+                       f"a quick_response entry")
     check("every pools.json `key` is a non-empty string", not bad,
           "; ".join(bad[:6]) + " — `key` is the entry's errand identity "
           "(institution+errand, e.g. 「引っ越し業者:見積もり」); drop the field "
@@ -3370,6 +3507,116 @@ def check_pool_errand_keys():
          "Resolve it by GROWING the pool, never by unsharing a key")
 
 
+# F5 (qa-report-20260818_1). 謙譲語 humbles the SPEAKER's own act, so telling the
+# listener to perform one inverts the direction: `20260818_1` 問題4-11番's drawn
+# stimulus was 「薬の説明は、調剤師から伺ってください。」 — 伺う is the customer's
+# humble act toward the 調剤師, which the customer cannot be instructed to
+# perform. `question-authoring` Item integrity #20 has always required the keyed
+# REPLY to match the keigo direction; nothing checked the STIMULUS, and the
+# stimulus is drawn, so the defect was in the pool and would have re-drawn.
+# Narrow on purpose: 謙譲語 stem + 〜てください only. 「〜ていただけますか」 asks the
+# listener to act FOR the speaker and is correct; 「お待ちください」 is 尊敬語.
+KEIGO_INVERSION = re.compile(r"(伺って|拝見して|申し上げて|存じて|参って|いたして)ください")
+
+
+def check_pool_keigo_direction():
+    """No `quick_response` entry may tell the listener to perform a 謙譲語 act (F5)."""
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    if not pools_path.is_file():
+        return skip("no quick_response entry inverts the keigo direction",
+                    "no pools.json")
+    pools = json.loads(pools_path.read_text(encoding="utf-8"))
+    bad = [s for s in (pools.get("quick_response") or [])
+           if KEIGO_INVERSION.search(str(s))]
+    check("no quick_response entry inverts the keigo direction", not bad,
+          "; ".join(f"「{s}」" for s in bad[:4]) + " — 謙譲語 humbles the SPEAKER's "
+          "own act, so a 〜てください aimed at the listener cannot carry one "
+          "(「調剤師から伺ってください」 → 「調剤師からお聞きください」). Fix the POOL "
+          "entry: repairing only the script leaves the next paper to redraw the "
+          "same defect (question-authoring Item integrity #20; "
+          "qa-report-20260818_1 F5)")
+
+
+# R2-F5 (qa-report-20260818_1-round2). A pool sentence is PRINTED and SPOKEN, so a
+# noun that does not exist in Japanese ships to the examinee. 「調剤師」 shipped
+# exactly that way: the licensed profession is 薬剤師 (調剤 is the act), the word
+# occurs in no dictionary and zero times across the 31-sitting archive, and it
+# survived a QA round in which the SAME sentence was corrected for something else
+# — the fix pass changed 伺ってください→お聞きください and never re-read the subject
+# noun. Hence the rule this deny-list enforces: correct the whole sentence, not
+# the reported defect.
+#
+# A deny-list, deliberately: "is this a real Japanese title" is not decidable, so
+# this catches the NEAR MISSES — a real title with a wrong morpheme, which is the
+# shape that gets written by analogy (調剤+師, 看護+士, 診療+師). Add a row when one
+# ships; do not pretend the list is complete.
+NONEXISTENT_TITLES = {
+    "調剤師": "薬剤師",
+    "看護士": "看護師",
+    "診療師": "医師／診療放射線技師",
+    "介護士": "介護福祉士",
+    "理容士": "理容師",
+    "調理士": "調理師",
+    "保健士": "保健師",
+}
+
+
+def check_pool_nonexistent_titles():
+    """No pool string may name a professional title that does not exist (R2-F5)."""
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    if not pools_path.is_file():
+        return skip("no pool entry names a non-existent professional title",
+                    "no pools.json")
+    pools = json.loads(pools_path.read_text(encoding="utf-8"))
+    hits = []
+    for cat in ("quick_response", "listening_scenarios", "reading_topics"):
+        for e in pools.get(cat) or []:
+            text = pool_entry_text(e)
+            for bad, good in NONEXISTENT_TITLES.items():
+                if bad in text:
+                    hits.append(f"{cat} 「{text[:26]}」: {bad} → {good}")
+    check(f"no pool entry names a non-existent professional title "
+          f"({len(NONEXISTENT_TITLES)} near-misses on the deny-list)",
+          not hits, "; ".join(hits[:6]) + " — the entry is PRINTED and SPOKEN, so "
+          "correct the pool string in place and let the spec, the ledger row and "
+          "the script follow it (exam-blueprint §'A `quick_response` entry is a "
+          "SENTENCE'), then re-read every other noun in the same sentence: this "
+          "check exists because 「調剤師」 survived a correction of that very "
+          "sentence (qa-report-20260818_1-round2 R2-F5)")
+
+
+def prove_grandfather(label: str, test_id: str, spec: dict, keyed_at: str,
+                      breaches: int):
+    """An errand-key exemption must prove its own criterion, per id (R2-F6).
+
+    THE RULE: a paper is exempt from an errand-key rotation/pair check only while
+    (a) its DRAW predates the `key` that puts it in breach — if the key existed at
+    draw time, `draw()`'s cross-key exclusion would have refused the pick, so a
+    breach means the spec was hand-edited and the repair is a redraw — and (b) it
+    still breaches, since "delete an id the moment that test's draw is repaired"
+    is otherwise a sentence nothing enforces.
+
+    THE INCIDENT: both halves lived in a comment. The comment's own count drifted
+    ("NINE of the twelve papers" over a set of ten of thirteen) and the criterion
+    could only be checked by a reviewer replaying git history by hand — which
+    round 2 did, and found TRUE, but "legitimate vs self-serving" had become a
+    matter of trust instead of measurement (qa-report-20260818_1-round2 §5.3).
+    """
+    drawn_at = str(spec.get("generated_at") or "")
+    ok = bool(drawn_at) and drawn_at < keyed_at and breaches > 0
+    check(f"{label} proves its own criterion "
+          f"(drawn {drawn_at or '(unrecorded)'} < keyed {keyed_at}, "
+          f"{breaches} breach(es) still measured)", ok,
+          f"the exemption for {test_id} does not hold: "
+          + ("its draw is unrecorded" if not drawn_at
+             else f"its draw {drawn_at} does NOT precede the key ({keyed_at}), so "
+                  f"draw() would have refused the pick and the repair is a "
+                  f"redraw, not an exemption" if drawn_at >= keyed_at
+             else "it no longer breaches the rule, so the exemption is stale — "
+                  "delete the id from the grandfather set")
+          + " (exam-blueprint §'`key` — the errand identity')")
+
+
 def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
     """No paper may redraw an errand its own recent predecessors drew (R14).
 
@@ -3381,10 +3628,18 @@ def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
     聴解 item one paper after the previous one did, with the rotation gate green
     on both, because the pool spells that errand three ways.
 
-    THE REPAIR: `--reroll listening_scenarios` (never a hand substitution), or
-    give the surface a genuinely different errand. NINE of the twelve papers on
-    disk breach this the day it was written, so they are exempted BY NAME below
-    and print the same measurement as a WARN; any id not in that set FAILS.
+    THE REPAIR: `--reroll listening_scenarios`, `--reroll-one <cat>:<index>` for
+    a single entry (never a hand substitution), or give the surface a genuinely
+    different errand. The papers that already breached the rule the day the `key`
+    field landed are exempted BY NAME below and print the same measurement as a
+    WARN; any id not in that set FAILS. **Read the set for who is exempt and how
+    many — do not restate a count here.** The docstring used to say "NINE of the
+    twelve papers" over a set that had grown to ten of thirteen, which is the
+    doc-says-one-thing/gate-says-another shape this file exists to prevent
+    (R2-F6, qa-report-20260818_1-round2), and the exemption criterion was
+    asserted in prose where nothing could check it. Both halves are now PROVEN
+    per id at run time, below: an exemption holds only while the paper's draw
+    predates the key that puts it in breach AND the breach is still there.
     """
     exempt = ERRAND_ROTATION_GRANDFATHERED
     hist = ledger_history()
@@ -3428,31 +3683,59 @@ def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
           "errand twice however differently the pool spells it; "
           "`--reroll <category>` (exam-blueprint R14)")
     detail = ("; ".join(cross) + " — the display strings differ, the errand "
-              "does not. `--reroll <category>`; never hand-substitute "
-              "(exam-blueprint 'Rotation model' / R14)")
+              "does not. `--reroll <category>` or `--reroll-one <cat>:<index>`; "
+              "never hand-substitute (exam-blueprint 'Rotation model' / R14)")
     if d.name in exempt:
+        prove_grandfather(f"{d.name}: errand-rotation exemption", d.name,
+                          spec, exempt[d.name], len(cross))
         warn(name, not cross, detail + GRANDFATHER_NOTE)
     else:
         check(name, not cross, detail)
 
 
 # Papers that already breach the errand-key rotation rule, measured over the
-# whole ledger the day the `key` field landed (2026-08-19). Every one of them
-# drew an errand a recent predecessor had drawn under a different spelling, and
-# no gate could see it. Clearing a breach means re-drawing and re-authoring a
-# 聴解 item, which is a decision about those papers, not about this gate. Delete
-# an id the moment that test's draw is repaired; never add one to quiet a new
-# paper.
+# whole ledger the day the `key` field landed. Every one of them drew an errand a
+# recent predecessor had drawn under a different spelling, and no gate could see
+# it. Clearing a breach means re-drawing and re-authoring a 聴解 item, which is a
+# decision about those papers, not about this gate.
+#
+# THE CRITERION FOR ADDING AN ID, stated because "never add one to quiet a new
+# paper" was read as "never add one" (F12, qa-report-20260818_1): an id belongs
+# here only when its DRAW predates the `key` that puts it in breach — i.e. the
+# breach was created by a later pool edit, not by a draw made against a pool
+# that already carried the key. If the key existed at draw time, `draw()`'s
+# cross-key exclusion would have refused the pick, so a breach means the spec
+# was hand-edited and the repair is `--reroll`, never an exemption.
+#
+# The criterion is now DATA, not prose: each id maps to when the key that puts it
+# in breach entered `pools.json`, and `prove_grandfather()` asserts at run time
+# that the paper's own `generated_at` precedes it — and that the paper still
+# breaches at all, so a stale exemption for a repaired paper fails instead of
+# sitting here forever. An exemption that cannot prove its own criterion is an
+# exemption by assertion (R2-F6).
+#
+# 2026-08-19 15:18:21 is commit 327912e, where the `key` field itself landed:
+# every id carrying that timestamp was drawn before any key existed at all.
+ERRAND_KEY_FIELD_LANDED = "2026-08-19 15:18:21"
 ERRAND_ROTATION_GRANDFATHERED = {
-    "20260810_2",   # 銀行:口座開設        (vs 20260810_1)
-    "20260811_1",   # 年金事務所:手続き案内 (vs 20260807_1)
-    "20260812_1",   # 保険会社:契約内容の見直し (vs 20260810_2)
-    "20260812_2",   # 年金事務所:手続き案内 (vs 20260807_1)
-    "20260813_1",   # 観光案内所:モデルコース (vs 20260810_1)
-    "20260814_1",   # 図書館:電子書籍の利用 (vs 20260811_1)
-    "20260817_1",   # 工場:安全講習 / 書店:取り寄せ / 税務署:確定申告
-    "20260817_2",   # 引っ越し業者:見積もり (vs 20260811_1)
-    "20260817_3",   # 引っ越し業者:見積もり + カルチャースクール + クリーニング店
+    "20260810_2": ERRAND_KEY_FIELD_LANDED,   # 銀行:口座開設        (vs 20260810_1)
+    "20260811_1": ERRAND_KEY_FIELD_LANDED,   # 年金事務所:手続き案内 (vs 20260807_1)
+    "20260812_1": ERRAND_KEY_FIELD_LANDED,   # 保険会社:契約内容の見直し (vs 20260810_2)
+    "20260812_2": ERRAND_KEY_FIELD_LANDED,   # 年金事務所:手続き案内 (vs 20260807_1)
+    "20260813_1": ERRAND_KEY_FIELD_LANDED,   # 観光案内所:モデルコース (vs 20260810_1)
+    "20260814_1": ERRAND_KEY_FIELD_LANDED,   # 図書館:電子書籍の利用 (vs 20260811_1)
+    "20260817_1": ERRAND_KEY_FIELD_LANDED,   # 工場:安全講習 / 書店:取り寄せ / 税務署
+    "20260817_2": ERRAND_KEY_FIELD_LANDED,   # 引っ越し業者:見積もり (vs 20260811_1)
+    "20260817_3": ERRAND_KEY_FIELD_LANDED,   # 引っ越し業者:見積もり + カルチャースクール
+    # `20260818_1` sat here from 2026-08-19 16:31 (F12/R2-F3) and is GONE, which is
+    # what an exemption leaving the set looks like: its 聴解問題5-2番 scenario
+    # 「陶芸教室:初心者コースの説明」 — errand 「カルチャースクール:受講申し込み」, drawn by
+    # 20260817_1 and 20260817_3 inside the same 11-draw window — was REDRAWN with
+    # `--reroll-one listening_scenarios:16` (seed 74989867 → 「テレビ:専門家の解説」)
+    # and the item re-authored, so the paper measures 0 breaches and passes
+    # `check_spec_errand_rotation` as a CHECK. `prove_grandfather()`'s stale half
+    # is what reported it: the id FAILED here for one run with "it no longer
+    # breaches the rule", exactly as designed.
 }
 
 
@@ -4153,6 +4436,296 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
     off = {q: (a, have.get(q)) for q, a in want.items() if have.get(q) != a}
     check(f"keys match test_spec.json answer_positions ({len(want)} prescribed)"
           + label_tail, not off, f"prescribed vs actual: {off}")
+
+
+def check_answer_position_section_clustering(d, spec: dict, sample):
+    """No 大問 may put more keys on one option than any official sitting does (F1).
+
+    THE RULE: `exam-blueprint` §"Answer positions" — a section's most-frequent
+    position may occur at most `sample_items.MAX_SECTION_MODE[section]` times,
+    the maximum observed per 大問 over the 31 sittings in
+    `refs/JLPT_N2_NEW/answer_keys.json` (era-matched: only the sittings whose
+    item count for that 大問 equals today's).
+
+    THE INCIDENT: `20260818_1` drew 問題7 = [1,1,2,4,4,1,1,1,2,1,1,1] — EIGHT of
+    twelve keys on option 1, against an official ceiling of 5 — and
+    問題4_語彙 = [1,1,4,1,3,1,4], four of seven against a ceiling of 3. Every gate
+    was green: `balanced_position_plan()` bounded the GLOBAL totals (22/23/22/23)
+    and the longest RUN (3), neither of which bounds a single slice's mode, and
+    no check read the slices at all (qa-report-20260818_1 F1).
+
+    THE REPAIR: re-draw the plan (`sample_items.py` now rejects a breaching plan
+    at draw time), or — on an already-authored paper — permute the printed option
+    ORDER of the affected items so the key lands on a compliant slot, leaving
+    stems and distractor sets untouched, then re-sync `answer_positions` and the
+    key tables. Do NOT hand-edit a position to taste: keep the global totals
+    inside `POSITION_BAND` by SWAPPING with an item elsewhere that gives up the
+    position it takes.
+
+    Founding-case measurement (run before this check was committed): on the
+    pre-fix `20260818_1` it printed `問題7 1x8 of 12 (official max 5);
+    問題4_語彙 1x4 of 7 (official max 3)` and left the other 12 papers green.
+    """
+    name = f"{d.name}: no 大問 clusters its keys past the official ceiling"
+    pos = spec.get("answer_positions") or {}
+    if not pos:
+        return skip(name, "no answer_positions in test_spec.json")
+    breaches = sample.section_mode_breaches(
+        {k: v for k, v in pos.items() if isinstance(v, list)})
+    check(name, not breaches,
+          "; ".join(breaches) + " — a globally balanced deck does not bound one "
+          "section's mode. Re-draw (sample_items.py enforces MAX_SECTION_MODE at "
+          "draw time) or permute the affected items' option ORDER so the key "
+          "moves, swapping positions with an item elsewhere so the paper's "
+          "global totals stay inside POSITION_BAND "
+          "(exam-blueprint §'Answer positions')")
+
+
+# F2 (qa-report-20260818_1). `jlpt-test-generation` §"One topic, one surface"
+# has always said "**No condition/number/rule shared** between the 問題14 flyer
+# and any 聴解 item. Shared setting is tolerable; shared decisive detail is not."
+# Nothing ever checked it, and `20260818_1` shipped 「三日後」 as the decisive
+# number on BOTH surfaces: the flyer's 「申請から三日後以降に…お越しください」 is
+# what kills 問70's option 3, and 聴解問題4-7番's 「到着予定は三日後です」 is the
+# 時制 pivot that kills its own option 1. It is string-decidable — the token
+# occurs in `言語知識・読解.md` and in `聴解スクリプト.txt`.
+#
+# Scope, deliberately narrow: NUMBER+COUNTER tokens only (三日後, 五日, 250円,
+# 一週間, 午前六時…), and only tokens the flyer actually prints. Rule words
+# (「のみ」「本人」) recur across any two documents in Japanese and would make this
+# unreadable. Kanji AND ASCII numerals, since the script spells numbers in kanji
+# (choukai-audio §'TTS spelling') while a booklet may not.
+NUM_TOKEN = re.compile(
+    r"(?:[0-9０-９]+|[〇一二三四五六七八九十百千万]+)"
+    r"(?:日後|日前|週間|か月|カ月|ヶ月|時間|分間|日間|年間|人前"
+    r"|日|月|年|時|分|秒|円|通|枚|人|回|階|冊|台|件|名|部|週|割)")
+# Tokens that are apparatus, not a decisive condition: a price or a plain small
+# number can coincide without either item turning on it. Only durations,
+# deadlines and clock times decide an item in practice, and those are what the
+# incident was about.
+DECISIVE_COUNTERS = ("日後", "日前", "週間", "か月", "カ月", "ヶ月", "時間",
+                     "分間", "日間", "年間")
+
+
+def check_p14_choukai_shared_decider(test_id: str, gt: str, st: str, bi):
+    """The 問題14 flyer and the 聴解 script may not share a decisive interval (F2)."""
+    name = f"{test_id}: 問題14 shares no decisive number with any 聴解 item"
+    cut = bi.KEY_HEADING.search(gt)
+    body = gt[: cut.start()] if cut else gt
+    flyer = dokkai_section(body, 14)
+    if not flyer or not st:
+        return skip(name, "no 問題14 section or no 聴解スクリプト.txt")
+    flyer_toks = {t for t in NUM_TOKEN.findall(flyer)
+                  if any(t.endswith(c) for c in DECISIVE_COUNTERS)}
+    # 問題3 is excluded from the script side, and that exclusion is the rule, not
+    # a convenience: 概要理解 keys on the GIST — `choukai-items.md` §問題3 requires
+    # the 解説 to say 「〜には触れていない」 and forbids the talk from mentioning its
+    # own options — so a number inside a 問題3 monologue cannot be the decisive
+    # detail of its item. Without this, `20260818_1` read as a FAIL on 「一週間」:
+    # decisive in the flyer (it kills 問71's option 3) and incidental colour in
+    # 問題3-2番's memory talk (「一週間後に覚えていた量は」).
+    parts = re.split(r"^問題([1-5])。$", st, flags=re.M)
+    scored = "".join(parts[i + 1] for i in range(1, len(parts), 2)
+                     if parts[i] in ("1", "2", "4", "5"))
+    script_toks = set(NUM_TOKEN.findall(scored or st))
+    shared = sorted(flyer_toks & script_toks)
+    detail = (f"both surfaces turn on {shared} — the 問題14 flyer and a 聴解 item "
+              f"share a decisive interval. Shared SETTING is tolerable, a shared "
+              f"decisive detail is not (jlpt-test-generation §'One topic, one "
+              f"surface'). The 聴解 side is usually pinned by a drawn "
+              f"`quick_response` string, so move the FLYER's number — then "
+              f"re-derive every 問題14 item the changed condition decides")
+    if test_id in P14_DECIDER_GRANDFATHERED:
+        return warn(name, not shared, detail + GRANDFATHER_NOTE)
+    check(name, not shared, detail)
+
+
+# Papers that already share a decisive interval between the 問題14 flyer and a
+# 聴解 item, measured over all 13 papers the day this check landed (2026-08-19).
+# Clearing one means re-authoring that paper's flyer condition and re-deriving
+# the items it decides — a decision about that paper, not about this gate.
+P14_DECIDER_GRANDFATHERED = {
+    # Flyer table cell 「発災後最大24時間」 against 聴解問題1's 「オンラインで24時間
+    # お手続きいただけますよ」 — the same token in two different senses (a
+    # 24-hour window vs round-the-clock availability), which is why it went
+    # unnoticed; the regex cannot tell the senses apart and the rule is about
+    # the printed number.
+    "20260814_1",
+}
+
+
+# F8 (qa-report-20260818_1). Invented apparatus is supposed to be fresh per
+# paper (`exam-qa-review`: apparatus carried over "verbatim OR near-verbatim
+# from another test"), but the check that reads apparatus compares 例 blocks and
+# （注N） lines byte-for-byte, and a letterhead is neither. 「みどり市」 headed the
+# 問題14 flyer of `20260812_2`, `20260817_3` AND `20260818_1` — three of thirteen
+# papers, two of them consecutive. Invented place names are the one apparatus
+# class a regex can enumerate: a 2–4 character name plus 市/町/村/区.
+PLACE_NAME = re.compile(r"([ぁ-んァ-ヶ一-鿿]{2,4}(?:市|町|村))")
+# Words whose tail happens to be 市/町 but which are not names.
+PLACE_STOP = {"都市", "大都市", "地方都市", "市町村", "朝市", "労働市", "国内市",
+              "ある市", "ある町", "別の市", "同じ市", "他の市", "海外の市",
+              "海外市", "見知らぬ町", "この町", "近くの町", "港町", "城下町",
+              "商店街の朝市", "温泉町", "全市", "各市", "同市", "本市", "本籍地が市",
+              "十五分都市"}
+PLACE_LOOKBACK = 2      # the previous two papers, same window as the theme rules
+
+
+def check_invented_proper_nouns():
+    """An invented place name may not be reused by the previous two papers (F8)."""
+    print("\ninvented apparatus (a letterhead is apparatus too)")
+    names: list[tuple[str, set[str]]] = []
+    for d in sorted(p for p in (ROOT / "tests").glob("*") if p.is_dir()):
+        if ORIGIN.test_origin(d.name) != "generated":
+            continue
+        found: set[str] = set()
+        for fn in ("言語知識・読解.md", "聴解スクリプト.txt"):
+            f = d / fn
+            if f.is_file():
+                found |= {n for n in PLACE_NAME.findall(f.read_text(encoding="utf-8"))
+                          if n not in PLACE_STOP}
+        names.append((d.name, found))
+    if not names:
+        return skip("no invented place name repeats the previous two papers",
+                    "no generated tests on disk")
+    for i, (tid, mine) in enumerate(names):
+        prev = names[max(0, i - PLACE_LOOKBACK):i]
+        hits = sorted({f"「{n}」 (also {ptid})" for ptid, theirs in prev
+                       for n in mine & theirs})
+        check(f"{tid}: no invented place name repeats the previous "
+              f"{PLACE_LOOKBACK} papers", not hits,
+              "; ".join(hits) + " — an invented municipality or town is "
+              "apparatus, and reusing it reads as the same paper re-skinned. "
+              "Invent a new one (exam-qa-review §Ground rules, 'apparatus "
+              "carried over verbatim OR near-verbatim')")
+
+
+def check_spec_quick_response_errand_pair(d, spec: dict, pools: dict):
+    """Two 問題4 items of one paper may not run the same errand (F4).
+
+    THE RULE: `jlpt-test-generation` §"One topic, one surface" — "Two 聴解 items
+    may not run the same errand", and `exam-qa-review` makes a topic repeated
+    within the paper an AUTOMATIC fail.
+
+    THE INCIDENT: `20260818_1` drew both 「お客様、恐れ入りますが、こちらにお名前と
+    ご連絡先をご記入いただけますでしょうか。」 and 「キャンセル待ちの方は、こちらに
+    名前をお書きください。」 — 問題4-2番 and 4-9番, both "write your name at a
+    counter", both keyed to a question back at the counter. `errand_key()`
+    clustered `listening_scenarios`/`reading_topics` only, so nothing upstream
+    could see it; `quick_response` had been drawn 11-at-a-time in all 13 papers
+    with no errand clustering at all (qa-report-20260818_1 F4).
+
+    THE REPAIR: `pools.json`'s `quick_response_keys` now names the clusters, so
+    `draw()`'s cross-key `taken` exclusion prevents the pair by construction on
+    every future draw. This check is the backstop for a hand-edited spec or a
+    newly-added near-duplicate that nobody keyed.
+
+    Measurement, run over all 13 papers: the pair occurred in `20260818_1` and in
+    no other paper. That draw predated the keys, so it was exempted BY NAME while
+    the pair stood. **The set is empty again since 2026-08-19**: re-angling
+    問題4-2番's invented SETTING was not a repair — the rule measures the errand,
+    not the scene (R2-F2) — so `20260818_1`'s 問題4-9番 stimulus was REDRAWN with
+    `sample_items.py --reroll-one quick_response:8`, which is the tooling that
+    exists so this repair costs one item instead of eleven. Never add an id whose
+    draw POST-dates the key, and delete an id the moment its paper is repaired —
+    `prove_grandfather()` enforces both.
+    """
+    name = f"{d.name}: no two drawn 問題4 stimuli run the same errand"
+    keys = (pools.get("quick_response_keys") or {})
+    drawn = (spec.get("items") or {}).get("quick_response") or []
+    if not keys or not drawn:
+        return skip(name, "no quick_response_keys in pools.json or no draw")
+    seen: dict[str, str] = {}
+    hits = []
+    for s in drawn:
+        t = pool_entry_text(s)
+        k = keys.get(t)
+        if not k:
+            continue
+        if k in seen:
+            hits.append(f"errand 「{k}」: 「{seen[k][:22]}」 + 「{t[:22]}」")
+        seen[k] = t
+    detail = ("; ".join(hits) + " — one paper cannot run the same 即時応答 errand "
+              "twice however differently the pool spells it. `--reroll "
+              "quick_response`; the sampler's cross-key exclusion prevents this "
+              "by construction now (exam-blueprint §'`key` — the errand identity')")
+    if d.name in QR_ERRAND_PAIR_GRANDFATHERED:
+        prove_grandfather(f"{d.name}: 問題4 errand-pair exemption", d.name, spec,
+                          QR_ERRAND_PAIR_GRANDFATHERED[d.name], len(hits))
+        return warn(name, not hits, detail + GRANDFATHER_NOTE)
+    check(name, not hits, detail)
+
+
+# Papers drawn BEFORE `pools.json` grew `quick_response_keys` (2026-08-19) that
+# the new clustering retroactively puts in breach. Same criterion as
+# ERRAND_ROTATION_GRANDFATHERED, and now proven the same way by
+# `prove_grandfather()`: the draw predates the key that creates the breach, and
+# the breach is still there. Never add an id whose draw post-dates the key — for
+# those the sampler already refuses the pair.
+#
+# EMPTY since 2026-08-19: `20260818_1` was the only entry (窓口:記名依頼 drawn
+# twice, 問題4-2番 + 4-9番, F4) and its 9番 stimulus has been redrawn with
+# `--reroll-one quick_response:8` (R2-F2), so the exemption became stale and was
+# deleted rather than left standing.
+QR_ERRAND_PAIR_GRANDFATHERED: dict[str, str] = {}
+
+
+def check_pools_sha_replayability():
+    """A recorded seed is only replayable against the pool it was drawn from (R7).
+
+    `draw()` consumes a fixed number of RNG values per category, so deleting one
+    pool entry changes WHICH items are picked without shifting the stream: the
+    later categories replay perfectly and the earlier ones silently do not.
+    `20260818_1`'s QA hit exactly that — its recorded seed reproduced 6 of 11
+    categories after `pools.json` changed four hours after the draw, and the
+    reviewer had to infer the intermediate pool state from commit timestamps
+    (qa-report-20260818_1 §6.1, R7).
+
+    `sample_items.py` now stamps `pools_sha` into both the spec and the ledger
+    entry. This reports — never fails — when a spec's stamp no longer matches the
+    file: a legitimate pool repair (the 飢饉 deletion, the 伺う correction)
+    invalidates every earlier stamp, and failing on that would punish the fix.
+    A spec with no stamp predates the field and is a skip, not a warning.
+    """
+    print("\npool provenance (is a recorded seed still replayable?)")
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    if not pools_path.is_file():
+        return skip("recorded pools_sha matches the current pools.json",
+                    "no pools.json")
+    cur = hashlib.sha1(pools_path.read_bytes()).hexdigest()[:12]
+    specs = dict(generated_specs())
+    stamped = {d.name: spec.get("pools_sha") for d, spec in specs.items()
+               if spec.get("pools_sha")}
+    if not stamped:
+        return skip("recorded pools_sha matches the current pools.json",
+                    f"INERT: {len(specs)} spec(s) on disk and NONE carries a "
+                    f"`pools_sha`, so this check has verified nothing about "
+                    f"anything — the field landed 2026-08-19 and binds from the "
+                    f"next fresh draw or reroll onward. An unstamped spec is old, "
+                    f"not wrong, and re-sampling an authored test to add a stamp "
+                    f"is forbidden (exam-blueprint 'Rotation model'); a stamp "
+                    f"written by hand would be a fabrication, since nobody can "
+                    f"recover the pool bytes a past draw saw")
+    unstamped = sorted(d.name for d, spec in specs.items()
+                       if not spec.get("pools_sha"))
+    stale = sorted(f"{tid} recorded {sha}" for tid, sha in stamped.items()
+                   if sha != cur)
+    # A `--reroll`/`--reroll-one` re-stamps, so on those specs the stamp certifies
+    # the pool revision of the LAST redraw, not of the original draw. Say so
+    # rather than letting a reader read more provenance into it than it carries.
+    by_id = {d.name: spec for d, spec in specs.items()}
+    partial = sorted(tid for tid in stamped
+                     if "reroll" in str(by_id.get(tid, {}).get("seed", "")))
+    warn(f"every stamped spec's pools_sha matches pools.json ({cur}) "
+         f"[{len(stamped)} stamped of {len(specs)}; INERT on the "
+         f"{len(unstamped)} unstamped: {', '.join(unstamped) or 'none'}]",
+         not stale,
+         "; ".join(stale) + f" — pools.json is now {cur}, so replaying those "
+         f"seeds will not reproduce those draws item-for-item. Expected after "
+         f"any pool repair; it is a record, not a defect. What it rules out is "
+         f"the inverse — a spec claiming a pool revision it was not drawn from"
+         + (f". Note {', '.join(partial)} stamped on a REROLL, so the sha "
+            f"certifies that redraw's pool, not the whole spec's" if partial else ""))
 
 
 # 2026-08-11: check_mondai1_key_band() and check_moji2_stem_kana() were
@@ -6312,6 +6885,19 @@ def check_tests():
         st_text = (d / "聴解スクリプト.txt").read_text(encoding="utf-8") if (d / "聴解スクリプト.txt").is_file() else ""
         check_banned_collocations(d, gt, ct, st_text, origin)
         check_answer_positions(d, keys, ck, g)
+        if origin == "generated":
+            spec_p = d / "test_spec.json"
+            spec_here = (json.loads(spec_p.read_text(encoding="utf-8"))
+                         if spec_p.is_file() else {})
+            if str(spec_here.get("test_id")) == d.name:
+                check_answer_position_section_clustering(
+                    d, spec_here,
+                    load(".agents/exam-blueprint/scripts/sample_items.py"))
+                check_spec_quick_response_errand_pair(
+                    d, spec_here,
+                    json.loads((AGENTS / "exam-blueprint" / "references"
+                                / "pools.json").read_text(encoding="utf-8")))
+            check_p14_choukai_shared_decider(d.name, gt, st_text, bi)
         for f in (gengo, choukai):
             body = f.read_text(encoding="utf-8")
             cut = bi.KEY_HEADING.search(body)
@@ -6327,7 +6913,7 @@ def check_tests():
         check_dokkai_span_anchor_identity(gengo.name, gengo_prose)
         check_note_pairing(d.name, gengo_prose)
         check_note_band(d.name, gt)
-        check_note_band_reuse(d.name, gt)
+        check_note_band_reuse(d.name, gt, st_text)
         if origin == "generated":
             check_dokkai_lengths(d.name, gengo_prose, bi)
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
@@ -6630,6 +7216,8 @@ def main():
         check_pool_grammar_band()
         check_pool_kanji_reading_shape()
         check_pool_errand_keys()
+        check_pool_keigo_direction()
+        check_pool_nonexistent_titles()
         check_pool_word_formation_notation()
         check_pool_glyph_inventory()
         print("\nrotation inputs (why a new test is actually new)")
@@ -6640,8 +7228,11 @@ def main():
         check_harvest_provenance()
         check_topics_themes()
         check_theme_repeat_cross_test()
+        check_slot_theme_repeat()
         check_cross_test_listening_subjects()
         check_draw_provenance()
+        check_pools_sha_replayability()
+        check_invented_proper_nouns()
     check_tests()
     check_grader_parity()
 

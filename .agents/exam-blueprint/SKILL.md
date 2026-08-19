@@ -55,6 +55,42 @@ one. `飢饉` shipped from this pool and survived three QA rounds: 饉 is not a
 `refs/JLPT_N2_NEW/`. Same shape as 問題1's 表外音訓 rule below — the defect is
 the entry, and re-spelling the stem leaves the pool to re-draw it next test.
 
+**A `quick_response` entry is a SENTENCE, so a defective one is corrected in
+place — it is not the same repair as an undrawable entry.** The 飢饉 rule above
+says *delete and `--reroll`*, and the reason is specific: an `orthography` entry
+whose own headword needs a 表外 glyph is **undrawable** — no compliant item
+exists, so there is nothing to fix on the entry. A `quick_response` entry that
+is merely ungrammatical is a different case: the tested errand and register are
+sound and the sentence itself is the defect, so the repair is to **fix the entry
+and print the corrected entry in the paper**, leaving pool, spec, ledger and
+script all naming the same string. `20260818_1` drew
+「薬の説明は、調剤師から伺ってください。」 — 謙譲語 aimed at the listener (F5) — and it
+was corrected in `pools.json`, with that paper's `test_spec.json` and
+`logs/ledger.json` rows following the corrected entry so
+`check_draw_provenance()` still resolves.
+
+**Correct the WHOLE sentence, not the reported defect (R2-F5).** That first
+repair changed 伺ってください→お聞きください and left the sentence's subject noun
+alone — 「調剤師」, which is not a Japanese professional title (the licensed one is
+**薬剤師**; 調剤 is the act) and occurs nowhere in the 31-sitting archive. So one
+pool sentence produced two defects in two QA rounds, the second one printed and
+SPOKEN. The entry now reads 「薬の説明は、薬剤師からお聞きください。」. When you touch a
+pool sentence, re-read every noun in it against the world, and note the
+paper-side cost: the fix re-synthesises the MP3 and re-labels the invented scene
+(`20260818_1`'s section table said 動物病院の会計, which has no dispensing window).
+`check_pool_nonexistent_titles()` now FAILs a pool string naming a title that
+does not exist (調剤師, 看護士, 診療師 …) — a deny-list, so it catches the near
+misses that have shipped, not every possible invention. That is NOT "patch the sentence instead
+of the pool", which is what the rule forbids: the pool IS the thing that changed,
+and no paper prints a string the pool does not carry. The precedent is the
+`内〜(国内)` → `〜内(国内)` correction (R3-2), where the machinery was adjusted so
+the corrected string did not orphan a recorded draw — same principle, and the
+reason a pool fix must never be allowed to "punish the fix".
+
+`check_pool_keigo_direction()` FAILs any `quick_response` entry putting a 謙譲語
+verb on a 〜てください aimed at the listener (`question-authoring` Item integrity
+#20 covers the keyed REPLY; nothing had ever read the drawn STIMULUS).
+
 ### The `kanji_reading` validity rule (audited 2026-08-06)
 
 Unanswerable 問題1 items (`領(えり)`, `線(すじ)`, `爆(は.ぜる)`) ship when
@@ -207,6 +243,24 @@ carry **that entry's `key`, verbatim**, not a new string and not a new
 paraphrase of the errand. Adding the near-duplicate unkeyed re-opens the hole
 by construction: the pool grows, the cooldown does not.
 
+**`quick_response` has keys too, in a separate map (F4, 2026-08-19.)** Its
+entries are bare strings, so a `key` cannot sit on the entry: making them
+objects would orphan every recorded draw, which `check_draw_provenance()`
+resolves by string. The keys live in a top-level
+`"quick_response_keys": {"<phrase>": "<institution:errand>"}` map instead, and
+`build_key_index()` folds it into the same index, so `errand_key()`,
+`recency_map()` and `draw()`'s in-test `taken` set all see it with no signature
+change. Clustering covered `listening_scenarios`/`reading_topics` ONLY until
+this landed, and `quick_response` had been drawn 11-at-a-time in all 13 papers
+with no errand identity at all: `20260818_1` drew both
+「…こちらにお名前とご連絡先をご記入いただけますでしょうか」 and
+「キャンセル待ちの方は、こちらに名前をお書きください」 — 問題4-2番 and 4-9番, two
+items running one errand, which `exam-qa-review` counts as an AUTOMATIC fail.
+Four clusters exist today (`窓口:記名依頼`, `店:在庫照会`, `窓口:担当者不在`,
+`職場:進捗確認`); add a key whenever you add a phrase whose errand the pool
+already carries. `check_spec_quick_response_errand_pair()` FAILs a paper drawing
+two phrases from one cluster.
+
 **And never delete a duplicate to solve it.** Four shipped tests name those
 strings in `logs/ledger.json`, and `check_draw_provenance()` requires every
 recorded draw to resolve to a pool entry — deleting a duplicate FAILs the gate
@@ -262,6 +316,25 @@ distinct themes out of a 20-value vocabulary, so theme overlap between them is
 forced by arithmetic and "no 読解 theme may match the previous paper's" is
 unsatisfiable — proposed after round 1 of `20260817_3` QA and rejected on
 those grounds, 2026-08-19.
+
+**Rule 4c — the cloze is the designated release valve for a rule-4 collision.**
+When the headline set breaches rule 4, 問題9 is the ONE headline surface with no
+pool entry, no draw and no cooldown, so re-subjecting it is the only repair that
+needs no reroll and touches no other surface. Reach for it FIRST, and never
+resolve a rule-4 breach by re-tagging: a theme the reviewer's own independent
+re-tag agrees with is not negotiable, and a relabel that dodges the rule hides
+the collision instead of clearing it (`exam-qa-review` Ground rules; the
+`20260813_1` 問題13 precedent). `20260818_1` shipped with TWO headline themes
+repeating the paper two back where rule 4 allows one (科学・技術 at 問題9, 教育 at
+聴解問題5-2番), recorded the judgment in `logs/topics.json` and left it — the
+honest fix was available the whole time and was taken in the round-1 fix pass:
+the cloze moved 科学・技術 (部屋の響き) → デジタル化 (文字として残すか画像として残すか).
+A re-subjected cloze must still satisfy everything its original brief did — its
+assigned closing-move shape, the final-sentence template cap, the 問題9 category
+tags and option-length limits, and 「the cloze's SUBJECT against the whole
+previous paper」 (rule 4b) — and note that a candidate theme is only free if it
+headlines NEITHER of the previous two papers (防災 looked free for `20260818_1`
+and was not: it headlined `20260817_3`'s 聴解問題5-2番).
 
 **These rules bind pool-origin and web-origin surfaces alike** — an offline
 all-pool paper is not exempt. The pools are lopsided (`働き方` holds 44 of
@@ -325,12 +398,29 @@ flat ledger migrates automatically.
   "now" window, so re-verifying them against the current window is wrong the
   moment a test is rerolled after later tests already exist. Fixed by
   scoping the post-draw check to `{cat: picked}` on the reroll path.
+  `--reroll-one` scopes it one level further, to the single new entry, for the
+  same reason: the kept entries of that category are older draws.
 - **Attribution** — pass `--test-id <id>` so each draw records its consumer.
 - **What gets RECORDED is the pool entry-string, never the paper's surface
   form or a substitute.** `recency_map()` keys on the raw string and
   `head()` — an inflected realization or an off-pool substitute cools
   nothing and can never rotate. Repair by re-sampling, never by editing
   either file to match the paper.
+
+**A recorded seed is replayable only against the pool it was drawn from — so
+every spec records `pools_sha` (R7, 2026-08-19).** `draw()` consumes a fixed
+number of RNG values per category, so deleting one entry changes WHICH items a
+category picks **without shifting the stream**: the later, unaffected categories
+replay bit-exactly and the earlier ones silently do not. `20260818_1`'s QA hit
+exactly that — its recorded seed reproduced 6 of 11 categories after
+`pools.json` changed four hours after the draw, and the reviewer had to infer
+the intermediate pool state from commit timestamps. `sample_items.py` now stamps
+the first 12 hex of sha1 over `pools.json` into both `test_spec.json` and the
+ledger entry (a reroll re-stamps, since it re-draws against the current pool).
+`check_pools_sha_replayability()` **reports** a mismatch and never fails it: a
+legitimate pool repair invalidates every earlier stamp, and failing on that
+would punish the fix. Never re-sample an authored test to add a stamp — the 13
+papers predating the field are a documented skip, not a defect.
 
 Every spec carries `"rotation": {"recency_source": "ledger", "history_len":
 2, "cooldown": 6}` — `cooldown` is the WEAKEST level actually applied to any
@@ -364,18 +454,105 @@ what the paper actually used.
 ## Answer positions are balanced globally across the paper, unpredictable inside sections
 
 Do not force each mondai to carry equal quotas of positions 1..4 — that makes
-key distribution within each mondai predictable. `balanced_position_plan()`
-generates a globally balanced sequence of the 90 four-choice items (22/23/23/22,
-within `POSITION_BAND = (19, 27)`), shuffles with no run longer than
-`MAX_POSITION_RUN` anywhere in the deck, and slices into sections in order.
-Individual sections naturally repeat positions (e.g. `[2, 4, 2, 1]` or
-`[3, 3]`), matching official papers. 聴解 問題4 (3-choice) is balanced
-section-locally and is not part of the 90.
+key distribution within each mondai predictable. Two bars instead, and
+`balanced_position_plan()` satisfies both at once:
+
+1. **Whole-paper balance.** Each position takes 19–27 of the 90 four-choice
+   items (`POSITION_BAND`), and no position runs more than `MAX_POSITION_RUN`
+   times anywhere in the paper, **section seams included**.
+2. **Per-大問 shape drawn from the archive.** Each section's row is built by
+   `section_row()`: its mode COUNT is drawn from `SECTION_MODE_DIST` — the
+   measured per-大問 distribution over the era-matched sittings — and realised by
+   rejection sampling over i.i.d. rows. Conditioning on the mode count leaves
+   WHICH position clusters uniform, so the shape is calibrated and the identity
+   of the clustered option stays unpredictable.
+
+Individual sections therefore repeat positions the way official papers do
+(`[2, 4, 2, 1]`, `[3, 3]`), at official's own rate. 聴解 問題4 (3-choice) gets
+the same treatment against its own distribution and is not part of the 90.
 
 ```
-MAX_POSITION_RUN = 3   # longest same-position run allowed in the 90-item deck
+MAX_POSITION_RUN = 3   # longest same-position run allowed anywhere in the deck
 POSITION_BAND_3 = (2, 6)   # per-position count band, 聴解 問題4 (11 items)
+MAX_SECTION_MODE = {...}   # per-大問 CEILING on the most-frequent position
+SECTION_MODE_DIST = {...}  # per-大問 TARGET distribution of that mode count
 ```
+
+The two mode tables are one measurement read two ways — the ceiling is
+`max(SECTION_MODE_DIST[section])` — and `sample_items.py` asserts that at import
+so they cannot drift apart under a hand edit.
+
+### `MAX_SECTION_MODE` — the ceiling the balance contract was missing
+
+Global balance and a run cap do **not** bound how many of one section's keys
+land on one option: a run cap only constrains ADJACENT items. `20260818_1`
+drew 問題7 = `[1,1,2,4,4,1,1,1,2,1,1,1]` — **eight of twelve keys on option 1**
+— and 問題4_語彙 = `[1,1,4,1,3,1,4]`, four of seven, with every gate green
+(`qa-report-20260818_1` F1). The 2026-08-18 audit above examined only the
+too-SMOOTH tail; nothing had ever looked at the other end, and no ceiling
+existed in the code or in this file.
+
+`MAX_SECTION_MODE` in `sample_items.py` is the **maximum mode count observed
+per 大問 over the 31 sittings** in `refs/JLPT_N2_NEW/answer_keys.json`, measured
+only on the sittings whose item count for that 大問 equals today's — 問題3 5→3,
+問題9 5→4, 問題11 9→8, 聴解問題4 12→11 and 聴解問題5 4→3 all changed at 12/2022,
+and mixing eras inflates the ceiling (聴解問題4 reads 7 across all 31 but **5**
+over the 18 current-shape sittings). Re-derive by re-measuring the archive,
+never by reading a paper:
+
+| | 問1 | 問2 | 問3 | 問4 | 問5 | 問6 | 問7 | 問8 | 問9 | 問10 | 問11 | 問12 | 問13 | 問14 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ceiling | 3 | 3 | 2 | 3 | 3 | 3 | **5** | 3 | 2 | 3 | 4 | 2 | 2 | 2 |
+
+聴解: 問題1 4, 問題2 4, 問題3 4, 問題4 **5**, 問題5 2.
+
+`balanced_position_plan()` re-draws a plan that breaches the table, and
+`check_answer_position_section_clustering()` FAILs a spec that does. It holds by
+construction now — every mode count the target distribution can draw is a count
+the archive shows — so a breach at the gate means the two tables have drifted.
+
+**It is a CEILING, not a target** — and a ceiling alone was the wrong
+instrument, which is `SECTION_MODE_DIST`'s whole reason for existing.
+
+### `SECTION_MODE_DIST` — the target the ceiling could not express (R2-F8)
+
+問題7's own official distribution is mode 3 in 14 sittings, 4 in 16 and 5 in
+exactly **one**, so a generator that lands on 5 every paper reproduces a shape
+official does not have — the same failure `bunpou.md` §問題7 documents for stem
+length. Measured 2026-08-19, the ceiling-only sampler was doing exactly that in
+**eight sections at once**, because slicing one globally balanced deck makes each
+section's mode multinomial while official balances *within* each 大問:
+
+| 大問 | official (era-matched) | sampler, ceiling only | sampler, with `SECTION_MODE_DIST` |
+|---|---|---|---|
+| 問題3 | 1:92 % 2:8 % | 1:39 % 2:61 % | 1:93 % 2:7 % |
+| 問題4_語彙 | 2:80 % 3:20 % | 2:24 % 3:76 % (**inverted**) | 2:80 % 3:20 % |
+| 問題7 | 3:45 % 4:52 % 5:3 % | 3:5 % 4:56 % 5:40 % | 3:48 % 4:48 % 5:4 % |
+| 問題9 | 1:64 % 2:36 % | 1:10 % 2:90 % | 1:64 % 2:36 % |
+| 問題1/2/5/6/8 | 2:94–97 % | 2:62–68 % | 2:91–98 % |
+| 聴解問題4 | 4:61 % 5:39 % | 4:40 % 5:60 % | 4:61 % 5:39 % |
+
+(400 simulated plans per column, era-matched against
+`refs/JLPT_N2_NEW/answer_keys.json`; every other section matches within noise
+too.) **Do not "fix" the skew by lowering the ceiling below 5** — that would
+reject a real official sitting. The fix is the distribution, and mode 5 stays
+reachable at its official 1-in-31 rate. This changed the RNG consumption of
+`balanced_position_plan()`, so a seed recorded before 2026-08-19 no longer
+replays its own `answer_positions`; the 13 papers on disk keep the positions
+they shipped (never re-sample an authored test) and no gate line moves, because
+the ceiling predicate is unchanged.
+
+**Repairing an already-authored paper.** Do not hand-edit a drawn position to
+taste. Permute the printed option ORDER of the affected items so the key lands
+on a compliant slot — item content, stems and distractor sets survive
+unchanged — and keep the paper's global totals inside `POSITION_BAND` by
+SWAPPING with an item elsewhere that gives up the position the moved key takes.
+Then re-sync `answer_positions`, both key tables, every 解説 that names an
+option number (`check_mondai7_option_refs` reads 問題7's) and the 問1–6
+functional-category line, which lists the options in printed order. Worked
+example: `20260818_1` moved 4 of 問題7's eight `1`s and 1 of 問題4's four, in
+five swaps with 問題1-1/問題2-8/問題3-11/問題5-22/問題5-23, leaving the totals at
+22/23/22/23 exactly.
 
 ### The algorithm is calibrated; 8 shipped papers still all landed maximally smooth
 
@@ -405,10 +582,13 @@ list as `[(i % width) + 1 for i in range(count)]` and only ever *reshuffled*
 it — the per-position COUNTS were never randomized, so `count=11, width=3`
 produced exactly 4/4/3 on every single draw, forever (checked: all 5 shipped
 papers with a real key table are 4/4/3). Official varies — July 2025 keys a
-3/5/3 split. `balanced_positions()` now draws each position independently
-and rejects until counts sit inside `POSITION_BAND_3` with no run of 3 — a
-genuine per-draw distribution. This only affects the NEXT draw;
-already-authored tests keep their shipped positions.
+3/5/3 split. That was fixed 2026-08-18 by drawing each position independently
+and rejecting until the counts sat inside `POSITION_BAND_3` with no run of 3;
+`balanced_positions()` was then folded into `section_row()` (2026-08-19, R2-F8),
+which keeps both of those constraints and additionally matches 問題4's measured
+mode distribution {4:61 %, 5:39 %} instead of drifting to {4:40 %, 5:60 %}. Both
+changes affect only the NEXT draw; already-authored tests keep their shipped
+positions.
 
 ## Adjunct one-shots (non-pool items — staging stays live)
 
@@ -447,7 +627,23 @@ SEED=$(python3 -c "import secrets; print(secrets.randbelow(10**8))")
 python .agents/exam-blueprint/scripts/sample_items.py --seed "$SEED" --test-id <id>
 python .agents/exam-blueprint/scripts/sample_items.py --check-depth
 python .agents/exam-blueprint/scripts/sample_items.py --reroll listening_scenarios --seed "$SEED"
+python .agents/exam-blueprint/scripts/sample_items.py --reroll-one quick_response:8 --seed "$SEED"
 ```
+
+**`--reroll-one <category>:<index>` redraws ONE drawn entry** (R2-F2,
+2026-08-19), under exactly the same exclusions as a full reroll: this paper's
+other picks in every category — including the same category's KEPT entries — plus
+that category's own cooldown window. It records itself in the seed expression as
+`+reroll-one(cat:idx,seed)`, re-stamps `pools_sha`, and writes the updated list
+to both the spec and this test's ledger entry, so `check_draw_provenance()` still
+resolves. Use it when ONE drawn entry is the defect: `--reroll quick_response`
+replaces all **eleven** stimuli and forces a whole-問題4 re-author plus an MP3
+rebuild to repair one of them, and that cost is what invited the cheaper wrong
+repair — `20260818_1` drew two 「窓口:記名依頼」 stimuli and the first fix pass
+re-angled one item's invented SETTING instead of redrawing the errand, which is
+not what the rule measures (`qa-report-20260818_1-round2` R2-F2). The sanctioned
+repair now costs one item. **It is still a redraw, not a hand substitution** — the
+index selects WHICH entry leaves, never which entry arrives.
 
 `tests/<test_id>/test_spec.json` is the authoring contract — per section,
 the exact items to test, scenario/topic lists, and the answer-position

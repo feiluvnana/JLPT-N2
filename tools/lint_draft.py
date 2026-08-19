@@ -233,10 +233,19 @@ def lint_choukai_script(script_text: str, report: LintReport, fix: bool = False)
 
 def autofix_gengo_md(gengo_text: str, report: LintReport) -> str:
     """Auto-fix stem underline markdown formatting and spacing."""
-    # Fix okurigana split bolding e.g. **生**じる -> **生じる** or **に**生じる -> に**生じる**
-    # 1. Move leading particle outside bold: **に**生じる -> に**生じる**
+    # Fix okurigana split bolding e.g. **生**じる -> **生じる** or **に生じる** -> に**生じる**
+    # 1. Move leading particle outside bold: **に生じる** -> に**生じる**
+    #    The tail MUST contain a kanji. Without that guard this rule corrupted an
+    #    all-kana marked span: 問題2 prints the target word in kana (the examinee
+    #    picks its kanji spelling), so 「重さを一グラム単位で**はかる**」 was rewritten
+    #    to 「…では**かる**」, silently re-marking the item onto 「かる」
+    #    (20260818_1, 2026-08-19). A kana-only span is never a particle + word.
     orig = gengo_text
-    fixed_text = re.sub(r"\*\*([にへとでからよりがをもは])([一-鿿ぁ-ゖ]+)\*\*", r"\1**\2**", gengo_text)
+    fixed_text = re.sub(
+        r"\*\*([にへとでからよりがをもは])([ぁ-ゖ]*[一-鿿][一-鿿ぁ-ゖ]*)\*\*",
+        r"\1**\2**",
+        gengo_text,
+    )
     if fixed_text != orig:
         report.fixed("GENGO-FORMAT", "Fixed leading particle inside bold underline span.")
     return fixed_text

@@ -253,6 +253,24 @@ accepts (コンクール vs コンテスト in the same sentence) makes the item
 double-answerable. If the stem accepts two options, change the target or
 stem — never defend the item.
 
+### A time/date/quantity key: the stem must FIX every axis the distractors can vary
+
+**Construction step, before the options are written.** When the key is a
+time, date, or quantity word, list the axes a reader could silently choose
+differently — the month, the year, the direction, the unit, whose calendar — and
+make the stem state each one. Every wrong option must then be excluded by the
+printed text ALONE, never by the reader's default reading.
+
+`20260818_1` 問題4-14 shipped 「請求書は毎月（　）に発送しますので、五日ごろにはお
+手元に届きます。」 keyed 初旬, with the 解説 excluding 月末/下旬 as 「いずれも五日に
+届く発送日にならない」. That holds only if the arrival is in the SAME month —
+「毎月月末に発送」 plus arrival on the 5th of the FOLLOWING month is ordinary
+business usage, so two distractors survive under a reading the stem never ruled
+out (`qa-report-20260818_1` F7). The repair is one clause in the stem, not a new
+distractor set: 「…ので、**同じ月の**五日ごろにはお手元に届きます。」 The 解説 must
+then say which axis the stem fixed, so the next reader can check the exclusion
+instead of re-deriving it.
+
 ## 問題5 (paraphrase)
 
 The stem contains the HARD word (あいにく, 妥当, ありふれた, くたくた, 重宝);
@@ -276,21 +294,63 @@ usual shape, not a thin draw.
 
 ## 問題6 (用法)
 
-1 correct sentence + 3 grammatical-but-wrong-collocation/domain misuses
-(妥協, 発揮, 解消, 募集, あふれる). Wrong sentences must be tempting, not
-absurd (avoid three 消す-domain sentences for 解消) — and must not be a
-second REAL collocation (「契約を解消」 is attested, so it's a second correct
-answer, not a distractor). Per wrong sentence: (1) write it correct; (2)
-break exactly ONE thing INSIDE the word's own domain — never leave the
-domain; (3) search the result — if attested, it's a second correct answer,
-back to step 2.
+1 correct sentence + 3 grammatical-but-wrong-usage sentences (妥協, 発揮,
+解消, 募集, あふれる). Wrong sentences must be **tempting, not absurd**, and
+must not be a second REAL collocation (「契約を解消」 is attested, so it's a
+second correct answer, not a distractor). Per wrong sentence: (1) write it
+correct; (2) break exactly ONE thing, and break it the way **a learner would
+plausibly get it wrong**; (3) search the result — if attested, it's a second
+correct answer, back to step 2.
 
 | Sentence (解消) | Verdict |
 |---|---|
 | ✅『長年の誤解が解消した』 | correct option |
-| ✗『部屋の電気を解消した』 | domain violation — banned (消す's domain) |
+| ✓『渋滞を解消に導いた』 | right domain, wrong collocation — the hardest discrimination, so prefer it |
+| ✓『部屋の電気を解消した』 | a DOMAIN SHIFT: legal (see below), but the weak kind — 解消 is invited here by the kanji 消 alone, so it reads absurd rather than tempting |
 | ✗『契約を解消した』 | attested — banned (second correct answer) |
-| ✓『渋滞を解消に導いた』 | the target band: right domain, wrong collocation |
+
+### "Never leave the word's own domain" was WRONG — refuted, not carried (R2-F9)
+
+Until 2026-08-19 step (2) read "break exactly ONE thing **INSIDE the word's own
+domain — never leave the domain**", with 「部屋の電気を解消した」 listed as *banned*;
+`exam-qa-review` §2b restated it. **Official does the opposite, and one sitting's
+問題6 settles it.** Every sentence below is a wrong option printed by 12/2024,
+verbatim from `refs/JLPT_N2_NEW/15. N2 12-2024/booklet.md` (L96–120):
+
+| item | wrong sentences that LEAVE the target's domain |
+|---|---|
+| 26 薄める | 「コースのレベルを薄めた」「エアコンをつけて温度を薄めた」「テレビの音量を薄めた」 — all three |
+| 27 充実 | 「空には雲が充実している」「喫茶店の中は、コーヒーのにおいが充実している」 |
+| 29 ふもと | 「駅のふもとで池田さんと会う」「ドアのふもとに猫がいて」 |
+| 30 定年 | 「犬の定年は…10歳から15歳」「この乗り物は…10歳が定年」 |
+
+Applied as written, that rule fails a real official sitting, and it fails this
+repo's own `20260818_1` 問題6-26 (掃除機 / 土地 for 素質) and 問題6-30 (賞金 /
+十キロ for 占める) — items two independent fresh-eyes QA rounds read as sound
+against the archive. **A rule that fails the corpus it is calibrated against is
+the defect.**
+
+Route history, so nobody re-files it: round 1 filed it as **R6** against
+`exam-qa-review` §2b — the restating file, not the owner — and the fix pass
+declined it for the right process reason, that a reviewer may not weaken a rule
+mid-review. Round 2 re-filed it as **R2-F9** against this file, the owner, and
+ruled that it could not be carried across another generation run. It is
+**refuted here, with the table above as the evidence.**
+
+**What actually fails a wrong sentence:**
+
+1. **A sentence no learner would produce** — absurd instead of tempting. That is
+   what the old rule was reaching for and mis-stated: three 消す-domain sentences
+   for 解消 is still a bad set, not because they leave the domain but because
+   nobody reaches for 解消 to mean 消す three times in a row.
+2. **A second ATTESTED collocation** (「契約を解消」) — two correct answers.
+3. **A form tell** — an option not sharing the printed word form the other three
+   use (§"All four options share the SAME word-form" below).
+
+A domain shift is official's main device. Use it where the shift is one a learner
+actually makes — a wrong-but-adjacent concept (素質 for a machine's 性能, 占める
+for an absolute quantity) — and reach for a same-domain wrong collocation when
+both are available, because it is the harder item.
 
 **Length:** mean 25.0, median 25, range 9–35 JP chars (n=136,
 `official_calibration.md` §7) — a 9-char option is official, so short alone

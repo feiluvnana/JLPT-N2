@@ -227,10 +227,18 @@ or does it die for an unrelated reason first?*
 - **Vocab-in-context/paraphrase/usage (問4-6):** write each option's
   functional category (degree adverb, regret adverb…); if the four don't
   share one, FAIL (わりに with 案の定/とっくに/一段と — none a comparison
-  competitor; 切実 with 痛快 in the set — tonally opposite). For 問題6, each
-  wrong sentence must stay inside the word's own domain, merely misusing it
-  — 解消 applied to discarding a computer is a domain violation, not a
-  collocation trap, and fails even when grammatical.
+  competitor; 切実 with 痛快 in the set — tonally opposite). **問題6's wrong
+  sentences are `question-authoring/references/moji-goi.md` §問題6's rule — read
+  it there, do not judge them from this file.** This bullet used to restate the
+  rule as "each wrong sentence must stay inside the word's own domain", which is
+  **refuted**: official 12/2024's 問題6 leaves the target's domain in 5 of its 5
+  items (「テレビの音量を薄めた」「空には雲が充実している」「駅のふもとで」「犬の定年」…,
+  all verbatim in `refs/JLPT_N2_NEW/15. N2 12-2024/booklet.md`), so applying it
+  fails a real sitting. What fails a wrong sentence is that no learner would
+  produce it, or that it is a second attested collocation — the owner carries the
+  evidence table and the route history (round 1 R6 → round 2 R2-F9, refuted
+  2026-08-19). Restating an owner's rule here is what let the two files disagree
+  for a whole generation cycle.
 - **問1 漢字読み — the TWO-branch distractor rule, every option a REAL word.**
   Each distractor satisfies one of two branches (a reading of the target's
   own/same-component kanji, OR a real N2 word in the same field and form); a

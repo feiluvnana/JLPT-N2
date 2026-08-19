@@ -202,6 +202,27 @@ closing-move column, and check:
   specifically — the cloze is the other unpooled surface (`exam-blueprint`
   §"The four theme rules" rule 4b).
 - **No topic repeats the previous test**, especially in the same 聴解 slots.
+  **Do this as a table read, not as a recollection:** build the slot × 3-paper
+  table from `logs/topics.json` — it is already stored, so this is a lookup, not
+  a re-derivation — and read each ROW across the columns. A shared domain in one
+  row is a finding even when the errand keys differ and the theme tags differ.
+  `20260818_1` put 自動車学校の危険予測運転 in 聴解問題3-4番 directly after
+  `20260817_3`'s 問題3-4番 整備担当が運転の癖を伝える話 (tagged 教育 and 交通, so
+  no tag matched) and put a house-move gas appointment in 問題2-1番 after a
+  house-move quote in the same slot. The 問題2-1番 half was re-angled in the
+  round-2 fix pass (same drawn errand, a tenant returning from a year abroad
+  instead of a move); the 問題3-4番 half was closed before round 3 by the cheaper
+  of its two repairs — its scenario 自動車学校:学科 is DRAWN, so the talk was
+  RE-SLOTTED (swapped with 問題3-2番's), which costs a re-order of both items'
+  spoken options so each key still lands where `answer_positions` says and a
+  re-derivation of both 解説, and costs no new authoring. A reroll is the other
+  route and is the dearer one: a fresh 220+-char 概要理解 talk plus four new
+  topic-level options plus a scenario that must itself clear cooldown, theme and
+  slot rules. `check_slot_theme_repeat()`
+  WARNs the half a tag can see (**問題2/3/5 slots only** — 問題4's scenes are
+  invented, so its tags measure the tagger, and 問題1's item mix is quota-bound,
+  so 働き方 there measures the rule: R2-F7); the 運転 half is exactly what a tag
+  cannot see, which is why this row read stays mandatory.
 - **A topic/domain match in the 2-tests-back column is a minor finding**,
   not an automatic fail — note it so a domain doesn't become a recurring
   crutch one skip apart.
@@ -209,10 +230,25 @@ closing-move column, and check:
   item. Shared setting is tolerable; shared decisive detail is not.
 - **Two 聴解 items may not run the same errand**, and errand archetypes
   (reschedule call, model choice at a store, campaign flyer…) must not
-  repeat within the last two tests — including 聴解問題5-2番's fixed task
-  shape (a two-person pick-one-from-a-shared-list decision): vary the
-  underlying decision structure (e.g. a single person changing their mind)
-  across consecutive papers, not just the subject.
+  repeat within the last two tests — including **both 聴解問題5 items**, each of
+  which has its own fixed task shape:
+  - **問題5-1番** — a multi-person meeting choosing among proposals.
+  - **問題5-2番** — a two-person pick-one-from-a-shared-list decision.
+
+  For **each** of them, vary the underlying DECISION STRUCTURE across
+  consecutive papers, not just the subject: who proposes, in what order
+  candidates are killed, and whether the adopted one is a late arrival, an
+  opening proposal held pending a condition, or a plan someone reverses. The
+  bullet named 2番 only until 2026-08-19, and 4 of 4 papers carrying a
+  セクション構成表 documented 2番's structure against the last three papers while
+  saying nothing about 1番 — so `20260818_1` shipped a 問題5-1番 with
+  `20260817_3`'s exact archetype (a three-person local-association meeting that
+  rejects three proposals on three grounds and adopts a NEW idea raised late) in
+  the same slot, one paper apart, with the rule "already written"
+  (`qa-report-20260818_1` F3). **The construction step, not the judgment:** the
+  聴解 author writes the 問題5 構成表's structure note for **1番 as well as 2番**,
+  each against the previous three papers by name — see
+  `question-authoring/references/choukai-items.md` §統合理解.
 - **問題12 (A/B) gets its own cross-test column** — one topic per paper.
 - **A duplicated topic in the spec is a sampler defect**: `check_spec_blend`
   fails a repeated draw. `--reroll` the category; never invent a substitute

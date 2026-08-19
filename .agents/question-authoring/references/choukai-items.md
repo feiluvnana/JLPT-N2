@@ -332,6 +332,29 @@ Not gated as a FAIL: official listening options are kana-leaning
 against a kanji script understates official overlap. `make check` reports our
 own verbatim share as a WARN against a design threshold, not a measured band.
 
+### The verbatim gate runs in ONE direction — the other end is the 構成表's arrow
+
+`check_choukai_key_paraphrase` measures how CLOSE a key sits to the deciding
+line, so everything above pushes keys away from the script's words. Nothing
+measures a key that has drifted too FAR, and 13 of 13 papers are therefore
+measured in one direction only. `20260818_1` 問題2-2番 scored 0/6 verbatim —
+green — while keying 「作ったものを試せる機会が多いから」 against a decider of
+「自分の手で**形にできる**回数が、東の方がずっと多いんです。そこが決め手で」: 形にする
+is not 試す, so the key names a proposition the script never states. The item
+still had one answer (all three distractors were explicitly denied), which is
+exactly why it survived — a paper can be keyed by elimination and still be
+mis-keyed as a paraphrase (`qa-report-20260818_1` F13).
+
+**The rule, and it cannot be mechanized:** the 構成表's 鍵の言い換え column already
+forces the author to write `decider → key`. **Read that arrow as an EQUATION.**
+If the two sides are not the same proposition, the key is wrong even when every
+distractor is denied — repair the KEY, not the distractors. Both directions in
+one sentence: the key must restate the decider in different words, and it must
+restate *that* decider, not a neighbouring idea the same scene would support.
+Verbatim distance is gated; propositional identity is human judgment, so it is
+QA's step-1 read (`exam-qa-review`) and the author's own arrow, and a clean
+`make check` proves only the near half.
+
 ## 問題3 (概要理解): the narration names the SETTING, never the topic
 
 Official 問題3 item lines are setting plus speaker only — 「1番 ラジオで女の人が
@@ -388,6 +411,34 @@ twice at double length, spending both 統合理解 slots on 課題理解.
 **Rotate the 質問 pair across tests.** 「最初どう思っていたか／最終的にどうする
 ことにしたか」 ran four consecutive papers; official also rotates
 男の人は／女の人は, 1日目/2日目, 最初/結局.
+
+### The 構成表 must state BOTH items' decision structure, against the last three papers
+
+Each 問題5 item's task shape is FIXED (1番 a multi-person meeting choosing among
+proposals, 2番 a two-person pick-one-from-a-list), so the only thing that can
+vary between papers is the **decision structure** — who proposes, the order
+candidates die in, and whether the adopted one is a late arrival, an opening
+proposal held pending a condition, or a plan someone reverses.
+
+**Write that structure into the 問題5 構成表 for 1番 AND 2番, naming the previous
+three papers' structures.** This existed as prose for 2番 only, and it worked:
+all four papers carrying a 構成表 varied 2番 deliberately and documented it. All
+four said nothing about 1番, and `20260818_1` then shipped a 問題5-1番 with
+`20260817_3`'s exact archetype — a three-person local-association meeting that
+rejects three proposals on three grounds and adopts a NEW idea raised late — same
+slot, consecutive papers (`qa-report-20260818_1` F3). The rule named the wrong
+slot, so the paper complied with it and repeated anyway. Structures seen so far,
+so the next paper can diff against them:
+
+| paper | 1番 | 2番 |
+|---|---|---|
+| 20260817_1 | — | 単独逐次消去 (one person kills candidates by their own constraints) |
+| 20260817_2 | — | 共同逐次消去 (a couple kills together, then splits the last two) |
+| 20260817_3 | 逐次消去＋後出し採用 (three rejected on three grounds, a late new idea adopted) | 入れ替わり型 (mutual advice moves both off their first pick) |
+| 20260818_1 | 冒頭提案＋条件保留 (the adopted plan opens the talk, two back it for DIFFERENT reasons, a condition holds it, the alternatives are explored as fallbacks and die, the condition is then met) | 共同決定＋用途別の第二選択 (the two settle ONE candidate for shared use, then one of them takes a DIFFERENT one for a second, individual purpose — and the candidate that was impossible in the first context is the key in the second; official 7/2014 and 7/2015 問題5-3番 both run it). Its first draft was 別人のための選択 (each choosing for a different beneficiary) and was replaced when the scenario was redrawn for R2-F3 — the row records what the paper SHIPS |
+
+No script gates this — the table is the artifact, and QA reads it as a column
+(`exam-qa-review` §4).
 
 ## 問題5-2番 choices — spoken, not printed
 

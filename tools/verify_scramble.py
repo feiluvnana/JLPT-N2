@@ -140,6 +140,116 @@ LAST_SLOT_MARKERS = ("最終スロット", "最後のスロット", "末尾ス�
 PROOF_PREFIX = 4        # chars of a card that count as "the 解説 names it"
 
 
+# --- The invalid-leg class (R2-F1, qa-report-20260818_1-round2) -------------
+# The last-slot proof above can be PRESENT and still prove nothing, because two
+# structural legs keep getting written that are false by construction. Both are
+# string-decidable, so they are checked here rather than left to a reader:
+#
+#   (a) "placing X last leaves Y in the middle, where it loses its receiver /
+#       connects to nothing" — applied to a card that CAN sit mid-sentence. Two
+#       card shapes always can: a card ending in a PLAIN-FORM PREDICATE (a
+#       連体修飾句 of whatever noun follows) and a card that is a bare ADVERBIAL
+#       PHRASE whose receiving predicate is printed AFTER the blanks (an
+#       adverbial can be fronted over any number of clauses, so it never needs an
+#       adjacent receiver).
+#   (b) "the ordering A→B is impossible because two particles run together" —
+#       true only for STACKED CASE particles (を+が …), which is
+#       IMPOSSIBLE_JUNCTIONS[0]. Two ordinary particle phrases in a row
+#       (「観光客にも地元の人に…」) are everyday Japanese.
+#
+# Founding cases, both from `20260818_1`, both of which this predicate fires on:
+#   45 (round 2): 「『おかげで』を最後に置くと『子どもの急な熱にも』が受け手を失う」 —
+#      にも-adverbial, receiver 「慌てずに済んでいる」 printed after the blanks. The
+#      item really had two grammatical orderings (★=1 and ★=3).
+#   47 (round 1, F9): 「…『高齢の利用者が今も多い』が…どのカードとも結べない」 —
+#      plain-predicate card; the rival 4→3→1→2 reads fine and had to be excluded
+#      SEMANTICALLY instead.
+#   44 (found by the same re-read): 「『タイ料理やインド料理まで』を最後に置くと
+#      『作れるように』が受け手を失って」 — false in the ordering it excludes, where
+#      『なったと』 still sits right after it.
+#   43 (same re-read): 「『観光客にも→地元の人に』は助詞が連続して不可」 — arm (b).
+#
+# What this CANNOT decide, and it is the whole remaining question: whether a
+# rival ordering that IS grammatical is also semantically impossible. Excluding
+# it "by the contradiction it creates" is legal and is what 45/47 now do; whether
+# the named contradiction is real is a reader's judgment. This predicate only
+# stops the two legs that are false before anyone reads them.
+RECEIVER_LEG = re.compile(r"受け手を失|受け手がな|受け手をなく|受けるものがな"
+                          r"|結べな|むすべな|掛からな|かからな|つながらな|宙に浮")
+PARTICLE_RUN_LEG = re.compile(r"助詞が連続|助詞が二つ続|助詞の連続")
+# A plain-form predicate tail: the う-column (dictionary form), い-adjective,
+# 〜た, 〜だ, 〜ない. Deliberately NOT て形 or ます形 — those genuinely cannot host
+# a following noun, so a structural leg about them is legal.
+PLAIN_PREDICATE_END = re.compile(r"(?:[うくぐすずつづぬふぶぷむゆる]|い|た|だ|ない)$")
+# A bare adverbial phrase: case/topic particle tail with no predicate of its own.
+ADVERBIAL_PARTICLE_END = re.compile(
+    r"(?:にも|でも|へも|とも|までも|には|とは|では|から|まで|に|は|も|へ|と|で)$")
+LEG_WINDOW = 30      # chars between a card's name and the leg that excludes it
+
+
+def frontable_class(card: str, tail: str) -> str:
+    """Why a 'connects to nothing' leg is false for this card, or ''."""
+    c = re.sub(r"[\s。、]+$", "", re.sub(r"\s", "", card))
+    if PLAIN_PREDICATE_END.search(c):
+        return ("ends in a plain-form predicate, so it can always sit "
+                "mid-sentence as a 連体修飾句 of the following noun")
+    if ADVERBIAL_PARTICLE_END.search(c) and re.search(r"[^\s。、]", tail or ""):
+        return (f"is a bare adverbial phrase whose receiving predicate is "
+                f"printed AFTER the blanks (「{tail}」), so it can be fronted "
+                f"and never needs an adjacent receiver")
+    return ""
+
+
+def _last_named_card(item: dict, before: str) -> tuple[str, int]:
+    """The card named latest in `before`, and where — ('', -1) if none is."""
+    best, pos = "", -1
+    for o in item["options"]:
+        key = re.sub(r"\s", "", o)[:PROOF_PREFIX]
+        i = before.rfind(key)
+        if i > pos:
+            best, pos = o, i
+    return best, pos
+
+
+def illegal_legs(item: dict) -> list[str]:
+    """Every invalid structural leg the 解説's uniqueness proof leans on."""
+    text = re.sub(r"\s", "", item.get("kaisetsu", ""))
+    if not text:
+        return []
+    out = []
+    for mo in RECEIVER_LEG.finditer(text):
+        card, pos = _last_named_card(item, text[:mo.start()])
+        if pos < 0 or mo.start() - pos > LEG_WINDOW:
+            continue
+        why = frontable_class(card, item["tail"])
+        if why:
+            out.append(f"「{card}」 is excluded with a 「{mo.group(0)}…」 leg, but it "
+                       f"{why} — exclude it SEMANTICALLY (name the reading its "
+                       f"mid-sentence use produces and the contradiction that "
+                       f"reading creates), never structurally")
+    for mo in PARTICLE_RUN_LEG.finditer(text):
+        window = text[max(0, mo.start() - LEG_WINDOW):mo.start()]
+        named = [o for o in item["options"]
+                 if re.sub(r"\s", "", o)[:PROOF_PREFIX] in window]
+        if len(named) < 2:
+            continue
+        clash = False
+        for left, right in itertools.permutations(named, 2):
+            lseg = left[-4:]
+            pair = lseg + right[:4]
+            if any(m.start() < len(lseg) < m.end()
+                   for m in JUNCTION_RE.finditer(pair)):
+                clash = True
+        if not clash:
+            out.append(f"「{mo.group(0)}」 is claimed for "
+                       + " / ".join(f"「{o}」" for o in named)
+                       + " but no seam among them stacks CASE particles — two "
+                         "ordinary particle phrases in a row are everyday "
+                         "Japanese (「私にも彼に似たところがある」). Exclude that "
+                         "ordering by what it MEANS")
+    return out
+
+
 def missing_proof(item: dict) -> str:
     """'' when the 解説 carries a last-slot proof naming every card."""
     text = re.sub(r"\s", "", item.get("kaisetsu", ""))
@@ -226,6 +336,10 @@ def analyze_scramble(item: dict, verbose: bool = False):
     else:
         print(f"  => ARTIFACT: ok (解説 carries a last-slot proof naming every card)")
 
+    illegal = illegal_legs(item)
+    for leg in illegal:
+        print(f"  => PROOF LEG INVALID — {leg}")
+
     matching_perms = [p for p in valid_perms if p[1] == key]
     if not valid_perms:
         print(f"  => RESULT: FAIL (0 orderings survive the junction filter — "
@@ -241,14 +355,14 @@ def analyze_scramble(item: dict, verbose: bool = False):
         print(f"  => RESULT: PASS (one ordering survives and its ★={key} "
               f"matches; uniqueness is still the 解説's claim, not this "
               f"tool's finding)")
-        return not missing
+        return not missing and not illegal
     others = sorted({p[1] for p in valid_perms} - {key})
     print(f"  => RESULT: UNDECIDED — {len(valid_perms)} of 24 orderings survive "
           f"a filter that knows {len(IMPOSSIBLE_JUNCTIONS)} junction patterns, "
           f"so this tool has NOT verified uniqueness. Rival ★ values among the "
           f"survivors: {others or 'none'}. The 解説's per-card proof, including "
           f"the LAST slot, is the evidence — read it against these orderings.")
-    return not missing
+    return not missing and not illegal
 
 
 def main():
@@ -276,10 +390,13 @@ def main():
             all_ok = False
 
     print("\n-------------------------------------------------------------")
-    print("This tool decides two things: whether the keyed ★ survives its own "
-          "junction filter, and whether the 解説 carries the per-card "
-          "last-slot proof. It does NOT decide uniqueness — read the module "
-          "docstring before quoting an UNDECIDED line as a pass.")
+    print("This tool decides three things: whether the keyed ★ survives its "
+          "own junction filter, whether the 解説 carries the per-card last-slot "
+          "proof, and whether that proof leans on one of the two structural "
+          "legs that are false by construction (see `illegal_legs`). It does "
+          "NOT decide uniqueness, and it cannot tell whether a SEMANTIC "
+          "exclusion is sound — read the module docstring before quoting an "
+          "UNDECIDED line as a pass.")
     sys.exit(0 if all_ok else 1)
 
 

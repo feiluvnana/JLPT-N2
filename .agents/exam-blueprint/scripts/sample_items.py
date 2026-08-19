@@ -5,6 +5,7 @@ Sample a randomized test blueprint from the N2 item pools.
 Usage:
     python sample_items.py --test-id 4 --seed 20260803
     python sample_items.py --test-id 4 --reroll grammar_p7 --seed 99999
+    python sample_items.py --test-id 4 --reroll-one quick_response:8 --seed 99999
 
 Outputs tests/<test_id>/test_spec.json (the authoring contract) and updates
 ledger.json (v2 LRU cooldown: an item drawn within the last N draws is
@@ -19,6 +20,7 @@ much longer, so a draw does not cluster right at the cooldown boundary.
 """
 
 import argparse
+import hashlib
 import itertools
 import json
 import random
@@ -189,9 +191,12 @@ ANSWER_SECTIONS = [
 # position 1..4 (which made small sections completely predictable, e.g. every 4-item
 # section having {1,2,3,4} and every 2-item section having distinct numbers).
 # Instead, the 90 four-choice items are globally balanced across the whole paper
-# (each position 1..4 receives 22 or 23 items to satisfy POSITION_BAND = (19, 27)),
-# shuffled with no 4 identical answers in a row anywhere, and then
-# sliced into sections in order — matching official JLPT past exams.
+# (each position 1..4 receives 19-27 items, POSITION_BAND) with no 4 identical
+# answers in a row anywhere, seams included. Until 2026-08-19 that balance was
+# produced by shuffling ONE 90-item deck and slicing it in order; the slices are
+# now built per section against SECTION_MODE_DIST and checked for the global band
+# afterwards (R2-F8, below) — the whole-paper contract in this note is unchanged,
+# only the direction the plan is built in.
 #
 # 2026-08-18: the shuffle cap was a run of 3 (no 1-1-1) until this line, which
 # turned out to over-correct the R17 fix above for the four SMALL 聴解 slices
@@ -218,16 +223,121 @@ POSITION_BAND = (19, 27)
 MAX_POSITION_RUN = 3   # longest same-position run allowed anywhere in the deck;
                        # see the note above — 3 is observed in the archive, 4 is not.
 
+# --- Per-section MODE ceiling (F1, qa-report-20260818_1) -------------------
+# The 2026-08-18 audit above examined only the too-SMOOTH tail: it asked whether
+# our sections cluster as hard as official's, found they never did, and relaxed
+# the run cap. Nothing ever looked at the other end, and there was no ceiling at
+# all — so `20260818_1` drew 問題7 = [1,1,2,4,4,1,1,1,2,1,1,1], EIGHT of twelve
+# keys on option 1, plus 問題4_語彙 with four of seven, and every gate stayed
+# green. A globally balanced deck sliced in order does not bound a single
+# slice's mode: the run cap only forbids ADJACENT repeats.
+#
+# The ceiling below is the MAXIMUM mode count observed per 大問 over all 31
+# sittings in `refs/JLPT_N2_NEW/answer_keys.json`, measured only on the sittings
+# whose item count for that 大問 equals today's (問題3 5→3, 問題9 5→4, 問題11
+# 9→8, 聴解問題4 12→11 and 聴解問題5 4→3 all changed at 12/2022, and mixing eras
+# inflates the ceiling — 聴解問題4 reads 7 across all 31 but 5 over the 18
+# current-shape sittings). Re-derive it by re-measuring the archive, never by
+# reading a paper. Measured 2026-08-19:
+#
+#   問1 3/5  問2 3/5  問3 2/3  問4 3/7  問5 3/5  問6 3/5  問7 5/12  問8 3/5
+#   問9 2/4  問10 3/5  問11 4/8  問12 2/2  問13 2/3  問14 2/2
+#   聴解問1 4/5  聴解問2 4/6  聴解問3 4/5  聴解問4 5/11  聴解問5 2/3
+#
+# This is a CEILING, not a target: 問題7's own distribution is mode 3 in 14
+# sittings, 4 in 16 and 5 in exactly ONE, so a generator that authors to 5 every
+# paper reproduces a shape official does not have (bunpou.md §問題7 documents the
+# same failure on stem length). `balanced_position_plan()` rejects and reshuffles
+# a plan that breaches it; `check_answer_position_section_clustering()` in
+# tools/check_consistency.py fails a spec that does.
+MAX_SECTION_MODE = {
+    "問題1_語彙": 3, "問題2_語彙": 3, "問題3_語彙": 2, "問題4_語彙": 3,
+    "問題5_語彙": 3, "問題6_語彙": 3, "問題7": 5, "問題8": 3, "問題9": 2,
+    "問題10": 3, "問題11": 4, "問題12": 2, "問題13": 2, "問題14": 2,
+    "聴解_問題1": 4, "聴解_問題2": 4, "聴解_問題3": 4, "聴解_問題4": 5,
+    "聴解_問題5": 2,
+}
+
+# --- Per-section MODE DISTRIBUTION (R2-F8, qa-report-20260818_1-round2) -----
+# The ceiling above is the right VALUE and the wrong INSTRUMENT on its own. It
+# bounds the worst case and says nothing about the shape, and the shape was
+# wrong in eight sections at once: slicing ONE globally balanced 90-item deck
+# makes each section's mode multinomial, while official examiners balance
+# WITHIN each 大問. Measured over 400 simulated plans against the era-matched
+# archive, the old generator ran
+#
+#   問題3   official {1:92%, 2: 8%}          -> sampler {1:39%, 2:61%}
+#   問題4   official {2:80%, 3:20%}          -> sampler {2:24%, 3:76%}  (inverted)
+#   問題7   official {3:45%, 4:52%, 5: 3%}   -> sampler {3: 5%, 4:56%, 5:40%}
+#   問題9   official {1:64%, 2:36%}          -> sampler {1:10%, 2:90%}
+#   問題1/2/5/6/8 official {2:94-97%}        -> sampler {2:62-68%}
+#   聴解問題4 official {4:61%, 5:39%}         -> sampler {4:40%, 5:60%}
+#
+# i.e. our slices were MORE clustered than any official sitting's distribution,
+# while still (after the ceiling landed) never breaching the ceiling. Authoring
+# to a ceiling reproduces a shape official does not have — the identical failure
+# `bunpou.md` §問題7 documents for stem length.
+#
+# So the target is a DISTRIBUTION, applied by rejection sampling: each section's
+# mode COUNT is drawn from the table below, then a random row is redrawn until it
+# realises that count (`section_row()`), and the whole plan is redrawn until the
+# global totals still sit inside `POSITION_BAND` and the deck still respects
+# `MAX_POSITION_RUN` across section seams. Mode 5 in 問題7 stays reachable at its
+# official 1-in-31 rate, which is the point of not lowering the ceiling.
+#
+# VALUES ARE SITTING COUNTS, not percentages — the measurement itself, so it can
+# be re-derived and diffed. Measured 2026-08-19 from
+# `refs/JLPT_N2_NEW/answer_keys.json`, era-matched exactly as MAX_SECTION_MODE
+# is: only the sittings whose item count for that 大問 equals today's (hence
+# n=31 for the unchanged sections and n=10..18 for the five that changed shape
+# at 12/2022). Re-derive by re-measuring the archive, never by reading a paper.
+SECTION_MODE_DIST = {
+    "問題1_語彙": {2: 30, 3: 1},            # n=31
+    "問題2_語彙": {2: 30, 3: 1},            # n=31
+    "問題3_語彙": {1: 12, 2: 1},            # n=13
+    "問題4_語彙": {2: 24, 3: 6},            # n=30
+    "問題5_語彙": {2: 29, 3: 2},            # n=31
+    "問題6_語彙": {2: 30, 3: 1},            # n=31
+    "問題7": {3: 14, 4: 16, 5: 1},          # n=31
+    "問題8": {2: 29, 3: 2},                 # n=31
+    "問題9": {1: 7, 2: 4},                  # n=11
+    "問題10": {2: 24, 3: 7},                # n=31
+    "問題11": {2: 1, 3: 8, 4: 1},           # n=10
+    "問題12": {1: 27, 2: 4},                # n=31
+    "問題13": {1: 21, 2: 10},               # n=31
+    "問題14": {1: 22, 2: 9},                # n=31
+    "聴解_問題1": {2: 22, 3: 8, 4: 1},      # n=31
+    "聴解_問題2": {2: 11, 3: 11, 4: 4},     # n=26
+    "聴解_問題3": {2: 25, 3: 4, 4: 1},      # n=30
+    "聴解_問題4": {4: 11, 5: 7},            # n=18
+    "聴解_問題5": {1: 5, 2: 6},             # n=11
+}
+
+# The two tables are one measurement read two ways, so they cannot be allowed to
+# drift: the ceiling IS the largest mode count the archive shows for that 大問.
+# A mismatch means one of them was hand-edited instead of re-measured.
+_MODE_TABLE_MISMATCH = {
+    name: (MAX_SECTION_MODE.get(name), max(dist))
+    for name, dist in SECTION_MODE_DIST.items()
+    if MAX_SECTION_MODE.get(name) != max(dist)
+}
+assert not _MODE_TABLE_MISMATCH, (
+    "MAX_SECTION_MODE disagrees with max(SECTION_MODE_DIST) for "
+    f"{_MODE_TABLE_MISMATCH} — both are the same era-matched measurement of "
+    "refs/JLPT_N2_NEW/answer_keys.json; re-measure, do not hand-edit either")
+assert set(SECTION_MODE_DIST) == {n for n, _, _ in ANSWER_SECTIONS}, (
+    "SECTION_MODE_DIST must cover exactly the sections in ANSWER_SECTIONS")
+
 
 def shuffle_no_triple(rng: random.Random, base: list[int], name: str,
                       max_run: int = 2) -> list[int]:
     """Shuffle `base` until no position repeats more than `max_run` times running.
 
-    `max_run` defaults to 2 (no 3-in-a-row) for the small section-local draws
-    (聴解 問題4's 3-choice items via `balanced_positions` below). The 90-item
-    four-choice deck in `balanced_position_plan` calls this with
-    `max_run=MAX_POSITION_RUN` (3) instead — see the note above `POSITION_BAND`
-    for why a run of 3 is correct there and a run of 2 was not.
+    `max_run` defaults to 2 (no 3-in-a-row), which is what the width-3 section
+    (聴解問題4) uses. 4-choice sections pass `max_run=MAX_POSITION_RUN` (3) — see
+    the note above `POSITION_BAND` for why a run of 3 is correct there and a run
+    of 2 was not. Callers: `section_row()`, per section; the cross-seam run cap
+    is `balanced_position_plan()`'s, on the assembled deck.
     """
     base = list(base)
     window = max_run + 1
@@ -257,71 +367,128 @@ POSITION_BAND_3 = (2, 6)   # per-position count band for width-3 draws (聴解
                            # only ever gets reordered, never re-counted).
 
 
-def balanced_positions(rng: random.Random, count: int, width: int) -> list[int]:
-    """Randomly distributed over 1..width — no fixed per-position quota.
+def section_max_run(width: int) -> int:
+    """Longest same-position run allowed inside one section's own row.
 
-    Section-local: used for the width-3 section (聴解 問題4), which does not
-    take part in the cross-section balancing below. Draws each item's
-    position independently (not a reshuffled even split) and rejects until
-    every position's count sits inside `POSITION_BAND_3` and no position
-    repeats 3 times running, so the per-position COUNTS vary draw to draw
-    the way official's do, not just their order.
+    4-choice sections take `MAX_POSITION_RUN` (3, observed in the archive — see
+    the note above `POSITION_BAND`). The width-3 section (聴解問題4) keeps the
+    stricter cap of 2 it has always had: with only three positions a run of 3 is
+    a much larger share of an 11-item row, and nothing in the archive shows one.
     """
-    if width != 3:
-        # only 聴解_問題4 calls this today; keep the previous even-split
-        # shape for any other width so this fix stays scoped to that section.
-        return shuffle_no_triple(rng, [(i % width) + 1 for i in range(count)],
-                                 f"{count}x{width}")
-    lo, hi = POSITION_BAND_3
-    for _ in range(10_000):
-        deck = [rng.randrange(1, width + 1) for _ in range(count)]
-        counts = {p: deck.count(p) for p in range(1, width + 1)}
-        if all(lo <= c <= hi for c in counts.values()) and \
-           all(len(set(deck[i:i + 3])) > 1 for i in range(len(deck) - 2)):
-            return deck
-    sys.exit(f"balanced_positions: no valid {count}x{width} arrangement "
-             f"inside {POSITION_BAND_3} after 10000 draws")
+    return 2 if width == 3 else MAX_POSITION_RUN
+
+
+def sample_mode_target(rng: random.Random, name: str) -> int:
+    """One section's mode COUNT, drawn from the official distribution (R2-F8)."""
+    dist = SECTION_MODE_DIST[name]
+    counts = sorted(dist)
+    return rng.choices(counts, weights=[dist[c] for c in counts], k=1)[0]
+
+
+def section_row(rng: random.Random, name: str, count: int,
+                width: int) -> list[int]:
+    """One section's answer positions, mode-matched to the archive (R2-F8).
+
+    Draw the target mode count from `SECTION_MODE_DIST[name]`, then REJECTION
+    SAMPLE independent rows until one realises exactly that count, then order it
+    under the section's own run cap. Conditioning an i.i.d. row on its mode count
+    is what keeps WHICH position is the mode uniform — the shape is calibrated,
+    the identity of the clustered option stays unpredictable, which is the
+    invariant §"Answer positions are balanced globally" owns.
+
+    The rejection loop is cheap except where the target is the least likely
+    row shape (問題7's mode 3 = a perfectly even 3/3/3/3 split, ~2 % of rows), so
+    the bound is generous rather than tight.
+    """
+    target = sample_mode_target(rng, name)
+    lo3, hi3 = POSITION_BAND_3
+    for _ in range(50_000):
+        row = [rng.randrange(1, width + 1) for _ in range(count)]
+        if section_mode(row)[1] != target:
+            continue
+        if width == 3 and not all(lo3 <= row.count(p) <= hi3
+                                  for p in range(1, width + 1)):
+            continue
+        return shuffle_no_triple(rng, row, f"{name} ({count}x{width})",
+                                 max_run=section_max_run(width))
+    sys.exit(f"section_row: no {count}x{width} row for {name} with mode count "
+             f"{target} after 50000 draws — SECTION_MODE_DIST[{name}] offers a "
+             f"count this section size cannot realise; re-measure the archive")
+
+
+def section_mode(row: list[int]) -> tuple[int, int]:
+    """(most-frequent position, how many times it occurs) in one section's row."""
+    if not row:
+        return (0, 0)
+    counts = {p: row.count(p) for p in set(row)}
+    pos = max(sorted(counts), key=lambda p: counts[p])
+    return (pos, counts[pos])
+
+
+def section_mode_breaches(plan: dict[str, list[int]]) -> list[str]:
+    """Sections whose most-frequent position beats the archive ceiling (F1)."""
+    out = []
+    for name, row in plan.items():
+        cap = MAX_SECTION_MODE.get(name)
+        if cap is None:
+            continue
+        pos, cnt = section_mode(row)
+        if cnt > cap:
+            out.append(f"{name} {pos}x{cnt} of {len(row)} (official max {cap})")
+    return out
 
 
 def balanced_position_plan(rng: random.Random,
                            sections: list[tuple[str, int, int]]
                            ) -> tuple[dict[str, list[int]], dict[int, int]]:
-    """Answer positions for every section, globally balanced ACROSS the paper.
+    """Answer positions for every section: per-大問 shape, whole-paper balance.
 
-    Instead of forcing each section to contain equal quotas of 1..4 (which made
-    answers predictable within each mondai), the full paper sequence of 90
-    four-choice items is generated with balanced global totals (22/23 each),
-    shuffled with no 3-in-a-row repeats, and sliced into sections.
+    Two bars, and they pull in opposite directions:
+
+    * **Globally balanced** — each position takes 19–27 of the 90 four-choice
+      items (`POSITION_BAND`), and no position runs more than
+      `MAX_POSITION_RUN` times anywhere in the paper, seams included. Never a
+      per-section QUOTA: forcing every 4-item section to hold {1,2,3,4} is what
+      made small sections predictable (R17).
+    * **Per-section SHAPE drawn from the archive** — each section's row is built
+      by `section_row()`, whose mode count comes from `SECTION_MODE_DIST` and is
+      realised by rejection sampling. Until 2026-08-19 the rows were slices of
+      one shuffled global deck, which made every section's mode multinomial and
+      left eight sections measurably MORE clustered than any official
+      distribution (R2-F8) — the ceiling below caught only the extreme tail
+      (`20260818_1`'s 問題7 = 8 of 12 on option 1, F1).
+
+    Rows are built first, the paper is checked second, and the whole plan is
+    redrawn if the global band or the cross-seam run cap fails. `MAX_SECTION_MODE`
+    is re-verified at the end as a belt: it holds by construction now (every
+    drawable target is a count the archive actually shows), and a breach here
+    would mean the two tables have drifted apart.
     """
-    quad = [s for s in sections if s[2] == 4]
-    total = sum(c for _, c, _ in quad)
     lo, hi = POSITION_BAND
 
-    base_count = total // 4
-    rem = total % 4
-    counts = [base_count] * 4
-    for p_idx in rng.sample(range(4), rem):
-        counts[p_idx] += 1
+    for _ in range(2000):
+        plan = {name: section_row(rng, name, count, width)
+                for name, count, width in sections}
+        deck = [p for name, _, width in sections if width == 4
+                for p in plan[name]]
+        running = {p: deck.count(p) for p in (1, 2, 3, 4)}
+        if not all(lo <= running[p] <= hi for p in running):
+            continue
+        # The run cap is a property of the PAPER, not of a section: a row that
+        # ends 4,4 followed by a row that opens 4,4 is a run of four nobody
+        # measured while the deck was shuffled as one list.
+        window = MAX_POSITION_RUN + 1
+        if any(len(set(deck[i:i + window])) == 1
+               for i in range(len(deck) - window + 1)):
+            continue
+        if section_mode_breaches(plan):
+            continue
+        return plan, running
 
-    deck = []
-    for pos, cnt in zip([1, 2, 3, 4], counts):
-        deck.extend([pos] * cnt)
-
-    deck = shuffle_no_triple(rng, deck, "90-item deck", max_run=MAX_POSITION_RUN)
-
-    plan: dict[str, list[int]] = {}
-    idx = 0
-    for name, count, width in sections:
-        if width == 4:
-            plan[name] = deck[idx:idx + count]
-            idx += count
-        else:
-            plan[name] = balanced_positions(rng, count, width)
-
-    running = {p: deck.count(p) for p in (1, 2, 3, 4)}
-    if not all(lo <= running[p] <= hi for p in running):
-        sys.exit(f"balanced_position_plan: totals {running} outside {POSITION_BAND}")
-    return plan, running
+    sys.exit("balanced_position_plan: no plan satisfying SECTION_MODE_DIST, "
+             f"{POSITION_BAND} and MAX_POSITION_RUN after 2000 attempts — "
+             "re-measure both tables against refs/JLPT_N2_NEW/answer_keys.json "
+             "rather than widening a band")
 
 
 # --- Ledger (v2): draw history, newest last ------------------------------
@@ -415,6 +582,26 @@ def apply_adjunct(rng: random.Random, cat: str, picked: list,
     return result
 
 
+def pools_sha() -> str:
+    """First 12 hex digits of sha1 over `pools.json`'s raw bytes (R7).
+
+    A recorded SEED is only replayable against the pool it was drawn from.
+    `draw()` consumes a fixed number of RNG values per category, so removing one
+    entry changes WHICH items are picked without shifting the stream — the later
+    categories realign perfectly and the earlier ones silently do not. That is
+    exactly what happened to `20260818_1`: its recorded seed reproduced 6 of 11
+    categories after `pools.json` changed four hours later, and the reviewer had
+    to infer the intermediate pool state from commit timestamps
+    (qa-report-20260818_1 §6.1, R7). Stamping the pool revision makes
+    "is this spec genuine?" answerable by replay instead of by inference.
+
+    Same 12-hex convention as `script_sha`/`pacing_sha` (`choukai-audio`).
+    Specs written before 2026-08-19 carry no stamp; the gate reports that as a
+    skip, never a failure — an unstamped spec is old, not wrong.
+    """
+    return hashlib.sha1(POOLS.read_bytes()).hexdigest()[:12]
+
+
 def load_ledger() -> dict:
     if not LEDGER.exists():
         return {"version": 2, "history": []}
@@ -458,13 +645,28 @@ _KEY_BY_TEXT: dict[str, str] = {}
 
 
 def build_key_index(pools: dict) -> dict[str, str]:
-    """display string -> errand key, for every pool entry that carries one."""
+    """display string -> errand key, for every pool entry that carries one.
+
+    `quick_response` entries are bare strings, so their keys live in a separate
+    top-level `quick_response_keys` map instead of on the entry (F4,
+    qa-report-20260818_1): making them objects would orphan every recorded draw
+    in `logs/ledger.json`, which `check_draw_provenance()` resolves by string.
+    Clustering was `listening_scenarios`/`reading_topics`-only until 2026-08-19,
+    so `20260818_1` drew BOTH 「…お名前とご連絡先をご記入いただけますでしょうか」
+    and 「キャンセル待ちの方は、こちらに名前をお書きください」 — two 問題4 items
+    running one errand (write your name at a counter), an automatic QA fail that
+    nothing upstream could see. With the map in place `draw()`'s cross-key
+    `taken` exclusion prevents the pair by construction.
+    """
     idx: dict[str, str] = {}
     for cat in THEMED_CATS:
         for e in pools.get(cat, []):
             k = entry_key(e)
             if k:
                 idx[item_text(e)] = k
+    for text, k in (pools.get("quick_response_keys") or {}).items():
+        if isinstance(k, str) and k.strip():
+            idx[str(text)] = k
     return idx
 
 
@@ -712,6 +914,8 @@ def report_key_clusters(pools: dict) -> None:
             k = entry_key(e)
             if k:
                 clusters.setdefault(f"{cat}/{k}", []).append(item_text(e))
+    for text, k in (pools.get("quick_response_keys") or {}).items():
+        clusters.setdefault(f"quick_response/{k}", []).append(str(text))
     dupes = {k: v for k, v in clusters.items() if len(v) > 1}
     if not dupes:
         return
@@ -796,6 +1000,10 @@ def main():
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--reroll", default=None,
                     help="resample only this category, keep the rest")
+    ap.add_argument("--reroll-one", default=None, metavar="CAT:INDEX",
+                    help="resample ONE entry of a category, keep the other "
+                         "entries and every other category "
+                         "(e.g. --reroll-one quick_response:8)")
     ap.add_argument("--test-id", required=True,
                     help="test id; writes tests/<test_id>/test_spec.json and "
                          "records ledger attribution")
@@ -816,6 +1024,10 @@ def main():
     if args.check_depth:
         check_pool_depths(pools)
         return
+
+    if args.reroll and args.reroll_one:
+        sys.exit("--reroll and --reroll-one are alternatives: the first redraws "
+                 "a whole category, the second one entry of one")
 
     seed = args.seed if args.seed is not None else int(time.time())
     rng = random.Random(seed)
@@ -861,6 +1073,9 @@ def main():
                                    taken_text, updated_recency, cool_max)
         spec["items"][cat] = picked
         spec["seed"] = f"{spec.get('seed')}+reroll({cat},{seed})"
+        # R7: a reroll re-draws against the CURRENT pool, so the stamp moves
+        # with it — the spec records the revision the newest draw used.
+        spec["pools_sha"] = pools_sha()
         spec["rotation"] = {
             "recency_source": "ledger",
             "history_len": 0,          # filled in below, once this test's own
@@ -871,6 +1086,7 @@ def main():
         if own_entry is not None:
             own_entry.setdefault("items", {})[cat] = picked
             own_entry["seed"] = spec["seed"]
+            own_entry["pools_sha"] = spec["pools_sha"]
         for w in check_theme_spread(picked, cat):
             print(f"  WARNING: {cat} draw is theme-heavy — {w}")
         # Only THIS category was freshly drawn — against "now" (the full
@@ -884,6 +1100,85 @@ def main():
         # preceded this test, and spuriously fails on categories the reroll
         # never touched (reproduces even at the old flat COOLDOWN=2). Verify
         # only what actually changed.
+        rotation_check_items = {cat: picked}
+    elif args.reroll_one:
+        # --- single-entry reroll (R2-F2, 2026-08-19) ------------------------
+        # `--reroll <cat>` was the only redraw available, and for `quick_response`
+        # it replaces all ELEVEN stimuli — a whole-問題4 re-author plus an MP3
+        # rebuild — to repair one drawn entry. That cost is what invited the
+        # cheaper wrong repair: `20260818_1` drew two 「窓口:記名依頼」 stimuli
+        # (問題4-2番 + 4-9番, an automatic QA fail) and the fix pass re-angled one
+        # item's invented SETTING instead of redrawing the errand, which is not
+        # what the rule measures (qa-report-20260818_1-round2 R2-F2). One entry
+        # out, one entry in, under exactly the same exclusions as a full reroll:
+        # this test's other picks (all categories, INCLUDING this category's kept
+        # entries) via `taken`, and the category's own cooldown window via
+        # `recency`. Recorded in the seed expression the way the other rerolls
+        # are, so the draw stays replayable and check_draw_provenance() resolves.
+        spec_of = args.reroll_one.rsplit(":", 1)
+        if len(spec_of) != 2 or not spec_of[1].lstrip("-").isdigit():
+            sys.exit(f"--reroll-one takes <category>:<index>, got "
+                     f"'{args.reroll_one}' (e.g. quick_response:8)")
+        cat, idx = spec_of[0], int(spec_of[1])
+        if cat not in DRAW:
+            sys.exit(f"unknown category '{cat}'. Valid: {', '.join(DRAW)}")
+        if cat not in pools:
+            sys.exit(f"category '{cat}' is in DRAW but missing from pools.json")
+        if not spec_path.is_file():
+            sys.exit(f"--reroll-one needs an existing {spec_path.relative_to(ROOT)}")
+        spec = json.loads(spec_path.read_text(encoding="utf-8"))
+        current = (spec.get("items") or {}).get(cat) or []
+        if not -len(current) <= idx < len(current):
+            sys.exit(f"--reroll-one {cat}:{idx} is out of range — "
+                     f"{cat} holds {len(current)} entr(ies) in "
+                     f"{spec_path.relative_to(ROOT)}")
+        own_entry = None
+        for e in reversed(history):
+            if (str(e.get("test_id")) == str(spec.get("test_id")) or
+                    str(e.get("seed")) == str(spec.get("seed"))):
+                own_entry = e
+                break
+        # Same reason as the full-reroll path: this paper's own recorded picks
+        # must not count as "recently used" against its own redraw. The KEPT
+        # entries come back through `taken` immediately below, so they are still
+        # excluded — just as in-test collisions, not as cooldown history.
+        if own_entry is not None:
+            own_entry.setdefault("items", {}).pop(cat, None)
+        idx %= len(current)              # normalise a negative index once
+        replaced = current[idx]
+        kept = [x for i, x in enumerate(current) if i != idx]
+        taken_text = {tok for c, xs in spec["items"].items() if c != cat
+                      for x in xs for tok in taken_tokens(x)}
+        taken_text |= {tok for x in kept for tok in taken_tokens(x)}
+        updated_recency = recency_map(history)
+        cool_max = cooldown_for(cat, len(pools[cat]))
+        picked, cool = draw(rng, pools[cat], updated_recency, 1, cat,
+                            taken_text, cool_max)
+        # No adjunct pass: ADJUNCT_CAP of a 1-item draw is 0 by construction
+        # (`int(1 * 0.20)`), so apply_adjunct() would return the pick unchanged.
+        spec["items"][cat][idx] = picked[0]
+        spec["seed"] = f"{spec.get('seed')}+reroll-one({cat}:{idx},{seed})"
+        spec["pools_sha"] = pools_sha()   # R7, same as --reroll
+        spec["rotation"] = {
+            "recency_source": "ledger",
+            "history_len": 0,          # filled in below
+            "cooldown": min(cool, spec.get("rotation", {}).get("cooldown", cool)),
+        }
+        if own_entry is not None:
+            own_entry.setdefault("items", {})[cat] = spec["items"][cat]
+            own_entry["seed"] = spec["seed"]
+            own_entry["pools_sha"] = spec["pools_sha"]
+        for w in check_theme_spread(spec["items"][cat], cat):
+            print(f"  WARNING: {cat} draw is theme-heavy — {w}")
+        print(f"  reroll-one {cat}[{idx}]:\n"
+              f"    out: 「{item_text(replaced)}」\n"
+              f"    in : 「{item_text(picked[0])}」"
+              + (f"  (errand key 「{errand_key(picked[0])}」)"
+                 if errand_key(picked[0]) else ""))
+        # Only the ONE new entry was drawn against "now"; the kept entries were
+        # drawn earlier against a different window (see the full-reroll note
+        # above), so verifying the whole category would be the same false
+        # positive one level down.
         rotation_check_items = {cat: picked}
     else:
         items = {}
@@ -916,11 +1211,14 @@ def main():
                 "history_len": len(history),
                 "cooldown": effective_cool,
             },
+            # R7: the pool revision this seed is replayable against.
+            "pools_sha": pools_sha(),
             "items": items,
             "answer_positions": positions,
         }
         history.append({"test_id": args.test_id, "seed": seed,
-                        "generated_at": spec["generated_at"], "items": items,
+                        "generated_at": spec["generated_at"],
+                        "pools_sha": spec["pools_sha"], "items": items,
                         "draw": dict(DRAW)})
         print(f"  answer positions over the {sum(pos_totals.values())} "
               f"four-choice items: " +
