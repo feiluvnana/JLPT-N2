@@ -167,7 +167,7 @@ restate them here or in a skill; fix them there.
 | `make check-tests`        | the same gate, per-test contracts only | (below) |
 | `make sample <id> SEED=n` | `sample_items.py` → `test_spec.json` + ledger | `exam-blueprint` |
 | `make scaffold-sections <id>` | `scaffold_sections.py` → scaffolds `_sections/` authoring templates | `question-authoring` |
-| `make matrix`             | `matrix_helper.py` — 2x2 Cartesian matrix generator & validator | `question-authoring` |
+| `make matrix`             | `matrix_helper.py` — **validate only**; both generators are hard-disabled (they had no 音訓 table and emitted kana-skeleton-violating grids — qa-report-20260819_1 F4) | `question-authoring` |
 | `make booklet <id>`       | `build_booklet.py` on both Markdown sources | `exam-app` |
 | `make mp3 <id>`           | `make_choukai_mp3.py` on `聴解スクリプト.txt` | `choukai-audio` |
 | `make sheet <id>`         | `build_interactive.py` → `解答.html` | `exam-app` |

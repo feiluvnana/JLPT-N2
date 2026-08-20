@@ -157,11 +157,49 @@ Known residue (audited 2026-08-06, left deliberately): five `grammar_p7`×
 `grammar_p8` pairs where p8's pattern contains p7's bare form — don't add
 more; `--reroll grammar_p8` if a drawn 問題8 pattern repeats a 問題7 point.
 
+**`grammar_p7` and `grammar_p8` are ONE rotation space** (F1, 2026-08-20).
+**15** forms are listed in both pools (`つつある/てたまらない/として/としても/
+ないことには/につれて/に基づいて/に沿って/に限らず/のみならず/ばかりか/ばかりに/
+わりに/をきっかけに/をはじめ`) and the per-category cooldown window could not
+see across them: `head()` splits a p8 entry on its first paren, so
+`限定表現(〜のみならず…も)`'s identity was the LABEL 「限定表現」, not the form.
+`20260819_1` drew that entry and `変化推移(〜につれて…ていく)` into 問題8 after
+`20260818_1` — the paper immediately before it — had KEYED both forms in its
+問題7, with every gate green; **9 of the 14 papers on disk leak this way.**
+`grammar_form_tokens()` now folds the FORM into `identity_tokens()` (cross-
+paper cooldown) and `taken_tokens()` (one point, one 問題 per paper), and
+`check_grammar_cross_category_rotation()` is the backstop. Repair a hit with
+`--reroll-one grammar_p8:<index>` and a fresh RNG seed, then re-author that
+item — never a hand substitution.
+
 **2026-08-11: `grammar_p7`/`grammar_p8` audited against Shin Kanzen's full
 TOC (~211 forms)** — roughly half the book's forms were missing, including
 two whole lessons with zero coverage. Added 60 N2-band forms to `grammar_p7`
 (172 total; `grammar_p8` unchanged at 42), each checked against the band-ban
 list and the skeleton-dup check.
+
+## A `paraphrase` parenthetical is a NON-BINDING gloss — and a bad one is a POOL defect
+
+`納める(税金)` is context, `詫びる(謝る)` a synonym, `半ば(なかば)` a reading:
+the parenthetical means something different per category and nothing had ever
+said what a `paraphrase` one obliges. It names **the intended simpler synonym**,
+and it is a gloss, not the key — an author may key a different word, and when
+one does, **the reason goes into the stage handoff** so the deviation is
+reportable instead of silent. `check_spec_target_items()` reads 問題1/2/4 only;
+no gate reads a `paraphrase` parenthetical, and none can.
+
+**A gloss that is not idiomatic in the drawn word's own frame is a defect in
+`pools.json`, to be fixed there — never worked around item by item.** The entry
+read `うっすら(かすかに)`; 「かすかに」 modifies faint *perception* (音・光・におい),
+not quantity, so 「庭の草にかすかに雪が積もっていた」 is not idiomatic while
+「わずかに雪が積もっていた」 is. `20260819_1`'s author keyed 「わずかに」 and
+recorded the deviation — the right call — but the pool would have handed the
+same bad gloss to the next paper that drew うっすら (F5,
+qa-report-20260819_1). It now reads `うっすら(わずかに)`; 「かすかに」 remains a
+valid standalone `paraphrase` entry. Follow the `調剤師` precedent when you
+touch one: correct the entry, and carry the corrected string into every
+`test_spec.json`/`logs/ledger.json` row that recorded it, so
+`check_draw_provenance()` still resolves.
 
 ## `paraphrase`/`usage` katakana rate is capped, not left to the pool's composition
 
@@ -443,6 +481,33 @@ flat ledger migrates automatically.
   `head()` — an inflected realization or an off-pool substitute cools
   nothing and can never rotate. Repair by re-sampling, never by editing
   either file to match the paper.
+
+### A `grammar_p8` draw whose form is a general-purpose sentence pattern obliges a prose grep
+
+**Some `grammar_p8` entries are not N2 headwords at all** — `理由説明(〜のは…からだ)`,
+`換言要約(〜つまり…ということだ)`, `対比表現(〜一方…だ)`, `例示指示(〜例えば…)` name
+frames that any expository writer uses without thinking. 400 lines of 問題10–14
+prose cannot be kept clear of one by luck, and `question-authoring` Item
+integrity #15 ("a tested form stays out of the reading passages") binds them
+exactly as it binds 〜かねない.
+
+**So the draw carries an authoring obligation, and it is a STEP in the stage-3
+handoff, not a hope:** when a drawn `grammar_p8` entry is a general-purpose
+pattern, grep the drafted 読解 passages for its frame — **both copula spellings**
+(`からだ`/`からである`, `のだ`/`のである`) — and re-word every hit but at most one,
+which must not be in the tested syntactic frame. Re-wording is cheap and never
+touches the item; re-keying is the fallback.
+
+`20260819_1` drew `理由説明(〜のは…からだ)` for 問題8-47 and shipped 問題10(1) and
+問題11(3) both closing a sentence with 「…のは、…からである。」 — the exact 文末
+cleft-reason frame the item tests, twice, invisible to every gate for two
+independent reasons (`qa-report-20260819_1-round2` R2-F5). The mechanical half
+is now real: `check_key_grammar_exposure()` reads the FORM through
+`grammar_form_tokens`/`grammar_form_parts` instead of the 類型 LABEL and folds
+`である`→`だ`, so the ≥2-occurrence COUNT is measured. The judgement half is not
+mechanisable — a cleft-reason sentence is not distinguishable from ordinary
+prose by regex in every frame — so the gate ships the count and the author owns
+the reading.
 
 **A recorded seed is replayable only against the pool it was drawn from — so
 every spec records `pools_sha` (R7, 2026-08-19).** `draw()` consumes a fixed

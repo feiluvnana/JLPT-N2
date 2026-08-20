@@ -86,6 +86,21 @@ DISTINCT_THEME_CATS = {"reading_topics"}
 KATAKANA_TARGET_RATE = {"paraphrase": 3 / 35, "usage": 1 / 35}
 KATAKANA_CAP = {"paraphrase": 1, "usage": 1}  # never observed 2 in one section
 
+# Target per-ITEM probability that a 問題1 draw slot is a 訓読み target, and the
+# hard per-paper ceiling, enforced during the draw by `sample_kun_capped()`
+# (qa-report-20260819_1 F3).
+# `question-authoring/references/moji-goi.md` §問題1 measured 12 訓読み of the 35
+# current-era 問題1 items (34%), and per sitting official runs 2/2/1/2/2 of 5 —
+# never more than TWO. Nothing enforced that: `20260819_1` drew 4 of 5 訓読み
+# (半ば/情け/湯/常に), `20260807_1` drew 4, `20260810_1` and `20260817_2` drew 3.
+# The consequence is not cosmetic — the 2×2 on-reading grid (清濁/長短
+# discrimination) that official exercises in 3–4 of the 5 slots is what 問題1
+# actually discriminates on, and a 訓読み-heavy paper measures word recognition
+# instead. The rate is the archive's, not the pool's own 31% 訓読み share; do not
+# re-derive it from `pools.json`.
+KUN_TARGET_RATE = {"kanji_reading": 12 / 35}
+KUN_CAP = {"kanji_reading": 2}
+
 
 def is_katakana_headword(entry) -> bool:
     """True if the pool entry's headword (gloss stripped) is a katakana word.
@@ -96,6 +111,107 @@ def is_katakana_headword(entry) -> bool:
     test used to measure the archive rate in official_calibration.md §12.
     """
     return bool(re.search(r"[゠-ヿ]", head(item_text(entry))))
+
+
+# --- 訓読み / 音読み classification of a `kanji_reading` entry (F3) ----------
+# A `kanji_reading` entry is `語(よみ)`. Official treats the two target types
+# differently (moji-goi.md §問題1's distractor table), and only the 音読み
+# compound carries the 2×2 清濁/長短 grid, so the mix is a calibration number,
+# not a taste. Nothing could count it before this: the shape of a reading is the
+# only signal on disk — there is no 音訓 column in `pools.json` and no
+# grep-able dictionary in the repo (`joyo_kanji.txt` is a bare character set).
+_KUN_KANA = re.compile(r"[ぁ-んァ-ヶーゝゞ々]")
+_KUN_KANJI = re.compile(r"[一-鿕]")
+_KUN_SMALL = "ゃゅょ"
+# The morae an ON-reading may take as its SECOND mora (漢音/呉音 shapes:
+# こう/かい/せん/しき/かつ/ぎょう…). A native 訓読み almost never lands here
+# (なか, なさ, つね, さかい, わざ …) — that asymmetry is the whole test.
+_ON_TAIL = set("うくきつちんいーっ")
+_SURU_TAILS = ("じる", "ずる", "する")
+
+
+def _morae(s: str) -> list[str]:
+    out: list[str] = []
+    for ch in s:
+        if ch in _KUN_SMALL and out:
+            out[-1] += ch
+        else:
+            out.append(ch)
+    return out
+
+
+def _on_shaped_chunk(ms: list[str]) -> bool:
+    return len(ms) == 1 or (len(ms) == 2 and ms[1] in _ON_TAIL)
+
+
+def on_segmentable(reading: str, k: int) -> bool:
+    """Can `reading` be cut into exactly `k` ON-reading-shaped chunks?
+
+    こうしょう → こう|しょう (2 kanji) yes; かたみち → no cut of かたみち into two
+    on-shaped chunks exists, so 片道 is a 訓読み compound even though it prints
+    no okurigana.
+    """
+    ms = _morae(reading)
+    if not ms or k <= 0:
+        return False
+
+    def rec(i: int, left: int) -> bool:
+        if left == 0:
+            return i == len(ms)
+        return any(i + L <= len(ms) and _on_shaped_chunk(ms[i:i + L])
+                   and rec(i + L, left - 1) for L in (1, 2))
+
+    return rec(0, k)
+
+
+def split_reading_entry(entry) -> tuple[str, str]:
+    """`半ば(なかば)` -> (`半ば`, `なかば`); an entry with no gloss -> (entry, '')."""
+    m = re.match(r"^(.+?)[(（](.+?)[)）]\s*$", item_text(entry))
+    return (m.group(1).strip(), m.group(2).strip()) if m \
+        else (item_text(entry).strip(), "")
+
+
+def is_kun_target(entry) -> bool:
+    """True when a `kanji_reading` entry's target is a 訓読み word.
+
+    KNOWN LIMIT, stated rather than hidden: this decides 音 vs 訓 from the SHAPE
+    of the recorded reading, so a single-kanji 訓読み word whose reading happens
+    to be on-shaped (灰(はい), 恋(こい), 奥(おく), 筒(つつ), 乳(ちち) — 5 of the
+    pool's 74 single-kanji entries) reads as 音読み here. It errs toward
+    UNDER-counting 訓読み, i.e. toward letting a draw through, never toward
+    failing a compliant one. The four founding cases it must reproduce are
+    `20260807_1` (4), `20260819_1` (4), `20260810_1` (3), `20260817_2` (3);
+    `check_mondai1_reading_type_mix()` in `tools/check_consistency.py` imports
+    THIS function so the gate and the sampler can never disagree.
+    """
+    t, r = split_reading_entry(entry)
+    t = t.replace("〜", "").replace("～", "").replace("~", "")
+    if not _KUN_KANJI.search(t):
+        return True                       # kana headword: not an on-compound
+    m = re.search(r"([ぁ-ん]+)$", t)
+    tail = m.group(1) if m else ""
+    core = t[:len(t) - len(tail)] if tail else t
+    if _KUN_KANA.search(core):
+        return True                       # internal okurigana: 折り曲げる, 取り扱う
+    ks = _KUN_KANJI.findall(core)
+    if not ks:
+        return True
+    if not r:
+        return not tail
+    if tail:
+        if not r.endswith(tail):
+            return True                   # reading and spelling disagree: judge kun
+        stem = r[:-len(tail)]
+    else:
+        stem = r
+    if len(ks) == 1:
+        # 演じる/生じる/害する are 音読み stems wearing okurigana; 見にくい,
+        # 閉じる, 恥じる are not — the stem has to be an on-shaped 2+-mora
+        # reading before the okurigana can be discounted.
+        if tail and tail not in _SURU_TAILS:
+            return True
+        return not (len(_morae(stem)) >= 2 and on_segmentable(stem, 1))
+    return not on_segmentable(stem, len(ks))
 
 
 def weighted_sample_no_replacement(rng: random.Random, items: list,
@@ -153,6 +269,42 @@ def sample_katakana_capped(rng: random.Random, eligible: list, n: int,
               f"to an uncapped draw; grow the non-katakana side of this pool")
         return pick(eligible, n)
     picked = pick(plain, n - k) + pick(kata, k)
+    rng.shuffle(picked)
+    return picked
+
+
+def sample_kun_capped(rng: random.Random, eligible: list, n: int,
+                      target_rate: float, cap: int, name: str,
+                      already: int = 0, weight_fn=None) -> list:
+    """`n` entries whose 訓読み count matches the archive's mix, hard-capped.
+
+    Same shape as `sample_katakana_capped()`, and for the same reason: the
+    pool's own 訓読み share (31%) is close to the archive's (34%), so an
+    uncapped draw is usually fine and occasionally lands 3 or 4 of 5 — which
+    four papers did, with no gate able to see it (qa-report-20260819_1 F3).
+    `already` is how many 訓読み entries of this category the draw is KEEPING
+    (nonzero only on the `--reroll-one` path), so a one-entry redraw cannot
+    push the paper over the ceiling the full draw respects.
+    """
+    budget = max(0, cap - already)
+    kun = [e for e in eligible if is_kun_target(e)]
+    plain = [e for e in eligible if not is_kun_target(e)]
+    k = min(budget, len(kun), sum(rng.random() < target_rate for _ in range(n)))
+
+    def pick(pool: list, count: int) -> list:
+        if count <= 0:
+            return []
+        if weight_fn:
+            return weighted_sample_no_replacement(
+                rng, pool, [weight_fn(e) for e in pool], count)
+        return rng.sample(pool, count)
+
+    if len(plain) < n - k:
+        print(f"  warning: pool '{name}' has too few 音読み entries "
+              f"({len(plain)}) to fill {n - k} of {n} slots — falling back "
+              f"to an uncapped draw; grow the 音読み side of this pool")
+        return pick(eligible, n)
+    picked = pick(plain, n - k) + pick(kun, k)
     rng.shuffle(picked)
     return picked
 
@@ -697,6 +849,67 @@ def affix_marker_free(t: str) -> str:
     return t.replace("〜", "").replace("～", "")
 
 
+# --- grammar FORM identity: 問題7 and 問題8 are ONE rotation space (F1, 2026-08-20)
+# `grammar_p7` spells a point bare (`〜のみならず`) and `grammar_p8` spells the
+# same point as a 類型-labelled pattern (`限定表現(〜のみならず…も)`). Neither the
+# raw string nor `head()` folds those together — `head()` splits on the first
+# paren, so the p8 entry's identity is the LABEL 「限定表現」 — so the two
+# categories rotated independently and 13 forms listed in both pools could go out
+# one paper apart with every gate green.
+#
+# THE INCIDENT: `20260819_1` drew `限定表現(〜のみならず…も)` and
+# `変化推移(〜につれて…ていく)` into 問題8 after `20260818_1` — the IMMEDIATELY
+# previous paper — had KEYED 〜のみならず and 〜につれて in its 問題7
+# (qa-report-20260819_1 F1). Measured over the whole ledger the day this landed:
+# **9 of 14 papers** leak p7↔p8 inside the drawing category's own cooldown window.
+#
+# The token is the FORM, not the entry: strip the 類型 wrapper when it holds the
+# 〜-marked pattern, then cut on 「…」/「・」/「〜」 and keep the chunks of
+# GRAMMAR_FORM_MIN+ characters. Short tails (〜上, 〜がち, 〜きり) produce no token
+# and keep their ordinary string cooldown — form tokens only ever ADD identity.
+GRAMMAR_FORM_CATS = ("grammar_p7", "grammar_p8")
+GRAMMAR_FORM_NS = "form»"
+GRAMMAR_FORM_MIN = 3        # 「わりに」 is the shortest dual-listed form; 2 would
+                            # collide kana tails across unrelated points
+_GRAMMAR_FORM_ENTRY = re.compile(r"^(?P<label>[^(（]*)[(（](?P<inner>.+)[)）]\s*$")
+
+
+def grammar_form_parts(entry) -> list[str]:
+    """The entry's FORM, label stripped, cut into its chunks IN ORDER.
+
+    `限定表現(〜のみならず…も)` -> `['のみならず', 'も']`; `〜に基づいて` ->
+    `['に基づいて']`; `理由説明(〜のは…からだ)` -> `['のは', 'からだ']`; a word
+    entry with no 〜 marker -> `[]`.
+
+    Order is kept because a discontinuous pattern is only that pattern when its
+    chunks occur in order — `check_key_grammar_exposure()` matches the whole
+    skeleton (「のは…からだ」), not one chunk of it, and a set could not express
+    that. `grammar_form_tokens()` below is this list filtered and namespaced, so
+    the two can never disagree about what the FORM of an entry is.
+    """
+    t = item_text(entry)
+    if not re.search(r"[〜～]", t):
+        return []           # the 〜 marker IS the grammar/affix entry signature;
+                            # without it this is a word, and head() already folds
+                            # words across categories
+    m = _GRAMMAR_FORM_ENTRY.match(t)
+    inner = (m.group("inner") if m and re.search(r"[〜～]", m.group("inner"))
+             else re.split(r"[(（]", t)[0])
+    return [p for p in (q.strip(" 　、。") for q in re.split(r"[…・〜～~]", inner))
+            if p]
+
+
+def grammar_form_tokens(entry) -> set[str]:
+    """The grammar FORMS an entry tests, namespaced, for cross-category recency.
+
+    `限定表現(〜のみならず…も)` -> {`form»のみならず`}; `〜のみならず` -> the same
+    token, which is the whole point. `〜しかない・よりほかない` -> both halves.
+    `〜上(で)` -> {} (the gloss carries no 〜, and 「上」 is one character).
+    """
+    return {GRAMMAR_FORM_NS + p for p in grammar_form_parts(entry)
+            if len(p) >= GRAMMAR_FORM_MIN}
+
+
 def identity_tokens(entry) -> set[str]:
     """Every token that makes this entry 'the same item' for RECENCY."""
     t = item_text(entry)
@@ -707,19 +920,28 @@ def identity_tokens(entry) -> set[str]:
     k = errand_key(entry)
     if k:
         toks.add(KEY_NS + k)
+    toks |= grammar_form_tokens(entry)
     return toks
 
 
 def taken_tokens(entry) -> set[str]:
-    """The in-test exclusion tokens: the display string and the errand key.
+    """The in-test exclusion tokens: the display string, the errand key, the form.
 
     Deliberately NOT head() — cross-category head folding is recency's job
     (`recency_map`), and widening the in-test set would change draws that have
     nothing to do with the errand-key defect this was added for.
+
+    The grammar FORM token is the exception, and it is here for the same reason
+    it is in `identity_tokens()`: 問題7 and 問題8 draw from two pools that list 15
+    forms in common, so without it one paper could key 〜のみならず at 問題7 and
+    build its 問題8 frame on 限定表現(〜のみならず…も) — 「one grammar point may be
+    the KEY only once per paper」 (question-authoring Item integrity #15) with
+    nothing able to see it (F1).
     """
     t = item_text(entry)
     k = errand_key(entry)
-    return ({t} if t else set()) | ({KEY_NS + k} if k else set())
+    return (({t} if t else set()) | ({KEY_NS + k} if k else set())
+            | grammar_form_tokens(entry))
 
 
 def recency_map(history: list) -> dict:
@@ -780,7 +1002,8 @@ def sample_distinct_theme(rng: random.Random, eligible: list, n: int,
 
 
 def draw(rng: random.Random, pool: list, recency: dict, n: int,
-         name: str, taken: set, cool_max: int) -> tuple[list, int]:
+         name: str, taken: set, cool_max: int,
+         kept: list | tuple = ()) -> tuple[list, int]:
     """LRU draw. Returns (picked, cooldown_actually_applied).
 
     `cool_max` is this category's own cooldown ceiling (`cooldown_for()`) —
@@ -795,6 +1018,11 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
     (no recency filter at all) and it is a value the caller RETURNS and records,
     so a paper drawn without rotation says so in its own spec instead of only
     in a console line nobody kept.
+
+    `kept` is the entries of this same category the caller is KEEPING (nonzero
+    only on the `--reroll-one` path). Nothing but the mix caps read it: a
+    one-entry redraw must not be able to push the paper past a per-paper ceiling
+    the full draw respects.
     """
     if len(pool) < 2.5 * n:
         print(f"  warning: pool '{name}' is thin ({len(pool)} for draws of {n}) "
@@ -834,6 +1062,11 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
                 return sample_katakana_capped(
                     rng, eligible, n, KATAKANA_TARGET_RATE[name],
                     KATAKANA_CAP[name], name, weight_fn=weight), cool
+            if name in KUN_CAP:
+                return sample_kun_capped(
+                    rng, eligible, n, KUN_TARGET_RATE[name], KUN_CAP[name],
+                    name, already=sum(1 for x in kept if is_kun_target(x)),
+                    weight_fn=weight), cool
             return weighted_sample_no_replacement(
                 rng, eligible, [weight(x) for x in eligible], n), cool
     remaining = len([x for x in pool if item_text(x) not in taken])
@@ -1064,7 +1297,19 @@ def main():
             own_entry.setdefault("items", {}).pop(cat, None)
         taken_text = {tok for c, xs in spec["items"].items()
                       if c != cat for x in xs for tok in taken_tokens(x)}
-        updated_recency = recency_map(history)
+        # THIS TEST'S OWN ENTRY LEAVES THE HISTORY, not just its rerolled
+        # category (F1 fix pass, 2026-08-20). Popping the category alone left
+        # the entry occupying a slot, so every `ago` draw() measured was one
+        # SHALLOWER than the window `assert_rotation()` then proved against
+        # (it drops the whole entry via `prior_history`). A reroll could
+        # therefore pick an item exactly `cool` draws back, draw() would
+        # accept it and assert_rotation() would abort on it — which is what
+        # `--reroll-one grammar_p8:0` did on the first attempt at this repair
+        # (「目的結果(〜ために…なった)」, drawn by 20260813_2 six draws back).
+        # The kept entries stay excluded through `taken_text` below, which is
+        # an in-test collision guard, not cooldown history.
+        updated_recency = recency_map([h for h in history
+                                       if h is not own_entry])
         cool_max = cooldown_for(cat, len(pools[cat]))
         picked, cool = draw(rng, pools[cat], updated_recency,
                             DRAW[cat], cat, taken_text, cool_max)
@@ -1150,10 +1395,22 @@ def main():
         taken_text = {tok for c, xs in spec["items"].items() if c != cat
                       for x in xs for tok in taken_tokens(x)}
         taken_text |= {tok for x in kept for tok in taken_tokens(x)}
-        updated_recency = recency_map(history)
+        # THIS TEST'S OWN ENTRY LEAVES THE HISTORY, not just its rerolled
+        # category (F1 fix pass, 2026-08-20). Popping the category alone left
+        # the entry occupying a slot, so every `ago` draw() measured was one
+        # SHALLOWER than the window `assert_rotation()` then proved against
+        # (it drops the whole entry via `prior_history`). A reroll could
+        # therefore pick an item exactly `cool` draws back, draw() would
+        # accept it and assert_rotation() would abort on it — which is what
+        # `--reroll-one grammar_p8:0` did on the first attempt at this repair
+        # (「目的結果(〜ために…なった)」, drawn by 20260813_2 six draws back).
+        # The kept entries stay excluded through `taken_text` below, which is
+        # an in-test collision guard, not cooldown history.
+        updated_recency = recency_map([h for h in history
+                                       if h is not own_entry])
         cool_max = cooldown_for(cat, len(pools[cat]))
         picked, cool = draw(rng, pools[cat], updated_recency, 1, cat,
-                            taken_text, cool_max)
+                            taken_text, cool_max, kept=kept)
         # No adjunct pass: ADJUNCT_CAP of a 1-item draw is 0 by construction
         # (`int(1 * 0.20)`), so apply_adjunct() would return the pick unchanged.
         spec["items"][cat][idx] = picked[0]

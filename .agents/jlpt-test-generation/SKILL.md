@@ -136,8 +136,11 @@ make scaffold-sections <id>        # -> pre-scaffolds tests/<id>/_sections/ temp
 ```
 
 - Author ONLY items in `test_spec.json`; keys go where `answer_positions` says.
-- For 問題1 & 問題2 2×2 matrices, use `python3 tools/matrix_helper.py` for
-  valid phonological/orthographic pairings at zero token cost.
+- For 問題1 & 問題2 2×2 matrices, build the grid BY HAND against
+  `moji-goi.md`, then CHECK it with
+  `python3 tools/matrix_helper.py validate --reading <かな> <4 options>`.
+  The tool's two GENERATORS are hard-disabled — they had no 音訓 table and
+  invented readings and glyphs (F4, qa-report-20260819_1).
 - Tested items (grammar/vocab/kanji) are ALWAYS pool-sampled; the assigned
   `reading_topics`/`listening_scenarios` entry supplies scene/content only —
   you write the passage/dialogue from it yourself.

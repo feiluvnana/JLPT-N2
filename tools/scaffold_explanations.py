@@ -101,6 +101,24 @@ def auto_generate_linguistic_scaffold(q_num: int, raw_info: dict, exp_info: dict
     }
 
 
+def stem_fallback(q_num: int) -> str:
+    """The stem to show when the booklet prints none for this item.
+
+    問9 (文章の文法) items are a bare numbered blank inside the passage, so the
+    source really has no stem text. The fallback used to be the placeholder
+    "第 48 問", which only repeats the number badge 模範解答.html already prints
+    beside it. Name the blank instead — verify_fidelity.py documents this
+    instruction-line shape as an expected, non-drift difference from the
+    source, and it is what earlier papers carry by hand.
+    """
+    for info in bma.GENGO_TAXONOMY.values():
+        lo, hi = info["range"]
+        if lo <= q_num <= hi and info["name"] == "文章の文法":
+            return (f"文章全体の趣旨を踏まえて、（　{q_num}　）に入る"
+                    f"最もよいものを、1・2・3・4から一つ選びなさい。")
+    return f"第 {q_num} 問"
+
+
 def scaffold_test(test_dir: Path, lean: bool = False, merge_existing: bool = True) -> dict:
     test_dir = Path(test_dir)
     gengo_md, choukai_md, script_text = vf.load_sources(test_dir)
@@ -127,7 +145,7 @@ def scaffold_test(test_dir: Path, lean: bool = False, merge_existing: bool = Tru
         exp_info = gengo_exps.get(q_num, {})
         ex_item = existing.get(q_str, {})
 
-        stem = ex_item.get("stem") or raw_info.get("stem") or f"第 {q_num} 問"
+        stem = ex_item.get("stem") or raw_info.get("stem") or stem_fallback(q_num)
         options = ex_item.get("options") or raw_info.get("options") or [f"選択肢 {i}" for i in range(1, 5)]
         passage = ex_item.get("passage") if "passage" in ex_item else raw_info.get("passage")
         ans_val = exp_info.get("ans", 1)

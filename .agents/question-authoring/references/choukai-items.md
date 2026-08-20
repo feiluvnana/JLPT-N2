@@ -114,6 +114,41 @@ reading `順番待ち` — the second QA round found the table describing a line
 paper no longer contains. Re-derive from the script every time; the table is
 evidence, and evidence is re-read, not carried forward.
 
+### 決め手の種類 — the column that counts FACTS, not labels
+
+Every other column of the 構成表 counts a label: 場面, 正解, 消去方法, 質問型. Two
+items can differ in all four and still make the candidate do **the same listening
+twice**, because what an item is *decided by* has no column at all.
+
+`20260819_1` 問題2-1番 turns on 「実は、一人、卵が食べられない者がいまして」 and
+問題2-3番, three items later, on 「今年入った人の中に、辛いものが食べられない人と、
+魚が苦手な人がいて」 — one axis, *a diner who cannot eat something*, twice; 3番's
+keyed option even prints the same lexical frame (「食べられない物がある人も
+たのめること」). Nothing could see it: different 場面, different 正解, different
+質問型, and the theme tags actively hide it (食 vs 働き方). The drawn scenarios did
+not cause it either — `職場:歓迎会の店選び` carries no dietary constraint at all;
+the author added one (`qa-report-20260819_1-round3` R3-S3).
+
+**Add a `決め手の種類` column to the 問題1 and 問題2 構成表.** One token per row,
+from this closed list — the same discipline §消去方法 already runs, for the same
+reason (free text makes a repeat uncountable):
+
+`在庫・数量` · `時刻・日程` · `費用・金額` · `規則・制度` · `身体・飲食の制約` ·
+`場所・経路` · `人手・担当` · `設備・故障` · `連絡・情報の不足`
+
+**No token in more than 2 rows of one 問題, 例 counted** — rows, not occurrences,
+exactly as §消去方法 counts. Then read the column DOWN, not across. If a token
+would take a third row, re-angle the item's deciding line onto another axis; the
+scenario draw does not decide this, the author does.
+
+**Not gate-checkable, on purpose.** Which fact decides an item is a judgment the
+author makes while writing the deciding line, and a regex cannot re-derive it
+from the script. The column is the artifact; QA reads it as a column
+(`exam-qa-review` §4). `20260819_1`'s own measurement, filled in after the rule
+existed: 問題1 = six distinct tokens; 問題2 = 在庫・数量2 / 身体・飲食の制約2 /
+時刻・日程2 / 場所・経路1 — three tokens sitting exactly ON the cap, which is what
+the finding above looks like once it is visible.
+
 ## Section item mix — quotas measured against the 31-sitting archive
 
 A section that runs one item shape six times is solvable by pattern even when

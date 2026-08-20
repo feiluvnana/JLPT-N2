@@ -60,6 +60,28 @@ Repairing a set that came out flat means **compressing** stems (drop the
 background clause), never lengthening the rest: lengthening moves the mean
 the wrong way and leaves the range unchanged.
 
+### One form, one item — the fourth binding number
+
+**No grammar form may appear in more than ONE item's option set across
+問題7.** Measured over the six current-era sittings (7/2023–12/2025), no
+5-kana grammar n-gram occurs in two 問題7 option lines. A form printed three
+times as a wrong option is eliminable on sight by its third appearance: the
+examinee stops reading the stem and starts reading the paper's habits.
+
+`20260819_1` printed 「どころではない」 as a wrong option in **3 of 12** items
+(問33, 問38, 問41) and never as a key (F2). Recurrence over the 14 papers on
+disk: **11 exceed the official maximum of 1**, three exceed 2
+(`20260814_1` 「わけではない」×4, `20260810_1` 「にひきかえ」×3, `20260819_1`×3).
+
+`check_mondai7_option_form_reuse()` enforces it, and it enforces it in two
+steps on purpose: it ships at **more than 2** — the count that fires on
+exactly the three worst papers — and **tightens to more than 1**, the
+official maximum, once those are repaired. Both numbers are constants at the
+top of that check; read them there, not here. Repair by replacing the surplus
+distractors with real N2 forms that are impossible for a nameable reason, and
+rewriting the 解説 cells that argue them — never by shortening the form so
+the n-gram stops matching.
+
 Build length with scene-setting (職場・電話・掲示・インタビュー), a
 subordinate clause, or a short dialogue lead-in — never by padding the
 tested form. Official items often open with `(会社で)`/`(電話で)`/a named
@@ -112,7 +134,82 @@ chars, and a bare adverb/particle on a card is official practice. Chunk-size
 intuitions don't survive contact with the archive — **the invariant is
 ★-uniqueness** (Item integrity #8, the link table); length is calibration only.
 
-### The uniqueness proof is a TWO-PART procedure, and two structural legs are illegal
+### At most ONE card may be a FREELY-ORDERABLE PRE-PREDICATE UNIT
+
+This is a CONSTRUCTION rule, checked before any proof is written — it decides
+whether the item can be made unique at all.
+
+**A pre-predicate unit is free when nothing structural fixes where it sits.**
+Japanese does not order the material in front of a predicate: 「〜を〜に基づいて
+決める」 and 「〜に基づいて〜を決める」 are both ordinary, SOV and OSV are both
+ordinary, and — the half the old wording missed — **an adjunct CLAUSE scrambles
+against an object exactly as freely as a second argument would.** So if two
+cards (or two card BLOCKS) both sit in front of the final predicate and neither
+is pinned by one of the four sources below, the item has TWO ★ answers whatever
+the 解説 says. That is an item defect, not a proof defect.
+
+**The rule, as it must be counted:**
+
+> 最終述語の前に来るカード（塊）のうち、位置が構造的に固定されていないものは1つまで。
+> 共項か付加詞かは問わない——条件節・時の節・理由節など、述語に係る従属節も
+> 「自由な単位」に数える。位置を固定できる源は (1) 連体修飾の主要部、(2) 引用の
+> 「と」、(3) 下位範疇化された助詞（形式名詞の連体修飾スロットを含む）、(4) 半分ずつを
+> 語彙的に順序づける呼応テンプレート の四つだけであり、「重い前置きが三つ並ぶと崩れる」
+> のような処理負荷・自然さの議論は根拠にならない。自由な単位が二つ残るなら、片方を
+> 下線の前の文中へ移すか、主要部が隣接を強制するカードに差し替えて切り直す。
+
+**Why the rename — the worked example this wording exists for.** From
+2026-08-19 to 2026-08-20 this section read *"at most ONE card may be a free
+**co-argument** of the final predicate"*, and it measured the wrong quantity.
+`20260819_1` 問題8-45 shipped as `申請書に不備が / あった場合は / 受け付けを /
+断らねばならない`: exactly ONE free co-argument (「受け付けを」), so the rule
+passed it — while 「申請書に不備があった場合は」, a は-marked conditional ADJUNCT
+clause, was a second freely-orderable unit sitting in front of the same
+predicate. The rival `受け付けを → 申請書に不備が → あった場合は →
+断らねばならない` is grammatical and keys ★=2 instead of ★=4, and the shipped
+解説 excluded it only with a heaviness/topic-position argument — *「前置きの句が
+三つ並ぶと崩れる」* — which is precisely the kind of reason the block above
+refuses. **This is the same structural shape round 2 declared fatal for 43 and
+47 and then exempted for 45 ad hoc** (`qa-report-20260819_1-round3` R3-S1). The
+item was re-cut on 2026-08-20; see the repair paragraph below.
+
+**Legal adjacency comes from four sources, and never from transitivity:**
+
+1. a **連体修飾 head** — the modifying clause's own arguments cannot leave it
+   (`20260819_1` 問題8-44: 「あの技術を→受け継ぐ人が」);
+2. a **quotative 「と」** — 「〜と+言う/思う/自慢している」;
+3. a **subcategorised particle** — 「に→基づいて」, 「に→限らず」, a 形式名詞's
+   連体修飾 slot (「体を壊した→ときほど」);
+4. a **fixed 呼応 template that lexically orders its two halves** —
+   「AだけでなくBも」, 「AほどBはない」, 「〜のは…からだ」. Both halves are
+   positionally fixed BY the template, so neither counts as free.
+
+**The repair when two free units exist: RE-CUT the item.** Move one unit into
+the stem (before the first blank), or replace the card with one whose host
+forces adjacency by 1–4 above, or fuse the loose unit into the predicate card
+so it is no longer separately orderable. Do NOT reroll the drawn form — the
+`grammar_p8` target is the contract; the cards are yours.
+`20260819_1` 問題8-43 and 問題8-47 both shipped as
+*[adjunct block] + [free を-object] + [predicate]* and both admitted a second
+★; each was repaired by moving the を-object into the stem, leaving the four
+cards as two lexically-chained blocks
+(`qa-report-20260819_1-round2` R2-F1/R2-F2). `20260819_1` 問題8-45 was re-cut
+the same day the rule was re-scoped: the adjunct clause and the を-object were
+replaced by ONE chained unit (`申請書の → 不備が → 見つかった場合は`), with the
+object folded into the predicate card (`課長に報告せねばならない`), so the
+sentence now has a single pre-predicate unit and one ordering. The class
+recurs: `20260810_2` 問題8-45 has the same shape.
+
+**The audit is per item, all five, every time you touch one.** Write the final
+predicate down, list every card or block sitting in front of it — arguments AND
+adjunct clauses — and name the source (1–4) that fixes each one's position. A
+unit you cannot assign a source to is the free one, and there may be at most
+one. `tools/verify_scramble.py`'s `free_unit_count()` prints the same number
+(`FREE UNITS: n`) off the 解説's word-order line and FAILs at n ≥ 2, so the
+audit is recorded rather than remembered — but the tool merges cards by a
+string rule and the WRITTEN audit is still the rule.
+
+### The uniqueness proof is a TWO-PART procedure, and three structural legs are illegal
 
 Item integrity #8 requires the 解説's uniqueness note to prove, per card, why
 that card cannot be the FINAL card before the fixed tail. Write it in this order,
@@ -128,8 +225,8 @@ because the order is what makes it checkable:
    survivor that PARSES is excluded by naming the reading it produces and the
    contradiction that reading creates. Never by "it connects to nothing".
 
-**Two legs are false by construction and `make verify-scramble` now FAILs on
-both** (`illegal_legs()`; run it after every 問題8 edit):
+**Three legs are false by construction and `make verify-scramble` now FAILs on
+all three** (`illegal_legs()`; run it after every 問題8 edit):
 
 - **"placing X last leaves Y in the middle, where it connects to neither
   neighbour / loses its receiver"**, applied to a card that can sit
@@ -143,6 +240,44 @@ both** (`illegal_legs()`; run it after every 問題8 edit):
 - **"that ordering stacks two particles, so it is impossible."** Only stacked
   CASE particles are impossible (を+が). 「観光客にも地元の人に…」 is everyday
   Japanese (「私にも彼に似たところがある」).
+- **「『X〈助詞〉』は述語（動詞）を要求するので［X→その述語］は連続した塊になる」** —
+  **false for EVERY case and topic particle**, not only 「を」/他動詞. **A particle
+  constrains ORDER, never ADJACENCY**: it licenses a predicate *somewhere later in
+  the clause*, and Japanese scrambles pre-predicate material freely. (The one
+  particle that genuinely demands an immediately following element is 連体 「の」,
+  which wants a noun 直後 — that is source 1, not this leg.)
+
+  **How to tell this leg from a legal one — DIRECTION.** A **bound element
+  pointing BACKWARD at its own host** is legal, and adjacency really does follow:
+  「そうだ」/「からだ」 wanting a 普通形 **直前**, 「ときほど」 wanting a 連体修飾述語
+  **直前**, 「基づいて」 wanting a bare 「に」 **直前**. A **card ending in a
+  case/topic particle pointing FORWARD** at "whichever of the four cards is a
+  predicate" is this leg, whatever the particle is.
+
+  **Worked example — 「は」, `20260819_1` 問題8-46** (2026-08-20). Cards
+  `心細いものは / 体を壊した / ときほど / ない`, key ★=1 on
+  「体を壊したときほど心細いものはない」. The 解説 excluded its one rival
+  `1→2→3→4`（★=3、「心細いものは体を壊したときほどない」）with
+  「『心細いものは』の『は』は述語を要求し、四枚のうち述語は『ない』だけなので、
+  ［心細いものは→ない］も塊になる」. In that rival 「ない」 **is** later — just not
+  adjacent — so the leg excludes nothing. Item, cards and key were sound; only the
+  reason was not, and the valid exclusion was source 4, already named in the same
+  解説's opening line: 「AほどBはない」 orders both halves lexically, and the reversed
+  「BはAほどない」 forces a gradable-comparative reading that the bare existential
+  「ない」 cannot carry.
+
+  The leg proves nothing even when its conclusion happens to hold: at
+  `20260819_1` 問題8-44 the two cards really are adjacent, but because
+  「あの技術を」 sits INSIDE the 連体修飾 clause headed by 「受け継ぐ人」, which is
+  source 1 above — restate the proof from the real source, do not keep the
+  leg. Where the leg is load-bearing (`20260819_1` 問題8-43 and 問題8-47) the
+  item itself has two ★ answers and must be re-cut per the construction rule
+  above. It shipped in **4 of that paper's 5** 解説 as 「を」 (round 2) and in the
+  **5th** as 「は」 (round-3 verification) — one paper, all five items.
+  `verify_scramble.illegal_legs()` was widened from the 「他動詞」 anchor to the
+  particle-general form on 2026-08-20 (`PREDICATE_DEMAND_LEG` + `CASE_TOPIC_END`,
+  with a 直前 guard for the backward-looking legal legs) and fires on all five;
+  the 70 問題8 items on the 14 papers on disk produce zero findings.
 
 Structural legs stay legal for cards that genuinely cannot attach — a bare
 particle tail before the printed tail (nothing to predicate), a テ形 or ます形 with

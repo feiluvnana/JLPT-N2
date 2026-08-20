@@ -394,6 +394,15 @@ as "N1"/"N3", so a single source's label was never sufficient.
   quota breached. **A missing table is itself a fail.** Verify the table
   against the script, not on trust — an author who filled it in wrongly is
   exactly the author whose section repeats.
+- **同じ大問の二項目が同じ決め手の種類で決まっていないか——場面・正解・質問型が
+  違っても、決め手が同種なら受験者は同じ聞き取りを二度させられている。構成表の
+  決め手列を縦に読むこと。** The 問題1/問題2 構成表 carries a `決め手の種類`
+  column drawn from a closed nine-token list, capped at 2 rows per 問題, 例
+  counted (`choukai-items.md` §決め手の種類). No gate can re-derive it — the
+  column is the artifact, and a section without it is as unshippable as one
+  without the table. `20260819_1` 問題2-1番 and 問題2-3番 both decided on *a
+  diner who cannot eat something* while differing in 場面, 正解, 質問型 and
+  theme tag (食 vs 働き方), which is why no other column and no check saw it.
 - **Read the first and last spoken line of each item in a column too** — if
   openings/closings rhyme, the section is a template (`choukai-audio`
   §"Banned formulas"); the gate only catches *identical* closers >4 chars.

@@ -99,6 +99,13 @@ ORIGIN = load(".agents/external-test-import/scripts/origin.py")
 _LINT_DRAFT = load("tools/lint_draft.py")
 CONTRACTION_RE = _LINT_DRAFT.CONTRACTION_RE
 
+# The sampler is the single owner of what an entry's grammar FORM is. Two checks
+# read it (`check_mondai1_reading_type_mix` takes it as an argument from
+# `check_tests`; `check_key_grammar_exposure` has no such seam), and a second,
+# private copy of the extraction is exactly the defect R2-F4 records — so the
+# module is loaded once here and both use the same functions.
+SAMPLE_ITEMS = load(".agents/exam-blueprint/scripts/sample_items.py")
+
 
 def check(name: str, ok: bool, detail: str = "") -> bool:
     print(f"  {'ok  ' if ok else 'FAIL'}  {name}" + (f" — {detail}" if detail and not ok else ""))
@@ -2440,6 +2447,126 @@ def check_mondai7_option_refs(name: str, key_bunpou: str,
           "(question-authoring 'Name the reason each distractor is IMPOSSIBLE')")
 
 
+# Papers whose 問題7 prints one grammar form in THREE or more items' option sets,
+# measured over all 14 papers on disk the day this check landed (2026-08-20):
+# 20260810_1 = 「にひきかえ」 x3 (問37/41/42) and 20260814_1 = 「わけではない」 x4
+# (問31/36/37/40). `20260819_1` is the founding case and is ABSENT because it was
+# repaired (「どころではない」 x3 -> x1; 問33 -> 「待つわけにはいかない」, 問38 ->
+# 「はずがない」). Clearing one of these means re-authoring that paper's
+# distractors — the form is printed, so nothing but new text repairs it.
+P7_FORM_REUSE_GRANDFATHERED = {"20260810_1", "20260814_1"}
+# THRESHOLD, and the plan for tightening it. Official's own maximum is ONE:
+# across the six current-era sittings (7/2023-12/2025) no 5-kana grammar n-gram
+# occurs in two 問題7 option lines. Shipping straight at 2 would fire on nine
+# further papers at once, so the check lands at 3 — the count that fires on
+# exactly the three worst papers — and TIGHTENS TO 2 once those are repaired.
+# Both numbers live here so the tightening is a one-line edit, not a re-derivation.
+P7_FORM_REUSE_MAX = 2           # FAIL when a form appears in MORE items than this
+P7_FORM_REUSE_TARGET = 1        # the official maximum, this rule's destination
+P7_FORM_MIN_KANA = 5            # the n-gram width the archive was measured at
+_P7_FORM_KANA = re.compile(r"^[ぁ-ん]+$")
+
+
+def _p7_option_forms(option: str) -> set[str]:
+    """Every pure-hiragana suffix of `option` at least P7_FORM_MIN_KANA long."""
+    flat = re.sub(r"[\s。、・「」（）()★＿]", "", str(option))
+    return {flat[i:] for i in range(len(flat))
+            if len(flat) - i >= P7_FORM_MIN_KANA and _P7_FORM_KANA.match(flat[i:])}
+
+
+def check_mondai7_option_form_reuse(test_id: str, opts: dict[int, list[str]]):
+    """No grammar form may be printed in more than one 問題7 item's option set.
+
+    THE RULE (bunpou.md §問題7): measured over the six current-era sittings, no
+    5-kana grammar n-gram occurs in two 問題7 option lines. By its third
+    appearance a form is eliminable on sight, without reading the stem — the
+    examinee learns the paper's habits instead of the grammar.
+
+    THE INCIDENT (qa-report-20260819_1 F2): 「どころではない」 was printed as a
+    wrong option in **3 of 12** items (問33, 問38, 問41) and never as a key.
+    Recurrence over the 14 papers on disk: 11 exceed the official maximum of 1,
+    and three exceed 2 — see `P7_FORM_REUSE_GRANDFATHERED`.
+
+    THE REPAIR: replace the surplus distractors with real N2 forms that are
+    impossible for a nameable reason (question-authoring 'Name the reason each
+    distractor is IMPOSSIBLE'), and rewrite the 解説 cells that argue them. Do
+    not "fix" it by shortening the form — the n-gram width is the archive's.
+    """
+    idx: dict[str, set[int]] = {}
+    for q, options in opts.items():
+        if not 31 <= q <= 42:
+            continue
+        for o in options:
+            for form in _p7_option_forms(o):
+                idx.setdefault(form, set()).add(q)
+    hits = {f: qs for f, qs in idx.items() if len(qs) > P7_FORM_REUSE_MAX}
+    # Report only the LONGEST form per item set: 「どころではない」 also yields
+    # 「ころではない」 and 「ろではない」 over the same three items.
+    maximal = {f: qs for f, qs in hits.items()
+               if not any(g != f and g.endswith(f) and hits.get(g) == qs
+                          for g in hits)}
+    name = (f"{test_id}: no 問題7 form printed in more than "
+            f"{P7_FORM_REUSE_MAX} items' options")
+    if not opts:
+        return skip(name, "no 問題7 options parsed")
+    detail = ("; ".join(f"「{f}」 x{len(qs)} (問{', 問'.join(str(q) for q in sorted(qs))})"
+                        for f, qs in sorted(maximal.items()))
+              + f" — official's own maximum is {P7_FORM_REUSE_TARGET}; this "
+                f"check ships at {P7_FORM_REUSE_MAX} and tightens to "
+                f"{P7_FORM_REUSE_TARGET} once the grandfathered papers are "
+                f"repaired. Replace the surplus distractors and rewrite their "
+                f"解説 (bunpou.md §問題7; qa-report-20260819_1 F2)")
+    if test_id in P7_FORM_REUSE_GRANDFATHERED:
+        return warn(name, not maximal, detail + GRANDFATHER_NOTE)
+    check(name, not maximal, detail)
+
+
+P5_ITEMS = range(21, 26)
+
+
+def check_mondai5_option_reuse(test_id: str, opts: dict[int, list[str]]):
+    """No word may be printed in two 問題5 items' option sets.
+
+    THE RULE (moji-goi.md §問題5): the twenty options of one 問題5 are twenty
+    DIFFERENT words. Measured across the five current-format official 問題5
+    sections (80 options, 7/2023-12/2025), the repeat count is **zero**.
+
+    THE INCIDENT (qa-report-20260819_1-round3 R3-S4): `20260819_1` keyed
+    「わずかに」 at 問題5-21 and printed it as a distractor at 問題5-23. Round 2 saw
+    the observation and rejected it on the correct ground that no rule existed;
+    round 3 measured the archive and filed the rule. The harm is one-directional
+    and specific: a candidate who is sure of 21 has been handed an elimination at
+    23 for free, from the paper rather than from the language.
+
+    FOUNDING-CASE MEASUREMENT, run on the pre-fix revision before this landed:
+    `20260819_1: 「わずかに」x2 (問21 key / 問23 distractor)` — the only line the
+    check produces on any paper on disk. Re-run over all 14 papers 2026-08-20:
+    every other id is clean at 20 distinct options, so no id is grandfathered and
+    the rule re-classifies no shipped work. 20260819_1 was repaired the same day
+    (問題5-23's distractor 「わずかに」 -> 「多少」, same functional category, key
+    untouched), so the corpus now reads 14/14 clean.
+
+    THE REPAIR: change the DISTRACTOR, never the key — the key is half of a drawn
+    `paraphrase` pool entry and moving it silently un-tests the drawn item.
+    """
+    name = f"{test_id}: no word appears in two 問題5 items' options"
+    flat = [(q, normalize_option(o)) for q in P5_ITEMS for o in opts.get(q, [])]
+    flat = [(q, o) for q, o in flat if o]
+    if not flat:
+        return skip(name, "no 問題5 options parsed")
+    where: dict[str, list[int]] = {}
+    for q, o in flat:
+        where.setdefault(o, []).append(q)
+    dup = {o: qs for o, qs in where.items() if len(set(qs)) > 1}
+    check(name, not dup,
+          "; ".join(f"「{o}」x{len(qs)} (問"
+                    + ", 問".join(str(q) for q in sorted(set(qs))) + ")"
+                    for o, qs in sorted(dup.items()))
+          + " — official repeats none of its 80 options (moji-goi.md §問題5). "
+            "Replace the DISTRACTOR, not the key: the key is half of a drawn "
+            "`paraphrase` entry (qa-report-20260819_1-round3 R3-S4)")
+
+
 def check_mondai9_tags(name: str, key_bunpou: str):
     tags: dict[int, str | None] = {}
     for q, expl in re.findall(r"\|\s*(4[89]|5[01])\s*\|\s*[1-4]\s*\|\s*([^|]+)\|",
@@ -2649,6 +2776,23 @@ def check_mondai9_option_reuse(test_id: str, gt: str, spec: dict,
 # 種が」, because the 連体 use is not the same string. Measured over the 12
 # papers: 9 breach, 3 are clean.
 KEY_EXPOSURE_MAX = 1
+# A 問題8 form is often DISCONTINUOUS (「〜のは…からだ」). Its two halves land in one
+# sentence, so the wildcard between them never crosses 「。」 and is capped; the
+# founding measurement is identical at 60/80/120, i.e. the number is not doing
+# the work — the sentence boundary is.
+KEY_EXPOSURE_GAP = 80
+
+
+def _copula_norm(s: str) -> str:
+    """Fold the written-register copula tail: からである≡からだ, のである≡のだ.
+
+    The pool spells 問題8 targets with 「だ」 and expository 読解 prose writes
+    「である」, so without this the R2-F5 pair was invisible even to the repaired
+    extraction. One replacement covers all three named equivalences.
+    """
+    return s.replace("である", "だ")
+
+
 KEY_EXPOSURE_GRANDFATHERED = {
     "20260807_1", "20260810_1", "20260810_2", "20260811_1", "20260812_2",
     "20260813_1", "20260813_2", "20260814_1", "20260817_2",
@@ -2675,6 +2819,47 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
     THE REPAIR: rewrite the reading occurrence (a connective always has a
     synonym) or re-key the grammar item. A 連体 use of a form keyed 文末 is NOT a
     hit — matching the whole keyed string is what encodes that.
+
+    R2-F4 (qa-report-20260819_1-round2), `GATE-WRONG`: the 問題8 branch used to
+    do `re.sub(r"[（(].*?[）)]", "", pool_entry_text(e))`, which on a 類型-labelled
+    entry DELETES THE FORM AND KEEPS THE LABEL — `理由説明(〜のは…からだ)` measured
+    as `"理由説明"`, `〜ほど〜はない` as `"ほどはない"` (a string that cannot occur).
+    **46 of 70** recorded `grammar_p8` draws across the 14 papers are
+    label-wrapped, so two-thirds of every 問題8 draw since the branch landed was
+    measured on a string the paper can never contain. Silence, not a wrong
+    number, was the symptom.
+
+    The extraction is now `sample_items.grammar_form_parts()` — the sampler's own,
+    the same one `grammar_form_tokens()` is built from, so gate and sampler cannot
+    disagree about what an entry's FORM is (the `check_mondai1_reading_type_mix`
+    precedent). Two things the token set could not supply and this branch needs:
+
+      * **the chunks IN ORDER, matched as one discontinuous skeleton** inside a
+        single sentence (`[^。]{0,KEY_EXPOSURE_GAP}`). `理由説明(〜のは…からだ)` is
+        the frame 「のは…からだ」, not the token 「からだ」; counting bare chunks would
+        fire on every 「〜ではない。」 for `〜ほど〜はない` and on every 「例えば」 for
+        `例示指示(〜例えば…)`. Chunks of 1 char (`対比表現(〜一方…だ)`'s 「だ」) are
+        dropped — a bare copula is not half of a frame.
+      * **copula-tail normalisation** (`である`→`だ`, which folds からである≡からだ
+        and のである≡のだ). Without it R2-F5 stays invisible even with the
+        extraction fixed: the pool writes 「からだ」 and expository 読解 prose writes
+        「からである」.
+
+    FOUNDING-CASE MEASUREMENT, run over all 14 papers on disk the day this landed
+    (`>KEY_EXPOSURE_MAX` only):
+
+        20260819_1 (pre-fix)  FAIL — 問題8 target「のは…からだ」×2
+                              — 問題10(1) 「…続けたのは、…回廊になっているからである。」
+                                and 問題11(3) 「…身構えたのは、…思ったからである。」,
+                                both the 文末 cleft-reason frame 問題8-47 tests.
+                                Repaired in the prose; now ×0.
+        20260810_1            問題8 target「一方」×3        <- GAINS a line
+        20260807_1            問題8 target「からといって」×2  (unchanged)
+        20260813_2            問題8 target「として」×10      (unchanged)
+
+    `20260810_1` is the only id that gains a line, and it is ALREADY in
+    KEY_EXPOSURE_GRANDFATHERED — so the repair adds no grandfathered id and
+    un-blinds the rule without re-classifying any shipped paper.
     """
     cut = bi.KEY_HEADING.search(gt)
     body = gt[:cut.start()] if cut else gt
@@ -2694,14 +2879,18 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
         n = prose.count(keyed)
         if n > KEY_EXPOSURE_MAX:
             hits.append(f"問{q}「{keyed}」×{n}")
+    prose8 = _copula_norm(prose)
     for e in (spec.get("items") or {}).get("grammar_p8") or []:
-        form = re.sub(r"[（(].*?[）)]", "", pool_entry_text(e))
-        form = form.replace("〜", "").replace("～", "").strip()
-        if len(form) < 2:
+        parts = [_copula_norm(p) for p in SAMPLE_ITEMS.grammar_form_parts(e)
+                 if len(p) >= 2]
+        if not parts:
             continue
-        n = prose.count(form)
+        skeleton = re.compile(("[^。]{0,%d}?" % KEY_EXPOSURE_GAP)
+                              .join(map(re.escape, parts)))
+        n = len(skeleton.findall(prose8))
         if n > KEY_EXPOSURE_MAX:
-            hits.append(f"問題8 target「{form}」×{n}")
+            hits.append(f"問題8 target「{'…'.join(parts)}」×{n} "
+                        f"(pool entry: {pool_entry_text(e)})")
     name = (f"{test_id}: no 問題7/8/9 keyed form appears more than "
             f"{KEY_EXPOSURE_MAX}× in the 問題10-14 prose")
     detail = ("; ".join(hits) + " — the tested form is ordinary running text a "
@@ -3810,6 +3999,152 @@ ERRAND_ROTATION_CATEGORIES = ("listening_scenarios", "reading_topics",
                               "quick_response")
 
 
+# Papers that already leak a grammar FORM across 問題7 and 問題8 inside the
+# drawing category's own cooldown window, measured over the whole ledger the day
+# `grammar_form_tokens()` landed (2026-08-20). All nine were drawn while the two
+# categories rotated independently, so `draw()` could not have refused the pick;
+# with the token in place the exclusion is by construction and any NEW id here
+# means a hand-edited spec, not a sampler gap. Clearing one means
+# `--reroll-one grammar_p8:<index>` and re-authoring that 問題8 item, which is a
+# decision about those papers, not about this gate. `20260819_1` is deliberately
+# ABSENT: it is the founding case and it was repaired
+# (`--reroll-one grammar_p8:0` seed 29028873, `grammar_p8:4` seed 35312257).
+GRAMMAR_CROSS_ROTATION_GRANDFATHERED = {
+    "20260811_1",   # p8 〜に基づいて      vs 20260807_1 p7 〜に基づいて
+    "20260812_1",   # p8 〜ないことには/〜つつある vs 20260810_1 p7 (both)
+    "20260812_2",   # p8 基準準拠(〜に沿って…進める) vs 20260807_1 p7 〜に沿って
+    "20260813_1",   # p8 〜に基づいて      vs 20260807_1 p7 〜に基づいて
+    "20260813_2",   # p7 〜ばかりに vs 20260807_1 p8; p8 〜として vs 20260813_1 p7
+    "20260817_1",   # p8 感情強調(〜てたまらない) vs 20260813_1 p7 〜てたまらない
+    "20260817_2",   # p8 原因理由構文(〜ばかりに…てしまった) vs 20260813_2 p7 〜ばかりに
+    "20260818_1",   # p7 〜につれて / 〜のみならず vs 20260810_1 / 20260811_1 p8
+}
+
+
+def check_grammar_cross_category_rotation(d, spec: dict, sample, pools: dict):
+    """問題7 and 問題8 are ONE rotation space — a form may not cross between them.
+
+    THE RULE: no grammar FORM this paper drew into `grammar_p7` may have been
+    drawn into `grammar_p8` by a paper inside that category's own
+    `cooldown_for()` window, or vice versa. The form is
+    `sample.grammar_form_tokens()`: the 類型 wrapper stripped, then cut on
+    「…」/「・」/「〜」, chunks of 3+ characters kept.
+
+    THE INCIDENT (qa-report-20260819_1 F1, AUTOMATIC fail): `20260819_1` drew
+    `限定表現(〜のみならず…も)` and `変化推移(〜につれて…ていく)` into 問題8 after
+    `20260818_1` — the IMMEDIATELY previous paper — had KEYED 〜のみならず at its
+    問題7-41 and 〜につれて at its 問題7-35. 15 forms are listed in BOTH pools;
+    `head()` splits a p8 entry on its first paren, so its identity was the LABEL
+    「限定表現」, and `check_spec_rotation` compared each category's window
+    separately. Re-measured over the ledger the day the token landed: **9 of the
+    14 papers on disk** leak this way, which is what made it systemic rather than
+    one bad draw.
+
+    THE REPAIR: `sample_items.py --reroll-one grammar_p8:<index>` with a fresh
+    RNG seed, then re-author that 問題8 item — never a hand substitution
+    (exam-blueprint 'Rotation model'). `draw()` now excludes the collision by
+    construction through `identity_tokens()`/`taken_tokens()`, so this check is
+    the backstop for a hand-edited spec and the founding-case record.
+    """
+    cats = getattr(sample, "GRAMMAR_FORM_CATS", ("grammar_p7", "grammar_p8"))
+    hist = ledger_history()
+    self_idx = next((i for i, h in enumerate(hist)
+                     if str(h.get("test_id")) == d.name), None)
+    prior = hist[:self_idx] if self_idx is not None else \
+        [h for h in hist if str(h.get("test_id")) != d.name]
+    stem = f"{d.name}: no grammar form crosses 問題7 <-> 問題8 inside its cooldown"
+    if not prior:
+        return skip(stem, "no other draws in the ledger to rotate against")
+
+    compared, cross = 0, []
+    for cat in cats:
+        xs = (spec.get("items") or {}).get(cat) or []
+        if not xs or cat not in pools:
+            continue
+        cool = sample.cooldown_for(cat, len(pools[cat]))
+        recent: dict[str, tuple[str, str, str]] = {}
+        for entry in prior[-cool:] if cool > 0 else []:
+            tid = str(entry.get("test_id"))
+            for other in cats:
+                for x in (entry.get("items") or {}).get(other) or []:
+                    for tok in sample.grammar_form_tokens(x):
+                        recent.setdefault(tok, (tid, other, pool_entry_text(x)))
+        for x in xs:
+            for tok in sample.grammar_form_tokens(x):
+                compared += 1
+                hit = recent.get(tok)
+                if hit and hit[1] != cat:
+                    form = tok.split("»", 1)[-1]
+                    cross.append(f"{cat} 「{pool_entry_text(x)}」 form 「{form}」 = "
+                                 f"{hit[0]} {hit[1]} 「{hit[2]}」 "
+                                 f"({cool}-draw cooldown)")
+    name = f"{stem} ({compared} form token(s) compared)"
+    if compared == 0:
+        return skip(name, "neither grammar category drew an entry carrying a "
+                          "3+-character form token")
+    detail = ("; ".join(sorted(set(cross))) + " — 問題7 and 問題8 draw from two "
+              "pools that list 15 forms in common; the category windows cannot "
+              "see across them. `--reroll-one grammar_p8:<index>` with a fresh "
+              "RNG seed, then re-author the item (exam-blueprint 'Rotation "
+              "model'; qa-report-20260819_1 F1)")
+    if d.name in GRAMMAR_CROSS_ROTATION_GRANDFATHERED:
+        return warn(name, not cross, detail + GRANDFATHER_NOTE)
+    check(name, not cross, detail)
+
+
+# Papers whose 問題1 draw exceeds the official ceiling of 2 訓読み targets in 5,
+# measured with `sample_items.is_kun_target()` over the whole ledger the day the
+# cap landed (2026-08-20): 20260807_1 = 4, 20260810_1 = 3, 20260817_2 = 3.
+# `20260819_1` is the founding case and is ABSENT because it was repaired
+# (`--reroll-one kanji_reading:0` seed 74013109, `kanji_reading:3` seed
+# 19524231, 4 訓読み -> 2). Clearing one of these means rerolling that paper's
+# 問題1 targets and re-authoring the items.
+MONDAI1_KUN_GRANDFATHERED = {"20260807_1", "20260810_1", "20260817_2"}
+MONDAI1_KUN_CAP = 2
+
+
+def check_mondai1_reading_type_mix(d, spec: dict, sample):
+    """At most 2 of the 5 問題1 targets may be 訓読み.
+
+    THE RULE (moji-goi.md §問題1): official's current era runs 2/2/1/2/2 訓読み of
+    5 across 7/2023-12/2025 — never more than two — and moji-goi's own
+    calibration table counts 12 訓読み among 35 current-era items (34 %).
+
+    THE INCIDENT (qa-report-20260819_1 F3): `20260819_1` shipped **4 of 5**
+    訓読み (半ば/情け/湯/常に). The consequence is not cosmetic — the 2x2
+    on-reading grid (清濁/長短 discrimination), which official exercises in 3-4
+    of the 5 slots, ran in ONE item, so 問題1 measured word recognition where
+    official measures reading precision. moji-goi's table had stated the 34 %
+    for months without ever turning it into a per-paper constraint, and nothing
+    counted it.
+
+    THE REPAIR: `sample_items.py --reroll-one kanji_reading:<index>` with a
+    fresh RNG seed — never a hand substitution (moji-goi.md §"Build the set
+    BEFORE you accept the target"). `sample_kun_capped()` now enforces the same
+    ceiling at draw time, including on the `--reroll-one` path, so this check is
+    the backstop and the founding-case record. The classifier is
+    `sample_items.is_kun_target()` and this check imports it, so gate and
+    sampler can never disagree.
+    """
+    xs = (spec.get("items") or {}).get("kanji_reading") or []
+    if not xs:
+        return skip(f"{d.name}: 問題1 訓読み/音読み mix", "no kanji_reading draw")
+    kun = [pool_entry_text(x) for x in xs if sample.is_kun_target(x)]
+    name = (f"{d.name}: 問題1 訓読み mix ({len(kun)} of {len(xs)}, "
+            f"cap {MONDAI1_KUN_CAP})")
+    detail = (f"訓読み {len(kun)} of {len(xs)} ({'/'.join(kun)}) — official runs "
+              f"2/2/1/2/2 of 5 over 7/2023-12/2025 and never exceeds "
+              f"{MONDAI1_KUN_CAP}. Above the cap the section stops testing the "
+              f"2x2 on-reading grid, which official runs in 3-4 of 5 slots. "
+              f"`--reroll-one kanji_reading:<index>` with a fresh RNG seed, "
+              f"never a hand substitution (moji-goi.md §問題1; "
+              f"qa-report-20260819_1 F3)")
+    over = len(kun) > MONDAI1_KUN_CAP
+    if d.name in MONDAI1_KUN_GRANDFATHERED:
+        return warn(name, not over, detail + GRANDFATHER_NOTE)
+    check(name, not over, detail)
+
+
 # `word_formation` entries notate the affix's SIDE: `X〜(例)` is a prefix and
 # `〜X(例)` a suffix. The example is the entry's own proof, so the two must
 # agree — and when they disagree the blueprint hands the author a target whose
@@ -4389,7 +4724,7 @@ def check_rotation_inputs():
     if not specs:
         return skip("test_spec blend contract", "no generated test_spec.json files")
 
-    sample = load(".agents/exam-blueprint/scripts/sample_items.py")
+    sample = SAMPLE_ITEMS
     pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
     pools = json.loads(pools_path.read_text(encoding="utf-8")) if pools_path.is_file() else {}
     # sample_items builds this index in main(), which never runs here. Ledger
@@ -4403,6 +4738,8 @@ def check_rotation_inputs():
         check_spec_rotation(d, spec, sample, pools)
         check_spec_errand_rotation(d, spec, sample, pools)
         check_spec_pool_kanji_reading(d, spec)
+        check_grammar_cross_category_rotation(d, spec, sample, pools)
+        check_mondai1_reading_type_mix(d, spec, sample)
         if not harvest:
             continue
         blended: list[tuple[str, str]] = []
@@ -7154,6 +7491,7 @@ def check_tests():
         if origin == "generated":
             check_moji4_option_set_level(d.name, opts)
             check_moji2_option_glyphs(d.name, gt, opts, bi)
+            check_mondai5_option_reuse(d.name, opts)
         st_text = (d / "聴解スクリプト.txt").read_text(encoding="utf-8") if (d / "聴解スクリプト.txt").is_file() else ""
         check_banned_collocations(d, gt, ct, st_text, origin)
         check_answer_positions(d, keys, ck, g)
@@ -7226,6 +7564,7 @@ def check_tests():
             check_mondai9_tags(d.name, bunpou.group(1))
             check_mondai9_option_lengths(d.name, opts)
             check_mondai7_option_refs(d.name, bunpou.group(1), opts)
+            check_mondai7_option_form_reuse(d.name, opts)
         elif origin == "generated":
             check(f"{d.name}: 問題9 解説 cells carry four distinct category "
                   f"tags incl. one [内容推論]", False,

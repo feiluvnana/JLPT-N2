@@ -34,6 +34,30 @@ MUST share that exact okurigana** (`生じる` options all end `〜じる`) —
 offering `しょうする`/`せいする` beside a printed `じる` tail eliminates them
 on sight.
 
+### At most 2 of the 5 問題1 targets may be 訓読み
+
+A 訓読み target is one whose okurigana is printed, or a single-kanji 和語 word.
+Official's current era runs **2 / 2 / 1 / 2 / 2 of 5** (7/2023–12/2025) and
+never exceeds two; the calibration table further down this file counts 12
+訓読み among 35 current-era items (34 %).
+
+**Three or more inverts the section.** The 2×2 on-reading grid below — 清濁 and
+長短 discrimination — is what 問題1 actually discriminates on, and official runs
+it in 3–4 of the 5 slots. A 訓読み-heavy paper measures word recognition
+instead. `20260819_1` shipped **4 of 5** 訓読み (半ば/情け/湯/常に) with the
+grid exercised in ONE item (F3); `20260807_1` also shipped 4, `20260810_1` and
+`20260817_2` 3.
+
+The cap is enforced at draw time by `sample_kun_capped()` in
+`sample_items.py` (including on the `--reroll-one` path, so a single redraw
+cannot push a paper over) and re-checked by
+`check_mondai1_reading_type_mix()`. Both read the same classifier,
+`sample_items.is_kun_target()`. **Repair a paper over the cap with
+`sample_items.py --reroll-one kanji_reading:<index>` and a fresh RNG seed** —
+never a hand substitution (§"Build the set BEFORE you accept the target"), and
+never by re-balancing the option field, which cannot change what kind of
+reading the printed target has.
+
 ### 2-kanji on-reading compounds: the 2×2 Cartesian product matrix
 
 For 2-kanji 音読み targets (矛盾, 縮小, 概要, 効率, 措置, 交渉), official
@@ -285,6 +309,23 @@ frame — change the frame.** `20260817_3` 問題5-21 keyed 器用だ and shippe
 「手先が上手だ」: the idiomatic phrase is 手先が**器用**, which is unusable
 because it is the target, so substituting into 「手先が〜」 can only produce
 marked wordings. The fix was a different frame — 「細かい作業が得意だ」.
+
+### The twenty options of one 問題5 are twenty DIFFERENT words
+
+一つの問題5の中で、同じ語を二つの項目の選択肢に出さない。公式5回分80選択肢での
+重複は**0件**。鍵として出した語を別項目の妨害肢に再利用すると、21を確信した受験者に
+23の消去情報を、言語ではなく紙のほうから与えてしまう。
+
+`20260819_1` keyed 「わずかに」 at 問題5-21 and printed it as a distractor at
+問題5-23 (`qa-report-20260819_1-round3` R3-S4). **The repair is the DISTRACTOR,
+never the key**: the key is half of a drawn `paraphrase` entry
+(`うっすら(わずかに)`), so moving it silently un-tests the drawn item. Replace
+the distractor with another word of the same functional category — the swap
+that shipped was 問題5-23 「わずかに」→「多少」.
+
+`check_mondai5_option_reuse()` collects the 20 options and FAILs on any word
+appearing in two items. Re-run over all 14 papers when it landed: the pre-fix
+`20260819_1` was the only line it produced anywhere, so no id is grandfathered.
 
 **Katakana headwords are rare on purpose** — the archive draws one in only
 3/35 current-era 問題5 items (`official_calibration.md` §12);

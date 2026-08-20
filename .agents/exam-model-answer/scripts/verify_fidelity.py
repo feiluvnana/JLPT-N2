@@ -25,9 +25,10 @@ real content:
   - 問6 (用法) stems, and any 問9 (文章の文法) cloze item, legitimately prepend
     the section instruction line for readability; the source alone is just
     the bare target word / blank marker.
-  - 聴解 script fields legitimately end before the announcer's restated
-    question (kept in `stem`/narration instead, not duplicated into `script`)
-    and use `<br>` between speaker turns where the source has a bare newline.
+  - 聴解 script fields may use `<br>` between speaker turns where the source
+    has a bare newline. (The restated question IS part of `script` for 問題1-4
+    and for a one-question 問5; only a two-question 問5 keeps 質問1/質問2 in
+    `stem` alone, since one talk feeds two items.)
 Everything else that's flagged -- a dropped <strong>, a passage left empty on
 the 2nd+ question of a shared reading passage, option wording that doesn't
 match the booklet -- is a real defect: fix it by hand, re-deriving the
@@ -74,12 +75,26 @@ def strip_markup(text: str) -> str:
     return text
 
 
-def _strip_stem_option_spans(text: str, matches) -> str:
-    """`text` with every STEM_BLOCK_RE match's span removed, for passage use."""
+def _strip_stem_option_spans(text: str, matches, offset: int = 0) -> str:
+    """`text` with every STEM_BLOCK_RE match's span removed, for passage use.
+
+    `offset` rebases the match spans, which are indices into the WHOLE section
+    body, onto `text` when `text` is a slice of that body (one ### subsection).
+    Without it the cut landed `offset` characters too late: the passage of a
+    問題10/問題11 subsection kept the head of its own stem (`…**52** 市が`), and
+    every later subsection -- where the offset exceeds the subsection's own
+    length -- had nothing removed at all, so the numbered option lines (and, on
+    a two-question passage, the next item's whole block) were served to the
+    learner as part of the reading text. Found 2026-08-20 in 20260819_1 and
+    present in every earlier paper's 詳細解説.json passages.
+    """
     out, last = [], 0
     for m in matches:
-        out.append(text[last:m.start()])
-        last = m.end()
+        start, end = m.start() - offset, m.end() - offset
+        if end <= 0 or start >= len(text):
+            continue
+        out.append(text[last:max(last, start)])
+        last = max(last, end)
     out.append(text[last:])
     return "".join(out).strip()
 
@@ -113,7 +128,8 @@ def derive_gengo_raw(exam_body: str) -> dict:
                 sub_body = body[sub_start:sub_end]
                 sub_stems = [m for m in stem_matches
                              if sub_start <= m.start() < sub_end]
-                sub_texts.append(_strip_stem_option_spans(sub_body, sub_stems))
+                sub_texts.append(
+                    _strip_stem_option_spans(sub_body, sub_stems, sub_start))
                 sub_stem_matches.append(sub_stems)
 
             in_any_sub = {m for stems in sub_stem_matches for m in stems}
@@ -158,7 +174,7 @@ CHOUKAI_ITEM_RE = re.compile(
 
 
 def derive_choukai_options_from_md(choukai_body: str) -> dict:
-    """Printed options for 問題1-3 (問4/5 print only placeholder numerals, so
+    """Printed options for 問題1-2 (問3/4/5 print only placeholder numerals, so
     they come back empty here -- derive_choukai_raw falls back to the script
     for those)."""
     out = {}
@@ -178,6 +194,63 @@ def derive_choukai_options_from_md(choukai_body: str) -> dict:
     return out
 
 
+SPEAKER_LINE_RE = re.compile(r"^[^\n:：]{1,6}[:：]")
+SPOKEN_QUESTION_RE = re.compile(r"^質問([12])[。.][ \t]*(.*)$")
+SPOKEN_OPTION_RE = re.compile(r"^([1-4])[、.][ \t]*(.*)$")
+
+
+def _split_spoken_block(rest: str):
+    """(narration_lines, option_groups, questions) for a 問題3/4/5 script block.
+
+    The booklet prints no options for these sections, so they come out of the
+    script itself. Three shapes have to survive the same splitter:
+      問題3/問5 one-question — narration, then ONE numbered option group;
+      問題4                 — one prompt line, then ONE 3-option group;
+      問5 two-question      — narration, 質問1 + group, 質問2 + group.
+    Anything after an option group that is neither a further 質問 nor a further
+    numbered option is the announcer's instruction for the NEXT item (or the
+    closing 「これで、聴解試験を終わります。」) and is dropped: it used to be
+    concatenated onto the last option's text.
+    """
+    narration, groups, questions = [], [], []
+    cur, seen_opts = None, False
+    for line in rest.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        m_q = SPOKEN_QUESTION_RE.match(line)
+        if m_q:
+            questions.append((int(m_q.group(1)), m_q.group(2).strip()))
+            cur = None
+            continue
+        m_o = SPOKEN_OPTION_RE.match(line)
+        if m_o:
+            if m_o.group(1) == "1" or cur is None:
+                cur = []
+                groups.append(cur)
+            cur.append(m_o.group(2).strip())
+            seen_opts = True
+            continue
+        cur = None
+        if not seen_opts and not questions:
+            narration.append(line)
+    return narration, groups, questions
+
+
+def _narration_parts(lines: list):
+    """(lead_in, trailing_narration) around the block's speaker turns.
+
+    The lead-in ("ラジオで、店長が話しています。") and the restated question
+    ("店長は何について話していますか。") are the announcer's, not a speaker's:
+    together they are what the item ASKS, and the booklet prints neither.
+    """
+    speakers = [i for i, l in enumerate(lines) if SPEAKER_LINE_RE.match(l)]
+    if not speakers:
+        return "\n".join(lines).strip(), ""
+    return ("\n".join(lines[:speakers[0]]).strip(),
+            "\n".join(lines[speakers[-1] + 1:]).strip())
+
+
 def derive_choukai_raw(choukai_body: str, script_text: str) -> dict:
     """{key_id: {"stem": raw, "options": [raw,...], "script": raw|None}}"""
     items = {}
@@ -190,7 +263,7 @@ def derive_choukai_raw(choukai_body: str, script_text: str) -> dict:
             continue
         rest = block[m_head.end():]
         if key_id in md_options:
-            # 問題1-3: booklet prints the options; the script's lead-in
+            # 問題1-2: booklet prints the options; the script's lead-in
             # sentence up to the first speaker turn is the stem, everything
             # after (including any restated question) is the script.
             speaker_m = re.search(r"^[^\n:：]{1,6}[:：]", rest, re.M)
@@ -201,26 +274,38 @@ def derive_choukai_raw(choukai_body: str, script_text: str) -> dict:
                 stem, script = rest.strip(), None
             items[key_id] = {"stem": stem, "options": md_options[key_id],
                               "script": script}
+            continue
+
+        # 問題3/4/5: the options are spoken, not printed.
+        narration, groups, questions = _split_spoken_block(rest)
+        lead_in, tail = _narration_parts(narration)
+
+        if key_id.startswith("問4"):
+            # 即時応答: the whole prompt is the stem, there is no transcript
+            # to show separately.
+            items[key_id] = {"stem": "\n".join(narration),
+                             "options": groups[0] if groups else [],
+                             "script": None}
+        elif len(questions) >= 2 and len(groups) >= 2:
+            # 問5 統合理解, two questions over one talk. It has to become TWO
+            # entries: 聴解.md keys the rows 問5-N-1/問5-N-2 and the answer key
+            # is per question, so a single 8-option entry could never be tagged
+            # against one answer value (build_model_answer.explanation_box_html
+            # tags [正解] by index). Each half keeps its own 4 options.
+            script = "\n".join(narration)
+            for group, (q_n, q_text) in zip(groups, questions):
+                items[f"{key_id}-{q_n}"] = {
+                    "stem": f"{lead_in}質問{q_n}　{q_text}",
+                    "options": group,
+                    "script": script,
+                }
         else:
-            # 問題4/5: booklet prints no options -- they are spoken. Split off
-            # the trailing "1、…\n2、…\n3、…[\n4、…]" block as options; what
-            # remains is stem (問4: the single prompt line) or script (問5:
-            # the monologue/dialogue, ending in the restated question).
-            opt_m = re.search(
-                r"(?:^|\n)1[、.][ \t]*.*$", rest, re.S)
-            if opt_m:
-                pre = rest[:opt_m.start()].strip()
-                opts = [o.strip() for o in
-                        re.split(r"(?:^|\n)[1-4][、.][ \t]*", rest[opt_m.start():])
-                        if o.strip()]
-            else:
-                pre, opts = rest.strip(), []
-            if key_id.startswith("問4"):
-                items[key_id] = {"stem": pre, "options": opts, "script": None}
-            else:  # 問5
-                items[key_id] = {"stem": pre if "質問" in key_id else "",
-                                  "options": opts,
-                                  "script": None if "質問" in key_id else pre}
+            # 問題3 概要理解 / 問5 one-question: the announcer's lead-in and
+            # restated question make the stem; the whole narration is the
+            # transcript.
+            items[key_id] = {"stem": f"{lead_in}{tail}",
+                             "options": groups[0] if groups else [],
+                             "script": "\n".join(narration)}
     return items
 
 

@@ -213,8 +213,17 @@ it before calling any authoring work done.
     「値段の比較的美味しい」 is unanswerable as printed). A meaning match
     isn't enough; the frame must accept the word.
 13. **問題1 & 問題2: 2×2 Cartesian product matrix ({A, B} × {C, D} → {AC,
-    AD, BC, BD}).** Generate/validate deterministically with
-    `python3 tools/matrix_helper.py` (zero token cost).
+    AD, BC, BD}).** Build the grid by hand from `moji-goi.md`, then check it
+    with `python3 tools/matrix_helper.py validate --reading <かな> <4 options>`
+    (zero token cost). `--reading` is REQUIRED for a 問題2 grid, and what it
+    adds is the check that matters: every option's kanji must actually read as
+    the stem kana. Without it the tool certifies only the Cartesian SHAPE — it
+    used to return PASS on `回転/回体/同転/同体`, a perfect grid three of whose
+    options cannot be read かいてん (F4, qa-report-20260819_1). 問題1 grids are
+    pure kana, so no skeleton is derivable and the tool says so in its own PASS
+    string: resolve those four readings by hand (§"All four readings must
+    RESOLVE"). **The two GENERATOR subcommands are hard-disabled** — never
+    reach for them.
     - 問題1 on-reading compounds (矛盾, 縮小, 概要, 効率): options follow
       the 2×2 reading matrix — never break the grid with an arbitrary 3rd
       ending.
