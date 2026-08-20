@@ -2,13 +2,13 @@
 
 .PHONY: help check check-tests grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
        init-import extract-pdf extract-archive extract-keys lint-draft lint verify-scramble scaffold-explanations irt \
-       scaffold-sections matrix qa-eval autofix
+       scaffold-sections matrix qa-eval autofix scaffold-translation merge-translation
 
 # Positional test-id argument: "make grade 1", "make sheet 2", "make sample 5".
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
 # covers every test, so it takes no id. `pages` builds every test by default;
 # "make pages 1" (or TEST=1) narrows it to one.
-TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt scaffold-sections matrix qa-eval autofix
+TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt scaffold-sections matrix qa-eval autofix scaffold-translation merge-translation
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -25,6 +25,12 @@ TEST ?= $(if $(POS_ARG),$(POS_ARG),1)
 # never a hand-picked or remembered number — see exam-blueprint/SKILL.md.
 SEED ?=
 SLUG ?=
+# Target language for the model-answer translation. TLANG/TLABEL, never
+# LANG/LABEL: `make LANG=vi` would also replace the locale of every command
+# these recipes shell out to. Which languages a paper ships with is declared in
+# GENERATE.md, never here (.agents/exam-answer-translation).
+TLANG ?=
+TLABEL ?=
 # GitHub Pages build output. Gitignored: CI builds it, nothing commits it.
 SITE ?= _site
 PAGES_PORT ?= 8766
@@ -48,6 +54,8 @@ help:
 	@echo "  make model-answer 1   Build model answer & explanation for test 1 (模範解答.html)"
 	@echo "  make explanation 1    Alias for make model-answer"
 	@echo "  make scaffold-explanations 1 Scaffold explanation JSON template directly from markdown"
+	@echo "  make scaffold-translation 1 TLANG=xx TLABEL=Name  Scaffold model-answer translation packets"
+	@echo "  make merge-translation 1 TLANG=xx  Validate + merge them into 詳細解説.xx.json"
 	@echo "  make lint-draft 1     Fast pre-linter for contractions, reaction turns, abs-quantifiers"
 	@echo "  make autofix 1        Auto-fix conversational contractions and stem formatting"
 	@echo "  make lint 1           Alias for make lint-draft"
@@ -100,6 +108,12 @@ explanation: model-answer
 
 scaffold-explanations:
 	python3 tools/scaffold_explanations.py tests/$(TEST)
+
+scaffold-translation:
+	python3 .agents/exam-answer-translation/scripts/scaffold_translation.py tests/$(TEST) --lang "$(TLANG)" --label "$(TLABEL)"
+
+merge-translation:
+	python3 .agents/exam-answer-translation/scripts/merge_translation.py tests/$(TEST) --lang "$(TLANG)"
 
 lint-draft:
 	python3 tools/lint_draft.py tests/$(TEST)

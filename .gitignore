@@ -20,6 +20,10 @@ tests/*/_extract/
 # (jlpt-test-generation reading map); the merged Markdown is the deliverable.
 tests/*/_sections/
 
+# Model-answer translation work packets (make scaffold-translation). The
+# deliverable is tests/<id>/詳細解説.<lang>.json, which IS committed.
+tests/*/_translation/
+
 # Compiled helper binaries (tools/vision_ocr.swift is rebuilt on first use)
 tools/.build/
 

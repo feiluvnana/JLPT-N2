@@ -38,7 +38,7 @@ authored nothing** — an author cannot audit its own intent.
 | 2. Author | 文字・語彙 (問1–6) \| 文法 (問7–9) \| 読解 (問10–14) \| 聴解 (booklet §聴解 + script) | 4 subagents, **in parallel** |
 | 3. Build + gate | Booklet HTML, MP3, 解答.html, `make check`, whole-paper topic table | 1 subagent |
 | 4. QA | `exam-qa-review` in full — blind-solve first, all 101 items, root-cause table | 1 **fresh** subagent |
-| 5. Model Answer (Final) | `make model-answer <id>` → `模範解答.html` — **MUST always be the final step** after QA PASS | 1 subagent |
+| 5. Model Answer (Final) | `詳細解説.json` → the translations `GENERATE.md` declares (`exam-answer-translation`) → `make model-answer <id>` → `模範解答.html` — **MUST always be the final step** after QA PASS | 1 subagent per translation packet + 1 |
 
 Every QA finding adds a fix + re-review round: the fix may reuse an
 authoring context; the re-review of the touched items must again be fresh
@@ -81,7 +81,7 @@ disk, never from the orchestrator's summary), and nothing else:
 | 2 聴解 | `test_spec.json` + `question-authoring/SKILL.md` + `references/choukai-items.md` + `choukai-audio/SKILL.md` + `jlpt-exam-structure/SKILL.md` | `聴解.md` (incl. セクション構成表), `聴解スクリプト.txt` |
 | 3 Build+gate | `exam-app/SKILL.md`, `choukai-audio/SKILL.md` (synthesis §), this file's topic-table § | `言語知識・読解.md` (merged), HTML/MP3, `logs/topics.json` row, gate report |
 | 4 QA | `exam-qa-review/SKILL.md` (routes to what it needs) | `qa/qa-report-<id>.md` |
-| 5 Model Answer | `exam-model-answer/SKILL.md` | `tests/<id>/模範解答.html` |
+| 5 Model Answer | `exam-model-answer/SKILL.md`, then `exam-answer-translation/SKILL.md` | `tests/<id>/詳細解説.json`, `tests/<id>/詳細解説.<lang>.json`, `tests/<id>/模範解答.html` |
 
 Stage-2 authors write **section fragments** to
 `tests/<id>/_sections/<問題range>.md` — booklet body, then its
@@ -265,7 +265,9 @@ the gate says.
 
 ```bash
 make scaffold-explanations <id>    # -> auto-scaffold tests/<id>/詳細解説.json from markdown
-make model-answer <id>             # -> tests/<id>/模範解答.html
+make scaffold-translation <id> TLANG=xx TLABEL=…   # -> translation work packets
+make merge-translation <id> TLANG=xx               # -> tests/<id>/詳細解説.xx.json
+make model-answer <id>             # -> tests/<id>/模範解答.html (all languages)
 ```
 
 - **MUST always be the final step** — run only AFTER Stage 4 returns

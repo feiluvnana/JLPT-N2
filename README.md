@@ -28,7 +28,7 @@ Shin Kanzen Master textbooks in `refs/`.
 > | The rules, directory layout, file-naming contract, command router | **`AGENTS.md`** |
 > | To generate a new mock exam | `GENERATE.md` → `.agents/jlpt-test-generation/SKILL.md` |
 > | To import an external PDF / past paper | `IMPORT.md` → `.agents/external-test-import/SKILL.md` |
-> | How any one subsystem works | the 8 skills in `.agents/<name>/SKILL.md` |
+> | How any one subsystem works | the 10 skills in `.agents/<name>/SKILL.md` |
 >
 > If this file and an owner file ever disagree, **the owner wins** — and the
 > disagreement is a defect to fix, not to route around.
@@ -46,7 +46,7 @@ Shin Kanzen Master textbooks in `refs/`.
 | 5 | `pdfplumber`, `pypdf`, `pdfminer.six` | PDF extraction (`make extract-*`, imports) | for imports/refs |
 | 6 | **GNU Make + a POSIX shell** | the `make` targets use `test -n … \|\| ( … )` | **yes** |
 | 7 | **Git + Git LFS** | `refs/` is **2.3 GB / 261 PDFs and MP3s** behind LFS | **yes** |
-| 8 | **Git symlink support** | `.claude/skills/*` are 8 symlinks into `.agents/*` | **yes** |
+| 8 | **Git symlink support** | `.claude/skills/*` are 10 symlinks into `.agents/*` | **yes** |
 | 9 | **Noto Serif CJK JP + Noto Sans CJK JP** | the booklet CSS names these two fonts explicitly | for correct print output |
 | 10 | **Node.js** | one gate check compares the in-page grader with `grade_answers.py` | optional (check skips) |
 | 11 | **poppler** (`pdftoppm`) | `make extract-archive` page rasterisation | optional |
@@ -141,7 +141,7 @@ winget install ezwinports.make        # or use MSYS2 / choco install make
   *Install for all users*. (`Yu Gothic`, already on Windows, covers the app UI.)
 - **Symlinks** — enable **Developer Mode** (Settings → System → For developers),
   then `git config --global core.symlinks true`, **before cloning**. Without it
-  the 8 files under `.claude/skills/` check out as text stubs containing a path,
+  the 10 files under `.claude/skills/` check out as text stubs containing a path,
   the skills stop resolving, and `make check` fails
   `every skill is symlinked under .claude/skills/`.
 - **Console encoding** — set `PYTHONUTF8=1`. `make check` prints Japanese
