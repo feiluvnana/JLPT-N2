@@ -92,7 +92,20 @@ differently, so whichever was on PATH silently changed the furigana output.
    (line-height 2.1) only to blocks containing ruby.
 8. **Vocabulary notes** (`（注1）…`): `.vocab-notes` styling (9pt, line-height
    1.6, top dashed border) replicates the official Dokkai layout.
-9. **`add_choukai_furigana()`'s pykakasi output needs a fixup pass** — a
+9. **Passage boxes are not optional decoration** — official booklets print
+   every 問題9–14 passage/notice inside a ruled box, separate from the
+   questions below it (`.passage-box`, produced by `box_passages()`).
+   **14 boxes per paper**: 問題9 ×1, 問題10 ×5, 問題11 ×4, 問題12 ×2 (A and B
+   box separately), 問題13 ×1, 問題14 ×1 — `make check`
+   (`check_passage_boxes`) FAILs any other count, in the Markdown AND in both
+   built HTML files. The box comes from pattern-matching the source, so an
+   authoring dialect the boxer misses prints an unboxed passage with no error:
+   both the `## 問題N` + inline instruction and the bare-heading + instruction-
+   paragraph forms are matched, and 問題12's texts may be labelled `### A` or
+   `**A**`. A dialect that ships boxless is a `box_passages()` bug — teach the
+   boxer, never hand-edit HTML (2026-08-20: three papers rendered 0 boxes and
+   three more merged 問題12's A and B into one, all green).
+10. **`add_choukai_furigana()`'s pykakasi output needs a fixup pass** — a
    2026-08 audit found real wrong readings: bare `人` came back `にん` instead
    of `ひと` (genuine `にん` compounds like 三人/本人 are long enough that
    kakasi already merges them, so a standalone `人` is always "hito"); `方`

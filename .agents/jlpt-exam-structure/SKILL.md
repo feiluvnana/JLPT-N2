@@ -275,6 +275,9 @@ equal the announcer's declared number — `make check` compares them.
 - **読解 vocabulary notes**: 問題9–14 passages carry NO furigana; over-level
   terms are annotated inline only via `（注1）`, `（注2）`…, with structured
   note blocks below the passage before its questions.
+- **読解 passages print inside a ruled box** (問題9–14), the questions
+  outside it — 14 boxes per paper. Rendering and the accepted Markdown
+  dialects: `exam-app` §"Non-negotiables" item 9.
 - **Passage numbered markers (1-to-1)**: every `①**...**`/`②**...**` in a
   passage must match a question stem — no orphaned markers.
 

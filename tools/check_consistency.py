@@ -6626,6 +6626,61 @@ def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
              "prefer contrasting voices (choukai-audio)")
 
 
+def check_passage_boxes(d):
+    """Every 問題9–14 passage must render inside its ruled `.passage-box`.
+
+    Official booklets print the reading text/notice in a ruled box, separate
+    from the questions under it (`build_booklet.box_passages()`). The box is
+    produced by pattern-matching the Markdown, so an authoring dialect the
+    boxer does not recognise silently prints an unboxed passage — no error,
+    valid HTML, just not the official layout. Exactly that shipped (user
+    report, 2026-08-20): `20260818_1`/`20260817_3` put the 問題N instruction
+    on the `## 問題N` heading line, where `SECTION_RE` demanded a bare
+    heading, so ALL 14 boxes vanished; and `20260814_1`/`20260817_1`/
+    `20260817_2` labelled 問題12's two texts `**A**`/`**B**` instead of
+    `### A`, merging both texts into one box. `make check` was green through
+    all of it.
+
+    The count, not the dialect, is what the reader sees: 14 boxes per paper —
+    問題9 ×1, 問題10 ×5, 問題11 ×4, 問題12 ×2 (A and B box separately),
+    問題13 ×1, 問題14 ×1. Both dialects are accepted by the boxer; a new one
+    that the boxer misses lands here as a count mismatch. Checked on the
+    built HTML (booklet AND sheet), because that is the artifact that ships.
+    """
+    src = d / "言語知識・読解.md"
+    if not src.is_file():
+        return
+    bb = load(".agents/exam-app/scripts/build_booklet.py")
+    md = src.read_text(encoding="utf-8")
+    boxed = bb.box_passages(md)
+    want = boxed.count(bb.BOX_START)
+    per = {}
+    for m in re.finditer(r"^## (問題(?:9|1[0-4]))[^\n]*\n(.*?)(?=^## |\Z)",
+                         bb.box_passages(bb.KEY_SPLIT.split(md, maxsplit=1)[0]),
+                         re.M | re.S):
+        per[m.group(1)] = m.group(2).count(bb.BOX_START)
+    expected = {"問題9": 1, "問題10": 5, "問題11": 4,
+                "問題12": 2, "問題13": 1, "問題14": 1}
+    missing = [f"{k} boxes {per.get(k, 0)}, expected {v}"
+               for k, v in expected.items() if per.get(k, 0) != v]
+    check(f"{d.name}: 読解 Markdown boxes every passage ({want}/14)",
+          not missing,
+          "; ".join(missing) + " — the passage is rendering with no ruled box "
+          "(or two texts share one). Either the section uses an authoring "
+          "dialect build_booklet.box_passages() does not match (instruction "
+          "placement, A/B labels) or a passage is missing; teach the boxer the "
+          "dialect, never hand-edit the HTML (exam-app §Booklet rendering)")
+    for name in ("言語知識・読解.html", "解答.html"):
+        page = d / name
+        if not page.is_file():
+            continue
+        got = page.read_text(encoding="utf-8").count('class="passage-box"')
+        check(f"{d.name}: {name} renders {want} passage boxes", got == want,
+              f"{got} in the HTML vs {want} from today's Markdown — run "
+              f"`make booklet {d.name} && make sheet {d.name}` "
+              f"(exam-app: the Markdown is the single source of truth)")
+
+
 def check_artifact_freshness(d):
     """Deliverables must carry the sha of the source they were built from (G4).
 
@@ -7141,6 +7196,7 @@ def check_tests():
             check("聴解_チャプター.json accompanies the MP3", (d / "聴解_チャプター.json").is_file(),
                   "re-run make mp3 to regenerate chapter marks")
         check_artifact_freshness(d)
+        check_passage_boxes(d)
 
         sheet = d / "解答.html"
         if not sheet.is_file():

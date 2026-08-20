@@ -324,8 +324,15 @@ def widen(line: str) -> str:
 BOX_START = "JLPTPASSAGEBOXSTART"
 BOX_END = "JLPTPASSAGEBOXEND"
 KEY_SPLIT = re.compile(r"^#+\s*(?:解答|【?正解)", re.M)
-SECTION_RE = re.compile(r"^(## 問題(?:9|10|11|12|13|14)[ \t]*\n)(.*?)(?=^## |\Z)", re.M | re.S)
-SUBSECTION_RE = re.compile(r"^(### [^\n]*\n)(.*?)(?=^### |\Z)", re.M | re.S)
+# Both authored dialects must box, or the box silently disappears (see
+# box_passages()): the 問題N instruction may sit on the `## 問題N` line OR in
+# its own paragraph below, and 問題12's two texts may be labelled `### A` OR
+# `**A**`. `[^\n]*` on the heading and SUB_MARK's two alternatives are what
+# make the boxer dialect-agnostic -- narrowing either one drops boxes with no
+# error (2026-08-20: `[ \t]*` here boxed nothing at all in three papers).
+SECTION_RE = re.compile(r"^(## 問題(?:9|10|11|12|13|14))([^\n]*)\n(.*?)(?=^## |\Z)", re.M | re.S)
+SUB_MARK = r"(?:###[ \t][^\n]*|\*\*[A-D]\*\*[ \t]*)"
+SUBSECTION_RE = re.compile(rf"^({SUB_MARK}\n)(.*?)(?=^{SUB_MARK}$|\Z)", re.M | re.S)
 FIRST_STEM_RE = re.compile(r"\n\*\*\d+\*\*")
 FIRST_PARA_GAP_RE = re.compile(r"\n[ \t]*\n")
 
@@ -344,12 +351,20 @@ def _box_upto_stem(body: str) -> str:
 
 
 def _process_section(m: re.Match) -> str:
-    heading, body = m.group(1), m.group(2)
+    number, head_tail, body = m.group(1), m.group(2), m.group(3)
+    heading = f"{number}{head_tail}\n"
     if SUBSECTION_RE.search(body):
-        # ### (1)/### A subsections: the box wraps each subsection's own
-        # passage, so the section's instruction line (before the first ###)
-        # sits outside every box, matching official layout.
+        # ### (1) / ### A / **A** subsections: the box wraps each
+        # subsection's own passage, so the section's instruction line (before
+        # the first marker) sits outside every box, matching official layout.
+        # The marker itself stays outside too -- the label prints above the
+        # ruled box, as in the official booklets.
         body = SUBSECTION_RE.sub(lambda sm: sm.group(1) + _box_upto_stem(sm.group(2)), body)
+    elif head_tail.strip():
+        # 問題9/13/14 with the instruction already on the heading line: the
+        # whole body IS the passage. Skipping a paragraph here would push the
+        # passage's first paragraph out of the box.
+        body = _box_upto_stem(body)
     else:
         # No subsections (問題9/13/14): skip the leading instruction
         # sentence -- the box starts at the next paragraph (the passage's
