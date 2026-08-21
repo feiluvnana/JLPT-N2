@@ -196,6 +196,22 @@ open the sourced Markdown and diff. Full procedure in "Ground rules" above;
 the diff is §7 item 2 of the report. Steps 1–6 all read the keys, so none can
 run first.
 
+**Then run the two BLIND STRATEGY passes over the 20 読解 items, and record both
+scores in the report** (REPORT-DOKKAI.md §F1/§F2, §2.4). Before reasoning about
+meaning, answer each 問題10–13 item twice mechanically:
+
+1. pick the option sharing the most character bigrams with its own passage;
+2. pick the second-longest option.
+
+Chance is 25%. Official papers score 32.8% and 24.6% on these; a shipped paper
+of ours scored **60.3%** and **49.2%**, which means an examinee who reads no
+Japanese outscores one who reads badly. **Above 45% on either, the section goes
+back to authoring** — and the repair is to rebuild distractors from passage
+clauses with one fact changed, never to trim the key (trimming is how a
+paraphrase collapses back onto the passage's wording). These two numbers are the
+only way a single paper's F1/F2 exposure is visible to a human pass; the gate
+sees the distribution, not the solvability.
+
 ### 1. Key-by-key proof (all 101 items)
 
 For each item, find the line that DECIDES it and confirm the keyed option

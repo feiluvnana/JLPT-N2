@@ -176,9 +176,25 @@ def classify_q14_target(stem: str) -> str:
         return "value"
     if re.search(r"(何を用意|どの書類|必要なもの|支払うもの|何を持|何が必要|何を持参)", stem):
         return "value"
-    if re.search(r"(どうしなければ|どうすれば|どのように申し込|どのように予約|どうやって|どのような手続き|手続)", stem):
+    if re.search(r"(どうしなければ|どうすれば|どのように申し込|どのように予約|どうやって|"
+                 r"どのような手続き|手続|なければならない|必要があるか|どこへ|どこで|"
+                 r"しかた|仕方|方法|気をつけ|注意すること|"
+                 r"どのように[^。]{0,6}(すれば|買え|申請|連絡))", stem):
         return "action"
-    if re.search(r"(どの(講座|コース|プラン|部屋|日|時間)|誰|どの人)", stem):
+    # A choice is any 「どの＋名詞」 — the report's definition is "one named option
+    # from the flyer", and the closed noun list this replaces (講座|コース|プラン|
+    # 部屋|日|時間) silently dropped every other named thing an item can key on
+    # (施設, 券, 窓口, 便), which read as `other` and so counted against the paper.
+    if re.search(r"どの[一-鿿ぁ-ヿ]{1,6}|誰|どの人", stem):
+        return "choice"
+    # 「前田さんの希望に合う講座はどれか」 — a named option from the flyer, which is
+    # what 情報検索 asks for; only 「もの/こと/の + はどれか」 is the generic
+    # truth-check shape, so a CONCRETE noun before はどれか is a choice.
+    # Katakana and long-vowel marks belong in the noun class: 「鈴木さんに合う
+    # コースはどれか」 is a named choice, and a kanji-only class read it as `other`.
+    # 「正しいものはどれか」 cannot match — もの is hiragana — so the truth-check
+    # family below still catches the generic shape.
+    if re.search(r"[一-鿿ァ-ヶー]{2,10}は(?:どれか|どちらか)", stem):
         return "choice"
     if re.search(r"(正しいもの|適切なもの|合っているもの)", stem):
         return "truth_check"
@@ -188,6 +204,32 @@ def classify_q14_target(stem: str) -> str:
 # --------------------------------------------------------------------------
 # Official booklet parser
 # --------------------------------------------------------------------------
+
+def _stem_and_options(first_line: str, blob: str) -> tuple[str, list[str]]:
+    """Fold a stem's wrapped lines back on before the options start.
+
+    Official stems routinely run two lines, and the QUESTION is usually the
+    second one: 12/2025 問70 reads 「中村さんは、4歳の娘と一緒に…」 / 「…どの便に
+    乗ればよいか。」. Capturing only the first line dropped the interrogative from
+    every multi-line stem, which is why all 14 official 問題14 stems classified as
+    `other` — i.e. the corpus the 問題14 rule is measured against looked as if it
+    asked nothing at all. Stem-bucket histograms for 問題10–13 (§F6, §F9) were
+    reading the same truncated text.
+    """
+    lines = [ln.strip() for ln in blob.splitlines() if ln.strip()]
+    stem_tail: list[str] = []
+    rest: list[str] = []
+    started = False
+    for ln in lines:
+        if not started and re.match(r"^1[.、．　 ]", ln):
+            started = True
+        if started:
+            rest.append(ln)
+        else:
+            stem_tail.append(ln)
+    stem = (first_line.strip() + "".join(stem_tail)).strip()
+    return stem, _parse_4_options("\n".join(rest))
+
 
 def _parse_official_dokkai(sitting: str, booklet_md: str, answer_keys: dict) -> tuple[list[DokkaiPassage], list[DokkaiItem]]:
     exam_keys = answer_keys["exams"].get(sitting, {}).get("items", [])
@@ -219,11 +261,16 @@ def _parse_official_dokkai(sitting: str, booklet_md: str, answer_keys: dict) -> 
     mondai_starts = {}
     for i in range(choukai_line):
         ln = lines[i]
-        m = re.search(r"[問間]題\s*(\d+)", ln)
-        if m:
-            m_num = int(m.group(1))
-            if 10 <= m_num <= 14:
-                mondai_starts[m_num] = i
+        m = re.match(r"^#*\s*[問間]題\s*(\d+)\s*(.*)$", ln)
+        if not m:
+            continue
+        m_num = int(m.group(1))
+        if not 10 <= m_num <= 14:
+            continue
+        # A section header states the task; a bare cross-reference does not.
+        if not re.search(r"次の|以下|つぎ|読んで|問い|ページ", m.group(2)):
+            continue
+        mondai_starts.setdefault(m_num, i)
 
     passages: list[DokkaiPassage] = []
     items: list[DokkaiItem] = []
@@ -242,16 +289,14 @@ def _parse_official_dokkai(sitting: str, booklet_md: str, answer_keys: dict) -> 
         m_items.sort(key=lambda x: x["no"])
 
         if m_num == 10:
-            p_parts = re.split(r"(?:^|\n)\s*[（(]([1-5１-５])[）)]\s*\n", sec_text)
+            p_parts = re.split(r"(?:^|\n)\s*[（(]([1-5１-５])[）)][ 　]*(?=\n|[^\n])", sec_text)
             if len(p_parts) >= 11:
                 for p_idx in range(1, 6):
                     sub = p_parts[p_idx * 2]
-                    it_match = re.search(r"(?:^|\n)\s*(\d{2})\s+([^\n]+)\n([\s\S]+)$", sub)
+                    it_match = re.search(r"(?:^|\n)\s*((?:5[2-9]|6[0-9]|7[01]))\s+([^\n]+)\n([\s\S]+)$", sub)
                     if it_match:
                         p_text = sub[:it_match.start()].strip()
-                        stem = it_match.group(2).strip()
-                        opts_blob = it_match.group(3).strip()
-                        opts = _parse_4_options(opts_blob)
+                        stem, opts = _stem_and_options(it_match.group(2), it_match.group(3))
                         q_no = int(it_match.group(1))
                         k = dokkai_keys.get(q_no, {}).get("answer", 1)
                         is_ess = not bool(re.search(r"(お知らせ|メール|通知|案内)", p_text[:100] + stem))
@@ -264,57 +309,53 @@ def _parse_official_dokkai(sitting: str, booklet_md: str, answer_keys: dict) -> 
                     k = it.get("answer", 1)
                     q_m = re.search(rf"(?:^|\n)\s*{q_no}\s+([^\n]+)\n([\s\S]*?)(?=(?:^|\n)\s*\d{{2}}\s+|\Z)", sec_text)
                     if q_m:
-                        stem = q_m.group(1).strip()
-                        opts = _parse_4_options(q_m.group(2))
+                        stem, opts = _stem_and_options(q_m.group(1), q_m.group(2))
                         passages.append(DokkaiPassage("official", sitting, 10, i_pos, "", is_essay=True))
                         if len(opts) == 4:
                             items.append(DokkaiItem("official", sitting, 10, q_no, i_pos, "", stem, opts, k))
 
         elif m_num == 11:
-            p_parts = re.split(r"(?:^|\n)\s*[（(]([1-4１-４])[）)]\s*\n", sec_text)
+            p_parts = re.split(r"(?:^|\n)\s*[（(]([1-4１-４])[）)][ 　]*(?=\n|[^\n])", sec_text)
             if len(p_parts) >= 3:
                 p_count = (len(p_parts) - 1) // 2
                 for p_idx in range(1, p_count + 1):
                     sub = p_parts[p_idx * 2]
-                    q_matches = list(re.finditer(r"(?:^|\n)\s*(\d{2})\s+([^\n]+)\n([\s\S]*?)(?=(?:^|\n)\s*\d{2}\s+|\Z)", sub))
+                    q_matches = list(re.finditer(r"(?:^|\n)\s*((?:5[2-9]|6[0-9]|7[01]))\s+([^\n]+)\n([\s\S]*?)(?=(?:^|\n)\s*(?:5[2-9]|6[0-9]|7[01])\s+|\Z)", sub))
                     p_text = sub[:q_matches[0].start()].strip() if q_matches else sub.strip()
                     passages.append(DokkaiPassage("official", sitting, 11, p_idx, p_text, is_essay=True))
                     for qm in q_matches:
                         q_no = int(qm.group(1))
-                        stem = qm.group(2).strip()
-                        opts = _parse_4_options(qm.group(3))
+                        stem, opts = _stem_and_options(qm.group(2), qm.group(3))
                         k = dokkai_keys.get(q_no, {}).get("answer", 1)
                         if len(opts) == 4:
                             items.append(DokkaiItem("official", sitting, 11, q_no, p_idx, p_text, stem, opts, k))
 
         elif m_num == 12:
-            q_matches = list(re.finditer(r"(?:^|\n)\s*(\d{2})\s+([^\n]+)\n([\s\S]*?)(?=(?:^|\n)\s*\d{2}\s+|\Z)", sec_text))
+            q_matches = list(re.finditer(r"(?:^|\n)\s*((?:5[2-9]|6[0-9]|7[01]))\s+([^\n]+)\n([\s\S]*?)(?=(?:^|\n)\s*(?:5[2-9]|6[0-9]|7[01])\s+|\Z)", sec_text))
             p_text = sec_text[:q_matches[0].start()].strip() if q_matches else sec_text.strip()
             p_text = re.sub(r"^###?\s*問題\s*12[^\n]*\n", "", p_text).strip()
             passages.append(DokkaiPassage("official", sitting, 12, 1, p_text, is_essay=True))
             for qm in q_matches:
                 q_no = int(qm.group(1))
-                stem = qm.group(2).strip()
-                opts = _parse_4_options(qm.group(3))
+                stem, opts = _stem_and_options(qm.group(2), qm.group(3))
                 k = dokkai_keys.get(q_no, {}).get("answer", 1)
                 if len(opts) == 4:
                     items.append(DokkaiItem("official", sitting, 12, q_no, 1, p_text, stem, opts, k))
 
         elif m_num == 13:
-            q_matches = list(re.finditer(r"(?:^|\n)\s*(\d{2})\s+([^\n]+)\n([\s\S]*?)(?=(?:^|\n)\s*\d{2}\s+|\Z)", sec_text))
+            q_matches = list(re.finditer(r"(?:^|\n)\s*((?:5[2-9]|6[0-9]|7[01]))\s+([^\n]+)\n([\s\S]*?)(?=(?:^|\n)\s*(?:5[2-9]|6[0-9]|7[01])\s+|\Z)", sec_text))
             p_text = sec_text[:q_matches[0].start()].strip() if q_matches else sec_text.strip()
             p_text = re.sub(r"^###?\s*問題\s*13[^\n]*\n", "", p_text).strip()
             passages.append(DokkaiPassage("official", sitting, 13, 1, p_text, is_essay=True))
             for qm in q_matches:
                 q_no = int(qm.group(1))
-                stem = qm.group(2).strip()
-                opts = _parse_4_options(qm.group(3))
+                stem, opts = _stem_and_options(qm.group(2), qm.group(3))
                 k = dokkai_keys.get(q_no, {}).get("answer", 1)
                 if len(opts) == 4:
                     items.append(DokkaiItem("official", sitting, 13, q_no, 1, p_text, stem, opts, k))
 
         elif m_num == 14:
-            q_matches = list(re.finditer(r"(?:^|\n)\s*(\d{2})\s+([^\n]+)\n([\s\S]*?)(?=(?:^|\n)\s*\d{2}\s+|\Z)", sec_text))
+            q_matches = list(re.finditer(r"(?:^|\n)\s*((?:5[2-9]|6[0-9]|7[01]))\s+([^\n]+)\n([\s\S]*?)(?=(?:^|\n)\s*(?:5[2-9]|6[0-9]|7[01])\s+|\Z)", sec_text))
             p_text = ""
             if len(q_matches) >= 2:
                 blob_last = q_matches[-1].group(3)
@@ -327,8 +368,7 @@ def _parse_official_dokkai(sitting: str, booklet_md: str, answer_keys: dict) -> 
             passages.append(DokkaiPassage("official", sitting, 14, 1, p_text, is_essay=False))
             for qm in q_matches:
                 q_no = int(qm.group(1))
-                stem = qm.group(2).strip()
-                opts = _parse_4_options(qm.group(3))
+                stem, opts = _stem_and_options(qm.group(2), qm.group(3))
                 k = dokkai_keys.get(q_no, {}).get("answer", 1)
                 if len(opts) == 4:
                     items.append(DokkaiItem("official", sitting, 14, q_no, 1, p_text, stem, opts, k))
@@ -336,27 +376,61 @@ def _parse_official_dokkai(sitting: str, booklet_md: str, answer_keys: dict) -> 
     return passages, items
 
 
+SENTENCE_END = ("。", "！", "？", "!", "?")
+# Lines that belong to no option: a page marker, the booklet footer, a heading,
+# a 問題14 flyer's bullet furniture.
+OPTION_STOP = re.compile(r"^(?:#{2,}|N2\s|[（(]\d+[）)]|[♦◆■※【]|表\s|タイトル\s)")
+
+
+def _opt_len(text: str) -> int:
+    """Option length as printed: every non-space character counts.
+
+    A JP-only class reads 「3,500円」 as one character and 「3,500 円から 200 円が
+    割引された金額」 as fourteen, so a legitimate official 問題14 item measured a
+    14x length ratio. Non-space length reproduces the archive maximum of 4.29
+    that this metric's thresholds were derived from.
+    """
+    return len(re.sub(r"\s+", "", text))
+
+
 def _parse_4_options(blob: str) -> list[str]:
-    """Extract 4 options from a text blob."""
+    """The four printed options, LINE-WISE, with wrapped lines folded forward.
+
+    Two failures this replaces, both measured on the archive:
+
+    1. Joining the blob into one string and hunting for `[1-4]` broke on every
+       option set containing a date or a price — 「3 月 19 日の午後に…」 made the
+       「3」 of 「3月」 look like option 3, so four options collapsed into two
+       fragments and one 698-character blob that had swallowed the 問題14 flyer.
+    2. Stopping at option 4's first LINE truncated it wherever it wrapped
+       (「必要な条件が揃」, 「登場人物が詳しく描」), which manufactured max/min
+       ratios of 3.2–4.3 out of nothing — the very statistic D2's threshold is
+       read from.
+
+    So: an option starts a line, its number ascends 1→4, wrapped lines fold into
+    the option being read, and option 4 keeps folding until its sentence ends or
+    a structural line appears. That is what keeps the flyer out while keeping the
+    option whole.
+    """
     lines = [ln.strip() for ln in blob.splitlines() if ln.strip()]
-    full = " ".join(lines)
-    opt_dict = {}
-    matches = list(re.finditer(r"(?<![0-9０-９])([1-4])[.、 　]+", full))
-    if len(matches) >= 4:
-        seen = {}
-        for m in matches:
-            d = int(m.group(1))
-            if d not in seen:
-                seen[d] = m
-        if len(seen) == 4:
-            sorted_order = sorted(seen.items(), key=lambda kv: kv[1].start())
-            for idx, (d, m) in enumerate(sorted_order):
-                start = m.end()
-                end = sorted_order[idx + 1][1].start() if idx + 1 < len(sorted_order) else len(full)
-                opt_dict[d] = full[start:end].strip()
-    if len(opt_dict) == 4:
-        return [opt_dict[1], opt_dict[2], opt_dict[3], opt_dict[4]]
-    return []
+    opts: list[str] = []
+    want = 1
+    for ln in lines:
+        m = re.match(rf"^{want}[.、．　 ]\s*(.+)$", ln)
+        if m and want <= 4:
+            opts.append(m.group(1).strip())
+            want += 1
+            continue
+        if not opts:
+            continue
+        if OPTION_STOP.match(ln):
+            if want > 4:
+                break
+            continue
+        if want > 4 and opts[-1].endswith(SENTENCE_END):
+            break                      # option 4 is complete; the rest is not an option
+        opts[-1] = opts[-1] + ln
+    return opts if len(opts) == 4 else []
 
 
 # --------------------------------------------------------------------------
@@ -634,8 +708,11 @@ class PaperProfile:
         for it in self.items:
             opt_lens = [jp(o) for o in it.options]
             all_opt_lens.extend(opt_lens)
-            if min(opt_lens) > 0:
-                self.max_min_ratios.append(max(opt_lens) / min(opt_lens))
+            # The RATIO uses printed length (see `_opt_len`); the mean below stays
+            # in JP chars, which is what dokkai.md's option-length band is in.
+            printed = [_opt_len(o) for o in it.options]
+            if min(printed) > 0:
+                self.max_min_ratios.append(max(printed) / min(printed))
 
             k_len = opt_lens[it.key - 1]
             rank = 1 + sum(1 for l in opt_lens if l > k_len)
@@ -723,6 +800,15 @@ def format_baseline_tables(profiles: list[PaperProfile]) -> str:
 
     # 1. Section lengths
     lines.append("## 1. Section Lengths (JP characters in passage prose)\n")
+    lines.append(
+        "> **Two parses, both named.** The numbers below are this script's parse of\n"
+        "> `booklet.md`. The gate's floors and ceilings are in\n"
+        "> `check_consistency.passage_prose()`'s metric, measured on the same 7\n"
+        "> sittings and recorded in `official_calibration.md` §2 — the two agree to\n"
+        "> within ~3% (問題10: 1143/1225/1329 there, 1143/1259/1357 here; the gap is\n"
+        "> passage-marker and preface lines). **A threshold has to sit outside BOTH\n"
+        "> ranges**, which is why the 問題10 ceiling reads 1330 in gate metric rather\n"
+        "> than being moved to this table's 1357.\n")
     lines.append("| 大問 | official min | official median | official max | gate floor | gate ceiling |")
     lines.append("|---|---|---|---|---|---|")
     for sec, name, floor, ceil in [

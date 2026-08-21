@@ -370,7 +370,11 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     "choukai_voice_margin":           ("聴解スクリプト.txt",  "deterministic"),
     "choukai_split_turns":            ("聴解スクリプト.txt",  "deterministic"),
     "choukai_contraction_rate":       ("聴解スクリプト.txt",  "deterministic"),
-    "choukai_q3_option_suffix":       ("聴解スクリプト.txt",  "assisted"),
+    # One aggregate line reports the 問題3 option suffix, the 問題4 already-done
+    # concentration and the 問題5 speaker count together (they share an artifact
+    # and a tier), so they share one slug rather than carrying three that no
+    # check emits.
+    "choukai_section_mix":            ("聴解スクリプト.txt",  "assisted"),
     "choukai_filler_band":            ("聴解スクリプト.txt",  "assisted"),
     "choukai_reaction_floor":         ("聴解スクリプト.txt",  "assisted"),
     "choukai_service_formula_rate":   ("聴解スクリプト.txt",  "assisted"),
@@ -379,11 +383,26 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     "choukai_decider_position":       ("<section re-author>", "authoring"),
     "choukai_probe_carousel":         ("<section re-author>", "authoring"),
     "choukai_q3_talk_band":           ("<section re-author>", "authoring"),
-    "choukai_q5_speaker_count":       ("<section re-author>", "authoring"),
-    "choukai_q4_done_concentration":  ("<section re-author>", "authoring"),
     "choukai_q4_stimulus_register":   ("<section re-author>", "authoring"),
     "choukai_voice_balance":          ("<section re-author>", "authoring"),
     "choukai_pause_distribution":     ("聴解.mp3",            "deterministic"),
+    # 読解 (REPORT-DOKKAI.md §Phase 3, §5.0). Same derivation, different artifacts:
+    # a stem/option/key cell is tier A, passage prose is tier B, a new surface is
+    # tier C. Declare the cheapest SUFFICIENT artifact — for the overlap
+    # direction that is the OPTIONS (rebuild each distractor from a passage
+    # clause with one fact changed), never the passage and never the key.
+    "dokkai_banned_stems":            ("stem/option/key-cell", "assisted"),
+    "dokkai_q14_stem_target":         ("stem/option/key-cell", "authoring"),
+    "dokkai_overlap_direction":       ("stem/option/key-cell", "authoring"),
+    "dokkai_key_rank_spread":         ("stem/option/key-cell", "assisted"),
+    "dokkai_option_length_band":      ("stem/option/key-cell", "assisted"),
+    "dokkai_asterisk_rate":           ("stem/option/key-cell", "assisted"),
+    "dokkai_q10_form_mix":            ("stem/option/key-cell", "authoring"),
+    "dokkai_span_rate":               ("stem/option/key-cell", "authoring"),
+    "dokkai_lengths":                 ("passage prose",        "assisted"),
+    "dokkai_sentence_rhythm":         ("passage prose",        "assisted"),
+    "dokkai_kanji_density":           ("passage prose",        "assisted"),
+    "dokkai_register_voice":          ("<surface re-author>",  "authoring"),
 }
 
 # The tier is a pure function of the artifact a repair touches (§5.0), so two
@@ -395,6 +414,12 @@ REPAIR_TIER = {
     "聴解スクリプト.txt": "B",
     "<section re-author>": "C",
     "聴解.mp3": "R",          # rebuild only: `make mp3` + `make sheet`, no content change
+    # 読解 artifacts (REPORT-DOKKAI.md §5.0). Tier B here drags more than tier B
+    # in 聴解: a passage edit re-opens every item anchored on that passage —
+    # span identity, 解説 quotes, overlap direction, key rank.
+    "stem/option/key-cell": "A",
+    "passage prose": "B",
+    "<surface re-author>": "C",
 }
 
 
@@ -1856,6 +1881,34 @@ def headline_theme_set(themes: dict) -> set[str]:
     return head | m5
 
 
+def check_topics_voice_axis():
+    """Every paper's topics record declares the VOICE of each 読解 surface.
+
+    Subject and closing move were both counted; register was not, and the corpus
+    answered the uncounted question with one answer — です・ます in 0% of essay
+    surfaces against official's 30–45%, first-person 37% against 60–100%, kanji
+    density in a band that does not overlap the archive's at all
+    (REPORT-DOKKAI.md §F3). A quota nobody records is a quota nobody meets, so
+    the third axis lives in `logs/topics.json` next to the other two
+    (`exam-blueprint` §"Rule 5").
+
+    WARN, not FAIL: all fourteen papers predate the rule, and an id leaves this
+    list when its surfaces are re-authored — which is Phase 5 tier C work, not a
+    bookkeeping edit. Filling the map in without changing the prose would make
+    the gate green and the papers unchanged.
+    """
+    print("\n読解 surface VOICE axis (exam-blueprint Rule 5)")
+    path = ROOT / "logs" / "topics.json"
+    if not path.is_file():
+        return skip("logs/topics.json voice axis", "no topics.json")
+    hist = json.loads(path.read_text(encoding="utf-8")).get("history", [])
+    missing = [h["test_id"] for h in hist if h.get("surfaces") and not h.get("voices")]
+    warn("every paper's topics record carries a `voices` map", not missing,
+         f"{len(missing)} paper(s) record no voice per surface ({', '.join(missing[:5])}"
+         f"{', …' if len(missing) > 5 else ''}) — 一人称随筆 / 評論 / 解説 / 通知 per "
+         f"surface, with the per-paper quotas in exam-blueprint §'Rule 5'")
+
+
 def check_topics_themes():
     """The four theme rules, applied to the SHIPPED paper.
 
@@ -2090,16 +2143,16 @@ def check_dokkai_lengths(name: str, body: str, bi, origin: str = "generated"):
         warn(f"{name}: 読解 sections sit within official length ceiling "
              f"{DOKKAI_CEILING}", not long_sec,
              "; ".join(long_sec) + " — tighten over-long passage prose (dokkai.md §'Length bands')"
-             + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""))
+             + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""), slug="dokkai_lengths", test_id=name)
         warn(f"{name}: every 問題10 passage sits within {DOKKAI_PASSAGE_CEILING}", not thick,
              "; ".join(thick) + " — official current-era 問題10 per-passage max is 334 JP chars (dokkai.md §'Length bands')"
-             + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""))
+             + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""), slug="dokkai_lengths", test_id=name)
     else:
         check(f"{name}: 読解 sections sit within official length ceiling "
               f"{DOKKAI_CEILING}", not long_sec,
-              "; ".join(long_sec) + " — tighten over-long passage prose (dokkai.md §'Length bands')")
+              "; ".join(long_sec) + " — tighten over-long passage prose (dokkai.md §'Length bands')", slug="dokkai_lengths", test_id=name)
         check(f"{name}: every 問題10 passage sits within {DOKKAI_PASSAGE_CEILING}", not thick,
-              "; ".join(thick) + " — official current-era 問題10 per-passage max is 334 JP chars (dokkai.md §'Length bands')")
+              "; ".join(thick) + " — official current-era 問題10 per-passage max is 334 JP chars (dokkai.md §'Length bands')", slug="dokkai_lengths", test_id=name)
     check(f"{name}: every 問題10/11 passage reaches {DOKKAI_PASSAGE_FLOOR}", not thin,
           "; ".join(thin) + " — official current-era per-passage minima are "
           "157 (問題10) and 507 (問題11) JP chars; medians 241 and 655 "
@@ -2559,7 +2612,7 @@ def check_dokkai_banned_stems(name: str, body: str):
                 banned.append(f"Q{q_no}: 「{stem[:30]}」")
     check(f"{name}: 問題10–14 uses no banned pure-retrieval stem shapes",
           not banned,
-          f"{banned} — 「本文で述べられて…」「…として正しいもの」「…の主な目的は」「…の内容と合っている」「正しいものはどれか」「適切なものはどれか」 occur 0 times in 15 official sittings (dokkai.md §'問題11 stems & Banned retrieval shapes')")
+          f"{banned} — 「本文で述べられて…」「…として正しいもの」「…の主な目的は」「…の内容と合っている」「正しいものはどれか」「適切なものはどれか」 occur 0 times in 15 official sittings (dokkai.md §'問題11 stems & Banned retrieval shapes')", slug="dokkai_banned_stems", test_id=name)
 
 
 def check_dokkai_q10_form_mix(name: str, body: str):
@@ -2570,9 +2623,23 @@ def check_dokkai_q10_form_mix(name: str, body: str):
     for m in re.finditer(r"^\s*\*\*(5[2-6])\*\*\s*(.+)$", sec, re.M):
         stems.append((int(m.group(1)), m.group(2).strip()))
     kangae = sum(1 for _, s in stems if DOKKAI.classify_stem_bucket(s) == "kangae")
-    warn(f"{name}: 問題10 carries >= 2 筆者の考え items (got {kangae}/5)",
-         kangae >= 2,
-         f"got {kangae}/5 考え items — official current-era share ~46% (dokkai.md §'問題10 stems & apparatus')")
+    # FAIL at ZERO — a 問題10 with no 筆者の考え item is missing official's
+    # dominant shape entirely (46% of its items), and that absence is what let
+    # 問題10 drift to content lookups (§F9). The >=2 target stays a WARN.
+    k_detail = (f"got {kangae}/5 考え items — official current-era share is ~46% "
+                f"(筆者の考えに合うのはどれか / 筆者はどのように考えているか). An essay "
+                f"passage with no stance question is a lookup (dokkai.md §'問題10 stems "
+                f"& apparatus')")
+    if kangae == 0:
+        if name in DOKKAI_Q10_FORM_GRANDFATHERED:
+            warn(f"{name}: 問題10 carries a 筆者の考え item (got 0/5)", False,
+                 k_detail + GRANDFATHER_NOTE, slug="dokkai_q10_form_mix", test_id=name)
+        else:
+            check(f"{name}: 問題10 carries a 筆者の考え item (got 0/5)", False,
+                  k_detail, slug="dokkai_q10_form_mix", test_id=name)
+    else:
+        warn(f"{name}: 問題10 carries >= 2 筆者の考え items (got {kangae}/5)",
+             kangae >= 2, k_detail, slug="dokkai_q10_form_mix", test_id=name)
 
     app_bad = []
     for q_no, s in stems:
@@ -2584,7 +2651,53 @@ def check_dokkai_q10_form_mix(name: str, body: str):
          f"{app_bad} — official apparatus stems ask what the document is for/aims to convey (8 of 10 items), not mere content lookup (dokkai.md §'問題10 stems & apparatus')")
 
 
+# Papers whose BOTH 問題14 items are truth-check shaped. 情報検索 tests locating
+# and combining printed conditions to produce an answer; "which statement is
+# true" turns that into four verification passes over the whole flyer — the one
+# shape the archive avoids in 12 of 12 items. An id leaves this set when its two
+# stems ask a value, an action or a named option (REPORT-DOKKAI.md §F4).
+DOKKAI_Q14_TARGET_GRANDFATHERED = {
+    "20260812_1", "20260812_2", "20260813_2", "20260814_1",
+    "20260817_1", "20260817_2",
+    # 20260810_2 and 20260810_1 are NOT in this set: their stems ask 「…に合う
+    # コースはどれか」, a named choice. The set shrank from 10 to 6 when the
+    # classifier stopped reading a katakana noun before 「はどれか」 as generic.
+    # 20260811_1 carries ONE truth-check stem, which is the WARN band, not this set.
+    # Left the set 2026-08-21, repaired rather than exempted: 20260817_3 (どのように
+    # 申し込むことになるか / どうすれば参加できるか), 20260818_1 (何を持って行かなけ
+    # ればならないか / どのように申し込まなければならないか), 20260819_1 (いくらに
+    # なるか / どの施設を回っておかなければならないか).
+}
+# Papers above the current era's span maximum of 3 (median 0). The surplus
+# converts to 「筆者によると」 retrieval and one 指示語 item — the shapes it
+# displaced (§F6).
+DOKKAI_SPAN_RATE_GRANDFATHERED = {
+    "20260810_2", "20260811_1", "20260812_1", "20260812_2", "20260813_1",
+    "20260813_2", "20260817_3", "20260818_1", "20260819_1",
+}
+# Papers with no 筆者の考え item in 問題10 at all — official's dominant shape
+# (46% of its 問題10 items) missing entirely (§F9).
+DOKKAI_Q10_FORM_GRANDFATHERED = {
+    "20260807_1", "20260812_2", "20260813_2", "20260817_1", "20260817_2",
+}
+
+
 def check_dokkai_q14_stem_target(name: str, body: str):
+    """問題14 asks for a value, an action or a named option — never a truth-check.
+
+    Official: 42% value, 42% action, 17% choice, **0% truth-check** (n=12).
+    Ours ran 68% truth-check, and both of the repo's own 問題14 rules were
+    satisfied while it did: `dokkai.md` requires person-scenario items (28 of 28
+    are) and bans the literal 「このお知らせの内容と合っているものはどれか」 for
+    item 71 — so naming a person in front of a truth-check passes both. And
+    `check_mondai14_quotes` reads the 解説's flyer quotes, not the stem, so the
+    gate confirmed two constraints were used and never noticed the question was
+    "which of these four sentences is true".
+
+    FAILs when BOTH items are truth-check shaped, WARNs on one — the plan's
+    thresholds (§Phase 3); this check shipped 2026-08-21 as a bare WARN, i.e. a
+    rule that could never block and had no queue behind it.
+    """
     sec = dokkai_section(body, 14)
     if not sec:
         return
@@ -2596,9 +2709,18 @@ def check_dokkai_q14_stem_target(name: str, body: str):
         t = DOKKAI.classify_q14_target(s)
         if t not in ("value", "action", "choice"):
             bad.append(f"Q{q_no} ({t}): 「{s[:35]}」")
-    warn(f"{name}: 問題14 stems ask a value, an action, or a named choice",
-         not bad,
-         f"{bad} — official 70/71 ask what action to take, what fee to pay, or which option to choose, never a generic proposition truth-check (dokkai.md §'問題14')")
+    detail = (f"{bad} — official 70/71 ask what action to take, what fee to pay, or "
+              f"which option to choose, never a generic proposition truth-check "
+              f"(dokkai.md §'問題14')")
+    name_line = f"{name}: 問題14 stems ask a value, an action, or a named choice"
+    if len(bad) >= 2:
+        if name in DOKKAI_Q14_TARGET_GRANDFATHERED:
+            warn(name_line, False, detail + GRANDFATHER_NOTE,
+                 slug="dokkai_q14_stem_target", test_id=name)
+        else:
+            check(name_line, False, detail, slug="dokkai_q14_stem_target", test_id=name)
+    else:
+        warn(name_line, not bad, detail, slug="dokkai_q14_stem_target", test_id=name)
 
 
 def check_dokkai_span_rate(name: str, body: str):
@@ -2615,12 +2737,32 @@ def check_dokkai_span_rate(name: str, body: str):
                 spans += 1
             if b == "shijigo":
                 shijigo += 1
-    warn(f"{name}: 問題10–13 span-anchored stems <= 2 (got {spans})",
-         spans <= 2,
-         f"got {spans} span-anchored stems — official current-era median is 0, max 3 (dokkai.md §'Marked-span quoting')")
+    # FAIL only outside the current era's whole range (max 3, median 0); the
+    # <=2 target is the WARN. Shipped 2026-08-21 as WARN-only, so a paper could
+    # run 8 spans — nearly three times the archive's maximum — and print no
+    # blocking line (§F6).
+    span_detail = (f"got {spans} span-anchored stems — official current era runs a "
+                   f"median of 0 and a maximum of 3 (4 of 7 sittings have none). The "
+                   f"surplus converts to 「筆者によると」 retrieval, which is a quarter "
+                   f"of official's 問題11/13 stems and 3% of ours "
+                   f"(dokkai.md §'Marked-span quoting')")
+    if spans > 4:
+        if name in DOKKAI_SPAN_RATE_GRANDFATHERED:
+            warn(f"{name}: 問題10–13 span-anchored stems <= 4 (got {spans})", False,
+                 span_detail + GRANDFATHER_NOTE, slug="dokkai_span_rate", test_id=name)
+        else:
+            check(f"{name}: 問題10–13 span-anchored stems <= 4 (got {spans})", False,
+                  span_detail, slug="dokkai_span_rate", test_id=name)
+    else:
+        warn(f"{name}: 問題10–13 span-anchored stems <= 2 (got {spans})", spans <= 2,
+             span_detail, slug="dokkai_span_rate", test_id=name)
     warn(f"{name}: 問題10–13 指示語 stems >= 1 (got {shijigo})",
          shijigo >= 1,
-         f"got {shijigo} 指示語 stems — official current-era average is 1.57/paper (Shin Kanzen 第1部-2; dokkai.md §'Marked-span quoting')")
+         f"got {shijigo} 指示語 stems — official current-era average is 1.57/paper, "
+         f"and 6 of 7 sittings carry one; a demonstrative forces a backwards search "
+         f"where a quoted noun phrase is already the answer's neighbourhood "
+         f"(Shin Kanzen 第1部-2; dokkai.md §'Marked-span quoting')",
+         slug="dokkai_span_rate", test_id=name)
 
 
 def check_dokkai_register(name: str, gt: str, origin: str = "generated"):
@@ -2631,24 +2773,24 @@ def check_dokkai_register(name: str, gt: str, origin: str = "generated"):
     kd = prof.kanji_density
     kd_fail = 0.22 <= kd <= 0.34
     kd_warn = 0.24 <= kd <= 0.32
-    kd_detail = f"kanji density is {kd:.1%} (official current-era band 25.0%–29.7%, median 28.0%; dokkai.md §'Axis 3')"
+    kd_detail = f"kanji density is {kd:.1%} (official current-era band 25.5%–30.1%, median 28.4%; dokkai.md §'Axis 3')"
 
     if origin != "generated" or name in DOKKAI_DISTRIBUTION_GRANDFATHERED:
         warn(f"{name}: 読解 kanji density in 22–34% (got {kd:.1%})",
-             kd_fail, kd_detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""))
+             kd_fail, kd_detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""), slug="dokkai_kanji_density", test_id=name)
     else:
-        check(f"{name}: 読解 kanji density in 22–34% (got {kd:.1%})", kd_fail, kd_detail)
-    warn(f"{name}: 読解 kanji density in target 24–32% (got {kd:.1%})", kd_warn, kd_detail)
+        check(f"{name}: 読解 kanji density in 22–34% (got {kd:.1%})", kd_fail, kd_detail, slug="dokkai_kanji_density", test_id=name)
+    warn(f"{name}: 読解 kanji density in target 24–32% (got {kd:.1%})", kd_warn, kd_detail, slug="dokkai_kanji_density", test_id=name)
 
     fp_cnt = prof.first_person_passages
     warn(f"{name}: 読解 first-person essay passages >= 4 of 12 (got {fp_cnt})",
          fp_cnt >= 4,
-         f"got {fp_cnt}/12 first-person passages (containing 私/僕/自分) — official median 50% (dokkai.md §'Axis 3')")
+         f"got {fp_cnt}/12 first-person passages (containing 私/僕/自分) — official runs 60–100% of its essay passages in the first person, median 78% (dokkai.md §'Axis 3')", slug="dokkai_register_voice", test_id=name)
 
     polite_cnt = sum(1 for p in passages if p.is_essay and re.search(r"(です|ます|ました|ません|でした|でしょう|ください|ましょう)[。！？]?$", p.text.strip()))
     warn(f"{name}: 読解 polite voice (です・ます) passages >= 3 (got {polite_cnt})",
          polite_cnt >= 3,
-         f"got {polite_cnt} passages written in polite style — official current era median 37% of sentences (dokkai.md §'Axis 3')")
+         f"got {polite_cnt} passages written in polite style — official runs です・ます at 30.5–45.2% of essay sentence endings, median 35% (dokkai.md §'Axis 3')", slug="dokkai_register_voice", test_id=name)
 
 
 def check_dokkai_sentence_rhythm(name: str, gt: str, origin: str = "generated"):
@@ -2662,28 +2804,28 @@ def check_dokkai_sentence_rhythm(name: str, gt: str, origin: str = "generated"):
     med_s = prof.median_sentence_len
     med_fail = 28.0 <= med_s <= 50.0
     med_warn = 33.0 <= med_s <= 43.0
-    med_detail = f"median sentence length is {med_s:.1f} JP chars (official current-era band 33.5–44.0, median 38.0; dokkai.md §'Sentence rhythm')"
+    med_detail = f"median sentence length is {med_s:.1f} JP chars (official current-era band 31.5–39.0, median 36.0; dokkai.md §'Sentence rhythm')"
 
     if origin != "generated" or name in DOKKAI_DISTRIBUTION_GRANDFATHERED:
         warn(f"{name}: 読解 median sentence length in 28–50 JP chars (got {med_s:.1f})",
-             med_fail, med_detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""))
+             med_fail, med_detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""), slug="dokkai_sentence_rhythm", test_id=name)
     else:
         check(f"{name}: 読解 median sentence length in 28–50 JP chars (got {med_s:.1f})",
-              med_fail, med_detail)
+              med_fail, med_detail, slug="dokkai_sentence_rhythm", test_id=name)
     warn(f"{name}: 読解 median sentence length in target 33–43 JP chars (got {med_s:.1f})",
-         med_warn, med_detail)
+         med_warn, med_detail, slug="dokkai_sentence_rhythm", test_id=name)
 
     u25 = prof.under_25_sentence_share
     warn(f"{name}: 読解 share of sentences < 25 chars in 12–30% (got {u25:.1%})",
          0.12 <= u25 <= 0.30,
-         f"got {u25:.1%} short sentences — official current era band 13.8%–31.5%, median 20.5% (dokkai.md §'Sentence rhythm')")
+         f"got {u25:.1%} short sentences — official current era band 16.7%–32.5%, median 21.1% (dokkai.md §'Sentence rhythm')", slug="dokkai_sentence_rhythm", test_id=name)
 
 
 def check_dokkai_asterisk_rate(name: str, body: str):
     cnt = len(re.findall(r"※", body))
     warn(f"{name}: 読解 ※ (asterisk) symbol count <= 3 (got {cnt})",
          cnt <= 3,
-         f"got {cnt} ※ symbols in 読解 — official current era 0–3, median 0 (dokkai.md §'Axis 3')")
+         f"got {cnt} ※ symbols in 読解 — official current era 0–3, median 0 (dokkai.md §'Axis 3')", slug="dokkai_asterisk_rate", test_id=name)
 
 
 # G4. A quotable flyer span has to CARRY A CONDITION. The first version of this
@@ -3263,12 +3405,29 @@ DOKKAI_OPTION_RATIO_FAIL = 2.50
 
 
 def check_dokkai_option_length_balance(name: str, opts: dict[int, list[str]]):
+    """Option lengths per item, over 問題10–13 only (REPORT-DOKKAI.md §F2, §D2).
+
+    Two corrections from re-measuring the archive with `dokkai_profile.py`:
+
+    * **問題14 is exempt.** Its options are values and dates by design —
+      official 12/2023 問70 prints 「3,500円」 beside 「3,500円から200円と300円が
+      割引された金額」, a 4.17x ratio. 問題14's own range is 1.26–4.17 where
+      問題10–13's is 1.03–2.00, so one threshold cannot serve both, and the FAIL
+      line was quietly rejecting a shape the archive ships every sitting.
+    * **Length is PRINTED length**, not JP-only: a kanji/kana class reads
+      「3,500円」 as one character, which is what made those numeric items look
+      like 9x and 14x outliers in the first place.
+
+    問題10–13 measured (n=126): median 1.25, p90 1.55, max 2.00 — so WARN at
+    1.65 sits just above p90 and FAIL at 2.50 is outside the archive's whole
+    range, as the repo requires of any threshold.
+    """
     warn_items, fail_items = [], []
-    for q in range(52, 72):
+    for q in range(52, 70):          # 70/71 are 問題14 — see the docstring
         o = opts.get(q) or []
         if len(o) != 4:
             continue
-        lens = [jp_char_count(x) for x in o]
+        lens = [len(re.sub(r"\s+", "", x)) for x in o]
         mx, mn = max(lens), min(lens)
         if mn == 0:
             continue
@@ -3279,10 +3438,10 @@ def check_dokkai_option_length_balance(name: str, opts: dict[int, list[str]]):
             warn_items.append(f"{q}({lens}, {ratio:.2f}x)")
     check(f"{name}: no 読解 item has option length ratio max/min > {DOKKAI_OPTION_RATIO_FAIL}",
           not fail_items,
-          f"{'; '.join(fail_items)} — lengthen short distractors or trim over-long keys (dokkai.md §'読解 keys')")
+          f"{'; '.join(fail_items)} — lengthen short distractors or trim over-long keys (dokkai.md §'読解 keys')", slug="dokkai_option_length_band", test_id=name)
     warn(f"{name}: 読解 item option length ratios sit within max/min <= {DOKKAI_OPTION_RATIO_WARN}",
          not warn_items,
-         f"{'; '.join(warn_items)} — official p90 is 1.61; consider balancing option lengths (dokkai.md §'読解 keys')")
+         f"{'; '.join(warn_items)} — official p90 is 1.61; consider balancing option lengths (dokkai.md §'読解 keys')", slug="dokkai_option_length_band", test_id=name)
 
 
 def check_dokkai_key_rank_spread(name: str, keys: dict[int, int],
@@ -3309,12 +3468,12 @@ def check_dokkai_key_rank_spread(name: str, keys: dict[int, int],
     if origin != "generated" or name in DOKKAI_DISTRIBUTION_GRANDFATHERED:
         warn(f"{name}: 読解 key length ranks are evenly spread (no single rank > 60%, got {share:.0%})",
              share <= 0.60,
-             detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""))
+             detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""), slug="dokkai_key_rank_spread", test_id=name)
     else:
         check(f"{name}: 読解 key length ranks are evenly spread (no single rank > 60%, got {share:.0%})",
-              share <= 0.60, detail)
+              share <= 0.60, detail, slug="dokkai_key_rank_spread", test_id=name)
     warn(f"{name}: 読解 key rank dominant share <= 45% (got {share:.0%})",
-         share <= 0.45, detail)
+         share <= 0.45, detail, slug="dokkai_key_rank_spread", test_id=name)
 
 
 def check_dokkai_overlap_direction(name: str, gt: str, origin: str = "generated"):
@@ -3330,27 +3489,31 @@ def check_dokkai_overlap_direction(name: str, gt: str, origin: str = "generated"
 
     mgn_ok = mgn <= 0.0
     mgn_detail = (f"median overlap margin is {mgn:+.3f} (key − best distractor bigram overlap) — "
-                  f"official current era is always negative (-0.008 to -0.089). Keys must share "
+                  f"official current era never goes positive (-0.089 to 0.000). Keys must share "
                   f"LESS surface text with the passage than distractors (dokkai.md §'Overlap direction')")
 
     if origin != "generated" or name in DOKKAI_DISTRIBUTION_GRANDFATHERED:
         warn(f"{name}: 読解 keys share less passage bigram surface than distractors (median margin <= 0, got {mgn:+.3f})",
-             mgn_ok, mgn_detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""))
+             mgn_ok, mgn_detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""), slug="dokkai_overlap_direction", test_id=name)
     else:
         check(f"{name}: 読解 keys share less passage bigram surface than distractors (median margin <= 0, got {mgn:+.3f})",
-              mgn_ok, mgn_detail)
+              mgn_ok, mgn_detail, slug="dokkai_overlap_direction", test_id=name)
 
     top_ok = top_share <= 0.50
     top_detail = (f"keys strictly top in passage overlap in {top_share:.0%} of items — "
-                  f"official median 33.3%, max 46.2%. Build distractors from passage text (dokkai.md §'Overlap direction')")
+                  f"official median 35.0%, max 45.0%. Build distractors from passage text (dokkai.md §'Overlap direction')")
     if origin != "generated" or name in DOKKAI_DISTRIBUTION_GRANDFATHERED:
         warn(f"{name}: 読解 keys strict top-overlap share <= 50% (got {top_share:.0%})",
-             top_ok, top_detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""))
+             top_ok, top_detail + (GRANDFATHER_NOTE if name in DOKKAI_DISTRIBUTION_GRANDFATHERED else ""), slug="dokkai_overlap_direction", test_id=name)
     else:
         check(f"{name}: 読解 keys strict top-overlap share <= 50% (got {top_share:.0%})",
-              top_ok, top_detail)
-    warn(f"{name}: 読解 keys strict top-overlap share <= 44% (got {top_share:.0%})",
-         top_share <= 0.44, top_detail)
+              top_ok, top_detail, slug="dokkai_overlap_direction", test_id=name)
+    warn(f"{name}: 読解 keys strict top-overlap share <= 46% (got {top_share:.0%})",
+         # 0.46, not 0.44: re-measuring the archive with the repaired parser puts
+         # one official sitting at 45.0%, and a WARN that flags the measuring
+         # stick is the same defect as a FAIL that does (REPORT-DOKKAI.md §D2,
+         # which set 44% precisely because it failed no official paper then).
+         top_share <= 0.46, top_detail, slug="dokkai_overlap_direction", test_id=name)
 
 
 LONGEST_KEY_RATE_MAX = 0.35
@@ -6555,7 +6718,7 @@ def check_script_register(name: str, script_text: str, m):
          f"official is 18% (589/3215 turns <=12 chars: 「はい。」「そうですか。」"
          f"「うん。」); below ~12% the conversation never lets the other speaker "
          f"land, and the audio loses the 0.9 s turn gaps that make it breathe "
-         f"(official_register.md §1)")
+         f"(official_register.md §1)", slug="choukai_reaction_floor", test_id=name)
 
     fillers = sum(script_text.count(f) for f in FILLERS)
     warn(f"{name}: 聴解 dialogue hesitates like a person ({fillers} tokens)",
@@ -6569,7 +6732,7 @@ def check_script_register(name: str, script_text: str, m):
          f"have shipped at 58. The real deficit is not fillers: official carries "
          f"うん 11.3/paper against our 4.2, so spend the budget on the OTHER "
          f"speaker acknowledging, not the current one stalling. Keep all of it "
-         f"out of the ANNOUNCER's lines (choukai-audio §Register)")
+         f"out of the ANNOUNCER's lines (choukai-audio §Register)", slug="choukai_filler_band", test_id=name)
 
     denials = len(re.findall(r"(ではありません|じゃありません|必要は?ありません"
                              r"|しなくていい)", script_text))
@@ -6842,7 +7005,7 @@ def check_choukai_countable_mix(test_id: str, ct: str, st: str, m, bi):
                    "cast 男1+男2+女 (choukai-items.md §統合理解)")
 
     _gated(test_id, f"{test_id}: 聴解 section mix inside the archive's range",
-           not bad, " ⁄ ".join(bad))
+           not bad, " ⁄ ".join(bad), slug="choukai_section_mix")
 
 
 def check_choukai_same_speaker_lines(test_id: str, st: str, m):
@@ -8929,6 +9092,7 @@ def main():
         check_harvest_hygiene()
         check_harvest_provenance()
         check_legacy_item_repeats(SAMPLE_ITEMS)
+        check_topics_voice_axis()
         check_topics_themes()
         check_theme_repeat_cross_test()
         check_slot_theme_repeat()

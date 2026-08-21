@@ -440,31 +440,40 @@ one (max 50 %).
 
 ### 1. Section Lengths (JP characters in passage prose)
 
+> **Two parses, both named.** The numbers below are this script's parse of
+> `booklet.md`. The gate's floors and ceilings are in
+> `check_consistency.passage_prose()`'s metric, measured on the same 7
+> sittings and recorded in `official_calibration.md` §2 — the two agree to
+> within ~3% (問題10: 1143/1225/1329 there, 1143/1259/1357 here; the gap is
+> passage-marker and preface lines). **A threshold has to sit outside BOTH
+> ranges**, which is why the 問題10 ceiling reads 1330 in gate metric rather
+> than being moved to this table's 1357.
+
 | 大問 | official min | official median | official max | gate floor | gate ceiling |
 |---|---|---|---|---|---|
-| 問題10 短文 (5 passages) | 1143 | 1225 | 1329 | **≥1100** | **≤1330** |
-| 問題11 中文 (4 passages) | 2449 | 2556 | 2685 | **≥2250** | **≤2700** |
-| 問題12 統合 A/B | 532 | 551 | 592 | **≥510** | **≤600** |
-| 問題13 長文 | 814 | 904 | 1061 | **≥800** | **≤1070** |
-| 問題14 情報検索 | 489 | 604 | 638 | **≥450** | **≤640** |
+| 問題10 短文 (5 passages) | 1143 | 1259 | 1357 | **≥1100** | **≤1330** |
+| 問題11 中文 (4 passages) | 2503 | 2613 | 2789 | **≥2250** | **≤2700** |
+| 問題12 統合 A/B | 544 | 564 | 605 | **≥510** | **≤600** |
+| 問題13 長文 | 820 | 916 | 1088 | **≥800** | **≤1070** |
+| 問題14 情報検索 | 505 | 604 | 638 | **≥450** | **≤640** |
 
 ### 2. Register, Voice & Rhythm
 
 | measure | official band (cur) | median | gate recommendation |
 |---|---|---|---|
-| median sentence length (JP chars) | 33.5–44.0 | 38.0 | 33–43 (FAIL outside 28–50) |
-| share of sentences < 25 chars | 13.8%–31.5% | 20.5% | 12–30% |
-| kanji density (% of JP chars) | 25.0%–29.7% | 28.0% | 24–32% (FAIL outside 22–34%) |
-| です・ます share in essay passages | 17.7%–49.2% | 37.1% | ≥3 passages throughout |
-| first-person essay passages share | 28.6%–100.0% | 50.0% | ≥4 of 12 surfaces |
-| median overlap margin (key − best dist) | -0.089…-0.008 | -0.042 | **≤ 0.0** |
-| strict top-overlap key share | 10.0%–46.2% | 33.3% | ≤ 50% (WARN > 44%) |
+| median sentence length (JP chars) | 31.5–39.0 | 36.0 | 33–43 (FAIL outside 28–50) |
+| share of sentences < 25 chars | 16.7%–32.5% | 21.1% | 12–30% |
+| kanji density (% of JP chars) | 25.5%–30.1% | 28.4% | 24–32% (FAIL outside 22–34%) |
+| です・ます share in essay passages | 30.5%–45.2% | 34.8% | ≥3 passages throughout |
+| first-person essay passages share | 60.0%–100.0% | 77.8% | ≥4 of 12 surfaces |
+| median overlap margin (key − best dist) | -0.089…+0.000 | -0.051 | **≤ 0.0** |
+| strict top-overlap key share | 10.0%–45.0% | 35.0% | ≤ 50% (WARN > 44%) |
 
 ### 3. Option Length Balance & Key Ranks
 
 | measure | official cur | rule |
 |---|---|---|
-| option max/min ratio median (p90) | 1.30 (1.61) | WARN > 1.65, FAIL > 2.5 |
+| option max/min ratio median (p90) | 1.25 (1.58) | WARN > 1.65, FAIL > 2.5 |
 | key rank distribution (1/2/3/4) | ~29% / ~29% / ~27% / ~15% | no single rank > 60% (WARN > 45%) |
 | uniquely-longest key rate | ~20–25% | 20–30% |
 

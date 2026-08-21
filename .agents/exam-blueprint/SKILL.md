@@ -374,6 +374,38 @@ binds only the **headline set** = 問題9 cloze, 問題12 A/B (one surface),
    previous two papers together at most ONE headline theme may repeat**
    (only against the paper-before-last, only once).
 
+**Rule 5 — VOICE is the third axis, and it is a per-paper quota.** Subject
+(rules 1–4) and closing move (`dokkai.md`) govern *what* a surface is about and
+*how it ends*; neither says what register it is written in, and the corpus
+answered that question with one register in fourteen papers: **です・ます in 0%
+of essay surfaces against official's 30–45%, first-person in 37% against 60–100%,
+kanji density 35.5–41.7% against 25.5–30.1% — a band with no overlap at all**
+(REPORT-DOKKAI.md §F3). Official 読解 passages are excerpts from published
+essays; ours read as policy prose, and that single fact is most of the
+"読解 feels harder than the real thing" complaint.
+
+So each of the thirteen surfaces records a **voice** alongside its subject and
+closing move — `一人称随筆` / `評論` / `解説` / `通知` — and the paper's tally must
+reach, over the 12 essay-type surfaces (問題14 excluded):
+
+| quota | official | gate |
+|---|---|---|
+| ≥4 surfaces in the **first person** (私/僕/自分) | 60–100%, median 78% | WARN |
+| ≥3 surfaces in **です・ます throughout** | 30.5–45.2% of endings, median 35% | WARN |
+| kanji density per paper **24–32%** | 25.5–30.1%, median 28.4% | FAIL outside 22–34% |
+| ≥1 surface carrying quoted speech 「…」; ≥1 carrying a 疑問提示文 | 21–51 / 10k, 1–7 / 10k | QA reads it |
+
+Record it in `logs/topics.json` beside the subjects, as a **`voices` map keyed
+by the same surface keys** — `{"問題10(1)": "一人称随筆", "問題11(2)": "評論", …}`.
+That extends the record instead of adding a file (the same argument the rotation
+history makes), and `surfaces` keeps its existing shape so every reader of it
+still works. `make check` WARNs on a paper whose entry has no `voices` map; all
+fourteen papers on disk are in that state, and each leaves it when its surfaces
+are re-authored under this rule. A paper that reaches the length ceiling only by reverting
+to plain style **fails this rule rather than passing the length one**: です・ます
+prose runs longer for the same content, so author both together
+(`dokkai.md` §"Length bands", §"Axis 3").
+
 **Rule 4b — the cloze's SUBJECT, not its theme, is bound against the whole
 previous paper.** 問題9 is the one scored surface with no pool entry, no draw
 and no cooldown, so rules 1–4 reach it only through its headline THEME tag —

@@ -274,8 +274,27 @@ All figures from `official_calibration.md` §4 — current era, n=7 sittings,
 
 **70 and 71 are BOTH person-scenario items** — 7 of 7 papers (`official_calibration.md` §6). The answer always combines **≥2** constraints from the table.
 
-- **Target shape**: stems must ask for a **value** (料金はいくらになるか / 何を用意すべきか), an **action** (どのように申し込むか / どうしなければならないか), or a **choice** among named options (どの講座か).
-- **🚫 BANNED**: stems asking generic truth checks (「〜について、正しいものはどれか」「〜について、適切なのはどれか」).
+- **Target shape**: stems must ask for a **value** (料金はいくらになるか / 何を用意
+  すべきか / 何を持って行かなければならないか), an **action** (どのように申し込むか /
+  どうしなければならないか / どうすれば参加できるか), or a **choice** among named
+  options (どの講座か / 希望に合うコースはどれか). Measured over all 14 official
+  current-era items: **5 value, 6 action, 3 choice, 0 truth-check** — the
+  classifier behind that count is `dokkai_profile.classify_q14_target` and it now
+  covers 14 of 14, so a stem it calls `other` is a shape the archive does not use.
+- **🚫 BANNED**: stems asking generic truth checks (「〜について、正しいものはどれか」
+  「〜について、適切なのはどれか」). `check_dokkai_q14_stem_target` **FAILs when both
+  items are truth-check shaped** and WARNs on one; the papers still exempt are
+  `20260812_1`, `20260812_2`, `20260813_2`, `20260814_1`, `20260817_1`,
+  `20260817_2` (`DOKKAI_Q14_TARGET_GRANDFATHERED`), and an id leaves that set the
+  moment its two stems ask a value, an action or a named option — as
+  `20260817_3`, `20260818_1` and `20260819_1` did on 2026-08-21.
+- **A worked pair, from the repair of `20260819_1`:** 「川口さんが払う金額は、全部で
+  いくらになるか」 with options 六百円 / 八百円 / 千円 / 千四百円 — each distractor a
+  real combination of flyer cells with one fact changed (the student rate alone,
+  the one-day rate mistaken for it, the museum's own admission added on top of a
+  ticket that already covers it) — and 「日曜日にどの施設を回っておかなければならな
+  いか」, keyed on the two 休館日 cells that read 月曜日. Neither asks whether a
+  sentence is true; both make the candidate compute something.
 - **The 解説 cells for 70/71 must each quote the TWO flyer cells the key combines**.
 - **Every WRONG option must contain at least one clause factually FALSE against the flyer** — not merely incomplete. Build wrong options from true combinations with ONE fact changed to something the flyer contradicts.
 
@@ -283,9 +302,24 @@ All figures from `official_calibration.md` §4 — current era, n=7 sittings,
 
 ### 1. Option length balance & rank distribution
 
-1. **Per-item length ratio**: all four options must be balanced.
-   - **WARN if max/min > 1.65** (official p90 is 1.61).
-   - **FAIL if max/min > 2.50** (archive max 4.29).
+1. **Per-item length ratio**, 問題10–13 only — every number re-measured
+   2026-08-21 with `make dokkai-profile BASELINE=1` §3 after repairing that
+   script's option parser (it had been cutting option 4 at its first line and
+   reading 「3,500円」 as one character, which manufactured ratios of 9–14 out of
+   nothing):
+   - **WARN if max/min > 1.65** — official 問題10–13 runs median 1.25, p90 1.55,
+     **max 2.00** over 126 items.
+   - **FAIL if max/min > 2.50** — outside that whole range, as a threshold must be.
+   - **問題14 is exempt.** Its options are values and dates by design: official
+     12/2023 問70 prints 「3,500円」 beside 「3,500円から200円と300円が割引された
+     金額」 (4.17×), and 問題14's own range is 1.26–4.17. One threshold cannot
+     serve both, and the old FAIL line was rejecting a shape the archive ships
+     every sitting.
+   - Length here is **printed length** (every non-space character), not JP-only —
+     name the metric wherever this number is quoted.
+   - The ≤1.30 clamp this replaced failed **34.3% of official current-era items**
+     (the audit reported 40.5% from a parse whose truncations inflated it), and it
+     is what pushed 48.8% of our keys onto rank 2 (§F2).
 2. **Per-paper key rank spread**:
    - **No single key rank (1=longest, 2, 3, 4=shortest) may exceed 60% of items** (`check_dokkai_key_rank_spread` FAILs >60%, WARNs >45%). Official per-paper worst is 56%, median 39%.
    - **Uniquely longest rate**: key is uniquely longest in **20–30%** of items (official median 23.0%).
@@ -295,7 +329,10 @@ All figures from `official_calibration.md` §4 — current era, n=7 sittings,
 
 Examinees must not be able to solve items by simple character matching:
 1. **Overlap Margin**: the paper's median (key overlap − best distractor overlap) bigram margin must be **≤ 0.0** (negative in 7 of 7 official papers: −0.021 to −0.100).
-2. **Top overlap share**: the key may be strictly top in passage bigram overlap in **≤50%** of items (WARN above 44%; official range 11–44%, median 38%).
+2. **Top overlap share**: the key may be strictly top in passage bigram overlap
+   in **≤50%** of items (WARN above **46%**; official range 10–45%, median 35%,
+   re-measured 2026-08-21 — the WARN sat at 44% until one official sitting
+   measured 45.0% under the repaired parser).
 3. **Distractor construction**: build wrong options FROM passage material (a true clause with one fact altered) and write the key as an abstract paraphrase. This ensures distractors are attractive and share high surface overlap with the passage, while the key tests comprehension of the idea.
 
 ### 3. Strict key paraphrasing — keys must NEVER be verbatim text lifts
