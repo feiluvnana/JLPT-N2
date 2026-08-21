@@ -135,17 +135,30 @@ by pattern, or stops testing a skill the exam tests:
 
 ### Banned formulas — each one shipped, with the count that banned it
 
-| Never write | Official / 31 sittings | Generated papers (pre-rule) |
+**Every band below is measured** by
+`choukai_profile.service_formula_archive()` and read by the gate — the numbers
+are per-paper counts over the 31 sittings, not estimates. Refresh by re-running,
+never by retyping.
+
+| Never write | Official: total / max per paper | Generated papers |
 |---|---|---|
 | 「Xの話ではありませんし、Yについて論じているのでもありません」 (問題3 close) | **0** | every 問題3 item |
-| 「〜た方がいいですか」 (un-official probe) | **0** in 31 sittings | 13× in 8/14 papers |
-| 「かしこまりました」 transaction formula | 4× in 31 sittings | **24× in 12/14 papers** |
-| 「〜ていただけますか」 | 6× in 31 sittings | 25× in 12/14 papers |
-| 「よろしいでしょうか」 | 6× in 31 sittings | 13× in 10/14 papers |
-| 「あ、そうなんですね」 | 0.2/10k chars | 17× in 8/14 papers |
+| 「〜た方がいいですか」 (un-official probe) | **0 / 0** | 13× in 8/14 papers |
+| 「かしこまりました」 transaction formula | 4× / **max 1** | **24× in 12/14 papers** |
+| 「〜ていただけますか」 | 13× / max 2 | 39× in 12/14 papers |
+| 「よろしいでしょうか」 | 6× / max 2 | 13× in 10/14 papers |
+| 「あ、そうなんですね」 | 4× / max 2 | 36× in 8/14 papers |
+| 「〜ておきましょうか」 | 1× / max 1 | 9× |
 | 「わかりました。書きます。」 reused as every closing turn | 0 | reused across a section |
 | 「なるほど、〜なんですね」 echo just before the answer | rare | once per 問題2 item |
 | 問題4 replies opening はい / いいえ / では | **1.3 %** | over half |
+
+**One row on this list is a FLOOR, not a ceiling.** 「そうですね」 appears
+**83× across 29 of 31 sittings, median 3 per paper**, against a median of 1 in
+ours: it is the human courtesy official reaches for, and the gate now WARNs when
+a paper falls BELOW the archive median. The first cut of that check capped it at
+1 — which would have pushed every paper further from official while reading as a
+register fix. Before adding any phrase to this table, measure both directions.
 
 **The formula is the defect, not the phrase** — a section that runs the same
 opening move → probe shape → closing turn in every item is solvable by
@@ -187,7 +200,8 @@ form:
 - Blocks are separated by ONE blank line. **One block = one audio unit.**
 - **One turn = ONE line. Two consecutive lines may never carry the same
   speaker label.** A gap is inserted between every pair of lines
-  (`GAP_BETWEEN_LINES`, 0.9 s); a same-speaker pause at a 。 is a within-turn
+  (`turn_gap_jitter()`, median 0.9 s over a five-value ladder — Part 3
+  §"Verify the pause DISTRIBUTION"); a same-speaker pause at a 。 is a within-turn
   pause instead (official median 0.40 s, p75 0.53; capped at
   `GAP_WITHIN_TURN_MAX`). Official has **0** consecutive same-label pairs in
   31 sittings — a same-speaker split turn silently inflates the reaction-turn
@@ -364,8 +378,13 @@ the examinee who is speaking. Nothing reconciles them — the author does:
   When two same-gender speakers share an item, pitch separation is measured in semitones:
   $$\Delta\text{st} = 12 \times \left|\log_2\left(\frac{f_{\text{base}} + \Delta f_1}{f_{\text{base}} + \Delta f_2}\right)\right|$$
   where $f_{\text{base}} = 210\text{ Hz}$ for female (`NanamiNeural`) and $120\text{ Hz}$ for male (`KeitaNeural`).
-  Target: **$\ge 1.9\text{ st}$**. Gate FAILs if $< 1.0\text{ st}$ (e.g. `20260807_1` 問題5-2番 at 0.16 st),
-  and WARNs if between $1.0\text{ st}$ and $1.9\text{ st}$.
+  Target: **$\ge 1.9\text{ st}$**. Gate FAILs if $< 1.0\text{ st}$, and WARNs between
+  $1.0$ and $1.9\text{ st}$. The FAIL edge has been hit once: `20260807_1` 問題5-2番 cast
+  係員(+18 Hz) beside 妻(+16 Hz) — **0.16 st**, inaudible — repaired 2026-08-21 by moving the
+  enumerator to `男性係員` (2.94 st against 夫). Why semitones and not Hz: 18 Hz on a 120 Hz
+  male voice is 2.42 st and plainly audible, 20 Hz on a 210 Hz female voice is 1.57 st and
+  marginal, so the old Hz rule flagged the audible pair and passed the inaudible one
+  (REPORT-CHOUKAI.md §D2; the reversed precedent is noted in `qa/qa-report-20260811_1.md` §6).
 - **Scan the WHOLE block for the narration, not its first line** — 問題5's
   2番 puts the situation on the block's second line.
 - **Questions must name speakers unambiguously** — if a question says
@@ -444,20 +463,65 @@ check` diffs against the code** — change values here and in the code together.
 
 | Constant | Value | Official (median [band]) | Meaning |
 |---|---|---|---|
-| GAP_BETWEEN_LINES | 0.9 s | 0.51 s [p75 0.75, p90 1.08], n=465 | between dialogue turns |
+| `turn_gap_jitter()` ladder | (0.65, **0.90**, 0.90, 1.15, 1.40) s | 0.51 s [p75 0.75, p90 1.08], n=465 | between dialogue turns — **median 0.90, with a tail** |
+| GAP_BETWEEN_LINES | 0.9 s | same row | the pre-jitter constant; kept as the ladder's centre and as `pacing_sha` input |
 | GAP_AFTER_PRE_QUESTION | 3 s | 2.80 s [2.5–4.6], n=74 | 問1: question → conversation |
 | GAP_OPTION_READING | 20 s | 20.22 s [20.19–20.81], n=139 | 問2 only: read printed options |
 | GAP_BETWEEN_SPOKEN_CHOICES | 3 s | 3.10 s [2.66–3.26], n=427 | 問3/問5 spoken choices |
 | GAP_BETWEEN_SPOKEN_RESPONSES | 2.2 s | 2.23 s [2.14–2.31], n=795 | 問4 only: read continuously |
 | GAP_BEFORE_REPEATED_QUESTION | 3 s | 2.94 s [2.81–3.19], n=74 | 問1/問2: talk → question repeated |
 | GAP_AFTER_SHITSUMON1 | 10 s | 10.0 s [7.8–12.4], n=20 | 問5: 質問1's answer time, before 質問2 |
-| GAP_WITHIN_TURN_MAX | 0.5 s | 0.40 s [p75 0.53, p90 0.72], n=181 | ceiling for a pause INSIDE one turn |
+| `WITHIN_TURN_LADDER` | (0.40, 0.40, 0.60, **0.72**) s | 0.40 s [p75 0.53, p90 0.72], n=181 | a capped pause INSIDE one turn — rungs, not one value |
+| GAP_WITHIN_TURN_MAX | 0.5 s | same row | the ladder's centre; still the invariant every rung stays under the turn gap |
 | SHAPE_PAUSE_FLOOR | 0.6 s | threshold, not measured | only pauses above this are capped |
 | ANSWER_PAUSE | 問1/2: 12 s, 問3/4: 8 s, 問5: 10 s | 12.2 s / 8.3 s / 8.3–12.3 s | after each item block |
 
 Every value is inside the measured band, unmoved in 15 years (|r| ≤ 0.22
 against sitting year). Loudness target: **−15 LUFS, −1.0 dBTP** (official
 median −15.01 [−15.5, −14.3], n=31).
+
+### Verify the pause DISTRIBUTION, not the median (F8)
+
+Every constant above sat inside its measured band while the rendered audio was
+still wrong, because a median says nothing about shape. Measured with
+`silencedetect=noise=-35dB:d=0.30` over sub-2 s silences (longer ones are the
+scripted answer pauses, not speech rhythm):
+
+| corpus | median | p75 | p90 | in the 0.5/0.9 s spikes | > 1.05 s |
+|---|---|---|---|---|---|
+| ours, before the ladder (`20260819_1`) | 0.51 s | 0.92 s | 0.93 s | **60%** | **1%** |
+| Shin Kanzen CD2, 17 mock tracks | 0.66 s | 1.04 s | 1.22 s | 19% | 24% |
+| official 7/2025, full MP3 | 0.69 s | 1.00 s | 1.41 s | 20% | 21% |
+
+Every turn gap was exactly `GAP_BETWEEN_LINES` and every within-turn pause was
+capped at `GAP_WITHIN_TURN_MAX`, so the 1.1–1.4 s beat where a speaker thinks —
+**one pause in five in both reference corpora** — did not exist in our audio at
+all. `turn_gap_jitter()` restores it: a **five-value ladder indexed by
+`sha1(line)[0] % 5`**, so a warm cache stays byte-identical to a cold build
+(`make_silences()` pre-creates each value as `_sil_{s:g}.wav`, and a continuous
+jitter would spawn hundreds of tiny WAVs).
+
+**Two ladders, because the turn boundary was only half of it.**
+`turn_gap_jitter()` spreads the gap BETWEEN turns; `WITHIN_TURN_LADDER` spreads
+the same-speaker pause that `shape_pauses()` caps, which was the bigger half —
+every internal pause above `SHAPE_PAUSE_FLOOR` used to be clamped to exactly
+0.5 s. Measured on `20260807_1`: spikes 60% → 46% (turn gap only) → **18%**
+(both).
+
+**Rule:** after any pacing change, verify on the RENDERED MP3 that the two
+spikes hold under 35% and the >1.05 s tail is at least 7%.
+`check_choukai_pause_distribution` in `make check` does exactly that, per paper;
+it is a WARN because it needs the audio and skips when it is absent. A paper
+whose 聴解.mp3 predates the ladders is in `PACING_SHA_GRANDFATHERED` until
+`make mp3 <id>` is re-run.
+
+**Why 7% and not the reference corpora's 17–24%:** only a turn *boundary* may
+exceed the 0.9 s gap — a within-turn pause at or above it makes one speaker
+sound like two — and our papers carry ~120 boundaries against ~480 within-turn
+pauses because our median turn is 27 chars against official's 37
+(`official_register.md` §1). The tail is therefore capped near 9% by SCRIPT
+SHAPE, and the way to lift it is fewer, longer turns, not a bigger constant
+(`official_pacing.md` §6.1).
 
 ### A gap is only real if the segments around it are trimmed
 
@@ -570,6 +634,16 @@ Corpus: `refs/JLPT_N2_NEW/<n>. N2 <M>-<YYYY>/…mp3` — 31 sittings, every one
 except the cancelled July 2020. **Never add a second audio folder** (a
 duplicate once double-weighted the last three years). Script PDFs are scans
 (no transcript for mora counts); Shinkanzen CD tracks are weaker evidence.
+
+**Shin Kanzen DOES have a script, and it is extracted.** The 別冊
+「解答とスクリプト」 is bound into `Shin_Kanzen_Masuta_N2-Choukai.pdf` and carries
+a complete 模擬試験 paper plus every practice dialogue — cleanly typeset, not an
+OCR of a stencil. `make extract-shinkanzen` writes it to
+`refs/Shinkanzen/choukai_script.md`. Use it for **register and rhythm** (the
+音の変化・縮約形 and 間接的な答え方 chapters sit beside it) and its mock tracks for
+pause distribution (`official_pacing.md` §6.1). It is **secondary evidence**: a
+textbook corroborates shape, family and register, and never sets a count or a
+length the 31-sitting archive can set instead (`AGENTS.md` §3).
 Five steps (full commands in the reference, §1):
 
 1. **Basics** — `ffprobe` for duration/bitrate; loudness via

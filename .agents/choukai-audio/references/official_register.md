@@ -32,9 +32,17 @@ Turn = one speaker's uninterrupted speech, wrapped OCR lines rejoined.
 | 問題4 replies opening はい/いいえ/では | **2.5%** combined | **57%** | 23× |
 | 問題4 「まだ〜ていません」-shaped distractors | 2% | 8% | 4× |
 
-Turn LENGTH is already right — median 38 vs 32 chars, p90 94 vs 92. **The
-problem was never sentence length; it's that generated speakers never
-react, never hesitate, and kill distractors by announcing they're wrong.**
+**Turn SHAPE is not right, corrected 2026-08-21.** This line used to read "turn
+LENGTH is already right — median 38 vs 32"; re-measured with
+`tools/choukai_profile.py` over all 14 papers it is **median 27 chars against
+official 37** (p90 62 vs 96), with **more** turns per paper (121–220 vs 77–149).
+So our speakers take twice as many turns half as long, and each of those extra
+boundaries buys another turn gap — audible as ping-pong (`official_pacing.md`
+§6.1, and the reason the pause ladder matters). Write fewer, longer turns; a
+speaker may carry two sentences in one line.
+
+**Still true, and the original point of this section:** generated speakers never
+react, never hesitate, and kill distractors by announcing they're wrong.
 
 ---
 
@@ -103,6 +111,11 @@ three and rejecting each is what made generated items easy.
 
 ## 3. Banned formulas, with the count that banned them
 
+**Bands measured by `choukai_profile.service_formula_archive()`** (per-paper
+counts over the 31 sittings) — and note the last row: 「そうですね」 is the one
+string official uses MORE than we do (83× across 29 sittings, median 3/paper vs
+our median 1), so it is gated as a floor, not a ceiling.
+
 | Formula | Official / 31 sittings | Generated (baseline) |
 |---|---|---|
 | 「Xの話ではありませんし、Yについて…」 | 0 | every 問題3 item |
@@ -161,9 +174,26 @@ devices     regex per row of §2.3 over the joined turn text, per 10 k chars
 問題4        replies = ^[1-3]\s*(.+)$ inside the 問題4..問題5 span
 ```
 
-Not committed as a script (one-shot analysis over `refs/`), but every number
-above is reproducible from these five rules. Re-measure after adding
-sittings; do not re-derive from one paper.
+**Committed as a script since 2026-08-21** — `tools/choukai_profile.py`, run it
+with:
+
+```
+make choukai-profile BASELINE=1      # the official tables, in this file's Markdown
+make choukai-profile                 # archive vs every paper under tests/
+python3 tools/choukai_profile.py --tests 20260819_1 --json
+```
+
+`tools/check_consistency.py` imports the same module, so a threshold in the gate
+and a number here cannot drift apart: the gate owns the **thresholds**, the
+script owns the **measurement** (`AGENTS.md` §4). Refresh §§1–3 and §7 by
+pasting `--baseline` output; do not retype a row and do not re-derive from one
+paper. The five rules above are what the script implements, and it prints them
+under its own tables.
+
+Why this stopped being prose: three numbers this file and `choukai-items.md`
+carried — 問題2 どのように at 18%, 問題3 talk median 305, 問題4 casual at 49% —
+could not be reproduced by any parse, and papers had already been authored to
+them (REPORT-CHOUKAI.md §F3, §F7, §D1).
 
 ---
 
@@ -219,10 +249,10 @@ Each is now a rule with a cap, owned by `choukai-items.md` §"Section item mix".
 |---|---|---|---|
 | 問題1 items at a service counter | **6%** (9/153) | 42% (17/40) | `20260813_2` 5/5 |
 | 問題2 items keyed by 「一番/優先」 | **6%** (8/141) | 52% (25/48) | two papers 5/6 |
-| 問題2 items keyed by どのように | 18% (25/141) | 2% (1/48) | — |
+| 問題2 items keyed by どのように | **2.2%** (4/181) — the 18% here was unreproducible, see §6 | 17% | quota rebuilt on the measured share |
 | 問題4 items with a もう/済/さっき distractor | median 1, max 3, of 11.4 | — | `20260813_2` 9/11 |
 | 問題3 options ending 「〜について」 | **1%** (8/685) | 60% (116/192) | 24/24 in four papers |
-| 問題3 talk length, spoken chars (§7.4) | median 305, p10 251, min 177 (n=149) | median 179, max 258 | 34/40 below official p10 |
+| 問題3 talk length, spoken chars | median **243** [p10 202, p90 320], n=123; current era 158–397 | median 179–337 | the older half sits low, the newest four run 306–337 |
 | 問題5 items with ≥3 speakers | every sitting since 2020 | 0 in last 5 papers | — |
 | consecutive same-speaker turn pairs | 0 (max 1, an OCR wrap) | 0 in 6 papers | `20260813_2`: 9 |
 | 「まず」 inside 問題1 dialogue /10k | median 5.5 (0–19.1) | 4.1–36.3 | `20260807_1` 36.3 |
@@ -315,9 +345,16 @@ same-speaker    two consecutive speaker-tagged lines with an identical label
 
 Scored items only on both sides throughout (official script PDFs usually
 omit the 例; counting ours with 例 included overstates every share by a
-sixth). The §7.4 rule is parser-independent and gives 305 for 問題3 length —
-an earlier "median 257" figure came from a speaker-tag-only parse that
-silently dropped untagged official monologues.
+sixth).
+
+**Corrected 2026-08-21.** This section previously reported 305 as the official
+問題3 talk median (replacing an earlier 257, itself from a speaker-tag-only parse
+that dropped untagged monologues). Neither number survived re-measurement:
+`tools/choukai_profile.py` reads **median 243** over 123 scored talks [p10 202,
+p90 320], and **305 is one sitting's per-paper median** — the top of a 193–298
+per-paper range. Four papers were authored to 306–337 chars against it, i.e.
+above the archive's p90, which is F7. The lesson is §6's: a number nobody can
+re-run is not a target, and the fix is a committed parse, not a third figure.
 
 ### 7.5 What is gated, and what a green gate does not mean
 
@@ -328,7 +365,7 @@ outer edge, never at its median:
 |---|---|---|
 | a section keying two items to the same thing | any | FAIL |
 | 問題3 options suffixed 「〜について」 | >2/paper | FAIL |
-| 問題3 talk length | any scored item <175 | FAIL |
+| 問題3 talk length | any scored item outside [150, 400] | FAIL |
 | 問題4 already-done distractors | >3 items | FAIL |
 | 問題5 items with ≥3 speakers | 0 | FAIL |
 | two consecutive lines, one speaker label | any | FAIL |

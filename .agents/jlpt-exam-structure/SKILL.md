@@ -135,20 +135,29 @@ Note: The four banned retrieval shapes occur **0 times in any 大問** across 15
 問題5 shape: **2 item blocks, 3 answers** — `1番` + `2番` (二つの質問), **all
 choices spoken**. Keys are `問5-1`, `問5-2-1`, `問5-2-2`.
 
-### 問題1 Question Forms (measured across 31 sittings)
+### 問題1 Question Forms
+
+**Measured, not estimated** — every share below is printed by
+`make choukai-profile BASELINE=1` §2 over the 155 scored 問題1 items in the 31
+sittings, one label per item on the priority order the same output states.
+Refresh this table from that output; never retype a row (`AGENTS.md` §4).
 
 | Frame | Official share | Example |
 |---|---|---|
-| この後/これから + まず + 何をしますか・しなければなりませんか | ~40% | 「女の職員はこの後まず何をしますか」 |
-| 何をしますか・しなければなりませんか (no まず) | ~37% | 「女の職員はこの後何をしますか」 |
-| どう/どのように 〜ますか (modify a draft, poster, booking, method) | ~12% | 「学生はスピーチの原稿をどう直しますか」 |
-| どの〜を選ぶ/押す/買う (condition match) | ~5% | 「どの番号を押せばいいですか」 |
-| 何を持って行く/出す/書く/用意する (object) | ~4% | 「料理教室に何を持って行かなければなりませんか」 |
-| いつ/いくら/どこ (time, cost, location) | ~3% | 「今ここでいくら払いますか」 |
+| この後/これから + まず + 何をしますか・しなければなりませんか | **36.8%** | 「女の職員はこの後まず何をしますか」 |
+| 何をしますか・しなければなりませんか (no まず) | **31.0%** | 「女の職員はこの後何をしますか」 |
+| その他 (anything the five named frames do not catch) | **18.1%** | 「二人はこれからどうしますか」 |
+| どう/どのように 〜ますか (modify a draft, poster, booking, method) | **5.8%** | 「学生はスピーチの原稿をどう直しますか」 |
+| 何を持って行く/出す/書く/用意する (object) | **3.2%** | 「料理教室に何を持って行かなければなりませんか」 |
+| いつ/いくら/どこ (time, cost, location) | **3.2%** | 「今ここでいくら払いますか」 |
+| どの〜を選ぶ/押す/買う (condition match) | **1.9%** | 「どの番号を押せばいいですか」 |
 
 Note:
 - **課題理解 options may be a SET** (e.g. Shin Kanzen 問題紹介 例題1 keys combinations like `1: アイウ`, `2: アウオ`, `3: ウオ`, `4: アウ`).
-- **~14% of official 問題1 items are single-speaker** (announcement, 留守番電話 message, 課長からのメッセージ, automated menu).
+- **16% of official 問題1 items are single-speaker** (announcement, 留守番電話 message, 課長からのメッセージ, automated menu) — 25 of 155, §7 of the same output.
+- The two rare frames still carry a **≥1 of 6** authoring quota each
+  (`choukai-items.md` §"Section item mix") even though official runs them at
+  2–6%: the quota exists to break the まず monoculture, not to match the share.
 
 ### Printed options are kana-LEANING — the booklet is not a reading test
 

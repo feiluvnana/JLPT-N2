@@ -3,13 +3,13 @@
 .PHONY: help check check-tests goi-profile dokkai-profile choukai-profile grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
        init-import extract-pdf extract-archive extract-keys extract-kanji-tables extract-shinkanzen-goi extract-shinkanzen-dokkai extract-shinkanzen \
        lint-draft lint verify-scramble scaffold-explanations irt \
-       scaffold-sections matrix qa-eval autofix
+       scaffold-sections matrix qa-eval autofix findings repair-plan
 
 # Positional test-id argument: "make grade 1", "make sheet 2", "make sample 5".
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
 # covers every test, so it takes no id. `pages` builds every test by default;
 # "make pages 1" (or TEST=1) narrows it to one.
-TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt scaffold-sections matrix qa-eval autofix
+TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt scaffold-sections matrix qa-eval autofix repair-plan
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -72,6 +72,8 @@ help:
 	@echo "  make goi-profile [BASELINE=1]  文字・語彙 measurement: archive vs tests (--baseline for the doc tables)"
 	@echo "  make dokkai-profile [BASELINE=1] 読解 measurement: archive vs tests (--baseline for the doc tables)"
 	@echo "  make choukai-profile [BASELINE=1] 聴解 measurement: archive vs tests (--baseline for the doc tables)"
+	@echo "  make findings         Gate in --json mode -> logs/findings.json (slug/tier per finding)"
+	@echo "  make repair-plan [1] [TIER=B] 聴解 work order -> qa/[<id>/]repair-plan.{json,md}"
 	@echo "  (any per-test target also takes TEST=<id>; default TEST=1)"
 	@echo "=========================================================================="
 
@@ -89,6 +91,18 @@ dokkai-profile:
 
 choukai-profile:
 	python3 tools/choukai_profile.py $(if $(BASELINE),--baseline,--official --tests)
+
+# The 聴解 work order: findings -> tier -> the batch that must land before a rebuild.
+# `findings` is the gate in --json mode, so no number is recomputed (REPORT-CHOUKAI.md §5.0).
+# `-` on purpose: this target EMITS findings, it does not gate. A red gate is the
+# normal state mid-repair (a script edit makes its MP3 stale until the rebuild
+# batch runs), and that is exactly when the work order is needed. `make check` is
+# the gate; this is its data feed.
+findings:
+	-python3 tools/check_consistency.py --json logs/findings.json
+
+repair-plan: findings
+	python3 tools/choukai_repair_plan.py $(if $(filter-out 1,$(TEST)),$(TEST),) $(if $(TIER),--tier $(TIER),)
 
 extract-shinkanzen:
 	python3 tools/extract_shinkanzen_choukai.py

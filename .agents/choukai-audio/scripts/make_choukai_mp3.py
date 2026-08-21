@@ -117,16 +117,14 @@ SPEAKER_MAP = {
     "女性医者":   {"voice": FEMALE, "rate": "+0%", "pitch": "-10Hz"},
     "男性アナウンサー": {"voice": MALE, "rate": "+4%", "pitch": "+6Hz"},
     "女性アナウンサー": {"voice": FEMALE, "rate": "+4%", "pitch": "+20Hz"},
-    # Counterparts for existing names as aliases
-    "職員2":     {"voice": MALE,   "rate": "+0%", "pitch": "-14Hz"},
-    "係員2":     {"voice": MALE,   "rate": "+0%", "pitch": "+8Hz"},
-    "担当者2":   {"voice": MALE,   "rate": "+0%", "pitch": "-20Hz"},
-    "講師2":     {"voice": MALE,   "rate": "-6%", "pitch": "-24Hz"},
-    "専門家2":   {"voice": MALE,   "rate": "-6%", "pitch": "-10Hz"},
-    "店員2":     {"voice": MALE,   "rate": "+4%", "pitch": "+12Hz"},
-    "医者2":     {"voice": MALE,   "rate": "+0%", "pitch": "-8Hz"},
-    "アナウンサー2": {"voice": MALE, "rate": "+4%", "pitch": "+6Hz"},
 }
+# There is ONE naming scheme for a gendered role, and it is 男性/女性 + role.
+# A parallel `職員2`-style set shipped alongside it on 2026-08-21 and was removed
+# the same week, unused: two spellings of one speaker is how a label and the
+# voice it resolves to drift apart, and `職員2` reads as "the second 職員 in this
+# item", which is not what it meant. The bare labels above stay as they are —
+# every shipped script uses them, and remapping one silently re-voices finished
+# audio (`SPEAKER_MAP` is not hashed into `script_sha`).
 
 # Pacing (seconds) — measured across the 31-sitting official archive in
 # refs/JLPT_N2_NEW/ (2010-2025).  See
@@ -272,10 +270,19 @@ def shape_pauses(path: Path, frame_ms: int = 10):
     Two operations, both on 24 kHz mono s16 samples, speech untouched:
       1. drop leading and trailing silence entirely, so the inter-segment gap
          is exactly what the plan asked for;
-      2. shorten any internal pause longer than `SHAPE_PAUSE_FLOOR` to
-         `GAP_WITHIN_TURN_MAX` (official same-speaker pauses: median 0.40,
-         p75 0.53). Anything shorter is left alone — a 促音 closure is a ~0.1 s
-         silence and shortening or padding it would damage the consonant.
+      2. shorten any internal pause longer than `SHAPE_PAUSE_FLOOR` to a value
+         off `WITHIN_TURN_LADDER` (official same-speaker pauses: median 0.40,
+         p75 0.53, **p90 0.72**). Anything shorter is left alone — a 促音 closure
+         is a ~0.1 s silence and shortening or padding it would damage the
+         consonant.
+
+    Why the ladder and not the flat `GAP_WITHIN_TURN_MAX`: capping every
+    internal pause to exactly 0.5 s put 37% of all sub-2 s pauses on that one
+    value (`20260807_1`, measured 2026-08-21), which is half of F8's degenerate
+    distribution — the turn-gap ladder alone left the spike share at 46%
+    against a 35% ceiling. The rung is chosen by a stable hash of the segment
+    file name (itself a hash of the line) plus the pause's ordinal, so a warm
+    cache stays byte-identical to a cold build.
 
     Silence is decided per 10 ms frame against a floor 38 dB below the
     segment's own peak (and never above −50 dBFS absolute), which is inside the
@@ -303,10 +310,10 @@ def shape_pauses(path: Path, frame_ms: int = 10):
 
     first, last = loud.index(True), len(loud) - 1 - loud[::-1].index(True)
     keep_floor = int(SHAPE_PAUSE_FLOOR * 1000 / frame_ms)
-    keep_max = int(GAP_WITHIN_TURN_MAX * 1000 / frame_ms)
 
     out = array.array("h")
     i = first
+    pause_ord = 0
     while i <= last:
         if loud[i]:
             out.extend(samples[i * step:(i + 1) * step])
@@ -316,7 +323,12 @@ def shape_pauses(path: Path, frame_ms: int = 10):
         while run_end <= last and not loud[run_end]:
             run_end += 1
         length = run_end - i
-        keep = keep_max if length > keep_floor else length
+        if length > keep_floor:
+            rung = within_turn_pause(path.stem, pause_ord)
+            keep = min(length, int(rung * 1000 / frame_ms))
+            pause_ord += 1
+        else:
+            keep = length
         out.extend(array.array("h", [0]) * (keep * step))
         i = run_end
     # The tail of the last loud frame is partial when the file does not end on a
@@ -425,11 +437,29 @@ CHOICE_RE = re.compile(r"^[1-4]、")
 SHITSUMON2_RE = re.compile(r"^質問2。")
 
 
+WITHIN_TURN_LADDER = (0.40, 0.40, 0.60, 0.72)
+
+
+def within_turn_pause(seg_tag: str, ordinal: int) -> float:
+    """Which rung a capped within-turn pause keeps (official p90 is 0.72 s)."""
+    h = hashlib.sha1(f"{seg_tag}:{ordinal}".encode("utf-8")).digest()[0]
+    return WITHIN_TURN_LADDER[h % len(WITHIN_TURN_LADDER)]
+
+
+TURN_GAP_LADDER = (0.65, 0.90, 0.90, 1.15, 1.40)
+
+
 def turn_gap_jitter(line: str) -> float:
-    """Deterministic pause jitter across dialogue turns (REPORT-CHOUKAI.md §4.2)."""
-    ladder = (0.65, 0.90, 0.90, 1.15, 1.40)
+    """Deterministic pause jitter across dialogue turns (REPORT-CHOUKAI.md §4.2).
+
+    Median stays at `GAP_BETWEEN_LINES`, so this is additive — a tail appears,
+    the audio is not re-timed. Five rungs, not a continuous jitter, because
+    `make_silences()` writes one `_sil_{s:g}.wav` per distinct value and a warm
+    cache must be byte-identical to a cold build; the rung is chosen by
+    `sha1(line)[0] % 5`, which is stable across runs and machines.
+    """
     h = hashlib.sha1(line.encode("utf-8")).digest()[0]
-    return ladder[h % len(ladder)]
+    return TURN_GAP_LADDER[h % len(TURN_GAP_LADDER)]
 
 
 def gap_before_line(section: str, line_index: int, line: str,

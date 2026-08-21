@@ -79,7 +79,14 @@ not route around it silently.
 
 - `refs/`: Reference input files (scanned PDFs and audio recordings). See §3.
 - `tests/<test_id>/`: Output folder for each exam. **Origin is encoded in the folder name:** ids starting with `imported-` are external imports (e.g. `tests/imported-n2-2025-12/`); any other id is **generated** (e.g. `tests/1/`). See `external-test-import`.
-- `logs/`: Item coverage ledger (`logs/ledger.json`), topic history (`logs/topics.json`), adjunct staging. Each generated test's blueprint lives at `tests/<test_id>/test_spec.json`.
+- `logs/`: Item coverage ledger (`logs/ledger.json`), topic history
+  (`logs/topics.json`), adjunct staging, and any **remediation state file**
+  (`logs/choukai_remediation_state.json`) — a long repair plan's resumable
+  step list, tracked for the same reason the ledger is: the next run depends
+  on it. A fresh context starts there, then re-derives what it claims by
+  measuring the artifact, never by trusting the flag. `logs/findings.json` is
+  the gate's `--json` output and is gitignored — it is recomputed in seconds.
+  Each generated test's blueprint lives at `tests/<test_id>/test_spec.json`.
 - `.agents/`: The 9 skills — docs, scripts, and reference data.
 - `tools/`: Repo-level tooling that is not a skill (`check_consistency.py`, the `refs/` archive extractors).
 - `_site/`: **Build output only, gitignored.** The static GitHub Pages copy of the exam app, rebuilt from `tests/` by `make pages` and by CI on push. Never edit or commit it. See `exam-app`.
@@ -180,6 +187,8 @@ restate them here or in a skill; fix them there.
 | `make goi-profile [BASELINE=1]` | `tools/goi_profile.py` — 文字・語彙 measurement (archive vs tests); `BASELINE=1` prints the doc tables | `question-authoring` |
 | `make dokkai-profile [BASELINE=1]` | `tools/dokkai_profile.py` — 読解 measurement (archive vs tests); `BASELINE=1` prints the doc tables | `question-authoring` |
 | `make choukai-profile [BASELINE=1]` | `tools/choukai_profile.py` — 聴解 measurement (archive vs tests); `BASELINE=1` prints the doc tables | `choukai-audio` |
+| `make findings`           | the gate in `--json` mode → `logs/findings.json` (one record per slugged finding: slug, test id, artifact, tier) | (below) |
+| `make repair-plan [<id>] [TIER=B]` | `tools/choukai_repair_plan.py` → `qa/[<id>/]repair-plan.{json,md}` — the 聴解 work order, grouped by the tier each finding's artifact implies | `exam-qa-review` |
 | `make sample <id> SEED=n` | `sample_items.py` → `test_spec.json` + ledger | `exam-blueprint` |
 | `make scaffold-sections <id>` | `scaffold_sections.py` → scaffolds `_sections/` authoring templates | `question-authoring` |
 | `make matrix`             | `matrix_helper.py` — **validate only**; both generators are hard-disabled (they had no 音訓 table and emitted kana-skeleton-violating grids — qa-report-20260819_1 F4) | `question-authoring` |

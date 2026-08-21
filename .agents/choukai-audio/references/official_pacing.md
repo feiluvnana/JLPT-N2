@@ -266,6 +266,60 @@ agrees with all-22 to within 0.2s).
 
 ---
 
+## 6.1 The pause DISTRIBUTION, and a third corpus (2026-08-21)
+
+§§1–5 measure pause **medians**, and every constant sits inside its band — which
+is why the degenerate shape in our rendered audio went unseen for 14 papers
+(REPORT-CHOUKAI.md §F8). Measured with one method, `silencedetect=noise=-35dB:d=0.30`,
+counting only silences under 2 s (longer ones are the scripted answer pauses):
+
+| corpus | n | median | p75 | p90 | max | in the 0.5/0.9 s spikes | > 1.05 s |
+|---|---|---|---|---|---|---|---|
+| official 7/2025, full MP3 | 1 file | 0.69 s | 1.00 s | 1.41 s | 2.00 s | 20% | **21%** |
+| Shin Kanzen CD2, 17 mock tracks | 17 | 0.66 s | 1.04 s | 1.22 s | 1.73 s | 19% | **24%** |
+| ours, before `turn_gap_jitter()` (`20260819_1`) | 1 file | 0.51 s | 0.92 s | 0.93 s | 1.55 s | **60%** | **1%** |
+
+**The third corpus.** `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/` (163
+tracks, 156 min) is a *register and rhythm* source, not a paper-structure source
+— the tracks are per-item practice with no answer pauses — but its 模擬試験
+tracks are a continuous paper and are usable for pause work. Corroborating
+numbers: turn gaps median **0.66 s** (p75 1.04, p90 1.22), answer pause **~9.8 s**,
+loudness **−13.8 to −15.2 LUFS**. Read those two ways: 0.9 s sits at the slow
+edge of both corpora, and our 12 s answer pause is **the exam's, not the
+textbook's** (official 問題1 measures 12.2 s; the book is tighter at 9.8 s).
+Textbook audio is secondary evidence — it corroborates shape, it never sets a
+constant the 31-sitting archive can set instead (`AGENTS.md` §3).
+
+**Two ladders, and what they can and cannot fix.** `turn_gap_jitter()`
+(0.65/0.90/0.90/1.15/1.40 s, median = `GAP_BETWEEN_LINES`) spreads the turn
+boundary; `WITHIN_TURN_LADDER` (0.40/0.40/0.60/0.72 s, median = `GAP_WITHIN_TURN_MAX`) spreads the capped
+same-speaker pause, which was the larger half of the defect — every internal
+pause above `SHAPE_PAUSE_FLOOR` used to be clamped to exactly 0.5 s. Measured on
+`20260807_1` rebuilt 2026-08-21:
+
+| | spikes at 0.5/0.9 s | > 1.05 s | median |
+|---|---|---|---|
+| before either ladder | 60% | 1% | 0.51 s |
+| turn-gap ladder only | 46% | 9% | 0.51 s |
+| both ladders | **18%** | **9%** | 0.46 s |
+
+**The 21–24% tail is not reachable by pacing alone, and that is a finding, not a
+shortfall.** Only a turn *boundary* may exceed the 0.9 s gap — a within-turn
+pause at or above it makes one speaker sound like two (Part 3's invariant, gated)
+— and our papers hold ~120 turn boundaries against ~480 within-turn pauses,
+because our median turn is 27 chars where official's is 37
+(`official_register.md` §1). So the reachable ceiling is ≈9%, and closing the
+rest is an authoring change (fewer, longer turns), not a constant. The plan that
+asked for 10–25% (REPORT-CHOUKAI.md §4.2) assumed pacing could deliver it; the
+measurement says otherwise, so the gate floor is **7%** with the spike cap at
+35%, and the median is printed beside them as the rhythm number to watch.
+
+**Gated since 2026-08-21:** `check_choukai_pause_distribution` re-measures every
+generated paper's MP3 the same way. Verify a pacing change there, on the rendered
+file — not in this table.
+
+---
+
 ## 7. Reproducing this
 
 Not committed (one-shot analysis, inputs are 2GB of `refs/` audio). Four

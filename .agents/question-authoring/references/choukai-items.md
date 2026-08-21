@@ -162,17 +162,17 @@ binding; write it into the 構成表 and check it there.
 
 | 問題 | Quota | Official | Gate threshold |
 |---|---|---|---|
-| 1 | ≤3 of 6 items on the まず frame; ≥1 modify/method (どう直す・どのように); ≥1 condition-match (どの〜) or object frame | 37% まず / 6% modify / 5% condition | FAIL at ≥5 on one frame |
-| 1 | ≥1 non-dialogue item per paper (announcement / message / automated menu) | 14% of 問題1 | WARN |
-| 1 | ≤2 of 6 items with ≥3 proposal-and-deny turns ("the probe carousel") | 1 item in 154 | FAIL at >3 items |
+| 1 | ≤3 of 6 items on the まず frame; ≥1 modify/method (どう直す・どのように); ≥1 condition-match (どの〜) or object frame | 36.8% まず / 5.8% modify / 1.9% condition | FAIL at ≥5 on one frame |
+| 1 | ≥1 non-dialogue item per paper (announcement / message / automated menu) | 16% of 問題1 (25/155) | WARN |
+| 1 | ≤2 of 6 items with ≥3 proposal-and-deny turns ("the probe carousel") | 2 items in 155; per-item median 0 | FAIL at >2 items |
 | 1 | Decider position must not share a bucket (first/mid/last third) in >3 of 6 rows | spread ⅓ each | FAIL at >3 rows sharing |
 | 1 | ≤2 of 6 items at a service counter; **≥3 must be someone assigning work** (「〜してくれる？」) | 6% at a counter (9/153) | WARN |
-| 2 | **≥2 of 6 content/reported-statement questions** (何・どんな・〜と言っていますか) | 38% content / 33% reported | FAIL at 0 content items |
-| 2 | 一番/優先 ≤2 **and** 理由 ≤3 of 6 | 6% 一番 / 33% 理由 | FAIL at >4 on one type |
+| 2 | **≥2 of 6 content/reported-statement questions** (何・どんな・〜と言っていますか) | 37.6% 内容・発言, plus 20.4% その他 | FAIL at 0 content items |
+| 2 | 一番/優先 ≤2 **and** 理由 ≤3 of 6 | 5.5% 一番 / 32.6% 理由 | FAIL at >4 on one type |
 | 2 | ≥1 item keyed to a speaker's 気持ち (Shin Kanzen: 「理由や目的、話し手の気持ち」) | 2–5% | target / QA |
-| 3 | ≤2 of 6 institutional announcements; **≥3 must be an ordinary person's 主張・意図・経験** | 42% institutional / 33% person | FAIL at 5 of 6 institutional |
-| 3 | Talk length: target **220–300 spoken chars** (band, not floor) | median 240, min 177 | FAIL below 175 or >450 |
-| 4 | **≥5 of 12 stimuli clearly casual**; ≤2 keigo counter prompts; no class-addressed stimulus (「〜の方は、…窓口へ」) | 49% casual / 13% keigo | FAIL at 0 casual |
+| 3 | ≤2 of 6 institutional announcements; **≥3 must be an ordinary person's 主張・意図・経験** | 33.8% institutional / 39.0% person | FAIL at 5 of 6 institutional |
+| 3 | Talk length: target **220–300 spoken chars** (band, not floor) | per item median 243 [p10 202, p90 320]; current era 158–397 | FAIL outside [150, 400] |
+| 4 | **≥5 of 12 stimuli clearly casual**; ≤2 keigo counter prompts; no class-addressed stimulus (「〜の方は、…窓口へ」) | 20.7% casual / 9.1% keigo, rest neutral | FAIL at 0 casual; WARN below 5 casual or above 4 keigo |
 | 4 | ≤2 of 12 items may carry an already-done distractor (**target**; archive ceiling 3, gate FAILs at >3 — §即時応答); ≤2 may key a reply opening 「あ、」 | median 1, max 3 | FAIL at >3 done |
 | 5 | 1番 ≥3 speakers cast on distinguishable voices (≥1.9 st margin); 2番 the OTHER official type; no shared template | 31/31 sittings ≥3 spk | FAIL at 0 items with ≥3 spk |
 
@@ -181,6 +181,29 @@ FAILs only *beyond the archive's whole range* — a green gate means "no
 official sitting looks this bad," not "this section is official-shaped." The
 genre/counter/「あ、」 quotas can't be decided by regex; they print as a WARN
 and QA settles them off the 構成表.
+
+**Every "Official" cell above is printed by
+`make choukai-profile BASELINE=1`** (`tools/choukai_profile.py`, §§2–7) over
+the same 31 sittings, with the parse rule for each row printed under it.
+Refresh a cell by pasting that output — three of these numbers (18% どのように,
+問題3 median 305, 49% casual) were retyped from a one-shot analysis nobody could
+reproduce, and papers were then authored to them (REPORT-CHOUKAI.md §F3, §F7).
+
+**Which papers each of these gates exempts today.** The rules above landed
+2026-08-21 against 14 finished papers, so every one of them ships with a named
+grandfather set in `tools/check_consistency.py`, and **an id leaves its set the
+moment that paper's 聴解 is repaired** — never by widening a threshold:
+
+| Gate | Set | Ids exempted today |
+|---|---|---|
+| 問題1 質問型 mix | `CHOUKAI_Q1_FORMS_GRANDFATHERED` | all 14 — every paper runs one frame |
+| 問題1 決め手の位置 | `CHOUKAI_DECIDER_GRANDFATHERED` | all 14 (7 of them have no 構成表 column yet, so they skip) |
+| 問題1 probe carousel | `CHOUKAI_PROBE_GRANDFATHERED` | `20260807_1`, `20260810_2`, `20260817_3`, `20260818_1`, `20260819_1` |
+| 問題2 質問型 mix | `CHOUKAI_Q2_MIX_GRANDFATHERED` | all but `20260813_2` |
+| 問題3 talk band | `CHOUKAI_TALK_BAND_GRANDFATHERED` | `20260807_1`, `20260810_1`, `20260810_2`, `20260811_1` |
+| 問題4 stimulus register | `CHOUKAI_Q4_REGISTER_GRANDFATHERED` | all 14 — 0 casual stimuli anywhere |
+| 聴解 voice balance | `CHOUKAI_VOICE_BALANCE_GRANDFATHERED` | all 14 |
+| 聴解.mp3 pacing freshness | `PACING_SHA_GRANDFATHERED` | 13 — the Phase 4.2 jitter rebuild is still pending; **this set is not a policy, it is a to-do** |
 
 **問題1's default is not a customer at a counter.** Official 問題1 is
 overwhelmingly a superior, teacher or colleague handing out work (7/2025: 図書館

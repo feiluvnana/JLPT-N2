@@ -58,8 +58,16 @@ ABS_QUANTIFIERS = [
     "無関係", "一切", "まったく", "全く〜ない", "完全に"
 ]
 
-# Auto-fix replacement rules for conversational contractions in dialogue
-AUTO_CONTRACTION_REPLACEMENTS = [
+# Auto-fix replacement rules for conversational contractions in dialogue.
+#
+# TWO ladders, because 縮約形 and politeness are independent axes. The first cut
+# of this table had one, and it dropped ます from whatever line it touched:
+# 「かしこまりました、そちらは当店で承っておきますね」 became 「…承っとくね」 —
+# a shop assistant talking down to a customer. That is F4's register drift
+# committed by the tool meant to fix register. Official keigo dialogue DOES
+# contract (service-role items measure 37.5 縮約形/10k): it just contracts to the
+# polite form — 〜てます、〜ときます、〜ちゃいました.
+AUTO_CONTRACTION_CASUAL = [
     (r"ています([。、ねよか])", r"てる\1"),
     (r"ていました([。、ねよか])", r"てた\1"),
     (r"ておきます([。、ねよか])", r"とく\1"),
@@ -69,6 +77,34 @@ AUTO_CONTRACTION_REPLACEMENTS = [
     (r"なければなりません", r"なきゃいけません"),
     (r"なくてはいけません", r"なくちゃいけません"),
 ]
+AUTO_CONTRACTION_POLITE = [
+    (r"ています([。、ねよか])", r"てます\1"),
+    (r"ていました([。、ねよか])", r"てました\1"),
+    (r"ておきます([。、ねよか])", r"ときます\1"),
+    (r"ておいてください", r"といてください"),
+    (r"てしまいました([。、ねよか])", r"ちゃいました\1"),
+    (r"てしまいます([。、ねよか])", r"ちゃいます\1"),
+    (r"なければなりません", r"なきゃいけません"),
+    (r"なくてはいけません", r"なくちゃいけません"),
+]
+AUTO_CONTRACTION_REPLACEMENTS = AUTO_CONTRACTION_CASUAL   # back-compat alias
+
+# A turn is on the polite ladder if its speaker holds a service/expert role or
+# the line itself carries keigo. Both tests are needed: 客 speaking TO a counter
+# uses keigo without holding the role, and a 職員 line can be keigo-free.
+KEIGO_ROLE_LABELS = ("店員", "職員", "係員", "担当者", "講師", "専門家", "医者",
+                     "先生", "教授", "アナウンス", "アナウンサー", "レポーター",
+                     "教室の人", "部長", "店長", "FP")
+KEIGO_MARKER_RE = re.compile(r"ございま|いただ|ておりま|申し訳|伺|存じ|いらっしゃ|"
+                             r"かしこまり|承り|承っ|くださ|ご[一-鿿]")
+
+
+def contraction_ladder(label: str, text: str):
+    """Which ladder this turn contracts on — politeness is not negotiable."""
+    role = label.lstrip("男性女性") if label.startswith(("男性", "女性")) else label
+    if role in KEIGO_ROLE_LABELS or KEIGO_MARKER_RE.search(text):
+        return AUTO_CONTRACTION_POLITE
+    return AUTO_CONTRACTION_CASUAL
 
 
 class LintReport:
@@ -132,7 +168,8 @@ def autofix_script(script_text: str, report: LintReport) -> str:
         # Only modify dialogue turns (starting with 男: or 女:), not announcer lines
         if re.match(r"^[男女AB１２34567890\w]+:", line.strip()) and not re.match(r"^(?:問題|第?\d+番|アナウンス)", line.strip()):
             mod_line = line
-            for pattern, repl in AUTO_CONTRACTION_REPLACEMENTS:
+            label, _, body = line.strip().partition(":")
+            for pattern, repl in contraction_ladder(label, body):
                 if re.search(pattern, mod_line):
                     mod_line = re.sub(pattern, repl, mod_line)
                     fixed_count += 1
@@ -145,9 +182,154 @@ def autofix_script(script_text: str, report: LintReport) -> str:
     return "\n".join(new_lines)
 
 
+def autofix_split_turns(script_text: str, report: LintReport) -> str:
+    """Join two consecutive lines that carry the SAME speaker label.
+
+    Deterministic by construction (REPORT-CHOUKAI.md §5.0.1): one turn is one
+    line, so a repeated label is a split turn, and the repair is a join at 。 —
+    no wording decision to make. It matters twice over: the split buys a turn
+    gap where official has a 0.40 s within-turn pause, and it inflates the
+    short-reaction rate without adding a reaction, since only the OTHER
+    speaker's turn counts as one (`official_register.md` §7.3).
+    """
+    label = re.compile(r"^([^:：\s][^:：]{0,7})[:：](.*)$")
+    out: list[str] = []
+    joined = 0
+    for line in script_text.splitlines():
+        hit = label.match(line.strip())
+        prev = label.match(out[-1].strip()) if out else None
+        if hit and prev and hit.group(1) == prev.group(1) and hit.group(2).strip():
+            head = out[-1].rstrip()
+            if not head.endswith(("。", "、", "？", "！", "?", "!")):
+                head += "。"
+            out[-1] = head + hit.group(2).strip()
+            joined += 1
+            continue
+        out.append(line)
+    if joined:
+        report.fixed("CHOUKAI-SPLIT-TURN",
+                     f"Joined {joined} split turn(s) — one turn is one line "
+                     f"(choukai-audio Part 1 §Block conventions).")
+    # Keep the trailing newline: `validate_script()` splits on blank lines, and a
+    # file that loses its final "\n" reads as an edit to the last block.
+    return "\n".join(out) + ("\n" if script_text.endswith("\n") else "")
+
+
+# Gendered role pairs from `SPEAKER_MAP` (Phase 4.1). A swap is only ever
+# BETWEEN the two spellings of one role, so it can never introduce a label the
+# synthesis map lacks — an unmapped label does not error, it silently falls
+# through to the narrator voice.
+def _synth():
+    spec = importlib.util.spec_from_file_location(
+        "_synth_map", Path(__file__).resolve().parents[1]
+        / ".agents/choukai-audio/scripts/make_choukai_mp3.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_synth_map"] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+FEMALE_BASE_F0, MALE_BASE_F0 = 210.0, 120.0
+VOICE_MARGIN_ST = 1.9
+
+
+def _semitones(base: float, p1: float, p2: float) -> float:
+    import math
+    f1, f2 = base + p1, base + p2
+    return abs(12.0 * math.log2(f1 / f2)) if f1 > 0 and f2 > 0 else 0.0
+
+
+def _min_margin(labels: list[str], smap: dict, female) -> float:
+    """Smallest same-gender separation among an item's labels, in semitones."""
+    worst = float("inf")
+    for i, a in enumerate(labels):
+        for b in labels[i + 1:]:
+            ca, cb = smap.get(a), smap.get(b)
+            if not ca or not cb or ca["voice"] != cb["voice"]:
+                continue
+            base = FEMALE_BASE_F0 if ca["voice"] == female else MALE_BASE_F0
+            worst = min(worst, _semitones(base,
+                                          float(str(ca["pitch"]).replace("Hz", "")),
+                                          float(str(cb["pitch"]).replace("Hz", ""))))
+    return worst
+
+
+def autofix_voice_margin(script_text: str, report: LintReport) -> str:
+    """Recast ONE label of a too-close pair onto its gendered counterpart.
+
+    Deterministic given Phase 4.1's pairs (§5.0.1), but only because the swap is
+    SIMULATED first: the naive version of this fix — "an item with 女 plus a
+    female role label gets the male role label" — moved `20260814_1` 問題5-2番
+    from a 1.42 st female pair to a **1.12 st male** one, because the item
+    already held 男. So every candidate swap is scored by the item's minimum
+    same-gender separation and applied only when that minimum actually improves
+    and clears the 1.9 st margin.
+
+    Skipped when the narration names the speaker's gender (「〜の女の人」) — the
+    one case where the swap would contradict the booklet, and `check_voice_casting`
+    FAILs on it rather than warning.
+    """
+    smap = _synth().SPEAKER_MAP
+    female = _synth().FEMALE
+    pairs: dict[str, str] = {}
+    for label in smap:
+        for prefix, other in (("男性", "女性"), ("女性", "男性")):
+            if label.startswith(prefix):
+                counterpart = other + label[len(prefix):]
+                bare = label[len(prefix):]
+                if counterpart in smap:
+                    pairs[label] = counterpart
+                if bare in smap:
+                    pairs.setdefault(bare, label if prefix == "男性" else counterpart)
+
+    blocks = re.split(r"(\n\s*\n)", script_text)
+    swapped = 0
+    for i, block in enumerate(blocks):
+        lines = [l for l in block.splitlines() if l.strip()]
+        if len(lines) < 2 or not re.match(r"^(例|\d+番)。", lines[0].strip()):
+            continue
+        labels: list[str] = []
+        for l in lines:
+            hit = re.match(r"^([^:：\s][^:：]{0,7})[:：]", l.strip())
+            if hit and hit.group(1) in smap and hit.group(1) not in labels:
+                labels.append(hit.group(1))
+        before = _min_margin(labels, smap, female)
+        if before >= VOICE_MARGIN_ST:
+            continue
+        best = None
+        for label in labels:
+            target = pairs.get(label)
+            if not target or target in labels:
+                continue
+            if re.search(rf"{re.escape(label)}の(男|女)の人|(男|女)の{re.escape(label)}", block):
+                continue                      # narration fixes this speaker's gender
+            after = _min_margin([target if x == label else x for x in labels], smap, female)
+            if after > before and (best is None or after > best[1]):
+                best = (label, after, target)
+        if not best or best[1] < VOICE_MARGIN_ST:
+            continue                          # no swap actually repairs this item
+        label, _, target = best
+        blocks[i] = re.sub(rf"^{re.escape(label)}([:：])", rf"{target}\1", block, flags=re.M)
+        swapped += 1
+    if swapped:
+        report.fixed("CHOUKAI-VOICE-MARGIN",
+                     f"Recast {swapped} item(s) onto a gendered role label so every "
+                     f"same-gender pair clears {VOICE_MARGIN_ST} st (choukai-audio "
+                     f"Part 2 §D2). Re-read those items' 聴解.md narration and 解説.")
+    return "".join(blocks)
+
+
 def lint_choukai_script(script_text: str, report: LintReport, fix: bool = False) -> str:
     if not script_text:
         return script_text
+
+    # The deterministic subset of the 聴解 repair lanes (REPORT-CHOUKAI.md §5.0.1).
+    # Everything else stays `assisted` on purpose: stripping 「〜について」 off a
+    # 問題3 option is a writing decision, not a substitution, and a tool that
+    # pretended otherwise would ship 20 malformed options and a green gate.
+    if fix:
+        script_text = autofix_split_turns(script_text, report)
+        script_text = autofix_voice_margin(script_text, report)
 
     # 1. Opening & level check
     if "N2" in script_text:

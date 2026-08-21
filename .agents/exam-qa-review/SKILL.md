@@ -409,6 +409,17 @@ as "N1"/"N3", so a single source's label was never sufficient.
   quota breached. **A missing table is itself a fail.** Verify the table
   against the script, not on trust — an author who filled it in wrongly is
   exactly the author whose section repeats.
+- **Three columns the gate reads as counts, so read them the same way**
+  (added 2026-08-21, REPORT-CHOUKAI.md §F1/§F2): `質問型` — no more than 3 of 6
+  on one frame, and at least one modify/method and one condition-match item;
+  `決め手の位置` — no more than 3 of 6 rows in any one third (冒頭/中盤/終盤);
+  `提案消去回数` — at most 2 items carrying ≥3 proposal-and-deny turns. All
+  three shipped as monocultures behind a green gate: 70 of 70 問題1 items asked
+  「この後まず何を…」, and the newest three papers put 14 of 15 deciders in the
+  first third *because* the rule against "always last" had no other side.
+  A paper also needs **one non-dialogue item** somewhere (announcement,
+  留守番電話, automated menu — 16% of official 問題1) and **≥1 casual 問題4
+  stimulus**, ideally 5 of 12.
 - **同じ大問の二項目が同じ決め手の種類で決まっていないか——場面・正解・質問型が
   違っても、決め手が同種なら受験者は同じ聞き取りを二度させられている。構成表の
   決め手列を縦に読むこと。** The 問題1/問題2 構成表 carries a `決め手の種類`

@@ -32,3 +32,10 @@ _site/
 # whose open root-cause entries block the next generation run, so it stays
 # tracked. Ignore only the per-test render directories.
 qa/*/
+
+# Derived 聴解 work order (make findings / make repair-plan). Both are recomputed
+# from the gate and the profile in seconds; committing them would be a fourth
+# copy of numbers whose single owner is a script (REPORT-CHOUKAI.md §5.0).
+logs/findings.json
+qa/repair-plan.json
+qa/repair-plan.md

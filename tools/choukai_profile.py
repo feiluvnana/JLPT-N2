@@ -22,7 +22,9 @@ from __future__ import annotations
 import argparse
 import collections
 import dataclasses
+import functools
 import hashlib
+import importlib.util
 import json
 import math
 import re
@@ -79,47 +81,73 @@ SERVICE_FORMULAS = {
 FEMALE_BASE_F0 = 210.0
 MALE_BASE_F0 = 120.0
 
-SPEAKER_MAP_FALLBACK = {
-    "男": {"voice": "MALE", "pitch": 0.0},
-    "男1": {"voice": "MALE", "pitch": 18.0},
-    "男2": {"voice": "MALE", "pitch": -16.0},
-    "夫": {"voice": "MALE", "pitch": -12.0},
-    "学生": {"voice": "MALE", "pitch": 14.0},
-    "部長": {"voice": "MALE", "pitch": -18.0},
-    "店長": {"voice": "MALE", "pitch": 10.0},
-    "教授": {"voice": "MALE", "pitch": -20.0},
-    "FP": {"voice": "MALE", "pitch": -14.0},
-    "女": {"voice": "FEMALE", "pitch": 0.0},
-    "妻": {"voice": "FEMALE", "pitch": 16.0},
-    "店員": {"voice": "FEMALE", "pitch": 22.0},
-    "先生": {"voice": "FEMALE", "pitch": -16.0},
-    "医者": {"voice": "FEMALE", "pitch": -10.0},
-    "専門家": {"voice": "FEMALE", "pitch": -22.0},
-    "レポーター": {"voice": "FEMALE", "pitch": 25.0},
-    "教室の人": {"voice": "FEMALE", "pitch": 12.0},
-    "職員": {"voice": "FEMALE", "pitch": -14.0},
-    "係員": {"voice": "FEMALE", "pitch": 18.0},
-    "担当者": {"voice": "FEMALE", "pitch": -20.0},
-    "講師": {"voice": "FEMALE", "pitch": -25.0},
-    "アナウンス": {"voice": "FEMALE", "pitch": 8.0},
-    "アナウンサー": {"voice": "FEMALE", "pitch": 20.0},
-    "男性職員": {"voice": "MALE", "pitch": -14.0},
-    "女性職員": {"voice": "FEMALE", "pitch": -14.0},
-    "男性係員": {"voice": "MALE", "pitch": 8.0},
-    "女性係員": {"voice": "FEMALE", "pitch": 18.0},
-    "男性担当者": {"voice": "MALE", "pitch": -20.0},
-    "女性担当者": {"voice": "FEMALE", "pitch": -20.0},
-    "男性講師": {"voice": "MALE", "pitch": -24.0},
-    "女性講師": {"voice": "FEMALE", "pitch": -25.0},
-    "男性専門家": {"voice": "MALE", "pitch": -10.0},
-    "女性専門家": {"voice": "FEMALE", "pitch": -22.0},
-    "男性店員": {"voice": "MALE", "pitch": 12.0},
-    "女性店員": {"voice": "FEMALE", "pitch": 22.0},
-    "男性医者": {"voice": "MALE", "pitch": -8.0},
-    "女性医者": {"voice": "FEMALE", "pitch": -10.0},
-    "男性アナウンサー": {"voice": "MALE", "pitch": 6.0},
-    "女性アナウンサー": {"voice": "FEMALE", "pitch": 20.0},
-}
+def _load_synth_speaker_map() -> dict[str, dict[str, Any]]:
+    """Resolve every speaker label through the SYNTHESIS script's SPEAKER_MAP.
+
+    `SPEAKER_MAP` is owned by `.agents/choukai-audio/scripts/make_choukai_mp3.py`
+    — it is what the MP3 is actually rendered with. A hand copy here was the
+    fourth copy of a number this file exists to prevent (REPORT-CHOUKAI.md §D1):
+    the copy shipped 2026-08-21 already lagged the labels Phase 4.1 added, so
+    voice balance and pitch margins were computed off a map the audio never used.
+    """
+    path = ROOT / ".agents" / "choukai-audio" / "scripts" / "make_choukai_mp3.py"
+    spec = importlib.util.spec_from_file_location("_choukai_synth", path)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["_choukai_synth"] = mod
+    spec.loader.exec_module(mod)
+    return {
+        label: {
+            "voice": "FEMALE" if cfg["voice"] == mod.FEMALE else "MALE",
+            "pitch": float(str(cfg["pitch"]).replace("Hz", "").replace("+", "")),
+        }
+        for label, cfg in mod.SPEAKER_MAP.items()
+    }
+
+
+SPEAKER_MAP_FALLBACK = _load_synth_speaker_map()
+
+# Official scripts tag speakers the synthesis map has no entry for (男の人, 女1, …).
+# Gender is decidable from the tag itself; pitch is not, so these carry none and
+# are excluded from every pitch-margin measurement.
+OFFICIAL_TAG_FEMALE = re.compile(r"女|母|妻|娘|お?ばあ|女性")
+OFFICIAL_TAG_MALE = re.compile(r"男|父|夫|息子|お?じい|男性")
+
+
+def resolve_voice(label: str) -> str:
+    """MALE/FEMALE for any label, synthesis map first, then the official tag rule."""
+    hit = SPEAKER_MAP_FALLBACK.get(label)
+    if hit:
+        return hit["voice"]
+    if label.startswith(("男性", "男")):
+        return "MALE"
+    if label.startswith(("女性", "女")):
+        return "FEMALE"
+    if OFFICIAL_TAG_MALE.search(label) and not OFFICIAL_TAG_FEMALE.search(label):
+        return "MALE"
+    if OFFICIAL_TAG_FEMALE.search(label):
+        return "FEMALE"
+    return "MALE"
+
+
+@functools.cache
+def service_formula_archive() -> dict[str, dict[str, float]]:
+    """Per-paper counts of each §Banned-formulas string across the 31 sittings.
+
+    Measured, never retyped (§D1). The first cut of the gate hardcoded 2/1/0 by
+    hand and got two of seven wrong in opposite directions: 「かしこまりました」
+    was allowed twice where the archive's per-paper max is 1, and 「そうですね」 —
+    which official uses at a **median of 3 per paper**, five times our rate — was
+    capped at 1, pushing papers further from official while reading as a fix.
+    A formula whose archive median is >=2 is a FLOOR, not a ceiling.
+    """
+    out: dict[str, dict[str, float]] = {}
+    texts = [p.read_text(encoding="utf-8") for p in sorted(REFS.glob("*/script.md"))]
+    for form, rx in SERVICE_FORMULAS.items():
+        counts = [len(rx.findall(t)) for t in texts]
+        out[form] = {"total": sum(counts), "max": max(counts) if counts else 0,
+                     "median": statistics.median(counts) if counts else 0,
+                     "papers": sum(1 for c in counts if c)}
+    return out
 
 
 def jp(s: str) -> int:
@@ -490,9 +518,7 @@ def calculate_sitting_profile(sitting: Sitting) -> dict[str, Any]:
     voice_balance: dict[int, dict[str, int]] = collections.defaultdict(lambda: {"MALE": 0, "FEMALE": 0})
     for it in sitting.items:
         for t in it.turns:
-            spk_info = SPEAKER_MAP_FALLBACK.get(t.speaker, {"voice": "FEMALE" if "女" in t.speaker or t.speaker in ("店員", "職員", "係員", "担当者", "講師", "専門家", "レポーター") else "MALE"})
-            v = spk_info.get("voice", "FEMALE")
-            voice_balance[it.section][v] += 1
+            voice_balance[it.section][resolve_voice(t.speaker)] += 1
 
     return {
         "test_id": sitting.test_id,
@@ -528,6 +554,7 @@ def calculate_sitting_profile(sitting: Sitting) -> dict[str, Any]:
         "q2_forms": dict(q2_forms),
         "q3_item_count": len(q3_items),
         "q3_speakers": dict(q3_speakers),
+        "q3_lengths": q3_lengths,
         "q3_length_median": statistics.median(q3_lengths) if q3_lengths else 0,
         "q3_length_min": min(q3_lengths) if q3_lengths else 0,
         "q3_length_max": max(q3_lengths) if q3_lengths else 0,
@@ -609,11 +636,72 @@ def format_baseline_markdown(official_profiles: list[dict[str, Any]], current_on
 
     lines.append("\n## 4. 問題3 概要理解\n")
     lines.append(f"- Speaker distribution: **{q3_speakers.get('institutional', 0) / q3_total_spk:.1%}** institutional vs **{q3_speakers.get('ordinary_person', 0) / q3_total_spk:.1%}** ordinary person (target: ≤2 institutional, ≥3 ordinary person)")
-    lines.append(f"- Talk length (spoken chars): median **{statistics.median(q3_medians):.0f}**, min {min(p['q3_length_min'] for p in official_profiles if p['q3_length_min'] > 0)}, max {max(p['q3_length_max'] for p in official_profiles)} (target: 220–300 chars, gate floor: 175)")
+    q3_all = sorted(l for p in official_profiles for l in p["q3_lengths"] if l > 0)
+    q3_cur = sorted(l for p in official_profiles if p["test_id"] in CURRENT_ERA
+                    for l in p["q3_lengths"] if l > 0)
+    def _pct(xs, q):
+        return xs[min(len(xs) - 1, int(q * len(xs)))] if xs else 0
+    lines.append(f"- Talk length, per item (spoken chars, n={len(q3_all)}): median **{statistics.median(q3_all):.0f}**, "
+                 f"p10 {_pct(q3_all, 0.10)}, p90 {_pct(q3_all, 0.90)}, min {q3_all[0]}, max {q3_all[-1]}")
+    lines.append(f"- Talk length, current era only (n={len(q3_cur)}): median **{statistics.median(q3_cur):.0f}**, "
+                 f"range **{q3_cur[0]}–{q3_cur[-1]}** → gate FAILs outside [150, 400], WARNs outside the 220–300 target")
+    lines.append(f"- Per-paper medians: {min(q3_medians):.0f}–{max(q3_medians):.0f} — the figure `official_register.md` "
+                 f"§7.4 once carried as \"median 305\" was one sitting's per-paper median, not the corpus median")
     lines.append(f"- Options suffixed 「〜について」: **{sum(p['q3_suffixed_count'] for p in official_profiles)}** total (target: 0, gate: ≤ 2)")
 
     lines.append("\n## 5. 問題4 即時応答\n")
-    lines.append(f"- Stimulus register: **{q4_stimuli.get('casual', 0) / q4_total_stim:.1%}** casual vs **{q4_stimuli.get('keigo', 0) / q4_total_stim:.1%}** keigo counter prompts (target: ≥5 casual, ≤2 keigo)")
+    lines.append(f"- Stimulus register (single label, keigo tested first — `classify_p4_stimulus`): "
+                 f"**{q4_stimuli.get('casual', 0) / q4_total_stim:.1%}** casual vs "
+                 f"**{q4_stimuli.get('keigo', 0) / q4_total_stim:.1%}** keigo counter prompts, "
+                 f"rest neutral (n={q4_total_stim}) — target ≥5 of 12 casual, ≤2 keigo; gate FAILs at 0 casual")
+    lines.append(f"- Already-done distractors: **{sum(p['q4_done_count'] for p in official_profiles)}** items across "
+                 f"{len(official_profiles)} sittings (gate FAILs above 3 per paper)")
+    lines.append(f"- Replies opening はい/いいえ/では: **{sum(p['q4_yes_no_replies'] for p in official_profiles)}** "
+                 f"({statistics.mean([p['q4_yes_no_share'] for p in official_profiles]):.1%} of replies)")
+
+    lines.append("\n## 6. 問題5 統合理解 and voice balance\n")
+    q5_ok = sum(1 for p in official_profiles if p["q5_3spk_count"] >= 1)
+    lines.append(f"- Sittings with at least one ≥3-speaker 問題5 item: **{q5_ok}/{len(official_profiles)}** "
+                 f"(choukai-items.md §統合理解 requires it of 1番)")
+    vb_rows = collections.defaultdict(lambda: [0, 0])
+    for p in official_profiles:
+        for sec, counts in p["voice_balance"].items():
+            vb_rows[int(sec)][0] += counts.get("MALE", 0)
+            vb_rows[int(sec)][1] += counts.get("FEMALE", 0)
+    lines.append("")
+    lines.append("| 大問 | male turns | female turns | female share |")
+    lines.append("|---|---|---|---|")
+    for sec in sorted(vb_rows):
+        male, fem = vb_rows[sec]
+        lines.append(f"| 問題{sec} | {male} | {fem} | {fem / max(male + fem, 1):.0%} |")
+    lines.append("")
+    lines.append("Speaker gender resolves through the SYNTHESIS `SPEAKER_MAP` for our labels and "
+                 "through the tag itself (男/女…) for official ones; official scripts carry no pitch, "
+                 "so the semitone margin (§D2) is measurable on generated papers only.")
+
+    lines.append("\n## 7. 問題1 shape\n")
+    lines.append(f"- Single-speaker items (announcement / 留守番電話 / automated menu): "
+                 f"**{sum(p['q1_single_speaker'] for p in official_profiles)}** of {q1_total} "
+                 f"({sum(p['q1_single_speaker'] for p in official_profiles) / max(q1_total, 1):.0%}) — "
+                 f"choukai-items.md asks for ≥1 non-dialogue item per paper")
+    prop_med = [p["q1_proposals_median"] for p in official_profiles]
+    lines.append(f"- Proposal turns per item: median of per-sitting medians **{statistics.median(prop_med):.1f}**, "
+                 f"worst single item {max(p['q1_proposals_max'] for p in official_profiles)} — "
+                 f"gate FAILs above 2 items carrying ≥3 proposals (the probe carousel)")
+
+    lines.append("\n## Parse rules behind every row\n")
+    lines.append("```")
+    lines.append("turns        speaker-tag regex; wrapped OCR lines rejoined into the preceding turn")
+    lines.append("reactions    turn length <= 12 JP chars, 問い/質問 lines dropped")
+    lines.append("問題1 質問型   one label per item, priority まず > 何をしますか > どう直す・方法 >")
+    lines.append("             条件一致 > 物・提出 > 時・額・場所 > その他")
+    lines.append("問題2 質問型   one label per item, priority 理由 > 一番・優先 > どのように > 内容・発言 > 気持ち")
+    lines.append("問題3 talk    item block minus lead-in, options and question line; JP chars only")
+    lines.append("問題4 register single label per stimulus, keigo markers tested BEFORE casual markers")
+    lines.append("問題5 speakers distinct speaker labels per item block")
+    lines.append("```")
+    lines.append("")
+    lines.append("Regenerate with `make choukai-profile BASELINE=1`; never retype a row.")
 
     return "\n".join(lines)
 

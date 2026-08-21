@@ -118,10 +118,29 @@ DOKKAI = load("tools/dokkai_profile.py")
 CHOUKAI = load("tools/choukai_profile.py")
 
 
-def check(name: str, ok: bool, detail: str = "") -> bool:
+# One record per emitted finding, for `--json` (REPORT-CHOUKAI.md §5.0). A finding
+# is only machine-readable if it carries a STABLE slug — the check's title is an
+# f-string that changes whenever a message is reworded, which is why the repair
+# table is keyed by slug and not by title.
+_findings: list[dict] = []
+
+
+def _record(slug: str | None, test_id: str | None, status: str, name: str, detail: str):
+    if not slug:
+        return
+    artifact, automation = FINDING_REPAIR.get(slug, (None, None))
+    tier = REPAIR_TIER.get(artifact)
+    _findings.append({"slug": slug, "test_id": test_id, "status": status,
+                      "artifact": artifact, "tier": tier, "automation": automation,
+                      "title": name, "detail": detail})
+
+
+def check(name: str, ok: bool, detail: str = "", slug: str | None = None,
+          test_id: str | None = None) -> bool:
     print(f"  {'ok  ' if ok else 'FAIL'}  {name}" + (f" — {detail}" if detail and not ok else ""))
     if not ok:
         _fail.append(f"{name}: {detail}" if detail else name)
+        _record(slug, test_id, "FAIL", name, detail)
     return ok
 
 
@@ -130,7 +149,8 @@ def skip(name: str, why: str):
     _skip.append(name)
 
 
-def warn(name: str, ok: bool, detail: str = ""):
+def warn(name: str, ok: bool, detail: str = "", slug: str | None = None,
+         test_id: str | None = None):
     """Report a suspicion without failing the gate.
 
     For rules that are real but not decidable by string matching — a 解説 may
@@ -141,6 +161,7 @@ def warn(name: str, ok: bool, detail: str = ""):
     print(f"  {'ok  ' if ok else 'WARN'}  {name}" + (f" — {detail}" if detail and not ok else ""))
     if not ok:
         _warn.append(f"{name}: {detail}")
+        _record(slug, test_id, "WARN", name, detail)
 
 
 def docs() -> dict[Path, str]:
@@ -362,14 +383,99 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     "choukai_q4_done_concentration":  ("<section re-author>", "authoring"),
     "choukai_q4_stimulus_register":   ("<section re-author>", "authoring"),
     "choukai_voice_balance":          ("<section re-author>", "authoring"),
+    "choukai_pause_distribution":     ("聴解.mp3",            "deterministic"),
+}
+
+# The tier is a pure function of the artifact a repair touches (§5.0), so two
+# sessions on the same corpus produce the same work order. Escalation (B → C) is
+# allowed and recorded; de-escalation is not — that is how a 消去方法 label once
+# outlived the line it described.
+REPAIR_TIER = {
+    "聴解.md": "A",
+    "聴解スクリプト.txt": "B",
+    "<section re-author>": "C",
+    "聴解.mp3": "R",          # rebuild only: `make mp3` + `make sheet`, no content change
 }
 
 
+def check_remediation_state():
+    """A tracked remediation plan's state file must stay honest (Phase R.2).
+
+    The file is what makes a multi-session repair resumable, so the three ways it
+    can rot are checked here rather than discovered by a runner mid-plan: a
+    `plan_sha` that no longer matches the plan on disk (the work order and the
+    plan have diverged), a status outside the documented set, and a `test_id`
+    that names a paper that does not exist.
+    """
+    state_files = sorted((ROOT / "logs").glob("*_remediation_state.json"))
+    if not state_files:
+        return skip("remediation state files", "none on disk")
+    print("\nremediation state files (logs/*_remediation_state.json)")
+    ids = {d.name for d in (ROOT / "tests").iterdir() if d.is_dir()}
+    for f in state_files:
+        try:
+            state = json.loads(f.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            check(f"{f.name} parses", False, str(exc))
+            continue
+        src = state.get("plan_source", "")
+        report = ROOT / src.split("#")[0]
+        if report.is_file():
+            plan = report.read_text(encoding="utf-8")
+            head = plan.find("# Remediation plan")
+            actual = hashlib.sha1(plan[head:].encode()).hexdigest()[:12] if head >= 0 else "?"
+            check(f"{f.name} plan_sha matches {report.name}",
+                  state.get("plan_sha") == actual,
+                  f"records {state.get('plan_sha')}, the plan hashes to {actual} — "
+                  f"APPEND the new steps and mark superseded ones `stale`; do not "
+                  f"silently re-plan (Phase R.2)")
+        allowed = {"todo", "doing", "done", "blocked", "declined", "stale"}
+        bad_status = {s["id"]: s.get("status") for s in state.get("steps", [])
+                      if s.get("status") not in allowed}
+        check(f"{f.name} step statuses are from the documented set", not bad_status,
+              f"{bad_status} — allowed: {sorted(allowed)}")
+        unknown = sorted({t for s in state.get("steps", [])
+                          for t in str(s.get("test_id") or "").split(",")
+                          if t and t != "*" and t not in ids})
+        check(f"{f.name} names only papers that exist", not unknown,
+              f"{unknown} are not directories under tests/")
+        declined_no_reason = [s["id"] for s in state.get("steps", [])
+                              if s.get("status") == "declined" and not s.get("reason")]
+        check(f"{f.name} records a reason for every declined step", not declined_no_reason,
+              f"{declined_no_reason} say no with no reason — an unstated skip is the "
+              f"thing that keeps shipping (AGENTS.md §0.7)")
+        left = sum(1 for s in state.get("steps", []) if s.get("status") in ("todo", "doing"))
+        print(f"  ok    {f.name}: {left} step(s) still open of {len(state.get('steps', []))}")
+
+
 def check_every_choukai_finding_declares_repair():
+    """Every 聴解 finding declares the artifact that repairs it (§5.0 rule 3).
+
+    Defaulting an unknown finding to tier C would be safe and would quietly grow
+    tier C forever; failing makes somebody classify it once. Three ways this can
+    rot, all checked here: an unknown automation class, a slug a check emits but
+    the table does not declare, and a declaration no check attaches to any more.
+    """
     print("\nFINDING_REPAIR declarations for 聴解")
     for slug, (artifact, mode) in FINDING_REPAIR.items():
         check(f"FINDING_REPAIR declares {slug}", mode in ("deterministic", "assisted", "authoring"),
               f"unknown mode {mode} for {slug}")
+        check(f"FINDING_REPAIR maps {slug} to a known artifact", artifact in REPAIR_TIER,
+              f"{artifact!r} has no tier in REPAIR_TIER — declare the cheapest "
+              f"SUFFICIENT artifact, not the one that hides the defect")
+    emitted = set(re.findall(r'slug="([a-z0-9_]+)"', Path(__file__).read_text(encoding="utf-8")))
+    undeclared = sorted(emitted - set(FINDING_REPAIR))
+    check("every slug a check emits is declared in FINDING_REPAIR", not undeclared,
+          f"{undeclared} fire with no repair declaration — add the artifact that "
+          f"repairs each (REPORT-CHOUKAI.md §5.0)")
+    orphaned = sorted(set(FINDING_REPAIR) - emitted)
+    warn("every FINDING_REPAIR declaration is attached to a check", not orphaned,
+         f"{orphaned} are declared but no check emits them — either attach the slug "
+         f"to the check that finds it, or drop the row; a declaration nothing emits "
+         f"is invisible to `make findings`")
+    for slug, (artifact, _) in FINDING_REPAIR.items():
+        if slug in emitted:
+            print(f"  ok    {slug} -> {artifact} (tier {REPAIR_TIER.get(artifact)})")
 
 
 # ------------------------------------------------------------------ choukai pacing
@@ -431,6 +537,30 @@ def check_pacing():
           f"{m.SHAPE_PAUSE_FLOOR} vs {m.GAP_WITHIN_TURN_MAX}: with the floor at or "
           f"below the cap, shaping would lengthen pauses it was meant to leave "
           f"alone — including the ~0.1 s 促音 closures it must never touch")
+
+    # The two pause LADDERS (F8). A ladder that drifts off its constant is how the
+    # distribution fix would silently become a re-timing: the median is what the
+    # 31-sitting archive measured, the spread is what it was missing.
+    ladder = m.TURN_GAP_LADDER
+    check("turn-gap ladder keeps GAP_BETWEEN_LINES as its centre",
+          statistics.median(ladder) == m.GAP_BETWEEN_LINES,
+          f"{ladder} has median {statistics.median(ladder)}, GAP_BETWEEN_LINES is "
+          f"{m.GAP_BETWEEN_LINES} — the ladder must be additive, not a re-timing")
+    check("turn-gap ladder reaches past 1.05 s",
+          max(ladder) > 1.05,
+          f"rungs {ladder} — without a rung above 1.05 s the rendered audio "
+          f"cannot reproduce the 21–24% long-pause share both reference corpora show "
+          f"(official_pacing.md §6.1)")
+    wt = m.WITHIN_TURN_LADDER
+    check("within-turn ladder centres on GAP_WITHIN_TURN_MAX",
+          statistics.median(wt) == m.GAP_WITHIN_TURN_MAX,
+          f"{wt} has median {statistics.median(wt)}, GAP_WITHIN_TURN_MAX is "
+          f"{m.GAP_WITHIN_TURN_MAX}")
+    check("within-turn ladder tops out at official's p90 (0.72 s)",
+          max(wt) <= 0.72 and max(wt) > m.GAP_WITHIN_TURN_MAX,
+          f"{wt}: the top rung must sit at official's within-turn p90 of 0.72 s — "
+          f"above it a speaker's own sentence break starts sounding like a turn "
+          f"change, at or below the cap the 0.5 s spike comes back")
 
 
 # ------------------------------------------------------------------- item counts
@@ -6527,11 +6657,11 @@ CHOUKAI_SECTION_GRANDFATHERED = {
 GRANDFATHER_NOTE = " [pre-rule paper — a FAIL for any id not grandfathered]"
 
 
-def _gated(test_id: str, name: str, ok: bool, detail: str):
+def _gated(test_id: str, name: str, ok: bool, detail: str, slug: str | None = None):
     """FAIL for a paper authored under the rule, WARN for one that predates it."""
     if test_id in CHOUKAI_SECTION_GRANDFATHERED:
-        return warn(name, ok, detail + GRANDFATHER_NOTE)
-    return check(name, ok, detail)
+        return warn(name, ok, detail + GRANDFATHER_NOTE, slug=slug, test_id=test_id)
+    return check(name, ok, detail, slug=slug, test_id=test_id)
 
 
 def choukai_item_label(first_line: str) -> str:
@@ -6730,7 +6860,8 @@ def check_choukai_same_speaker_lines(test_id: str, st: str, m):
            ". One turn is one line: a split turn buys a 0.9 s turn gap where "
            "official has a 0.40 s within-turn pause, and inflates the "
            "reaction-turn rate without adding a reaction — only the OTHER "
-           "speaker's turn counts (choukai-audio §'Block conventions')")
+           "speaker's turn counts (choukai-audio §'Block conventions')",
+           slug="choukai_split_turns")
 
 
 def check_choukai_section_table(test_id: str, ct: str, bi):
@@ -6740,7 +6871,7 @@ def check_choukai_section_table(test_id: str, ct: str, bi):
     tail = ct[cut.start():] if cut else ct
     head = re.search(r"^#+\s*セクション構成表", tail, re.M)
     if not head:
-        return _gated(test_id, name, False,
+        return _gated(test_id, name, False, slug="choukai_section_table_missing", detail=
                       "no セクション構成表 heading — one row per item "
                       "(場面 / 主導 / 正解 / 消去方法 / 質問型), after the answer-key "
                       "heading. QA reads its columns first "
@@ -6753,7 +6884,7 @@ def check_choukai_section_table(test_id: str, ct: str, bi):
     missing = sorted(want - rows)
     _gated(test_id, f"{name} ({len(rows & want)}/{len(want)} items)",
            not missing, f"no row for {missing[:8]} — a partial table audits a "
-           f"partial section")
+           f"partial section", slug="choukai_section_table_missing")
 
 
 # F4 / N2 (qa-report-20260817_3, both rounds). The 構成表's 消去方法 column is
@@ -6882,8 +7013,8 @@ def check_choukai_elimination_tokens(test_id: str, ct: str, bi):
               "outlives the line it describes is the defect, not the fix "
               "(question-authoring/references/choukai-items.md §消去方法)")
     if test_id in ELIMINATION_VOCAB_GRANDFATHERED:
-        return warn(name, not bad, detail + GRANDFATHER_NOTE)
-    check(name, not bad, detail)
+        return warn(name, not bad, detail + GRANDFATHER_NOTE, slug="choukai_elimination_tokens", test_id=test_id)
+    check(name, not bad, detail, slug="choukai_elimination_tokens", test_id=test_id)
 
 
 # N7 (qa-report-20260817_3 round 2). Two lodging-reception scenes inside one
@@ -7599,12 +7730,11 @@ CHOUKAI_VOICE_BALANCE_GRANDFATHERED = {
     "20260818_1", "20260819_1",
 }
 VOICE_MARGIN_GRANDFATHERED: set[str] = set()
-PACING_SHA_GRANDFATHERED = {
-    "20260810_1", "20260810_2", "20260811_1", "20260812_1",
-    "20260812_2", "20260813_1", "20260813_2", "20260814_1",
-    "20260817_1", "20260817_2", "20260817_3", "20260818_1",
-    "20260819_1",
-}
+PACING_SHA_GRANDFATHERED: set[str] = set()
+# Emptied 2026-08-21: all 14 papers rebuilt on the two pause ladders (Phase 4).
+# This set was never a policy — it was a to-do wearing an exemption, and a
+# 13-of-14 grandfather set on an audio-freshness check is how the rebuild the
+# whole phase existed for went missing behind a green gate.
 
 
 def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
@@ -7647,14 +7777,14 @@ def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
     if origin == "generated":
         if test_id in VOICE_MARGIN_GRANDFATHERED:
             warn(f"{test_id}: 聴解 same-gender voice pitch separation (semitones)",
-                 not low_margin, "; ".join(low_margin) + " < 1.0 st" + GRANDFATHER_NOTE)
+                 not low_margin, "; ".join(low_margin) + " < 1.0 st" + GRANDFATHER_NOTE, slug="choukai_voice_margin", test_id=test_id)
         else:
             check(f"{test_id}: 聴解 same-gender voice pitch separation (semitones)",
                   not low_margin,
-                  "; ".join(low_margin) + " < 1.0 st separation — target >= 1.9 st (REPORT-CHOUKAI.md §D2)")
+                  "; ".join(low_margin) + " < 1.0 st separation — target >= 1.9 st (REPORT-CHOUKAI.md §D2)", slug="choukai_voice_margin", test_id=test_id)
         warn(f"{test_id}: 聴解 item speaker pairs cast distinguishable voices",
              not indistinct,
-             "; ".join(indistinct) + " — pitch separation < 1.9 st (target >= 1.9 st)")
+             "; ".join(indistinct) + " — pitch separation < 1.9 st (target >= 1.9 st)", slug="choukai_voice_margin", test_id=test_id)
 
 
 def check_choukai_q1_question_forms(test_id: str, st: str, m):
@@ -7668,12 +7798,29 @@ def check_choukai_q1_question_forms(test_id: str, st: str, m):
     name = f"{test_id}: 問題1 質問型 mix ({', '.join(f'{k}:{v}' for k, v in counts.items())})"
     ok = most_common_cnt <= 4
     detail = (f"{most_common_cnt} of {len(items)} items share the same question frame — "
-              f"official runs at most 3 of 6 on any one frame (e.g. 37% まず, 6% modify, 5% condition). "
-              f"Vary the question frame (choukai-items.md §問題1)")
+              f"official runs 36.8% まず, 31.0% 何をしますか, 5.8% modify, 1.9% condition over "
+              f"155 items and never more than 3 of 6 on one frame "
+              f"(`make choukai-profile BASELINE=1` §2). Vary the question frame "
+              f"(choukai-items.md §問題1)")
     if test_id in CHOUKAI_Q1_FORMS_GRANDFATHERED:
-        warn(name, ok, detail + GRANDFATHER_NOTE)
+        warn(name, ok, detail + GRANDFATHER_NOTE, slug="choukai_q1_question_forms", test_id=test_id)
     else:
-        check(name, ok, detail)
+        check(name, ok, detail, slug="choukai_q1_question_forms", test_id=test_id)
+    # The two authoring targets underneath the FAIL edge (choukai-items.md §問題1).
+    # Shipped 2026-08-21 with the monoculture FAIL only, so a paper could satisfy
+    # "≤4 on one frame" with two frames and still exercise none of Shin Kanzen's
+    # 課題理解 sub-skills — which is F1's actual complaint.
+    if ok:
+        missing = []
+        if not counts.get("どう直す・方法"):
+            missing.append("no modify/method item (どう直す・どのように)")
+        if not counts.get("条件一致") and not counts.get("物・提出"):
+            missing.append("no condition-match or object item (どの〜 / 何を持って行く)")
+        if missing:
+            warn(f"{test_id}: 問題1 covers the rare question frames", False,
+                 "; ".join(missing) + " — ≥1 of each per paper "
+                 "(choukai-items.md §'Section item mix'; jlpt-exam-structure §問題1 Question Forms)",
+                 slug="choukai_q1_question_forms", test_id=test_id)
 
 
 def check_choukai_decider_position(test_id: str, ct: str, bi):
@@ -7689,9 +7836,9 @@ def check_choukai_decider_position(test_id: str, ct: str, bi):
               f"official spreads deciders across 冒頭, 中盤, 終盤. No more than 3 of 6 rows may share a bucket "
               f"(choukai-audio SKILL.md Rule 6)")
     if test_id in CHOUKAI_DECIDER_GRANDFATHERED:
-        warn(name, ok, detail + GRANDFATHER_NOTE)
+        warn(name, ok, detail + GRANDFATHER_NOTE, slug="choukai_decider_position", test_id=test_id)
     else:
-        check(name, ok, detail)
+        check(name, ok, detail, slug="choukai_decider_position", test_id=test_id)
 
 
 def check_choukai_probe_carousel(test_id: str, st: str, m):
@@ -7711,9 +7858,9 @@ def check_choukai_probe_carousel(test_id: str, st: str, m):
     detail = (f"{len(heavy_items)} items carry >=3 proposal turns ({', '.join(heavy_items)}) — "
               f"official has at most 1–2 per paper. Vary dialogue dynamic (choukai-items.md §問題1)")
     if test_id in CHOUKAI_PROBE_GRANDFATHERED:
-        warn(name, ok, detail + GRANDFATHER_NOTE)
+        warn(name, ok, detail + GRANDFATHER_NOTE, slug="choukai_probe_carousel", test_id=test_id)
     else:
-        check(name, ok, detail)
+        check(name, ok, detail, slug="choukai_probe_carousel", test_id=test_id)
 
 
 def check_choukai_q2_question_mix(test_id: str, st: str, m):
@@ -7730,48 +7877,98 @@ def check_choukai_q2_question_mix(test_id: str, st: str, m):
     detail = (f"counts: {dict(counts)} — official runs >=2 content/reported items and at most 3 理由 / 2 一番. "
               f"(choukai-items.md §問題2)")
     if test_id in CHOUKAI_Q2_MIX_GRANDFATHERED:
-        warn(name, ok, detail + GRANDFATHER_NOTE)
+        warn(name, ok, detail + GRANDFATHER_NOTE, slug="choukai_q2_question_mix", test_id=test_id)
     else:
-        check(name, ok, detail)
+        check(name, ok, detail, slug="choukai_q2_question_mix", test_id=test_id)
+
+
+def q4_stimulus(lines: list[str]) -> str:
+    """The 問題4 prompt itself: the first spoken line of the block, label stripped.
+
+    Read it from the SPOKEN line, never from the 「N番。」 marker. The first cut of
+    this check (2026-08-21) took `lines[0].split("。")[1]`, which is the empty
+    string for every well-formed block — so every paper measured 0 casual / 0
+    keigo / 11 neutral and the check could neither pass nor ever empty its
+    grandfather set, while F4's real 44%-keigo drift stayed invisible.
+    """
+    for line in lines[1:]:
+        if re.match(r"^[1-3]、", line):
+            break                      # replies start; no stimulus line found
+        body = line.split(":", 1)[-1].split("：", 1)[-1].strip()
+        if body:
+            return body
+    tail = lines[0].split("。", 1)
+    return tail[1].strip() if len(tail) > 1 else ""
 
 
 def check_choukai_q4_stimulus_register(test_id: str, st: str, m):
-    """問題4 stimuli must include casual prompts (REPORT-CHOUKAI.md §F7)."""
+    """問題4 stimuli are officially CASUAL speech, not counter keigo (§F4).
+
+    即時応答 tests 縮約形, intonation and 間接的な答え方; a keigo counter prompt
+    suppresses all three (you cannot contract 「ご記入をお願いします」). Official
+    stimuli under `choukai_profile.classify_p4_stimulus`: 20.7% casual, 9.1%
+    keigo, the rest neutral — ours ran 0 casual with four consecutive 係員/担当者/
+    店員/職員 prompts in `20260819_1`.
+    """
     items = choukai_item_blocks(choukai_span(st, 4), m, True)
     if not items:
         return skip(f"{test_id}: 問題4 prompt register", "no 問題4 items")
-    stimuli = [it[0].split("。")[1].strip() if "。" in it[0] else it[0] for it in items]
-    classes = [CHOUKAI.classify_p4_stimulus(s) for s in stimuli]
+    classes = [CHOUKAI.classify_p4_stimulus(q4_stimulus(it)) for it in items]
     counts = collections.Counter(classes)
-    casual_count = counts.get("casual", 0)
+    casual_count, keigo_count = counts.get("casual", 0), counts.get("keigo", 0)
     ok = casual_count >= 1
-    name = f"{test_id}: 問題4 prompt register ({counts.get('casual', 0)} casual, {counts.get('keigo', 0)} keigo)"
+    name = f"{test_id}: 問題4 prompt register ({casual_count} casual, {keigo_count} keigo)"
     detail = (f"only {casual_count} of {len(items)} stimuli are casual ({dict(counts)}) — "
-              f"official is ~49% casual prompt stimuli (choukai-items.md §問題4)")
+              f"official measures 20.7% casual / 9.1% keigo under the same parse "
+              f"(`make choukai-profile BASELINE=1` §5; choukai-items.md §問題4)")
     if test_id in CHOUKAI_Q4_REGISTER_GRANDFATHERED:
-        warn(name, ok, detail + GRANDFATHER_NOTE)
+        warn(name, ok, detail + GRANDFATHER_NOTE, slug="choukai_q4_stimulus_register", test_id=test_id)
     else:
-        check(name, ok, detail)
+        check(name, ok, detail, slug="choukai_q4_stimulus_register", test_id=test_id)
+    # The two target halves, WARN-class: the gate FAILs only at zero casual.
+    if ok and casual_count < 5:
+        warn(f"{test_id}: 問題4 casual stimuli meet the ≥5-of-12 target", False,
+             f"{casual_count} of {len(items)} stimuli are clearly casual — target ≥5 "
+             f"(choukai-items.md §問題4)", slug="choukai_q4_stimulus_register", test_id=test_id)
+    if keigo_count > 4:
+        warn(f"{test_id}: 問題4 keigo counter prompts ≤4", False,
+             f"{keigo_count} of {len(items)} stimuli are keigo counter prompts — "
+             f"target ≤2, gate WARNs above 4 (choukai-items.md §問題4)",
+             slug="choukai_q4_stimulus_register", test_id=test_id)
 
 
 def check_choukai_q3_talk_band(test_id: str, st: str, m):
-    """問題3 talk length band (spoken chars) (REPORT-CHOUKAI.md §Phase 3)."""
+    """問題3 talk length is a BAND, not a floor (REPORT-CHOUKAI.md §F7, §Phase 3).
+
+    Measured with `choukai_profile.py` over the 31 sittings' scored 問題3 talks
+    (n=123): median 243, p10 202, p90 320, max 483 (one 7/2018 item); the seven
+    current-era sittings run **158–397**, median 268. So the gate FAILs outside
+    [150, 400] — outside the current era's whole range, per the repo's rule that
+    a threshold never sits inside it — and WARNs outside the 220–300 authoring
+    target. Two numbers this replaces, both unreproducible: a one-sided floor of
+    175 (above the 158-char talk 7/2024 actually shipped, so official itself
+    would have failed it) and a 450 ceiling that came from no measurement at all.
+    `official_register.md` §7.4's "median 305" was one sitting's per-paper median,
+    not the corpus median — which is why papers were authored to 306–337.
+    """
     items = choukai_item_blocks(choukai_span(st, 3), m, True)
     if not items:
         return skip(f"{test_id}: 問題3 talk length band", "no 問題3 items")
     lens = [p3_talk_chars(it) for it in items]
-    out_of_band = [f"{choukai_item_label(it[0])}={l}" for it, l in zip(items, lens) if l < 175 or l > 450]
+    out_of_band = [f"{choukai_item_label(it[0])}={l}" for it, l in zip(items, lens) if l < 150 or l > 400]
     warn_band = [f"{choukai_item_label(it[0])}={l}" for it, l in zip(items, lens) if l < 220 or l > 300]
     name = f"{test_id}: 問題3 talk length inside band ({min(lens)}–{max(lens)} chars)"
     ok = not out_of_band
-    detail = f"talk length {out_of_band} outside archive range [175, 450] (target 220–300 chars)"
+    detail = (f"talk length {out_of_band} outside the current era's measured range "
+              f"[150, 400] (target 220–300 chars; `make choukai-profile BASELINE=1` §4)")
     if test_id in CHOUKAI_TALK_BAND_GRANDFATHERED:
-        warn(name, ok, detail + GRANDFATHER_NOTE)
+        warn(name, ok, detail + GRANDFATHER_NOTE, slug="choukai_q3_talk_band", test_id=test_id)
     else:
-        check(name, ok, detail)
+        check(name, ok, detail, slug="choukai_q3_talk_band", test_id=test_id)
     if warn_band and ok:
         warn(f"{test_id}: 問題3 talk length matches target band 220–300", False,
-             f"{len(warn_band)} talk(s) outside 220–300 target: {', '.join(warn_band)}")
+             f"{len(warn_band)} talk(s) outside 220–300 target: {', '.join(warn_band)}",
+             slug="choukai_q3_talk_band", test_id=test_id)
 
 
 def check_choukai_voice_balance(test_id: str, st: str, m):
@@ -7806,22 +8003,152 @@ def check_choukai_voice_balance(test_id: str, st: str, m):
     ok = worst_share <= 0.85
     detail = f"問題{worst_sec} turn distribution is {worst_share:.0%} on one voice — target 40–60%, fail > 85%"
     if test_id in CHOUKAI_VOICE_BALANCE_GRANDFATHERED:
-        warn(name, ok, detail + GRANDFATHER_NOTE)
+        warn(name, ok, detail + GRANDFATHER_NOTE, slug="choukai_voice_balance", test_id=test_id)
     else:
-        check(name, ok, detail)
+        check(name, ok, detail, slug="choukai_voice_balance", test_id=test_id)
+    # The WARN half of the rule (choukai-audio Part 2: "no 大問 above 70% on one
+    # voice"). Shipped 2026-08-21 with the FAIL edge only, so a 83%-female 問題3 —
+    # the exact F5 shape, every service role being female — printed a bare "ok".
+    if ok and worst_share > 0.70:
+        warn(f"{test_id}: 聴解 voice balance inside the 70% target", False,
+             f"問題{worst_sec} runs {worst_share:.0%} of its turns on one voice — "
+             f"role labels come in gendered pairs, pick per item "
+             f"(choukai-audio SKILL.md Part 2 §Casting)", slug="choukai_voice_balance", test_id=test_id)
+
+
+def check_choukai_non_dialogue_item(test_id: str, st: str, m):
+    """At least one item somewhere is NOT a two-person dialogue (§F1).
+
+    16% of official 問題1 items are single-speaker — an announcement, a
+    留守番電話 message, a 課長からのメッセージ, an automated phone menu — and
+    Shin Kanzen 実力養成編 III builds a whole 課題理解 sub-skill on the last of
+    those (p.42's worked item keys a phone menu). Ours were 0 of 70: every 問題1
+    item a two-person dialogue, so one of the four named sub-skills was never
+    exercised. 問題3 monologues do not count — the rule is about 課題理解 and
+    ポイント理解 items whose speaker never gets an interlocutor.
+    """
+    solo = []
+    for section in (1, 2):
+        for it in choukai_item_blocks(choukai_span(st, section), m, True):
+            labels = {hit.group(1) for line in it[1:]
+                      if (hit := m.SPEAKER_RE.match(line)) and hit.group(1) in m.SPEAKER_MAP}
+            if len(labels) == 1:
+                solo.append(f"問題{section}-{choukai_item_label(it[0])}")
+    warn(f"{test_id}: 聴解 carries a non-dialogue item ({len(solo)} found)", bool(solo),
+         "every 問題1/2 item is a two-person dialogue — official runs 16% of 問題1 "
+         "single-speaker (announcement / 留守番電話 / automated menu; 25 of 155). "
+         "Write one per paper (choukai-items.md §問題1; jlpt-exam-structure §問題1 "
+         "Question Forms)", slug="choukai_q1_question_forms", test_id=test_id)
+
+
+CLASS_ADDRESSED_RE = re.compile(r"(方|かた|様|皆様|みなさま)は[、,]?\s*[^。]{0,20}"
+                                r"(窓口|受付|カウンター|会場|入口|入り口)へ")
+
+
+def check_choukai_q4_addressee(test_id: str, st: str, m):
+    """A 問題4 stimulus is spoken TO somebody who can answer it (§F4).
+
+    「〜の方は、…窓口へ」 is addressed to a class of people, not to the person in
+    front of the speaker, so there is no addressee to answer as — the shape
+    `choukai-items.md` §即時応答 bans. It arrived with the keigo drift: four
+    consecutive 20260819_1 items were spoken by 係員/担当者/店員/職員.
+    """
+    items = choukai_item_blocks(choukai_span(st, 4), m, True)
+    if not items:
+        return skip(f"{test_id}: 問題4 stimuli have an addressee", "no 問題4 items")
+    bad = [f"{choukai_item_label(it[0])}「{q4_stimulus(it)[:24]}…」" for it in items
+           if CLASS_ADDRESSED_RE.search(q4_stimulus(it))]
+    warn(f"{test_id}: 問題4 stimuli have an addressee who can reply", not bad,
+         "; ".join(bad) + " — addressed to a class of people, not to the listener, "
+         "so no reply is answerable (choukai-items.md §即時応答)",
+         slug="choukai_q4_stimulus_register", test_id=test_id)
+
+
+PAUSE_DIST_GRANDFATHERED: set[str] = set()
+
+
+def check_choukai_pause_distribution(test_id: str, mp3: Path):
+    """The rendered audio's pause SHAPE, not its median (REPORT-CHOUKAI.md §F8).
+
+    `official_pacing.md` measured pause medians and every constant sits inside its
+    band — but the distribution was never measured, and it was degenerate: every
+    turn gap was exactly `GAP_BETWEEN_LINES` and every within-turn pause was
+    capped at `GAP_WITHIN_TURN_MAX`, so 60% of sub-2 s pauses sat in two spikes at
+    0.5 s and 0.9 s and only **1%** exceeded 1.05 s. Both reference corpora — the
+    official 7/2025 MP3 and the Shin Kanzen mock tracks — put **21–24%** there:
+    the 1.1–1.4 s beat where a speaker thinks did not exist in our audio at all.
+    `turn_gap_jitter()` (Phase 4.2) restores it; this check is what makes the
+    restoration observable, per Part 3's own rule that the claim to verify is the
+    distribution, measured on the RENDERED file.
+
+    Same method as the audit: `silencedetect=noise=-35dB:d=0.30`, silences under
+    2 s only (longer ones are the scripted answer pauses, not speech rhythm).
+    """
+    name = f"{test_id}: 聴解.mp3 pause distribution has a >1.05 s tail"
+    try:
+        out = subprocess.run(
+            ["ffmpeg", "-hide_banner", "-nostats", "-i", str(mp3),
+             "-af", "silencedetect=noise=-35dB:d=0.30", "-f", "null", "-"],
+            capture_output=True, text=True, timeout=300).stderr
+    except (OSError, subprocess.SubprocessError) as exc:
+        return skip(name, f"ffmpeg unavailable ({exc.__class__.__name__})")
+    durations = [float(x) for x in re.findall(r"silence_duration: ([\d.]+)", out)]
+    short = [d for d in durations if d < 2.0]
+    if len(short) < 50:
+        return skip(name, f"only {len(short)} sub-2 s silences measured")
+    tail = sum(1 for d in short if d > 1.05) / len(short)
+    spikes = sum(1 for d in short if abs(d - 0.5) <= 0.06 or abs(d - 0.9) <= 0.06) / len(short)
+    med = statistics.median(short)
+    detail = (f"{tail:.0%} of {len(short)} sub-2 s pauses exceed 1.05 s (floor 7%), "
+              f"{spikes:.0%} sit in the 0.5 s/0.9 s spikes (cap 35%), median {med:.2f} s — "
+              f"rebuild with `make mp3 {test_id}` after any pacing change. Reference "
+              f"corpora run a 17–24% tail on a 0.62–0.69 s median, and the remaining "
+              f"gap is TURN SHAPE, not a constant: only turn gaps may exceed the 0.9 s "
+              f"boundary, so a paper of 27-char turns caps out near 9% however the "
+              f"ladders are set (official_register.md §1, official_pacing.md §6.1)")
+    ok = tail >= 0.07 and spikes <= 0.35
+    if test_id in PAUSE_DIST_GRANDFATHERED:
+        warn(name, ok, detail + GRANDFATHER_NOTE, slug="choukai_pause_distribution", test_id=test_id)
+    else:
+        warn(name, ok, detail, slug="choukai_pause_distribution", test_id=test_id)
 
 
 def check_choukai_service_formulas(test_id: str, st: str, m):
-    """Counts transaction service formulas (REPORT-CHOUKAI.md §F8)."""
-    warn_msgs = []
+    """Transaction formulas against the archive's own per-paper rate (§F9).
+
+    What differs from official is not how much courtesy our papers use but WHICH
+    strings carry it: official's most reused phrases are human
+    (ありがとうございます, はい、わかりました), ours are counter transactions —
+    「かしこまりました」 in 12 of 14 papers against 4 times in 31 sittings.
+
+    Both bands come from `choukai_profile.service_formula_archive()`, so neither
+    is a hand-picked number. A formula the archive uses at a median of ≥2 per
+    paper is read as a FLOOR: 「そうですね」 runs a median of 3 officially and 1
+    here, so capping it — as the first cut of this check did — moves papers away
+    from official while looking like a fix.
+    """
+    bands = CHOUKAI.service_formula_archive()
+    over, under = [], []
     for form, rx in CHOUKAI.SERVICE_FORMULAS.items():
         cnt = len(rx.findall(st))
-        max_allowed = 2 if form in ("かしこまりました", "〜ていただけますか", "よろしいでしょうか") else 0 if form == "〜た方がいいですか" else 1
-        if cnt > max_allowed:
-            warn_msgs.append(f"「{form}」×{cnt} (archive max {max_allowed})")
+        band = bands[form]
+        if band["median"] >= 2:
+            if cnt < band["median"]:
+                under.append(f"「{form}」×{cnt} (archive median {band['median']:.0f}/paper)")
+        elif cnt > band["max"]:
+            over.append(f"「{form}」×{cnt} (archive max {band['max']}/paper, "
+                        f"{band['total']}× in 31 sittings)")
     warn(f"{test_id}: 聴解 transaction formulas within official limits",
-         not warn_msgs,
-         ", ".join(warn_msgs) + " — over official archive frequency (choukai-audio SKILL.md §Banned formulas)")
+         not over,
+         ", ".join(over) + " — above the archive's per-paper maximum "
+         "(choukai-audio SKILL.md §Banned formulas; bands measured by "
+         "`make choukai-profile`)", slug="choukai_service_formula_rate", test_id=test_id)
+    warn(f"{test_id}: 聴解 uses the courtesy official actually reaches for",
+         not under,
+         ", ".join(under) + " — official's own high-frequency phrases are the "
+         "human ones; under-using them is the same register drift from the other "
+         "side (official_register.md §F9 table)",
+         slug="choukai_service_formula_rate", test_id=test_id)
 
 
 def check_choukai_contraction_rate(test_id: str, st: str, m):
@@ -7834,7 +8161,7 @@ def check_choukai_contraction_rate(test_id: str, st: str, m):
     warn(f"{test_id}: 聴解 縮約形 frequency ({rate:.1f}/10k chars, {cnt} tokens)",
          rate >= 22.4,
          f"縮約形 rate {rate:.1f}/10k chars below gate floor 22.4/10k (official median 63.9, band 29.9–89.3). "
-         f"Use conversational contractions (てる, とく, ちゃう, なきゃ) in spoken turns (choukai-items.md §Register)")
+         f"Use conversational contractions (てる, とく, ちゃう, なきゃ) in spoken turns (choukai-items.md §Register)", slug="choukai_contraction_rate", test_id=test_id)
 
 
 def check_passage_boxes(d):
@@ -8417,6 +8744,8 @@ def check_tests():
                 check_choukai_probe_carousel(d.name, st, m)
                 check_choukai_q2_question_mix(d.name, st, m)
                 check_choukai_q4_stimulus_register(d.name, st, m)
+                check_choukai_q4_addressee(d.name, st, m)
+                check_choukai_non_dialogue_item(d.name, st, m)
                 check_choukai_q3_talk_band(d.name, st, m)
                 check_choukai_voice_balance(d.name, st, m)
                 check_choukai_service_formulas(d.name, st, m)
@@ -8433,6 +8762,8 @@ def check_tests():
         if (d / "聴解.mp3").is_file():
             check("聴解_チャプター.json accompanies the MP3", (d / "聴解_チャプター.json").is_file(),
                   "re-run make mp3 to regenerate chapter marks")
+            if origin == "generated":
+                check_choukai_pause_distribution(d.name, d / "聴解.mp3")
         check_artifact_freshness(d)
         check_passage_boxes(d)
 
@@ -8565,6 +8896,10 @@ def check_grader_parity():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tests", action="store_true", help="only the per-test contracts")
+    ap.add_argument("--json", metavar="PATH", nargs="?", const="logs/findings.json",
+                    help="also write one record per slugged finding "
+                         "(default logs/findings.json) — the input to "
+                         "tools/choukai_repair_plan.py")
     args = ap.parse_args()
 
     print("JLPT pipeline consistency check")
@@ -8575,6 +8910,7 @@ def main():
         check_makefile_help()
         check_deployments()
         check_every_choukai_finding_declares_repair()
+        check_remediation_state()
         check_pacing()
         check_item_counts()
         check_taxonomy()
@@ -8602,6 +8938,15 @@ def main():
         check_invented_proper_nouns()
     check_tests()
     check_grader_parity()
+
+    if args.json:
+        out = Path(args.json)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps({"findings": _findings,
+                                   "counts": {"fail": len(_fail), "warn": len(_warn),
+                                              "skip": len(_skip), "slugged": len(_findings)}},
+                                  ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        print(f"\n{len(_findings)} slugged finding(s) -> {out}")
 
     print()
     if _warn:
