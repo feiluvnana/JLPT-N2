@@ -34,20 +34,9 @@ Binding points, all from those two files:
 4. **Model answer (FINAL STEP)**: After `QA: PASS`, and only then, build the
    explanation deliverable — all questions and keys must be locked first.
    a. Author `tests/⟨test_id⟩/詳細解説.json` (`exam-model-answer`).
-   b. **Translate it into every language in the list below** — read
-      `.agents/exam-answer-translation/SKILL.md` end to end and run its
-      workflow per language (`make scaffold-translation` → one context per
-      packet → `make merge-translation`). The skill deliberately names no
-      language; this list is the only place one is declared:
-
-      | Language | `TLANG` | `TLABEL` |
-      | --- | --- | --- |
-      | Vietnamese | `vi` | `Tiếng Việt` |
-
-      The candidate's own language is what the explanations are read in, so a
-      paper that ships Japanese-only is incomplete, not merely untranslated.
-   c. Run `make model-answer ⟨test_id⟩` LAST — one page carries every
-      language, so it is built once, after the translations exist.
+   b. Run `make model-answer ⟨test_id⟩` LAST. The page is **Japanese-only**:
+      the per-language explanation pipeline was retired 2026-08-21, so there is
+      no translation step and no language to declare here.
 5. **Commit** `tests/⟨test_id⟩/` and the updated `logs/` together when done.
 6. **Final report** per `AGENTS.md` §0.7: which skills you read, which stages
    you ran, the seed you used, every WARN you resolved or justified, and

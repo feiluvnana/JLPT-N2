@@ -8,7 +8,7 @@ by every agent harness. It is imported below, so its rules apply in full here â€
 
 ## Claude-Code-specific notes
 
-- The 10 skills in `.agents/<skill_name>/SKILL.md` are also exposed as native
+- The 9 skills in `.agents/<skill_name>/SKILL.md` are also exposed as native
   Claude Code skills through symlinks in `.claude/skills/`, invocable as
   `/<skill-name>`. Both paths are the same files â€” edit `.agents/`, never a
   copy.

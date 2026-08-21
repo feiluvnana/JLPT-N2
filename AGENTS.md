@@ -58,7 +58,7 @@ not route around it silently.
 
 - Skills are located in `.agents/<skill_name>/SKILL.md`.
 - Before performing any specialized task, **read the corresponding `SKILL.md` file** (they are plain Markdown — open them with whatever file-reading tool your harness provides).
-- **Claude Code**: the same 10 skills are exposed natively via symlinks in `.claude/skills/<skill_name>` → `.agents/<skill_name>`, so they are auto-discovered and invocable as `/<skill-name>`. `.agents/` remains the single copy — edit files there.
+- **Claude Code**: the same 9 skills are exposed natively via symlinks in `.claude/skills/<skill_name>` → `.agents/<skill_name>`, so they are auto-discovered and invocable as `/<skill-name>`. `.agents/` remains the single copy — edit files there.
 - **`jlpt-test-generation` is the entry point for generating mocks.** For importing an outside PDF/past paper, read `external-test-import` instead. For any other exam work, read `jlpt-test-generation` first — it routes to the other skills in order.
 - Available Skills:
   1. `jlpt-test-generation`: End-to-end mock exam generation orchestrator — **read this one first** for generated exams. Owns the 4-stage pass structure and the per-stage reading map.
@@ -69,8 +69,7 @@ not route around it silently.
   6. `exam-app`: Rendering and running the exam — booklet HTML (`build_booklet.py`, no PDF), the merged answer sheet `解答.html` with in-page grading (`build_interactive.py`), the one server (`serve_sheet.py`), the static GitHub Pages build (`build_pages.py`), and CLI grading (`grade_answers.py`).
   7. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test). It also root-causes every finding back to the skill, script, or gate check that let it through, so the next test does not reproduce it.
   8. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
-  9. `exam-model-answer`: Model answer & comprehensive explanation generator — builds `模範解答.html` explaining every item (why the correct option is chosen and why each distractor is wrong) across Language Knowledge, Reading, and Listening.
-  10. `exam-answer-translation`: The model answer in languages beside Japanese — `詳細解説.<lang>.json`, its scaffold/merge tooling, and the in-page language switcher. Runs after `exam-model-answer`'s inputs are frozen. It never names a language; **`GENERATE.md` declares which languages a paper ships with**.
+  9. `exam-model-answer`: Model answer & comprehensive explanation generator — builds `模範解答.html` explaining every item (why the correct option is chosen and why each distractor is wrong) across Language Knowledge, Reading, and Listening. Japanese only.
 
 ---
 
@@ -81,7 +80,7 @@ not route around it silently.
 - `refs/`: Reference input files (scanned PDFs and audio recordings). See §3.
 - `tests/<test_id>/`: Output folder for each exam. **Origin is encoded in the folder name:** ids starting with `imported-` are external imports (e.g. `tests/imported-n2-2025-12/`); any other id is **generated** (e.g. `tests/1/`). See `external-test-import`.
 - `logs/`: Item coverage ledger (`logs/ledger.json`), topic history (`logs/topics.json`), adjunct staging. Each generated test's blueprint lives at `tests/<test_id>/test_spec.json`.
-- `.agents/`: The 10 skills — docs, scripts, and reference data.
+- `.agents/`: The 9 skills — docs, scripts, and reference data.
 - `tools/`: Repo-level tooling that is not a skill (`check_consistency.py`, the `refs/` archive extractors).
 - `_site/`: **Build output only, gitignored.** The static GitHub Pages copy of the exam app, rebuilt from `tests/` by `make pages` and by CI on push. Never edit or commit it. See `exam-app`.
 
@@ -90,7 +89,7 @@ where exams get built and taken, and the ledger must persist because item
 rotation depends on the history of past draws. Commit new tests and the updated
 ledger together with the pipeline changes that produced them. Gitignored
 build/cache paths: `tests/*/segments/`, `tests/*/_extract/`,
-`tests/*/_sections/`, `tests/*/_translation/`, `qa/*/` (keyless renders —
+`tests/*/_sections/`, `qa/*/` (keyless renders —
 `qa/qa-report-*.md` stays tracked), `_site/`.
 
 ### Deliverables Naming Convention (Japanese File Names Mandatory)
@@ -107,9 +106,8 @@ Inside `tests/<test_id>/` — this table is the single copy; skills point here:
 | Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
 | User Answers Record                  | `ユーザー解答.json`                    | Saved automatically on submit from `解答.html`                                         |
 | Combined Grading Result              | `採点結果.json`                        | Generated on submit from `解答.html` or written by `grade_answers.py`. There is no Markdown report — the result is data, read back by the result screen and by the test list |
-| Model Answer & Detailed Explanation  | `模範解答.html`                        | Comprehensive model answer and explanation document for all 101 items, rendered by `build_model_answer.py`. Carries every language in one file |
-| Model Answer Explanations (Japanese) | `詳細解説.json`                        | Hand-authored per-item explanations — the source `模範解答.html` renders (`exam-model-answer`) |
-| Model Answer Explanations (translated) | `詳細解説.<lang>.json`               | One per non-Japanese language the paper ships with, written by `merge_translation.py` (`exam-answer-translation`); absent when the paper is Japanese-only |
+| Model Answer & Detailed Explanation  | `模範解答.html`                        | Comprehensive model answer and explanation document for all 101 items, rendered by `build_model_answer.py` |
+| Model Answer Explanations | `詳細解説.json`                        | Hand-authored per-item explanations — the source `模範解答.html` renders (`exam-model-answer`). Japanese only: the per-language pipeline was retired 2026-08-21 |
 | Import provenance (imported only)    | `import_meta.json`                     | Written by `external-test-import` for `tests/imported-<slug>/` only — generated tests must not have this file |
 
 ---
@@ -174,8 +172,6 @@ restate them here or in a skill; fix them there.
 | `make sheet <id>`         | `build_interactive.py` → `解答.html` | `exam-app` |
 | `make model-answer <id>`  | `build_model_answer.py` → `模範解答.html` | `exam-model-answer` |
 | `make scaffold-explanations <id>` | `scaffold_explanations.py` → scaffolds `詳細解説.json` template | `exam-model-answer` |
-| `make scaffold-translation <id> TLANG=xx TLABEL=…` | `scaffold_translation.py` → translation work packets | `exam-answer-translation` |
-| `make merge-translation <id> TLANG=xx` | `merge_translation.py` → `詳細解説.xx.json` | `exam-answer-translation` |
 | `make lint-draft <id>`    | `lint_draft.py` — fast deterministic pre-lint before QA | `exam-qa-review` |
 | `make autofix <id>`       | `lint_draft.py --fix` — auto-fixes contractions and stem layout | `exam-qa-review` |
 | `make verify-scramble <id>` | `verify_scramble.py` — topological & permutation validator for 問題8 | `question-authoring` |
@@ -232,10 +228,9 @@ template, and the fix→re-review loop; read it before any generation work.
 
 **Model answer generation (`make model-answer <id>`) MUST always be the final step**
 (for both generated exams and imported exams) — run only after QA/fidelity verification
-has passed and all questions, options, and keys are locked. Any translations
-`GENERATE.md` asks for are produced inside that same final step, between
-`詳細解説.json` and the build (`exam-answer-translation`); the page carries
-every language, so it is built once, last.
+has passed and all questions, options, and keys are locked. The page is
+Japanese-only: the per-language explanation pipeline (`詳細解説.<lang>.json`, its
+scaffold/merge targets, the in-page switcher) was retired 2026-08-21.
 
 The two context-isolation rules that are never optional, in any harness or
 fallback: **no long single-run authoring** (defects cluster in whatever one

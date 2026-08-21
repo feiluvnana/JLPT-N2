@@ -219,8 +219,13 @@ def check_filename_contracts():
     # the move to one server + a JSON result document, must not come back.
     retired = ["言語知識・読解_解答.html", "聴解_解答.html", "採点結果_",
                "採点結果.md", "user_answers", "マークシート.pdf",
-               "make serve 1", "make serve <test_id>"]
-    exonerated = re.compile(r"gone|no per-section|legacy|removed|replaces|there are no")
+               "make serve 1", "make serve <test_id>",
+               # The model-answer translation pipeline, retired 2026-08-21:
+               # 模範解答.html is Japanese-only by design, so a doc naming a
+               # per-language explanation file or its make targets is stale.
+               "詳細解説.<lang>.json", "exam-answer-translation",
+               "make scaffold-translation", "make merge-translation"]
+    exonerated = re.compile(r"gone|no per-section|legacy|removed|retired|replaces|there are no")
     offenders = []
     for f, text in docs().items():
         # A doc may name a retired file in order to say it is GONE, and that
@@ -5392,7 +5397,7 @@ def check_moji_stem_shape(test_id: str, gt: str):
     文字・語彙 mark for a 読解 reason, systematically.
 
     THE REPAIR: rewrite the stem (tier B — the key does not move, but every
-    詳細解説 cell quoting the stem and every translation of it does).
+    詳細解説 cell quoting the stem does).
     """
     m = GOI.measures([r for r in _goi_paper(gt, test_id) if r["mondai"] in (1, 2, 5)])
     if "stem_125" not in m:
@@ -7070,152 +7075,6 @@ def check_choukai_longest_key_rate(test_id: str, ct: str, st: str, m, bi):
          f"(choukai-items.md §'Key length carries no information')")
 
 
-# ---------------------------------------------------- model-answer translations
-# 模範解答.html carries every language in ONE file (exam-answer-translation), so a
-# translation can rot in three ways that reading either file alone cannot show:
-#
-#   * 詳細解説.json is edited by a QA fix and 詳細解説.<lang>.json is not — the
-#     translated pane then explains a paper that no longer exists, while the
-#     Japanese pane beside it is correct. `_meta.source_sha256` is the whole
-#     point of the merge writing a digest.
-#   * a translation is merged and 模範解答.html is never rebuilt, so the language
-#     exists on disk and not on the page anyone opens.
-#   * an item, an options_analysis entry, or a points entry goes missing, and the
-#     pane silently falls back to Japanese for that one item.
-#
-# GENERATE.md's language table is the single declaration of which languages a
-# paper ships with; this reads it rather than holding a second copy.
-def declared_languages() -> dict:
-    text = (ROOT / "GENERATE.md").read_text(encoding="utf-8")
-    return {m.group(2): m.group(3) for m in re.finditer(
-        r"^\s*\|\s*([^|]+?)\s*\|\s*`([a-z]{2,3}(?:-[a-z0-9]+)?)`\s*\|\s*`([^`]+)`\s*\|",
-        text, re.M)}
-
-
-def check_translation_ui_labels():
-    print("\nmodel-answer UI labels (builder ↔ ui/*.json)")
-    bma = load(".agents/exam-model-answer/scripts/build_model_answer.py")
-    ui_dir = ROOT / ".agents/exam-answer-translation/ui"
-    template = json.loads((ui_dir / "_template.json").read_text(encoding="utf-8"))
-    template.pop("_comment", None)
-    check("ui/_template.json is build_model_answer.JA_UI verbatim",
-          template == bma.JA_UI,
-          f"differs at {sorted(set(template) ^ set(bma.JA_UI)) or [k for k in template if template[k] != bma.JA_UI.get(k)]}"
-          f" — the template is what a new language is cloned from, so a drifted "
-          f"copy hands the translator labels the page never prints "
-          f"(exam-answer-translation §'UI labels')")
-    declared = declared_languages()
-    for path in sorted(ui_dir.glob("*.json")):
-        if path.name == "_template.json":
-            continue
-        lang = path.stem
-        ui = json.loads(path.read_text(encoding="utf-8"))
-        ui.pop("_comment", None)
-        missing = [k for k in template if k not in ui]
-        untranslated = [k for k, v in template.items() if ui.get(k) == v]
-        check(f"ui/{path.name} covers every label",
-              not missing and not untranslated,
-              f"missing {missing}; still Japanese: {untranslated}")
-        check(f"ui/{path.name}: question_label keeps its {{n}} placeholder",
-              "{n}" in ui.get("question_label", ""),
-              f"got {ui.get('question_label')!r} — the item number is substituted "
-              f"into it at runtime and vanishes without the placeholder")
-        if lang not in declared:
-            warn(f"ui/{path.name} belongs to a language GENERATE.md declares",
-                 False,
-                 f"{lang!r} is not in GENERATE.md's language table, so no paper is "
-                 f"built with it — add the row or delete the file")
-
-
-def check_test_translations(test_dir: Path):
-    name = test_dir.name
-    src_path = test_dir / "詳細解説.json"
-    files = sorted(test_dir.glob("詳細解説.*.json"))
-    declared = declared_languages()
-    if not src_path.is_file():
-        return skip(f"{name}: 詳細解説.<lang>.json translations",
-                    "no 詳細解説.json to translate")
-    raw = src_path.read_text(encoding="utf-8")
-    source = json.loads(raw)
-    source.pop("_meta", None)
-    src_digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()
-    ui_dir = ROOT / ".agents/exam-answer-translation/ui"
-    page = (test_dir / "模範解答.html")
-    page_text = page.read_text(encoding="utf-8") if page.is_file() else ""
-
-    present = set()
-    for path in files:
-        lang = path.name[len("詳細解説."):-len(".json")]
-        present.add(lang)
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError as e:
-            check(f"{name}: {path.name} parses", False, str(e))
-            continue
-        meta = data.pop("_meta", {}) or {}
-        check(f"{name}: {path.name} _meta.lang matches its filename",
-              meta.get("lang") == lang,
-              f"_meta.lang={meta.get('lang')!r} filename={lang!r} — "
-              f"build_model_answer.py skips the file rather than render it "
-              f"under the wrong flag")
-        check(f"{name}: {path.name} was made from the current 詳細解説.json",
-              meta.get("source_sha256") == src_digest,
-              f"digest mismatch — the Japanese explanations changed after this "
-              f"translation was merged, so the translated pane argues about "
-              f"wording the paper no longer has. Re-scaffold (--force), "
-              f"re-translate the edited items, `make merge-translation {name} "
-              f"TLANG={lang}`, then `make model-answer {name}` "
-              f"(exam-answer-translation §'Ordering rule')")
-
-        ui_path = ui_dir / f"{lang}.json"
-        if ui_path.is_file():
-            shared_ui = json.loads(ui_path.read_text(encoding="utf-8"))
-            shared_ui.pop("_comment", None)
-            check(f"{name}: {path.name} _meta.ui matches ui/{lang}.json",
-                  (meta.get("ui") or {}) == shared_ui,
-                  "the shared label file is the single copy; re-run "
-                  "`make merge-translation` to refresh the embedded one")
-
-        missing = [k for k in source if k not in data]
-        extra = [k for k in data if k not in source]
-        bad = []
-        for key, entry in data.items():
-            if key not in source:
-                continue
-            if not (entry.get("why_correct") or "").strip():
-                bad.append(f"{key}.why_correct")
-            for field in ("options_analysis", "points"):
-                want = len(source[key].get(field) or [])
-                got = [x for x in (entry.get(field) or []) if (x or "").strip()]
-                if len(got) != want:
-                    bad.append(f"{key}.{field}({len(got)}/{want})")
-            for field in ("passage", "script"):
-                if source[key].get(field) and not (entry.get(field) or "").strip():
-                    bad.append(f"{key}.{field}")
-        check(f"{name}: {path.name} covers every item of 詳細解説.json "
-              f"({len(source)} items)",
-              not (missing or extra or bad),
-              f"missing {missing[:5]}; unknown {extra[:5]}; incomplete {bad[:8]} — "
-              f"an item absent from the translation falls back to Japanese inside "
-              f"the translated pane, which reads as a bug to the learner. "
-              f"`make merge-translation {name} TLANG={lang}` refuses to write a "
-              f"file like this, so it was hand-edited afterwards")
-
-        check(f"{name}: 模範解答.html carries the {lang} panes",
-              bool(page_text) and f'data-lang="{lang}"' in page_text,
-              f"{path.name} exists but the page has no {lang} pane — it was not "
-              f"rebuilt after the merge. Run `make model-answer {name}`")
-
-    for lang, label in declared.items():
-        if lang not in present:
-            warn(f"{name}: ships the {label} ({lang}) model answer GENERATE.md declares",
-                 False,
-                 f"no 詳細解説.{lang}.json — the candidate reads the explanations in "
-                 f"their own language, so a Japanese-only paper is incomplete. "
-                 f"Follow exam-answer-translation for this paper, or drop the row "
-                 f"from GENERATE.md's table if the language is retired")
-
-
 # 模範解答 explains the options the candidate actually saw (G18). 詳細解説.json stores its
 # own copy of every option's text — hand-authored, furigana included — and
 # build_model_answer.py PREFERS that copy over the one it parses out of the booklet
@@ -8015,7 +7874,6 @@ def check_tests():
                 check_choukai_judgment_mix(d.name, st, ct, m, bi)
                 check_choukai_longest_key_rate(d.name, ct, st, m, bi)
                 check_model_answer_option_sync(d.name, gt, ct, st, m, bi)
-                check_test_translations(d)
                 check_moji_longest_key_rate(d.name, gt, keys, bi)
                 # G17 — the sentences themselves, vs Shin Kanzen 実力養成編.
                 check_choukai_contractions(d.name, st, m)
@@ -8166,7 +8024,6 @@ def main():
         check_refs()
         check_skills()
         check_filename_contracts()
-        check_translation_ui_labels()
         check_makefile_help()
         check_deployments()
         check_pacing()

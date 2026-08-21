@@ -9,12 +9,10 @@ This skill owns generating `tests/<test_id>/模範解答.html` — the model
 answer and in-depth explanation deliverable — and `詳細解説.json`, the
 Japanese explanations it renders.
 
-**Any language other than Japanese belongs to `exam-answer-translation`**:
-`詳細解説.<lang>.json`, the scaffold/merge tooling, the UI label set, and the
-in-page switcher. `build_model_answer.py` discovers those files by glob and
-renders one `.lang-pane` per language inside every explanation box, so the
-page below is the Japanese layer of a possibly multilingual page. Which
-languages a paper ships with is declared in `GENERATE.md`.
+**The page is Japanese-only.** The translation pipeline that once rendered one
+pane per language (`詳細解説.<lang>.json`, its scaffold/merge tooling, the UI
+label set and the in-page switcher) was retired 2026-08-21; every label the page
+prints outside the exam's own wording lives once in `build_model_answer.UI`.
 
 ## Purpose & Pedagogical Quality
 
@@ -123,9 +121,6 @@ longer matches the booklet/script it was copied from.
 > - **Import**: run `make model-answer imported-<slug>` ONLY AFTER all 101
 >   keys are verified against the official answer key and `make check` is
 >   completely green.
-> - **Translations**: `詳細解説.<lang>.json` is produced BETWEEN the frozen
->   `詳細解説.json` and this build (`exam-answer-translation`) — one page
->   carries every language, so the build still happens exactly once, last.
 
 ```bash
 python3 .agents/exam-model-answer/scripts/build_model_answer.py tests/<id>

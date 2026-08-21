@@ -9,8 +9,8 @@ re-draws ≈30 items) are queued below, not done.
 Skills read in full before acting: `AGENTS.md`, `question-authoring/SKILL.md` +
 `references/moji-goi.md` + `references/official_calibration.md`,
 `exam-blueprint/SKILL.md` + `scripts/sample_items.py`, `exam-qa-review/SKILL.md`,
-`exam-answer-translation/SKILL.md`, the 文字・語彙 half of
-`tools/check_consistency.py`.
+`exam-answer-translation/SKILL.md` (read for the F9 rebuild chain; the skill was
+retired later the same day), the 文字・語彙 half of `tools/check_consistency.py`.
 
 ## Landed
 
@@ -25,7 +25,7 @@ Skills read in full before acting: `AGENTS.md`, `question-authoring/SKILL.md` +
 | F5 | 訓読み floor | `KUN_CAP` became a band 1–2 (`KUN_FLOOR`), enforced in `sample_kun_capped()` including `--reroll-one`, and `check_mondai1_reading_type_mix` prints both bounds. |
 | F6 | option distinctness | The 問題5-only rule is now section-agnostic (`moji-goi.md` Part 0) and `check_mondai5_option_reuse` → **`check_moji_option_reuse` over 問題1–6**. Official: 0 repeats in 31 of 31 sittings, any 大問. |
 | F8 | legacy queue | `check_legacy_item_repeats` prints all **eleven** live repeats by item and paper pair as a standing WARN; `exam-blueprint` "Rotation model" names them. The exemption keeps its skip, the queue stops being invisible. |
-| F9 | 「頻繁に」 | **Repaired** on disk: `20260813_2` 問題1-5 now prints 「戸締まり…出入りが**頻繁**になった」 — the 「に」 belongs to 〜になる, and the options read 頻繁, so the marked span was wrong, not the option field. New gate `check_moji1_okurigana_exposure`, no exemptions. Rebuilt booklet + sheet + `詳細解説.json` + vi merge + 模範解答.html. |
+| F9 | 「頻繁に」 | **Repaired** on disk: `20260813_2` 問題1-5 now prints 「戸締まり…出入りが**頻繁**になった」 — the 「に」 belongs to 〜になる, and the options read 頻繁, so the marked span was wrong, not the option field. New gate `check_moji1_okurigana_exposure`, no exemptions. Rebuilt booklet + sheet + `詳細解説.json` + 模範解答.html. |
 
 `make check`: **green, 190 warnings** (138 before). Every new warning is a
 grandfather line from the checks above plus the legacy queue; no pre-existing
@@ -68,5 +68,5 @@ book and page that confirmed it (`exam-qa-review` §3).
 Ordering rule for the queue, unchanged from the plan: **draw-time work (tier C)
 before stem work (tier B) on the same paper** — a re-draw invalidates a stem
 that was just rewritten. One paper per session, and each paper ends with the
-Phase 4 rebuild chain (`booklet` → `sheet` → `詳細解説.json` → vi re-merge →
-`model-answer`) plus `make check` read line by line.
+Phase 4 rebuild chain (`booklet` → `sheet` → `詳細解説.json` → `model-answer`)
+plus `make check` read line by line.

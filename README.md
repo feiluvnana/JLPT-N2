@@ -28,7 +28,7 @@ Shin Kanzen Master textbooks in `refs/`.
 > | The rules, directory layout, file-naming contract, command router | **`AGENTS.md`** |
 > | To generate a new mock exam | `GENERATE.md` → `.agents/jlpt-test-generation/SKILL.md` |
 > | To import an external PDF / past paper | `IMPORT.md` → `.agents/external-test-import/SKILL.md` |
-> | How any one subsystem works | the 10 skills in `.agents/<name>/SKILL.md` |
+> | How any one subsystem works | the 9 skills in `.agents/<name>/SKILL.md` |
 >
 > If this file and an owner file ever disagree, **the owner wins** — and the
 > disagreement is a defect to fix, not to route around.
