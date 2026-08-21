@@ -165,6 +165,7 @@ restate them here or in a skill; fix them there.
 | ------------------------- | ------------------------------------ | ----------- |
 | `make check`              | `tools/check_consistency.py` — the read-only gate | (below) |
 | `make check-tests`        | the same gate, per-test contracts only | (below) |
+| `make goi-profile [BASELINE=1]` | `tools/goi_profile.py` — 文字・語彙 measurement (archive vs tests); `BASELINE=1` prints the doc tables | `question-authoring` |
 | `make sample <id> SEED=n` | `sample_items.py` → `test_spec.json` + ledger | `exam-blueprint` |
 | `make scaffold-sections <id>` | `scaffold_sections.py` → scaffolds `_sections/` authoring templates | `question-authoring` |
 | `make matrix`             | `matrix_helper.py` — **validate only**; both generators are hard-disabled (they had no 音訓 table and emitted kana-skeleton-violating grids — qa-report-20260819_1 F4) | `question-authoring` |
@@ -206,6 +207,13 @@ the rule, the incident behind it, and the repair.
 - FAIL blocks the work. **WARN is part of the output** (§0.5): warn-class
   checks exist where a rule cannot be decided by string matching — resolve
   each one or state in your final report why it is a false positive.
+- **A measured number has one owner, and it is a script.** `make goi-profile`
+  measures 文字・語彙 on both corpora (archive + `tests/`) and
+  `check_consistency.py` imports the same module, so a threshold here and a band
+  in `moji-goi.md`/`official_calibration.md` cannot drift apart. Three numbers
+  the 文字・語彙 rules were built on turned out to be unreproducible when someone
+  finally re-measured them (REPORT-GOI.md §F10) — refresh a doc table from
+  `--baseline` output, never by retyping.
 - Green is the floor, never the verdict on a paper — `exam-qa-review` is.
   Several binding authoring rules are read by QA only, not by the gate
   (`question-authoring` §"Answer keys — format pointers and the required

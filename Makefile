@@ -1,6 +1,6 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check check-tests grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
+.PHONY: help check check-tests goi-profile grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
        init-import extract-pdf extract-archive extract-keys lint-draft lint verify-scramble scaffold-explanations irt \
        scaffold-sections matrix qa-eval autofix scaffold-translation merge-translation
 
@@ -72,6 +72,7 @@ help:
 	@echo "  make extract-pdf PDF=a.pdf OUT=tests/imported-x/_extract/a.txt"
 	@echo "  make extract-archive  refs/JLPT_N2_NEW/*/ -> booklet.md script.md audio_inspection.md"
 	@echo "  make extract-keys     Answer-key PDF -> per-exam key.md + answer_keys.json"
+	@echo "  make goi-profile [BASELINE=1]  文字・語彙 measurement: archive vs tests (--baseline for the doc tables)"
 	@echo "  (any per-test target also takes TEST=<id>; default TEST=1)"
 	@echo "=========================================================================="
 
@@ -80,6 +81,9 @@ check:
 
 check-tests:
 	python3 tools/check_consistency.py --tests
+
+goi-profile:
+	python3 tools/goi_profile.py $(if $(BASELINE),--baseline,--official --tests)
 
 sample:
 	@test -n "$(SEED)" || (echo 'usage: make sample <id> SEED=$$(python3 -c "import secrets; print(secrets.randbelow(10**8))")'; \

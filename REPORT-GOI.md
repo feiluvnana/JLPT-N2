@@ -2,6 +2,18 @@
 
 Date: 2026-08-21 (measurements run 2026-08-20). Read-only analysis; nothing on disk was changed.
 
+> **Status, 2026-08-21 — partly consumed.** The pipeline half of the plan has
+> landed: `tools/goi_profile.py` + `make goi-profile` (Phase 1), every rule
+> change in Phase 2, ten gate lines in Phase 3, and the F9 repair on
+> `20260813_2`. F10's three numbers were re-measured and the docs edited to what
+> the script prints; §D2's proposed 10 % longest-key floor was **refuted** by
+> that measurement (six official sittings run 0 %). The per-paper repairs
+> (Phase 5 tiers A–C) and Phase 7's book extracts are **not** done — the queue
+> is `qa/goi-remediation-report.md` and the gate's own grandfather sets. Numbers
+> in the findings below are the audit's original parse; where this report and
+> `goi_profile.py` differ (coverage 98.9 % vs 96.9 %, and the register
+> classifier), **the script is the owner** (§D1).
+
 **Corpora actually opened**
 
 | Corpus | What was read | n |

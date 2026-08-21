@@ -106,6 +106,14 @@ CONTRACTION_RE = _LINT_DRAFT.CONTRACTION_RE
 # module is loaded once here and both use the same functions.
 SAMPLE_ITEMS = load(".agents/exam-blueprint/scripts/sample_items.py")
 
+# 文字・語彙 measurement, owned by one module and shared with the docs
+# (REPORT-GOI.md §D1). Every number the 問題1–6 checks below threshold against is
+# printed by `python3 tools/goi_profile.py --baseline`; this file owns the
+# THRESHOLDS and nothing else. Three of the numbers that used to live in prose
+# here and in `official_calibration.md` could not be reproduced when someone
+# finally re-measured them — that is the defect class this seam removes.
+GOI = load("tools/goi_profile.py")
+
 
 def check(name: str, ok: bool, detail: str = "") -> bool:
     print(f"  {'ok  ' if ok else 'FAIL'}  {name}" + (f" — {detail}" if detail and not ok else ""))
@@ -2521,52 +2529,6 @@ def check_mondai7_option_form_reuse(test_id: str, opts: dict[int, list[str]]):
     check(name, not maximal, detail)
 
 
-P5_ITEMS = range(21, 26)
-
-
-def check_mondai5_option_reuse(test_id: str, opts: dict[int, list[str]]):
-    """No word may be printed in two 問題5 items' option sets.
-
-    THE RULE (moji-goi.md §問題5): the twenty options of one 問題5 are twenty
-    DIFFERENT words. Measured across the five current-format official 問題5
-    sections (80 options, 7/2023-12/2025), the repeat count is **zero**.
-
-    THE INCIDENT (qa-report-20260819_1-round3 R3-S4): `20260819_1` keyed
-    「わずかに」 at 問題5-21 and printed it as a distractor at 問題5-23. Round 2 saw
-    the observation and rejected it on the correct ground that no rule existed;
-    round 3 measured the archive and filed the rule. The harm is one-directional
-    and specific: a candidate who is sure of 21 has been handed an elimination at
-    23 for free, from the paper rather than from the language.
-
-    FOUNDING-CASE MEASUREMENT, run on the pre-fix revision before this landed:
-    `20260819_1: 「わずかに」x2 (問21 key / 問23 distractor)` — the only line the
-    check produces on any paper on disk. Re-run over all 14 papers 2026-08-20:
-    every other id is clean at 20 distinct options, so no id is grandfathered and
-    the rule re-classifies no shipped work. 20260819_1 was repaired the same day
-    (問題5-23's distractor 「わずかに」 -> 「多少」, same functional category, key
-    untouched), so the corpus now reads 14/14 clean.
-
-    THE REPAIR: change the DISTRACTOR, never the key — the key is half of a drawn
-    `paraphrase` pool entry and moving it silently un-tests the drawn item.
-    """
-    name = f"{test_id}: no word appears in two 問題5 items' options"
-    flat = [(q, normalize_option(o)) for q in P5_ITEMS for o in opts.get(q, [])]
-    flat = [(q, o) for q, o in flat if o]
-    if not flat:
-        return skip(name, "no 問題5 options parsed")
-    where: dict[str, list[int]] = {}
-    for q, o in flat:
-        where.setdefault(o, []).append(q)
-    dup = {o: qs for o, qs in where.items() if len(set(qs)) > 1}
-    check(name, not dup,
-          "; ".join(f"「{o}」x{len(qs)} (問"
-                    + ", 問".join(str(q) for q in sorted(set(qs))) + ")"
-                    for o, qs in sorted(dup.items()))
-          + " — official repeats none of its 80 options (moji-goi.md §問題5). "
-            "Replace the DISTRACTOR, not the key: the key is half of a drawn "
-            "`paraphrase` entry (qa-report-20260819_1-round3 R3-S4)")
-
-
 def check_mondai9_tags(name: str, key_bunpou: str):
     tags: dict[int, str | None] = {}
     for q, expl in re.findall(r"\|\s*(4[89]|5[01])\s*\|\s*[1-4]\s*\|\s*([^|]+)\|",
@@ -4099,16 +4061,33 @@ def check_grammar_cross_category_rotation(d, spec: dict, sample, pools: dict):
 # (`--reroll-one kanji_reading:0` seed 74013109, `kanji_reading:3` seed
 # 19524231, 4 訓読み -> 2). Clearing one of these means rerolling that paper's
 # 問題1 targets and re-authoring the items.
-MONDAI1_KUN_GRANDFATHERED = {"20260807_1", "20260810_1", "20260817_2"}
+# Over the cap: 20260807_1 (4), 20260810_1 (3), 20260817_2 (3). Under the floor:
+# 20260817_3 (0), added 2026-08-21 with the floor itself. Each id leaves when
+# that paper's `kanji_reading` slot is actually re-drawn (tier C).
+MONDAI1_KUN_GRANDFATHERED = {"20260807_1", "20260810_1", "20260817_2",
+                             "20260817_3"}
 MONDAI1_KUN_CAP = 2
+MONDAI1_KUN_FLOOR = SAMPLE_ITEMS.KUN_FLOOR["kanji_reading"]
 
 
 def check_mondai1_reading_type_mix(d, spec: dict, sample):
-    """At most 2 of the 5 問題1 targets may be 訓読み.
+    """1–2 of the 5 問題1 targets are 訓読み — a BAND, both bounds enforced.
 
-    THE RULE (moji-goi.md §問題1): official's current era runs 2/2/1/2/2 訓読み of
-    5 across 7/2023-12/2025 — never more than two — and moji-goi's own
-    calibration table counts 12 訓読み among 35 current-era items (34 %).
+    THE RULE (moji-goi.md §問題1): the five hand-classified current-era sittings
+    run 2/2/1/2/2 訓読み of 5 (7/2023-12/2025) — never more than two and never
+    fewer than one — and moji-goi's calibration table counts 12 訓読み among 35
+    current-era items (34 %). The archive cannot settle this by script: the
+    text-layer extract loses the underline, so no official 問題1 TARGET is
+    recoverable (`goi_profile.py` reports `target=None` by design). Five
+    sittings, hand-classified, is the honest evidence base — and it is a cap
+    plus a floor, not an assertion about all 31 sittings.
+
+    THE SECOND INCIDENT (REPORT-GOI §F5, 2026-08-21): with only a ceiling,
+    `20260817_3` shipped **0 of 5** 訓読み — five on-reading compounds, no native
+    word — and this check printed `ok`. A one-sided rule reliably produces the
+    opposite monoculture: the cap exists because a 訓読み-heavy paper stops
+    exercising the 清濁/長短 grid, and a paper with zero 訓読み stops exercising
+    word recognition, which is the other half of what 問題1 measures.
 
     THE INCIDENT (qa-report-20260819_1 F3): `20260819_1` shipped **4 of 5**
     訓読み (半ば/情け/湯/常に). The consequence is not cosmetic — the 2x2
@@ -4130,19 +4109,21 @@ def check_mondai1_reading_type_mix(d, spec: dict, sample):
     if not xs:
         return skip(f"{d.name}: 問題1 訓読み/音読み mix", "no kanji_reading draw")
     kun = [pool_entry_text(x) for x in xs if sample.is_kun_target(x)]
-    name = (f"{d.name}: 問題1 訓読み mix ({len(kun)} of {len(xs)}, "
-            f"cap {MONDAI1_KUN_CAP})")
-    detail = (f"訓読み {len(kun)} of {len(xs)} ({'/'.join(kun)}) — official runs "
-              f"2/2/1/2/2 of 5 over 7/2023-12/2025 and never exceeds "
-              f"{MONDAI1_KUN_CAP}. Above the cap the section stops testing the "
-              f"2x2 on-reading grid, which official runs in 3-4 of 5 slots. "
+    name = (f"{d.name}: 問題1 訓読み mix ({len(kun)} of {len(xs)}, band "
+            f"{MONDAI1_KUN_FLOOR}-{MONDAI1_KUN_CAP})")
+    detail = (f"訓読み {len(kun)} of {len(xs)} ({'/'.join(kun) or 'none'}) — the "
+              f"five hand-classified current-era sittings run 2/2/1/2/2 of 5, "
+              f"i.e. never more than {MONDAI1_KUN_CAP} and never fewer than "
+              f"{MONDAI1_KUN_FLOOR}. Above the cap the section stops testing the "
+              f"2x2 on-reading grid (official runs it in 3-4 of 5 slots); at "
+              f"zero it stops testing word recognition at all. "
               f"`--reroll-one kanji_reading:<index>` with a fresh RNG seed, "
               f"never a hand substitution (moji-goi.md §問題1; "
-              f"qa-report-20260819_1 F3)")
-    over = len(kun) > MONDAI1_KUN_CAP
+              f"qa-report-20260819_1 F3; REPORT-GOI §F5)")
+    outside = not MONDAI1_KUN_FLOOR <= len(kun) <= MONDAI1_KUN_CAP
     if d.name in MONDAI1_KUN_GRANDFATHERED:
-        return warn(name, not over, detail + GRANDFATHER_NOTE)
-    check(name, not over, detail)
+        return warn(name, not outside, detail + GRANDFATHER_NOTE)
+    check(name, not outside, detail)
 
 
 # `word_formation` entries notate the affix's SIDE: `X〜(例)` is a prefix and
@@ -5336,6 +5317,356 @@ def check_moji4_blank_stems(name: str, gt: str, keys: dict[int, int],
           "; ".join(missing + leaking) + " — the 問題4 instruction asks for the "
           "best word to put in （　）; a stem that prints the blank's answer is "
           "self-answering (question-authoring 問題4)")
+
+
+# ---------------------------------------------------------------------------
+# 文字・語彙 stems and composition (REPORT-GOI.md §F1–F3, §F5–F7, §F9)
+#
+# House style, and the reason these arrived together: every threshold below is
+# the ARCHIVE's own envelope as `tools/goi_profile.py` measures it (954 of 964
+# items, 98.9%), FAIL sits outside the whole 31-sitting range and WARN outside
+# the 7 current-era sittings, and every paper on disk that breaches one is
+# named. The sets are a QUEUE, not an amnesty: an id leaves only when that
+# paper is actually repaired, and `moji-goi.md` names them too.
+#
+# Why they did not exist before: `moji-goi.md` specified option SETS in
+# exhaustive detail and said nothing about the stem, so the four findings that
+# turned 問題1/2/5 from a sentence into a passage (median 29 chars against the
+# archive's 15–21.5, 7% comma-free against 73%, です・ます gone, an institution as
+# the actor at 3× the archive's rate) were invisible to every gate and to four
+# rounds of fresh-eyes QA. One authoring habit, four measures, one repair pass.
+MOJI_STEM_MEDIAN_FAIL = 22       # archive per-paper max 21.5 (cur 17.5)
+MOJI_STEM_MEDIAN_WARN = 18       # archive per-paper median 18, cur max 17.5
+MOJI_COMMA_FREE_FAIL = 0.45      # archive per-paper min 47% (cur 60%)
+MOJI_COMMA_FREE_WARN = 0.60
+MOJI_POLITE_FAIL = 2             # archive 2–11 of ~25 stems (cur 4–8)
+MOJI_POLITE_WARN = 4
+MOJI_INSTITUTION_FAIL = 7        # archive 0–7 of 25 (cur 0–3)
+MOJI_INSTITUTION_WARN = 3
+MOJI4_MEDIAN_FAIL = 37           # archive per-paper median 19–37 (cur 26–34)
+MOJI4_MEDIAN_WARN = 34
+MOJI4_STEM_MAX = 47              # longest single official 問題4 stem (cur 44)
+MOJI2_COMPOUND_CAP = 3           # bare-2-kanji items, archive 1–3 in 31 of 31
+MOJI2_WAGO_FLOOR = 1             # 和語 items, archive 1–3 in 31 of 31
+
+MOJI_STEM_GRANDFATHERED = {
+    "20260807_1", "20260810_2", "20260811_1", "20260812_1", "20260812_2",
+    "20260813_1", "20260813_2", "20260814_1", "20260817_1", "20260817_2",
+    "20260817_3", "20260818_1", "20260819_1",
+}   # every paper but 20260810_1 (median 21, 60% comma-free — the only compliant one)
+MOJI_REGISTER_GRANDFATHERED = {
+    "20260807_1", "20260810_2", "20260811_1", "20260812_2", "20260813_2",
+    "20260814_1", "20260817_1", "20260817_2", "20260819_1",
+}   # 8 on the です・ます floor + 20260810_2 on the institution-actor ceiling
+MOJI4_STEM_GRANDFATHERED = {
+    "20260810_1", "20260810_2", "20260811_1", "20260813_2", "20260817_2",
+}   # median >37 and/or one stem >47; 20260811_1's median is 64 against an
+    # archive maximum SINGLE stem of 47
+MOJI2_COMPOSITION_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260812_1", "20260812_2",
+    "20260813_1", "20260814_1", "20260817_1", "20260817_2", "20260818_1",
+    "20260819_1",
+}   # six of these ship ZERO 和語 items; eleven ship 4–5 bare compounds
+MOJI_OPTION_REUSE_GRANDFATHERED = {
+    "20260810_1", "20260810_2", "20260811_1", "20260813_1",
+}   # 問題3 affix repeats (半 twice over, 総, 各, 性) — tier A, one distractor each
+
+
+def _goi_paper(gt: str, test_id: str) -> list[dict]:
+    """This paper's 問題1–6 items, parsed by the module the docs measure with."""
+    return GOI.generated_items(gt, test_id)
+
+
+def check_moji_stem_shape(test_id: str, gt: str):
+    """問題1/2/5 stems stay one clause of the archive's length (F1).
+
+    THE RULE (moji-goi.md Part 0 §"The stem"): per-paper median 15–22 JP chars,
+    author to 17, and at least 45% (author 60%) of the fifteen stems carry no
+    「、」. 問題1 tests a reading and 問題5 a synonym; every character beyond what
+    disambiguates the target is reading load charged to a vocabulary item.
+
+    THE MEASUREMENT (2026-08-21): official runs a per-paper median of 15–21.5
+    (current era 15–17.5) and 47–93% comma-free (cur 60–93%). All fourteen
+    papers on disk ran 21–32 and 0–60%, six of them with no comma-free 問題1/2/5
+    stem at all — a candidate who cannot parse 「市は来年度の予算を見直し、」 lost a
+    文字・語彙 mark for a 読解 reason, systematically.
+
+    THE REPAIR: rewrite the stem (tier B — the key does not move, but every
+    詳細解説 cell quoting the stem and every translation of it does).
+    """
+    m = GOI.measures([r for r in _goi_paper(gt, test_id) if r["mondai"] in (1, 2, 5)])
+    if "stem_125" not in m:
+        return skip(f"{test_id}: 問題1/2/5 stem shape", "no 問題1/2/5 stems parsed")
+    med, cf = m["stem_125"]["median"], m["comma_free"]
+    name = (f"{test_id}: 問題1/2/5 stem shape (median {med:g} chars, "
+            f"{cf:.0%} comma-free)")
+    detail = (f"median {med:g} JP chars (band 15–{MOJI_STEM_MEDIAN_FAIL}, author "
+              f"17) and {cf:.0%} of the stems comma-free (floor "
+              f"{MOJI_COMMA_FREE_FAIL:.0%}, author {MOJI_COMMA_FREE_WARN:.0%}) — "
+              f"official runs 15–21.5 and 47–93% over 31 sittings "
+              f"(`tools/goi_profile.py --baseline`). One clause, one actor: "
+              f"a two-clause setup moves difficulty out of 文字・語彙 and into "
+              f"読解 (moji-goi.md Part 0 §\"The stem\")")
+    bad = med > MOJI_STEM_MEDIAN_FAIL or cf < MOJI_COMMA_FREE_FAIL
+    if test_id in MOJI_STEM_GRANDFATHERED:
+        return warn(name, not bad, detail + GRANDFATHER_NOTE)
+    if not check(name, not bad, detail):
+        return
+    warn(f"{test_id}: 問題1/2/5 stems inside the CURRENT era too",
+         med <= MOJI_STEM_MEDIAN_WARN and cf >= MOJI_COMMA_FREE_WARN,
+         f"median {med:g} (cur 15–17.5), {cf:.0%} comma-free (cur 60–93%)")
+
+
+def check_moji_stem_register(test_id: str, gt: str):
+    """問題1–5 stems keep official's conversational register (F2, F7).
+
+    THE RULE (moji-goi.md Part 0 §"The stem"): of the 25 問題1–5 stems, at least
+    2 (author 7) carry です・ます, at least one is first-person, and at most 7
+    (author ≤2) have an INSTITUTION as the sentence's actor.
+
+    THE MEASUREMENT (2026-08-21): official runs 2–11 polite stems per sitting
+    (cur 4–8) and 0–7 institution-actor stems (cur 0–3). Ours ran 0–4 polite —
+    six papers at ZERO, 問題1 sentence-final polite 0 of 70 against official's
+    31% — and 0–9 institutional. 問題4 is the control: official writes it plain
+    (8–12% polite) and ours matches, so this is not "official is polite", it is
+    that 問題1/2/5's register never made it into our papers.
+
+    CLASSIFIER LIMIT, which is why the register half is a WARN and the polite
+    half a FAIL: politeness is a closed set of six suffixes, but the actor
+    classes are two flat token lists (`goi_profile.PERSONAL` /
+    `.INSTITUTIONAL`) and they will mis-bucket edge cases. Workplace SCENES are
+    fine and run at official's own rate; what is capped is the institution as
+    the sentence's subject.
+    """
+    rows = [r for r in _goi_paper(gt, test_id) if 1 <= r["mondai"] <= 5]
+    m = GOI.measures(rows)
+    if "polite" not in m:
+        return skip(f"{test_id}: 問題1–5 stem register", "no stems parsed")
+    n = m["n_15"]
+    polite, inst = round(m["polite"] * n), m["n_institutional"]
+    fp = round(m["first_person"] * n)
+    name = (f"{test_id}: 問題1–5 stem register ({polite} polite, {fp} "
+            f"first-person, {inst} institution-actor of {n})")
+    detail = (f"{polite} of {n} stems in です・ます (floor {MOJI_POLITE_FAIL}, "
+              f"author 7; official 2–11, cur 4–8), {fp} first-person (author "
+              f"≥1; official 0–4), {inst} with an institution as the actor "
+              f"(ceiling {MOJI_INSTITUTION_FAIL}, author ≤2; official 0–7, cur "
+              f"0–3) — an institutional actor needs a modifier clause to be "
+              f"specific and does not take です・ます, so this row and the stem "
+              f"length are ONE rewrite (moji-goi.md Part 0 §\"The stem\")")
+    bad = polite < MOJI_POLITE_FAIL or inst > MOJI_INSTITUTION_FAIL
+    if test_id in MOJI_REGISTER_GRANDFATHERED:
+        return warn(name, not bad, detail + GRANDFATHER_NOTE)
+    if not check(name, not bad, detail):
+        return
+    warn(f"{test_id}: 問題1–5 register inside the CURRENT era too",
+         polite >= MOJI_POLITE_WARN and inst <= MOJI_INSTITUTION_WARN and fp >= 1,
+         f"{polite} polite (cur 4–8), {inst} institution-actor (cur 0–3), "
+         f"{fp} first-person (cur ≥1)")
+
+
+def check_moji4_stem_band(test_id: str, gt: str):
+    """問題4 stems stay inside the archive's own length band (F4).
+
+    THE RULE (moji-goi.md Part 0 §"The stem", last row): per-paper median 26–34,
+    author 30, and no single stem past 47. 問題4 IS officially the long section —
+    one comma, a scene — so the finding is not that our stems are long but where
+    they end up.
+
+    THE INCIDENT: `20260811_1`'s median 問題4 stem is 64 JP chars, i.e. 17 longer
+    than the LONGEST SINGLE 問題4 stem in 31 official sittings, and its longest
+    is 75. Seven papers sit above the archive's per-paper ceiling.
+
+    The rule pulls against §"A time/date/quantity key", which requires the stem
+    to fix every axis that excludes a distractor: satisfy both by fixing the
+    axes in the fewest clauses that do so. A paper that hits the band by
+    dropping the axis-fixing clause has traded a measured defect for an
+    unmeasured one.
+    """
+    rows = [r for r in _goi_paper(gt, test_id) if r["mondai"] == 4]
+    m = GOI.measures(rows)
+    if "stem_4" not in m:
+        return skip(f"{test_id}: 問題4 stem band", "no 問題4 stems parsed")
+    med, mx = m["stem_4"]["median"], m["stem_4"]["max"]
+    name = f"{test_id}: 問題4 stem band (median {med:g}, longest {mx})"
+    detail = (f"median {med:g} (ceiling {MOJI4_MEDIAN_FAIL}, author 30) and "
+              f"longest {mx} (ceiling {MOJI4_STEM_MAX}) — official runs a "
+              f"per-paper median of 19–37 (cur 26–34) and its longest single "
+              f"stem anywhere is 47 (cur 44). A 60+-char 文脈規定 stem is a small "
+              f"reading passage whose distractor exclusions no candidate holds "
+              f"in working memory (moji-goi.md Part 0 §\"The stem\")")
+    bad = med > MOJI4_MEDIAN_FAIL or mx > MOJI4_STEM_MAX
+    if test_id in MOJI4_STEM_GRANDFATHERED:
+        return warn(name, not bad, detail + GRANDFATHER_NOTE)
+    if not check(name, not bad, detail):
+        return
+    warn(f"{test_id}: 問題4 stems inside the CURRENT era too",
+         med <= MOJI4_MEDIAN_WARN and mx <= 44,
+         f"median {med:g} (cur 26–34), longest {mx} (cur max 44)")
+
+
+def check_moji2_composition(test_id: str, gt: str):
+    """問題2 runs BOTH branches: ≥1 和語 item, ≤3 bare-compound items (F3).
+
+    THE RULE (moji-goi.md §問題2 composition): official ships 1–3 和語 targets
+    with printed okurigana (median 2) and 1–3 bare 2-kanji compounds (median 3)
+    in EVERY ONE of 31 sittings. The two test different things — a grid item
+    asks which of two lookalike kanji spells an on-reading, a 和語 item asks
+    which kanji writes a native word given its okurigana.
+
+    THE MEASUREMENT (2026-08-21): our papers ran 0–2 和語 (SIX at zero) and 2–5
+    bare compounds (eleven at 4 or 5). 問題2 had become one puzzle five times,
+    and the option-length histogram never left 2–4 characters where official
+    runs 1–6.
+
+    DRAW-TIME, not writing: the `orthography` entry decides the branch, so
+    `sample_wago_floor()` enforces this during the draw (sampling the 和語 count
+    from the archive's own histogram) and this check is the backstop. Drawn and
+    printed counts agree on all 14 papers, so reading the printed options here
+    is equivalent to reading the spec — and it also catches a compound grid
+    authored onto a 和語 entry. THE REPAIR is a re-draw (tier C), never a
+    hand-substituted target.
+    """
+    rows = [r for r in _goi_paper(gt, test_id) if r["mondai"] == 2]
+    if not rows:
+        return skip(f"{test_id}: 問題2 composition", "no 問題2 items parsed")
+    m = GOI.measures(rows)
+    wago, comp = m["wago_2"], m["compound_2"]
+    name = (f"{test_id}: 問題2 composition ({wago} 和語 / {comp} bare-compound "
+            f"of {m['n_2']})")
+    detail = (f"{wago} 和語 item(s) (floor {MOJI2_WAGO_FLOOR}, author 2) and "
+              f"{comp} all-bare-2-kanji item(s) (ceiling {MOJI2_COMPOUND_CAP}) "
+              f"— official runs 1–3 of each in 31 of 31 sittings. Repair with "
+              f"`sample_items.py --reroll orthography` (or `--reroll-one "
+              f"orthography:<index>`) and a fresh seed; `sample_wago_floor()` "
+              f"stops it happening again at draw time (moji-goi.md §問題2)")
+    bad = wago < MOJI2_WAGO_FLOOR or comp > MOJI2_COMPOUND_CAP
+    if test_id in MOJI2_COMPOSITION_GRANDFATHERED:
+        return warn(name, not bad, detail + GRANDFATHER_NOTE)
+    check(name, not bad, detail)
+
+
+def check_moji1_okurigana_exposure(test_id: str, gt: str):
+    """Whatever kana tail the 問題1 bold span prints, all four options carry it.
+
+    THE RULE (moji-goi.md §問題1): the underline covers the whole word including
+    its tail, so the tail is visibly printed — and an option that does not carry
+    it is eliminated on sight. This is a RELATION between the printed span and
+    the option field; `moji-goi.md` had stated it as a property of the options,
+    and no gate had ever compared the two.
+
+    THE INCIDENT (REPORT-GOI §F9): `20260813_2` 問題1-5 printed 「**頻繁に**」 and
+    offered ひんはん/びんぱん/びんはん/ひんぱん — the item asks for the reading of 頻繁に
+    and every available answer reads 頻繁, so a candidate who reasons correctly
+    finds no correct option. 24 of our 25 okurigana-bearing 問題1 targets comply;
+    the compliant shape is `20260819_1`'s 「**常に**」 against
+    すでに/ただちに/しだいに/つねに.
+
+    THE REPAIR: append the tail to all four options (tier A), or re-draw the
+    target if the tail makes an option a non-word (tier C). NOT exempted: this
+    is a well-formedness defect, not a calibration one.
+    """
+    bad = []
+    for r in _goi_paper(gt, test_id):
+        if r["mondai"] != 1:
+            continue
+        tail = GOI.kana_tail(r["target"] or "")
+        if tail and not all(o.endswith(tail) for o in r["options"]):
+            bad.append(f"問題1-{r['no']}「{r['target']}」 tail 「{tail}」 vs "
+                       f"{r['options']}")
+    check(f"{test_id}: every 問題1 option carries the printed okurigana",
+          not bad,
+          "; ".join(bad) + " — the underline prints the tail, so an option "
+          "without it is eliminated on sight, and an item where NO option "
+          "carries it has no correct answer (moji-goi.md §問題1; REPORT-GOI §F9)")
+
+
+def check_moji_option_reuse(test_id: str, gt: str):
+    """No word may be printed in two items' option sets of the SAME 大問.
+
+    THE RULE (moji-goi.md Part 0 §"N options, N different words"): measured
+    2026-08-21 over 31 of 31 sittings and every 大問, official repeats an option
+    inside a 大問 ZERO times. With 12–20 printed slots a repeat tells the
+    candidate that the repeated word is not the key of at least one item it
+    appears in — elimination information from the paper, not from the language.
+
+    THE INCIDENTS: `20260819_1` keyed 「わずかに」 at 問題5-21 and printed it as a
+    distractor at 問題5-23 (`qa-report-20260819_1-round3` R3-S4) — that is why
+    this check existed for 問題5 only. Re-run over 問題1–6 it also finds four
+    papers repeating a 問題3 affix (「半」 in two of them, plus 総/各/性), and 「半」
+    is printed as a 問題3 option in six of our fourteen papers (REPORT-GOI §F6).
+    A rule written for one 大問 and gated for one 大問 missed the 大問 where the
+    defect actually lived.
+
+    THE REPAIR: change the DISTRACTOR, never the key — the key is half of a
+    drawn pool entry and moving it silently un-tests the drawn item. The shipped
+    fix was 問題5-23 「わずかに」→「多少」, same functional category.
+    """
+    rows = _goi_paper(gt, test_id)
+    if not rows:
+        return skip(f"{test_id}: no option repeats inside a 大問", "no items parsed")
+    dup = GOI.option_reuse(rows)
+    name = f"{test_id}: no word appears twice in one 大問's options"
+    detail = ("; ".join(f"問題{k}: " + ", ".join(f"「{o}」" for o in v)
+                        for k, v in sorted(dup.items()))
+              + " — official repeats none, in any 大問, in 31 of 31 sittings. "
+                "Replace the DISTRACTOR, not the key (moji-goi.md Part 0 "
+                "§\"N options, N different words\")")
+    if test_id in MOJI_OPTION_REUSE_GRANDFATHERED:
+        return warn(name, not dup, detail + GRANDFATHER_NOTE)
+    check(name, not dup, detail)
+
+
+def check_legacy_item_repeats(sample):
+    """WARN, by name: every drawn item repeated inside its own cooldown window.
+
+    THE RULE (exam-blueprint "Rotation model"): `cooldown_for()` scales each
+    pool's window to its own depth — `orthography` 47 draws, `usage` 41,
+    `paraphrase` 26, `context_words` 195, `kanji_reading` 303.
+
+    WHY THIS IS A LIST AND NOT A FAIL: the nine papers drawn before the gate
+    checked each category against its OWN window carry `{"legacy": true}` in
+    their spec, and re-sampling an already-authored paper is explicitly banned.
+    Nothing is wrong with that exemption — what was wrong is that the skip line
+    was where the list stopped existing, so nobody could see the queue while a
+    learner taking `20260811_1` then `20260813_1` met 「宣伝する」 as a 問題6
+    headword twice (REPORT-GOI §F8). A grandfather set is a queue, not an
+    amnesty, so the queue is printed: eleven items over nine paper pairs, 3–5
+    draws apart against windows of 26–47.
+
+    An item leaves this list when its paper is re-drawn (tier C:
+    `--reroll-one <cat>:<index>`, fresh seed, spec + ledger updated).
+    """
+    print("\n文字・語彙/語彙 item rotation — live repeats inside each pool's own window")
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    if not pools_path.is_file():
+        return skip("no drawn item repeats inside its cooldown window",
+                    "no pools.json")
+    pools = json.loads(pools_path.read_text(encoding="utf-8"))
+    hist = ledger_history()
+    hits = []
+    for cat in ("kanji_reading", "orthography", "word_formation",
+                "context_words", "paraphrase", "usage"):
+        cool = sample.cooldown_for(cat, len(pools.get(cat, [])))
+        seen: dict[str, tuple[int, str]] = {}
+        for i, entry in enumerate(hist):
+            for x in (entry.get("items") or {}).get(cat) or []:
+                t = sample.item_text(x)
+                prev = seen.get(t)
+                if prev and i - prev[0] < cool:
+                    hits.append(f"{cat} 「{t}」: {prev[1]} & "
+                                f"{entry.get('test_id')} ({i - prev[0]} draws "
+                                f"apart, cooldown {cool})")
+                seen[t] = (i, entry.get("test_id", "?"))
+    warn(f"no drawn 文字・語彙 item repeats inside its own cooldown window "
+         f"({len(hits)} live repeat(s) queued for a re-draw)",
+         not hits,
+         " ⁄ ".join(hits) + " — all inside the legacy window (specs marked "
+         "`legacy: true`, drawn before each category was checked against its "
+         "OWN cooldown_for() window). Not a FAIL, because re-sampling an "
+         "already-authored paper is banned; the queue shrinks one "
+         "`--reroll-one <cat>:<index>` at a time (exam-blueprint 'Rotation "
+         "model'; REPORT-GOI §F8)")
 
 
 _NUMERAL_DIGIT = {"〇": 0, "一": 1, "二": 2, "三": 3, "四": 4,
@@ -6990,14 +7321,24 @@ def check_moji_longest_key_rate(test_id: str, gt: str, keys: dict[int, int], bi)
     if n == 0:
         return skip(f"{test_id}: 問題5/6 longest-key rate", "no length-varying items")
     rate = n_longest / n
+    # Baseline corrected 2026-08-21 (REPORT-GOI §F10.2): this message said
+    # "official is 15% (問題5, n=123) and 16% (問題6, n=124)". Re-measured with
+    # the same definition by `tools/goi_profile.py`, official is 19% in BOTH
+    # (問題5 22/116, 問題6 29/151). No paper's verdict changes — the ceiling is
+    # untouched — but it is the number an author calibrates to. There is
+    # deliberately NO floor: six official sittings run 0%, so a paper keying no
+    # long option is an ordinary official shape, and the 10% floor the audit
+    # proposed is refuted by its own corpus.
     check(f"{test_id}: 問題5/6 key is not the longest option "
-          f"({n_longest}/{n} = {rate:.0%}, official 15–16%, target <= 30%)",
+          f"({n_longest}/{n} = {rate:.0%}, official 19%, target <= 30%)",
           rate <= MOJI_LONGEST_KEY_MAX,
           f"{n_longest} of {n} length-varying 問題5/6 items ({rate:.0%}) key the uniquely "
           f"longest option: {', '.join(worst[:6])}{' …' if len(worst) > 6 else ''} — "
-          f"official is 15% (問題5, n=123) and 16% (問題6, n=124) over 31 sittings. In 問題5 "
-          f"this is usually a PHRASE key against bare single-word distractors; give all "
-          f"four the same grain (question-authoring/references/moji-goi.md)")
+          f"official is 19% in both 問題5 (22/116) and 問題6 (29/151) over 31 sittings, "
+          f"0–50% per paper (current era 11–22%, max 22%, which is what the 30% "
+          f"ceiling is calibrated to). In 問題5 a breach is usually a PHRASE key against "
+          f"bare single-word distractors; give all four the same grain "
+          f"(question-authoring/references/moji-goi.md §問題5)")
 
 
 def check_choukai_judgment_mix(test_id: str, st: str, ct: str, m, bi):
@@ -7491,7 +7832,12 @@ def check_tests():
         if origin == "generated":
             check_moji4_option_set_level(d.name, opts)
             check_moji2_option_glyphs(d.name, gt, opts, bi)
-            check_mondai5_option_reuse(d.name, opts)
+            check_moji_option_reuse(d.name, gt)
+            check_moji_stem_shape(d.name, gt)
+            check_moji_stem_register(d.name, gt)
+            check_moji4_stem_band(d.name, gt)
+            check_moji2_composition(d.name, gt)
+            check_moji1_okurigana_exposure(d.name, gt)
         st_text = (d / "聴解スクリプト.txt").read_text(encoding="utf-8") if (d / "聴解スクリプト.txt").is_file() else ""
         check_banned_collocations(d, gt, ct, st_text, origin)
         check_answer_positions(d, keys, ck, g)
@@ -7840,6 +8186,7 @@ def main():
         check_ledger_spec_agreement()
         check_harvest_hygiene()
         check_harvest_provenance()
+        check_legacy_item_repeats(SAMPLE_ITEMS)
         check_topics_themes()
         check_theme_repeat_cross_test()
         check_slot_theme_repeat()

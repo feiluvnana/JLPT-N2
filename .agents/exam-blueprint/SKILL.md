@@ -201,17 +201,36 @@ touch one: correct the entry, and carry the corrected string into every
 `test_spec.json`/`logs/ledger.json` row that recorded it, so
 `check_draw_provenance()` still resolves.
 
-## `paraphrase`/`usage` katakana rate is capped, not left to the pool's composition
+## Composition is drawn, not authored — three shapes `draw()` enforces
 
-The official archive draws a katakana HEADWORD in only 3/35 問題5 items and
-1/35 問題6 items (`official_calibration.md` §12) — far below what a plain
-`rng.sample()` would reproduce from the pool's own katakana share. `draw()`
-routes `paraphrase`/`usage` through `sample_katakana_capped()` instead:
-`n` independent Bernoulli(`KATAKANA_TARGET_RATE[name]`) trials decide how many
-katakana slots the draw gets (capped at `KATAKANA_CAP[name]`), filled from
-the katakana subset, the rest from non-katakana. **Do not derive the target
-rate from the pool's own katakana share** — that's the composition being
-corrected for; re-derive only by re-measuring the archive (§12).
+**Most 文字・語彙 quotas are properties of the DRAW, not writing choices.** The
+和語 share of 問題2, the 訓読み count of 問題1 and the katakana rate of 問題5/6 are
+all decided before an author writes a word, so each is enforced inside `draw()`
+and re-checked by the gate — never left to the pool's own composition, which is
+the thing being corrected for. **Never re-derive a target from
+`len(subset)/len(pool)`; re-measure the archive** (`official_calibration.md`
+§12/§14, `tools/goi_profile.py --baseline`).
+
+| category | helper | rule | archive |
+|---|---|---|---|
+| `paraphrase`, `usage` | `sample_katakana_capped()` | `n` Bernoulli(`KATAKANA_TARGET_RATE`) trials pick the katakana slots, capped at `KATAKANA_CAP` | katakana headword in 3/35 問題5 and 1/35 問題6 items |
+| `kanji_reading` | `sample_kun_capped()` | 訓読み count inside `KUN_FLOOR`–`KUN_CAP` = **1–2 of 5**, both bounds, `--reroll-one` included | five hand-classified sittings run 2/2/1/2/2 |
+| `orthography` | `sample_wago_floor()` | 和語 count drawn from the archive's own histogram `WAGO_DIST` (floor `WAGO_FLOOR`), bare 2-kanji compounds ≤ `COMPOUND_CAP` = 3 | 和語 1–3 and compounds 1–3 in **31 of 31** sittings |
+
+Two things the 2026-08-21 additions record, because both were shipped defects:
+
+- **A one-sided rule produces the opposite monoculture.** `KUN_CAP` alone let a
+  paper draw ZERO 訓読み (`20260817_3`) with the gate printing `ok`, so the cap
+  became a band. Every per-paper composition rule here is now two-ended
+  (REPORT-GOI §F5/§D2).
+- **A fixed quota reproduces a shape the archive varies.** `sample_wago_floor()`
+  samples the 和語 count from the archive's histogram (1:1, 2:23, 3:7 sittings)
+  rather than always drawing the median 2 — the same reasoning that made the
+  katakana cap Bernoulli rather than a fixed one-per-paper.
+
+`is_kun_target()`, `is_wago_orthography()` and `is_bare_compound()` are the
+classifiers, and `tools/check_consistency.py` imports them, so the sampler and
+the gate can never disagree about what a branch is.
 
 **Growth history, briefly:** both pools were grown and re-curated across
 several 2026-08-11 passes — legacy 2級-era katakana dumps and off-domain
@@ -481,6 +500,17 @@ flat ledger migrates automatically.
   `head()` — an inflected realization or an off-pool substitute cools
   nothing and can never rotate. Repair by re-sampling, never by editing
   either file to match the paper.
+- **The legacy exemption is a QUEUE, and the queue is PRINTED.** The nine specs
+  marked `{"legacy": true}` were drawn before each category was checked against
+  its own `cooldown_for()` window, and re-sampling an already-authored paper is
+  banned — so they keep their skip. What is not allowed is the skip being where
+  the list stops existing: `check_legacy_item_repeats()` WARNs one line per live
+  repeat, by item and by paper pair, and the list only shrinks when a paper is
+  actually re-drawn. As of 2026-08-21 it holds **eleven items over nine paper
+  pairs, 3–5 draws apart against windows of 26–47** (`orthography` 歌謡/果実/
+  努める/系統/育児, `usage` 持参/大まか/宣伝する, `paraphrase` あらかじめ/どなる,
+  `context_words` ええと) — 「宣伝する」 keys 問題6 in two papers a learner may take
+  back to back, which is what a hidden queue costs (REPORT-GOI §F8).
 
 ### A `grammar_p8` draw whose form is a general-purpose sentence pattern obliges a prose grep
 

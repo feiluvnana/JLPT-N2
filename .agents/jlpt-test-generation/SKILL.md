@@ -136,6 +136,11 @@ make scaffold-sections <id>        # -> pre-scaffolds tests/<id>/_sections/ temp
 ```
 
 - Author ONLY items in `test_spec.json`; keys go where `answer_positions` says.
+- **文字・語彙 stems are quota-bound too, not just its items** — 問題1/2/5 median
+  17 JP chars with ≥9 of 15 comma-free, ≥7 of the 25 問題1–5 stems in です・ます
+  with ≥1 first-person and ≤2 institution-actor stems, 問題4 median ≤30 and no
+  stem past 44 (`moji-goi.md` Part 0 §"The stem"). Fourteen papers missed all of
+  these before they were written down; `make check` now measures every one.
 - For 問題1 & 問題2 2×2 matrices, build the grid BY HAND against
   `moji-goi.md`, then CHECK it with
   `python3 tools/matrix_helper.py validate --reading <かな> <4 options>`.

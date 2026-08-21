@@ -100,6 +100,32 @@ KATAKANA_CAP = {"paraphrase": 1, "usage": 1}  # never observed 2 in one section
 # re-derive it from `pools.json`.
 KUN_TARGET_RATE = {"kanji_reading": 12 / 35}
 KUN_CAP = {"kanji_reading": 2}
+# ...and the FLOOR, added 2026-08-21 (REPORT-GOI.md §F5). A one-sided rule
+# produces the opposite monoculture: with only a ceiling, `20260817_3` drew 0 of
+# 5 訓読み and the gate printed `ok`. Five hand-classified sittings run 2/2/1/2/2,
+# minimum ONE — a paper testing five on-reading compounds stops testing word
+# recognition, which is the other half of what 問題1 measures. Both bounds are
+# enforced by `sample_kun_capped()` and re-checked by
+# `check_mondai1_reading_type_mix()`.
+KUN_FLOOR = {"kanji_reading": 1}
+
+# 問題2 composition, enforced during the draw by `sample_wago_floor()`
+# (REPORT-GOI.md §F3). Measured over 31 of 31 sittings: 1–3 of the five 問題2
+# items are 和語 targets with printed okurigana (median 2) and 1–3 are bare
+# 2-kanji compounds (median 3). Ours ran 0–2 和語 (six papers at ZERO) and 2–5
+# compounds (eleven at 4 or 5), because `moji-goi.md` taught the 2×2 component
+# grid in detail and never put a count on it — so 問題2 became one puzzle
+# repeated five times. This is a DRAW property, not a writing choice: the
+# `orthography` entry decides it. Drawn and printed counts agree on all 14
+# papers on disk, so the gate may read either.
+WAGO_FLOOR = {"orthography": 1}          # author to 2
+COMPOUND_CAP = {"orthography": 3}        # the archive's own ceiling, 31 of 31
+# The archive's OWN histogram of 和語 items per sitting (31 sittings: one paper
+# with 1, twenty-three with 2, seven with 3). The draw samples this instead of
+# fixing the count at the median, because a fixed quota reproduces a shape the
+# archive varies — the same reason `sample_katakana_capped()` runs Bernoulli
+# trials rather than forcing exactly one katakana headword.
+WAGO_DIST = {"orthography": {1: 1, 2: 23, 3: 7}}
 
 
 def is_katakana_headword(entry) -> bool:
@@ -214,6 +240,25 @@ def is_kun_target(entry) -> bool:
     return not on_segmentable(stem, len(ks))
 
 
+# --- 和語 / bare-compound classification of an `orthography` entry (F3) -----
+# One regex each on the entry's headword, shared by the sampler and the gate the
+# way `is_kun_target()` is: 問題2 prints the target in KANA and the options in
+# kanji, so what decides the branch is whether the WORD carries okurigana
+# (努める, 険しい, 計る → 和語) or is a bare 2-kanji compound (果実, 系統 → grid).
+_HIRAGANA = re.compile(r"[ぁ-ゟ]")
+
+
+def is_wago_orthography(entry) -> bool:
+    """True if an `orthography` headword carries okurigana/kana (a 和語 target)."""
+    return bool(_HIRAGANA.search(head(item_text(entry))))
+
+
+def is_bare_compound(entry) -> bool:
+    """True if an `orthography` headword is exactly two kanji and no kana."""
+    h = head(item_text(entry))
+    return len(h) == 2 and len(_KUN_KANJI.findall(h)) == 2
+
+
 def weighted_sample_no_replacement(rng: random.Random, items: list,
                                    weights: list[float], n: int) -> list:
     """Weighted sample of `n` items from `items`, no replacement.
@@ -275,21 +320,25 @@ def sample_katakana_capped(rng: random.Random, eligible: list, n: int,
 
 def sample_kun_capped(rng: random.Random, eligible: list, n: int,
                       target_rate: float, cap: int, name: str,
-                      already: int = 0, weight_fn=None) -> list:
-    """`n` entries whose 訓読み count matches the archive's mix, hard-capped.
+                      already: int = 0, weight_fn=None,
+                      floor: int = 0) -> list:
+    """`n` entries whose 訓読み count sits inside the archive's BAND.
 
     Same shape as `sample_katakana_capped()`, and for the same reason: the
     pool's own 訓読み share (31%) is close to the archive's (34%), so an
-    uncapped draw is usually fine and occasionally lands 3 or 4 of 5 — which
-    four papers did, with no gate able to see it (qa-report-20260819_1 F3).
+    unbounded draw is usually fine and occasionally lands 3 or 4 of 5 — which
+    four papers did, with no gate able to see it (qa-report-20260819_1 F3) — or
+    ZERO, which `20260817_3` did under the ceiling-only rule (REPORT-GOI §F5).
     `already` is how many 訓読み entries of this category the draw is KEEPING
-    (nonzero only on the `--reroll-one` path), so a one-entry redraw cannot
-    push the paper over the ceiling the full draw respects.
+    (nonzero only on the `--reroll-one` path), so a one-entry redraw can neither
+    push the paper over the ceiling nor leave it under the floor the full draw
+    respects.
     """
     budget = max(0, cap - already)
     kun = [e for e in eligible if is_kun_target(e)]
     plain = [e for e in eligible if not is_kun_target(e)]
     k = min(budget, len(kun), sum(rng.random() < target_rate for _ in range(n)))
+    k = max(k, min(budget, len(kun), max(0, floor - already)))
 
     def pick(pool: list, count: int) -> list:
         if count <= 0:
@@ -305,6 +354,60 @@ def sample_kun_capped(rng: random.Random, eligible: list, n: int,
               f"to an uncapped draw; grow the 音読み side of this pool")
         return pick(eligible, n)
     picked = pick(plain, n - k) + pick(kun, k)
+    rng.shuffle(picked)
+    return picked
+
+
+def sample_wago_floor(rng: random.Random, eligible: list, n: int, floor: int,
+                      compound_cap: int, name: str, kept: list | tuple = (),
+                      weight_fn=None, dist: dict | None = None) -> list:
+    """`n` `orthography` entries with at least `floor` 和語 targets and at most
+    `compound_cap` bare 2-kanji compounds (F3).
+
+    Unlike the katakana and 訓読み caps this is not a per-item rate — the archive
+    runs BOTH branches in every one of 31 sittings (和語 1–3, compounds 1–3) — so
+    the 和語 count is drawn from the archive's own histogram (`WAGO_DIST`) and the
+    compounds fill the rest up to their ceiling. `kept` is what a `--reroll-one`
+    is keeping, counted against both bounds.
+    """
+    wago = [e for e in eligible if is_wago_orthography(e)]
+    comp = [e for e in eligible if is_bare_compound(e)]
+    other = [e for e in eligible if e not in wago and e not in comp]
+    have_w = sum(1 for x in kept if is_wago_orthography(x))
+    have_c = sum(1 for x in kept if is_bare_compound(x))
+
+    def pick(pool: list, count: int) -> list:
+        if count <= 0 or not pool:
+            return []
+        count = min(count, len(pool))
+        if weight_fn:
+            return weighted_sample_no_replacement(
+                rng, pool, [weight_fn(e) for e in pool], count)
+        return rng.sample(pool, count)
+
+    hist = dist or {2: 1}
+    target = rng.choices(list(hist), weights=list(hist.values()))[0]
+    want_w = max(0, max(floor, target) - have_w)
+    if len(wago) < want_w:
+        print(f"  warning: pool '{name}' has too few 和語 entries "
+              f"({len(wago)}) to fill {want_w} of {n} slots — grow the "
+              f"okurigana side of this pool (moji-goi.md §問題2 composition)")
+        want_w = len(wago)
+    picked = pick(wago, want_w)
+    room_c = max(0, compound_cap - have_c)
+    rest = n - len(picked)
+    take_c = min(room_c, rest, len(comp))
+    picked += pick(comp, take_c)
+    rest = n - len(picked)
+    if rest > 0:
+        spare = [e for e in other + wago + comp if e not in picked]
+        # Never break the compound ceiling to fill the draw: prefer anything
+        # that is not a bare compound, and only then fall back.
+        first = [e for e in spare if not is_bare_compound(e)]
+        picked += pick(first, min(rest, len(first)))
+        rest = n - len(picked)
+        if rest > 0:
+            picked += pick([e for e in spare if e not in picked], rest)
     rng.shuffle(picked)
     return picked
 
@@ -1066,7 +1169,12 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
                 return sample_kun_capped(
                     rng, eligible, n, KUN_TARGET_RATE[name], KUN_CAP[name],
                     name, already=sum(1 for x in kept if is_kun_target(x)),
-                    weight_fn=weight), cool
+                    weight_fn=weight, floor=KUN_FLOOR.get(name, 0)), cool
+            if name in WAGO_FLOOR:
+                return sample_wago_floor(
+                    rng, eligible, n, WAGO_FLOOR[name], COMPOUND_CAP[name],
+                    name, kept=kept, weight_fn=weight,
+                    dist=WAGO_DIST.get(name)), cool
             return weighted_sample_no_replacement(
                 rng, eligible, [weight(x) for x in eligible], n), cool
     remaining = len([x for x in pool if item_text(x) not in taken])

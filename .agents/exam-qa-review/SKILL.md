@@ -286,6 +286,19 @@ as "N1"/"N3", so a single source's label was never sufficient.
 
 ### 3. Mechanical reads
 
+- **文字・語彙 stems — two counts, thirty seconds, and no gate can see them on
+  one paper.** Before solving, count (a) how many of the fifteen 問題1/2/5 stems
+  carry no 「、」 and (b) how many of the twenty-five 問題1–5 stems are in
+  です・ます, and compare against `moji-goi.md` Part 0 §"The stem" (author: ≥9 and
+  7; official runs 47–93 % comma-free and 2–11 polite). Fourteen papers shipped a
+  問題1/2/5 stem median of 29 chars against an archive maximum of 21.5, and six
+  shipped no comma-free stem at all, through four fresh-eyes QA rounds — because
+  nobody counted. Print both counts in the report.
+- **A re-drawn key's BAND is a named QA question, not the author's silent
+  judgment.** Every tier-C repair (`--reroll`/`--reroll-one`) lands in the report
+  as 「key X drawn, band checked against <book, page>」, and this pass reads that
+  line. No gate checks vocabulary band (`moji-goi.md` Part 0 §"The KEY must be
+  N2"), so an unstated band check did not happen.
 - **問題7 stems — measure the DISTRIBUTION, both directions.** The three
   binding numbers are `question-authoring/references/bunpou.md` §問題7's (mean
   inside 36–52 JP chars, ≥2 stems under 34, max−min ≥25); compute all three

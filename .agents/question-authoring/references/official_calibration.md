@@ -181,6 +181,13 @@ complete, never partial) — corroborates `question-authoring`'s rule.
 **Single-kanji whole words are drawn officially** (腕, 柱) — not
 "undrawable", just one-kanji-spelled words.
 
+**The underline is NOT in `booklet.md`.** The text layer loses it, so no
+official 問題1/2/5 TARGET is recoverable by script (`goi_profile.py` reports
+`target=None` for every official item, by design). Everything below — and the
+訓読み band in `moji-goi.md` §問題1 — is a HAND classification of the seven
+current-era sittings read as images, not a re-derivable measurement. What would
+settle it is Shin Kanzen 語彙's two typeset 模擬試験 (pp.186/188).
+
 Distractors, all 35 current-era items classified:
 
 | target type | n | what the distractors are |
@@ -237,8 +244,14 @@ every sitting since 12/2020.
 1–14. Zero options exceed 14 JP chars — a 20–40 char 読解-style paraphrase on
 a `[内容推論]` blank is off-format; cap every option at ≤16 (author to ≤14).
 
-**問題6 用法 option sentences: mean 25.0, median 25, range 9–35** (n=136) —
-a 9-char option is official, so short alone is not a defect.
+**問題6 用法 option sentences (re-measured 2026-08-21, `tools/goi_profile.py
+--baseline`): current era mean 26.0, median 25, range 18–39 (n=136); all 31
+sittings mean 26.3, median 26, range 13–39 (n=608).** *History:* this row read
+「mean 25.0, median 25, range 9–35 (n=136)」 and concluded 「a 9-char option is
+official, so short alone is not a defect」. The n and the median reproduce (the
+window was the current era); the mean and the range do not, and the shortest of
+608 official option sentences is 13, so that conclusion is **withdrawn** —
+`moji-goi.md` §問題6 carries the replacement.
 
 ---
 
@@ -388,3 +401,35 @@ feels uniformly hard" complaint comes from every item sharing one dense
 institutional register where official mixes in plain first-person/casual
 dialogue. The fix is a register-mix rule in `bunpou.md` §問題8, not a change
 to which grammar forms are drawn.
+
+## 14. 文字・語彙 (問題1–6) — measured by script, not by prose
+
+**`python3 tools/goi_profile.py --baseline` prints every number in this section**,
+from one parser over both corpora (954 of 964 archive items, 98.9 %; all 420
+generated items). `tools/check_consistency.py` imports the same module, so a
+threshold and its baseline can no longer disagree. `moji-goi.md` Part 0 owns the
+RULES (bands + author targets) built on these; this section is the measurement and
+the three corrections that came out of re-running it (REPORT-GOI.md §F10).
+
+| measure, per paper | official (31) | current era (7) | generated (14) |
+|---|---|---|---|
+| median 問題1/2/5 stem, JP chars | 15–21.5 (med 18) | 15–17.5 (med 16) | 21–32 (med 29) |
+| 問題1/2/5 stems with no 「、」 | 47–93 % (med 73) | 60–93 % (med 80) | 0–60 % (med 7) |
+| 問題1–5 stems with です・ます | 2–11 of ~25 (med 6) | 4–8 (med 7) | 0–4 (med 1) |
+| first-person stems | 0–16 % (med 4) | 4–16 % (med 4) | 0–8 % (med 0) |
+| institution-actor stems | 0–7 of 25 (med 2) | 0–3 (med 1) | 0–9 (med 3) |
+| median / longest 問題4 stem | 19–37 / 47 | 26–34 / 44 | 24–64 / 75 |
+| 問題2 和語 items of 5 | 1–3 every sitting | 1–3 | 0–2 (six papers 0) |
+| 問題2 all-bare-2-kanji items of 5 | 1–3 | 2–3 | 2–5 (eleven ≥4) |
+| repeated option inside one 大問 | **0 of 31 sittings** | 0 of 7 | 4 of 14 papers (問題3) |
+
+Pooled stem medians by 大問 (official all / current / generated): 問題1 18/16/27.5,
+問題2 19/18/30, 問題3 22/21/30.5, 問題4 28/29/33, 問題5 16/15.5/27.
+
+**問題5/6 uniquely-longest-key rate — corrected.** `check_moji_longest_key_rate`'s
+message said 「official is 15 % (問題5, n=123) and 16 % (問題6, n=124)」. Measured:
+**19 % both** (問題5 22/116, 問題6 29/151). Per paper the archive runs 0–50 %
+(current era 11–22 %) and **six sittings run 0 %**, so the 10 % floor the audit
+proposed is refuted — a paper keying no long option is an ordinary official shape.
+The ≤30 % ceiling stays, and is a current-era envelope (max 22 %), not an all-era
+one (max 50 %).
