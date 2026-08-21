@@ -120,19 +120,31 @@ All calibration inputs must be looked up in `refs/`:
   - Grammar: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Bunpou.pdf`
   - Reading: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Dokkai.pdf`
   - Listening: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai.pdf`
-  - Vocabulary: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Goi.pdf`
-  - Kanji: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Kanji.pdf`
+  - Vocabulary: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Goi.pdf` → extract
+    `refs/Shinkanzen/goi_reference.md` (`make extract-shinkanzen-goi`)
+  - Kanji: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Kanji.pdf` → extract
+    `refs/Shinkanzen/kanji_tables.md` (`make extract-kanji-tables`)
   - Textbook CDs: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/`
 - **Textbooks (`refs/Soumatome/`) — 日本語総まとめ N2**:
-  - Vocabulary: `refs/Soumatome/nihongo-soumatome-n2-goi.pdf`
-  - Kanji: `refs/Soumatome/nihongo-soumatome-n2-kanji.pdf`
+  - Vocabulary: `refs/Soumatome/nihongo-soumatome-n2-goi.pdf` → extract
+    `refs/Soumatome/goi_reference.md` (`make extract-shinkanzen-goi`)
+  - Kanji: `refs/Soumatome/nihongo-soumatome-n2-kanji.pdf` (no extract yet)
   - Together with Shinkanzen's Goi/Kanji volumes, these are exam-blueprint's
     ONLY vocabulary/kanji pool authority (`pools.json`'s `kanji_reading`,
     `context_words`, `paraphrase`, `usage`) — the vendored OpenJLPT JSON corpus
-    was removed 2026-08-11 (exam-blueprint/SKILL.md). Both Soumatome PDFs are
-    scanned images with no text layer (confirmed via `pdftotext`), same as
-    Shinkanzen — read them via the pages-parameter PDF support, never assume a
-    grep-able extract exists.
+    was removed 2026-08-11 (exam-blueprint/SKILL.md). All four PDFs are scanned
+    images with no text layer (`pdffonts` prints an empty table), so
+    `pdftotext` returns nothing.
+  - **Read the three `*_reference.md` / `*_tables.md` extracts above first**;
+    open a PDF only to verify a line one of them got wrong. Those files are
+    **OCR, not exact**, and they are **secondary evidence**: a textbook
+    corroborates band, family and reading, and never sets a count or a length —
+    the 31-sitting archive below is the measuring stick for every number. Each
+    extract's own header carries the full trust rules and the sections it
+    covers. Three of the four books are over the **100 MB per-file PDF read
+    cap** (漢字 264 MB, Soumatome 漢字 173 MB, Soumatome 語彙 103 MB; Shin
+    Kanzen 語彙 at 40 MB is the only direct read) — slice one with
+    `--split-pdf DIR` rather than trying to open it whole.
 - **Official Past Exam Archive (`refs/JLPT_N2_NEW/`) — 31 Sittings (Booklet PDF, Script PDF, Audio MP3)**:
   - **July 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023 (script).pdf`, Audio `refs/JLPT_N2_NEW/14. N2 7-2023/File nghe N2 7-2023.mp3`
   - **Dec 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 12-2023/14.N2 12-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 12-2023/14. script N2 12-2023.pdf`, Audio `refs/JLPT_N2_NEW/14. N2 12-2023/14. Nghe N2 T12-2023.mp3`

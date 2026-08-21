@@ -1,20 +1,25 @@
 {
- "seed": "15212088+reroll(usage,56459537)+reroll(word_formation,124145653)",
+ "seed": "15212088+reroll(usage,56459537)+reroll(word_formation,124145653)+reroll-one(orthography:4,31425245)+reroll-one(kanji_reading:0,2177799)+reroll-one(kanji_reading:3,31346296)",
  "generated_at": "2026-08-07 18:26:24",
  "test_id": "20260807_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 0,
+  "history_len": 13,
   "cooldown": 2,
   "legacy": true,
-  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17)."
+  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17).",
+  "verified_items": [
+   "包装(ほうそう)",
+   "呼吸(こきゅう)",
+   "招く"
+  ]
  },
  "items": {
   "kanji_reading": [
-   "誓う(ちかう)",
+   "呼吸(こきゅう)",
    "惜しい(おしい)",
    "迅速(じんそく)",
-   "漂う(ただよう)",
+   "包装(ほうそう)",
    "抑える(おさえる)"
   ],
   "orthography": [
@@ -22,7 +27,7 @@
    "努める(努力)",
    "果実",
    "歌謡",
-   "免責"
+   "招く"
   ],
   "word_formation": [
    "〜別(男女別)",
@@ -495,5 +500,6 @@
    "source": "https://www.wbgt.env.go.jp/pdf/report/R07_heatillness_report_24.pdf"
   }
  ],
- "harvest_sha": "165eb22f8fd9"
+ "harvest_sha": "165eb22f8fd9",
+ "pools_sha": "aadf23081392"
 }

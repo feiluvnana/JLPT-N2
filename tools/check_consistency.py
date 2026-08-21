@@ -4069,8 +4069,9 @@ def check_grammar_cross_category_rotation(d, spec: dict, sample, pools: dict):
 # Over the cap: 20260807_1 (4), 20260810_1 (3), 20260817_2 (3). Under the floor:
 # 20260817_3 (0), added 2026-08-21 with the floor itself. Each id leaves when
 # that paper's `kanji_reading` slot is actually re-drawn (tier C).
-MONDAI1_KUN_GRANDFATHERED = {"20260807_1", "20260810_1", "20260817_2",
-                             "20260817_3"}
+# EMPTY as of 2026-08-21: 20260807_1 (was 4), 20260810_1 and 20260817_2 (3)
+# and 20260817_3 (0) were all re-drawn into the 1–2 band.
+MONDAI1_KUN_GRANDFATHERED: set[str] = set()
 MONDAI1_KUN_CAP = 2
 MONDAI1_KUN_FLOOR = SAMPLE_ITEMS.KUN_FLOOR["kanji_reading"]
 
@@ -4598,7 +4599,19 @@ def check_spec_rotation(d, spec: dict, sample, pools: dict):
 
     per_cat_name = f"{d.name}: rotation claim holds — nothing drawn appears " \
                    "inside its own category's cooldown window"
-    if rot.get("legacy"):
+    # A legacy spec's exemption is PER DRAWN ITEM, not per paper (2026-08-21).
+    # `rotation.verified_items` lists the entries the paper has since re-drawn:
+    # those were drawn against the current window and proved by
+    # assert_rotation() at draw time, so they are checked here, while the
+    # entries still carrying the old draw stay skipped and are counted so the
+    # queue is visible. Not per CATEGORY either — on the `--reroll-one` path a
+    # re-drawn category keeps entries that are still older draws against an
+    # older window, which is why sample_items.py scopes its own post-draw check
+    # to the single new entry. Before this, one reroll either kept a blanket
+    # amnesty over items that had just been proved, or — when the sampler
+    # dropped the marker — claimed a proof the paper's old items never had.
+    legacy_verified = set(rot.get("verified_items") or [])
+    if rot.get("legacy") and not legacy_verified:
         return skip(per_cat_name,
                     "spec is grandfathered legacy — generated before this "
                     "gate checked each category against its OWN "
@@ -4619,6 +4632,10 @@ def check_spec_rotation(d, spec: dict, sample, pools: dict):
     for cat, xs in (spec.get("items") or {}).items():
         if cat not in sample.DRAW or cat not in pools:
             continue
+        if rot.get("legacy"):
+            xs = [x for x in xs if pool_entry_text(x) in legacy_verified]
+            if not xs:
+                continue              # still grandfathered — counted below
         cool = sample.cooldown_for(cat, len(pools[cat]))
         if cool <= 0:
             continue
@@ -4638,6 +4655,12 @@ def check_spec_rotation(d, spec: dict, sample, pools: dict):
             if tid:
                 clashes.append(f"{cat}:「{t}」 (test {tid}, needs its own "
                                 f"{cool}-draw cooldown)")
+    if rot.get("legacy"):
+        total = sum(len(xs) for c, xs in (spec.get("items") or {}).items()
+                    if c in sample.DRAW)
+        per_cat_name += (f" [legacy spec: {len(legacy_verified)} re-drawn item(s) "
+                         f"checked, {total - len(legacy_verified)} still "
+                         f"grandfathered]")
     check(per_cat_name, not clashes,
           "; ".join(clashes[:6]) + " — an item was drawn, or hand-substituted, "
           "inside its OWN category's cooldown window (cooldown_for(cat, "
@@ -5190,7 +5213,11 @@ KANJI_CHAR = re.compile(r"[一-鿿]")
 # NAME and prints the same measurement as a WARN. Any id not in this set FAILS.
 # 20260817_3 is deliberately NOT exempt: its 飢饉 is the open automatic finding
 # R3-1, under repair now, and this gate is what confirms the repair.
-MOJI_GLYPH_GRANDFATHERED = {"20260811_1"}
+# EMPTY as of 2026-08-21: 20260811_1's 問題2-9 was the last exemption — its
+# 「曳帰す」/「曳返す」 were built on 表外 「曳」 AND on a non-standard verb okurigana
+# (「引返す」, corrected in pools.json to 「引き返す」). The item was re-drawn to
+# 「引分け」 and 曳 no longer occurs anywhere in the paper.
+MOJI_GLYPH_GRANDFATHERED: set[str] = set()
 
 
 def joyo_set() -> set[str]:
@@ -5354,27 +5381,29 @@ MOJI4_STEM_MAX = 47              # longest single official 問題4 stem (cur 44)
 MOJI2_COMPOUND_CAP = 3           # bare-2-kanji items, archive 1–3 in 31 of 31
 MOJI2_WAGO_FLOOR = 1             # 和語 items, archive 1–3 in 31 of 31
 
-MOJI_STEM_GRANDFATHERED = {
-    "20260807_1", "20260810_2", "20260811_1", "20260812_1", "20260812_2",
-    "20260813_1", "20260813_2", "20260814_1", "20260817_1", "20260817_2",
-    "20260817_3", "20260818_1", "20260819_1",
-}   # every paper but 20260810_1 (median 21, 60% comma-free — the only compliant one)
-MOJI_REGISTER_GRANDFATHERED = {
-    "20260807_1", "20260810_2", "20260811_1", "20260812_2", "20260813_2",
-    "20260814_1", "20260817_1", "20260817_2", "20260819_1",
-}   # 8 on the です・ます floor + 20260810_2 on the institution-actor ceiling
-MOJI4_STEM_GRANDFATHERED = {
-    "20260810_1", "20260810_2", "20260811_1", "20260813_2", "20260817_2",
-}   # median >37 and/or one stem >47; 20260811_1's median is 64 against an
+# EMPTY as of 2026-08-21: all fourteen papers were rewritten to the contract
+# (per-paper median 16–17 against the archive's 15–21.5, comma-free 80–100%
+# against 47–93%). The set is a queue, and the queue is now clear — any id that
+# breaches from here is a FAIL, not an exemption.
+MOJI_STEM_GRANDFATHERED: set[str] = set()
+# EMPTY as of 2026-08-21: every paper now runs 7–9 です・ます stems of 25
+# (official 2–11, current era 4–8), at least one first-person stem, and 0–2
+# institution-actor stems (official 0–7).
+MOJI_REGISTER_GRANDFATHERED: set[str] = set()
+# EMPTY as of 2026-08-21: per-paper 問題4 medians are now 24–30 (author target
+# 30) and the longest single stem anywhere is 40, against an archive maximum of
+# 47. 20260811_1, whose median had been 64 — longer than the longest single
+# official 問題4 stem — is now at 28/28.
+MOJI4_STEM_GRANDFATHERED: set[str] = set()
     # archive maximum SINGLE stem of 47
-MOJI2_COMPOSITION_GRANDFATHERED = {
-    "20260807_1", "20260810_1", "20260810_2", "20260812_1", "20260812_2",
-    "20260813_1", "20260814_1", "20260817_1", "20260817_2", "20260818_1",
-    "20260819_1",
-}   # six of these ship ZERO 和語 items; eleven ship 4–5 bare compounds
-MOJI_OPTION_REUSE_GRANDFATHERED = {
-    "20260810_1", "20260810_2", "20260811_1", "20260813_1",
-}   # 問題3 affix repeats (半 twice over, 総, 各, 性) — tier A, one distractor each
+# EMPTY as of 2026-08-21: 29 re-drawn items later, every paper runs 1–2 和語
+# targets and 2–3 bare compounds, inside the archive's 1–3 / 1–3 in 31 of 31
+# sittings. Two papers sit at 和語=1 rather than the author target of 2 — in
+# band (one official sitting runs 1), and raising them needs another draw.
+MOJI2_COMPOSITION_GRANDFATHERED: set[str] = set()
+# EMPTY as of 2026-08-21: the four 問題3 affix repeats (半 in two papers, 総,
+# 各, 性) were each fixed by replacing the DISTRACTOR, never the key.
+MOJI_OPTION_REUSE_GRANDFATHERED: set[str] = set()
 
 
 def _goi_paper(gt: str, test_id: str) -> list[dict]:
@@ -5775,6 +5804,19 @@ def check_spec_target_items(d, gt: str, st: str, bi):
                 if stem and stem != base.rstrip("。") and re.search(r"[一-鿿]", stem):
                     marked = re.findall(r"\*\*([^*\n]+)\*\*", hay)
                     if any(sp.startswith(stem) for sp in marked):
+                        continue
+                    # 問題2 prints the target in KANA — the bold span IS the
+                    # reading — so the kanji-stem probe above can never land on
+                    # a marked span there. The kanji lives in the OPTIONS, and
+                    # official inflects them freely (12/2025: すくわれました
+                    # against 救われました). Without this branch the gate FAILED
+                    # exactly the inflected 和語 問題2 item that moji-goi §問題2
+                    # tells authors to write, and passed only the dictionary
+                    # form — found while repairing 20260817_1, 2026-08-21.
+                    if cat == "orthography" and any(
+                            tok.strip().startswith(stem)
+                            for line in re.findall(r"^\s*[1-4][.、].*$", hay, re.M)
+                            for tok in re.split(r"\s*[1-4][.、]\s*|\s{2,}", line)):
                         continue
             missing.append(f"{cat}:「{item[:24]}」")
     check(f"{d.name}: 問題1/2/4 test the items test_spec.json drew "
@@ -7166,7 +7208,14 @@ def check_moji_longest_key_rate(test_id: str, gt: str, keys: dict[int, int], bi)
     opts = gengo_option_sets(gt, bi)
     n = n_longest = 0
     worst = []
-    for q in list(range(23, 28)) + list(range(28, 33)):   # 問題5 + 問題6
+    # WINDOW BUG, fixed 2026-08-21: this read `range(23,28) + range(28,33)`,
+    # i.e. items 23-32 — it skipped 問題5's items 21-22 and measured two 問題7
+    # GRAMMAR items (31-32) as if they were 問題6. Two independent authoring
+    # agents caught it by comparing this line against `goi_profile.py`, which
+    # derives the window from each item's own 大問 heading. 問題5 is 21-25 and
+    # 問題6 is 26-30 (jlpt-exam-structure); every rate this check printed before
+    # today was over the wrong ten items.
+    for q in range(21, 31):                               # 問題5 + 問題6
         a, o = keys.get(q), opts.get(q) or []
         if a is None or len(o) != 4 or not 1 <= a <= 4:
             continue

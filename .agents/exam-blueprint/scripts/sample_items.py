@@ -779,6 +779,42 @@ def cooldown_for(cat: str, pool_size: int) -> int:
     return max(COOLDOWN_FLOOR, depth - COOLDOWN_MARGIN)
 
 
+def carry_legacy(old: dict | None, new_items: list, fresh: dict) -> dict:
+    """Rebuild a spec's `rotation` block across a reroll WITHOUT losing what it
+    already proved, or claiming what it never did.
+
+    Both reroll paths used to replace this block wholesale, which silently
+    dropped `legacy`/`legacy_note` — and a legacy spec's marker is the only
+    record that its OTHER categories were drawn before the gate checked each
+    category against its own `cooldown_for()` window. Dropping it made the spec
+    claim a rotation proof it does not have, and `check_spec_rotation` then
+    correctly FAILed on pre-existing legacy repeats in categories the reroll
+    never touched (found across 13 papers during the 2026-08-21 文字・語彙 pass).
+
+    The other half is the honest converse: the ENTRIES just drawn ARE proved,
+    against the current window, by `assert_rotation()` at draw time — so they
+    join `verified_items` and the gate checks exactly those. The unit is the
+    entry, not the category: on the `--reroll-one` path the category's KEPT
+    entries are still older draws against an older window, which is the same
+    reason this file scopes its own post-draw check to `{cat: picked}`. A legacy
+    exemption is therefore a queue that shrinks one drawn item at a time, not an
+    amnesty for the whole paper.
+    """
+    out = dict(fresh)
+    old = old or {}
+    if old.get("legacy"):
+        out["legacy"] = True
+        if old.get("legacy_note"):
+            out["legacy_note"] = old["legacy_note"]
+    verified = list(old.get("verified_items") or [])
+    for x in new_items:
+        t = item_text(x)
+        if t not in verified:
+            verified.append(t)
+    out["verified_items"] = sorted(verified)
+    return out
+
+
 def load_staging_ready() -> dict[str, list[dict]]:
     """category -> staging rows with status=ready and level=N2."""
     if not STAGING.is_file():
@@ -1429,13 +1465,13 @@ def main():
         # R7: a reroll re-draws against the CURRENT pool, so the stamp moves
         # with it — the spec records the revision the newest draw used.
         spec["pools_sha"] = pools_sha()
-        spec["rotation"] = {
+        spec["rotation"] = carry_legacy(spec.get("rotation"), picked, {
             "recency_source": "ledger",
             "history_len": 0,          # filled in below, once this test's own
                                        # entry can be told from the others
             # a reroll can only make the paper's weakest cooldown weaker
             "cooldown": min(cool, spec.get("rotation", {}).get("cooldown", cool)),
-        }
+        })
         if own_entry is not None:
             own_entry.setdefault("items", {})[cat] = picked
             own_entry["seed"] = spec["seed"]
@@ -1524,11 +1560,11 @@ def main():
         spec["items"][cat][idx] = picked[0]
         spec["seed"] = f"{spec.get('seed')}+reroll-one({cat}:{idx},{seed})"
         spec["pools_sha"] = pools_sha()   # R7, same as --reroll
-        spec["rotation"] = {
+        spec["rotation"] = carry_legacy(spec.get("rotation"), picked, {
             "recency_source": "ledger",
             "history_len": 0,          # filled in below
             "cooldown": min(cool, spec.get("rotation", {}).get("cooldown", cool)),
-        }
+        })
         if own_entry is not None:
             own_entry.setdefault("items", {})[cat] = spec["items"][cat]
             own_entry["seed"] = spec["seed"]

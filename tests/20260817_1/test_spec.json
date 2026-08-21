@@ -1,10 +1,10 @@
 {
- "seed": "91572330+reroll(kanji_reading,91572330)+reroll(kanji_reading,22083132)",
+ "seed": "91572330+reroll(kanji_reading,91572330)+reroll(kanji_reading,22083132)+reroll-one(orthography:0,75571555)+reroll-one(orthography:4,57288539)",
  "generated_at": "2026-08-17 10:05:39",
  "test_id": "20260817_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 9,
+  "history_len": 13,
   "cooldown": 6
  },
  "items": {
@@ -16,11 +16,11 @@
    "未満(みまん)"
   ],
   "orthography": [
-   "宴会",
+   "預ける",
    "警備",
    "形式",
    "苦情",
-   "雨戸"
+   "詳しい"
   ],
   "word_formation": [
    "高〜(高気圧)",
@@ -367,5 +367,6 @@
    4,
    2
   ]
- }
+ },
+ "pools_sha": "aadf23081392"
 }

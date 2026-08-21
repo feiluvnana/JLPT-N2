@@ -1,13 +1,18 @@
 {
- "seed": "81480636+reroll(reading_topics,81480636)+reroll(paraphrase,60851241)+reroll(word_formation,4827847876)",
+ "seed": "81480636+reroll(reading_topics,81480636)+reroll(paraphrase,60851241)+reroll(word_formation,4827847876)+reroll-one(orthography:0,30494272)+reroll-one(orthography:4,91044757)+reroll-one(kanji_reading:4,23173121)+reroll-one(orthography:0,30673474)+reroll-one(orthography:4,11414556)+reroll-one(kanji_reading:4,90177708)",
  "generated_at": "2026-08-10 10:02:21",
  "test_id": "20260810_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 1,
+  "history_len": 13,
   "cooldown": 2,
   "legacy": true,
-  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17)."
+  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17).",
+  "verified_items": [
+   "塩辛い",
+   "診る(医師が)",
+   "願書(がんしょ)"
+  ]
  },
  "items": {
   "kanji_reading": [
@@ -15,14 +20,14 @@
    "恵まれる(めぐまれる)",
    "潔い(いさぎよい)",
    "漠然(ばくぜん)",
-   "竹(たけ)"
+   "願書(がんしょ)"
   ],
   "orthography": [
-   "貨物",
+   "診る(医師が)",
    "育児",
    "王女",
    "系統",
-   "救助"
+   "塩辛い"
   ],
   "word_formation": [
    "悪〜(悪影響)",
@@ -458,5 +463,6 @@
    "source": "https://aebs.or.jp/Activity/Electronic_library_introduction_record.html"
   }
  ],
- "harvest_sha": "a17048ca5f3c"
+ "harvest_sha": "a17048ca5f3c",
+ "pools_sha": "765cbc22bd6d"
 }

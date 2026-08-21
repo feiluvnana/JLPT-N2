@@ -1,17 +1,17 @@
 {
- "seed": 36017970,
+ "seed": "36017970+reroll-one(orthography:4,34920988)+reroll-one(kanji_reading:2,79172635)+reroll-one(orthography:4,34953971)",
  "generated_at": "2026-08-17 15:03:48",
  "test_id": "20260817_2",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 10,
+  "history_len": 13,
   "cooldown": 6
  },
  "items": {
   "kanji_reading": [
    "電柱(でんちゅう)",
    "溶ける(とける)",
-   "悪口(わるぐち)",
+   "大戦(たいせん)",
    "伝わる(つたわる)",
    "分類(ぶんるい)"
   ],
@@ -20,7 +20,7 @@
    "継続",
    "園芸",
    "承認",
-   "監督"
+   "珍しい"
   ],
   "word_formation": [
    "〜触れ(前触れ)",
@@ -365,5 +365,6 @@
    1,
    4
   ]
- }
+ },
+ "pools_sha": "14a9ce6344cd"
 }

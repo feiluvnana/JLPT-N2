@@ -3,23 +3,9 @@
  "history": [
   {
    "test_id": "20260807_1",
-   "seed": "15212088+reroll(usage,56459537)+reroll(word_formation,124145653)",
+   "seed": "15212088+reroll(usage,56459537)+reroll(word_formation,124145653)+reroll-one(orthography:4,31425245)+reroll-one(kanji_reading:0,2177799)+reroll-one(kanji_reading:3,31346296)",
    "generated_at": "2026-08-07 18:26:24",
    "items": {
-    "kanji_reading": [
-     "誓う(ちかう)",
-     "惜しい(おしい)",
-     "迅速(じんそく)",
-     "漂う(ただよう)",
-     "抑える(おさえる)"
-    ],
-    "orthography": [
-     "一旦",
-     "努める(努力)",
-     "果実",
-     "歌謡",
-     "免責"
-    ],
     "context_words": [
      "サラリーマン",
      "抑制",
@@ -224,6 +210,20 @@
      "〜別(男女別)",
      "〜圏(首都圏)",
      "〜版(決定版)"
+    ],
+    "orthography": [
+     "一旦",
+     "努める(努力)",
+     "果実",
+     "歌謡",
+     "招く"
+    ],
+    "kanji_reading": [
+     "呼吸(こきゅう)",
+     "惜しい(おしい)",
+     "迅速(じんそく)",
+     "包装(ほうそう)",
+     "抑える(おさえる)"
     ]
    },
    "draw": {
@@ -239,27 +239,14 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    },
-   "harvest_sha": "165eb22f8fd9"
+   "harvest_sha": "165eb22f8fd9",
+   "pools_sha": "aadf23081392"
   },
   {
    "test_id": "20260810_1",
-   "seed": "81480636+reroll(reading_topics,81480636)+reroll(paraphrase,60851241)+reroll(word_formation,4827847876)",
+   "seed": "81480636+reroll(reading_topics,81480636)+reroll(paraphrase,60851241)+reroll(word_formation,4827847876)+reroll-one(orthography:0,30494272)+reroll-one(orthography:4,91044757)+reroll-one(kanji_reading:4,23173121)+reroll-one(orthography:0,30673474)+reroll-one(orthography:4,11414556)+reroll-one(kanji_reading:4,90177708)",
    "generated_at": "2026-08-10 10:02:21",
    "items": {
-    "kanji_reading": [
-     "演じる(えんじる)",
-     "恵まれる(めぐまれる)",
-     "潔い(いさぎよい)",
-     "漠然(ばくぜん)",
-     "竹(たけ)"
-    ],
-    "orthography": [
-     "貨物",
-     "育児",
-     "王女",
-     "系統",
-     "救助"
-    ],
     "context_words": [
      "ええと",
      "逆らう",
@@ -464,6 +451,20 @@
      "悪〜(悪影響)",
      "初〜(初体験)",
      "〜立て(採れたて)"
+    ],
+    "orthography": [
+     "診る(医師が)",
+     "育児",
+     "王女",
+     "系統",
+     "塩辛い"
+    ],
+    "kanji_reading": [
+     "演じる(えんじる)",
+     "恵まれる(めぐまれる)",
+     "潔い(いさぎよい)",
+     "漠然(ばくぜん)",
+     "願書(がんしょ)"
     ]
    },
    "draw": {
@@ -479,11 +480,12 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    },
-   "harvest_sha": "a17048ca5f3c"
+   "harvest_sha": "a17048ca5f3c",
+   "pools_sha": "765cbc22bd6d"
   },
   {
    "test_id": "20260810_2",
-   "seed": "32999628+reroll(paraphrase,43621231)+reroll(usage,61570247)+reroll(word_formation,6610777377)+reroll(quick_response,90988406)",
+   "seed": "32999628+reroll(paraphrase,43621231)+reroll(usage,61570247)+reroll(word_formation,6610777377)+reroll(quick_response,90988406)+reroll-one(orthography:0,59873291)+reroll-one(orthography:4,5146400)",
    "generated_at": "2026-08-10 13:05:01",
    "items": {
     "kanji_reading": [
@@ -492,13 +494,6 @@
      "徹底(てってい)",
      "紛れる(まぎれる)",
      "慎重(しんちょう)"
-    ],
-    "orthography": [
-     "為替",
-     "損害",
-     "羽根",
-     "英文",
-     "加熱"
     ],
     "context_words": [
      "こうして",
@@ -697,6 +692,13 @@
      "申し伝えます",
      "割り勘",
      "板につく"
+    ],
+    "orthography": [
+     "一段と",
+     "損害",
+     "羽根",
+     "英文",
+     "快い"
     ]
    },
    "draw": {
@@ -712,20 +714,14 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    },
-   "harvest_sha": "bc1b9b9725de"
+   "harvest_sha": "bc1b9b9725de",
+   "pools_sha": "aadf23081392"
   },
   {
    "test_id": "20260811_1",
-   "seed": "76797128+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,27969690)+reroll(kanji_reading,20631168)+reroll(kanji_reading,14950249)+reroll(context_words,85922550)+reroll(word_formation,76797128)+reroll(context_words,76797128)+reroll(word_formation,1231562560)+reroll(word_formation,2170583024)",
+   "seed": "76797128+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,76797128)+reroll(kanji_reading,76797128)+reroll(context_words,76797128)+reroll(kanji_reading,27969690)+reroll(kanji_reading,20631168)+reroll(kanji_reading,14950249)+reroll(context_words,85922550)+reroll(word_formation,76797128)+reroll(context_words,76797128)+reroll(word_formation,1231562560)+reroll(word_formation,2170583024)+reroll-one(orthography:0,50766964)+reroll-one(orthography:3,56360405)",
    "generated_at": "2026-08-11 13:55:23",
    "items": {
-    "orthography": [
-     "歌謡",
-     "保留",
-     "抑える(感情を)",
-     "引返す",
-     "架空"
-    ],
     "paraphrase": [
      "すみやかに(早く)",
      "わずかに",
@@ -946,6 +942,13 @@
      "当〜(当劇場)",
      "〜がる(怖がる)",
      "自〜(自宅)"
+    ],
+    "orthography": [
+     "宛名",
+     "保留",
+     "抑える(感情を)",
+     "引分け",
+     "架空"
     ]
    },
    "draw": {
@@ -960,11 +963,12 @@
     "quick_response": 11,
     "listening_scenarios": 21,
     "reading_topics": 13
-   }
+   },
+   "pools_sha": "14a9ce6344cd"
   },
   {
    "test_id": "20260812_1",
-   "seed": "11060548+reroll(word_formation,9830544209)",
+   "seed": "11060548+reroll(word_formation,9830544209)+reroll-one(orthography:4,73487909)+reroll-one(paraphrase:0,62271049)+reroll-one(paraphrase:3,11738349)+reroll-one(context_words:2,66026397)",
    "generated_at": "2026-08-12 10:02:39",
    "items": {
     "kanji_reading": [
@@ -973,29 +977,6 @@
      "食塩(しょくえん)",
      "埋める(うめる)",
      "尊重(そんちょう)"
-    ],
-    "orthography": [
-     "展開",
-     "補う",
-     "会館",
-     "換気",
-     "空中"
-    ],
-    "context_words": [
-     "通行",
-     "つりあう",
-     "ええと",
-     "該当",
-     "名場面",
-     "足を延ばす",
-     "証言"
-    ],
-    "paraphrase": [
-     "あらかじめ(事前に)",
-     "適度に",
-     "たちまち",
-     "どなる",
-     "厚かましい(失礼だ)"
     ],
     "usage": [
      "融通",
@@ -1192,6 +1173,29 @@
      "準〜(準決勝)",
      "非〜(非公開)",
      "〜券(回数券)"
+    ],
+    "orthography": [
+     "展開",
+     "補う",
+     "会館",
+     "換気",
+     "近寄る"
+    ],
+    "paraphrase": [
+     "一切〜ない(まったく〜ない)",
+     "適度に",
+     "たちまち",
+     "みっともない(格好悪い)",
+     "厚かましい(失礼だ)"
+    ],
+    "context_words": [
+     "通行",
+     "つりあう",
+     "ひとまず",
+     "該当",
+     "名場面",
+     "足を延ばす",
+     "証言"
     ]
    },
    "draw": {
@@ -1206,11 +1210,12 @@
     "quick_response": 11,
     "listening_scenarios": 21,
     "reading_topics": 13
-   }
+   },
+   "pools_sha": "aadf23081392"
   },
   {
    "test_id": "20260812_2",
-   "seed": "45158912+reroll(word_formation,2953455534)",
+   "seed": "45158912+reroll(word_formation,2953455534)+reroll-one(orthography:1,67480264)+reroll-one(orthography:2,97227970)+reroll-one(usage:0,37545541)+reroll-one(usage:1,45804987)",
    "generated_at": "2026-08-12 17:22:18",
    "items": {
     "kanji_reading": [
@@ -1219,13 +1224,6 @@
      "列島(れっとう)",
      "自治体(じちたい)",
      "各々(おのおの)"
-    ],
-    "orthography": [
-     "漁業",
-     "果実",
-     "努める(努力)",
-     "下品",
-     "納入"
     ],
     "context_words": [
      "大げさ",
@@ -1242,13 +1240,6 @@
      "みじめだ(悲惨だ)",
      "純粋だ(素直だ)",
      "さっさと(すぐに/早く)"
-    ],
-    "usage": [
-     "持参",
-     "大まか",
-     "体系",
-     "同調",
-     "妨げる"
     ],
     "grammar_p7": [
      "〜にくい",
@@ -1436,6 +1427,20 @@
      "全〜(全自動)",
      "某〜(某所)",
      "〜済み(記入済み)"
+    ],
+    "orthography": [
+     "漁業",
+     "一休み",
+     "収める(成功を)",
+     "下品",
+     "納入"
+    ],
+    "usage": [
+     "反発",
+     "訴える",
+     "体系",
+     "同調",
+     "妨げる"
     ]
    },
    "draw": {
@@ -1450,11 +1455,12 @@
     "quick_response": 11,
     "listening_scenarios": 21,
     "reading_topics": 13
-   }
+   },
+   "pools_sha": "aadf23081392"
   },
   {
    "test_id": "20260813_1",
-   "seed": 55976159,
+   "seed": "55976159+reroll-one(orthography:0,62664769)+reroll-one(orthography:1,96433935)+reroll-one(usage:3,58958831)+reroll-one(orthography:0,835162)+reroll-one(usage:3,19633316)",
    "generated_at": "2026-08-13 10:01:46",
    "items": {
     "kanji_reading": [
@@ -1463,13 +1469,6 @@
      "相互(そうご)",
      "抜ける(ぬける)",
      "物価(ぶっか)"
-    ],
-    "orthography": [
-     "系統",
-     "育児",
-     "回数券",
-     "仮定",
-     "推薦"
     ],
     "word_formation": [
      "〜化(簡素化)",
@@ -1491,13 +1490,6 @@
      "あきれる(驚く)",
      "せめて(最低でも)",
      "丈夫だ"
-    ],
-    "usage": [
-     "切実",
-     "経緯",
-     "抱える",
-     "宣伝する",
-     "負う"
     ],
     "grammar_p7": [
      "〜わけにもいかない",
@@ -1672,6 +1664,20 @@
       "topic": "防災訓練の実施要領と避難場所案内",
       "theme": "防災"
      }
+    ],
+    "orthography": [
+     "一通り",
+     "測る(寸法)",
+     "回数券",
+     "仮定",
+     "推薦"
+    ],
+    "usage": [
+     "切実",
+     "経緯",
+     "抱える",
+     "統一する",
+     "負う"
     ]
    },
    "draw": {
@@ -1686,7 +1692,8 @@
     "quick_response": 11,
     "listening_scenarios": 21,
     "reading_topics": 12
-   }
+   },
+   "pools_sha": "14a9ce6344cd"
   },
   {
    "test_id": "20260813_2",
@@ -1932,7 +1939,7 @@
   },
   {
    "test_id": "20260814_1",
-   "seed": "53303397+reroll(listening_scenarios,53303397)+reroll(listening_scenarios,42527010)",
+   "seed": "53303397+reroll(listening_scenarios,53303397)+reroll(listening_scenarios,42527010)+reroll-one(orthography:0,58914165)",
    "generated_at": "2026-08-14 11:28:14",
    "items": {
     "kanji_reading": [
@@ -1941,13 +1948,6 @@
      "励む(はげむ)",
      "経営(けいえい)",
      "皮肉(ひにく)"
-    ],
-    "orthography": [
-     "基盤",
-     "傾向",
-     "基地",
-     "一流",
-     "威張る"
     ],
     "word_formation": [
      "〜向け(初心者向け)",
@@ -2146,6 +2146,13 @@
       "scenario": "電気店:スマート家電の設定相談",
       "theme": "デジタル化"
      }
+    ],
+    "orthography": [
+     "区切る",
+     "傾向",
+     "基地",
+     "一流",
+     "威張る"
     ]
    },
    "draw": {
@@ -2160,20 +2167,14 @@
     "quick_response": 11,
     "listening_scenarios": 21,
     "reading_topics": 12
-   }
+   },
+   "pools_sha": "aadf23081392"
   },
   {
    "test_id": "20260817_1",
-   "seed": "91572330+reroll(kanji_reading,91572330)+reroll(kanji_reading,22083132)",
+   "seed": "91572330+reroll(kanji_reading,91572330)+reroll(kanji_reading,22083132)+reroll-one(orthography:0,75571555)+reroll-one(orthography:4,57288539)",
    "generated_at": "2026-08-17 10:05:39",
    "items": {
-    "orthography": [
-     "宴会",
-     "警備",
-     "形式",
-     "苦情",
-     "雨戸"
-    ],
     "word_formation": [
      "高〜(高気圧)",
      "〜観(人生観)",
@@ -2384,6 +2385,13 @@
      "公演(こうえん)",
      "お歳暮(おせいぼ)",
      "未満(みまん)"
+    ],
+    "orthography": [
+     "預ける",
+     "警備",
+     "形式",
+     "苦情",
+     "詳しい"
     ]
    },
    "draw": {
@@ -2398,27 +2406,14 @@
     "quick_response": 11,
     "listening_scenarios": 21,
     "reading_topics": 12
-   }
+   },
+   "pools_sha": "aadf23081392"
   },
   {
    "test_id": "20260817_2",
-   "seed": 36017970,
+   "seed": "36017970+reroll-one(orthography:4,34920988)+reroll-one(kanji_reading:2,79172635)+reroll-one(orthography:4,34953971)",
    "generated_at": "2026-08-17 15:03:48",
    "items": {
-    "kanji_reading": [
-     "電柱(でんちゅう)",
-     "溶ける(とける)",
-     "悪口(わるぐち)",
-     "伝わる(つたわる)",
-     "分類(ぶんるい)"
-    ],
-    "orthography": [
-     "衣食住",
-     "継続",
-     "園芸",
-     "承認",
-     "監督"
-    ],
     "word_formation": [
      "〜触れ(前触れ)",
      "下〜(下請け)",
@@ -2620,6 +2615,20 @@
       "origin": "reauthored",
       "note": "問題12 re-themed off its original pool draw (高齢者の運転免許返納/交通) to resolve a rule-4 headline-theme violation — this paper's 6-slot headline set shared {交通(問12), 教育(問14)} = 2 themes with 20260814_1's headline set, over rule 4's 'at most ONE' cap. New theme 旅行・観光 is absent from 20260814_1's headline set, absent from this paper's other 5 headline themes, absent from any of this paper's other 12 read/聴 surfaces, and also absent from 20260817_1's (the immediately preceding test's) full theme list except alongside 医療・福祉 — QA 20260817_2 F2."
      }
+    ],
+    "kanji_reading": [
+     "電柱(でんちゅう)",
+     "溶ける(とける)",
+     "大戦(たいせん)",
+     "伝わる(つたわる)",
+     "分類(ぶんるい)"
+    ],
+    "orthography": [
+     "衣食住",
+     "継続",
+     "園芸",
+     "承認",
+     "珍しい"
     ]
    },
    "draw": {
@@ -2634,20 +2643,14 @@
     "quick_response": 11,
     "listening_scenarios": 21,
     "reading_topics": 12
-   }
+   },
+   "pools_sha": "14a9ce6344cd"
   },
   {
    "test_id": "20260817_3",
-   "seed": "42839028+reroll(listening_scenarios,76954741)+reroll(listening_scenarios,27840167)+reroll(reading_topics,5651688)+reroll(reading_topics,77649053)+reroll(reading_topics,53009255)+reroll(context_words,79773993)+reroll(orthography,97107274)",
+   "seed": "42839028+reroll(listening_scenarios,76954741)+reroll(listening_scenarios,27840167)+reroll(reading_topics,5651688)+reroll(reading_topics,77649053)+reroll(reading_topics,53009255)+reroll(context_words,79773993)+reroll(orthography,97107274)+reroll-one(kanji_reading:3,17543148)",
    "generated_at": "2026-08-18 15:06:31",
    "items": {
-    "kanji_reading": [
-     "相続(そうぞく)",
-     "命令(めいれい)",
-     "論じる(ろんじる)",
-     "星座(せいざ)",
-     "実際に(じっさいに)"
-    ],
     "word_formation": [
      "内〜(国内)",
      "仮〜(仮契約)",
@@ -2852,6 +2855,13 @@
      "下書き",
      "経度",
      "近付ける"
+    ],
+    "kanji_reading": [
+     "相続(そうぞく)",
+     "命令(めいれい)",
+     "論じる(ろんじる)",
+     "減る(へる)",
+     "実際に(じっさいに)"
     ]
    },
    "draw": {
@@ -2866,11 +2876,12 @@
     "quick_response": 11,
     "listening_scenarios": 21,
     "reading_topics": 12
-   }
+   },
+   "pools_sha": "aadf23081392"
   },
   {
    "test_id": "20260818_1",
-   "seed": "9670904+reroll(listening_scenarios,5719948)+reroll(listening_scenarios,10982156)+reroll-one(quick_response:8,1514814)+reroll-one(listening_scenarios:16,70517349)+reroll-one(listening_scenarios:16,92056458)+reroll-one(listening_scenarios:16,94620437)+reroll-one(listening_scenarios:16,69634010)+reroll-one(listening_scenarios:16,74989867)",
+   "seed": "9670904+reroll(listening_scenarios,5719948)+reroll(listening_scenarios,10982156)+reroll-one(quick_response:8,1514814)+reroll-one(listening_scenarios:16,70517349)+reroll-one(listening_scenarios:16,92056458)+reroll-one(listening_scenarios:16,94620437)+reroll-one(listening_scenarios:16,69634010)+reroll-one(listening_scenarios:16,74989867)+reroll-one(orthography:4,54217552)",
    "generated_at": "2026-08-19 11:29:18",
    "items": {
     "kanji_reading": [
@@ -2879,13 +2890,6 @@
      "彼岸(ひがん)",
      "神経(しんけい)",
      "見にくい(みにくい)"
-    ],
-    "orthography": [
-     "基礎",
-     "量る(重量)",
-     "支援",
-     "休業",
-     "促進"
     ],
     "word_formation": [
      "再〜(再利用)",
@@ -3084,6 +3088,13 @@
       "scenario": "塾:進路面談",
       "theme": "教育"
      }
+    ],
+    "orthography": [
+     "基礎",
+     "量る(重量)",
+     "支援",
+     "休業",
+     "仮名遣い"
     ]
    },
    "draw": {
@@ -3099,21 +3110,14 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    },
-   "pools_sha": "d24928db9883"
+   "pools_sha": "aadf23081392"
   },
   {
    "test_id": "20260819_1",
-   "seed": "66485076+reroll(listening_scenarios,6632264)+reroll-one(listening_scenarios:14,22851928)+reroll-one(listening_scenarios:14,94983450)+reroll-one(listening_scenarios:20,81268927)+reroll-one(listening_scenarios:18,24665361)+reroll-one(listening_scenarios:1,20779005)+reroll-one(listening_scenarios:19,67079477)+reroll-one(listening_scenarios:20,20290168)+reroll-one(reading_topics:0,72590665)+reroll-one(quick_response:10,96707738)+reroll-one(grammar_p8:0,29028873)+reroll-one(grammar_p8:4,35312257)+reroll-one(kanji_reading:0,74013109)+reroll-one(kanji_reading:3,19524231)",
+   "seed": "66485076+reroll(listening_scenarios,6632264)+reroll-one(listening_scenarios:14,22851928)+reroll-one(listening_scenarios:14,94983450)+reroll-one(listening_scenarios:20,81268927)+reroll-one(listening_scenarios:18,24665361)+reroll-one(listening_scenarios:1,20779005)+reroll-one(listening_scenarios:19,67079477)+reroll-one(listening_scenarios:20,20290168)+reroll-one(reading_topics:0,72590665)+reroll-one(quick_response:10,96707738)+reroll-one(grammar_p8:0,29028873)+reroll-one(grammar_p8:4,35312257)+reroll-one(kanji_reading:0,74013109)+reroll-one(kanji_reading:3,19524231)+reroll-one(orthography:4,29681945)",
    "generated_at": "2026-08-20 10:02:49",
    "pools_sha": "aadf23081392",
    "items": {
-    "orthography": [
-     "漢和",
-     "回転",
-     "削減",
-     "形容動詞",
-     "意義"
-    ],
     "word_formation": [
      "不〜(不満)",
      "〜沿い(川沿い)",
@@ -3318,6 +3322,13 @@
      "情け(なさけ)",
      "出荷(しゅっか)",
      "常に(つねに)"
+    ],
+    "orthography": [
+     "漢和",
+     "回転",
+     "削減",
+     "形容動詞",
+     "引越し"
     ]
    },
    "draw": {

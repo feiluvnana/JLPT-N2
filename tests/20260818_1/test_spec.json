@@ -1,10 +1,10 @@
 {
- "seed": "9670904+reroll(listening_scenarios,5719948)+reroll(listening_scenarios,10982156)+reroll-one(quick_response:8,1514814)+reroll-one(listening_scenarios:16,70517349)+reroll-one(listening_scenarios:16,92056458)+reroll-one(listening_scenarios:16,94620437)+reroll-one(listening_scenarios:16,69634010)+reroll-one(listening_scenarios:16,74989867)",
+ "seed": "9670904+reroll(listening_scenarios,5719948)+reroll(listening_scenarios,10982156)+reroll-one(quick_response:8,1514814)+reroll-one(listening_scenarios:16,70517349)+reroll-one(listening_scenarios:16,92056458)+reroll-one(listening_scenarios:16,94620437)+reroll-one(listening_scenarios:16,69634010)+reroll-one(listening_scenarios:16,74989867)+reroll-one(orthography:4,54217552)",
  "generated_at": "2026-08-19 11:29:18",
  "test_id": "20260818_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 12,
+  "history_len": 13,
   "cooldown": 6
  },
  "items": {
@@ -20,7 +20,7 @@
    "量る(重量)",
    "支援",
    "休業",
-   "促進"
+   "仮名遣い"
   ],
   "word_formation": [
    "再〜(再利用)",
@@ -362,5 +362,5 @@
    1
   ]
  },
- "pools_sha": "d24928db9883"
+ "pools_sha": "aadf23081392"
 }

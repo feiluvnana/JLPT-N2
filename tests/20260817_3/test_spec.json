@@ -1,10 +1,10 @@
 {
- "seed": "42839028+reroll(listening_scenarios,76954741)+reroll(listening_scenarios,27840167)+reroll(reading_topics,5651688)+reroll(reading_topics,77649053)+reroll(reading_topics,53009255)+reroll(context_words,79773993)+reroll(orthography,97107274)",
+ "seed": "42839028+reroll(listening_scenarios,76954741)+reroll(listening_scenarios,27840167)+reroll(reading_topics,5651688)+reroll(reading_topics,77649053)+reroll(reading_topics,53009255)+reroll(context_words,79773993)+reroll(orthography,97107274)+reroll-one(kanji_reading:3,17543148)",
  "generated_at": "2026-08-18 15:06:31",
  "test_id": "20260817_3",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 12,
+  "history_len": 13,
   "cooldown": 6
  },
  "items": {
@@ -12,7 +12,7 @@
    "相続(そうぞく)",
    "命令(めいれい)",
    "論じる(ろんじる)",
-   "星座(せいざ)",
+   "減る(へる)",
    "実際に(じっさいに)"
   ],
   "orthography": [
@@ -361,5 +361,6 @@
    2,
    4
   ]
- }
+ },
+ "pools_sha": "aadf23081392"
 }

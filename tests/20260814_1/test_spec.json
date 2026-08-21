@@ -1,13 +1,16 @@
 {
- "seed": "53303397+reroll(listening_scenarios,53303397)+reroll(listening_scenarios,42527010)",
+ "seed": "53303397+reroll(listening_scenarios,53303397)+reroll(listening_scenarios,42527010)+reroll-one(orthography:0,58914165)",
  "generated_at": "2026-08-14 11:28:14",
  "test_id": "20260814_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 8,
+  "history_len": 13,
   "cooldown": 6,
   "legacy": true,
-  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17)."
+  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17).",
+  "verified_items": [
+   "区切る"
+  ]
  },
  "items": {
   "kanji_reading": [
@@ -18,7 +21,7 @@
    "皮肉(ひにく)"
   ],
   "orthography": [
-   "基盤",
+   "区切る",
    "傾向",
    "基地",
    "一流",
@@ -363,5 +366,6 @@
    3,
    2
   ]
- }
+ },
+ "pools_sha": "aadf23081392"
 }

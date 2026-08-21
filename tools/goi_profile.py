@@ -59,10 +59,14 @@ INSTITUTIONAL = ("市", "町", "県", "国", "政府", "省", "会社", "当社"
                  "支店", "部長", "課長", "社長", "担当者", "職員", "当店", "学校",
                  "大学", "委員会", "協会", "組織", "予算", "事業", "申請", "制度",
                  "規定", "条例", "契約", "工場", "銀行", "病院", "議会", "当局")
-POLITE = ("です", "ます", "ました", "ません", "でしょう", "ください", "ですか",
-          "ますか")
-POLITE_FINAL = re.compile(r"(です|ます|ました|ません|ませんか|ますか|でしょう|"
-                          r"ください|ましょう)[。、！？]?$")
+# 「でした」 does not contain 「です」 as a substring (で-し-た), so it was measured
+# as PLAIN until 2026-08-21 — a real polite stem counted against the floor.
+# Found while repairing 20260817_2. Both corpora are re-measured with the fixed
+# list, so the archive bands moved with it.
+POLITE = ("です", "ます", "ました", "ません", "でした", "でしょう", "ください",
+          "ですか", "ますか", "でしたか")
+POLITE_FINAL = re.compile(r"(です|ます|ました|ません|ませんか|ますか|でした|"
+                          r"でしたか|でしょう|ください|ましょう)[。、！？]?$")
 FIRST_PERSON = ("私", "僕", "俺", "わたし", "ぼく", "わたくし")
 
 

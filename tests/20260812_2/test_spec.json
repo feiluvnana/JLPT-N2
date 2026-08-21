@@ -1,13 +1,19 @@
 {
- "seed": "45158912+reroll(word_formation,2953455534)",
+ "seed": "45158912+reroll(word_formation,2953455534)+reroll-one(orthography:1,67480264)+reroll-one(orthography:2,97227970)+reroll-one(usage:0,37545541)+reroll-one(usage:1,45804987)",
  "generated_at": "2026-08-12 17:22:18",
  "test_id": "20260812_2",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 5,
+  "history_len": 13,
   "cooldown": 2,
   "legacy": true,
-  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17)."
+  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17).",
+  "verified_items": [
+   "一休み",
+   "反発",
+   "収める(成功を)",
+   "訴える"
+  ]
  },
  "items": {
   "kanji_reading": [
@@ -19,8 +25,8 @@
   ],
   "orthography": [
    "漁業",
-   "果実",
-   "努める(努力)",
+   "一休み",
+   "収める(成功を)",
    "下品",
    "納入"
   ],
@@ -46,8 +52,8 @@
    "さっさと(すぐに/早く)"
   ],
   "usage": [
-   "持参",
-   "大まか",
+   "反発",
+   "訴える",
    "体系",
    "同調",
    "妨げる"
@@ -375,5 +381,6 @@
    1,
    4
   ]
- }
+ },
+ "pools_sha": "aadf23081392"
 }

@@ -1,13 +1,19 @@
 {
- "seed": "11060548+reroll(word_formation,9830544209)",
+ "seed": "11060548+reroll(word_formation,9830544209)+reroll-one(orthography:4,73487909)+reroll-one(paraphrase:0,62271049)+reroll-one(paraphrase:3,11738349)+reroll-one(context_words:2,66026397)",
  "generated_at": "2026-08-12 10:02:39",
  "test_id": "20260812_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 4,
+  "history_len": 13,
   "cooldown": 2,
   "legacy": true,
-  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17)."
+  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17).",
+  "verified_items": [
+   "ひとまず",
+   "みっともない(格好悪い)",
+   "一切〜ない(まったく〜ない)",
+   "近寄る"
+  ]
  },
  "items": {
   "kanji_reading": [
@@ -22,7 +28,7 @@
    "補う",
    "会館",
    "換気",
-   "空中"
+   "近寄る"
   ],
   "word_formation": [
    "準〜(準決勝)",
@@ -32,17 +38,17 @@
   "context_words": [
    "通行",
    "つりあう",
-   "ええと",
+   "ひとまず",
    "該当",
    "名場面",
    "足を延ばす",
    "証言"
   ],
   "paraphrase": [
-   "あらかじめ(事前に)",
+   "一切〜ない(まったく〜ない)",
    "適度に",
    "たちまち",
-   "どなる",
+   "みっともない(格好悪い)",
    "厚かましい(失礼だ)"
   ],
   "usage": [
@@ -377,5 +383,6 @@
    3,
    2
   ]
- }
+ },
+ "pools_sha": "aadf23081392"
 }

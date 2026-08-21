@@ -1,13 +1,18 @@
 {
- "seed": 55976159,
+ "seed": "55976159+reroll-one(orthography:0,62664769)+reroll-one(orthography:1,96433935)+reroll-one(usage:3,58958831)+reroll-one(orthography:0,835162)+reroll-one(usage:3,19633316)",
  "generated_at": "2026-08-13 10:01:46",
  "test_id": "20260813_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 6,
+  "history_len": 13,
   "cooldown": 2,
   "legacy": true,
-  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17)."
+  "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17).",
+  "verified_items": [
+   "一通り",
+   "測る(寸法)",
+   "統一する"
+  ]
  },
  "items": {
   "kanji_reading": [
@@ -18,8 +23,8 @@
    "物価(ぶっか)"
   ],
   "orthography": [
-   "系統",
-   "育児",
+   "一通り",
+   "測る(寸法)",
    "回数券",
    "仮定",
    "推薦"
@@ -49,7 +54,7 @@
    "切実",
    "経緯",
    "抱える",
-   "宣伝する",
+   "統一する",
    "負う"
   ],
   "grammar_p7": [
@@ -367,5 +372,6 @@
    1,
    3
   ]
- }
+ },
+ "pools_sha": "14a9ce6344cd"
 }

@@ -1,5 +1,5 @@
 {
- "seed": "66485076+reroll(listening_scenarios,6632264)+reroll-one(listening_scenarios:14,22851928)+reroll-one(listening_scenarios:14,94983450)+reroll-one(listening_scenarios:20,81268927)+reroll-one(listening_scenarios:18,24665361)+reroll-one(listening_scenarios:1,20779005)+reroll-one(listening_scenarios:19,67079477)+reroll-one(listening_scenarios:20,20290168)+reroll-one(reading_topics:0,72590665)+reroll-one(quick_response:10,96707738)+reroll-one(grammar_p8:0,29028873)+reroll-one(grammar_p8:4,35312257)+reroll-one(kanji_reading:0,74013109)+reroll-one(kanji_reading:3,19524231)",
+ "seed": "66485076+reroll(listening_scenarios,6632264)+reroll-one(listening_scenarios:14,22851928)+reroll-one(listening_scenarios:14,94983450)+reroll-one(listening_scenarios:20,81268927)+reroll-one(listening_scenarios:18,24665361)+reroll-one(listening_scenarios:1,20779005)+reroll-one(listening_scenarios:19,67079477)+reroll-one(listening_scenarios:20,20290168)+reroll-one(reading_topics:0,72590665)+reroll-one(quick_response:10,96707738)+reroll-one(grammar_p8:0,29028873)+reroll-one(grammar_p8:4,35312257)+reroll-one(kanji_reading:0,74013109)+reroll-one(kanji_reading:3,19524231)+reroll-one(orthography:4,29681945)",
  "generated_at": "2026-08-20 10:02:49",
  "test_id": "20260819_1",
  "rotation": {
@@ -21,7 +21,7 @@
    "回転",
    "削減",
    "形容動詞",
-   "意義"
+   "引越し"
   ],
   "word_formation": [
    "不〜(不満)",
