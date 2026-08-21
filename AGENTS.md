@@ -118,7 +118,8 @@ All calibration inputs must be looked up in `refs/`:
 
 - **Textbooks (`refs/Shinkanzen/`)**:
   - Grammar: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Bunpou.pdf`
-  - Reading: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Dokkai.pdf`
+  - Reading: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Dokkai.pdf` → extract
+    `refs/Shinkanzen/dokkai_reference.md` (`make extract-shinkanzen-dokkai`)
   - Listening: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai.pdf`
   - Vocabulary: `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Goi.pdf` → extract
     `refs/Shinkanzen/goi_reference.md` (`make extract-shinkanzen-goi`)
@@ -176,6 +177,7 @@ restate them here or in a skill; fix them there.
 | `make check`              | `tools/check_consistency.py` — the read-only gate | (below) |
 | `make check-tests`        | the same gate, per-test contracts only | (below) |
 | `make goi-profile [BASELINE=1]` | `tools/goi_profile.py` — 文字・語彙 measurement (archive vs tests); `BASELINE=1` prints the doc tables | `question-authoring` |
+| `make dokkai-profile [BASELINE=1]` | `tools/dokkai_profile.py` — 読解 measurement (archive vs tests); `BASELINE=1` prints the doc tables | `question-authoring` |
 | `make sample <id> SEED=n` | `sample_items.py` → `test_spec.json` + ledger | `exam-blueprint` |
 | `make scaffold-sections <id>` | `scaffold_sections.py` → scaffolds `_sections/` authoring templates | `question-authoring` |
 | `make matrix`             | `matrix_helper.py` — **validate only**; both generators are hard-disabled (they had no 音訓 table and emitted kana-skeleton-violating grids — qa-report-20260819_1 F4) | `question-authoring` |
@@ -198,6 +200,7 @@ restate them here or in a skill; fix them there.
 | `make extract-pdf PDF=… OUT=…` | `extract_pdf_text.py` | `external-test-import` |
 | `make extract-archive`    | `extract_jlpt_n2_new.py --all` — past-paper archive → Markdown | §3 above |
 | `make extract-keys`       | `extract_jlpt_n2_key.py` — key PDF → `key.md` + JSON | §3 above |
+| `make extract-shinkanzen-dokkai` | `tools/extract_shinkanzen_dokkai.py` — Shin Kanzen Dokkai → Markdown | §3 above |
 
 The pool-growth tooling (classify/promote/expand/suggest/fetch) is parked in
 `.agents/exam-blueprint/archive/` with no make targets — see its README.

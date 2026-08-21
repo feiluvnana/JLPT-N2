@@ -88,10 +88,12 @@ defect through.
     selects the key on sight;
   - **a 読解 distractor eliminable by an absolute quantifier or categorical
     denial** (すべて/まったく/のみ/だけで十分/無関係/存在しない);
+  - **a 読解 section whose blind-solve strategy score exceeds 45%** (e.g. key is predictable via highest surface/bigram overlap with the passage, or key is consistently the uniquely longest option; paper median overlap margin >0);
   - **a 即時応答 prompt with no defined responder** — an announcement has no
     addressee-reply (e.g. a 火災報知器 prompt);
   - **an orphaned `（注N）` gloss whose term never appears in the passage
     body, or an in-body marker with no definition line**;
+  - **a 問題14 item using a generic truth-check shape** (「〜として正しいものはどれか」「〜の内容と合っているものはどれか」) instead of asking a value, action, or named option;
   - **a 問題14 item answerable from a single constraint, or referencing a
     scenario detail the source text never describes**;
   - **an artifact older than the source it is built from** — `聴解.mp3`/

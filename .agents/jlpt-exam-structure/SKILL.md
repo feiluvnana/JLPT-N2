@@ -91,6 +91,22 @@ and 問題13's item 69 is 考え/主張 in 7 of 7. The four banned retrieval sha
 何か」「〜の内容と合っているものはどれか」) are corroborated at n=15 sittings
 — zero occurrences, in any 問題.
 
+### 問題10–14 question-form inventory (measured across current-era archive)
+
+| 大問 | Frame / Question shape | Official share |
+|---|---|---|
+| 10 | 筆者の考えに合うのはどれか / 筆者はどのように考えているか | ~29% |
+| 10 | 筆者はどのように述べているか / 筆者の説明に合うのはどれか | ~17% |
+| 10 | apparatus **intent**: この お知らせ/メール で伝えたいことは何か・問い合わせていることは何か・用件は何か | ~23% (8 of 10 apparatus items) |
+| 10 | 筆者によると、…は何か | ~6% |
+| 11/13 | 筆者によると、…は何か / どうすればいいか | **25–29%** |
+| 11/13 | span- or 指示語-anchored: 「…」とあるが、どういうことか / それは何を指すか | 27–29% (≤3 per paper) |
+| 11/13 | 筆者の考えに合うのはどれか / 言いたいことは何か | 24–25% |
+| 12 | 65 = A と B が共通して述べていること; 66 = どのようなアドバイス/どうしたらいい/違い | 7 of 7 |
+| 14 | a **value**, an **action**, or one named **option** — never a proposition to verify (e.g. 正しいものはどれか) | 12 of 12 |
+
+Note: The four banned retrieval shapes occur **0 times in any 大問** across 15 sittings. Stems must not use bare 「正しいものはどれか」「適切なものはどれか」.
+
 ### 時間配分の目安 (105分)
 
 | Part | 問題 | 目安 |

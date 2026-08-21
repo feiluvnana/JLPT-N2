@@ -9,21 +9,30 @@ length-band table.
 ## What a 読解 section is
 
 Difficulty lives in the QUESTIONS, not the vocabulary: ask 筆者の考え/
-一番言いたいこと/どういうことか, never mere fact lookup. Passage inventory
-per paper: opinions with a turn (しかし/ところが), one business email, one
-notice with 3 false options contradicted by ※ fine print, one A/B pair
-(agree on one point, differ on conclusion), one flyer with two-condition
-matching where one tempting option fails exactly one condition.
+一番言いたいこと/どういうことか, never mere fact lookup.
+
+**Reference Authority**:
+- Primary measuring stick: the 31-sitting official past exam archive in `refs/JLPT_N2_NEW/` (specifically the 7 current-era sittings 12/2022–12/2025 for all counts, lengths, and bands).
+- Secondary structural/discourse authority: `refs/Shinkanzen/dokkai_reference.md` (`Shin_Kanzen_Masuta_N2-Dokkai.pdf`).
+  - **Five discourse devices (第1部-1 文章のしくみを理解する)**: 1) 対比 2) 言い換え 3) 比喩 4) 疑問提示文 5) 主張表現.
+  - **Five question types (第1部-2 問いを解く技術を身につける)**: 1) 指示語 2) だれが・何が・何を 3) 下線部の意味 4) 理由 5) 例.
+  - **Four 情報検索 source types (第2部)**: 広告 / お知らせ / 説明書き / 表・リスト.
+  *(Secondary evidence: corroborates register, structure, and question taxonomy; never sets length or counts.)*
+
+Passage inventory per paper:
+- Diverse essay types (opinions with a turn, explanatory essays, reflective memoirs),
+- One business email,
+- One notice/announcement (exceptions in natural prose, ※ symbol capped at ≤3 per paper),
+- One A/B pair (agree on one common observation, differ on conclusion/advice),
+- One flyer/table with condition matching where distractor options fail specific conditions.
 
 **NO FURIGANA in 読解** — passages (問題9–14), stems, and options carry no
 `<ruby>`; over-level/rare/domain words are glossed only via `（注N）` (below).
 
-## Thirteen surfaces, thirteen different essays — subject AND closing move
+## Thirteen surfaces, thirteen different essays — subject, closing move, AND voice
 
 The 読解 half is 13 surfaces (問題9 cloze + 問題10×5 + 問題11×4 + 問題12 +
-問題13 + 問題14). They must differ on **two** axes — a paper can pass the
-first while failing the second badly (`20260810_1` shipped both through a
-green gate).
+問題13 + 問題14). They must differ on **three** axes:
 
 **Axis 1 — subject/theme. All thirteen carry DIFFERENT themes**
 (`exam-blueprint` §"The four theme rules" rule 3) — not "at most two per
@@ -110,6 +119,16 @@ Distractor sets must vary in kind across the section; a section whose wrong
 options are uniformly overstatements is strategy-solvable regardless of how
 well each item reads alone.
 
+**Axis 3 — Voice & Register (the voice quota).**
+Official 読解 passages are excerpts from published essays and books (first-person, half addressed to the reader in です・ます, with quoted speech and rhetorical devices). A compliant paper must avoid uniform impersonal policy prose:
+- **First-person quota**: ≥4 of the 12 essay-type surfaces (問9, 問10×5, 問11×4, 問12, 問13) are written in the first person (containing 私/僕/自分).
+- **Polite voice quota**: ≥3 passages carry です・ます sentence endings throughout.
+- **Kanji density**: 24–32% JP chars across the paper's reading prose (FAIL outside 22–34%).
+- **Rhetorical & discourse devices**:
+  - ≥1 passage carrying quoted dialogue/speech 「…」
+  - ≥1 passage carrying a 疑問提示文 (Shin Kanzen discourse device 4: 「〜のだろうか」「〜だろう」)
+- **※ (asterisk) symbol count**: ≤3 in the entire paper across 問題10–14 (archive 0–3, median 0).
+
 ## 読解 distractors — no free eliminations
 
 A 読解 distractor must be eliminable only by checking it against the
@@ -128,30 +147,34 @@ Shipped in all 8 prior generated papers before `20260813_2`'s QA caught it.
   against what the passage actually argues, so eliminating it requires
   reading.
 
-## Length bands — the single copy in this repo
+## Length bands & Sentence rhythm — the single copy in this repo
 
 These numbers once lived in three files at once, hand-synced, and 4/4
 generated papers shipped 問題11/問題14 under band while every gate stayed
 green. Stated **here and nowhere else** — `jlpt-exam-structure` points at
-this table, and `check_dokkai_lengths()` enforces the floors.
+this table, and `check_dokkai_lengths()` enforces the two-sided bounds.
 
-| Section | official min | official median | gate floor |
-|---|---|---|---|
-| 問題10 短文 (5 passages) | 1143 | 1225 | **≥1100** |
-| 問題11 中文 (4 passages) | 2449 | 2556 | **≥2250** |
-| 問題12 A/B | 532 | 551 | **≥510** |
-| 問題13 長文 | 814 | 904 | **≥800** |
-| 問題14 情報検索 | 489 | 604 | **≥450** |
+| Section | official min | official median | official max | gate floor | gate ceiling |
+|---|---|---|---|---|---|
+| 問題10 短文 (5 passages) | 1143 | 1225 | 1329 | **≥1100** | **≤1330** |
+| 問題11 中文 (4 passages) | 2449 | 2556 | 2685 | **≥2250** | **≤2700** |
+| 問題12 A/B | 532 | 551 | 592 | **≥510** | **≤600** |
+| 問題13 長文 | 814 | 904 | 1061 | **≥800** | **≤1070** |
+| 問題14 情報検索 | 489 | 604 | 638 | **≥450** | **≤640** |
 
-(`DOKKAI_FLOOR` in `tools/check_consistency.py` — re-calibrated against the
-31-sitting archive to sit below every official paper; a check an official
-paper fails is a wrong check, so the code is authoritative if this table drifts.)
-
-Per-passage floors: each 問題10 passage ≥150 JP chars, each 問題11 passage
+Per-passage bounds: each 問題10 passage 150–350 JP chars (ceiling 350; archive max 334), each 問題11 passage
 ≥400 (`DOKKAI_PASSAGE_FLOOR`). Current-era per-passage measurements: 問題10
 157/241/334 (min/med/max, n=35), 問題11 507/655/763 (n=28) — author 問題10 to
 ~240, 問題11 to ~650. An official 短文 is *allowed* to be short; a generated
 one that's short is usually thin, not deliberate.
+
+**Option length band**: mean option length per paper **24–30** JP chars across all 20 items (official current era 26.3 JP chars).
+
+### Sentence rhythm
+
+Sentence rhythm in N2 essays is remarkably stable across official sittings:
+- **Median sentence length per paper**: **33–43** JP chars (FAIL outside 28–50).
+- **Share of sentences under 25 chars**: **12–30%** (official current-era band 14–27%, median 20.5%).
 
 **Counting method, stated once**: JP characters only (hiragana/katakana/
 kanji/JP punctuation, same class `check_dokkai_lengths()` uses) over
@@ -159,11 +182,10 @@ kanji/JP punctuation, same class `check_dokkai_lengths()` uses) over
 definitions kept). Digits/Latin/spaces excluded. Never quote a length
 without naming this method.
 
-**Author to the medians, not the floors** — every floor sits below the
-official minimum by design, so clearing the gate alone still leaves a paper
-under-length against the band. Don't pad the note block or stems to hit a
-floor — the gate measures the passage region (問題14's table/conditions
-count). **問題14 misleads in JP chars**: counted all-char it measures
+**Author to the medians, not the floors or ceilings** — every floor sits below the
+official minimum and every ceiling sits above the official maximum by design.
+Don't pad the note block or stems to hit a floor — the gate measures the passage region
+(問題14's table/conditions count). **問題14 misleads in JP chars**: counted all-char it measures
 676–793, median 707 — right on 700字程度 while looking ~25% short in JP chars.
 
 **Calibrate to the era, not a paper**: 問題11 became 4×2 at 12/2022 and its
@@ -178,28 +200,18 @@ Official ships **2–5 per paper in the current era, median 3, never zero**
 passage across 問題11–13, and every `（中略）` must sit inside a 問題11–13
 passage body, never floating under an instruction line.
 
-## Marked-span quoting — bold every span a question anchors on
+## Marked-span quoting & retrieval shapes
 
-**Rule (every 問題10–14 stem):** whenever a stem anchors on a specific span
+- **Span rate**: **≤2 span-anchored stems per paper** across 問題10–13 (current-era official median is 0, range 0–3; 4 of 7 sittings have 0). Do not over-anchor.
+- **指示語 floor**: **≥1 指示語 item per paper** (Shin Kanzen 第1部-2 question type 1; official current era 1.57/paper, e.g. 「それ/これとは何を指すか」「どういうことか」).
+- **Default retrieval shape**: **「筆者によると、〜は何か」** is the primary anchored retrieval frame (~25–29% of official 問題11/13 stems).
+
+**Rule (every span-anchored stem):** whenever a stem anchors on a specific span
 via `「…」とあるが` — a quoted clause, sentence, or defined term — that EXACT
 span must be marked in the passage body with a circled-number marker AND
 bolded, `①**span**`, and the stem must reference it identically,
 `①**span**とあるが`. Never leave either side as a bare `「quoted text」とあるが`
-with no marker/bold — `check_dokkai_numbered_markers` only asserts passage
-and question markers match as SETS, so a paper with zero markers anywhere
-passes it trivially. `check_dokkai_span_anchor_bold` FAILs the bare-quote
-shape directly (WARNs on a marker present without the bold — the milder
-half, since a marker at least gives the set-match check something to pair).
-
-Every paper in the repo follows this except `20260817_1`, which shipped
-three span-anchored stems as plain bare quotes. The rule applies equally to
-a defined vocabulary term (`①**重ね合わせ**`) and to a full clause/sentence
-span.
-
-A passage with multiple span-anchored questions numbers them ①②③… in
-reading order; one question still uses ①, never a bare quote. An unanchored
-stem (筆者の考えに合うのはどれか) needs no marker — this rule only fires on
-the `「…」とあるが` shape.
+with no marker/bold. `check_dokkai_span_anchor_bold` FAILs the bare-quote shape.
 
 ### The two sides must be the SAME characters
 
@@ -208,271 +220,93 @@ are character-identical.** Not "the same idea", not "the stem's span inside
 the passage's span" — the same string.
 `check_dokkai_span_anchor_identity` FAILs a mismatch.
 
-`20260817_2`'s item 57 bolded 72 JP chars of passage —
-「特定空き家に指定されると、所有者に修繕や解体の指導・勧告が行われ、これに従わ
-ない場合は、住宅用地に対する固定資産税の軽減措置（注4）が打ち切られる」 — while
-its stem quoted only 「特定空き家に指定されると」, 12 chars (2026-08-18, user
-report). `check_dokkai_span_anchor_bold` could not see it: that check proves a
-marker and a bold EXIST on each side and never compares what they enclose.
-
 **Repair direction is fixed: shorten the PASSAGE bold to the stem's span,
-never lengthen the stem to the passage's.** Told only "make the two match",
-an author lengthens whichever is easier, and lengthening is the wrong
-direction — see the length band below. After re-cutting, re-check §3: the key
-must still need something the span alone does not show.
+never lengthen the stem to the passage's.**
 
 **A （注N） gloss never sits inside the bold**, wherever the glossed word
 falls in the span — `①**重ね合わせ**（注2）`, never `①**重ね合わせ（注2）**`.
-The stem drops the gloss when it quotes the span, so a gloss inside the bold
-makes the two sides differ *by construction*: that is exactly how
-`20260810_2` (自律神経（注3）) and `20260812_1` (高揚感（注2）) shipped
-mismatched. When the glossed term sits mid-span, move the span off it rather
-than move the gloss — 20260810_2's ① became 「体調や気分の波を生み出す」, leaving
-「気圧の変化が自律神経（注3）に影響し、」 outside the bold. A separate check,
-`no （注N） gloss inside a bolded marked span`, FAILs this on its own so the
-repair is unambiguous.
+`check_dokkai_span_anchor_identity` FAILs a gloss inside bold.
 
 ### Length band — the span is a pointer, not a highlighter
 
-Measured over the 31-sitting archive, 55 spans quoted in 問題10–13 stems:
+Measured over official sittings:
+- Median **8** JP chars (current-era band).
+- **WARN above 25** JP chars.
+- **FAIL above 35** JP chars.
 
-| | official | gate |
-|---|---|---|
-| min / median / max | 2 / **8** / 34 JP chars | — |
-| p95 | 23 | **WARN above 25** (54 of 55 sit at or below) |
-| ceiling | 34 | **FAIL above 35** |
+**Author to the median, ~8–15 chars** — a phrase, not a sentence.
 
-`check_dokkai_span_anchor_identity` gates both. **Author to the median, ~8–15
-chars** — a phrase, not a sentence.
+## 問題10 stems & apparatus
 
-Before this band existed, generated papers ran median 22, max 72, with 19 of
-57 spans (33 %) past the official p95 against official's 1 of 55 (1.8 %) —
-nine papers, so the defect was systemic, not a slip. The damage is not
-cosmetic: 20260817_2's 72-char bold ran a highlighter over the exact sentence
-its key restates, so item 57 is keyable by eye without reading the paragraph,
-and 20260810_2's item 61 bolded a 58-char clause whose key is a near-copy of
-it. A long span also collapses §3 automatically — once the bold covers the
-reasoning, the stem has already shown the reader the answer. All 19 were
-re-cut on 2026-08-18; the fix is always the same move, sliding the `**`
-delimiters onto the clause the question actually turns on, on both sides,
-with **no change to the passage prose itself**.
+問題10 comprises 5 short passages (52–56), including one business email and one notice/document:
+- **考え/主張 mix**: **≥2 of the 5 items** belong to the 筆者の考え family (「筆者の考えに合うのはどれか」「筆者はどのように考えているか」; official share ~46%).
+- **Apparatus stems ask INTENT, not content**: for notices, emails, and announcements, stems must ask what the document is FOR (「このお知らせで伝えたいことは何か」「このメールで問い合わせていることは何か」「このメールの用件は何か」; 8 of 10 official apparatus items). Asking mere content lookup turns notices into lookup traps.
 
-## 問題11 stems
+## 問題11 stems & Banned retrieval shapes
 
 All figures from `official_calibration.md` §4 — current era, n=7 sittings,
-28 pairs, 56 stems; where it disagrees with July 2025 alone, the archive wins.
+28 pairs, 56 stems:
 
-- **Anchoring:** every stem is anchored on **筆者** or a **marked span**
-  (「①…とあるが」/「〜とは何を指すか」). 82% name 筆者; 18% don't and anchor on
-  a span instead (0–3 per paper). Avoid unanchored pure-retrieval shapes.
-- **Banned — four pure-retrieval shapes:** 「本文で述べられている〜はどれか」
-  「〜として正しいものはどれか」「〜の主な目的は何か」「〜の内容と合っているもの
-  はどれか」 — 0 occurrences across 15 sittings, in any 問題. `make check`
-  FAILs on them.
-- **Paper level: 問題11 carries at LEAST ONE 考え/主張 stem** — official
-  spread is 1–4 of 8. Zero is the defect and the gate FAILs it. Author 2–3
-  of the eight (archive median), at most one per pair.
-- **Pair level: the 事実把握 stem comes FIRST** — 26 of 28 official pairs
-  (exceptions are the two 考え/考え pairs). The gate WARNs on an inverted
-  pair — a style regularity, not an answerability defect.
-
-**The old "one 事実把握 + one 考え/主張 per pair" rule is NOT a rule** — over
-28 current-era pairs the split is 13 one-of-each, 13 two-事実, 2 two-考え, and
-July 2025 is the ONLY sitting where all four pairs come out one-of-each. As a
-per-pair requirement it rejects 6 of 7 current official papers — it is not a
-requirement, and this file is where that statement lives. (**問題13 IS
-regular**: item 69 is a 考え/主張 stem in 7 of 7 papers — treat that slot as
-mandatory.)
-
-Classify each stem by SHAPE, not intent — span anchoring is tested FIRST,
-since 「売れた理由とあるが、筆者はなぜ売れたと考えているか」 is 事実把握 despite
-containing 考えて:
-
-- **事実把握** — anchored to a specific span/term/sub-topic, answerable from
-  the sentences around it: 「①…とあるが、どういうことか」/「〜について、筆者は
-  どのように述べているか」/「筆者によると、…とはどういうことか」.
-- **考え/主張** — unanchored, answerable only from the passage as a whole:
-  「筆者の考えに合うのはどれか」/「筆者が最も言いたいことは何か」.
-
-Write the eight labels down while drafting and count the 考え/主張 ones. If
-zero, rewrite the SECOND stem of one pair as an unanchored 考え question —
-never re-label a stem to make the tally look right.
+- **Anchoring:** every stem is anchored on **筆者**, a **marked span** (「①…とあるが」), or a **demonstrative/topic** (「筆者によると」). 82% name 筆者; 18% anchor on a span instead.
+- **Banned across 問題10–14 — four pure-retrieval shapes + bare truth-checks:**
+  1. 「本文で述べられている〜はどれか」
+  2. 「〜として正しいものはどれか」
+  3. 「〜の主な目的は何か」
+  4. 「〜の内容と合っているものはどれか」
+  5. Bare 「正しいものはどれか」「適切なものはどれか」
+  *(0 occurrences across 15 sittings in any 大問; `check_dokkai_banned_stems` FAILs them).*
+- **Paper level: 問題11 carries at LEAST ONE 考え/主張 stem** — official spread 1–4 of 8. Author 2–3 of the eight.
+- **Pair level: the 事実把握 stem comes FIRST** — 26 of 28 official pairs.
+- **問題13 IS regular**: item 69 is a 考え/主張 stem in 7 of 7 papers.
 
 ## （注N） glosses
 
-- **Pairing is 1-to-1 per passage, both directions** — every definition line
-  annotates a word actually in that passage's body, and every in-body marker
-  has a definition line. An orphan either way is an automatic QA fail.
-- **Count in-body markers**, not raw occurrences (each gloss also has a
-  definition line, so occurrence-counting nearly doubles the figure).
-- **The two numbers:** the gate WARNs below 25 in-body glosses
-  (`GLOSS_MARKER_MIN` — a floor below every current official paper). **Author
-  to the band, not the floor**: current-era band 27–61/paper, median 39,
-  target ~30–40, plus ≥3 in every 中文/長文 passage.
-- **Where the count is earned** — never a per-問題 floor touching 問題12/14
-  (zero glosses in every current-era paper):
-
-  | | 問題10 | 問題11 | 問題12 | 問題13 | 問題14 |
-  |---|---|---|---|---|---|
-  | current-era range | 3–13 | 17–36 | **0** | 0–12 | **0** |
-  | median | 6 | 24 | **0** | 7 | **0** |
-
-  Per 問題11 passage: min 2, median 5.5, max 13 (26 of 28 ≥3). Plan ~5 per
-  中文, ~7 for the 長文; do not spread a quota across 問題10 to reach a number.
-- **The count rule and the band rule are ONE rule.** Reaching the count with
-  basic-word glosses (割引・洗髪・契機・規制・革新・省力化・増幅) is worse than a
-  low count — it degrades the passage. A specialized subject naturally
-  carries five domain terms; a plain-vocabulary passage carries none and
-  can't be rescued by annotation afterward. If a draft yields fewer than 3
-  glossable terms, its subject is too plain for 中文 — deepen the subject,
-  never gloss down to the floor.
-- **STRICT vocabulary band for notes:**
-  - 🚫 **BANNED**: glossing N3–N5 or standard N2 vocabulary (選択, 信号, 技術,
-    文化, 質, 準備, 手順, 設計, 現象, 経由, 偏り, 維持, 継続, 前提, 細部,
-    バランス — examples, not the boundary) with trivial/circular definitions.
-  - 🚫 **The operational test**: (1) genuinely above N2 band — check against
-    Shin Kanzen N2-Goi/N2-Kanji and Soumatome N2 語彙/漢字: if either carries
-    it as a headline N2 word, don't gloss it; AND (2) the definition
-    introduces words the term itself does not contain (「洗髪：髪の毛を洗う
-    こと」 fails; 「大脳辺縁系：…」 passes). `make check` WARNs on condition
-    (2) only (no corpus needed since `openjlpt`'s removal); condition (1) is
-    a manual band judgment (`exam-qa-review` §2.5). **Both conditions are
-    necessary, neither sufficient** — a term absent from Shinkanzen/Soumatome
-    isn't automatically over-level (準備, 技術, 選択 plausibly are too, and
-    are still banned).
-  - 🚫 **Condition (2), as a procedure you run while writing — the
-    delete-the-headword-characters test.** "Avoid circular definitions" is a
-    judgement, so it was decided ad hoc every paper and `20260817_3` shipped
-    a circular gloss past three readers. Instead: **write the gloss, then
-    delete from it every character that also appears in the headword, and
-    read what is left for CONTENT** (not for fluency — the remainder is
-    ungrammatical by construction). What remains must still identify the
-    term.
-    - 「菜っ葉：食用にする葉物の野菜」 → 「食用にする物の野」. Only "a thing that
-      is eaten" survives; the leaf and the vegetable both came from the
-      headword. **Insufficient** — reword (「ほうれん草や小松菜など、葉の部分を
-      食べる野菜」 survives the deletion as the examples plus 部分を食べる).
-    - 「触診：体に手を触れて状態を確かめる診察の方法」 → 「体に手をれて状態を確かめる
-      察の方法」. The mechanism and the purpose both survive. **Sufficient.**
-    - 「農泊：農家に泊まり、その土地の暮らしや仕事に触れる旅行の形」 → the whole
-      second clause survives. **Sufficient.**
-    This is the same test the gate's WARN approximates, moved to where it can
-    be acted on. A well-glossed 漢語 naturally unpacks its own kanji, so the
-    gate will keep listing candidates — run this test on each and record the
-    verdict rather than dismissing the list.
-  - ✅ **TARGETS**: N1-level/rare/literary words (委ねる, 雄弁, 死守する,
-    顧みる, 飼いならす, 抑圧, その場しのぎ); onomatopoeic/colloquial
-    (むきむきの); specialized/domain jargon (大脳辺縁系, 起業, 機動性);
-    contextual/figurative metaphors (余白のあるメディア, 思い出の扉).
-  - **Cross-check against this SAME paper's 問題1–6.** `20260811_1` glossed
-    健やかさ in 問題11(4) while 健やか was, in the same paper, a 問題6 key —
-    proving the word is ordinary N2 vocabulary. `check_note_band_reuse()`
-    FAILs a same-paper match mechanically (plain string search) — found the
-    same defect independently in 3 more papers by 2026-08-17. A DIFFERENT
-    shape (a passage's own specialized subject noun repeating unglossed many
-    times within its own passage, e.g. 仮眠, フィルターバブル) is NOT the same
-    defect — that's the passage's actual topic recurring, not a leaked
-    band-reuse; treat repetition as a prompt to look twice, not a rule.
-  - **The band call is still mostly manual** — a 2026-08-17 audit found
-    roughly a THIRD of all glosses across ten papers (18–52% per paper, no
-    paper clean) targeted ordinary N2-or-easier vocabulary (クレーム, 議会,
-    アーカイブ, 懸念, 検証, 遠慮, 対話, 委ねる, 沈黙, 示唆, 発酵食品, こつ,
-    相談役, 培養, 水素, 実感, 化学物質, 摩擦, 妥当, 助成, 共生, 栞, 衰退, 端末,
-    安否, 代替, 郷土料理, 解明する, 惣菜, 厄介, 障壁 — worked examples, not a
-    closed list). The test is always the two conditions, not list membership.
-  - **A note can leak the answer even when band and circularity are both
-    fine** — if a gloss's definition states the fact/cause/comparison the
-    item tests, the reader answers from the glossary without engaging the
-    passage. Confirmed: `20260817_1`'s 重ね合わせ note IS item 57's answer;
-    `20260814_1`'s 物理的環境 note states the passage's whole thesis before
-    the reader gets there. Before finalizing a gloss, check whether it
-    already answers its anchored item — if so, generalize the definition
-    (meaning only, never why it matters) or gloss a different word. No
-    mechanical check catches this; QA must (`exam-qa-review`'s two-answer hunt).
-- Annotate strictly as `（注1）`, `（注2）`… (never `<ruby>`), one line per
-  note immediately after the passage.
+- **Pairing is 1-to-1 per passage, both directions** — every definition line annotates a word actually in that passage's body, and every in-body marker has a definition line.
+- **Count in-body markers**: gate WARNs below 25 in-body glosses (`GLOSS_MARKER_MIN`). **Author to the band**: current-era band 27–61/paper, median 39, target ~30–40.
+- **Where the count is earned**: 問題11 (~5 per passage) and 問題13 (~7). **問題12 and 問題14 get 0** in every current-era paper.
+- **STRICT vocabulary band**:
+  - 🚫 **BANNED**: glossing standard N2 or easier vocabulary (選択, 信号, 技術, 準備, 手順, 維持, 継続, 前提, バランス…) with circular definitions.
+  - 🚫 **Operational subtraction test**: delete from the definition every character that appears in the headword; what remains must still explain the concept.
+  - ✅ **TARGETS**: N1-level/rare words, specialized domain jargon, contextual metaphors.
+  - **No answer leaks**: a gloss must not give away the answer to a question anchored on it.
 
 ## 問題14 (情報検索)
 
-**70 and 71 are BOTH person-scenario items** — 7 of 7 papers
-(`official_calibration.md` §6). The answer always combines **≥2**
-constraints from the table (topic+date/time, or category+footnote
-exception; commonly 3). Never a single-field lookup.
+**70 and 71 are BOTH person-scenario items** — 7 of 7 papers (`official_calibration.md` §6). The answer always combines **≥2** constraints from the table.
 
-- **71 may never be** 「このお知らせの内容と合っているものはどれか」 — a
-  content-match question collapses to a one-cell lookup (shipped in
-  t2/t3/t4; no official paper uses it). Write 71 as a second applicant whose
-  plan fails exactly one condition.
-- Two official shapes: a named person with 2–3 requirements → which option;
-  a named person on a given date → what to do to book, decided by a footnote.
-- **The 解説 cells for 70/71 must each quote the TWO flyer cells the key
-  combines** — one quote means one constraint. `make check` FAILs a cell
-  with fewer than two distinct quoted spans occurring in the flyer text.
-- Every constraint the QUESTION references must be describable from the
-  flyer text as printed — never invent a role/category the source doesn't
-  describe.
-- **Every WRONG option must contain at least one clause factually FALSE
-  against the flyer** — not merely incomplete. `20260811_1` shipped a wrong
-  option combining two BOTH-true clauses (true-but-incomplete is a second
-  defensible answer). Build a wrong option from a true combination with ONE
-  fact changed to something the flyer contradicts, never by omission alone.
+- **Target shape**: stems must ask for a **value** (料金はいくらになるか / 何を用意すべきか), an **action** (どのように申し込むか / どうしなければならないか), or a **choice** among named options (どの講座か).
+- **🚫 BANNED**: stems asking generic truth checks (「〜について、正しいものはどれか」「〜について、適切なのはどれか」).
+- **The 解説 cells for 70/71 must each quote the TWO flyer cells the key combines**.
+- **Every WRONG option must contain at least one clause factually FALSE against the flyer** — not merely incomplete. Build wrong options from true combinations with ONE fact changed to something the flyer contradicts.
 
-## 読解 keys — unpredictable option lengths and strict paraphrasing
+## 読解 keys — unpredictable option lengths, rank spread, and strict paraphrasing
 
-### 1. Option length balance and unpredictable key length (longest answer rate ~20–35%)
+### 1. Option length balance & rank distribution
 
-**BINDING: key length must be unpredictable, all four options within ~30%
-of each other (max/min ≤ 1.30).**
+1. **Per-item length ratio**: all four options must be balanced.
+   - **WARN if max/min > 1.65** (official p90 is 1.61).
+   - **FAIL if max/min > 2.50** (archive max 4.29).
+2. **Per-paper key rank spread**:
+   - **No single key rank (1=longest, 2, 3, 4=shortest) may exceed 60% of items** (`check_dokkai_key_rank_spread` FAILs >60%, WARNs >45%). Official per-paper worst is 56%, median 39%.
+   - **Uniquely longest rate**: key is uniquely longest in **20–30%** of items (official median 23.0%).
+3. **Repair direction**: adjust ranks by **lengthening distractors with genuine, passage-groundable clauses** (conditions, consequences, qualifications). Do NOT shorten keys — shortening is how paraphrases collapse into verbatim lifts.
 
-1. Every keyed item (問題10–14, 52–71): four options' JP-char lengths satisfy
-   max/min ≤1.30 — `make check` FAILs (`check_dokkai_option_length_balance`).
-2. The key must NOT be predictably the longest option. **Two rates, not one**
-   — measured over 219 official items in 31 sittings:
+### 2. Overlap direction — keys must share LESS surface with the passage than distractors
 
-   | measure | official | FAIL above |
-   |---|---|---|
-   | key is (tied-)longest | 30 % | 35 % |
-   | key is the UNIQUELY longest | **20 %** | **30 %** |
+Examinees must not be able to solve items by simple character matching:
+1. **Overlap Margin**: the paper's median (key overlap − best distractor overlap) bigram margin must be **≤ 0.0** (negative in 7 of 7 official papers: −0.021 to −0.100).
+2. **Top overlap share**: the key may be strictly top in passage bigram overlap in **≤50%** of items (WARN above 44%; official range 11–44%, median 38%).
+3. **Distractor construction**: build wrong options FROM passage material (a true clause with one fact altered) and write the key as an abstract paraphrase. This ensures distractors are attractive and share high surface overlap with the passage, while the key tests comprehension of the idea.
 
-   Both are gated (`check_dokkai_longest_key_rate`). The pair exists because
-   the tied rate alone is gameable, and was gamed: nine of the eleven papers
-   on disk sat at exactly 6/20 = 30 % tied — authored straight at the top of
-   the old "20–35 %" target — but reached it with the key the UNIQUELY longest
-   every time, where official reaches the same 30 % partly through ties
-   (2026-08-18, user report). Since rule 1 clusters all four options into a
-   ±30 % band, "a hair longer than all three" is a reliable tiebreak inside
-   it: `20260810_2` keyed 37 vs [31,31,32], 41 vs [33,33,34], 38 vs [31,31,32]
-   and three more like them, every item inside every per-item rule.
-   **Author to 20 % uniquely-longest, not to the ceiling.**
-3. Vary key length rank across items (~4–6 each of rank 1/2/3/4) by
-   lengthening distractors with genuine, passage-groundable clauses
-   (conditions, consequences, qualifications — never filler). Letting the key
-   TIE the longest distractor is a legitimate repair — official does it — and
-   a one-character trim is usually all a tie needs. Do not shorten a key to
-   fix rank: 問題10–13 keys carry the paraphrase load (§2 below), and
-   shortening is how a paraphrase collapses back into the passage's wording.
-4. The same tell is gated in 聴解, where it was far worse (39–79 % per paper):
-   `question-authoring/references/choukai-items.md` §"Key length carries no
-   information".
-
-### 2. Strict key paraphrasing — keys must NEVER be verbatim text lifts
+### 3. Strict key paraphrasing — keys must NEVER be verbatim text lifts
 
 **BINDING: every key in 問題10–13 (52–69) must be genuinely paraphrased.**
+1. No verbatim lifts: an LCS against the passage ≥15 JP chars AND ≥50% of the key length is a FAIL (`check_verbatim_keys`); ≥20 chars is an automatic FAIL; ≥85% verbatim on a short key is an automatic FAIL.
+2. Rephrase the author's logic with synonyms, abstract summaries, or grammatical restructuring.
 
-1. No verbatim lifts: an LCS against the passage ≥15 JP chars AND ≥50% of
-   the key length is a FAIL (`check_verbatim_keys`); ≥20 chars is an
-   automatic FAIL; ≥85% verbatim on a short key is an automatic FAIL. (問題14
-   items 70–71 are excluded — flyer lookup tests exact printed conditions.)
-2. Rephrase the author's logic with synonyms, abstract summaries, or
-   grammatical restructuring. Test: can a test-taker find the answer by
-   searching for identical character sequences in the passage? If yes, rewrite.
-
-### 3. Stems quoting marked spans
+### 4. Stems quoting marked spans
 
 A key must never be answerable purely from the stem's own quoted span. When
 a stem anchors on `①**quoted clause**とあるが`, the key must require
-synthesizing something OUTSIDE that clause (its cause, consequence, or a
-term it defines) — never restate the clause with a synonym swapped in. Draft
-the key from the passage's surrounding reasoning, then check: does the
-option depend on anything the stem didn't already show the reader? If not,
-rewrite it.
+synthesizing something OUTSIDE that clause — never restate the clause with a
+synonym swapped in.

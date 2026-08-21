@@ -461,6 +461,10 @@ of 2, all invisible to every check). So:
   is not "untagged", it's uncounted, which reads as compliant.
 - **A tag must describe the passage as authored, not the topic as drawn** —
   re-tag at build time if drafting moved the subject.
+- **Voice & Register quota across 読解 surfaces**:
+  - ≥4 of the 12 essay surfaces written in first-person (`私`, `僕`, `自分`).
+  - ≥3 passages carry `です・ます` polite style throughout.
+  - Kanji density across reading prose 24–32%.
 - `check_topics_themes()` reads recorded themes and FAILs the four rules on
   the 読解 half. Rows predating the field WARN.
 

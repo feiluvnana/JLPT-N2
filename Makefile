@@ -1,7 +1,7 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check check-tests goi-profile grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
-       init-import extract-pdf extract-archive extract-keys extract-kanji-tables extract-shinkanzen-goi \
+.PHONY: help check check-tests goi-profile dokkai-profile grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
+       init-import extract-pdf extract-archive extract-keys extract-kanji-tables extract-shinkanzen-goi extract-shinkanzen-dokkai \
        lint-draft lint verify-scramble scaffold-explanations irt \
        scaffold-sections matrix qa-eval autofix
 
@@ -67,7 +67,9 @@ help:
 	@echo "  make extract-keys     Answer-key PDF -> per-exam key.md + answer_keys.json"
 	@echo "  make extract-kanji-tables   Shin Kanzen N2-漢字 別冊1 -> refs/Shinkanzen/kanji_tables.md"
 	@echo "  make extract-shinkanzen-goi Shin Kanzen + Soumatome N2 語彙 -> refs/*/goi_reference.md"
+	@echo "  make extract-shinkanzen-dokkai Shin Kanzen N2 読解 -> refs/Shinkanzen/dokkai_reference.md"
 	@echo "  make goi-profile [BASELINE=1]  文字・語彙 measurement: archive vs tests (--baseline for the doc tables)"
+	@echo "  make dokkai-profile [BASELINE=1] 読解 measurement: archive vs tests (--baseline for the doc tables)"
 	@echo "  (any per-test target also takes TEST=<id>; default TEST=1)"
 	@echo "=========================================================================="
 
@@ -79,6 +81,9 @@ check-tests:
 
 goi-profile:
 	python3 tools/goi_profile.py $(if $(BASELINE),--baseline,--official --tests)
+
+dokkai-profile:
+	python3 tools/dokkai_profile.py $(if $(BASELINE),--baseline,--official --tests)
 
 sample:
 	@test -n "$(SEED)" || (echo 'usage: make sample <id> SEED=$$(python3 -c "import secrets; print(secrets.randbelow(10**8))")'; \
@@ -161,12 +166,11 @@ extract-archive:
 extract-keys:
 	python3 tools/extract_jlpt_n2_key.py
 
-# The four scanned books AGENTS.md §3 names as the ONLY vocabulary/kanji band
-# authority have no text layer, so these two rasterise + Vision-OCR the sections
-# the pipeline actually needs. Read-only with respect to the PDFs; the .md they
-# write is SECONDARY evidence (band/family/reading), never a source of counts.
 extract-kanji-tables:
 	python3 tools/extract_kanji_tables.py
 
 extract-shinkanzen-goi:
 	python3 tools/extract_shinkanzen_goi.py
+
+extract-shinkanzen-dokkai:
+	python3 tools/extract_shinkanzen_dokkai.py
