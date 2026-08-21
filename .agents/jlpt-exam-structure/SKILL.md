@@ -135,6 +135,21 @@ Note: The four banned retrieval shapes occur **0 times in any 大問** across 15
 問題5 shape: **2 item blocks, 3 answers** — `1番` + `2番` (二つの質問), **all
 choices spoken**. Keys are `問5-1`, `問5-2-1`, `問5-2-2`.
 
+### 問題1 Question Forms (measured across 31 sittings)
+
+| Frame | Official share | Example |
+|---|---|---|
+| この後/これから + まず + 何をしますか・しなければなりませんか | ~40% | 「女の職員はこの後まず何をしますか」 |
+| 何をしますか・しなければなりませんか (no まず) | ~37% | 「女の職員はこの後何をしますか」 |
+| どう/どのように 〜ますか (modify a draft, poster, booking, method) | ~12% | 「学生はスピーチの原稿をどう直しますか」 |
+| どの〜を選ぶ/押す/買う (condition match) | ~5% | 「どの番号を押せばいいですか」 |
+| 何を持って行く/出す/書く/用意する (object) | ~4% | 「料理教室に何を持って行かなければなりませんか」 |
+| いつ/いくら/どこ (time, cost, location) | ~3% | 「今ここでいくら払いますか」 |
+
+Note:
+- **課題理解 options may be a SET** (e.g. Shin Kanzen 問題紹介 例題1 keys combinations like `1: アイウ`, `2: アウオ`, `3: ウオ`, `4: アウ`).
+- **~14% of official 問題1 items are single-speaker** (announcement, 留守番電話 message, 課長からのメッセージ, automated menu).
+
 ### Printed options are kana-LEANING — the booklet is not a reading test
 
 Official 問題1/2 options are deliberately light on kanji:

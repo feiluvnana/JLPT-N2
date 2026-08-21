@@ -100,6 +100,32 @@ SPEAKER_MAP = {
     "アナウンサー": {"voice": FEMALE, "rate": "+4%", "pitch": "+20Hz"},
     "教授":   {"voice": MALE,   "rate": "-6%", "pitch": "-20Hz"},   # vs 学生 (male)
     "FP":     {"voice": MALE,   "rate": "+0%", "pitch": "-14Hz"},
+    # Gendered role pairs (REPORT-CHOUKAI.md §4.1)
+    "男性職員":   {"voice": MALE,   "rate": "+0%", "pitch": "-14Hz"},
+    "女性職員":   {"voice": FEMALE, "rate": "+0%", "pitch": "-14Hz"},
+    "男性係員":   {"voice": MALE,   "rate": "+0%", "pitch": "+8Hz"},
+    "女性係員":   {"voice": FEMALE, "rate": "+6%", "pitch": "+18Hz"},
+    "男性担当者": {"voice": MALE,   "rate": "+0%", "pitch": "-20Hz"},
+    "女性担当者": {"voice": FEMALE, "rate": "+0%", "pitch": "-20Hz"},
+    "男性講師":   {"voice": MALE,   "rate": "-6%", "pitch": "-24Hz"},
+    "女性講師":   {"voice": FEMALE, "rate": "+0%", "pitch": "-25Hz"},
+    "男性専門家": {"voice": MALE,   "rate": "-6%", "pitch": "-10Hz"},
+    "女性専門家": {"voice": FEMALE, "rate": "+0%", "pitch": "-22Hz"},
+    "男性店員":   {"voice": MALE,   "rate": "+4%", "pitch": "+12Hz"},
+    "女性店員":   {"voice": FEMALE, "rate": "+6%", "pitch": "+22Hz"},
+    "男性医者":   {"voice": MALE,   "rate": "+0%", "pitch": "-8Hz"},
+    "女性医者":   {"voice": FEMALE, "rate": "+0%", "pitch": "-10Hz"},
+    "男性アナウンサー": {"voice": MALE, "rate": "+4%", "pitch": "+6Hz"},
+    "女性アナウンサー": {"voice": FEMALE, "rate": "+4%", "pitch": "+20Hz"},
+    # Counterparts for existing names as aliases
+    "職員2":     {"voice": MALE,   "rate": "+0%", "pitch": "-14Hz"},
+    "係員2":     {"voice": MALE,   "rate": "+0%", "pitch": "+8Hz"},
+    "担当者2":   {"voice": MALE,   "rate": "+0%", "pitch": "-20Hz"},
+    "講師2":     {"voice": MALE,   "rate": "-6%", "pitch": "-24Hz"},
+    "専門家2":   {"voice": MALE,   "rate": "-6%", "pitch": "-10Hz"},
+    "店員2":     {"voice": MALE,   "rate": "+4%", "pitch": "+12Hz"},
+    "医者2":     {"voice": MALE,   "rate": "+0%", "pitch": "-8Hz"},
+    "アナウンサー2": {"voice": MALE, "rate": "+4%", "pitch": "+6Hz"},
 }
 
 # Pacing (seconds) — measured across the 31-sitting official archive in
@@ -203,7 +229,7 @@ def pacing_sha() -> str:
               if k.isupper() and isinstance(v, (int, float, dict))
               and (k.startswith(("GAP_", "PAUSE_", "SHAPE_")))}
     logic = "".join(inspect.getsource(f)
-                    for f in (pause_after, gap_before_line, shape_pauses))
+                    for f in (pause_after, gap_before_line, shape_pauses, turn_gap_jitter))
     logic = re.sub(r"#[^\n]*|\s+", "", logic)
     return hashlib.sha1((repr(consts) + logic).encode()).hexdigest()[:12]
 
@@ -399,6 +425,13 @@ CHOICE_RE = re.compile(r"^[1-4]、")
 SHITSUMON2_RE = re.compile(r"^質問2。")
 
 
+def turn_gap_jitter(line: str) -> float:
+    """Deterministic pause jitter across dialogue turns (REPORT-CHOUKAI.md §4.2)."""
+    ladder = (0.65, 0.90, 0.90, 1.15, 1.40)
+    h = hashlib.sha1(line.encode("utf-8")).digest()[0]
+    return ladder[h % len(ladder)]
+
+
 def gap_before_line(section: str, line_index: int, line: str,
                     prev_line: str, is_item_block: bool) -> float:
     """Silence inserted BEFORE this line (i.e., after the previous one)."""
@@ -431,7 +464,7 @@ def gap_before_line(section: str, line_index: int, line: str,
     if (is_item_block and section in ("問題1", "問題2")
             and not SPEAKER_RE.match(line) and not CHOICE_RE.match(line)):
         return GAP_BEFORE_REPEATED_QUESTION
-    return GAP_BETWEEN_LINES
+    return turn_gap_jitter(line)
 
 
 # --- Script sanity gate (runs before any synthesis) ---------------------

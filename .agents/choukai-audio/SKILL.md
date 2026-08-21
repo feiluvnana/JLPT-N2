@@ -103,11 +103,14 @@ by pattern, or stops testing a skill the exam tests:
    this rule). Rotate the device across a section's items; the line still
    needs to be quotable in the 解説 (see `choukai-items.md`).
 6. **問題1's deciding line must not always be the dialogue's last word before
-   the repeated question, and must not always arrive through the same pivot.**
+   the repeated question, and must not always arrive through the same pivot — nor always first.**
    Found 2026-08-18 (`tests/20260817_2/聴解スクリプト.txt` 問題1): every one of
    its 6 items pivoted on the identical word 「それより」 straight into the
    correct action, one line before the repeated question — solvable by
-   ignoring the dialogue. Official does not do this:
+   ignoring the dialogue. But banning "always last" caused the opposite
+   monoculture: `20260818_1` and `20260819_1` placed 14 of 15 deciders in the
+   first third (0.0–0.33) of the item. Official spreads deciders across all
+   three buckets (first third, middle third, last third):
    - `16. N2 7-2025/script.md` 問題1-1番: the deciding line is the **first**
      instruction; two more turns follow (a task already claimed by the other
      speaker, then a third due next Friday) — the last-mentioned thing is not
@@ -115,11 +118,10 @@ by pattern, or stops testing a skill the exam tests:
    - `17.N2 12-2025/script.md` 問題1-2番: the deciding instruction sits
      **mid-turn**, immediately followed by a second, LATER instruction about
      what to do *after* — a real trailing task, not filler.
-   - Rule: in at least half a section's items, do not let the deciding action
-     be the final substantive clause — state it earlier and let the dialogue
-     continue with a genuinely later-due or already-assigned task. When it
-     must land last, do not signpost it with the same transition word every
-     time (vary それより / それで / あ、そういえば / じゃあ, or drop the pivot).
+   - Rule: across a 大問, decider positions must not all fall in one third of
+     their items. Spread them evenly across 冒頭 (first third), 中盤 (middle
+     third), and 終盤 (last third). No more than 3 of 6 rows may share a position
+     bucket in the 構成表.
 7. **Some items should run a stated plan into an unexpected complication**,
    not just enumerate settled facts. Official routinely revises a plan
    mid-dialogue: `17.N2 12-2025/script.md` 問題1-5番 opens with a plan, then
@@ -136,8 +138,11 @@ by pattern, or stops testing a skill the exam tests:
 | Never write | Official / 31 sittings | Generated papers (pre-rule) |
 |---|---|---|
 | 「Xの話ではありませんし、Yについて論じているのでもありません」 (問題3 close) | **0** | every 問題3 item |
-| 「〜た方がいいですか」 as every probe | 0 | every 問題1 probe |
-| 「かしこまりました」 opening every service reply | 4 in 31 sittings | every service reply |
+| 「〜た方がいいですか」 (un-official probe) | **0** in 31 sittings | 13× in 8/14 papers |
+| 「かしこまりました」 transaction formula | 4× in 31 sittings | **24× in 12/14 papers** |
+| 「〜ていただけますか」 | 6× in 31 sittings | 25× in 12/14 papers |
+| 「よろしいでしょうか」 | 6× in 31 sittings | 13× in 10/14 papers |
+| 「あ、そうなんですね」 | 0.2/10k chars | 17× in 8/14 papers |
 | 「わかりました。書きます。」 reused as every closing turn | 0 | reused across a section |
 | 「なるほど、〜なんですね」 echo just before the answer | rare | once per 問題2 item |
 | 問題4 replies opening はい / いいえ / では | **1.3 %** | over half |
@@ -149,6 +154,9 @@ noticing the pattern, without Japanese.
 - **No two items in a section may share their opening move, probe shape, or
   closing turn.** Read only the first/last line of each item in a column —
   if they rhyme, rewrite.
+- **Turn shape & ping-pong**: generated papers have drifted into short turns
+  (median 27 chars vs official 38 chars) and higher turn counts (107–198 vs
+  66–143). Write substantive dialogue turns rather than rapid transaction ping-pong.
 - **Vary who drives.** Official 問題1 is as often an instruction-giver
   assigning tasks (「〜してくれる？」) as a customer being redirected.
 - 「まず」 is the QUESTION's word (このあとまず何をしますか); inside the
@@ -315,8 +323,12 @@ merely *prints* the total. Missing pieces are otherwise SILENT.
 
 Dialogue lines: `男:` `女:` `男1:` `男2:` `夫:` `妻:` `学生:` `先生:` `店員:`
 `医者:` `部長:` `店長:` `専門家:` `レポーター:` `教室の人:` `職員:` `係員:`
-`担当者:` `講師:` `アナウンス:` `アナウンサー:` `教授:` `FP:` — half or
-full-width colon. Unlabeled lines = narrator. **An unmapped label does not
+`担当者:` `講師:` `アナウンス:` `アナウンサー:` `教授:` `FP:`
+plus gendered role pairs:
+`男性職員:` `女性職員:` `男性係員:` `女性係員:` `男性担当者:` `女性担当者:`
+`男性講師:` `女性講師:` `男性専門家:` `女性専門家:` `男性店員:` `女性店員:`
+`男性医者:` `女性医者:` `男性アナウンサー:` `女性アナウンサー:`
+— half or full-width colon. Unlabeled lines = narrator. **An unmapped label does not
 error at synthesis — it silently falls through to the narrator voice.**
 `validate_script()` rejects any label missing from the map; add it to
 `SPEAKER_MAP` *before* using it, choosing a voice that contrasts with the
@@ -333,31 +345,34 @@ the examinee who is speaking. Nothing reconciles them — the author does:
 
 - **A narration that states a gender must resolve to a voice of that
   gender.** 「〜の男の人」→`MALE` (Keita); 「〜の女の人」→`FEMALE` (Nanami).
-  Resolve by rewording the narration or picking a label whose mapping already
-  matches; **remapping an existing label is a last resort** — labels are
-  shared across tests, a remap silently changes every other paper's already-
-  built audio (`script_sha` doesn't hash the map), meaning `make mp3`
-  everywhere.
+  Use gendered role labels (`男性職員`, `女性係員`, etc.) whenever a role speaker's
+  gender is mentioned in the situation or prompt.
 - **A two-party item whose two labels resolve to the SAME voice is a
   defect** — who said the deciding line is the whole task in 問題1/2/5. Cast
   one male and one female label per item; `男1`/`男2` pitch-splitting is for
   the three-person conversation only.
+- **Voice balance across each 大問**: turn share between male and female voices
+  should remain balanced (target 40–60% per section; gate WARNs if >70% on one
+  voice, FAILs if >85%).
 - **問題5 needs a three-party item.** `choukai-items.md` §統合理解 requires
   問題5-1番 to be a ≥3-speaker discussion (official has one every sitting
   since 2020). edge-tts ships exactly two ja-JP voices, so the working build
   is **two same-gender labels split by `pitch` plus one of the other
   gender** — `男1`(+18 Hz) + `男2`(−16 Hz) + `女`, or `女1`/`女2` + `男`. Do
-  **not** spend `rate` on the split (moves difficulty). A role label
-  (`職員`, `店長`…) instead of `男1`/`男2` must keep its `pitch` the
-  documented margin from the other same-gender label (~25 Hz female, ~20 Hz
-  male) — `職員`(−14 Hz) beside `女`(+0 Hz) is only 14 Hz, under margin.
+  **not** spend `rate` on the split (moves difficulty).
+- **Voice separation margin (semitones)**:
+  When two same-gender speakers share an item, pitch separation is measured in semitones:
+  $$\Delta\text{st} = 12 \times \left|\log_2\left(\frac{f_{\text{base}} + \Delta f_1}{f_{\text{base}} + \Delta f_2}\right)\right|$$
+  where $f_{\text{base}} = 210\text{ Hz}$ for female (`NanamiNeural`) and $120\text{ Hz}$ for male (`KeitaNeural`).
+  Target: **$\ge 1.9\text{ st}$**. Gate FAILs if $< 1.0\text{ st}$ (e.g. `20260807_1` 問題5-2番 at 0.16 st),
+  and WARNs if between $1.0\text{ st}$ and $1.9\text{ st}$.
 - **Scan the WHOLE block for the narration, not its first line** — 問題5's
   2番 puts the situation on the block's second line.
 - **Questions must name speakers unambiguously** — if a question says
   「男の学生は」, the item must contain exactly one male and one female student.
 
-`make check` fails the gender contradiction and WARNs on the one-voice pair,
-but the lookup belongs in authoring: read `SPEAKER_MAP` before writing.
+`make check` fails the gender contradiction and low pitch margin, and WARNs on single-voice pairs.
+Read `SPEAKER_MAP` before writing.
 
 ## Voice model (matches the official recording)
 

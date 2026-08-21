@@ -1,7 +1,7 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check check-tests goi-profile dokkai-profile grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
-       init-import extract-pdf extract-archive extract-keys extract-kanji-tables extract-shinkanzen-goi extract-shinkanzen-dokkai \
+.PHONY: help check check-tests goi-profile dokkai-profile choukai-profile grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
+       init-import extract-pdf extract-archive extract-keys extract-kanji-tables extract-shinkanzen-goi extract-shinkanzen-dokkai extract-shinkanzen \
        lint-draft lint verify-scramble scaffold-explanations irt \
        scaffold-sections matrix qa-eval autofix
 
@@ -68,8 +68,10 @@ help:
 	@echo "  make extract-kanji-tables   Shin Kanzen N2-漢字 別冊1 -> refs/Shinkanzen/kanji_tables.md"
 	@echo "  make extract-shinkanzen-goi Shin Kanzen + Soumatome N2 語彙 -> refs/*/goi_reference.md"
 	@echo "  make extract-shinkanzen-dokkai Shin Kanzen N2 読解 -> refs/Shinkanzen/dokkai_reference.md"
+	@echo "  make extract-shinkanzen       Shin Kanzen N2 聴解 別冊 -> refs/Shinkanzen/choukai_script.md"
 	@echo "  make goi-profile [BASELINE=1]  文字・語彙 measurement: archive vs tests (--baseline for the doc tables)"
 	@echo "  make dokkai-profile [BASELINE=1] 読解 measurement: archive vs tests (--baseline for the doc tables)"
+	@echo "  make choukai-profile [BASELINE=1] 聴解 measurement: archive vs tests (--baseline for the doc tables)"
 	@echo "  (any per-test target also takes TEST=<id>; default TEST=1)"
 	@echo "=========================================================================="
 
@@ -84,6 +86,12 @@ goi-profile:
 
 dokkai-profile:
 	python3 tools/dokkai_profile.py $(if $(BASELINE),--baseline,--official --tests)
+
+choukai-profile:
+	python3 tools/choukai_profile.py $(if $(BASELINE),--baseline,--official --tests)
+
+extract-shinkanzen:
+	python3 tools/extract_shinkanzen_choukai.py
 
 sample:
 	@test -n "$(SEED)" || (echo 'usage: make sample <id> SEED=$$(python3 -c "import secrets; print(secrets.randbelow(10**8))")'; \

@@ -23,15 +23,16 @@ Turn = one speaker's uninterrupted speech, wrapped OCR lines rejoined.
 
 | Measure | Official | Generated (baseline) | Ratio |
 |---|---|---|---|
-| turns that are short reactions (≤12 chars) | **18%** (589/3215) | 6% (19/321) | ⅓ |
-| turns opening with a filler/reaction token | **35%** (1131/3215) | 18% (57/321) | ½ |
+| turns that are short reactions (≤12 chars) | **16.9%** (570/3382) | 6% (19/321) | ⅓ |
+| turns opening with a filler/reaction token | **32.7%** (1106/3382) | 18% (57/321) | ½ |
 | hesitation tokens per sitting — corrected, §7.1 | **median 27** (9–48), gate token list | 0–4 | ~0 |
-| explicit denial 「〜ではありません」 per 10k chars | **0.4** | 17.1 | **43×** |
+| explicit denial 「〜ではありません」 per 10k chars | **0.9** | 17.1 | **19×** |
+| 縮約形 per 10k chars | **median 63.9** [29.9–89.3] | 14.2 | 4.5× |
 | 問題3 "triple denial" close | **0** in 31 sittings | 19.8/10k — every item of a section | ∞ |
-| 問題4 replies opening はい/いいえ/では | **1.3%** combined | **57%** | 44× |
+| 問題4 replies opening はい/いいえ/では | **2.5%** combined | **57%** | 23× |
 | 問題4 「まだ〜ていません」-shaped distractors | 2% | 8% | 4× |
 
-Turn LENGTH is already right — median 36 vs 32 chars, p90 94 vs 92. **The
+Turn LENGTH is already right — median 38 vs 32 chars, p90 94 vs 92. **The
 problem was never sentence length; it's that generated speakers never
 react, never hesitate, and kill distractors by announcing they're wrong.**
 

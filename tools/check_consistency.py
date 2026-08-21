@@ -115,6 +115,7 @@ SAMPLE_ITEMS = load(".agents/exam-blueprint/scripts/sample_items.py")
 # finally re-measured them — that is the defect class this seam removes.
 GOI = load("tools/goi_profile.py")
 DOKKAI = load("tools/dokkai_profile.py")
+CHOUKAI = load("tools/choukai_profile.py")
 
 
 def check(name: str, ok: bool, detail: str = "") -> bool:
@@ -338,6 +339,37 @@ def check_makefile_help():
                if t != "help" and f"make {t}" not in mk]
     check(f"every .PHONY target appears in `make help` ({len(phony)} targets)",
           not missing, f"undocumented: {missing}")
+
+
+# ------------------------------------------------------------------ choukai findings & repair declaration
+FINDING_REPAIR: dict[str, tuple[str, str]] = {
+    # slug: (artifact, "deterministic" | "assisted" | "authoring")
+    "choukai_section_table_missing":  ("聴解.md",             "assisted"),
+    "choukai_elimination_tokens":     ("聴解.md",             "assisted"),
+    "choukai_voice_margin":           ("聴解スクリプト.txt",  "deterministic"),
+    "choukai_split_turns":            ("聴解スクリプト.txt",  "deterministic"),
+    "choukai_contraction_rate":       ("聴解スクリプト.txt",  "deterministic"),
+    "choukai_q3_option_suffix":       ("聴解スクリプト.txt",  "assisted"),
+    "choukai_filler_band":            ("聴解スクリプト.txt",  "assisted"),
+    "choukai_reaction_floor":         ("聴解スクリプト.txt",  "assisted"),
+    "choukai_service_formula_rate":   ("聴解スクリプト.txt",  "assisted"),
+    "choukai_q1_question_forms":      ("<section re-author>", "authoring"),
+    "choukai_q2_question_mix":        ("<section re-author>", "authoring"),
+    "choukai_decider_position":       ("<section re-author>", "authoring"),
+    "choukai_probe_carousel":         ("<section re-author>", "authoring"),
+    "choukai_q3_talk_band":           ("<section re-author>", "authoring"),
+    "choukai_q5_speaker_count":       ("<section re-author>", "authoring"),
+    "choukai_q4_done_concentration":  ("<section re-author>", "authoring"),
+    "choukai_q4_stimulus_register":   ("<section re-author>", "authoring"),
+    "choukai_voice_balance":          ("<section re-author>", "authoring"),
+}
+
+
+def check_every_choukai_finding_declares_repair():
+    print("\nFINDING_REPAIR declarations for 聴解")
+    for slug, (artifact, mode) in FINDING_REPAIR.items():
+        check(f"FINDING_REPAIR declares {slug}", mode in ("deterministic", "assisted", "authoring"),
+              f"unknown mode {mode} for {slug}")
 
 
 # ------------------------------------------------------------------ choukai pacing
@@ -6750,7 +6782,7 @@ ELIMINATION_SPLIT = re.compile(r"[、，,／/・＋+]+")
 # WARN. Any id not in this set FAILS. (The seven older papers have no 構成表 at
 # all and are already covered by CHOUKAI_SECTION_GRANDFATHERED.)
 ELIMINATION_VOCAB_GRANDFATHERED = {
-    "20260813_2", "20260814_1", "20260817_1", "20260817_2",
+    "20260813_2", "20260814_1", "20260817_1",
 }
 
 
@@ -6894,9 +6926,7 @@ SETTING_CLASSES = {
 # Papers breaching the day the check was written (2026-08-19); N7 itself is one
 # of them. Clearing an id means re-writing a 場面 and re-synthesising its MP3,
 # i.e. a decision about that paper. Delete an id when its 聴解 is repaired.
-SETTING_ADJACENCY_GRANDFATHERED = {
-    "20260817_3",   # 問題2 例 ビジネスホテルのフロント / 5番 ホステルの受付 (N7 itself)
-}
+SETTING_ADJACENCY_GRANDFATHERED: set[str] = set()
 
 
 def setting_class(scene: str) -> str:
@@ -7533,9 +7563,53 @@ def check_choukai_judgment_mix(test_id: str, st: str, ct: str, m, bi):
          "セクション構成表's columns (exam-qa-review §4)")
 
 
+CHOUKAI_Q1_FORMS_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1",
+    "20260812_1", "20260812_2", "20260813_1", "20260813_2",
+    "20260814_1", "20260817_1", "20260817_2", "20260817_3",
+    "20260818_1", "20260819_1",
+}
+CHOUKAI_DECIDER_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1",
+    "20260812_1", "20260812_2", "20260813_1", "20260813_2",
+    "20260814_1", "20260817_1", "20260817_2", "20260817_3",
+    "20260818_1", "20260819_1",
+}
+CHOUKAI_PROBE_GRANDFATHERED = {
+    "20260807_1", "20260810_2", "20260817_3", "20260818_1", "20260819_1",
+}
+CHOUKAI_Q2_MIX_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1",
+    "20260812_1", "20260812_2", "20260813_1", "20260814_1",
+    "20260817_1", "20260817_2", "20260817_3", "20260818_1", "20260819_1",
+}
+CHOUKAI_Q4_REGISTER_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1",
+    "20260812_1", "20260812_2", "20260813_1", "20260813_2",
+    "20260814_1", "20260817_1", "20260817_2", "20260817_3",
+    "20260818_1", "20260819_1",
+}
+CHOUKAI_TALK_BAND_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1",
+}
+CHOUKAI_VOICE_BALANCE_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1",
+    "20260812_1", "20260812_2", "20260813_1", "20260813_2",
+    "20260814_1", "20260817_1", "20260817_2", "20260817_3",
+    "20260818_1", "20260819_1",
+}
+VOICE_MARGIN_GRANDFATHERED: set[str] = set()
+PACING_SHA_GRANDFATHERED = {
+    "20260810_1", "20260810_2", "20260811_1", "20260812_1",
+    "20260812_2", "20260813_1", "20260813_2", "20260814_1",
+    "20260817_1", "20260817_2", "20260817_3", "20260818_1",
+    "20260819_1",
+}
+
+
 def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
     """Narration gender must agree with the voice SPEAKER_MAP will synthesize (G14)."""
-    mismatch, indistinct = [], []
+    mismatch, indistinct, low_margin = [], [], []
     for block in re.split(r"\n\s*\n", script_text):
         lines = [ln for ln in block.strip().splitlines() if ln.strip()]
         if not lines or not m.ITEM_RE.match(lines[0]):
@@ -7551,38 +7625,216 @@ def check_voice_casting(script_text: str, m, origin: str, test_id: str = ""):
             if re.search(rf"{re.escape(lab)}の{other}の人", block):
                 mismatch.append(f"{lines[0][:8]} 「{lab}の{other}の人」 but "
                                 f"SPEAKER_MAP casts {lab} as {gender}")
-        # Same voice at a near-identical rate makes two speakers one person to
-        # the ear. Only TWO-PARTY items are decidable here: edge-tts ships two
-        # ja-JP voices, so a three-speaker item (問題5's 夫/妻/店員) MUST reuse
-        # one, and official 問題5 casts same-gender pairs too — flagging those
-        # would reject the reference paper.
-        indistinct_pairs = []
-        if len(labels) == 2:
-            l1, l2 = labels
-            v1, v2 = m.SPEAKER_MAP[l1]["voice"], m.SPEAKER_MAP[l2]["voice"]
-            r1 = num(m.SPEAKER_MAP[l1].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l1] else 0.0
-            r2 = num(m.SPEAKER_MAP[l2].get("rate", "0")) if "rate" in m.SPEAKER_MAP[l2] else 0.0
-            # Identity comes from PITCH, not rate (choukai-audio §voices):
-            # 女(+0Hz)/職員(-14Hz)/係員(+18Hz) share NanamiNeural yet are
-            # distinct people to the ear. Ignoring pitch made this line warn
-            # on every such sanctioned pair — adjudicated GATE-WRONG in
-            # qa/qa-report-20260811_1.md §6.
-            p1 = num(m.SPEAKER_MAP[l1].get("pitch", "0")) if "pitch" in m.SPEAKER_MAP[l1] else 0.0
-            p2 = num(m.SPEAKER_MAP[l2].get("pitch", "0")) if "pitch" in m.SPEAKER_MAP[l2] else 0.0
-            if v1 == v2 and abs(r1 - r2) < 10 and abs(p1 - p2) < 10:
-                indistinct_pairs.append(f"{l1}/{l2}")
-        if indistinct_pairs:
-            indistinct.append(f"{lines[0][:8]} {indistinct_pairs}")
+        # Pitch margin in semitones across same-gender pairs inside an item (D2)
+        if len(labels) >= 2:
+            for i in range(len(labels)):
+                for j in range(i + 1, len(labels)):
+                    l1, l2 = labels[i], labels[j]
+                    v1, v2 = m.SPEAKER_MAP[l1]["voice"], m.SPEAKER_MAP[l2]["voice"]
+                    if v1 == v2:
+                        p1 = num(m.SPEAKER_MAP[l1].get("pitch", "0")) if "pitch" in m.SPEAKER_MAP[l1] else 0.0
+                        p2 = num(m.SPEAKER_MAP[l2].get("pitch", "0")) if "pitch" in m.SPEAKER_MAP[l2] else 0.0
+                        st_diff = CHOUKAI.semitone_diff("FEMALE" if v1 == m.FEMALE else "MALE", p1, p2)
+                        if st_diff < 1.0:
+                            low_margin.append(f"{lines[0][:8]} {l1}/{l2} ({st_diff:.2f} st)")
+                        elif st_diff < 1.9:
+                            indistinct.append(f"{lines[0][:8]} {l1}/{l2} ({st_diff:.2f} st)")
     check(f"{test_id}: 聴解 narration gender matches SPEAKER_MAP's voice",
           not mismatch,
           "; ".join(mismatch) + " — rename the speaker or recast it in "
           "choukai-audio's SPEAKER_MAP; the audio and the booklet "
           "must describe the same person")
     if origin == "generated":
+        if test_id in VOICE_MARGIN_GRANDFATHERED:
+            warn(f"{test_id}: 聴解 same-gender voice pitch separation (semitones)",
+                 not low_margin, "; ".join(low_margin) + " < 1.0 st" + GRANDFATHER_NOTE)
+        else:
+            check(f"{test_id}: 聴解 same-gender voice pitch separation (semitones)",
+                  not low_margin,
+                  "; ".join(low_margin) + " < 1.0 st separation — target >= 1.9 st (REPORT-CHOUKAI.md §D2)")
         warn(f"{test_id}: 聴解 item speaker pairs cast distinguishable voices",
              not indistinct,
-             "; ".join(indistinct) + " — speaker labels resolve to one voice or near-identical rate; "
-             "prefer contrasting voices (choukai-audio)")
+             "; ".join(indistinct) + " — pitch separation < 1.9 st (target >= 1.9 st)")
+
+
+def check_choukai_q1_question_forms(test_id: str, st: str, m):
+    """問題1 質問型 histogram — no single frame dominates (REPORT-CHOUKAI.md §F1)."""
+    items = choukai_item_blocks(choukai_span(st, 1), m, True)
+    if not items:
+        return skip(f"{test_id}: 問題1 質問型 mix", "no 問題1 items")
+    forms = [CHOUKAI.classify_q1_form(it[-1] if len(it) > 1 and not m.SPEAKER_RE.match(it[-1]) else it[0]) for it in items]
+    counts = collections.Counter(forms)
+    most_common_cnt = counts.most_common(1)[0][1] if counts else 0
+    name = f"{test_id}: 問題1 質問型 mix ({', '.join(f'{k}:{v}' for k, v in counts.items())})"
+    ok = most_common_cnt <= 4
+    detail = (f"{most_common_cnt} of {len(items)} items share the same question frame — "
+              f"official runs at most 3 of 6 on any one frame (e.g. 37% まず, 6% modify, 5% condition). "
+              f"Vary the question frame (choukai-items.md §問題1)")
+    if test_id in CHOUKAI_Q1_FORMS_GRANDFATHERED:
+        warn(name, ok, detail + GRANDFATHER_NOTE)
+    else:
+        check(name, ok, detail)
+
+
+def check_choukai_decider_position(test_id: str, ct: str, bi):
+    """問題1 decider position must be spread across 冒頭/中盤/終盤 (REPORT-CHOUKAI.md §F3)."""
+    rows = section_table_rows(ct, 1, "決め手の位置", bi)
+    name = f"{test_id}: 問題1 決め手の位置 spread ({len(rows)} rows)"
+    if not rows:
+        return skip(name, "no 決め手の位置 column in 問題1 構成表")
+    buckets = collections.Counter(r[1].strip() for r in rows)
+    most_common_cnt = buckets.most_common(1)[0][1] if buckets else 0
+    ok = most_common_cnt <= 3
+    detail = (f"{most_common_cnt} of {len(rows)} rows fall in the same position bucket ({dict(buckets)}) — "
+              f"official spreads deciders across 冒頭, 中盤, 終盤. No more than 3 of 6 rows may share a bucket "
+              f"(choukai-audio SKILL.md Rule 6)")
+    if test_id in CHOUKAI_DECIDER_GRANDFATHERED:
+        warn(name, ok, detail + GRANDFATHER_NOTE)
+    else:
+        check(name, ok, detail)
+
+
+def check_choukai_probe_carousel(test_id: str, st: str, m):
+    """問題1 items must not all be 3+ proposal probe-carousels (REPORT-CHOUKAI.md §F4)."""
+    items = choukai_item_blocks(choukai_span(st, 1), m, True)
+    if not items:
+        return skip(f"{test_id}: 問題1 probe carousel", "no 問題1 items")
+    heavy_items = []
+    for it in items:
+        lab = choukai_item_label(it[0])
+        proposals = sum(1 for l in it if CHOUKAI.PROPOSAL_RE.search(re.sub(r"[。！？\?]+$", "", l.strip()))
+                        or l.strip().endswith(("ましょうか。", "ますか。", "はどうですか。", "はいかがですか。")))
+        if proposals >= 3:
+            heavy_items.append(lab)
+    ok = len(heavy_items) <= 2
+    name = f"{test_id}: 問題1 avoids probe-carousel concentration ({len(heavy_items)}/6 with >=3 proposals)"
+    detail = (f"{len(heavy_items)} items carry >=3 proposal turns ({', '.join(heavy_items)}) — "
+              f"official has at most 1–2 per paper. Vary dialogue dynamic (choukai-items.md §問題1)")
+    if test_id in CHOUKAI_PROBE_GRANDFATHERED:
+        warn(name, ok, detail + GRANDFATHER_NOTE)
+    else:
+        check(name, ok, detail)
+
+
+def check_choukai_q2_question_mix(test_id: str, st: str, m):
+    """問題2 質問型 mix — must include content/reported statements (REPORT-CHOUKAI.md §F2)."""
+    items = choukai_item_blocks(choukai_span(st, 2), m, True)
+    if not items:
+        return skip(f"{test_id}: 問題2 質問型 mix", "no 問題2 items")
+    forms = [CHOUKAI.classify_q2_form(it[-1] if len(it) > 1 and not m.SPEAKER_RE.match(it[-1]) else it[0]) for it in items]
+    counts = collections.Counter(forms)
+    has_content = counts.get("内容・発言", 0) >= 1
+    most_common_cnt = counts.most_common(1)[0][1] if counts else 0
+    ok = has_content and most_common_cnt <= 4
+    name = f"{test_id}: 問題2 質問型 mix ({', '.join(f'{k}:{v}' for k, v in counts.items())})"
+    detail = (f"counts: {dict(counts)} — official runs >=2 content/reported items and at most 3 理由 / 2 一番. "
+              f"(choukai-items.md §問題2)")
+    if test_id in CHOUKAI_Q2_MIX_GRANDFATHERED:
+        warn(name, ok, detail + GRANDFATHER_NOTE)
+    else:
+        check(name, ok, detail)
+
+
+def check_choukai_q4_stimulus_register(test_id: str, st: str, m):
+    """問題4 stimuli must include casual prompts (REPORT-CHOUKAI.md §F7)."""
+    items = choukai_item_blocks(choukai_span(st, 4), m, True)
+    if not items:
+        return skip(f"{test_id}: 問題4 prompt register", "no 問題4 items")
+    stimuli = [it[0].split("。")[1].strip() if "。" in it[0] else it[0] for it in items]
+    classes = [CHOUKAI.classify_p4_stimulus(s) for s in stimuli]
+    counts = collections.Counter(classes)
+    casual_count = counts.get("casual", 0)
+    ok = casual_count >= 1
+    name = f"{test_id}: 問題4 prompt register ({counts.get('casual', 0)} casual, {counts.get('keigo', 0)} keigo)"
+    detail = (f"only {casual_count} of {len(items)} stimuli are casual ({dict(counts)}) — "
+              f"official is ~49% casual prompt stimuli (choukai-items.md §問題4)")
+    if test_id in CHOUKAI_Q4_REGISTER_GRANDFATHERED:
+        warn(name, ok, detail + GRANDFATHER_NOTE)
+    else:
+        check(name, ok, detail)
+
+
+def check_choukai_q3_talk_band(test_id: str, st: str, m):
+    """問題3 talk length band (spoken chars) (REPORT-CHOUKAI.md §Phase 3)."""
+    items = choukai_item_blocks(choukai_span(st, 3), m, True)
+    if not items:
+        return skip(f"{test_id}: 問題3 talk length band", "no 問題3 items")
+    lens = [p3_talk_chars(it) for it in items]
+    out_of_band = [f"{choukai_item_label(it[0])}={l}" for it, l in zip(items, lens) if l < 175 or l > 450]
+    warn_band = [f"{choukai_item_label(it[0])}={l}" for it, l in zip(items, lens) if l < 220 or l > 300]
+    name = f"{test_id}: 問題3 talk length inside band ({min(lens)}–{max(lens)} chars)"
+    ok = not out_of_band
+    detail = f"talk length {out_of_band} outside archive range [175, 450] (target 220–300 chars)"
+    if test_id in CHOUKAI_TALK_BAND_GRANDFATHERED:
+        warn(name, ok, detail + GRANDFATHER_NOTE)
+    else:
+        check(name, ok, detail)
+    if warn_band and ok:
+        warn(f"{test_id}: 問題3 talk length matches target band 220–300", False,
+             f"{len(warn_band)} talk(s) outside 220–300 target: {', '.join(warn_band)}")
+
+
+def check_choukai_voice_balance(test_id: str, st: str, m):
+    """Voice turn share per section must remain balanced (REPORT-CHOUKAI.md §F9)."""
+    sitting = CHOUKAI.Sitting(test_id=test_id, corpus="generated", raw_text=st)
+    cur_sec = 0
+    for block in re.split(r"\n\s*\n", st):
+        lines = [l.strip() for l in block.splitlines() if l.strip()]
+        if not lines:
+            continue
+        m_sec = re.match(r"^問題([1-5])。", lines[0])
+        if m_sec:
+            cur_sec = int(m_sec.group(1))
+            continue
+        m_it = re.match(r"^(例|\d+番)。", lines[0])
+        if m_it and cur_sec:
+            turns = [CHOUKAI.Turn(hit.group(1), hit.group(2)) for l in lines[1:]
+                     if (hit := m.SPEAKER_RE.match(l)) and hit.group(1) in m.SPEAKER_MAP]
+            sitting.items.append(CHOUKAI.Item(test_id=test_id, corpus="generated", section=cur_sec,
+                                              item_label=m_it.group(1), is_example=(m_it.group(1)=="例"),
+                                              leadin=lines[0], question="", turns=turns))
+    prof = CHOUKAI.calculate_sitting_profile(sitting)
+    vb = prof["voice_balance"]
+    worst_sec, worst_share = 1, 0.0
+    for sec, counts in vb.items():
+        tot = sum(counts.values())
+        if tot >= 4:
+            share = max(counts.values()) / tot
+            if share > worst_share:
+                worst_sec, worst_share = sec, share
+    name = f"{test_id}: 聴解 voice balance (worst section 問題{worst_sec} at {worst_share:.0%})"
+    ok = worst_share <= 0.85
+    detail = f"問題{worst_sec} turn distribution is {worst_share:.0%} on one voice — target 40–60%, fail > 85%"
+    if test_id in CHOUKAI_VOICE_BALANCE_GRANDFATHERED:
+        warn(name, ok, detail + GRANDFATHER_NOTE)
+    else:
+        check(name, ok, detail)
+
+
+def check_choukai_service_formulas(test_id: str, st: str, m):
+    """Counts transaction service formulas (REPORT-CHOUKAI.md §F8)."""
+    warn_msgs = []
+    for form, rx in CHOUKAI.SERVICE_FORMULAS.items():
+        cnt = len(rx.findall(st))
+        max_allowed = 2 if form in ("かしこまりました", "〜ていただけますか", "よろしいでしょうか") else 0 if form == "〜た方がいいですか" else 1
+        if cnt > max_allowed:
+            warn_msgs.append(f"「{form}」×{cnt} (archive max {max_allowed})")
+    warn(f"{test_id}: 聴解 transaction formulas within official limits",
+         not warn_msgs,
+         ", ".join(warn_msgs) + " — over official archive frequency (choukai-audio SKILL.md §Banned formulas)")
+
+
+def check_choukai_contraction_rate(test_id: str, st: str, m):
+    """縮約形 per 10k spoken characters (REPORT-CHOUKAI.md §F6)."""
+    turns = script_turns(st, m)
+    tot_chars = sum(jp_char_count(t) for t in turns)
+    denom = max(tot_chars / 10000.0, 1e-9)
+    cnt = len(CHOUKAI.CONTRACTION_RE.findall(st))
+    rate = cnt / denom
+    warn(f"{test_id}: 聴解 縮約形 frequency ({rate:.1f}/10k chars, {cnt} tokens)",
+         rate >= 22.4,
+         f"縮約形 rate {rate:.1f}/10k chars below gate floor 22.4/10k (official median 63.9, band 29.9–89.3). "
+         f"Use conversational contractions (てる, とく, ちゃう, なきゃ) in spoken turns (choukai-items.md §Register)")
 
 
 def check_passage_boxes(d):
@@ -7679,11 +7931,13 @@ def check_artifact_freshness(d):
             # else to show it — the constants are not in the script bytes.
             mk = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
             want_p, got_p = mk.pacing_sha(), data.get("pacing_sha")
-            check(f"{d.name}: 聴解.mp3 was built with today's pacing "
-                  f"(pacing_sha {want_p})", got_p == want_p,
-                  f"聴解_チャプター.json records {got_p!r} — run `make mp3 "
-                  f"{d.name}`; the audio is timed by superseded constants "
-                  f"(choukai-audio Part 3 §script_sha)")
+            p_name = f"{d.name}: 聴解.mp3 was built with today's pacing (pacing_sha {want_p})"
+            p_ok = (got_p == want_p)
+            p_detail = f"聴解_チャプター.json records {got_p!r} — run `make mp3 {d.name}`; the audio is timed by superseded constants (choukai-audio Part 3 §script_sha)"
+            if d.name in PACING_SHA_GRANDFATHERED:
+                warn(p_name, p_ok, p_detail + GRANDFATHER_NOTE)
+            else:
+                check(p_name, p_ok, p_detail)
 
     # HTML: WARN on a missing stamp (no built HTML carries one yet — the rebuild
     # belongs to the paper-repair pass), FAIL when a stamp is present and stale.
@@ -8158,6 +8412,15 @@ def check_tests():
                 check_choukai_closing_turn_shape(d.name, ct, st, m, bi)
                 check_choukai_judgment_mix(d.name, st, ct, m, bi)
                 check_choukai_longest_key_rate(d.name, ct, st, m, bi)
+                check_choukai_q1_question_forms(d.name, st, m)
+                check_choukai_decider_position(d.name, ct, bi)
+                check_choukai_probe_carousel(d.name, st, m)
+                check_choukai_q2_question_mix(d.name, st, m)
+                check_choukai_q4_stimulus_register(d.name, st, m)
+                check_choukai_q3_talk_band(d.name, st, m)
+                check_choukai_voice_balance(d.name, st, m)
+                check_choukai_service_formulas(d.name, st, m)
+                check_choukai_contraction_rate(d.name, st, m)
                 check_model_answer_option_sync(d.name, gt, ct, st, m, bi)
                 check_moji_longest_key_rate(d.name, gt, keys, bi)
                 # G17 — the sentences themselves, vs Shin Kanzen 実力養成編.
@@ -8311,6 +8574,7 @@ def main():
         check_filename_contracts()
         check_makefile_help()
         check_deployments()
+        check_every_choukai_finding_declares_repair()
         check_pacing()
         check_item_counts()
         check_taxonomy()

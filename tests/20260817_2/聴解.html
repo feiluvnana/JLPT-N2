@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet"><title>聴解</title>
-<!-- src_sha: 聴解.md=af2f5a7c40f1 -->
+<!-- src_sha: 聴解.md=d2d7b8683d4a -->
 <style>
 @page { size: A4; margin: 18mm 16mm; }
 body { font-family: "YuMincho", "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", "Noto Serif CJK JP", serif;
@@ -539,7 +539,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
 <td>サークルの部室</td>
 <td>先輩→後輩</td>
 <td>案内メールを送る</td>
-<td>既に完了（会場）＋割り当て（飲み物）</td>
+<td>既に完了（会場）／別の人に割り当て（飲み物）／順番待ち（飾り付け）</td>
 <td>この後まず</td>
 </tr>
 <tr>
@@ -547,7 +547,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
 <td>会社の来客対応引き継ぎ</td>
 <td>部長→社員</td>
 <td>来客用の資料を印刷する</td>
-<td>既に完了（会議室）＋割り当て（受付連絡）</td>
+<td>既に完了（会議室・受付連絡）／不要（お茶菓子）</td>
 <td>この後まず</td>
 </tr>
 <tr>
@@ -555,7 +555,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
 <td>引っ越し業者との電話</td>
 <td>担当者→客</td>
 <td>荷物のリストを送る</td>
-<td>割り当て（段ボール・駐車許可）＋後回し（処分）</td>
+<td>不要（段ボール）／規則で不可（駐車許可）／後回し（家具処分）</td>
 <td>この後まず</td>
 </tr>
 <tr>
@@ -563,7 +563,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
 <td>会社のクレーム対応</td>
 <td>部長→社員</td>
 <td>事実関係を確認する</td>
-<td>後回し（電話・報告書・訪問）</td>
+<td>順番待ち（お詫び電話）／明確に否定（訪問謝罪）／後回し（報告書）</td>
 <td>この後まず</td>
 </tr>
 <tr>
@@ -571,7 +571,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
 <td>イベント会場の準備分担</td>
 <td>実行委員→スタッフ</td>
 <td>椅子を並べる</td>
-<td>割り当て（看板）＋後回し（音響・名簿）</td>
+<td>別の人に割り当て（看板）／実行不可（音響・名簿）</td>
 <td>この後まず</td>
 </tr>
 <tr>
@@ -579,12 +579,12 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
 <td>塾の体験授業</td>
 <td>講師→学生</td>
 <td>レベルチェックのテストを受ける</td>
-<td>後回し（教材費・面談）＋工程差し替え（体験授業）</td>
+<td>条件不足（教材費・体験授業）／明確に否定（面談）</td>
 <td>この後まず</td>
 </tr>
 </tbody>
 </table>
-<p>場面の内訳：指示割当型（上司・指導者が動く）＝例・1番・3番・4番・5番の5件、客が業者に相談する型＝2番の1件。指示割当型が3件以上（quota ≥3）を満たし、カウンター型（客が窓口に来る）は0件で quota（≤2）を満たす。消去方法はいずれも異なる語で記述し、「既に完了」は例・1番の2件にとどめ、同一の定型句が2件を超えて繰り返されないようにした。</p>
+<p>場面の内訳：指示割当型（上司・指導者が動く）＝例・1番・3番・4番・5番の5件、客が業者に相談する型＝2番の1件。指示割当型が3件以上（quota ≥3）を満たし、カウンター型（客が窓口に来る）は0件で quota（≤2）を満たす。消去方法は閉じた語彙 <code>{既に完了 / 別の人に割り当て / 順番待ち / 後回し / 実行不可 / 規則で不可 / 条件不足 / 不要 / 明確に否定}</code> を用い、1トークンあたり最大2行の上限を満たす。</p>
 <p>2026-08-18改稿：旧版は6件全てで「それより」を同一の合図語として使い、正解の行動を毎回、繰り返される質問の直前・最後の実質発言に置いていたため、会話を追わず「それよりの直後」だけを聞けば解ける構成になっていた（<code>choukai-audio/SKILL.md</code> §Register 6の指摘）。改稿では合図語「それより」を全廃し、正解の行動を例・2番・3番・5番で発話の冒頭〜中盤に前倒しし、それぞれの後に会場予約済み／管理会社対応／お詫びの電話後回し／面談後回しといった不正解の話題を続けて話を終える構成にした（1番・4番は末尾のまま）。あわせて1番（来客日程が先方都合で急に前倒しになった）と4番（来場者の一部が予定より30分早く来ると分かった）の2件に、<code>choukai-audio/SKILL.md</code> §Register 7が示す「想定外の新情報で予定が変わる」型を導入し、単なる既出事実の列挙から一歩進めた。正解の内容・位置（1番=2、2番=1、3番=4、4番=2、5番=3）と消去方法の内訳は変更していない。</p>
 <h3>問題2</h3>
 <table>

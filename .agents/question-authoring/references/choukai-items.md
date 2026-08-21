@@ -18,17 +18,20 @@ written. Append to `聴解.md`, **after the answer-key heading** (so
 ```
 ## セクション構成表（作問監査用）
 ### 問題1
-| 項目 | 場面 | 主導 | 正解 | 消去方法 | 質問型 |
-|---|---|---|---|---|---|
-| 1番 | スーパーのレジ | 店員→客 | 本人確認書類を提示 | 順番待ち（先に会員登録）／不要／実行不可 | この後まず |
-| 2番 | 会社の朝会 | 部長→部下 | 見積書を送る | 別の人に割り当て／既に完了／条件不足 | この後まず |
+| 項目 | 場面 | 主導 | 正解 | 消去方法 | 質問型 | 決め手の位置 | 提案消去回数 | 決め手の種類 |
+|---|---|---|---|---|---|---|---|---|
+| 1番 | スーパーのレジ | 店員→客 | 本人確認書類を提示 | 順番待ち（先に会員登録）／不要／実行不可 | どう直す・方法 | 冒頭 | 1 | 規則・制度 |
+| 2番 | 会社の朝会 | 部長→部下 | 見積書を送る | 別の人に割り当て／既に完了／条件不足 | この後まず | 中盤 | 0 | 人手・担当 |
 ```
 
 Then read it **as columns, not as rows**:
 
 - **正解** — no two rows may name the same action or object.
 - **消去方法** — no device more than twice (§"Eliminated ≠ contradicted").
-- **場面 / 主導 / 質問型** — against the quotas below.
+- **場面 / 主導 / 質問型** — against the quotas below (≤3/6 まず, ≥1 modify, ≥1 condition).
+- **決め手の位置** — 冒頭 / 中盤 / 終盤 (no more than 3 of 6 rows in any one third).
+- **提案消去回数** — turns with proposals (≤2 items with ≥3 proposals).
+- **決め手の種類** — no token more than twice per section (§"決め手の種類").
 
 If a column repeats, rewrite the ITEM, not the table. QA reads this table first
 (`exam-qa-review` §4 聴解); a section with no table is not shippable.
@@ -157,13 +160,21 @@ every item is individually clean — and it has shipped, repeatedly, while
 `choukai-audio/references/official_register.md` §7.3. The left column below is
 binding; write it into the 構成表 and check it there.
 
-| 問題 | Quota | Official | Papers written without this rule |
+| 問題 | Quota | Official | Gate threshold |
 |---|---|---|---|
-| 1 | ≤2 of 6 items at a service counter; **≥3 must be someone assigning work** (「〜してくれる？」) | 6 % at a counter (9/153) | 42 % (17/40); 5/5 in `20260813_2` |
-| 2 | ≤2 of 6 keyed by 「一番/優先」; **≥2 理由 (どうして)**; ≥1 どのように | 6 % / 37 % / 18 % | 52 % / 38 % / 2 % |
-| 3 | ≤2 of 6 institutional announcements; **≥3 must be a person's 主張・意図・経験** | Shinkanzen: 「話し手の意図、主張などを判断する」 | 6/6 announcements, last two papers |
-| 4 | ≤2 of 12 items may carry an already-done distractor (**target**; the archive's ceiling is 3, the gate FAILs at 4 — §即時応答); ≤2 may key a reply opening 「あ、」 | median 1, max 3 of 11.4 | 9/11, 8/11 |
-| 5 | 1番 ≥3 speakers; 2番 the OTHER official type; no shared template | one of each type, every sitting | last 5 papers: same template twice |
+| 1 | ≤3 of 6 items on the まず frame; ≥1 modify/method (どう直す・どのように); ≥1 condition-match (どの〜) or object frame | 37% まず / 6% modify / 5% condition | FAIL at ≥5 on one frame |
+| 1 | ≥1 non-dialogue item per paper (announcement / message / automated menu) | 14% of 問題1 | WARN |
+| 1 | ≤2 of 6 items with ≥3 proposal-and-deny turns ("the probe carousel") | 1 item in 154 | FAIL at >3 items |
+| 1 | Decider position must not share a bucket (first/mid/last third) in >3 of 6 rows | spread ⅓ each | FAIL at >3 rows sharing |
+| 1 | ≤2 of 6 items at a service counter; **≥3 must be someone assigning work** (「〜してくれる？」) | 6% at a counter (9/153) | WARN |
+| 2 | **≥2 of 6 content/reported-statement questions** (何・どんな・〜と言っていますか) | 38% content / 33% reported | FAIL at 0 content items |
+| 2 | 一番/優先 ≤2 **and** 理由 ≤3 of 6 | 6% 一番 / 33% 理由 | FAIL at >4 on one type |
+| 2 | ≥1 item keyed to a speaker's 気持ち (Shin Kanzen: 「理由や目的、話し手の気持ち」) | 2–5% | target / QA |
+| 3 | ≤2 of 6 institutional announcements; **≥3 must be an ordinary person's 主張・意図・経験** | 42% institutional / 33% person | FAIL at 5 of 6 institutional |
+| 3 | Talk length: target **220–300 spoken chars** (band, not floor) | median 240, min 177 | FAIL below 175 or >450 |
+| 4 | **≥5 of 12 stimuli clearly casual**; ≤2 keigo counter prompts; no class-addressed stimulus (「〜の方は、…窓口へ」) | 49% casual / 13% keigo | FAIL at 0 casual |
+| 4 | ≤2 of 12 items may carry an already-done distractor (**target**; archive ceiling 3, gate FAILs at >3 — §即時応答); ≤2 may key a reply opening 「あ、」 | median 1, max 3 | FAIL at >3 done |
+| 5 | 1番 ≥3 speakers cast on distinguishable voices (≥1.9 st margin); 2番 the OTHER official type; no shared template | 31/31 sittings ≥3 spk | FAIL at 0 items with ≥3 spk |
 
 **Target vs gate.** These quotas are what you author to; `make check` (§G16)
 FAILs only *beyond the archive's whole range* — a green gate means "no
@@ -227,6 +238,10 @@ in papers written without this rule (archive: `official_register.md` §2.3).
 - **No two items in a section may reuse the same elimination device for their
   key.** List device-per-item in one column; if it reads the same word four
   times, rewrite.
+- **The elimination-device tally being perfectly flat is itself a signature.** Official
+  does not distribute devices evenly across all nine tokens; it prefers reassign/defer
+  and reaches for the others rarely. The nine tokens are a *ceiling* per row (≤2 rows each),
+  not a checklist to fill evenly.
 - Reassignment/deferral both satisfy the quotable-grounding rule below —
   naming WHO makes a better 解説 quote than a flat denial.
 - 「一番大切なのは〜」 as the answer-marker in every 問題2 item is the same
