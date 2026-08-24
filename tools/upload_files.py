@@ -33,7 +33,11 @@ Change detection differs by asset kind, because a zip is a derived artifact:
 * A zip is unchanged when its **members** are: the manifest stores a fingerprint
   over every member's path, size and sha256, and the zip is only rebuilt and
   re-uploaded when that fingerprint moves. Hashing the zip itself would be
-  useless — two zips of identical inputs differ in their stored mtimes.
+  useless — two zips of identical inputs differ in their stored mtimes. Their
+  SIZES do not, though, so a zip with no manifest record is rebuilt and its size
+  compared with the remote asset's: equal means it is already up there and only
+  the bookkeeping was lost. The manifest is flushed after every single asset, so
+  a run killed at 90% keeps the 90%.
 
 Either way the manifest also records the (size, mtime_ns) each sha was computed
 from, so a re-run does not re-hash gigabytes it already knows. On a machine that
@@ -224,6 +228,7 @@ def sync_files(tag: str, files: list[tuple[Path, str]], remote: dict[str, int],
                 shutil.copy2(path, staged)
             upload(tag, staged)
             manifest[f"{tag}/{name}"] = stat_record(path, sha)
+            save_manifest(manifest)     # per asset — an interrupted run keeps what it sent
             staged.unlink(missing_ok=True)
     print(f"  ✓ Uploaded {len(pending)} file(s) to release '{tag}'.", flush=True)
 
@@ -243,6 +248,15 @@ def refs_groups() -> list[tuple[str, list[Path]]]:
                          if p.is_file() and p.suffix.lower() in REFS_EXTS)
         if members:
             groups.append((f"{d.name}.zip", members))
+    # A binary sitting directly in refs/ belongs to no group and would be left
+    # behind in silence — the one failure mode that looks exactly like success.
+    loose = [p for p in sorted(REFS.iterdir())
+             if p.is_file() and p.suffix.lower() in REFS_EXTS]
+    if loose:
+        print(f"  ! {len(loose)} binary/ies sit directly in refs/ and are in no zip: "
+              + ", ".join(p.name for p in loose)
+              + "\n    Move each into its source folder (refs/<Source>/…) — the zips are "
+                "per top-level folder.", flush=True)
     if not groups:
         print(f"No {'/'.join(sorted(REFS_EXTS))} files found under {REFS}.", flush=True)
     return groups
@@ -287,9 +301,13 @@ def sync_zips(tag: str, groups: list[tuple[str, list[Path]]], remote: dict[str, 
         if not force and name in remote and entry.get("uploaded_fingerprint") == fp:
             skipped += 1
             continue
-        # No record of having uploaded THIS content: unlike a plain file there is
-        # nothing to compare against (the remote size depends on zip overhead and
-        # on which members were in it), so rebuild and push rather than assume.
+        # No record of having uploaded THIS content, but the release holds an asset
+        # by that name. Rebuilding settles it without a transfer: a ZIP_STORED
+        # archive's SIZE is a function of its members (names + bytes), not of when
+        # it was built, so a rebuilt zip whose size matches the remote one IS the
+        # remote one. This is the interrupted-run case — two 1 GB zips landed, the
+        # process was killed before it could write them down — and rebuilding costs
+        # seconds against re-uploading gigabytes.
         pending.append((name, members, fp))
 
     report(tag, len(groups), skipped,
@@ -297,15 +315,29 @@ def sync_zips(tag: str, groups: list[tuple[str, list[Path]]], remote: dict[str, 
            sizer=lambda n: manifest[f"{tag}/{n.name}"]["member_bytes"])
     if dry_run or not pending:
         return
+    sent = adopted = 0
     with tempfile.TemporaryDirectory() as tmpdir:
         for name, members, fp in pending:
             print(f"    building {name} ({len(members)} file(s))...", flush=True)
             staged = build_zip(Path(tmpdir) / name, members)
-            upload(tag, staged)
+            size = staged.stat().st_size
+            if not force and remote.get(name) == size:
+                print(f"    = {name} already on the release at {size / 1e6:.1f} MB "
+                      f"— recording it, not re-sending.", flush=True)
+                adopted += 1
+            else:
+                upload(tag, staged)
+                sent += 1
             manifest[f"{tag}/{name}"]["uploaded_fingerprint"] = fp
-            manifest[f"{tag}/{name}"]["uploaded_size"] = staged.stat().st_size
+            manifest[f"{tag}/{name}"]["uploaded_size"] = size
+            # Write down every asset as it lands. A 2 GB run that dies half way
+            # must not lose the half it finished — that is how the previous
+            # version turned one interruption into a second full upload.
+            save_manifest(manifest)
             staged.unlink(missing_ok=True)
-    print(f"  ✓ Uploaded {len(pending)} zip(s) to release '{tag}'.", flush=True)
+    parts = [f"{sent} zip(s) uploaded" if sent else "",
+             f"{adopted} already present" if adopted else ""]
+    print(f"  ✓ Release '{tag}': " + ", ".join(p for p in parts if p) + ".", flush=True)
 
 
 # --------------------------------------------------------------------------- #

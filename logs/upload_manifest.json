@@ -1,104 +1,1444 @@
 {
   "audio/20260807_1.mp3": {
     "mtime_ns": 1787294839213378892,
-    "path": "tests/20260807_1/聴解.mp3",
     "sha256": "becea152a2e0117fadd6f7ae81b337917b5e3d5fc50c6225730b138606c675a6",
     "size": 27730701
   },
   "audio/20260810_1.mp3": {
     "mtime_ns": 1787294951259857106,
-    "path": "tests/20260810_1/聴解.mp3",
     "sha256": "3f20b379220a88ee462feaa6bca33bc4ea38963352af45a60fbba30331324748",
     "size": 27367533
   },
   "audio/20260810_2.mp3": {
     "mtime_ns": 1787295022657722188,
-    "path": "tests/20260810_2/聴解.mp3",
     "sha256": "8ee7c1f65d5bf70bc0b2c71e00106f27031a9b1069e59aa0ab569c9869faa773",
     "size": 28842669
   },
   "audio/20260811_1.mp3": {
     "mtime_ns": 1787295102266589401,
-    "path": "tests/20260811_1/聴解.mp3",
     "sha256": "b8617d7e1819554cb04e9de736e7ef5d06da31a0b33acb65f42f2275a0479e6f",
     "size": 28117773
   },
   "audio/20260812_1.mp3": {
     "mtime_ns": 1787295198828361361,
-    "path": "tests/20260812_1/聴解.mp3",
     "sha256": "0ef9be009defe22a9b0e35630a14282fd8802c34cde5ae43fad6247fed3591ec",
     "size": 32366925
   },
   "audio/20260812_2.mp3": {
     "mtime_ns": 1787295288572742541,
-    "path": "tests/20260812_2/聴解.mp3",
     "sha256": "e626569c50f616a1be087da7d62018e31fbe3dac47a4a53698ad554f6c8c0105",
     "size": 31394349
   },
   "audio/20260813_1.mp3": {
     "mtime_ns": 1787296139121297393,
-    "path": "tests/20260813_1/聴解.mp3",
     "sha256": "9867da27df7f7024831ce227304180c35c60bf52812fb0d6bb59ff4bdf1f4da0",
     "size": 31844205
   },
   "audio/20260813_2.mp3": {
     "mtime_ns": 1787296222433304099,
-    "path": "tests/20260813_2/聴解.mp3",
     "sha256": "067d46637d264b527d98aac7d939183af15527fd0062e9c403692eb9a2c2f8ff",
     "size": 29184525
   },
   "audio/20260814_1.mp3": {
     "mtime_ns": 1787297182386886156,
-    "path": "tests/20260814_1/聴解.mp3",
     "sha256": "1744262bbb7781efe0a58c6b4efa5916c29bb0b7171574caddfa371040443fa3",
     "size": 29949453
   },
   "audio/20260817_1.mp3": {
     "mtime_ns": 1787296384958475366,
-    "path": "tests/20260817_1/聴解.mp3",
     "sha256": "edf9fdcb483d55094eaf3753e4718fe67b1a383e3121662cff71955515393cb1",
     "size": 31102605
   },
   "audio/20260817_2.mp3": {
     "mtime_ns": 1787296460276242239,
-    "path": "tests/20260817_2/聴解.mp3",
     "sha256": "37802b1210ed00669c9956ad8f47da4a4f9bf84d42d438cc5671ff1b652a14e7",
     "size": 30542445
   },
   "audio/20260817_3.mp3": {
     "mtime_ns": 1787296558321908806,
-    "path": "tests/20260817_3/聴解.mp3",
     "sha256": "8c4ee9f17b84a7fd0bfb54be87663eabe8ceae87b28d3fef504baa232b7e6af4",
     "size": 33356781
   },
   "audio/20260818_1.mp3": {
     "mtime_ns": 1787296659308856981,
-    "path": "tests/20260818_1/聴解.mp3",
     "sha256": "935ca34b8247065cb0664fe422bee8415eac6db49025d42e7b06c773fcdf89ab",
     "size": 33327693
   },
   "audio/20260819_1.mp3": {
     "mtime_ns": 1787297013273342974,
-    "path": "tests/20260819_1/聴解.mp3",
     "sha256": "d58ac04dc146360efb4c78c18b57f73aad7d95880bed509df730b792be2aa67b",
     "size": 33935949
   },
   "audio/20260821_1.mp3": {
     "mtime_ns": 1787537334897911712,
-    "path": "tests/20260821_1/聴解.mp3",
     "sha256": "09e800ad58d53eb481d18d7dfc07fe3932e9bb869344c2fcf9f23abd53c7e77b",
     "size": 33849549
   },
+  "audio/imported-n2-2023-12.mp3": {
+    "mtime_ns": 1787567251657290918,
+    "sha256": "b17a55fb1cd1fb3edcdd02338174b0ed3303c186132bbbdc379db4831f745cf2",
+    "size": 47016317
+  },
+  "audio/imported-n2-2024-07.mp3": {
+    "mtime_ns": 1787561264243572331,
+    "sha256": "8a3d9dd9ac47ca04303140282bfb56ba5735a20845ef7a2503884cdb76bc3598",
+    "size": 46208939
+  },
   "audio/imported-n2-2024-12.mp3": {
     "mtime_ns": 1787553106317004076,
-    "path": "tests/imported-n2-2024-12/聴解.mp3",
     "sha256": "067127680d3ebd454011c7b1a9842ec6678d51cbd503b6298ebe6692ffbd245d",
     "size": 71757428
   },
   "audio/imported-n2-2025-07.mp3": {
     "mtime_ns": 1787547368287447301,
-    "path": "tests/imported-n2-2025-07/聴解.mp3",
     "sha256": "f6b152f58c4fb5acd2c4f7ea2ab35f0f90f603a1550d75764738f82d4ddfa476",
     "size": 40488540
+  },
+  "refs/JLPT_N2_NEW.zip": {
+    "fingerprint": "eed78f1cf33a2b7e1c64c00ecc7a7a35631c3d7cc07814aafb97ee31714c7ba9",
+    "member_bytes": 1312880101,
+    "member_count": 94,
+    "members": {
+      "JLPT_N2_NEW/1. N2 12-2010/1. N2 12-2010.pdf": {
+        "mtime_ns": 1786003188741549245,
+        "sha256": "2ba324143a8585425f15c3d6e142258ce11267468c67917ab89caa08bcda7fcd",
+        "size": 1862577
+      },
+      "JLPT_N2_NEW/1. N2 12-2010/1. N2-12.2010(script).pdf": {
+        "mtime_ns": 1786003188744355683,
+        "sha256": "2fe478980265f2bf22bd4506240a10ebd61de807bd0b298982969e1f54f1dc07",
+        "size": 2818899
+      },
+      "JLPT_N2_NEW/1. N2 12-2010/1. Nghe N2 12-2010.mp3": {
+        "mtime_ns": 1786003188762028609,
+        "sha256": "305c8bc8bc2f78b54ec92030149f13ce9c7ab8c1b132d88129a8d5078b7dbb45",
+        "size": 28351159
+      },
+      "JLPT_N2_NEW/1. N2 7-2010/1. N2 7-2010(script).pdf": {
+        "mtime_ns": 1786003188709931671,
+        "sha256": "5f44f0df1fa9abdb96f8aec06767944a55b2a71460109e4bd68b77cde521ca24",
+        "size": 2595686
+      },
+      "JLPT_N2_NEW/1. N2 7-2010/1. N2 7-2010.pdf": {
+        "mtime_ns": 1786003188713410906,
+        "sha256": "661d6e9fa6084b2513cd268152109898a1e183562ab63302a7f8dce5c63d7202",
+        "size": 1976817
+      },
+      "JLPT_N2_NEW/1. N2 7-2010/1. Nghe N2 7-2010.mp3": {
+        "mtime_ns": 1786003188730802496,
+        "sha256": "5039f44454686ef62b05cf65974baa6f16a4f805bf63b986a85162b126030424",
+        "size": 27854107
+      },
+      "JLPT_N2_NEW/10. N2 12-2019/10. N2 12-2019(script).pdf": {
+        "mtime_ns": 1786003189365528409,
+        "sha256": "a7fdfd2c5ad95e37d2f99c255a070c0ef4f4c1ad652902acefadb44f72948d45",
+        "size": 3167816
+      },
+      "JLPT_N2_NEW/10. N2 12-2019/10. N2 12-2019.pdf": {
+        "mtime_ns": 1786003189374509561,
+        "sha256": "aaa11dceaacd7fca81ce450219358c8a0fa249c4a7548b2e2c4be4b1cfa835a3",
+        "size": 2253479
+      },
+      "JLPT_N2_NEW/10. N2 12-2019/10. Nghe N2 12-2019.mp3": {
+        "mtime_ns": 1786003189397521027,
+        "sha256": "706fe5573d7f25ba70469deed041269fe221e48e85484e180308276cde761125",
+        "size": 39497604
+      },
+      "JLPT_N2_NEW/10. N2 7-2019/10. N2 7 2019_update 260619.pdf": {
+        "mtime_ns": 1786003189292598604,
+        "sha256": "57796d619730fa04de7cb422b6a5c60a03bee445328430a3ccb7ae821d051d68",
+        "size": 2457512
+      },
+      "JLPT_N2_NEW/10. N2 7-2019/10. N2 7-2019(script).pdf": {
+        "mtime_ns": 1786003189293988740,
+        "sha256": "0c5ce5216ade159f473877c26a3f93c2776cabe12eb0fd3b1055d4d5e050b235",
+        "size": 2928318
+      },
+      "JLPT_N2_NEW/10. N2 7-2019/10. Nghe N2 7-2019.mp3": {
+        "mtime_ns": 1786003189324609306,
+        "sha256": "f6464e05ff1699d96f67df1146db7d7131e19379515c0bdc915e93047b8580fe",
+        "size": 44590019
+      },
+      "JLPT_N2_NEW/11. N2 12-2020/11. N2 12-2020(script).pdf": {
+        "mtime_ns": 1786003189412073763,
+        "sha256": "ca72d204e7d82080f52e5f0951a8aefb0c289a649ea7baf8caf16f09d312bdfc",
+        "size": 2986899
+      },
+      "JLPT_N2_NEW/11. N2 12-2020/11. N2 12-2020.pdf": {
+        "mtime_ns": 1786003189416397463,
+        "sha256": "4805ee2709c7d798f9981127e9e6b76e22b72d13e6721dcc6be36a9247e00a91",
+        "size": 2391896
+      },
+      "JLPT_N2_NEW/11. N2 12-2020/11.Nghe N2 12-2020.mp3": {
+        "mtime_ns": 1786003189446117731,
+        "sha256": "89add1b58d19309822a576b7ce31889e82bb354511b58d05b5f6a2b2e09a3b0b",
+        "size": 36761068
+      },
+      "JLPT_N2_NEW/12. N2 12-2021/12. N2 12-2021(script).pdf": {
+        "mtime_ns": 1786003189487378669,
+        "sha256": "5bfa68cfed1b0e320e61bcda59fd329084dd0e4b4adec9a4ce7a533c88b08c9e",
+        "size": 2682399
+      },
+      "JLPT_N2_NEW/12. N2 12-2021/12. N2 12-2021.pdf": {
+        "mtime_ns": 1786003189489871105,
+        "sha256": "66051b9418d0a44037d793cdf4bf9c7f0fae948c4b1c85eaedf936254640f0c7",
+        "size": 2261853
+      },
+      "JLPT_N2_NEW/12. N2 12-2021/12. Nghe N2 12-2021.mp3": {
+        "mtime_ns": 1786003189524084032,
+        "sha256": "0a8cec1068d880d7bb849956d6654724972db0d4682c9a527a81f16e720989ea",
+        "size": 41647586
+      },
+      "JLPT_N2_NEW/12. N2 7-2021/12. N2 07-2021(script).pdf": {
+        "mtime_ns": 1786003189456185349,
+        "sha256": "6b2f7d56ef914a68b3c2305086651f7b0ff263b3b9e861652c23c6e6b7b4e69f",
+        "size": 3083930
+      },
+      "JLPT_N2_NEW/12. N2 7-2021/12. N2 7-2021.pdf": {
+        "mtime_ns": 1786003189460404506,
+        "sha256": "257c75f8e7b3d02af51d1d62d5f27a9c626edb596f8d6401bd3f9b47fcf331bd",
+        "size": 2254922
+      },
+      "JLPT_N2_NEW/12. N2 7-2021/12. Nghe N2 7-2021.mp3": {
+        "mtime_ns": 1786003189482737676,
+        "sha256": "8b67eeef7b0c86fe666feb58df4860f68553cb2a096786ba8fad7d8238663482",
+        "size": 41585727
+      },
+      "JLPT_N2_NEW/13. N2 12-2022/13. N2 12-2022(script).pdf": {
+        "mtime_ns": 1786003189590317953,
+        "sha256": "88bb622ca2132887ddec0da8db408d9ccada3c212feef7b54f21c136ca651c58",
+        "size": 2559925
+      },
+      "JLPT_N2_NEW/13. N2 12-2022/13. N2 12-2022.pdf": {
+        "mtime_ns": 1786003189594201232,
+        "sha256": "3988c1a948b9e035c74480af902cbc5f65c8920a4a9a7d5334315c39685b872d",
+        "size": 2300665
+      },
+      "JLPT_N2_NEW/13. N2 12-2022/13. Nghe N2 T12-2022.mp3": {
+        "mtime_ns": 1786003189633608199,
+        "sha256": "abf0c8762928a68b17676f55800a7614e59462ed9050fe4143be35f77da93bc1",
+        "size": 65040282
+      },
+      "JLPT_N2_NEW/13. N2 7-2022/13. N2 07-2022(script).pdf": {
+        "mtime_ns": 1786003189539923986,
+        "sha256": "1bd48cac5fb438fc42c133e5885d4d043d97758f212ba785ef498d72afc0f464",
+        "size": 2936140
+      },
+      "JLPT_N2_NEW/13. N2 7-2022/13. N2 7-2022_update 260601.pdf": {
+        "mtime_ns": 1786003189544186727,
+        "sha256": "03b18d499879cafa7dc34af1f7e6608269c37427ddc94435da5d344b1bf66db6",
+        "size": 2342621
+      },
+      "JLPT_N2_NEW/13. N2 7-2022/13. Nghe N2 T7-2022.mp3": {
+        "mtime_ns": 1786003189562954078,
+        "sha256": "5ea012d2a5512a8783b9ec898a7472a1a0ebe70eeb79f7092fbf4adeef138e85",
+        "size": 41884569
+      },
+      "JLPT_N2_NEW/14. N2 12-2023/14. Nghe N2 T12-2023.mp3": {
+        "mtime_ns": 1786003189730516478,
+        "sha256": "b17a55fb1cd1fb3edcdd02338174b0ed3303c186132bbbdc379db4831f745cf2",
+        "size": 47016317
+      },
+      "JLPT_N2_NEW/14. N2 12-2023/14. script N2 12-2023.pdf": {
+        "mtime_ns": 1786003189731178983,
+        "sha256": "db444ed0dc06c8983f78630e8dd058700c534efb035aed7cdf89ee34eb255dff",
+        "size": 1124945
+      },
+      "JLPT_N2_NEW/14. N2 12-2023/14.N2 12-2023.pdf": {
+        "mtime_ns": 1786003189742227484,
+        "sha256": "09791b93924b07276581503af2a2bb90eed0bbc499546c23bf584d6b8b88d532",
+        "size": 1680028
+      },
+      "JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023 (script).pdf": {
+        "mtime_ns": 1786003189650248075,
+        "sha256": "2f6d3952ab9303aa468eca869c92c761fdf27f74a753fb5069c6ceba32bb9270",
+        "size": 2847044
+      },
+      "JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023.pdf": {
+        "mtime_ns": 1786003189662839713,
+        "sha256": "053808099dfcc33669c1d32195ca0eeaa6c0b1c9776aadcdc3dab31901852430",
+        "size": 2614372
+      },
+      "JLPT_N2_NEW/14. N2 7-2023/File nghe N2 7-2023.mp3": {
+        "mtime_ns": 1786003189694561662,
+        "sha256": "943f119315fce9011b080dd3cb94bdc1a0c76f8098a555624c499091e8244eec",
+        "size": 43430182
+      },
+      "JLPT_N2_NEW/15. N2 12-2024/15. N2 12.2024 (update 260625).pdf": {
+        "mtime_ns": 1786003189806715891,
+        "sha256": "ac7f506cbbc7140279fd0d62ee02bdb0468a7f8f647148020354c83a5feb3d18",
+        "size": 2024319
+      },
+      "JLPT_N2_NEW/15. N2 12-2024/15. script N2 12.2024.pdf": {
+        "mtime_ns": 1786003189808240236,
+        "sha256": "5ad41dee3313533fa277c7c8f79c0573db9c28682467d2140aefeeec6b4b26c8",
+        "size": 1023767
+      },
+      "JLPT_N2_NEW/15. N2 12-2024/Nghe N2 T12-2024.mp3": {
+        "mtime_ns": 1786003189862383273,
+        "sha256": "067127680d3ebd454011c7b1a9842ec6678d51cbd503b6298ebe6692ffbd245d",
+        "size": 71757428
+      },
+      "JLPT_N2_NEW/15. N2 7-2024/15. N2 7.2024.pdf": {
+        "mtime_ns": 1786003189756966721,
+        "sha256": "d7675c506dd820ac6537434f6ccf7dc968a1293518d4ac3a02dcf3a06297f115",
+        "size": 1828387
+      },
+      "JLPT_N2_NEW/15. N2 7-2024/Nghe N2 T7-2024.mp3": {
+        "mtime_ns": 1786003189783199629,
+        "sha256": "8a3d9dd9ac47ca04303140282bfb56ba5735a20845ef7a2503884cdb76bc3598",
+        "size": 46208939
+      },
+      "JLPT_N2_NEW/15. N2 7-2024/script N2 7.2024.pdf": {
+        "mtime_ns": 1786003189791912445,
+        "sha256": "eb183ced8c85083f2722d9b3dddd1bc097a81db672246bb2033c11b8ba47a583",
+        "size": 1015903
+      },
+      "JLPT_N2_NEW/16. N2 7-2025/16. N2 07-2025.pdf": {
+        "mtime_ns": 1786003189873754193,
+        "sha256": "edd09adfd3b41d2f2416c0f67b7da4be407b7761ff0d592618ab08db3ee24551",
+        "size": 1854294
+      },
+      "JLPT_N2_NEW/16. N2 7-2025/16. N2-7.2025 (script).pdf": {
+        "mtime_ns": 1786003189877122426,
+        "sha256": "5419c70d5ccc84d4927a71855e6a737d074b06996d395f7e7447d562819dcf6b",
+        "size": 2522375
+      },
+      "JLPT_N2_NEW/16. N2 7-2025/Nghe N2 T7-2025.mp3": {
+        "mtime_ns": 1786003189905335474,
+        "sha256": "f6b152f58c4fb5acd2c4f7ea2ab35f0f90f603a1550d75764738f82d4ddfa476",
+        "size": 40488540
+      },
+      "JLPT_N2_NEW/17.N2 12-2025/17 (script) N2 12-2025 _260410.pdf": {
+        "mtime_ns": 1786003189913707413,
+        "sha256": "2bf268fa2406144030c65f0ef6c875137436d054e60301ce7fb6001603e70b5c",
+        "size": 2944633
+      },
+      "JLPT_N2_NEW/17.N2 12-2025/17.N2 12-2025 _260603.pdf": {
+        "mtime_ns": 1786003189917695652,
+        "sha256": "917fc0c51f9a65a9f8b8a420d81617aa7cb201c3d9ffeaa68c81123ea32352eb",
+        "size": 2102410
+      },
+      "JLPT_N2_NEW/17.N2 12-2025/JLPT N2 12.2025 Choukai.mp3": {
+        "mtime_ns": 1786003189944082769,
+        "sha256": "d18c7cad5140402e02d0df4e5d4b41f91c583ccb1653d7b5e5ecd6f2cb4c96d6",
+        "size": 44793976
+      },
+      "JLPT_N2_NEW/2. N2 12-2011/2. N2 12-2011(script).pdf": {
+        "mtime_ns": 1786003188802521167,
+        "sha256": "d1baa6f03059079fde5a45505a5e3fa11525028bcdcda3fe07adeb248edc2308",
+        "size": 2820157
+      },
+      "JLPT_N2_NEW/2. N2 12-2011/2. N2 12-2011.pdf": {
+        "mtime_ns": 1786003188809239676,
+        "sha256": "5a7173d5ed6ef165bfbcc12553ba507ab40e811b5d77706f09ddc405a7c38aab",
+        "size": 1875910
+      },
+      "JLPT_N2_NEW/2. N2 12-2011/2. Nghe N2-12-2011.mp3": {
+        "mtime_ns": 1786003188829452539,
+        "sha256": "bd71547cb8e771bf4d63a565b38d7855f6e5ea17cbcba0f90341c042d2967522",
+        "size": 46258546
+      },
+      "JLPT_N2_NEW/2. N2 7-2011/2. N2 7-2011(script).pdf": {
+        "mtime_ns": 1786003188774204577,
+        "sha256": "51471a6d58aa42d07270ab8b49b7ae26efe4c10891995beb92ffab12515e9d61",
+        "size": 2690613
+      },
+      "JLPT_N2_NEW/2. N2 7-2011/2. N2 7-2011.pdf": {
+        "mtime_ns": 1786003188779328824,
+        "sha256": "1b869f552aaf5305664a1f1769a22456599240935225e3218d550c507d6d80dd",
+        "size": 1799134
+      },
+      "JLPT_N2_NEW/2. N2 7-2011/2. Nghe N2 7-2011.mp3": {
+        "mtime_ns": 1786003188789036689,
+        "sha256": "c77554b7ba8e450c03036c79b25d84fbf5f8accc4c42e64cecbd305d53fd5fab",
+        "size": 22035694
+      },
+      "JLPT_N2_NEW/3. N2 12-2012/3. N2 12-2012 (script).pdf": {
+        "mtime_ns": 1786003188874238046,
+        "sha256": "c408345e7b49f5216a1da5172c43fa79a79ad4ad36a722c8538d3428919237d2",
+        "size": 2949164
+      },
+      "JLPT_N2_NEW/3. N2 12-2012/3. N2 12-2012.pdf": {
+        "mtime_ns": 1786003188877312778,
+        "sha256": "153328415ce5c1206fc0f6c48da6eeeb309ac1e86c70425342f42d4ef3378cd6",
+        "size": 1789674
+      },
+      "JLPT_N2_NEW/3. N2 12-2012/3. Nghe N2 12-2012.mp3": {
+        "mtime_ns": 1786003188888860116,
+        "sha256": "01caeb4130da9c6503122c79f4e3e1ac4bcc68d99d295c54d20d1107dad1041a",
+        "size": 20615389
+      },
+      "JLPT_N2_NEW/3. N2 7-2012/3. N2 7-2012(script).pdf": {
+        "mtime_ns": 1786003188849757985,
+        "sha256": "6b84f8798ce7948c4b6dbe8a4eff8d8d3429bca4e9ca1cb85cac8ca01d36ce97",
+        "size": 2628147
+      },
+      "JLPT_N2_NEW/3. N2 7-2012/3. N2 7-2012.pdf": {
+        "mtime_ns": 1786003188853500888,
+        "sha256": "b25ae618ce184e3a782cd10a7d41defa339d33bc170446931b557648b5541d70",
+        "size": 2086001
+      },
+      "JLPT_N2_NEW/3. N2 7-2012/3. Nghe N2 7-2012.mp3": {
+        "mtime_ns": 1786003188863203754,
+        "sha256": "e4076cecb50761b5716485f00fc28255ea2b64948a9e6af012eda33004d1678c",
+        "size": 18168005
+      },
+      "JLPT_N2_NEW/4. N2 12-2013/4. N2 12-2013 (script).pdf": {
+        "mtime_ns": 1786003188679328271,
+        "sha256": "cd52d283368356c8d8de69dc4992dc0f71b7ac3d3a4cd2d964569037823904a8",
+        "size": 2897847
+      },
+      "JLPT_N2_NEW/4. N2 12-2013/4. N2 12-2013.pdf": {
+        "mtime_ns": 1786003188681560497,
+        "sha256": "bac2a49eda6f6d0b7838a1ce3505da92b0802a3b1ca411462810b254b821d221",
+        "size": 1870112
+      },
+      "JLPT_N2_NEW/4. N2 12-2013/4. Nghe N2 12-2013.mp3": {
+        "mtime_ns": 1786003188696334942,
+        "sha256": "102019a1540dd55f66f5ae63c747c887c5c5fb9efbf56e434cb464306083c450",
+        "size": 23372818
+      },
+      "JLPT_N2_NEW/4. N2 7-2013/4. N2 7-2013(script).pdf": {
+        "mtime_ns": 1786003188900494412,
+        "sha256": "6061864e5cfbdbad92afcb853407d00dc3bcf49a2987ab2a3d98feb465184ea0",
+        "size": 2768411
+      },
+      "JLPT_N2_NEW/4. N2 7-2013/4. N2 7-2013.pdf": {
+        "mtime_ns": 1786003188904540902,
+        "sha256": "040f4b714aae3c900a3d8ecddc692b3ed3f998248302c5cbe1a76246dfeb94d7",
+        "size": 2077734
+      },
+      "JLPT_N2_NEW/4. N2 7-2013/4. Nghe N2 7-2013.mp3": {
+        "mtime_ns": 1786003188916002697,
+        "sha256": "15a07d13f7a1245a2dd12415b7d7925b8f24d426425c12fb94f7af85f2dae900",
+        "size": 20702603
+      },
+      "JLPT_N2_NEW/5. N2 12-2014/5. N2 12-2014(script).pdf": {
+        "mtime_ns": 1786003188945101377,
+        "sha256": "69ec450f74d3387c3002a119d0cd2ac8d42395e73e465e20565958a2af612317",
+        "size": 3011041
+      },
+      "JLPT_N2_NEW/5. N2 12-2014/5. N2 12-2014.pdf": {
+        "mtime_ns": 1786003188952940728,
+        "sha256": "c24c9afbdbf3519d9bfac04b65c54423420b74da5bd5f092e100ad4b302144d9",
+        "size": 1971637
+      },
+      "JLPT_N2_NEW/5. N2 12-2014/5. Nghe N2 12-2014.mp3": {
+        "mtime_ns": 1786003188965399906,
+        "sha256": "abcf01b3927c03756def241bfc811c83b355499ca766bbb0d1610eea99491954",
+        "size": 24627660
+      },
+      "JLPT_N2_NEW/5. N2 7-2014/5. N2 7-2014(script).pdf": {
+        "mtime_ns": 1786003188920357230,
+        "sha256": "7e446fe29cfa3990fe218d3858a6fced9c3151ef4bf3352f3d175718684062ce",
+        "size": 2789666
+      },
+      "JLPT_N2_NEW/5. N2 7-2014/5. N2 7-2014.pdf": {
+        "mtime_ns": 1786003188923018542,
+        "sha256": "328c80330d47657f45dc451e7af05c6b12ec049f6438d9de0a16477de88e5475",
+        "size": 2045214
+      },
+      "JLPT_N2_NEW/5. N2 7-2014/5. Nghe N2 7-2014.mp3": {
+        "mtime_ns": 1786003188937092608,
+        "sha256": "ef5d4c5a50de5a5b6c0be223ea9526b9198354361a4caddc9901763a2a40cd23",
+        "size": 24769208
+      },
+      "JLPT_N2_NEW/6. N2 12-2015/6. N2 12-2015(script).pdf": {
+        "mtime_ns": 1786003189007856313,
+        "sha256": "94f2672c15aa096b99da9705618686be4c565e330d5d8b7f0ff08bee30ab0439",
+        "size": 3198646
+      },
+      "JLPT_N2_NEW/6. N2 12-2015/6. N2 12-2015.pdf": {
+        "mtime_ns": 1786003189012357389,
+        "sha256": "7aa641f4455d7e846b3bd4976342b2173b255020ee06d1243f0b9ffe92fccdb9",
+        "size": 2163770
+      },
+      "JLPT_N2_NEW/6. N2 12-2015/6. Nghe N2 12-2015.mp3": {
+        "mtime_ns": 1786003189025473238,
+        "sha256": "9d29b6865cd6cfe47f07b94fbe095759bb5c3e28dd1d525d23736f6904b82e0a",
+        "size": 30529603
+      },
+      "JLPT_N2_NEW/6. N2 7-2015/6. N2 7-2015(script).pdf": {
+        "mtime_ns": 1786003188979454471,
+        "sha256": "e44bf266e2f0ca2bee113947ff1afa09247b775fc27db1d1268917b5c2aeef39",
+        "size": 3004886
+      },
+      "JLPT_N2_NEW/6. N2 7-2015/6. N2 7-2015.pdf": {
+        "mtime_ns": 1786003188982559787,
+        "sha256": "3ed163e9d15d88d2536a6ab989981d9061d74daa97f7ef0367ce3f255b3ad511",
+        "size": 2048231
+      },
+      "JLPT_N2_NEW/6. N2 7-2015/6. Nghe N2 7-2015.mp3": {
+        "mtime_ns": 1786003188995487510,
+        "sha256": "d9b80f0c2bb6a50b7b31e0fcd4ffa72696522fe54c1bae41ed117c06fccfd772",
+        "size": 24870046
+      },
+      "JLPT_N2_NEW/7. N2 12-2016/7. N2 12 2016.pdf": {
+        "mtime_ns": 1786003189072165927,
+        "sha256": "c86cd81d27e7fe689e165520d92eca00800e5aa456b54a7c19406922f7e1184a",
+        "size": 2169453
+      },
+      "JLPT_N2_NEW/7. N2 12-2016/7. N2 12-2016(script).pdf": {
+        "mtime_ns": 1786003189074647238,
+        "sha256": "68c2b936f68c2fd0997f6679fb38900e767f0f57309ac80c932794a0acee20d9",
+        "size": 3360387
+      },
+      "JLPT_N2_NEW/7. N2 12-2016/7. Nghe N2 12-2016.mp3": {
+        "mtime_ns": 1786003189088711386,
+        "sha256": "4457472ce9eea5a9a2788035cba885a63cbc49ec70e430be987b52073d9c4ace",
+        "size": 25524951
+      },
+      "JLPT_N2_NEW/7. N2 7-2016/7. N2 7-2016(script).pdf": {
+        "mtime_ns": 1786003189041482318,
+        "sha256": "8fedf8a4a9932c628a41ae2dbeeea512cda5a5b3f27667f3286dd6ef9934dffa",
+        "size": 2987720
+      },
+      "JLPT_N2_NEW/7. N2 7-2016/7. N2 7-2016.pdf": {
+        "mtime_ns": 1786003189045695350,
+        "sha256": "4c3df02cf3da4ff87ced0fb99ddce419c47a6550bea15b20f330770f4b96a38f",
+        "size": 2182354
+      },
+      "JLPT_N2_NEW/7. N2 7-2016/7. Nghe N2 7-2016.mp3": {
+        "mtime_ns": 1786003189057673525,
+        "sha256": "9473f9899d156246172f5def7a34424764d6a5a105407008fa137e876a1908e0",
+        "size": 23524243
+      },
+      "JLPT_N2_NEW/8. N2 12-2017/8. N2 12 2017.pdf": {
+        "mtime_ns": 1786003189139967360,
+        "sha256": "2278986507c5d7b1f1681472c460f5aec1e7754ac9598cd0729d143c05acd9e1",
+        "size": 1897592
+      },
+      "JLPT_N2_NEW/8. N2 12-2017/8. Nghe N2 12-2017.mp3": {
+        "mtime_ns": 1786003189160982436,
+        "sha256": "77be013a98439fdfabc2fd20e0b89399d6a4926fa5fba40b829fec1e4c95607f",
+        "size": 48322395
+      },
+      "JLPT_N2_NEW/8. N2 12-2017/8.N2-12.2017(script).pdf": {
+        "mtime_ns": 1786003189173211237,
+        "sha256": "ff347a4a1fd51d7ba0861bfc68028db3a4c6704d3cc4e67db26f14d57ec94529",
+        "size": 3260676
+      },
+      "JLPT_N2_NEW/8. N2 7-2017/8. N2 7-2017(script).pdf": {
+        "mtime_ns": 1786003189096113692,
+        "sha256": "e92d40aa94ebe8892c37aadf8a52ad6031676bdf50aa7acddd7bd1fe93fa0169",
+        "size": 3063394
+      },
+      "JLPT_N2_NEW/8. N2 7-2017/8. N2 7-2017.pdf": {
+        "mtime_ns": 1786003189099910138,
+        "sha256": "69d3d293c99e67e418e9a5775b1823fa7bffd0acbc631eaa61ab716ca269d56a",
+        "size": 2416970
+      },
+      "JLPT_N2_NEW/8. N2 7-2017/8. Nghe N2 T7 2017.mp3": {
+        "mtime_ns": 1786003189120687838,
+        "sha256": "54983942df6b3ed741015ea2395eed3655baf6bb9d734051d2d495a277c14955",
+        "size": 45798756
+      },
+      "JLPT_N2_NEW/9. N2 12-2018/9. N2 12-2018(script).pdf": {
+        "mtime_ns": 1786003189226756853,
+        "sha256": "a9205b212db1feb1ad7fecac81bfe7d52e91975b3cc128f15dad19f8dfda2e5f",
+        "size": 3452613
+      },
+      "JLPT_N2_NEW/9. N2 12-2018/9. N2 12-2018.pdf": {
+        "mtime_ns": 1786003189230348214,
+        "sha256": "cc23ad9b6069ab9727d565647e0d8d50d1369a3860d2a724a1e2f1f1967d0de2",
+        "size": 2271645
+      },
+      "JLPT_N2_NEW/9. N2 12-2018/9. Nghe N2 12-2018.mp3": {
+        "mtime_ns": 1786003189274126130,
+        "sha256": "e499fcf1000db3887d299de9bc74d0d75d57c7b827095058176e159aacf1ee1e",
+        "size": 37956343
+      },
+      "JLPT_N2_NEW/9. N2 7-2018/9. N2 7-2018(script).pdf": {
+        "mtime_ns": 1786003189182967437,
+        "sha256": "d5b5aec1d3fed6cb97d7270c0c502d21df542329f04a39d2ceae01a7a81b9f38",
+        "size": 3208178
+      },
+      "JLPT_N2_NEW/9. N2 7-2018/9. N2 7-2018.pdf": {
+        "mtime_ns": 1786003189185717083,
+        "sha256": "4ba17d60612b7fb73d8bda7e6a0e370a1b6a6c629dfbf2b82d07b453eab59ce8",
+        "size": 2431316
+      },
+      "JLPT_N2_NEW/9. N2 7-2018/9. Nghe N2 7-2018.mp3": {
+        "mtime_ns": 1786003189217358698,
+        "sha256": "38970fc2cfce557ca1c7fc2c2127ec680deab13410caf95a6179ead6962c6297",
+        "size": 61998740
+      },
+      "JLPT_N2_NEW/ĐÁP ÁN JLPT N2 (update 10.4.2026).pdf": {
+        "mtime_ns": 1786003189991576756,
+        "sha256": "9b3706405e540129d4db2be89f505062e22199b7578b01b73a5d1e7067180ef8",
+        "size": 2264474
+      }
+    },
+    "uploaded_fingerprint": "eed78f1cf33a2b7e1c64c00ecc7a7a35631c3d7cc07814aafb97ee31714c7ba9",
+    "uploaded_size": 1312896261
+  },
+  "refs/Shinkanzen.zip": {
+    "fingerprint": "4e2178a14f5a6d7a53daf35033b45b030eabb4b04a43879c2a940e79cd42bfb0",
+    "member_bytes": 1064704282,
+    "member_count": 168,
+    "members": {
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Bunpou.pdf": {
+        "mtime_ns": 1785736522366286000,
+        "sha256": "9f71994c965a0fa9f7e44b9400fa5e6b9c2a97c09c8f28e2d9a1948ecb86967c",
+        "size": 69215273
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track01.mp3": {
+        "mtime_ns": 1785736526230715000,
+        "sha256": "809ef247aec8a618cf41dfe4d358fbccc5de5bc88225bf66525b0e56591bb75d",
+        "size": 2766890
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track02.mp3": {
+        "mtime_ns": 1785736526230734000,
+        "sha256": "8f3f7db00d63ec0f14bd657699c15457a77eab393b82d145085f5ccaa97daf8c",
+        "size": 4668604
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track03.mp3": {
+        "mtime_ns": 1785736526230750000,
+        "sha256": "281e53b4b5921e0a40902ef53fbc1e83b47d21061c7dd1b22fed484daa65888a",
+        "size": 4088686
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track04.mp3": {
+        "mtime_ns": 1785736526230765000,
+        "sha256": "24c2febc846bf81dc41b4fb5146ebe8e41bc0463368b35e9f7c8cf6faf783883",
+        "size": 2599707
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track05.mp3": {
+        "mtime_ns": 1785736526230780000,
+        "sha256": "cc8b84bc9a6c51f761b835c86f13a19ffc1478b98948653841bf834c9f4436d0",
+        "size": 4251690
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track06.mp3": {
+        "mtime_ns": 1785736526230794000,
+        "sha256": "bba553ea8179299fc3bf67ae4afbc3cd7dcf192ae03839c7553c549533e058a3",
+        "size": 5532735
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track07.mp3": {
+        "mtime_ns": 1785736526230807000,
+        "sha256": "d827363d24c025ba50355eb167887eca14b0e363afdd26b396bd8036d755803a",
+        "size": 5433470
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track08.mp3": {
+        "mtime_ns": 1785736526230821000,
+        "sha256": "3ed009c8642484029ebd29b9c18236db0c904ccdfea6778a44ae25ff1f2add3a",
+        "size": 1810809
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track09.mp3": {
+        "mtime_ns": 1785736526230834000,
+        "sha256": "b802be38c96261428a87ed512bb84845d0909a9db8e251b7e9c84016f0268685",
+        "size": 4226613
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track10.mp3": {
+        "mtime_ns": 1785736526230848000,
+        "sha256": "48f22d80cc3a6d68cfc8324ae44d5c208f6a7f2bfc9c936d6dcb59d8ca306783",
+        "size": 2081437
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track11.mp3": {
+        "mtime_ns": 1785736526230862000,
+        "sha256": "10779f17afba36fd71eedd09390d302313c649ff4777111dd5bdb62a634aea36",
+        "size": 4178547
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track12.mp3": {
+        "mtime_ns": 1785736526230998000,
+        "sha256": "4c137fd873778c05f43736d590c1b40f550537ea43025328731db2dc3117a18b",
+        "size": 1867233
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track13.mp3": {
+        "mtime_ns": 1785736526231014000,
+        "sha256": "9a01ac7643f45337ae4d5644b1d606a232059af9f343b1f601df12addc9aa120",
+        "size": 587233
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track14.mp3": {
+        "mtime_ns": 1785736526231028000,
+        "sha256": "df6f37c96421787e2d3e4961c2c2c5136a9312c995e1db04089db7dce3289565",
+        "size": 1040719
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track15.mp3": {
+        "mtime_ns": 1785736526231043000,
+        "sha256": "32acdc1bb24b03d645b819c0ef229da6e856737328a0ea53616f1327a25ffb73",
+        "size": 1810809
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track16.mp3": {
+        "mtime_ns": 1785736526231063000,
+        "sha256": "3276afa34a1427ff686813231dd40b98222a62e9c353c90c051cb9e31df36063",
+        "size": 1578841
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track17.mp3": {
+        "mtime_ns": 1785736526231080000,
+        "sha256": "3cc45e05e6b82ee998f2a56d10c6047ae0310ff9dc55647f97757cf3b955fd34",
+        "size": 439902
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track18.mp3": {
+        "mtime_ns": 1785736526231095000,
+        "sha256": "e273ae3ab1a7a93505a7460212009a0730488a112baddb2f17646268abe1e731",
+        "size": 1730351
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track19.mp3": {
+        "mtime_ns": 1785736526231110000,
+        "sha256": "5572288f9d2dd8e9173ba8e879ea89800032cacdbc643fe0f1c959f102a51d79",
+        "size": 308245
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track20.mp3": {
+        "mtime_ns": 1785736526231124000,
+        "sha256": "4de1bd686b9c5839456b6080af72380ba85dcb683871d5acd930394449687ace",
+        "size": 1821258
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track21.mp3": {
+        "mtime_ns": 1785736526231138000,
+        "sha256": "6f06d3fc06cdf57059fade39cc9f9260462a9792799eb7bc3c96dcd4b27a36e0",
+        "size": 3539070
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track22.mp3": {
+        "mtime_ns": 1785736526231153000,
+        "sha256": "149cc74e647f87bc73acb5fb2b357357261162c3f5b64c146f66158b18fd9edc",
+        "size": 1892311
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track23.mp3": {
+        "mtime_ns": 1785736526231166000,
+        "sha256": "1f14f86351a14b9ee0a8dacbe6932aa1e860cc958bbf2cb5dbed22608366ee4f",
+        "size": 1266417
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track24.mp3": {
+        "mtime_ns": 1785736526231181000,
+        "sha256": "35efe79710f90e7c02aa7a944addd884ad883bd640ec6b1418ec21f25d342a40",
+        "size": 2976915
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track25.mp3": {
+        "mtime_ns": 1785736526231315000,
+        "sha256": "f36ea1b201596bdf8c58bffb25a9dc428c7e3c2b6288ee362338bb572017a578",
+        "size": 4405290
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track26.mp3": {
+        "mtime_ns": 1785736526231330000,
+        "sha256": "e01025493c2eb5686cb6cc60e0c83a48f527056795979d7a6ffb539c5749986f",
+        "size": 639478
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track27.mp3": {
+        "mtime_ns": 1785736526231344000,
+        "sha256": "68168cb40fb4becf388a1537f194b4a3d0d7915f7c3782695a063a426ef11da6",
+        "size": 1291494
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track28.mp3": {
+        "mtime_ns": 1785736526231357000,
+        "sha256": "f41edc778a38cdb06264ab678b6fca040ba987fdc1560e5cbbf2a9ac9f6cb5fb",
+        "size": 2022923
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track29.mp3": {
+        "mtime_ns": 1785736526231373000,
+        "sha256": "77658a3ee74e95f4546246405097802341485fd65e8cef24955007008ea7bc1a",
+        "size": 2622694
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track30.mp3": {
+        "mtime_ns": 1785736526231387000,
+        "sha256": "a1a10f7a5979af8c48d9e3e19dee27dd9977bc9c61ba02159b5a03b9b39b1cef",
+        "size": 2505666
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track31.mp3": {
+        "mtime_ns": 1785736526231402000,
+        "sha256": "a7f118a99c8023da818053d0ca204a1a695092cd9041b0fa54291dacb5f4fa61",
+        "size": 2364604
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track32.mp3": {
+        "mtime_ns": 1785736526231416000,
+        "sha256": "ae9bf4beb5b1d3577d972292e688f9cb4eca7c2e9d317640279681959359d5a8",
+        "size": 2251756
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track33.mp3": {
+        "mtime_ns": 1785736526231429000,
+        "sha256": "64d556344f8c9f154bc1e9e44e9d432f6f7277d317b9d836e51cf934f55cd7f8",
+        "size": 2073078
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track34.mp3": {
+        "mtime_ns": 1785736526231446000,
+        "sha256": "ea8a6c4c84167a36267e3c8f77efc8f69ef4c24664babaf9eb8494aadbb2dcb4",
+        "size": 1795135
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track35.mp3": {
+        "mtime_ns": 1785736526231461000,
+        "sha256": "8c86477fd6777e213556d21afee2e63d3bcf5f897f59312404a2b97e045d5d28",
+        "size": 2162939
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track36.mp3": {
+        "mtime_ns": 1785736526231475000,
+        "sha256": "351b4c355819f2146b72c65b39044cf523b82ecce7ca1d7d874f865e0163b6ff",
+        "size": 2400131
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track37.mp3": {
+        "mtime_ns": 1785736526231489000,
+        "sha256": "631964f979bc1948cd47e519f186a1dbd7cfd14aa05b797a51ab183b8dbbbfc5",
+        "size": 2429388
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track38.mp3": {
+        "mtime_ns": 1785736526231626000,
+        "sha256": "e3cbf659d07cd83175f687ed4e799600de16fd679612b7875b2a3dc1d88bb970",
+        "size": 1945600
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track39.mp3": {
+        "mtime_ns": 1785736526231646000,
+        "sha256": "3d93864e81998ff2188391ef4391e797d40603c38e52a143efbb6a0f93badfd2",
+        "size": 1988441
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track40.mp3": {
+        "mtime_ns": 1785736526231664000,
+        "sha256": "f2703114cfc92bf7863b6f61f204e4ecd19eeefbe4cf4c0f13c8a5d4bc50c4e5",
+        "size": 2230858
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track41.mp3": {
+        "mtime_ns": 1785736526231681000,
+        "sha256": "60038bb43268742f06aad2d89f5d88d4c7154836f1a65229534c97e5f00fef3f",
+        "size": 2471184
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track42.mp3": {
+        "mtime_ns": 1785736526231698000,
+        "sha256": "914df75a8056a171abd2d916786ff8e24ca853f06d1f412bb435bb917c299670",
+        "size": 2740768
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track43.mp3": {
+        "mtime_ns": 1785736526231717000,
+        "sha256": "035639642b0ea61c2e0f4a3df3cafb6fdc67fa1ccf400a1d4ef28832d76bbebd",
+        "size": 509911
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track44.mp3": {
+        "mtime_ns": 1785736526231734000,
+        "sha256": "4dd247decb7c3caeca40e763f654e29d2b885460005e8b48eed493f71ab2c2d3",
+        "size": 3370841
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track45.mp3": {
+        "mtime_ns": 1785736526231756000,
+        "sha256": "c754b317b34d1cbb4755cc400695b1ada5ac10057d5520f9b8e31a90ccc4e995",
+        "size": 3283070
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track46.mp3": {
+        "mtime_ns": 1785736526231773000,
+        "sha256": "38457460fbdd58afe17fa3b6ac9765769c2de41952f341f458e0c196f7797503",
+        "size": 3918368
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track47.mp3": {
+        "mtime_ns": 1785736526231791000,
+        "sha256": "a1c692ab3abe7a2295f5ebb28081dc2009cc79a63dcc783ecc7935ebf61ac055",
+        "size": 665600
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track48.mp3": {
+        "mtime_ns": 1785736526231809000,
+        "sha256": "22da5c1b9d5e94a3a753f7943cfaf992fd0ee297de5df8db2f6a48c425f2ac2c",
+        "size": 1493160
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track49.mp3": {
+        "mtime_ns": 1785736526231827000,
+        "sha256": "101b5595b6bf70c08a97d7d1c91e1b92e23630d1b0027faddac027f750b4ca70",
+        "size": 2424164
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track50.mp3": {
+        "mtime_ns": 1785736526231845000,
+        "sha256": "331f13fe3fffdda856c3dc214e7f0adc675f8a5fa62fe3f116976fff8157c2eb",
+        "size": 2971690
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track51.mp3": {
+        "mtime_ns": 1785736526231948000,
+        "sha256": "9aed355f6cda37f741227d7b219acb38d85fc11c0f986d720c87c715f033aca8",
+        "size": 2664490
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track52.mp3": {
+        "mtime_ns": 1785736526231966000,
+        "sha256": "d17494efa6c11b446e2e458b33454a0d301590c92412ede7249e4671b07a767e",
+        "size": 2648817
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track53.mp3": {
+        "mtime_ns": 1785736526231983000,
+        "sha256": "341ede7d95d38bf6bd3ac574a6557b30f9897a81a1179aafc2d9b4c8cd475ab8",
+        "size": 1147298
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track54.mp3": {
+        "mtime_ns": 1785736526231999000,
+        "sha256": "164ef3beafc98510c3cf853dac749f7896a5db38af4d4f5b28341b15f2130dae",
+        "size": 1424196
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track55.mp3": {
+        "mtime_ns": 1785736526232013000,
+        "sha256": "6d0cd264637c43adc3d6ecf10e60fcbe37b99babbe134bd5e6081b258960e816",
+        "size": 1906939
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track56.mp3": {
+        "mtime_ns": 1785736526232029000,
+        "sha256": "7320e0fbef6818dd317746bc3af2d8a4cf313956ebdf3bb4652e38506cf50d6d",
+        "size": 1316572
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track57.mp3": {
+        "mtime_ns": 1785736526232044000,
+        "sha256": "a50b50a2341be6b356c58736ce19121a46c26833667e7792ff6f32813bd22998",
+        "size": 2865111
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track58.mp3": {
+        "mtime_ns": 1785736526232059000,
+        "sha256": "436facd45a9b54bd9f54c6cfb58e0498f2b355b398935168561018c58d00689a",
+        "size": 3054237
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track59.mp3": {
+        "mtime_ns": 1785736526232076000,
+        "sha256": "2983c4aeeb2c2f3bd273caab3889c3203ae98763102d2dd87573160cfbd6f551",
+        "size": 2263249
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track60.mp3": {
+        "mtime_ns": 1785736526232093000,
+        "sha256": "04fbbb1374abbd72f7e8b6d8b12b95aaad5444275bd9c13b648c7dad62ab5207",
+        "size": 2731364
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track61.mp3": {
+        "mtime_ns": 1785736526232107000,
+        "sha256": "11af477c4bdad0819831bd4d996f9b9bd92a77fc3cac3375cdce809f641daf15",
+        "size": 2770025
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track62.mp3": {
+        "mtime_ns": 1785736526232121000,
+        "sha256": "4eb4c2890d32d24825808fa6886ce15083d1b9c0a3455be321d00e97f657c9fe",
+        "size": 2701062
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track63.mp3": {
+        "mtime_ns": 1785736526232134000,
+        "sha256": "feaf31651e99369c01d812649f6a5ff34a7cbfb969ea390fd785f39f3ad665b7",
+        "size": 2765845
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track64.mp3": {
+        "mtime_ns": 1785736526232247000,
+        "sha256": "de9b8b8fd15e7a92208514685c13f1a711c1e14a637ac3b45f3dc0ad8d3b1383",
+        "size": 2730319
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track65.mp3": {
+        "mtime_ns": 1785736526232268000,
+        "sha256": "f3fdde0aa60860a113b3af2b7e639473352272d9d8a5028b32cfd8bbceed895f",
+        "size": 2721960
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track66.mp3": {
+        "mtime_ns": 1785736526232282000,
+        "sha256": "b7beb47472a8c2572195001a5a27c6239b0c8c6183a7b3bc43914e35ea496ff8",
+        "size": 725160
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track67.mp3": {
+        "mtime_ns": 1785736526232296000,
+        "sha256": "f78c7b69191a4280ed4020abca46169068c616ff02c809316c8a56c27fd75f12",
+        "size": 3278890
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track68.mp3": {
+        "mtime_ns": 1785736526232309000,
+        "sha256": "6881907fcadb4a6360f3eeccd46e5a83e676a466866a9f626c5fdbcfb6ae23cb",
+        "size": 3017666
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track69.mp3": {
+        "mtime_ns": 1785736526232323000,
+        "sha256": "0d821f9db07e59d0de6e203e3d1a00b387d57dd16189f8433bbc046360c91ebd",
+        "size": 2758531
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track70.mp3": {
+        "mtime_ns": 1785736526232337000,
+        "sha256": "eeb8794a1e0df8571a29619ef3aef3bfb6e5be714bf266d95065da80548f64a0",
+        "size": 513045
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track71.mp3": {
+        "mtime_ns": 1785736526232351000,
+        "sha256": "d6cf1f90815e47b6845f62fbcc90b84d450527eb5c5cdec47ed3dcf7612fbd9c",
+        "size": 1067886
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track72.mp3": {
+        "mtime_ns": 1785736526232365000,
+        "sha256": "871264ee866c4b9d83581ec55b3cb247c70a39bdc011e9f488bb74297932cfd4",
+        "size": 662466
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track73.mp3": {
+        "mtime_ns": 1785736526232380000,
+        "sha256": "55b4714beb5092e4cf7ee6200f13b9120f12dc99a6bd36d2dd30909d9fe3b9f4",
+        "size": 1445094
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track74.mp3": {
+        "mtime_ns": 1785736526232396000,
+        "sha256": "af6931f82f9245e896c31fcc8235e93578b22e766c061e213110c75fcc0b2317",
+        "size": 1612278
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track75.mp3": {
+        "mtime_ns": 1785736526232410000,
+        "sha256": "969f828dd8e0c64d2a7b78addaded4fea0108300b0013e1157e444c2d843a26c",
+        "size": 1541225
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track76.mp3": {
+        "mtime_ns": 1785736526232423000,
+        "sha256": "11c362b7cc4b3d364541a73151d9c17d21aa2de27a4983a38f3b067acd2099f0",
+        "size": 1314482
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track77.mp3": {
+        "mtime_ns": 1785736526232440000,
+        "sha256": "c8574fce32c0f744b730422be8088e8b29c37ac0b126596a202437f5125095b3",
+        "size": 1176556
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track78.mp3": {
+        "mtime_ns": 1785736526232455000,
+        "sha256": "fe0f5683c02651d7c1ecfe34154d40a59c8f98b525271f5de69d67d5050b5c9c",
+        "size": 1570482
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track79.mp3": {
+        "mtime_ns": 1785736526232470000,
+        "sha256": "c9668b7d76f0f2775d7a9f6f4bb08f6b3c5aa2779a22054bfe1cafeeb99ec983",
+        "size": 1540180
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track80.mp3": {
+        "mtime_ns": 1785736526232483000,
+        "sha256": "1f644612312f6b9ade6036bb8f09023458d978be8cebdc5610e22630b7c39407",
+        "size": 1543315
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track81.mp3": {
+        "mtime_ns": 1785736526232498000,
+        "sha256": "0c86859a2237c71f6b9d3e225673890768cb26fc11c617220f9dee3ab703cfb6",
+        "size": 3795070
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track82.mp3": {
+        "mtime_ns": 1785736526232512000,
+        "sha256": "4a4b95b85f4e85209a4a28d89032c6d22d972c8d95a651090a7afbae691694b0",
+        "size": 2279968
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track83.mp3": {
+        "mtime_ns": 1785736526232524000,
+        "sha256": "103ba1fc276bbb5595ac96fcf8562dd86629797636696daf4fff36bacf1e6305",
+        "size": 813976
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track01.mp3": {
+        "mtime_ns": 1785736526232537000,
+        "sha256": "e506b6bd6b9d22beb99ff089d6a1d546d741c1a94e70a08f7056a30bf5b5154c",
+        "size": 2227723
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track02.mp3": {
+        "mtime_ns": 1785736526232551000,
+        "sha256": "6c7d091d08e6698157adf0df8220c39c30139cdfbdecb6022e29082a6fbe7b1b",
+        "size": 778449
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track03.mp3": {
+        "mtime_ns": 1785736526232683000,
+        "sha256": "81a1e921559a3e332d5fca83f8d0b3fc6b421e26e6bba49e326634b1f327099e",
+        "size": 2294596
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track04.mp3": {
+        "mtime_ns": 1785736526232703000,
+        "sha256": "b601e234842d80013e0a06392d3b28d33befbeadcfe8455cfc5aee0c89e90f39",
+        "size": 914286
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track05.mp3": {
+        "mtime_ns": 1785736526232718000,
+        "sha256": "4f270b81275130f6b6a1415d29eeb25b24161f7704f27cda19f6b964b2c135b0",
+        "size": 2632098
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track06.mp3": {
+        "mtime_ns": 1785736526232732000,
+        "sha256": "d9db581d28d734093d7222782fe61447ce5507d5c4796e5ef38da7a0f7714327",
+        "size": 728294
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track07.mp3": {
+        "mtime_ns": 1785736526232746000,
+        "sha256": "802132505158bff56b3a5e22b8ba5dee5b32ec6e4c5b6bbf347d89f9e71b1e0a",
+        "size": 2263249
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track08.mp3": {
+        "mtime_ns": 1785736526232760000,
+        "sha256": "13470df17208422b6d8d9eb96bacda151e4b4716b20aacc63745596edb4ece4a",
+        "size": 1069976
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track09.mp3": {
+        "mtime_ns": 1785736526232775000,
+        "sha256": "2be1cc6d0f71f2074841ff719d4725a26b39b1c054cc1c5884dcf07c9d1f0842",
+        "size": 3912098
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track10.mp3": {
+        "mtime_ns": 1785736526232788000,
+        "sha256": "7996fa0548eea01d4ca096b36d39156cb8476a3505db0f46ca20c6fc4b03b456",
+        "size": 1669747
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track11.mp3": {
+        "mtime_ns": 1785736526232801000,
+        "sha256": "79b913fa3def4f4515cb41a1712fe374cebce41ab12c2b0070f1b24196f5b5ab",
+        "size": 778449
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track12.mp3": {
+        "mtime_ns": 1785736526232813000,
+        "sha256": "7a6eece2cc86914da2117d2621db41ac89f06bcaa6fb448a18144f4e2dd9ada3",
+        "size": 2530743
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track13.mp3": {
+        "mtime_ns": 1785736526232826000,
+        "sha256": "6894d819d3da1988eaa4ed54757a7b1b31d3d5a3fa3134179543aa262ba21d0b",
+        "size": 793078
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track14.mp3": {
+        "mtime_ns": 1785736526232840000,
+        "sha256": "e16fad115d6306ead01a6328f7314bd8fe2809fb8842bbadc7059b54df4749b4",
+        "size": 1902760
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track15.mp3": {
+        "mtime_ns": 1785736526232854000,
+        "sha256": "1cb82516c677baf2331a29daf7d6803cc2f11ad8353ccb47399a81a779e48145",
+        "size": 741878
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track16.mp3": {
+        "mtime_ns": 1785736526232867000,
+        "sha256": "3037d78b7ade423d1c7a0d2e5cae297c7a6384b551c94307fce53bcef6478ba9",
+        "size": 1992621
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track17.mp3": {
+        "mtime_ns": 1785736526232982000,
+        "sha256": "113e1d20c091f4c9a91884055fb9812819d92129e2fcad540fc32a714bcddd4c",
+        "size": 743968
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track18.mp3": {
+        "mtime_ns": 1785736526233003000,
+        "sha256": "93cd388790835ff6182930e00e62f3d0123ce92d764c53191c5e67a3a64573d2",
+        "size": 3702074
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track19.mp3": {
+        "mtime_ns": 1785736526233021000,
+        "sha256": "e8714316f74c59537cd87ed1e28c52759a5bb3df43abf3f2f02f6241de6d5138",
+        "size": 1328066
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track20.mp3": {
+        "mtime_ns": 1785736526233039000,
+        "sha256": "b84c4b919ea30cedd59d089fdf5b3f2c5d4719ad319f0cbbe2457ac3500a23df",
+        "size": 1742890
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track21.mp3": {
+        "mtime_ns": 1785736526233055000,
+        "sha256": "47d2228599c9c503a1de9b7a8aa3e5f63bb1ec061ecca731cfe7c5c26048d52a",
+        "size": 1878727
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track22.mp3": {
+        "mtime_ns": 1785736526233072000,
+        "sha256": "3930e9079b6ffaeaec5997bc4b12e0c4942e25172b2b54b34c702e5e90269585",
+        "size": 1688556
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track23.mp3": {
+        "mtime_ns": 1785736526233089000,
+        "sha256": "deb66acddcb0c937e8a9bcd3086f08ba2ff6c017d5e1fb10a1c8ee8282cc684f",
+        "size": 4005094
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track24.mp3": {
+        "mtime_ns": 1785736526233105000,
+        "sha256": "114d94b5ceb06ec60d93484a75530ed33a6551806c7ed38a395f30fbe3ef9dc8",
+        "size": 1641535
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track25.mp3": {
+        "mtime_ns": 1785736526233121000,
+        "sha256": "343dd18cb20ee9fd25bce035445024236bb56671c5d4c86fe21613f495905dce",
+        "size": 2471184
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track26.mp3": {
+        "mtime_ns": 1785736526233140000,
+        "sha256": "a46dbdbb3a201b916a699350488016de6ce214e1a76d7469e88e3fd25e499f18",
+        "size": 3160817
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track27.mp3": {
+        "mtime_ns": 1785736526233157000,
+        "sha256": "66ef8fd163990d1b2b9504a09f2d037d69c971e5d7c62110ead7de52ed76ff6a",
+        "size": 703217
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track28.mp3": {
+        "mtime_ns": 1785736526233175000,
+        "sha256": "d59b208afc62a0d51602ba0e9d3bb0fc90c71ac4a46e9b9e5b12ce501a3f989c",
+        "size": 3134694
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track29.mp3": {
+        "mtime_ns": 1785736526233192000,
+        "sha256": "6d987bf99de756fe97f343a6fd28ae5eb5f579c080d5eae174a84fd336afd263",
+        "size": 3921502
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track30.mp3": {
+        "mtime_ns": 1785736526233252000,
+        "sha256": "586004aefd44d7759543fefb6e651680715e6e25b66c87bee18e2f05c6950723",
+        "size": 3512947
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track31.mp3": {
+        "mtime_ns": 1785736526233280000,
+        "sha256": "f7bc4bc6f03269c6db82b58d97919514c9b973a86905a6a5487405620f58d58c",
+        "size": 2198466
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track32.mp3": {
+        "mtime_ns": 1785736526233297000,
+        "sha256": "0ffe87c955789e58f939334e1e76643f25466cc30256e0e1df0595c9ceceb323",
+        "size": 849502
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track33.mp3": {
+        "mtime_ns": 1785736526233317000,
+        "sha256": "bda8b287c0530bc630f5cdb641f128fdd8d14e20ef251a848df16a76c9ea5e69",
+        "size": 2999902
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track34.mp3": {
+        "mtime_ns": 1785736526233338000,
+        "sha256": "92d26d0284c73515fe5949ed139a9a31ceb06e1025b2b045d87711e5fb672569",
+        "size": 785764
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track35.mp3": {
+        "mtime_ns": 1785736526233356000,
+        "sha256": "7ed8294cef07084e568a38eb3f21b5039c3222faf1a958f8e7147c12fef8d116",
+        "size": 2712556
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track36.mp3": {
+        "mtime_ns": 1785736526233372000,
+        "sha256": "5e7294bd8f86ef5c89254e832e639a4af948a91b8ef2f64d609a26c3f6cf7074",
+        "size": 652017
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track37.mp3": {
+        "mtime_ns": 1785736526233393000,
+        "sha256": "20c5f9b9f84f9c5c69c837f2c94df65d52a59c759ab84d9e762362e7f9b1b8fa",
+        "size": 1565258
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track38.mp3": {
+        "mtime_ns": 1785736526233411000,
+        "sha256": "61d2208cf17d57601a43bb58333995c737681e998314c1d897b44b18b8d27003",
+        "size": 2809731
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track39.mp3": {
+        "mtime_ns": 1785736526233428000,
+        "sha256": "6b6f7c0ee10827f15745246563228d5d4310e72be7b44a9434959a8809f7a620",
+        "size": 3611168
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track40.mp3": {
+        "mtime_ns": 1785736526233447000,
+        "sha256": "19bc5648a1fcf7bc46d95edf2f855f2a9d2a08c3f81f3867fadd9a1d1ed00959",
+        "size": 2824360
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track41.mp3": {
+        "mtime_ns": 1785736526233466000,
+        "sha256": "cd9bb548f1d7fc82eda0a451e8df481018e1adf77a9801fa37b9a44f5e81b16d",
+        "size": 2077258
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track42.mp3": {
+        "mtime_ns": 1785736526233486000,
+        "sha256": "5325a78ff1af5b5c067f10b1441884017ecc5384302fc63da6f0e4513843a1c5",
+        "size": 2635233
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track43.mp3": {
+        "mtime_ns": 1785736526233606000,
+        "sha256": "0fcf9fc07548a50f54e3c09b6b1e0387896a5b249adcc1cb472772860af1542d",
+        "size": 4330058
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track44.mp3": {
+        "mtime_ns": 1785736526233630000,
+        "sha256": "75d4cbfd0170ebabcba2f3f1a0095f6ca95a9284ec300c04f8903f48afc7d55b",
+        "size": 5699919
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track45.mp3": {
+        "mtime_ns": 1785736526233651000,
+        "sha256": "d96c65bce15f223aaf382e181936cdf3f6f1eefa2a5b7c3c122da22b1f4f8ebe",
+        "size": 723070
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track46.mp3": {
+        "mtime_ns": 1785736526233670000,
+        "sha256": "fb71098670a2142f2aa3d1e276ce62fff8d9208c3e924938888c03c1218157bb",
+        "size": 2471184
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track47.mp3": {
+        "mtime_ns": 1785736526233692000,
+        "sha256": "21d6671293899aa17b3afe85b27a16258a918af7b6480a95f0cd72ab5d94d438",
+        "size": 3174400
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track48.mp3": {
+        "mtime_ns": 1785736526233711000,
+        "sha256": "4b6045db6157c9c142b174025ac1c510691d13a59fc4dbabeb16adbafe88b8e1",
+        "size": 3779396
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track49.mp3": {
+        "mtime_ns": 1785736526233733000,
+        "sha256": "df68173f2357cb7ce3c6dc28b80259205861b3798b7ed324f1d5f90fe79fa131",
+        "size": 3543249
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track50.mp3": {
+        "mtime_ns": 1785736526233751000,
+        "sha256": "8907ea72c70df7f0a0209818280ba5ca0de331c3c86a466226849dcd877e656b",
+        "size": 3511902
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track51.mp3": {
+        "mtime_ns": 1785736526233770000,
+        "sha256": "6ac12daa322086b737c7ced0b2b25b7495db6118a1bc3a3bc6864153d7ad0b50",
+        "size": 972800
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track52.mp3": {
+        "mtime_ns": 1785736526233814000,
+        "sha256": "4da3e9f88ce809c07442d2b4b69bd77ecee9c9d2bb05e8312a6d8f459cceaf79",
+        "size": 3481600
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track53.mp3": {
+        "mtime_ns": 1785736526233838000,
+        "sha256": "ec98d32baa3f845e19b65d0c3be62bcb12743404ad9afdc92c8e7644fb1ddae3",
+        "size": 3954939
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track54.mp3": {
+        "mtime_ns": 1785736526233861000,
+        "sha256": "e27e6aeeb1de288a27c5e843b3071ff58a214aa1eae39e85ea191b374eb8f271",
+        "size": 4025992
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track55.mp3": {
+        "mtime_ns": 1785736526233879000,
+        "sha256": "d438c059336adf64b19a5976022b050cac4c6129b281d70283f780d5881d7ff5",
+        "size": 3636245
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track56.mp3": {
+        "mtime_ns": 1785736526234005000,
+        "sha256": "439d10d691b2ffc71f9bee2cdf0a3f918b2408983dbfb84edf7d73f251bf0b27",
+        "size": 4105404
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track57.mp3": {
+        "mtime_ns": 1785736526234051000,
+        "sha256": "d74aced18f650e79bf02e65ac80a057111d7fc22be434bbf79fb8bdf49e7d07d",
+        "size": 3606988
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track58.mp3": {
+        "mtime_ns": 1785736526234072000,
+        "sha256": "9f5dfcaaa7b4a762ef12bdc6e5016ddf5fe8489eb07d9439e79ea4ae9b394db3",
+        "size": 993698
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track59.mp3": {
+        "mtime_ns": 1785736526234086000,
+        "sha256": "a5c3d84503387a11bd77a2678de89b23940eafa2d2fcb1ede2292f1a90d7338e",
+        "size": 3394874
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track60.mp3": {
+        "mtime_ns": 1785736526234103000,
+        "sha256": "24fdce21bca7699ac27de204c9aa507bd973c3ca6d10dd17b0317a0afed8da5e",
+        "size": 2973780
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track61.mp3": {
+        "mtime_ns": 1785736526234120000,
+        "sha256": "03101daf0b050509c958731d8b53200767d2eb5e4280e2d49b132e6659e7a062",
+        "size": 3298743
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track62.mp3": {
+        "mtime_ns": 1785736526234138000,
+        "sha256": "3ebdb8377fc4458bab7daf63966da121368398db96aef5e28cb660c3e7a6830f",
+        "size": 3020800
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track63.mp3": {
+        "mtime_ns": 1785736526234155000,
+        "sha256": "f772c15a4226711d2e2b4bca6a2b92104425af317e03d2b95ccd89c8b0db20b7",
+        "size": 3780441
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track64.mp3": {
+        "mtime_ns": 1785736526234171000,
+        "sha256": "4e5ab9cb51a6e928aa6139cd9a7720ef33511c4c26ad29ae20dd5e8b7bcdb450",
+        "size": 724115
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track65.mp3": {
+        "mtime_ns": 1785736526234187000,
+        "sha256": "5bd4fb7244397fc2b5d5e0df33241f00e82f4264f3ba92f980c60c0f1e07b962",
+        "size": 1106547
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track66.mp3": {
+        "mtime_ns": 1785736526234202000,
+        "sha256": "788f08e016233aa46def51c56f2fdfde71eb21212da793de80b52f0fec6103b8",
+        "size": 938319
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track67.mp3": {
+        "mtime_ns": 1785736526234217000,
+        "sha256": "7e98e8ec10cf61c48d18affa4139f0d445fe4000a054d2f23327ec8a73a0caaa",
+        "size": 937274
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track68.mp3": {
+        "mtime_ns": 1785736526234231000,
+        "sha256": "664afe6cb9631a301e6dd031d4debc782b26b8d781ca7e1868d3db7d9151c0e1",
+        "size": 1092964
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track69.mp3": {
+        "mtime_ns": 1785736526234328000,
+        "sha256": "c08a1a7d16ad3ce403bd850f397a01035c932dfd65a501fe4bc4bfc052ccecff",
+        "size": 984294
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track70.mp3": {
+        "mtime_ns": 1785736526234343000,
+        "sha256": "ee86a12332608f23e0cbd6366a6defbf75d2420014a406502841dfcd0e68d3c2",
+        "size": 956082
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track71.mp3": {
+        "mtime_ns": 1785736526234358000,
+        "sha256": "f52973227d785c998dfdf83ce2ded46fda4bed6f742ab5486677785f86c79cdd",
+        "size": 965486
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track72.mp3": {
+        "mtime_ns": 1785736526234373000,
+        "sha256": "a27c3505b8a3ec7738827d8c53505caf575a12edea8dffecb6d8df6a2373da80",
+        "size": 1028180
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track73.mp3": {
+        "mtime_ns": 1785736526234388000,
+        "sha256": "11e0e7d2f2621ba781c1784bf2264635ae80b7dfec8281539a629dddc07cffb8",
+        "size": 1159837
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track74.mp3": {
+        "mtime_ns": 1785736526234402000,
+        "sha256": "3e2c7a1e0eefee508cf994578bd6ea52a247e5bff9e9fc67568225344fad2cdd",
+        "size": 969666
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track75.mp3": {
+        "mtime_ns": 1785736526234416000,
+        "sha256": "cb2ee15e2743465c666e084fc0c2f3de611e01be40a14efe6da31b8708056f14",
+        "size": 1075200
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track76.mp3": {
+        "mtime_ns": 1785736526234429000,
+        "sha256": "0a6d3b658ca96bc26ff94c88ca29e33bbd7a2e3cf0d072a43e74a1ee9b13ffa8",
+        "size": 1077290
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track77.mp3": {
+        "mtime_ns": 1785736526234443000,
+        "sha256": "42fe217c72ef6f3e431e1c0c8c7b84e227f50d841054436b3b57207ea48ef49f",
+        "size": 380343
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track78.mp3": {
+        "mtime_ns": 1785736526234458000,
+        "sha256": "0b61fbc3ea063d5340a1a0f24bfe9e7663a0a32d1723cbb9ef12c6e0ce7d26e6",
+        "size": 4769960
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track79.mp3": {
+        "mtime_ns": 1785736526234472000,
+        "sha256": "22e58130041b24d385e1215b52566beeca3939b927681d9516ebe212d8b48d11",
+        "size": 5617372
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track80.mp3": {
+        "mtime_ns": 1785736526234488000,
+        "sha256": "0fa853d2aa1e07a6d20dfab30a38eb12bfb3e78a786c44ef296f1c1f543d89b5",
+        "size": 6862890
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai.pdf": {
+        "mtime_ns": 1785736522366307000,
+        "sha256": "b3c6d199a7c1d0f34fd76da34a1b9426cd98ae62c08ef7d970848e9e0734f1f8",
+        "size": 202381716
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Dokkai.pdf": {
+        "mtime_ns": 1785736522366322000,
+        "sha256": "46475248baeec693e4685a1dd623609ce282fd7874cccfef00e37822a844a262",
+        "size": 114163396
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Goi.pdf": {
+        "mtime_ns": 1785736522366334000,
+        "sha256": "5b1ff7f9eb08ba4e324645534dfee42a61ca78779b2797c25170958d9a9801e4",
+        "size": 40691294
+      },
+      "Shinkanzen/Shin_Kanzen_Masuta_N2-Kanji.pdf": {
+        "mtime_ns": 1785736522366347000,
+        "sha256": "5f7ddc015954042b0083273f924dd5f234ad16ba52499b42beb1b4fef7480e12",
+        "size": 264696294
+      }
+    },
+    "uploaded_fingerprint": "4e2178a14f5a6d7a53daf35033b45b030eabb4b04a43879c2a940e79cd42bfb0",
+    "uploaded_size": 1064748140
+  },
+  "refs/Soumatome.zip": {
+    "fingerprint": "1f97d34e1820b391b4507048175c97d29a631888ade9a5d631f9e6ae6aafead8",
+    "member_bytes": 276355915,
+    "member_count": 2,
+    "members": {
+      "Soumatome/nihongo-soumatome-n2-goi.pdf": {
+        "mtime_ns": 1786412887859251833,
+        "sha256": "9e7b4bb373642ef57eec792385c21ebe5ec945506242ceb63347927da5ecd9f8",
+        "size": 103130943
+      },
+      "Soumatome/nihongo-soumatome-n2-kanji.pdf": {
+        "mtime_ns": 1786412665777685039,
+        "sha256": "e6d795202ed7694cabcd87b4f46c3fd4e2832b3a42563b4dfee38caf44975289",
+        "size": 173224972
+      }
+    },
+    "uploaded_fingerprint": "1f97d34e1820b391b4507048175c97d29a631888ade9a5d631f9e6ae6aafead8",
+    "uploaded_size": 276356245
   }
 }
