@@ -247,6 +247,20 @@ CI rebuilds from `tests/`; MP3s (~30MB/test) are copied in, `--no-audio`
 skips them. Pages' CDN answers `Range:`; `make preview-pages`'s
 `http.server` does not (a preview-only limitation).
 
+**CI deploys WITHOUT audio, on purpose — and the reason is billing.** `*.mp3`
+is LFS-tracked, and `actions/checkout` with `lfs: true` smudges every LFS
+object in the tree: the `refs/` archive (~2.6 GB the site never reads) plus
+~0.5 GB of `tests/*/聴解.mp3`, on every push. That exhausted the account's LFS
+budget, and past that point the batch API refuses every object and **checkout
+itself fails** — no page gets built at all. So the workflow checks out with
+`lfs: false`, the MP3s arrive as ~130-byte pointer stubs, and
+`build_pages.is_lfs_pointer()` treats a stub as *no audio* rather than copying
+it (a copied stub deploys a silent player and a card claiming audio, all
+green). The sheet's 「MP3を選ぶ」 picker still plays a local file. To publish
+the audio, run the workflow manually with `deploy_audio=true`: one
+`git lfs pull --include="tests/**/*.mp3"`, test MP3s only, never `refs/` — and
+it is non-blocking, so an over-budget account still deploys the paper.
+
 **One store per build.** Exactly one backend is live per build, chosen at
 BUILD time (`--storage server|local`), never sniffed at runtime — a server
 sheet contains no localStorage code at all. `make check` asserts every

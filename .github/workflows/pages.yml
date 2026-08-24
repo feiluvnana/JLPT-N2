@@ -16,6 +16,11 @@ on:
       - '.agents/exam-app/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
+    inputs:
+      deploy_audio:
+        description: 'Fetch tests/*/聴解.mp3 from Git LFS and deploy it (~0.5 GB of LFS bandwidth per run)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -32,9 +37,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # NO LFS ON PUSH — deliberate, and the reason is billing, not taste.
+      # `lfs: true` makes checkout smudge EVERY LFS object in the tree: the
+      # refs/ past-paper archive (~2.6 GB of PDFs and MP3s the site never
+      # touches) plus ~0.5 GB of tests/*/聴解.mp3, i.e. ~3 GB of LFS bandwidth
+      # on every push under `paths:`. That exhausted the account's LFS budget,
+      # after which the batch API refuses every object and checkout itself
+      # fails ("This repository exceeded its LFS budget") — the whole deploy
+      # dies before a single page is built. With lfs:false the MP3s arrive as
+      # pointer stubs, build_pages.py detects them (is_lfs_pointer) and deploys
+      # the paper without audio; the sheet's 「MP3を選ぶ」 picker still plays a
+      # local file. To publish the audio, run this workflow manually with
+      # deploy_audio=true — one ~0.5 GB fetch, only the test MP3s, never refs/.
       - uses: actions/checkout@v7
         with:
-          lfs: true          # the 聴解.mp3 files, if this repo ever moves them to LFS
+          lfs: false
+
+      # Opt-in and non-blocking: if the budget is still exhausted this step
+      # fails, the pointers stay pointers, and the site deploys without audio
+      # rather than not at all.
+      - name: Fetch listening audio from LFS (tests/ only)
+        if: ${{ inputs.deploy_audio }}
+        continue-on-error: true
+        run: git lfs pull --include="tests/**/*.mp3"
 
       - uses: actions/setup-python@v7
         with:
@@ -49,9 +74,9 @@ jobs:
       # The same read-only gate every local change has to pass, --tests being
       # the per-test contracts only. NON-BLOCKING on purpose: the gate also
       # judges exam CONTENT (passage lengths, 例 reuse, sampled items), and a
-      # paper failing those is still a paper you may want to sit. Read the step's
-      # log; flip continue-on-error off once every test on disk is green, and it
-      # becomes a real deploy gate.
+      # paper failing those is still a paper you may want to sit. It also reads
+      # the MP3s, which are pointer stubs here (see the checkout step), so its
+      # audio checks cannot pass in CI at all. Read the step's log.
       - run: make check-tests
         continue-on-error: true
 

@@ -22,6 +22,10 @@ Output tree (default `_site/`, gitignored — CI builds it, nothing commits it):
     _site/tests/<id>/解答.html         screens 2 and 3, storage=local
     _site/tests/<id>/聴解.mp3          the audio the player streams
 
+An LFS-tracked 聴解.mp3 that was never fetched (CI checks out with `lfs: false`)
+is a text stub, not audio: it is detected and the paper deploys without a player
+instead of with a silent one.
+
 Nothing under `tests/` on disk is written or modified.
 """
 import argparse
@@ -39,6 +43,9 @@ import serve_sheet        # noqa: E402
 
 MARKER = ".nojekyll"      # also our "this directory is a build output" flag
 AUDIO = "聴解.mp3"
+
+# The first bytes of a Git LFS pointer file — see is_lfs_pointer().
+LFS_POINTER = b"version https://git-lfs.github.com/spec/v1"
 
 
 def deployable(test_id: str | None = None) -> list[Path]:
@@ -75,6 +82,26 @@ def prepare_out(out: Path, force: bool) -> None:
     (out / MARKER).write_text("", encoding="utf-8")
 
 
+def is_lfs_pointer(p: Path) -> bool:
+    """True when `p` is an UNFETCHED Git LFS pointer rather than the real file.
+
+    `*.mp3` is LFS-tracked, and CI checks out with `lfs: false` on purpose (the
+    refs/ archive makes a full smudge ~3 GB per run and blew the account's LFS
+    budget — .github/workflows/pages.yml carries the whole story). So in CI every
+    聴解.mp3 arrives as a ~130-byte text stub. Copying one to _site/ deploys a
+    player that plays nothing and a test card that claims audio it does not have,
+    with every step green — so the stub is DETECTED and treated as no audio at
+    all. Never "fix" this by copying it anyway.
+    """
+    try:
+        if p.stat().st_size > 1024:      # a real MP3 is ~30 MB; a pointer ~130 B
+            return False
+        with p.open("rb") as fh:
+            return fh.read(len(LFS_POINTER)) == LFS_POINTER
+    except OSError:
+        return False
+
+
 def copy_audio(src: Path, dst: Path) -> int:
     """Copy the ~30 MB MP3, skipping it when the destination is already it."""
     if dst.is_file() and dst.stat().st_size == src.stat().st_size \
@@ -106,11 +133,16 @@ def build_site(out: Path, test_id: str | None = None, with_audio: bool = True,
             shutil.copy2(model_ans, dest / "模範解答.html")
 
         mp3 = d / AUDIO
-        has_audio = mp3.is_file()
+        pointer = mp3.is_file() and is_lfs_pointer(mp3)
+        has_audio = mp3.is_file() and not pointer
         if has_audio and with_audio:
             copied += copy_audio(mp3, dest / AUDIO)
         elif has_audio:
             print(f"  ! {d.name}: --no-audio, 聴解.mp3 not deployed")
+        elif pointer:
+            print(f"  ! {d.name}: 聴解.mp3 is an unfetched Git LFS pointer, not "
+                  f"audio — deployed without the player (run "
+                  f"`git lfs pull --include=\"tests/{d.name}/{AUDIO}\"` first)")
         else:
             print(f"  ! {d.name}: no 聴解.mp3 (run make mp3 {d.name})")
 

@@ -39,3 +39,18 @@ qa/*/
 logs/findings.json
 qa/repair-plan.json
 qa/repair-plan.md
+
+# The refs/ SOURCE ARCHIVE is deliberately NOT in git — 2.6 GB of scanned past
+# papers, textbook PDFs and their MP3s (plus .rar twins of some audio). Tracking
+# it via LFS exhausted the account's LFS budget, and an exhausted budget makes
+# the batch API refuse every object, so `actions/checkout` failed and CI could
+# not deploy anything (see .gitattributes and .github/workflows/pages.yml).
+#
+# What STAYS tracked is the part agents actually read: every `*.md` extract
+# (booklet.md, script.md, key.md, audio_inspection.md, the Shinkanzen/Soumatome
+# reference extracts) plus answer_keys.json — 3.7 MB total. So a fresh clone can
+# still calibrate against the archive; only re-EXTRACTING or listening to it
+# needs the binaries, which AGENTS.md §3 says how to obtain.
+refs/**/*.pdf
+refs/**/*.mp3
+refs/**/*.rar

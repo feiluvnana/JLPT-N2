@@ -180,6 +180,34 @@ def num(s: str) -> float:
 
 
 # ---------------------------------------------------------------- refs on disk
+# The refs/ SOURCE BINARIES are not in git (.gitignore; AGENTS.md §3 says where
+# they come from), so a fresh clone has the `*.md` extracts and nothing else.
+# That is a legitimate machine, not a broken one — a cited PDF/MP3 that is simply
+# absent must not FAIL the gate, or `make check` becomes unpassable on any clone
+# and the next agent learns to ignore its output. The EXTRACTS are tracked, so a
+# missing one is still a real defect and still fails.
+ARCHIVE_BINARY = (".pdf", ".mp3", ".rar", ".wav", ".m4a")
+
+
+def git_tracks(path: str) -> bool:
+    """Does git track anything at (or under) `path`?
+
+    The archive-vs-extract split cannot be made on the name alone: AGENTS.md §3
+    cites `refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD`, a DIRECTORY whose
+    every file is an ignored MP3, so a fresh clone does not have it while every
+    cited sitting folder (which holds tracked *.md extracts) is right there. Git
+    already knows which is which, so ask it instead of keeping a hand-list that
+    drifts. Not a git checkout (a tarball) → nothing is tracked → the path is
+    treated as archive content, which is the safe direction.
+    """
+    try:
+        out = subprocess.run(["git", "ls-files", "--", path], cwd=ROOT,
+                             capture_output=True, text=True, check=True)
+    except (OSError, subprocess.CalledProcessError):
+        return False
+    return bool(out.stdout.strip())
+
+
 def check_refs():
     print("\nrefs/ paths named in the docs exist")
     seen: dict[str, list[str]] = {}
@@ -189,9 +217,30 @@ def check_refs():
             if any(x in p for x in ("<", ">", "*", "…", "...")):
                 continue          # naming pattern, not a concrete file
             seen.setdefault(p, []).append(f.relative_to(ROOT).as_posix())
-    missing = {p: w for p, w in seen.items() if not (ROOT / p).exists()}
-    check(f"{len(seen)} distinct refs paths resolve", not missing,
+
+    binary = {p: w for p, w in seen.items()
+              if p.lower().endswith(ARCHIVE_BINARY) or not git_tracks(p)}
+    tracked = {p: w for p, w in seen.items() if p not in binary}
+
+    missing = {p: w for p, w in tracked.items() if not (ROOT / p).exists()}
+    check(f"{len(tracked)} distinct refs extracts/dirs resolve", not missing,
           "; ".join(f"{p} (cited in {', '.join(w)})" for p, w in missing.items()))
+
+    absent = {p: w for p, w in binary.items() if not (ROOT / p).exists()}
+    if len(absent) == len(binary):
+        skip(f"{len(binary)} cited archive sources resolve",
+             "the refs/ source archive is not on this machine (it is gitignored "
+             "— README 'Setup' says how to obtain it); the tracked *.md extracts "
+             "are what the rules are measured against")
+    else:
+        # A hole in a PARTLY-present archive is worth a look — it may be a
+        # renamed source the docs still cite — but it is never a FAIL: git does
+        # not carry these files, so the gate cannot tell "renamed" from
+        # "this machine only downloaded the sittings it needed".
+        warn(f"{len(binary) - len(absent)}/{len(binary)} cited archive sources "
+             f"resolve on this machine", not absent,
+             "; ".join(f"{p} (cited in {', '.join(w)})" for p, w in absent.items())
+             + " — a partial archive is fine; a RENAMED source is a doc defect")
 
 
 # ------------------------------------------------------------------ skill wiring

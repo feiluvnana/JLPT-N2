@@ -121,6 +121,38 @@ Inside `tests/<test_id>/` — this table is the single copy; skills point here:
 
 ## 3. Reference Files (`refs/`)
 
+**The source archive is NOT in git, on purpose.** `refs/` is 2.6 GB of scanned
+PDFs and MP3s; tracking it through Git LFS exhausted the account's LFS budget,
+and an exhausted budget makes the LFS API refuse *every* object — so
+`actions/checkout` itself failed and CI could deploy nothing (2026-08-24;
+`.gitignore` and `.gitattributes` carry the rule, `exam-app/SKILL.md` the CI
+half). What a clone DOES get is the part these rules are measured against: every
+`*.md` extract (`booklet.md`, `script.md`, `key.md`, `audio_inspection.md`, the
+Shinkanzen/Soumatome reference extracts) plus `answer_keys.json` — 3.7 MB, all
+tracked. Only re-extracting, opening a PDF page, or listening to audio needs the
+binaries.
+
+**If a binary you need is not on the machine, STOP and ask the user to add it.**
+Name the exact path (e.g. `refs/JLPT_N2_NEW/16. N2 7-2025/Nghe N2 T7-2025.mp3`)
+and say what you were going to measure. Then wait. The three things you must
+NEVER do instead:
+
+1. **Do not commit the archive back into git** (`git add -f refs/…`, a new
+   `*.pdf`/`*.mp3` LFS rule) — that re-breaks CI for everyone.
+2. **Do not substitute a number from memory, from another sitting, or from a
+   textbook** for one the archive owns. Every band in these skills is a
+   *measurement*; §4's "a measured number has one owner, and it is a script"
+   applies here — an invented count is the defect class REPORT-GOI.md §F10
+   records. `make check` `skip`s the archive checks on such a machine, and a
+   skip is not a pass.
+3. **Do not quietly drop the step.** Say in your final report that it was
+   blocked on a missing source (§0.7).
+
+`make check` distinguishes the two classes: a missing `*.md` extract FAILs (git
+tracks it, so it is a real defect), a wholly absent archive `skip`s, and a
+partly-present one WARNs — a source the docs cite under an old name is a doc
+defect worth fixing.
+
 All calibration inputs must be looked up in `refs/`:
 
 - **Textbooks (`refs/Shinkanzen/`)**:

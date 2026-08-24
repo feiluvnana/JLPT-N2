@@ -45,7 +45,7 @@ Shin Kanzen Master textbooks in `refs/`.
 | 4 | **ffmpeg** *and* **ffprobe** on `PATH` | `make mp3` — concat, loudness, duration | for listening audio |
 | 5 | `pdfplumber`, `pypdf`, `pdfminer.six` | PDF extraction (`make extract-*`, imports) | for imports/refs |
 | 6 | **GNU Make + a POSIX shell** | the `make` targets use `test -n … \|\| ( … )` | **yes** |
-| 7 | **Git + Git LFS** | `refs/` is **2.3 GB / 261 PDFs and MP3s** behind LFS | **yes** |
+| 7 | **Git + Git LFS** | LFS carries ONLY `tests/*/聴解.mp3` (~0.5 GB). The 2.6 GB `refs/` archive is **not in git** — see [The refs/ archive](#the-refs-archive) | **yes** |
 | 8 | **Git symlink support** | `.claude/skills/*` are 10 symlinks into `.agents/*` | **yes** |
 | 9 | **Noto Serif CJK JP + Noto Sans CJK JP** | the booklet CSS names these two fonts explicitly | for correct print output |
 | 10 | **Node.js** | one gate check compares the in-page grader with `grade_answers.py` | optional (check skips) |
@@ -67,7 +67,7 @@ brew install --cask font-noto-serif-cjk-jp font-noto-sans-cjk-jp
 # 2. Python packages
 python3 -m pip install markdown pykakasi edge-tts pdfplumber pypdf pdfminer.six mutagen
 
-# 3. Clone WITH the LFS payload (2.3 GB — the past-paper archive)
+# 3. Clone (LFS carries only the 16 listening MP3s, ~0.5 GB)
 git lfs install
 git clone <repo-url> jlpt && cd jlpt
 
@@ -75,11 +75,26 @@ git clone <repo-url> jlpt && cd jlpt
 make check
 ```
 
-To skip the 2.3 GB download for now, clone with
-`GIT_LFS_SKIP_SMUDGE=1 git clone …` and fetch later with `git lfs pull`. The
-pipeline runs fine without it — only reading the reference PDFs/MP3s needs it,
-and the agent-readable extracts (`booklet.md`, `script.md`, `key.md`,
-`audio_inspection.md` — 124 files) are plain text and always present.
+To skip the MP3 download for now, clone with `GIT_LFS_SKIP_SMUDGE=1 git clone …`
+and fetch later with `git lfs pull`. The **2.6 GB `refs/` archive is not in the
+repo at all** — copy it in separately if you need it ([below](#the-refs-archive)).
+
+### The refs/ archive
+
+`refs/` holds the scanned past papers, the Shin Kanzen / 総まとめ textbooks and
+their audio: 2.6 GB of PDFs and MP3s that are **gitignored and must be copied
+onto the machine out of band** (external drive, `rsync`, cloud folder — keep the
+directory names in `AGENTS.md` §3 exactly). They lived in Git LFS until
+2026-08-24, when they exhausted the account's LFS budget: past that point the LFS
+API refuses every object, `actions/checkout` fails outright, and no CI deploy
+runs at all.
+
+What git DOES carry is the part the pipeline actually reads — the 130 `*.md`
+extracts (`booklet.md`, `script.md`, `key.md`, `audio_inspection.md`, the
+textbook reference extracts) plus `answer_keys.json`, 3.7 MB in all. So a clone
+with no archive still runs every `make` target and passes `make check`, which
+`skip`s the archive-only checks and says so. You need the binaries only to
+re-run `make extract-*`, read a PDF page directly, or listen to official audio.
 
 ---
 
@@ -110,7 +125,7 @@ make check
 ```
 
 ⚠️ **Clone into the WSL filesystem (`~/jlpt`), not `/mnt/c/...`.** Cross-OS
-file I/O against a 2.3 GB `refs/` tree is dramatically slower.
+file I/O against the (optional, 2.6 GB) `refs/` tree is dramatically slower.
 
 To open the exam in your normal Windows browser, run `make serve` in WSL and
 visit <http://127.0.0.1:8765> — WSL2 forwards localhost automatically.
@@ -240,7 +255,9 @@ GitHub Actions**. `_site/` is a build artifact: gitignored, never committed.
 | `make mp3` fails immediately | `ffmpeg`/`ffprobe` not on `PATH`, or no internet for the Edge TTS endpoint. |
 | `聴解.mp3` fails the gate as built from a superseded script | The script changed after the audio. `make mp3 <id>` re-synthesizes and rewrites `聴解_チャプター.json`. |
 | Booklet renders Japanese in the wrong typeface | Noto Serif/Sans CJK JP not installed — the CSS falls back to a generic `serif`. |
-| `refs/` PDFs are ~130-byte text files | LFS pointers. `git lfs install && git lfs pull`. |
+| `refs/` PDFs/MP3s are missing entirely | Expected on a fresh clone — the archive is gitignored. Copy it in ([The refs/ archive](#the-refs-archive)); the `*.md` extracts beside them are tracked and enough for most work. |
+| `tests/*/聴解.mp3` is a ~130-byte text file | LFS pointer. `git lfs install && git lfs pull`. |
+| `This repository exceeded its LFS budget` | The account is over its LFS quota. Nothing in the repo should add to it — LFS is scoped to `tests/**/*.mp3` (`.gitattributes`); never re-add a repo-wide `*.pdf`/`*.mp3` rule. Buy a data pack to restore access. |
 | `skip grader parity — node not installed` | Expected. Install Node.js to enable that check. |
 
 ---
