@@ -9,7 +9,7 @@
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
 # covers every test, so it takes no id. `pages` builds every test by default;
 # "make pages 1" (or TEST=1) narrows it to one.
-TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt scaffold-sections matrix qa-eval autofix repair-plan
+TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt scaffold-sections matrix qa-eval autofix repair-plan upload-files
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -21,6 +21,7 @@ ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
 endif
 
 TEST ?= $(if $(POS_ARG),$(POS_ARG),1)
+TARGET ?= tests
 # No default seed on purpose: the seed must be an RNG output passed explicitly
 # (SEED=$$(python3 -c "import secrets; print(secrets.randbelow(10**8))")),
 # never a hand-picked or remembered number — see exam-blueprint/SKILL.md.
@@ -32,6 +33,7 @@ PAGES_PORT ?= 8766
 # pages narrows to one test only when an id was given explicitly (positional or
 # TEST= on the command line); a bare `make pages` builds all tests.
 PAGES_TEST = $(if $(POS_ARG),$(POS_ARG),$(if $(filter command line,$(origin TEST)),$(TEST),))
+UPLOAD_TEST = $(if $(POS_ARG),$(POS_ARG),$(if $(filter command line,$(origin TEST)),$(TEST),all))
 
 help:
 	@echo "=========================================================================="
@@ -196,3 +198,8 @@ extract-shinkanzen-goi:
 
 extract-shinkanzen-dokkai:
 	python3 tools/extract_shinkanzen_dokkai.py
+
+upload-files:
+	python3 tools/upload_files.py $(TARGET) $(UPLOAD_TEST)
+
+

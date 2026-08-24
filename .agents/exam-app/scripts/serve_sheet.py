@@ -108,7 +108,7 @@ def progress_of(d: Path) -> dict:
         "answered": answered,
         "total": QUESTION_COUNT,
         "has_sheet": (d / SHEET).is_file(),
-        "has_audio": (d / "聴解.mp3").is_file(),
+        "has_audio": (d / "聴解.mp3").is_file() or (d / "聴解_チャプター.json").is_file(),
         "has_explanation": (d / "模範解答.html").is_file(),
         "result": result,
     }

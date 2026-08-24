@@ -1318,15 +1318,35 @@ RUBY_MARKUP = re.compile(r"<[^>]+>")
 # runs before scanning; every other Latin word is still reported, in both
 # origins (a generated paper that invents a URL is exam-qa-review's call, not
 # this line's).
-URL_RUN = re.compile(r"https?://\S+|www\.[^\s、。」）]+")
+# An embedded illustration is the same class as the URL above: 12/2024's 聴解
+# 問題1 2番 is a PICTURE item — its ア/イ/ウ exist only in the booklet's drawing,
+# so the import carries the drawing as a `data:` URI and the base64 payload is
+# tens of thousands of Latin runs of pure apparatus. Strip the whole URI.
+URL_RUN = re.compile(r"https?://\S+|www\.[^\s、。」）]+|data:[a-z/+.-]+;base64,[A-Za-z0-9+/=]+")
 
 
-def check_no_latin_prose(name: str, text: str):
+def check_no_latin_prose(name: str, text: str, origin: str = "generated"):
+    """Latin prose is an authoring defect — but an IMPORT does not author.
+
+    The defect this catches is a passage half-drafted in English and never
+    finished. An imported paper's Latin is the sitting's own ink: 12/2024
+    問題6-28 really does print 「Mogi社の製品のほうが…」 (booklet p.6,
+    image-verified). `external-test-import` §"Transcription rules" forbids
+    rewriting it, so FAIL here would order the importer to break the fidelity
+    rule. Report it instead, and let the importer confirm it is in the ink —
+    the same split §0.5 asks of every warn-class line.
+    """
     scanned = URL_RUN.sub(" ", RUBY_MARKUP.sub(" ", text))
     bad = sorted({w for w in LATIN_RUN.findall(scanned)
                   if w.upper() not in LATIN_OK})
-    check(f"{name}: no un-transliterated Latin words", not bad,
-          f"{bad} — write it in katakana or Japanese")
+    label = f"{name}: no un-transliterated Latin words"
+    if origin == "imported":
+        warn(label, not bad,
+             f"{bad} — an import transcribes the source as printed, so this is only a "
+             f"defect if the word is NOT in the ink; verify the page and say so in the "
+             f"final report (external-test-import §'Transcription rules')")
+    else:
+        check(label, not bad, f"{bad} — write it in katakana or Japanese")
 
 
 def check_dokkai_numbered_markers(name: str, gt_prose: str):
@@ -9586,7 +9606,7 @@ def check_tests():
         for f in (gengo, choukai):
             body = f.read_text(encoding="utf-8")
             cut = bi.KEY_HEADING.search(body)
-            check_no_latin_prose(f.name, body[: cut.start()] if cut else body)
+            check_no_latin_prose(f.name, body[: cut.start()] if cut else body, origin)
 
         gcut = bi.KEY_HEADING.search(gt)
         gengo_prose = gt[: gcut.start()] if gcut else gt

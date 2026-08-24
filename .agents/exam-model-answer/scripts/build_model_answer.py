@@ -868,6 +868,17 @@ function handleSearch() {{
       card.style.display = 'none';
     }}
   }});
+  const audio = document.getElementById('mainAudio');
+  if (audio) {{
+    audio.addEventListener('error', () => {{
+      const fb = audio.getAttribute('data-fallback-src');
+      if (fb && !audio.dataset.triedFallback) {{
+        audio.dataset.triedFallback = '1';
+        audio.src = fb;
+        audio.load();
+      }}
+    }});
+  }}
 }}
 
 function playAt(seconds, label) {{
@@ -1147,14 +1158,16 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         """
         content_blocks.append(card_html)
 
-    # Sticky audio player if 聴解.mp3 exists
+    # Sticky audio player if 聴解.mp3 or 聴解_チャプター.json exists
     audio_player_html = ""
     mp3_path = test_dir / "聴解.mp3"
-    if mp3_path.is_file():
-        audio_player_html = """
+    chapters_path = test_dir / "聴解_チャプター.json"
+    if mp3_path.is_file() or chapters_path.is_file():
+        fallback_url = f"https://github.com/feiluvnana/JLPT-N2/releases/download/audio/{test_id}.mp3"
+        audio_player_html = f"""
         <div id="sticky-audio">
           <span style="font-weight:700; font-size:0.85rem;">聴解音声</span>
-          <audio id="mainAudio" controls preload="metadata" src="聴解.mp3"></audio>
+          <audio id="mainAudio" controls preload="metadata" src="聴解.mp3" data-fallback-src="{fallback_url}"></audio>
           <span id="audioStatus" class="audio-status">準備完了</span>
         </div>
         """

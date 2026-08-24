@@ -1039,7 +1039,7 @@ html.is-result-mode #where{display:none!important}
  2. 一般受入施設のうち、屋外ケージが設置された指定校へ徒歩で向かう。<br />
  3. ペット同伴の場合は、事前に事業者単位での登録手続きが必要である。<br />
  4. 自家用車に犬を乗せて、最寄りの事業者協力施設へ移動して駐車する。</p>
-<div class="qa"><label><input type="radio" name="q_71" value="1"><span>1</span></label><label><input type="radio" name="q_71" value="2"><span>2</span></label><label><input type="radio" name="q_71" value="3"><span>3</span></label><label><input type="radio" name="q_71" value="4"><span>4</span></label></div></div><hr class="section-divider"><div id="section-choukai"><h1 class="section-title">JLPT N2 聴解</h1><div id="player"><audio id="au" controls preload="metadata" src="聴解.mp3"></audio><div class="pctl"><button type="button" onclick="nudge(-10)">◀ 10秒</button><button type="button" onclick="nudge(10)">10秒 ▶</button><label>速度 <select id="rate" onchange="au.playbackRate=+this.value"><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option></select></label><span id="chapwrap">章 <select id="chap" onchange="jump(this.value)"></select></span><label class="pick">MP3を選ぶ<input type="file" accept="audio/*" onchange="pick(this)"></label></div><script>window.CHAPTERS = {
+<div class="qa"><label><input type="radio" name="q_71" value="1"><span>1</span></label><label><input type="radio" name="q_71" value="2"><span>2</span></label><label><input type="radio" name="q_71" value="3"><span>3</span></label><label><input type="radio" name="q_71" value="4"><span>4</span></label></div></div><hr class="section-divider"><div id="section-choukai"><h1 class="section-title">JLPT N2 聴解</h1><div id="player"><audio id="au" controls preload="metadata" src="聴解.mp3" data-fallback-src="https://github.com/feiluvnana/JLPT-N2/releases/download/audio/20260814_1.mp3"></audio><div class="pctl"><button type="button" onclick="nudge(-10)">◀ 10秒</button><button type="button" onclick="nudge(10)">10秒 ▶</button><label>速度 <select id="rate" onchange="au.playbackRate=+this.value"><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option></select></label><span id="chapwrap">章 <select id="chap" onchange="jump(this.value)"></select></span><label class="pick">MP3を選ぶ<input type="file" accept="audio/*" onchange="pick(this)"></label></div><script>window.CHAPTERS = {
  "script_sha": "2c6d872b9881",
  "pacing_sha": "4d623645a38d",
  "duration": 2495.73,
@@ -2158,6 +2158,13 @@ function pick(inp){
   });
 })();
 au.addEventListener('error', ()=>{
+  const fallback = au.getAttribute('data-fallback-src');
+  if (fallback && !au.dataset.triedFallback) {
+    au.dataset.triedFallback = '1';
+    au.src = fallback;
+    au.load();
+    return;
+  }
   document.getElementById('player').classList.add('noaudio');
 });
 </script></body></html>

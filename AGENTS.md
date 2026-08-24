@@ -126,7 +126,9 @@ PDFs and MP3s; tracking it through Git LFS exhausted the account's LFS budget,
 and an exhausted budget makes the LFS API refuse *every* object — so
 `actions/checkout` itself failed and CI could deploy nothing (2026-08-24;
 `.gitignore` and `.gitattributes` carry the rule, `exam-app/SKILL.md` the CI
-half). What a clone DOES get is the part these rules are measured against: every
+half). All large binary files (`.mp3` and `.pdf`) are hosted via GitHub
+Releases (`audio`, `refs-audio`, `refs-pdf`) and uploaded via `make upload-files`.
+What a clone DOES get in git is the part these rules are measured against: every
 `*.md` extract (`booklet.md`, `script.md`, `key.md`, `audio_inspection.md`, the
 Shinkanzen/Soumatome reference extracts) plus `answer_keys.json` — 3.7 MB, all
 tracked. Only re-extracting, opening a PDF page, or listening to audio needs the
@@ -245,6 +247,7 @@ restate them here or in a skill; fix them there.
 | `make extract-keys`       | `extract_jlpt_n2_key.py` — key PDF → `key.md` + JSON | §3 above |
 | `make extract-shinkanzen-dokkai` | `tools/extract_shinkanzen_dokkai.py` — Shin Kanzen Dokkai → Markdown | §3 above |
 | `make extract-shinkanzen` | `tools/extract_shinkanzen_choukai.py` — Shin Kanzen Choukai → Markdown | §3 above |
+| `make upload-files [TARGET=… [TEST=…]]` | `tools/upload_files.py` — Upload exam audio (`tests`) and ref files (`refs-audio`, `refs-pdf`) to GitHub Releases | §3 above |
 
 The pool-growth tooling (classify/promote/expand/suggest/fetch) is parked in
 `.agents/exam-blueprint/archive/` with no make targets — see its README.

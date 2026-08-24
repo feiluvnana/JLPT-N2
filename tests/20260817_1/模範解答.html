@@ -537,7 +537,7 @@ footer {
   
         <div id="sticky-audio">
           <span style="font-weight:700; font-size:0.85rem;">聴解音声</span>
-          <audio id="mainAudio" controls preload="metadata" src="聴解.mp3"></audio>
+          <audio id="mainAudio" controls preload="metadata" src="聴解.mp3" data-fallback-src="https://github.com/feiluvnana/JLPT-N2/releases/download/audio/20260817_1.mp3"></audio>
           <span id="audioStatus" class="audio-status">準備完了</span>
         </div>
         
@@ -3543,6 +3543,17 @@ function handleSearch() {
       card.style.display = 'none';
     }
   });
+  const audio = document.getElementById('mainAudio');
+  if (audio) {
+    audio.addEventListener('error', () => {
+      const fb = audio.getAttribute('data-fallback-src');
+      if (fb && !audio.dataset.triedFallback) {
+        audio.dataset.triedFallback = '1';
+        audio.src = fb;
+        audio.load();
+      }
+    });
+  }
 }
 
 function playAt(seconds, label) {

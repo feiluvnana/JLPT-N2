@@ -267,6 +267,13 @@ function pick(inp){
   });
 })();
 au.addEventListener('error', ()=>{
+  const fallback = au.getAttribute('data-fallback-src');
+  if (fallback && !au.dataset.triedFallback) {
+    au.dataset.triedFallback = '1';
+    au.src = fallback;
+    au.load();
+    return;
+  }
   document.getElementById('player').classList.add('noaudio');
 });
 """
@@ -1264,9 +1271,10 @@ def player_html(d: Path) -> str:
     data = "null"
     if chapters.is_file():
         data = chapters.read_text(encoding="utf-8")
+    fallback_url = f"https://github.com/feiluvnana/JLPT-N2/releases/download/audio/{d.name}.mp3"
     return (
         '<div id="player">'
-        '<audio id="au" controls preload="metadata" src="聴解.mp3"></audio>'
+        f'<audio id="au" controls preload="metadata" src="聴解.mp3" data-fallback-src="{fallback_url}"></audio>'
         '<div class="pctl">'
         '<button type="button" onclick="nudge(-10)">◀ 10秒</button>'
         '<button type="button" onclick="nudge(10)">10秒 ▶</button>'

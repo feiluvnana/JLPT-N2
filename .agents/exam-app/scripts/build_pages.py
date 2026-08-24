@@ -134,17 +134,18 @@ def build_site(out: Path, test_id: str | None = None, with_audio: bool = True,
 
         mp3 = d / AUDIO
         pointer = mp3.is_file() and is_lfs_pointer(mp3)
-        has_audio = mp3.is_file() and not pointer
-        if has_audio and with_audio:
+        has_local_audio = mp3.is_file() and not pointer
+        has_audio = has_local_audio or (d / "聴解_チャプター.json").is_file()
+        if has_local_audio and with_audio:
             copied += copy_audio(mp3, dest / AUDIO)
-        elif has_audio:
-            print(f"  ! {d.name}: --no-audio, 聴解.mp3 not deployed")
+        elif has_local_audio:
+            print(f"  ! {d.name}: --no-audio, local 聴解.mp3 not copied (will use remote release audio)")
         elif pointer:
-            print(f"  ! {d.name}: 聴解.mp3 is an unfetched Git LFS pointer, not "
-                  f"audio — deployed without the player (run "
-                  f"`git lfs pull --include=\"tests/{d.name}/{AUDIO}\"` first)")
+            print(f"  ! {d.name}: 聴解.mp3 is an unfetched Git LFS pointer — will fallback to remote release audio")
+        elif (d / "聴解_チャプター.json").is_file():
+            print(f"  ! {d.name}: local 聴解.mp3 absent — will stream from GitHub Release")
         else:
-            print(f"  ! {d.name}: no 聴解.mp3 (run make mp3 {d.name})")
+            print(f"  ! {d.name}: no 聴解 audio/chapters (run make mp3 {d.name})")
 
         # The static half of what the list needs; the progress half comes from
         # localStorage in the page. Same field names as serve_sheet.progress_of.
