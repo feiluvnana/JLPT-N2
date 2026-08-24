@@ -1234,7 +1234,8 @@ def check_grammar_p8_targets(gt: str, opts: dict[int, list[str]], test_id: str):
          "never leave spec/ledger recording a construction the paper does not test")
 
 
-def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str]]):
+def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str]],
+                         origin: str = "generated"):
     """問題8: the key must name the option that lands on ★ (the 3rd blank).
 
     Both facts are checkable from the Markdown alone: the stem must offer four
@@ -1242,19 +1243,41 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
     as `語(n)→語(n)→語(n)→語(n)`, whose 3rd entry is the answer. A paper has
     shipped with three of five keys naming a different blank, and one 解説
     citing option numbers that did not exist in the stem.
+
+    IMPORTED papers key off the ★ the SOURCE printed (2026-08-24).
+    "★ third" is this repo's own authoring convention, not a format fact:
+    official 7/2024 問題8-43 prints ★ on the SECOND of four blanks
+    (image-verified, booklet page 9), and its own answer key says 2 —
+    「ことから→わかる(★)→ように→春を代表する」. Forcing ★ to slot 3 there would
+    mean either re-keying an official item or re-typesetting its stem, both
+    forbidden by external-test-import §'Transcription rules'. So for an import
+    the ★ INDEX comes from the stem and the permutation must agree with the key
+    at that index — which still catches the real defect (a mis-keyed 問題8),
+    just without dictating where the sitting put its star. Same reason the
+    4-slot count is only advisory here: 7/2024's item 46 prints 「＿＿ ＿＿ ★ 、
+    ＿＿」, a run the source's own 読点 splits.
     """
+    imported = origin == "imported"
     m8 = re.search(r"^##\s*問題8\b.*?(?=^##\s*問題9\b)", gt, re.M | re.S)
     m8_text = m8.group(0) if m8 else ""
     stems = {int(n): s for n, s in re.findall(r"^\*\*(\d+)\*\*\s*(.+)$", m8_text, re.M)}
     q_list = sorted(stems.keys()) if stems else list(range(43, 48))
-    bad_stem = []
+    bad_stem, star_at = [], {}
     for q in q_list:
         run = BLANK_RUN.search(stems.get(q, ""))
         slots = run.group().split() if run else []
-        if len(slots) != 4 or [i for i, s in enumerate(slots) if "★" in s] != [2]:
+        stars = [i for i, s in enumerate(slots) if "★" in s]
+        if stars:
+            star_at[q] = stars[0]
+        if len(slots) != 4 or stars != [2]:
             bad_stem.append(f"{q}({len(slots)} blanks, ★ at "
-                            f"{[i + 1 for i, s in enumerate(slots) if '★' in s]})")
-    check("問題8 stems offer 4 blanks with ★ third", not bad_stem, ", ".join(bad_stem))
+                            f"{[i + 1 for i, s in enumerate(stars and slots or []) if '★' in s]})")
+    if imported:
+        missing_star = [q for q in q_list if q not in star_at]
+        check("問題8 stems each print a ★ (imported: position is the source's)",
+              not missing_star, f"{missing_star} — the ★ is missing from the stem")
+    else:
+        check("問題8 stems offer 4 blanks with ★ third", not bad_stem, ", ".join(bad_stem))
 
     mismatch, unparsed = [], []
     for hit in re.finditer(r"^\|\s*(\d+)\s*\|\s*([1-4])\s*\|(.*)\|", gt, re.M):
@@ -1266,8 +1289,10 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
         seq = [int(m[0] or m[1]) for m in raw_matches]
         if sorted(seq) != [1, 2, 3, 4]:
             unparsed.append(f"{q}(order={seq or 'none'})")
-        elif seq[2] != ans:
-            mismatch.append(f"{q}: key={ans} but ★(3rd) is option {seq[2]}")
+        else:
+            idx = star_at.get(q, 2) if imported else 2
+            if seq[idx] != ans:
+                mismatch.append(f"{q}: key={ans} but ★({idx + 1}) is option {seq[idx]}")
     check("問題8 解説 spells the word order as a 1-4 permutation", not unparsed,
           f"{', '.join(unparsed)} — write `語(1)→語(4)→語(2)→語(3)`")
     check("問題8 keys name the option on ★", not mismatch, "; ".join(mismatch))
@@ -2720,7 +2745,7 @@ def check_note_band(name: str, gt: str):
           "(question-authoring/references/dokkai.md §（注N）)")
 
 
-def check_note_band_reuse(name: str, gt: str, st: str = ""):
+def check_note_band_reuse(name: str, gt: str, st: str = "", origin: str = "generated"):
     """A （注N） headword must never also appear as plain text elsewhere in this
     SAME paper's 問題1–9 or its 聴解 script — a same-paper self-contradiction the
     paper proves against itself, not a judgment call.
@@ -2764,6 +2789,18 @@ def check_note_band_reuse(name: str, gt: str, st: str = ""):
         text = "\n".join(parts) + "\n" + (st or "")
         return "\n".join(ln for ln in text.splitlines()
                          if not NOTE_DEF.match(ln))
+
+    # IMPORTED papers are exempt (2026-08-24). The rule's whole argument is
+    # about AUTHORING: a gloss the same paper contradicts proves the author
+    # mis-judged the level. An import did not choose either the gloss or the
+    # reuse — official 7/2024 glosses 履歴 in 問題11(1) and speaks 履歴書 in
+    # 問題4-5番, and the only "repair" available would be deleting an official
+    # gloss, which external-test-import forbids. (That pair is also a substring
+    # artefact: 履歴 "browsing history" is not the 履歴書 "résumé" of the script.)
+    if origin == "imported":
+        return skip(f"{name}: no （注N） headword is reused as plain text in "
+                    f"問題1-9 or the 聴解 script",
+                    "imported test — glosses and reuse are both the source's")
 
     hits = []
     for m in re.finditer(r"^.*$", gt, re.M):
@@ -9567,7 +9604,7 @@ def check_tests():
               "; ".join(f"{q}: {v}" for q, v in sorted(dupes.items())))
         wrong_n = {q: len(v) for q, v in opts.items() if len(v) != 4}
         check("every gengo question parses to exactly 4 options", not wrong_n, f"{wrong_n}")
-        check_scramble_stars(gt, keys, opts)
+        check_scramble_stars(gt, keys, opts, origin)
         check_grammar_stem_lengths(gt, bi, d.name, origin)
         # Official papers include short particle strips; the drill-length defect
         # is a generation failure mode — do not fail imported transcriptions.
@@ -9618,7 +9655,7 @@ def check_tests():
         check_dokkai_span_anchor_identity(gengo.name, gengo_prose)
         check_note_pairing(d.name, gengo_prose)
         check_note_band(d.name, gt)
-        check_note_band_reuse(d.name, gt, st_text)
+        check_note_band_reuse(d.name, gt, st_text, origin)
         if origin == "generated":
             check_dokkai_lengths(d.name, gengo_prose, bi, origin=origin)
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
