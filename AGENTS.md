@@ -129,26 +129,39 @@ PDFs and MP3s; tracking it through Git LFS exhausted the account's LFS budget,
 and an exhausted budget makes the LFS API refuse *every* object — so
 `actions/checkout` itself failed and CI could deploy nothing (2026-08-24;
 `.gitignore` and `.gitattributes` carry the rule, `exam-app/SKILL.md` the CI
-half). All large binary files (`.mp3` and `.pdf`) are hosted via GitHub
-Releases and uploaded via `make upload-files`. The three tags — `audio` (one
-`<test_id>.mp3` per test), `refs-audio` and `refs-pdf` (the whole archive,
-Shinkanzen and Soumatome included, flattened to one asset per file) — are
-**fixed addresses, reused forever**: `build_interactive.py` and
-`build_model_answer.py` hard-code `…/releases/download/audio/<test_id>.mp3` as
-the player's fallback, so a new tag 404s every deployed sheet. Uploads are
-incremental — `logs/upload_manifest.json` records each asset's size and sha256,
-so a file goes over the wire once and again only when its bytes change
-(`--force` overrides, `--dry-run` reports).
-What a clone DOES get in git is the part these rules are measured against: every
-`*.md` extract (`booklet.md`, `script.md`, `key.md`, `audio_inspection.md`, the
-Shinkanzen/Soumatome reference extracts) plus `answer_keys.json` — 3.7 MB, all
-tracked. Only re-extracting, opening a PDF page, or listening to audio needs the
-binaries.
+half). What a clone DOES get in git is the part these rules are measured
+against: every `*.md` extract (`booklet.md`, `script.md`, `key.md`,
+`audio_inspection.md`, the Shinkanzen/Soumatome reference extracts) plus
+`answer_keys.json` — 3.7 MB, all tracked. Only re-extracting, opening a PDF
+page, or listening to audio needs the binaries.
 
-**If a binary you need is not on the machine, STOP and ask the user to add it.**
-Name the exact path (e.g. `refs/JLPT_N2_NEW/16. N2 7-2025/Nghe N2 T7-2025.mp3`)
-and say what you were going to measure. Then wait. The three things you must
-NEVER do instead:
+**Where the binaries live: GitHub Releases, via `make upload-files`.** Two
+tags, both **fixed addresses, reused forever**: `audio` holds one
+`<test_id>.mp3` per test, and
+`refs` holds one zip per top-level `refs/` folder — `JLPT_N2_NEW.zip` (1.2 GB),
+`Shinkanzen.zip` (1.0 GB), `Soumatome.zip` (0.3 GB), stored uncompressed since
+PDFs and MP3s already are. Unzip one into `refs/` and that source's tree is
+back. Never rename a tag: `build_interactive.py` and `build_model_answer.py`
+hard-code `…/releases/download/audio/<test_id>.mp3` as the player's fallback,
+so a new tag 404s every deployed sheet. **Uploads are incremental and that is
+not optional** — `logs/upload_manifest.json` records each asset's fingerprint,
+so a file goes over the wire once and a zip is rebuilt only when one of its
+members changes. Add a binary, run `make upload-files`, commit the manifest with
+it; never re-push the archive to "make sure" (`--dry-run` tells you what would
+move, `--force` is for when you know the remote is wrong).
+
+**If a binary you need is not on the machine, STOP and ask the user.** Name the
+exact path (e.g. `refs/JLPT_N2_NEW/16. N2 7-2025/Nghe N2 T7-2025.mp3`), say what
+you were going to measure, and offer the one-command restore — the archive is on
+the `refs` release, so nothing has to be re-sourced:
+
+```bash
+gh release download refs --pattern 'JLPT_N2_NEW.zip' --dir /tmp   # or Shinkanzen / Soumatome
+unzip -n /tmp/JLPT_N2_NEW.zip -d refs/                            # -n: never overwrite
+```
+
+It is a 1 GB download, so **ask before running it** — and then wait. The three
+things you must NEVER do instead:
 
 1. **Do not commit the archive back into git** (`git add -f refs/…`, a new
    `*.pdf`/`*.mp3` LFS rule) — that re-breaks CI for everyone.
@@ -258,7 +271,7 @@ restate them here or in a skill; fix them there.
 | `make extract-keys`       | `extract_jlpt_n2_key.py` — key PDF → `key.md` + JSON | §3 above |
 | `make extract-shinkanzen-dokkai` | `tools/extract_shinkanzen_dokkai.py` — Shin Kanzen Dokkai → Markdown | §3 above |
 | `make extract-shinkanzen` | `tools/extract_shinkanzen_choukai.py` — Shin Kanzen Choukai → Markdown | §3 above |
-| `make upload-files [TARGET=… [TEST=…]]` | `tools/upload_files.py` — push exam audio (`tests`) and the whole `refs/` archive (`refs-audio`, `refs-pdf`) to their three fixed Releases; uploads each file **once** and re-uploads only what changed | §3 above |
+| `make upload-files [TARGET=tests\|refs\|all [TEST=…]]` | `tools/upload_files.py` — push exam audio (release `audio`) and the `refs/` archive as one zip per folder (release `refs`); uploads each asset **once** and again only when it changes | §3 above |
 
 The pool-growth tooling (classify/promote/expand/suggest/fetch) is parked in
 `.agents/exam-blueprint/archive/` with no make targets — see its README.

@@ -45,7 +45,8 @@ Shin Kanzen Master textbooks in `refs/`.
 | 4 | **ffmpeg** *and* **ffprobe** on `PATH` | `make mp3` — concat, loudness, duration | for listening audio |
 | 5 | `pdfplumber`, `pypdf`, `pdfminer.six` | PDF extraction (`make extract-*`, imports) | for imports/refs |
 | 6 | **GNU Make + a POSIX shell** | the `make` targets use `test -n … \|\| ( … )` | **yes** |
-| 7 | **Git + Git LFS** | LFS carries ONLY `tests/*/聴解.mp3` (~0.5 GB). The 2.6 GB `refs/` archive is **not in git** — see [The refs/ archive](#the-refs-archive) | **yes** |
+| 7 | **Git** (no LFS) | Git LFS was removed 2026-08-24. NO binary is in git: the listening MP3s and the 2.6 GB `refs/` archive both come from GitHub Releases — see [Binaries live in Releases](#binaries-live-in-releases) | **yes** |
+| 7b | **`gh`** (GitHub CLI, authenticated) | fetching those binaries and `make upload-files` | for audio/refs |
 | 8 | **Git symlink support** | `.claude/skills/*` are 10 symlinks into `.agents/*` | **yes** |
 | 9 | **Noto Serif CJK JP + Noto Sans CJK JP** | the booklet CSS names these two fonts explicitly | for correct print output |
 | 10 | **Node.js** | one gate check compares the in-page grader with `grade_answers.py` | optional (check skips) |
@@ -61,33 +62,44 @@ in your platform's section below.
 
 ```bash
 # 1. System tools
-brew install python git git-lfs ffmpeg node poppler
+brew install python git gh ffmpeg node poppler
 brew install --cask font-noto-serif-cjk-jp font-noto-sans-cjk-jp
 
 # 2. Python packages
 python3 -m pip install markdown pykakasi edge-tts pdfplumber pypdf pdfminer.six mutagen
 
-# 3. Clone (LFS carries only the 16 listening MP3s, ~0.5 GB)
-git lfs install
+# 3. Clone — 40 MB, no binaries
 git clone <repo-url> jlpt && cd jlpt
 
 # 4. Verify
 make check
 ```
 
-To skip the MP3 download for now, clone with `GIT_LFS_SKIP_SMUDGE=1 git clone …`
-and fetch later with `git lfs pull`. The **2.6 GB `refs/` archive is not in the
-repo at all** — copy it in separately if you need it ([below](#the-refs-archive)).
+The clone carries no audio and no `refs/`; both are fetched on demand
+([below](#binaries-live-in-releases)).
 
-### The refs/ archive
+### Binaries live in Releases
 
-`refs/` holds the scanned past papers, the Shin Kanzen / 総まとめ textbooks and
-their audio: 2.6 GB of PDFs and MP3s that are **gitignored and must be copied
-onto the machine out of band** (external drive, `rsync`, cloud folder — keep the
-directory names in `AGENTS.md` §3 exactly). They lived in Git LFS until
-2026-08-24, when they exhausted the account's LFS budget: past that point the LFS
-API refuses every object, `actions/checkout` fails outright, and no CI deploy
-runs at all.
+Nothing large is in git — Git LFS was removed on 2026-08-24 after the archive
+exhausted the account's LFS budget, at which point the LFS API refuses *every*
+object, `actions/checkout` fails outright, and no CI deploy runs at all.
+Two GitHub Releases hold it instead, and `AGENTS.md` §3 owns the rules:
+
+| Release | Assets | Size |
+| --- | --- | --- |
+| `audio` | one `<test_id>.mp3` per test | ~0.6 GB total |
+| `refs` | `JLPT_N2_NEW.zip`, `Shinkanzen.zip`, `Soumatome.zip` | 1.2 / 1.0 / 0.3 GB |
+
+```bash
+# a single test's listening audio
+gh release download audio -p '20260821_1.mp3' -O 'tests/20260821_1/聴解.mp3'
+
+# one source's refs tree (past papers / Shin Kanzen / 総まとめ)
+gh release download refs -p 'Shinkanzen.zip' -D /tmp && unzip -n /tmp/Shinkanzen.zip -d refs/
+
+# push new or changed binaries back (uploads only what changed)
+make upload-files TARGET=all
+```
 
 What git DOES carry is the part the pipeline actually reads — the 130 `*.md`
 extracts (`booklet.md`, `script.md`, `key.md`, `audio_inspection.md`, the
@@ -112,14 +124,13 @@ wsl --install -d Ubuntu     # then reboot and open Ubuntu
 ```bash
 # Inside Ubuntu
 sudo apt update
-sudo apt install -y python3 python3-pip make ffmpeg git git-lfs nodejs \
+sudo apt install -y python3 python3-pip make ffmpeg git gh nodejs \
                     poppler-utils fonts-noto-cjk
 pip install markdown pykakasi edge-tts pdfplumber pypdf pdfminer.six mutagen
 
 # CRLF must stay off — see Troubleshooting
 git config --global core.autocrlf false
 
-git lfs install
 git clone <repo-url> ~/jlpt && cd ~/jlpt
 make check
 ```
@@ -147,7 +158,7 @@ Workable, but two things in the repo assume a Unix host today:
 Then:
 
 ```powershell
-winget install Python.Python.3.12 Git.Git GitHub.GitLFS Gyan.FFmpeg OpenJS.NodeJS.LTS
+winget install Python.Python.3.12 Git.Git GitHub.cli Gyan.FFmpeg OpenJS.NodeJS.LTS
 winget install ezwinports.make        # or use MSYS2 / choco install make
 ```
 
@@ -181,7 +192,7 @@ never need to re-run `make extract-archive`.
 python3 --version                              # ≥ 3.10
 python3 -c "import markdown, pykakasi, edge_tts, pdfplumber, pypdf, pdfminer; print('py deps ok')"
 ffmpeg -version | head -1 && ffprobe -version | head -1
-git lfs env | head -1
+gh auth status | head -2                        # for the audio/refs Releases
 make check                                     # read EVERY line, including WARN
 ```
 
@@ -255,9 +266,10 @@ GitHub Actions**. `_site/` is a build artifact: gitignored, never committed.
 | `make mp3` fails immediately | `ffmpeg`/`ffprobe` not on `PATH`, or no internet for the Edge TTS endpoint. |
 | `聴解.mp3` fails the gate as built from a superseded script | The script changed after the audio. `make mp3 <id>` re-synthesizes and rewrites `聴解_チャプター.json`. |
 | Booklet renders Japanese in the wrong typeface | Noto Serif/Sans CJK JP not installed — the CSS falls back to a generic `serif`. |
-| `refs/` PDFs/MP3s are missing entirely | Expected on a fresh clone — the archive is gitignored. Copy it in ([The refs/ archive](#the-refs-archive)); the `*.md` extracts beside them are tracked and enough for most work. |
-| `tests/*/聴解.mp3` is a ~130-byte text file | LFS pointer. `git lfs install && git lfs pull`. |
-| `This repository exceeded its LFS budget` | The account is over its LFS quota. Nothing in the repo should add to it — LFS is scoped to `tests/**/*.mp3` (`.gitattributes`); never re-add a repo-wide `*.pdf`/`*.mp3` rule. Buy a data pack to restore access. |
+| `refs/` PDFs/MP3s are missing entirely | Expected on a fresh clone — the archive is gitignored and lives in the `refs` release ([Binaries live in Releases](#binaries-live-in-releases)). The `*.md` extracts beside them are tracked and enough for most work. |
+| `tests/*/聴解.mp3` is missing and the player shows nothing | The clone has no binaries. Either `gh release download audio -p '<id>.mp3' -O 'tests/<id>/聴解.mp3'`, or just take the test online — the deployed sheet falls back to the `audio` release URL. |
+| A `make extract-*` or PDF read fails on a missing `refs/` file | Fetch that source's zip: `gh release download refs -p 'JLPT_N2_NEW.zip' -D /tmp && unzip -n /tmp/JLPT_N2_NEW.zip -d refs/`. Never re-source or re-commit the archive. |
+| `This repository exceeded its LFS budget` | You are on a pre-2026-08-24 clone. LFS is gone: there is no `.gitattributes`, and `refs/**/*.{pdf,mp3}` plus `tests/**/*.mp3` are gitignored. Never re-add an LFS rule — an exhausted budget makes checkout itself fail. |
 | `skip grader parity — node not installed` | Expected. Install Node.js to enable that check. |
 
 ---

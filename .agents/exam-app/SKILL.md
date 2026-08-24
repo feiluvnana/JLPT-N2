@@ -247,19 +247,25 @@ CI rebuilds from `tests/`; MP3s (~30MB/test) are copied in, `--no-audio`
 skips them. Pages' CDN answers `Range:`; `make preview-pages`'s
 `http.server` does not (a preview-only limitation).
 
-**CI deploys WITHOUT audio, on purpose — and the reason is billing.** `*.mp3`
-is LFS-tracked, and `actions/checkout` with `lfs: true` smudges every LFS
-object in the tree: the `refs/` archive (~2.6 GB the site never reads) plus
+**CI deploys WITHOUT audio, on purpose — and the reason is billing.** The MP3s
+used to be LFS-tracked, and `actions/checkout` with `lfs: true` smudged every
+LFS object in the tree: the `refs/` archive (~2.6 GB the site never reads) plus
 ~0.5 GB of `tests/*/聴解.mp3`, on every push. That exhausted the account's LFS
 budget, and past that point the batch API refuses every object and **checkout
-itself fails** — no page gets built at all. So the workflow checks out with
-`lfs: false`, the MP3s arrive as ~130-byte pointer stubs, and
-`build_pages.is_lfs_pointer()` treats a stub as *no audio* rather than copying
-it (a copied stub deploys a silent player and a card claiming audio, all
-green). The sheet's 「MP3を選ぶ」 picker still plays a local file. To publish
-the audio, run the workflow manually with `deploy_audio=true`: one
-`git lfs pull --include="tests/**/*.mp3"`, test MP3s only, never `refs/` — and
-it is non-blocking, so an over-budget account still deploys the paper.
+itself fails** — no page gets built at all. LFS was removed on 2026-08-24:
+`tests/**/*.mp3` and `refs/**/*.{pdf,mp3}` are now gitignored and live in the
+`audio` and `refs` Releases instead (AGENTS.md §3, `make upload-files`).
+
+What that means for the deploy: a CI checkout simply HAS no `聴解.mp3`, so
+`make pages` finds nothing to copy and each sheet falls back to the release URL
+`…/releases/download/audio/<test_id>.mp3`, which the browser streams directly.
+**So the audio does play on the deployed site — as long as the test's MP3 has
+been uploaded.** Ship a new test's audio with `make upload-files TARGET=tests
+TEST=<id>`; forget it and the page deploys with a player that 404s.
+`build_pages.is_lfs_pointer()` stays as a guard for old clones that still carry
+a pointer stub — copying a stub would deploy a silent player and a card
+claiming audio, all green. The sheet's 「MP3を選ぶ」 picker still plays a local
+file either way.
 
 **One store per build.** Exactly one backend is live per build, chosen at
 BUILD time (`--storage server|local`), never sniffed at runtime — a server
