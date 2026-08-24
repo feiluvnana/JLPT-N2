@@ -457,24 +457,43 @@ def _parse_generated_dokkai(test_id: str, md_text: str) -> tuple[list[DokkaiPass
         return m.group(0) if m else ""
 
     # 問題10 (5 short passages)
+    #
+    # MARKER WALK, not a lookahead split (qa-report-20260821_1 F1, 2026-08-24).
+    # The passage for item N is the text BEFORE its `**NN**` marker. The previous
+    # code split on `(?=^\*\*(?:5[2-6])\*\*)`, so every chunk *started* at its
+    # question marker and `sub[:q_m.start()]` was the empty string for passages
+    # (2)–(5); only passage (1) survived, riding on the pre-split `lead`.
+    # Measured on all 15 papers on disk before this repair: `passage_lens[10]`
+    # was `[N, 0, 0, 0, 0]` on every single one (20260821_1: [266,0,0,0,0]), so
+    # 問題10's kanji density and sentence rhythm were measured on passage (1)
+    # alone, and `check_dokkai_option_overlap`'s `if it.passage:` guard silently
+    # dropped 4 of 20 読解 items on every paper (16 measured, not 20).
+    # After the repair 20260821_1 reads 266/251/250/261/267 (section_lens[10]
+    # 266→1295, items with passage 16→20), which reproduces the 読解 fix agent's
+    # independent parse of this paper exactly (1295/2676/574/1057/501).
+    # Stripping matches `_parse_official_dokkai`: the `## 問題10…` task line and
+    # the `### (n)` passage marker go, the 「以下は…である。」 preface stays (the
+    # official parse keeps it too, and the section-length bands are calibrated
+    # on that parse).
     sec10 = get_sec(10)
     if sec10:
-        p_parts = re.split(r"(?=^\*\*(?:5[2-6])\*\*)", sec10, flags=re.M)
-        if len(p_parts) >= 2:
-            lead = p_parts[0]
-            for p_idx, sub in enumerate(p_parts[1:6], 1):
-                q_m = re.search(r"^\*\*(\d{2})\*\*\s*([^\n]+)\n([\s\S]*)$", sub, re.M)
-                if q_m:
-                    q_no = int(q_m.group(1))
-                    stem = q_m.group(2).strip()
-                    raw_p = (lead + "\n" if p_idx == 1 else "") + sub[:q_m.start()]
-                    p_text = re.sub(r"^##\s*問題10[^\n]*\n", "", raw_p).strip()
-                    opts = _parse_gen_options(q_m.group(3))
-                    k = key_map.get(q_no, 1)
-                    is_ess = not bool(re.search(r"(お知らせ|メール|通知|案内)", p_text[:100] + stem))
-                    passages.append(DokkaiPassage("generated", test_id, 10, p_idx, p_text, is_essay=is_ess))
-                    if len(opts) == 4:
-                        items.append(DokkaiItem("generated", test_id, 10, q_no, p_idx, p_text, stem, opts, k))
+        q_matches = list(re.finditer(
+            r"^\*\*(5[2-6])\*\*\s*([^\n]+)\n([\s\S]*?)(?=^###?\s*\(|^\*\*\d{2}\*\*|\Z)",
+            sec10, re.M))
+        prev_end = 0
+        for p_idx, q_m in enumerate(q_matches[:5], 1):
+            q_no = int(q_m.group(1))
+            stem = q_m.group(2).strip()
+            raw_p = sec10[prev_end:q_m.start()]
+            prev_end = q_m.end()
+            p_text = re.sub(r"^##\s*問題10[^\n]*\n", "", raw_p, flags=re.M)
+            p_text = re.sub(r"^###?\s*\(\d+\)[^\n]*\n|^\*\*\(\d+\)\*\*[^\n]*\n", "", p_text, flags=re.M).strip()
+            opts = _parse_gen_options(q_m.group(3))
+            k = key_map.get(q_no, 1)
+            is_ess = not bool(re.search(r"(お知らせ|メール|通知|案内)", p_text[:100] + stem))
+            passages.append(DokkaiPassage("generated", test_id, 10, p_idx, p_text, is_essay=is_ess))
+            if len(opts) == 4:
+                items.append(DokkaiItem("generated", test_id, 10, q_no, p_idx, p_text, stem, opts, k))
 
     # 問題11 (4 passages)
     sec11 = get_sec(11)

@@ -431,6 +431,29 @@ alone isn't a defect」 — no parse reproduces the 9 (shortest of 608 is 13), s
 Give each sentence a who/when/what. Our papers run mean 26.6, median 27, range
 14–40 — the same distribution, i.e. this was a doc defect, not a paper defect.
 
+**State it as a DISTRIBUTION, not as a floor** (`20260821_1` F8, 2026-08-24).
+The paragraph above stated only the low side, and that is what a paper answers:
+`20260821_1` shipped mean **21.1**, median 21, range 18–25 — every sentence over
+the 18-char floor, the whole set in the bottom third of the official range, and
+the lowest of the 15 papers on disk. The same one-sided-rule failure had already
+happened to 問題7 stems (`bunpou.md` §問題7). The twenty sentences are now
+measured as a set by `check_mondai6_option_length()`, which carries these six
+numbers — change them in both files or in neither:
+
+| clause | FAIL outside | authoring target |
+|---|---|---|
+| mean of the 20 | 22–30 | **23–29** |
+| longest option | ≥26 | **≥29** |
+| sentences over 30 chars | (target only) | **≥2** |
+
+The FAIL envelope is set outside the archive's own range on purpose — measured
+per current-era sitting: means 22.9 / 23.6 / 25.8 / 26.7 / 26.8 / 27.5 / 28.8,
+maxes 28–39, and sentences over 30 chars **0 / 0 / 1 / 3 / 3 / 4 / 8**. Two
+current-era sittings ship none over 30, so "≥2 over 30" and "max ≥29" are
+targets and cannot fail the gate; a gate that fails an official paper is a wrong
+gate. Fix a warn by giving the SHORT sentences a fuller who/when/what — never by
+lengthening the long ones, which moves the mean and leaves the spread flat.
+
 ## "Never leave the word's own domain" was WRONG — refuted, not carried (R2-F9)
 
 Until 2026-08-19 step (2) read "break exactly ONE thing INSIDE the word's own

@@ -283,10 +283,18 @@ display strings differ but whose errand is the same carry the **same** `key`,
 and `sample_items.py` resolves rotation through `errand_key()` before it
 compares display strings, so one errand cools down once however many ways the
 pool spells it. An entry with no `key` is its own key — most of the pool is
-genuinely distinct and needs none. Currently 41 themed entries carry one in 19
-clusters, plus 9 `quick_response` phrases in 4 (§"`quick_response` has keys
-too") — 23 clusters in all, which is the number `check_pool_errand_keys()`
-prints; re-read it there rather than trusting this sentence.
+genuinely distinct and needs none. Currently 49 themed entries carry one in 23
+clusters, plus 10 `quick_response` phrases in 4 (§"`quick_response` has keys
+too") — 27 clusters in all, which is the number `check_pool_errand_keys()`
+prints; re-read it there rather than trusting this sentence. (2026-08-21,
+`20260821_1` blueprint: five clusters were added when the draw kept landing on
+unkeyed near-duplicates of the previous two papers' surfaces —
+`美術館:館内ルール案内`, `市役所:住民票`, `レストラン:予約・注文の変更`,
+`パン屋:予約注文`, and the `店:在庫照会` phrase
+「お客様、こちらの商品はただいまお取り寄せとなりますが…」. Each addition made the
+sampler refuse a pick it had just made, which is the mechanism working; keying
+them also turned `20260819_1`'s two "0 keyed draws compared" **skip** lines into
+`ok`.)
 
 **The incident (2026-08-19, R14):** the cooldown compared display strings, so
 `引越し:見積もり` / `引っ越し業者との見積もり調整` / `引っ越し業者との調整` were
@@ -813,6 +821,28 @@ not what the rule measures (`qa-report-20260818_1-round2` R2-F2). The sanctioned
 repair now costs one item. **It is still a redraw, not a hand substitution** — the
 index selects WHICH entry leaves, never which entry arrives.
 
+**KNOWN DEFECT — `--reroll-one` is a NO-OP on an entry the pool has never drawn
+before (measured 2026-08-21, `20260821_1` blueprint; NOT yet fixed).**
+`draw()`'s recency weight is `ago(x) + 1` with `ago = 10**9` for a never-used
+item, and the reroll path pops THIS paper's own entry out of the history before
+re-drawing (correctly — its own draw must not count as recent). So the entry you
+just rejected returns to the candidate set as "never used", weight `10**9 + 1`
+against `12–16` for every cooled rival: it is re-picked with probability ≈
+0.99999997. Two of `20260821_1`'s repairs hit this and could not be moved at all
+(`商店街組合:イベント出店の相談`, `テレビ:地域の祭りの紹介` — each redrew ITSELF on
+consecutive fresh seeds), and the same signature is visible in the recorded seed
+strings of earlier papers: `20260819_1` carries `reroll-one(listening_scenarios:16,…)`
+**five times in a row**, `20260814_1` carries `orthography:0` and `orthography:4`
+twice each. A rerolled entry that HAS been drawn before moves normally, and so
+does one whose errand `key` puts it inside the cooldown window — which is why
+adding the missing `key` (§"`key` — the errand identity") is the repair that
+actually works when the reject is a near-duplicate. Proposed fix: exclude the
+replaced entry's own `identity_tokens()` from the candidate set on the
+`--reroll-one` path (a one-line change in the reroll branch, no effect on the
+full-draw RNG stream). Until then: state in the handoff that the entry could not
+be moved, and carry the authoring constraint that keeps it clear of the previous
+papers' surfaces — never hand-substitute a different entry to get around it.
+
 `tests/<test_id>/test_spec.json` is the authoring contract — per section,
 the exact items to test, scenario/topic lists, and the answer-position
 sequence. **It belongs to ONE test and may predate the current `DRAW`.** Do
@@ -886,6 +916,33 @@ written by the build pass. Each row carries `surfaces` (every 読解 passage,
 問題9, 問題14, every 聴解 item incl. 例, one noun phrase each), `themes` (same
 keys → a `THEMES` value), `shapes` (each 聴解 item's errand shape). No
 subject or shape may repeat within the paper or against the previous two rows.
+
+**Two more required maps, adopted 2026-08-24 (`claim` and `persona`).** A
+theme tag records what a surface is ABOUT; it cannot record what the surface
+ASSERTS, and two papers shipped the same argument twice behind two different
+theme tags before anyone noticed by reading (`20260821_1` F4: 問題13 and
+聴解問題3-4番 both rejected the affective account of why a practice continues
+and installed a structural one, tagged 科学・技術 and スポーツ・余暇; then O1 in
+the same paper's round 2: 問題9 and 問題13, the same narrator doing the same
+kind of thing for the same number of years, hidden by two themes AND two
+shape labels). So each row also carries:
+
+- **`claim`** — same keys as `surfaces`, **one sentence naming what that
+  surface ASSERTS** (not its topic). Write it as the surface is written, then
+  READ THE COLUMN DOWN the way the closing column is read: two surfaces
+  asserting the same move on different subjects are one essay twice.
+- **`persona`** — the 読解 keys only, a narrator-archetype token
+  (`趣味の実践者` / `職業人` / `親` / `観察者` / `研究者` / …), **capped at 2**
+  like every other closing axis. `dokkai.md`'s three axes count theme, closing
+  move and voice/register; none of them can see that five surfaces are the same
+  person.
+
+Both are author-time columns — no script can derive them from prose, which is
+why they are recorded rather than measured. `check_topics_claim_field()`
+enforces presence and the persona cap. It is a **forward** requirement: the 15
+papers on disk at adoption are named in `CLAIM_FIELD_PRE_RULE` and `skip`,
+because writing 34 claim sentences for a paper after the fact produces
+assertions nobody can verify.
 
 **The honest limit.** 「屋上緑化」 vs 「グリーンパートナー制度」 are one
 subject with zero shared tokens, and no mechanized check catches that —

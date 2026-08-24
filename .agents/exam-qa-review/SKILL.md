@@ -109,10 +109,35 @@ defect through.
     reference material is calibration only) — check against imported papers
     directly, not just test-against-test;
   - **a surface's `theme` in `test_spec.json` disagreeing with the same
-    surface's `theme` in `logs/topics.json`** — no check compares these two
-    fields against each other; a relabel in one file that dodges a headline
-    collision without re-authoring or updating the other hides the collision
-    instead of resolving it (`20260813_1`'s 問題13 precedent);
+    surface's `theme` in `logs/topics.json` WHERE `topics.json` relieves a
+    quota or headline collision that the spec value creates** — a relabel in
+    one file that dodges a collision without re-authoring or updating the other
+    hides the collision instead of resolving it (`20260813_1`'s 問題13
+    precedent). Decide it by counting, not by spotting the disagreement: tally
+    the themes under each file's values and see whether the `topics.json`
+    tagging is what brings a per-theme count inside its cap or takes a surface
+    out of the headline set. If both tallies comply, the disagreement is a
+    **`要修正` bookkeeping desync**, not an automatic fail — §5 *instructs* you
+    to distrust the spec's theme and re-tag from the shipped text, so a paper
+    that follows §5 honestly will routinely disagree with a stale pool tag
+    (`20260821_1`'s 聴解問題2-3番/2-6番 precedent: neither relabel moved any
+    count, both files were simply out of sync with a wrong `pools.json` tag).
+    Then record the divergence — do NOT reconcile it by moving a `theme` value
+    and do NOT edit `pools.json`. On the spec entry **and** the byte-identical
+    ledger entry, keep the drawn `scenario`/`topic` string untouched
+    (`recency_map()` keys on it) and keep `theme` at the value the sampler drew
+    (the ledger is a record of the DRAW), then add three fields:
+    `"shipped_theme"`, `"shipped_surface"` and a `"note"` saying, with the
+    deciding line quoted, why the pool tag does not describe the authored
+    surface. One paper's surface drifting off a tag is a record-keeping fact
+    about that paper, not a pool defect. **`check_theme_record_agreement()`
+    reads exactly this** — it joins each spec/ledger row to its
+    `topics.json` surface, FAILs on a disagreement with no `note`, and goes
+    silent once the note is there. That check exists because this bullet
+    previously ended in a prose sync instruction that nothing read: round 1 of
+    `20260821_1` filed the desync, the rule was rewritten, and round 2 measured
+    that not one byte had moved in either file (NF-4). Prose no check reads is
+    prose that does not run;
   - **a headline theme (問題9/12/13/14/聴解問題5-1番/聴解問題5-2番) repeating the
     immediately-previous test's headline theme in ANY slot** —
     `exam-blueprint` rule 4's zero-tolerance clause, unchecked by any script.

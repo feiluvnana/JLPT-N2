@@ -43,13 +43,16 @@ authored nothing** — an author cannot audit its own intent.
 Every QA finding adds a fix + re-review round: the fix may reuse an
 authoring context; the re-review of the touched items must again be fresh
 eyes. **Exception: a QA round returning FAIL with ≤3 findings total may be
-fixed directly** — same rigor as the round-3 fallback below (root-cause,
+fixed directly** — same rigor as the round-2 fallback below (root-cause,
 verify `make check`, sanity-read the diff), stated explicitly in the final
-report. The loop ends at `QA: PASS`, **capped at 3 fresh-eyes QA rounds
-total.** Once PASS, proceed to Stage 5. If round 3 still FAILs, apply that
-round's findings directly (same rigor) without a 4th fresh-eyes pass; ship
-and say so explicitly — which findings were fixed without independent
-re-verification, and why. PASS closes the *paper*, not the *generator*: an
+report. The loop ends at `QA: PASS`, **capped at 2 fresh-eyes QA rounds
+total** (lowered from 3 on 2026-08-24: rounds 1 and 2 are where the paper
+defects surface, and round 3 has historically returned skill/gate findings
+that block the next run rather than this paper — those do not need a third
+review to be dispositioned). Once PASS, proceed to Stage 5. If round 2 still
+FAILs, apply that round's findings directly (same rigor) without a 3rd
+fresh-eyes pass; ship and say so explicitly — which findings were fixed
+without independent re-verification, and why. PASS closes the *paper*, not the *generator*: an
 open entry in QA's root-cause table blocks the next generation run until
 applied or rejected with a reason.
 
@@ -268,6 +271,36 @@ Read `exam-qa-review/SKILL.md` in full and run it with fresh eyes. NOT
 optional: generated papers can ship content defects through a green gate if
 QA is skipped. A test that hasn't survived this pass is not done, whatever
 the gate says.
+
+### The fix loop — closing a finding includes re-greppng its notes
+
+A repair is not finished when the artifact changes. **A repair is finished
+when every note that narrates the finding says what is now on disk.** After
+applying a fix, `grep` for the finding id and for the strings the fix
+removed, in all four places a repair gets narrated, and update each:
+
+1. the 構成表 / 解説 cells in `tests/<id>/聴解.md` and `言語知識・読解.md`
+   (a fix that ADDS or CHANGES a script or passage line must re-derive
+   **every** 解説 cell and 構成表 cell that cites that item, not only the cell
+   the finding named — `20260821_1` NF-3: F6 wrote a new deciding line into
+   the script and the 構成表 and left the 解説 quoting the old, weaker line);
+2. `logs/topics.json`'s `notes` for that test;
+3. `tests/<id>/test_spec.json` and `logs/ledger.json`, if the fix changed
+   what a recorded draw shipped as;
+4. the QA report's disposition column.
+
+**A note that says a step is 未実施 after you implemented it is a defect of
+the same class as a note quoting a removed string**, and both are worse than
+no note: the next paper's blueprint stage reads these fields and will chase a
+bug that is already fixed, or trust a claim the fix invalidated. Precedents:
+`20260817_3` (two false `notes` claims), `20260821_1` NF-5 (a 聴解.md 申し送り
+still saying `logs/topics.json` was 未実施 after it had been updated, and a
+`notes` field still arguing at length about a WARN the gate had stopped
+emitting — with a stale warning TOTAL attached).
+
+**Do not pin a repo-wide number in a note.** A warning total is true for one
+minute; state the per-test invariant instead ("the only WARN line naming this
+test is X"), and if you do quote a total, date it and say what would move it.
 
 ## Stage 5 — Model Answer & Detailed Explanation (FINAL STEP)
 

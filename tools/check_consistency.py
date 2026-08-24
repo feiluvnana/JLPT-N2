@@ -378,6 +378,11 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     "choukai_filler_band":            ("聴解スクリプト.txt",  "assisted"),
     "choukai_reaction_floor":         ("聴解スクリプト.txt",  "assisted"),
     "choukai_service_formula_rate":   ("聴解スクリプト.txt",  "assisted"),
+    # F2 (qa-report-20260821_1): re-opening an item's first spoken line keeps
+    # the errand, the key, the 消去方法 set and the 決め手, so the sufficient
+    # artifact is the script (tier B) plus a `make mp3` rebuild — not a section
+    # re-author.
+    "choukai_opening_frame":          ("聴解スクリプト.txt",  "assisted"),
     "choukai_q1_question_forms":      ("<section re-author>", "authoring"),
     "choukai_q2_question_mix":        ("<section re-author>", "authoring"),
     "choukai_decider_position":       ("<section re-author>", "authoring"),
@@ -1583,7 +1588,43 @@ def check_dokkai_rhetorical_monotony(name: str, body: str):
 REFRAME_CLOSING = re.compile(
     r"だけでは|だけのものではなく|にとどまらない|にすぎない.{0,20}ではなく"
     r"|である前に.{0,20}だ|の中にこそ"
-    r"|こそが?.{0,15}(だ|になっている|を作り上げている|が要る|にほかならない)")
+    r"|こそが?.{0,15}(だ|になっている|を作り上げている|が要る|にほかならない)"
+    r"|よりも.{0,25}(なのです|なのだ|である|だ)。?$")
+# 「よりも…なのだ」 added 2026-08-24 (qa-report-20260821_1 F3). It fires on 0 of
+# the 15 papers (20260821_1's 問題11(3) 「よりも…なのです」 closing, the phrasing
+# that motivated it, was rewritten by that paper's own F3 repair) — it is kept
+# because it is anchored to the passage's last characters and so cannot
+# cry wolf.
+#
+# 「というより」 was added here by the same round-1 pass and REMOVED again
+# 2026-08-24 by round 2 (qa-report-20260821_1-round2 NF-1). Round 1 measured
+# only how many hits it ADDED, never whether the hits were closings. Round 2
+# measured that: of the 33 hits this whole-passage scan produced across the 15
+# papers, **20 fell outside the passage's final two sentences**, and every one
+# of the three hits 「というより」 contributed (20260813_2, 20260817_3,
+# 20260821_1) was mid-passage — on 20260821_1 it was 問題13's paragraph-2
+# manner hedge 「走るというより外に出て戻ってくるだけの日もあった」, standing in for
+# the paper's real second reframe closing (問題9's 「教えたのではなく、見る力を
+# 与えたのだと思う」) which this check cannot see at all. A count that is right
+# by arithmetic and wrong by identity is worse than a low count. 「というより」 is
+# an ordinary comparative hedge in running prose — the exact reason the same
+# block below routes 「わけではない」 to sentence scope — and it is already in
+# `FINAL_SENTENCE_TEMPLATES`, where sentence scope makes it honest.
+# MEASURED before removing, hits per paper, with → without 「というより」:
+#   20260811_1 2→1, 20260813_2 1→0, 20260817_2 4→**2**, 20260817_3 2→1,
+#   20260821_1 2→1; the other 10 papers do not move. One paper leaves the
+#   over-cap set (`20260817_2` 4→2, so its WARN line goes away — its two
+#   「というより」 closings are still counted, by `FINAL_SENTENCE_TEMPLATES`
+#   ×2 and by `check_dokkai_closing_reframe_scope` ×2 below); no paper enters
+#   it. The closing-scope replacement is `check_dokkai_closing_reframe_scope`.
+# Bare 「わけではない」 was ALSO proposed by that report and is deliberately NOT
+# here: measured at this check's whole-passage scope it fires on 8 of the 15
+# papers, and its hits are ordinary hedges rather than closings — on
+# 20260821_1 it matched 問題9's mid-passage 「いつも魚が釣れているわけではない」
+# and 問題10(3)'s email instruction 「改造が遅くなるわけではないと申し添えてくだ
+# さい」, neither of which is a closing move at all. That is the same
+# cry-wolf shape as bare 「ではなく」 below, and it has the same remedy: it went
+# into FINAL_SENTENCE_TEMPLATES, where sentence scope makes it decidable.
 # Bare 「ではなく」 was tried and dropped: it is an ordinary contrastive
 # connector that appears in unrelated argumentative and descriptive prose
 # (measured: it alone fires this check on EVERY one of the 4 prior generated
@@ -1624,16 +1665,27 @@ REFRAME_SHAPE_CAP = 2        # dokkai.md's own stated per-shape ceiling
 
 
 def check_dokkai_closing_reframe(name: str, body: str, bi):
-    """No more than 2 読解 passages may close on the same reframe shape.
+    """ANTI-DODGE NET: no more than 2 読解 passages may CONTAIN the reframe
+    marker family ANYWHERE in their prose.
+
+    **This is not a closing-shape count.** Read the name literally: it counts
+    passages that contain a marker, wherever it sits. The closing-shape count
+    — dokkai.md's actual cap of 2 shared closing shapes — is
+    `check_dokkai_closing_reframe_scope` below, which reads only the final two
+    sentences. Round 1 of qa-report-20260821_1 mistook this check for the
+    shape count and widened it with 「というより」 on that basis; round 2 measured
+    that 20 of its 33 corpus-wide hits are mid-passage, i.e. two-thirds of
+    what a check named "closing reframe" counted was not a closing (NF-1).
+    The two checks now split the job: this one is the net that catches a fix
+    RELOCATING an override phrase earlier in the closing paragraph to dodge
+    the sentence-scope check (the 20260813_2 ROUND 2 F-CLOSING-2 dodge), and
+    it stays a WARN because a mid-passage hit is not by itself a defect.
 
     Scans the last `REFRAME_CLOSING_SPAN` JP characters of each passage's own
     prose (via `passage_prose`, which already strips stems/options and
     distractor text, so a hit is never scattered through the body or inside
     an option's own printed text). `REFRAME_CLOSING_SPAN` is set wide enough
-    to cover any passage's full prose in practice (see its own comment) —
-    scanning only a short tail let an override phrase escape detection by
-    sitting earlier in the closing paragraph while the final sentence still
-    read as a correlation (qa-report-20260813_2.md ROUND 2, F-CLOSING-2).
+    to cover any passage's full prose in practice (see its own comment).
     """
     hits: dict[str, str] = {}
     m9 = re.search(r"^##\s*問題9\b.*?(?=^##\s*問題10\b)", body, re.M | re.S)
@@ -1654,19 +1706,23 @@ def check_dokkai_closing_reframe(name: str, body: str, bi):
             if REFRAME_CLOSING.search(tail):
                 label = f"問題{n}" if len(passage_scopes(sec, n)) == 1 else f"問題{n}({i})"
                 hits[label] = tail[-40:]
-    warn(f"{name}: no more than {REFRAME_SHAPE_CAP} 読解 passages match this "
-         f"marker family for the 「not-A-but-B」 reframe closing "
-         f"({len(hits)} matched — a marker-family PROXY, not a shape-"
-         f"classification proof: a fix can dodge these exact tokens while "
-         f"keeping the same argument, as 20260812_1's own F2→F3 did)",
+    warn(f"{name}: no more than {REFRAME_SHAPE_CAP} 読解 passages CONTAIN the "
+         f"「not-A-but-B」 reframe marker family ANYWHERE in their prose "
+         f"({len(hits)} matched — a whole-passage anti-dodge net, NOT a "
+         f"closing-shape count: two-thirds of this check's corpus-wide hits "
+         f"are mid-passage hedges. The closing count is the next line, "
+         f"'close on the 「not-A-but-B」 reframe')",
          len(hits) <= REFRAME_SHAPE_CAP,
-         f"{sorted(hits)} — dokkai.md caps any one closing shape at "
-         f"{REFRAME_SHAPE_CAP} shared passages; rewrite the extras onto a "
-         f"different catalogued shape (説明/意外な観察/反論応答/随筆/条件提示) "
-         f"and re-check that any key relying on the old closing's content "
-         f"still matches the new one. A green run here is NOT proof the "
-         f"paper complies — read all 13 closings against dokkai.md's six "
-         f"named shapes yourself and write which one each is "
+         f"{sorted(hits)} — read WHERE each marker sits before doing anything. "
+         f"If it is in the passage's closing, the closing-scope line ('close "
+         f"on the 「not-A-but-B」 reframe') is already counting it and that is "
+         f"the line to repair. If it is mid-passage, this line is asking a "
+         f"different question: has a fix RELOCATED an override phrase out of "
+         f"the closing to dodge the closing-scope check while keeping the same "
+         f"argument (the 20260812_1 F2→F3 and 20260813_2 F-CLOSING-2 dodges)? "
+         f"If not, disposition it as a hedge and say so. Neither line is proof "
+         f"of compliance — read all 13 closings against dokkai.md's six named "
+         f"shapes yourself and write which one each is "
          f"(question-authoring/references/dokkai.md "
          f"§'Thirteen surfaces, thirteen different essays')")
 
@@ -1688,6 +1744,42 @@ FINAL_SENTENCE_TEMPLATES = {
     "〜のは A ではなく B": re.compile(r"(では|じゃ)なく"),
     "A よりも B のほう": re.compile(r"より(も|は)?、?[^。]{0,30}(ほう|方)が?"),
     "A だけでは〜、B こそが": re.compile(r"だけで(は|も)?(ない|なく)|こそが?"),
+    # Added 2026-08-24 (qa-report-20260821_1 F3). Both tokens are genuine
+    # not-A-but-B closings when they land in the FINAL SENTENCE and ordinary
+    # hedges when they land mid-passage, which is exactly why they belong here
+    # and not in REFRAME_CLOSING (see its comment for the 8-paper cry-wolf
+    # measurement of 「わけではない」 at passage scope).
+    # MEASURED over all 15 papers on disk before adding: per-paper hits are
+    # わけではない 20260807_1 1 (問題11(2) 「…全ての店に同じ正解があるわけでは
+    # ないのである」), 20260813_1 1, 20260817_2 1, 20260821_1 1 and 0 elsewhere;
+    # というより 20260817_2 2 (問題11(3)+問題11(4)) and 0 elsewhere. No paper
+    # reaches 3 on either, so this extension FAILS nothing on disk and needs no
+    # grandfather entry — it closes the hole going forward, where the
+    # passage-scope proxy above could not.
+    "A というより B": re.compile(r"というより"),
+    "A わけではない": re.compile(r"わけでは(ない|ありません)"),
+    # Added 2026-08-24 (qa-report-20260821_1-round2 NF-2). THE CORRELATION
+    # SKELETON — the one template family this dictionary had no entry for, and
+    # the one where 条件提示 closings pile up by construction, because
+    # "evidential frame + [group/period] では/ほど + quantity goes up/down" is
+    # the only sentence shape a checkable correlation naturally takes. That is
+    # why the class was unnameable: 20260821_1 shipped 問題11(1) 「実際、書き込みの
+    # 数集めに力を入れた店では、星の平均が高くなる一方で、買い直しの割合との開きが
+    # 大きくなっていた」 beside 問題12(A) 「手元にある四十回ほどの記録を数えてみると、
+    # 言い終わりのあとに間を置いた会ほど、終わりまでに一度でも発言した人の数が多い」
+    # — same skeleton, different content words, both labelled 条件提示, and both
+    # invisible to every template here. Both directions of the correlation are
+    # listed (多い/少ない, 高く/低く …) so a rewrite cannot dodge it by flipping
+    # the sign while keeping the skeleton.
+    # MEASURED over all 15 papers on disk before adding, at this check's
+    # final-sentence scope: **1 hit corpus-wide** (20260821_1's 問題12(A)) and 0
+    # on the other 14. The founding pair measured ×2 — at the cap, not over it
+    # — and is now ×1 because 問題11(1)'s closing was rewritten off the skeleton
+    # by that finding's own repair. So this entry FAILS nothing on disk and
+    # needs no grandfather entry; it closes the hole going forward.
+    "A では/ほど B が多い（相関）": re.compile(
+        r"(では|ほど)[^。]{0,25}"
+        r"(多い|少ない|大きく|小さく|高く|低く|増え|減り|開きが|なっていた)"),
 }
 FINAL_TEMPLATE_CAP = 2       # dokkai.md's own per-shape ceiling
 # Measured 2026-08-19, the day this check was written: one paper on disk
@@ -1703,14 +1795,64 @@ FINAL_TEMPLATE_GRANDFATHERED = {
 }
 
 
-def passage_final_sentence(prose: str) -> str:
-    """The passage's last sentence — glossary lines and headings removed."""
+def passage_final_sentences(prose: str, n: int = 1) -> str:
+    """The passage's last `n` sentences — glossary lines and headings removed.
+
+    n=1 is the sentence-template scope (`FINAL_SENTENCE_TEMPLATES`); n=2 is the
+    CLOSING scope (`check_dokkai_closing_reframe_scope`), because a two-sentence
+    closing routinely puts the reframe in the penultimate sentence and the
+    consequence in the last one — 20260821_1's 問題9 closes
+    「…教えたのではなく、見る力を与えたのだと思う。/ …ことこそが、私を毎週あの岸壁へ
+    向かわせているのである。」 and no 1-sentence check can see its reframe
+    (qa-report-20260821_1-round2 NF-1).
+    """
     kept = [ln for ln in prose.splitlines()
             if not re.match(r"^\s*[（(]注\d*[）)]", ln)
             and not ln.lstrip().startswith("#")]
     txt = re.sub(r"\s+", "", "".join(kept))
     parts = [p for p in re.split(r"(?<=。)", txt) if p.strip()]
-    return parts[-1] if parts else ""
+    return "".join(parts[-n:]) if parts else ""
+
+
+def passage_final_sentence(prose: str) -> str:
+    """The passage's last sentence (thin wrapper kept for its callers)."""
+    return passage_final_sentences(prose, 1)
+
+
+def dokkai_closing_scopes(body: str, bi) -> list[tuple[str, str]]:
+    """The THIRTEEN 読解 surfaces and their prose, labelled.
+
+    問題9 + 問題10×5 + 問題11×4 + 問題12(A) + 問題12(B) + 問題13. 問題12 is ONE
+    （注N） scope (official numbers its notes once across A and B, which is why
+    `passage_scopes` returns it whole) but TWO essays with TWO closings, and
+    `dokkai.md` counts the shape cap over thirteen closings, not twelve —
+    reading the joint scope took only B's final sentence, so A's closing, which
+    sits directly beside another closing and is therefore the one most likely
+    to rhyme, was never measured (qa-report-20260817_3-round3 R3-8; the
+    12-vs-13 contradiction in `dokkai.md`'s own prose was settled in favour of
+    thirteen by qa-report-20260821_1-round2 NF-2). Shared by every
+    closing-scope check so the denominator cannot drift between them.
+    """
+    scopes: list[tuple[str, str]] = []
+    m9 = re.search(r"^##\s*問題9\b.*?(?=^##\s*問題10\b|^#\s*【?読解)",
+                   body, re.M | re.S)
+    if m9:
+        scopes.append(("問題9", passage_prose(m9.group(0), bi)))
+    for n in (10, 11, 12, 13):
+        sec = dokkai_section(body, n)
+        if not sec:
+            continue
+        parts = passage_scopes(sec, n)
+        if n == 12 and len(parts) == 1:
+            ab = re.split(r"^(?:\*\*|###\s*)([AB])(?:\*\*)?\s*$", parts[0], flags=re.M)
+            if len(ab) >= 5:            # [pre, 'A', bodyA, 'B', bodyB, …]
+                for lab, scope in zip(ab[1::2], ab[2::2]):
+                    scopes.append((f"問題12({lab})", passage_prose(scope, bi)))
+                continue
+        for i, scope in enumerate(parts, 1):
+            lab = f"問題{n}" if len(parts) == 1 else f"問題{n}({i})"
+            scopes.append((lab, passage_prose(scope, bi)))
+    return scopes
 
 
 def check_dokkai_final_sentence_templates(test_id: str, body: str, bi):
@@ -1736,35 +1878,8 @@ def check_dokkai_final_sentence_templates(test_id: str, body: str, bi):
     and reading them as a column is the authoring-side version of this check.
     """
     hits: dict[str, list[str]] = {}
-    scopes: list[tuple[str, str]] = []
-    m9 = re.search(r"^##\s*問題9\b.*?(?=^##\s*問題10\b|^#\s*【?読解)",
-                   body, re.M | re.S)
-    if m9:
-        scopes.append(("問題9", passage_prose(m9.group(0), bi)))
-    for n in (10, 11, 12, 13):
-        sec = dokkai_section(body, n)
-        if not sec:
-            continue
-        parts = passage_scopes(sec, n)
-        # 問題12 is ONE （注N） scope (official numbers its notes once across A
-        # and B, which is why passage_scopes returns it whole) but TWO essays,
-        # and dokkai.md counts thirteen closings, not twelve. Reading the joint
-        # scope took only B's final sentence, so A's closing — sitting directly
-        # beside another closing, the one place the shape is most likely to
-        # rhyme — was never measured (qa-report-20260817_3-round3 R3-8).
-        if n == 12 and len(parts) == 1:
-            ab = re.split(r"^(?:\*\*|###\s*)([AB])(?:\*\*)?\s*$", parts[0], flags=re.M)
-            if len(ab) >= 5:            # [pre, 'A', bodyA, 'B', bodyB, …]
-                parts = ab[2::2]
-                labels = ab[1::2]
-                for lab, scope in zip(labels, parts):
-                    scopes.append((f"問題12({lab})", passage_prose(scope, bi)))
-                continue
-        for i, scope in enumerate(parts, 1):
-            lab = f"問題{n}" if len(parts) == 1 else f"問題{n}({i})"
-            scopes.append((lab, passage_prose(scope, bi)))
     finals: dict[str, str] = {}
-    for lab, prose in scopes:
+    for lab, prose in dokkai_closing_scopes(body, bi):
         fs = passage_final_sentence(prose)
         if not fs:
             continue
@@ -1782,6 +1897,119 @@ def check_dokkai_final_sentence_templates(test_id: str, body: str, bi):
               "(question-authoring/references/dokkai.md §'Thirteen surfaces')")
     if test_id in FINAL_TEMPLATE_GRANDFATHERED:
         return warn(name, not over, detail + GRANDFATHER_NOTE)
+    check(name, not over, detail)
+
+
+# NF-1 (qa-report-20260821_1-round2). The closing-shape half of the split:
+# `check_dokkai_closing_reframe` above is the whole-passage anti-dodge NET and
+# counts mid-passage hedges by design; `FINAL_SENTENCE_TEMPLATES` reads only
+# the LAST sentence and so cannot see a reframe that sits in the penultimate
+# one. Between them sat the hole this closes: 20260821_1's 問題9 closes on
+# 「釣れない時間は、私に待つことを教えたのではなく、見る力を与えたのだと思う。/
+# …ことこそが、私を毎週あの岸壁へ向かわせているのである。」 — a textbook not-A-but-B
+# closing, invisible to BOTH checks (the net excludes bare 「ではなく」; the
+# sentence check reads one sentence too few, and 「こそが」 is 19 chars from its
+# consequence, outside the net's 15-char window). This check reads each of the
+# thirteen surfaces' final TWO sentences.
+#
+# WHICH 「ではなく」: bare or nominalised. MEASURED both over all 15 papers at
+# this two-sentence scope before choosing, because the comment on
+# REFRAME_CLOSING's own bare-「ではなく」 exclusion was measured at PASSAGE scope
+# and NF-1 required it re-measured here:
+#   family + bare 「ではなく」   → over the cap of 2 on **7 of 15** papers
+#     (20260807_1 3, 20260810_1 4, 20260811_1 3, 20260812_1 4, 20260812_2 3,
+#      20260817_1 3, 20260817_2 4) = 47 % of the corpus, which reproduces the
+#     cry-wolf shape at a smaller scale, and double-counts what
+#     `FINAL_SENTENCE_TEMPLATES`'s 「〜のは A ではなく B」 row already reads.
+#   family + nominalised 「のではなく」 → over the cap on **2 of 15**
+#     (20260812_1 3, 20260817_2 4), grandfathered below by name.
+# The nominalised form is the one that carries the reframe ("it is not THAT A,
+# but THAT B"); bare 「AではなくB」 is an ordinary NP correction. So the family
+# below takes 「のではなく」 and NOT bare 「ではなく」. Do not widen it to the bare
+# token without re-running this measurement.
+#
+# FOUNDING CASE, 20260821_1: **2 matched — 問題9 (のではなく) and 問題11(2)
+# (だけでは)**, exactly the two surfaces the round-2 human column read labelled
+# not-A-but-B, and 問題13's paragraph-2 「走るというより」 hedge is NOT among them
+# (it is not in the final two sentences). The count the old check produced was
+# also 2, but composed of 問題13's false positive standing in for 問題9's miss.
+CLOSING_REFRAME_FAMILY = re.compile(
+    r"だけでは|だけのものではなく|にとどまらない|にすぎない.{0,20}ではなく"
+    r"|である前に.{0,20}だ|の中にこそ"
+    r"|こそが?.{0,15}(だ|になっている|を作り上げている|が要る|にほかならない)"
+    r"|というより|よりも.{0,25}(なのです|なのだ|である|だ)"
+    r"|のではなく")
+CLOSING_REFRAME_SENTENCES = 2   # final two sentences of each surface
+CLOSING_REFRAME_CAP = 2         # dokkai.md's own per-shape ceiling
+# Grandfathered BY NAME with the number measured 2026-08-24, the day this check
+# was written. Neither paper is re-closed here — that is a content decision
+# about shipped work — and neither threshold is lowered to hide it. Any id not
+# in this map FAILS.
+CLOSING_REFRAME_GRANDFATHERED = {
+    # ×3: 問題9 (のではなく), 問題11(1) (だけのものではなく), 問題12(B) (だけでは)
+    "20260812_1": 3,
+    # ×4: 問題11(3) (というより), 問題11(4) (というより), 問題12(A) (だけでは),
+    # 問題13 (のではなく). Same paper `FINAL_SENTENCE_TEMPLATES` shows two
+    # 「というより」 finals on; removing 「というより」 from the whole-passage net
+    # took its WARN there away, and this line is where that breach is now
+    # recorded honestly, at closing scope.
+    "20260817_2": 4,
+}
+
+
+def check_dokkai_closing_reframe_scope(test_id: str, body: str, bi):
+    """No more than 2 of the 13 読解 surfaces may CLOSE on the not-A-but-B reframe.
+
+    THE RULE: `dokkai.md` §"Thirteen surfaces, thirteen different essays" caps
+    any one closing shape at 2 shared surfaces. This is the count of that cap
+    for the reframe shape — read over each surface's final TWO sentences, which
+    is what "closing" means in that section (a closing is a move, and a move
+    routinely spans a reframe sentence plus its consequence).
+
+    THE INCIDENT: qa-report-20260821_1 round 1 read six of eleven essay
+    surfaces closing on this one shape, saw `check_dokkai_closing_reframe`
+    report "1 matched", and repaired the GATE by widening that whole-passage
+    check with 「というより」. Round 2 measured the result: 20 of the check's 33
+    corpus-wide hits fall outside the final two sentences, and on the paper
+    under review its entire contribution was one mid-passage manner hedge
+    standing in for one real miss. The count was right by arithmetic and wrong
+    by identity, and round 1 cited that number as evidence the repair worked.
+
+    THE REPAIR when this fails: rewrite the extra closings onto a different
+    catalogued shape (説明 / 意外な観察 / 反論応答 / 随筆 / 条件提示 / 主張) — replacing
+    sentences, not appending them, since every 読解 section ships within ~35
+    chars of its length ceiling — and re-check that no key quoted the old
+    closing. A label change in `logs/topics.json` is not a fix. Green here is
+    still not proof: the marker family is a proxy, and the mandatory human read
+    of all thirteen closings against the six named shapes (`exam-qa-review`) is
+    what enforces the rule.
+    """
+    hits: dict[str, str] = {}
+    read = 0
+    for lab, prose in dokkai_closing_scopes(body, bi):
+        seg = passage_final_sentences(prose, CLOSING_REFRAME_SENTENCES)
+        if not seg:
+            continue
+        read += 1
+        m = CLOSING_REFRAME_FAMILY.search(seg)
+        if m:
+            hits[lab] = m.group(0)
+    name = (f"{test_id}: no more than {CLOSING_REFRAME_CAP} 読解 surfaces close on "
+            f"the 「not-A-but-B」 reframe ({len(hits)} of {read} surfaces, final "
+            f"{CLOSING_REFRAME_SENTENCES} sentences read)")
+    detail = (f"{ {k: v for k, v in sorted(hits.items())} } — dokkai.md caps "
+              f"one closing SHAPE at {CLOSING_REFRAME_CAP} shared surfaces, "
+              f"counted over the thirteen closings. Rewrite the extras onto "
+              f"another catalogued shape (説明/意外な観察/反論応答/随筆/条件提示/主張), "
+              f"REPLACING sentences rather than adding them, and re-check that "
+              f"no key quoted the closing you moved "
+              f"(question-authoring/references/dokkai.md §'Thirteen surfaces')")
+    over = len(hits) > CLOSING_REFRAME_CAP
+    if test_id in CLOSING_REFRAME_GRANDFATHERED:
+        return warn(name, not over,
+                    detail + f" [grandfathered at "
+                    f"×{CLOSING_REFRAME_GRANDFATHERED[test_id]} as measured "
+                    f"2026-08-24]" + GRANDFATHER_NOTE)
     check(name, not over, detail)
 
 
@@ -2787,7 +3015,23 @@ def check_dokkai_register(name: str, gt: str, origin: str = "generated"):
          fp_cnt >= 4,
          f"got {fp_cnt}/12 first-person passages (containing 私/僕/自分) — official runs 60–100% of its essay passages in the first person, median 78% (dokkai.md §'Axis 3')", slug="dokkai_register_voice", test_id=name)
 
-    polite_cnt = sum(1 for p in passages if p.is_essay and re.search(r"(です|ます|ました|ません|でした|でしょう|ください|ましょう)[。！？]?$", p.text.strip()))
+    # Strip （注N） gloss definition lines before reading the passage's last
+    # ending — the same `re.sub` PaperProfile.compute() already applies
+    # (qa-report-20260821_1 F1b, 2026-08-24). Without it, any passage whose last
+    # physical line is a gloss can NEVER count as polite, however it is written:
+    # 20260821_1's 問題10(4)/(5) both end 「…とお考えください。」/「…ということです。」
+    # above their 注 lines and read False on the raw tail. Measured over all 15
+    # papers with the F1 parser repair in place: the count moves only on
+    # 20260821_1 (2→3, clearing the ≥3 floor — 問題10(3)/(4) are メール/お知らせ
+    # surfaces and so are not essay passages, which is why 5 authored です・ます
+    # surfaces yield 3 here); the other 14 papers are written throughout in
+    # だ/である and stay at 0, so this widening grandfathers nothing.
+    polite_cnt = sum(
+        1 for p in passages
+        if p.is_essay and re.search(
+            r"(です|ます|ました|ません|でした|でしょう|ください|ましょう)[。！？]?$",
+            re.sub(r"^\s*[（(]注\s*\d*[）)].*$", "", p.text, flags=re.M).strip())
+    )
     warn(f"{name}: 読解 polite voice (です・ます) passages >= 3 (got {polite_cnt})",
          polite_cnt >= 3,
          f"got {polite_cnt} passages written in polite style — official runs です・ます at 30.5–45.2% of essay sentence endings, median 35% (dokkai.md §'Axis 3')", slug="dokkai_register_voice", test_id=name)
@@ -3228,6 +3472,28 @@ def _copula_norm(s: str) -> str:
     return s.replace("である", "だ")
 
 
+# F7 (qa-report-20260821_1). `exam-qa-review` §3 states the rule in TWO halves —
+# "at most ONE occurrence… and never in the same syntactic frame" — and
+# KEY_EXPOSURE_MAX implements only the count, so a keyed connective reappearing
+# in the IDENTICAL frame passes at n=1. 20260821_1 keyed 問題7-42 on
+# 「届けたところ、…連絡が来た」 and its 問題10(1) prose read 「電話で分量を教わった
+# ところ、伯母は少し笑って…」 — one occurrence, same [V-た]ところ、[判明した結果]
+# frame, gate green.
+#
+# Scope is deliberately narrow and string-decidable: only keys ENDING in one of
+# these clause connectives, and only where the 読解 prose uses the same
+# connective clause-finally (connective + 「、」 + a following clause), which is
+# the frame 問題7 keys them in. A 文末 or 連体 use of the same token is not a hit.
+CONNECTIVE_KEY_FORMS = ("たところ", "たとたんに", "たとたん", "た末に", "たあげく",
+                        "につけ", "ことから", "に伴って", "に伴い",
+                        "を機に", "を契機に", "をきっかけに", "が早いか", "そばから")
+
+
+def connective_frame_hits(prose: str, form: str) -> int:
+    """Clause-final uses of `form` in `prose` — 「〜{form}、」 after content."""
+    return len(re.findall(r"(?<=[^。、\s])" + re.escape(form) + r"、", prose))
+
+
 KEY_EXPOSURE_GRANDFATHERED = {
     "20260807_1", "20260810_1", "20260810_2", "20260811_1", "20260812_2",
     "20260813_1", "20260813_2", "20260814_1", "20260817_2",
@@ -3295,6 +3561,21 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
     `20260810_1` is the only id that gains a line, and it is ALREADY in
     KEY_EXPOSURE_GRANDFATHERED — so the repair adds no grandfathered id and
     un-blinds the rule without re-classifying any shipped paper.
+
+    F7 (qa-report-20260821_1), the rule's SECOND half: a keyed CLAUSE
+    CONNECTIVE re-used in the identical frame is a breach at n=1, which the
+    count alone cannot see (see CONNECTIVE_KEY_FORMS for the incident).
+
+    FOUNDING-CASE MEASUREMENT, run over all 15 papers on disk 2026-08-24 before
+    this branch was accepted: **zero same-frame hits corpus-wide**, so it
+    re-classifies no shipped paper and needs no new grandfathered id. Only five
+    papers key a connective on this list at all (20260807_1 たところ/ことから/
+    に伴って, 20260810_1 を契機に, 20260817_2 たとたん, 20260821_1 を契機に/
+    に伴って/ことから/たところ), and none of their 問題10–14 prose uses the
+    connective clause-finally. Run against 20260821_1's PRE-repair 問題10(1)
+    sentence (「…電話で分量を教わったところ、伯母は少し笑って…」) it reports 1,
+    i.e. it catches its founding case; the shipped prose reads 「…教わると、」 and
+    reports 0.
     """
     cut = bi.KEY_HEADING.search(gt)
     body = gt[:cut.start()] if cut else gt
@@ -3314,6 +3595,15 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
         n = prose.count(keyed)
         if n > KEY_EXPOSURE_MAX:
             hits.append(f"問{q}「{keyed}」×{n}")
+        elif (conn := next((c for c in CONNECTIVE_KEY_FORMS
+                            if keyed.endswith(c)), None)):
+            # The rule's SECOND half (F7): one occurrence is allowed, the same
+            # syntactic frame never is.
+            nf = connective_frame_hits(prose, conn)
+            if nf:
+                hits.append(f"問{q}「{keyed}」 same frame ×{nf} "
+                            f"(読解 prose uses 「〜{conn}、」 clause-finally, the "
+                            f"frame the item keys)")
     prose8 = _copula_norm(prose)
     for e in (spec.get("items") or {}).get("grammar_p8") or []:
         parts = [_copula_norm(p) for p in SAMPLE_ITEMS.grammar_form_parts(e)
@@ -5035,6 +5325,216 @@ def check_ledger_spec_agreement():
               "exists to catch")
 
 
+# NF-4 (qa-report-20260821_1-round2). Grandfathered BY NAME with the count
+# measured 2026-08-24, the day this check was written. Each is a shipped paper
+# whose spec/ledger theme disagrees with what `logs/topics.json` records for
+# the same surface, with no `note` anywhere saying why. Re-tagging a shipped
+# paper's records is a decision about that paper's bookkeeping, so they are
+# exempted and named rather than the rule being weakened. Any id not in this
+# map FAILS.
+THEME_RECORD_GRANDFATHERED = {
+    "20260810_1": 1,   # 聴解問題5-2番 文化祭模擬店: drawn 食 / shipped 教育
+    "20260810_2": 1,   # 聴解問題1-5番 信用金庫: drawn 消費・経済 / shipped 住まい
+    "20260818_1": 1,   # 聴解問題1-3番 講演会: drawn 科学・技術 / shipped 働き方
+}
+
+
+def check_theme_record_agreement():
+    """A spec/ledger theme that disagrees with `logs/topics.json` must say why.
+
+    THE RULE (`exam-qa-review` §5 + its ground rules): the reviewer is told to
+    DISTRUST `test_spec.json`'s theme and re-tag from the shipped passage,
+    because a drafted surface can wander off its pool tag. Doing that honestly
+    leaves two tracked files disagreeing — which the ground rules then treated
+    as a defect. The rewritten rule settles the severity (bookkeeping, not an
+    automatic fail) and ends in an instruction: "Sync both files, and record in
+    each the reason the pool tag did not describe the authored item."
+
+    THE INCIDENT: nothing read that instruction, so nothing happened.
+    `20260821_1` shipped with spec and ledger recording
+    「市役所:手続き案内 → 地域活性化」 and 「コールセンター:本人確認 → 働き方」 while
+    `logs/topics.json` recorded 行政・手続き and デジタル化 for the same two
+    surfaces, no `note` in any file, for two consecutive QA rounds — round 1
+    filed it, round 2 measured that not one byte had moved (NF-4). Prose that
+    no check reads is prose that does not run.
+
+    THE REPAIR when this fails: on the spec entry AND the identical ledger
+    entry, keep the `scenario`/`topic` string EXACTLY as drawn — `recency_map()`
+    keys on the pool string, so renaming it leaves the drawn item un-cooled and
+    breaks `check_draw_provenance`/`check_ledger_spec_agreement` — and add
+    `"shipped_theme"` plus a `"note"` saying why the pool tag did not describe
+    the authored surface. Do NOT edit `pools.json` to make the tag match: the
+    authored item drifted from the tag, which is a record-keeping fact about
+    one paper, not a pool defect. That is the same shape as the `origin`/`note`
+    precedent this paper set for a re-realised medium (F5).
+
+    JOIN, and its limits: spec/ledger rows carry no surface label, so each row
+    is joined to `topics.json` by its institution head (the text before 「:」)
+    appearing in exactly ONE of that paper's `surfaces` descriptions. Rows that
+    match zero or several surfaces are SKIPPED, and the printed denominator
+    says how many joined — this check is a floor, not full coverage. Measured
+    2026-08-24 over all 15 papers, it joins 100–150 rows per paper and finds
+    disagreements on **4**: 20260821_1 ×2 (the founding case, both 聴解問題2),
+    20260810_1 ×1, 20260810_2 ×1, 20260818_1 ×1. `20260813_1`'s 問題13, which
+    the report predicted would fire, does NOT — its spec and topics themes both
+    read スポーツ・余暇, so that prediction was wrong and is recorded here as
+    wrong rather than engineered into a pass.
+    """
+    print("\ntheme records (test_spec/ledger ↔ logs/topics.json)")
+    tp = ROOT / "logs" / "topics.json"
+    if not tp.is_file():
+        return skip("theme records agree with logs/topics.json", "no logs/topics.json")
+    tmap = {str(e.get("test_id")): e
+            for e in json.loads(tp.read_text(encoding="utf-8")).get("history", [])}
+    lmap = {str(e.get("test_id")): e for e in ledger_history()}
+    for d, spec in generated_specs():
+        tid = d.name
+        tj = tmap.get(tid)
+        if not tj:
+            skip(f"test {tid}: theme records agree with logs/topics.json",
+                 "no logs/topics.json entry for this test")
+            continue
+        surfaces = tj.get("surfaces") or {}
+        themes = tj.get("themes") or {}
+        joined, off = 0, {}
+        for where, items in (("test_spec.json", spec.get("items") or {}),
+                             ("logs/ledger.json",
+                              (lmap.get(tid) or {}).get("items") or {})):
+            for cat in ("listening_scenarios", "reading_topics"):
+                for e in items.get(cat) or []:
+                    if not isinstance(e, dict):
+                        continue
+                    text = e.get("scenario") or e.get("topic") or ""
+                    drawn = e.get("theme")
+                    if not text or not drawn:
+                        continue
+                    head = re.split(r"[:：]", text)[0]
+                    if len(head) < 3:
+                        continue        # too short to join safely
+                    cands = [k for k, v in surfaces.items() if head in str(v)]
+                    if len(cands) != 1:
+                        continue        # unjoinable or ambiguous — skipped
+                    joined += 1
+                    shipped = themes.get(cands[0])
+                    if not shipped or shipped == drawn:
+                        continue
+                    if e.get("note"):
+                        continue        # the divergence is recorded — silent
+                    off[f"{where} {cands[0]}「{head}」"] = (
+                        f"drawn={drawn} / topics.json={shipped}")
+        name = (f"test {tid}: every theme recorded in test_spec/ledger agrees "
+                f"with logs/topics.json or says why ({joined} rows joined)")
+        detail = ("; ".join(f"{k} {v}" for k, v in sorted(off.items()))
+                  + " — the two tracked records disagree about the same "
+                  "surface's theme and NOTHING says why, so the next paper's "
+                  "blueprint stage reads one of them at random. Keep the "
+                  "drawn `scenario`/`topic` string untouched (recency_map keys "
+                  "on it) and add `shipped_theme` + `note` to BOTH files; do "
+                  "not edit pools.json to match, and do not rename the draw "
+                  "(exam-qa-review §'Automatic fails', the theme-disagreement "
+                  "bullet; this function's docstring has the incident)")
+        if tid in THEME_RECORD_GRANDFATHERED:
+            warn(name, not off,
+                 detail + f" [grandfathered at ×"
+                 f"{THEME_RECORD_GRANDFATHERED[tid]} as measured 2026-08-24]"
+                 + GRANDFATHER_NOTE)
+        else:
+            check(name, not off, detail)
+
+
+# O1 (qa-report-20260821_1-round2), the disposition of the `claim` field the
+# round-1 root-cause table proposed and nobody implemented. ADOPTED as a
+# FORWARD requirement 2026-08-24. The 15 papers below predate the rule and are
+# NOT retrofitted: writing 34 claim sentences after the fact, for papers whose
+# authors are gone, produces assertions nobody can verify — and on the paper
+# that motivated this, the repairs were still moving while this was written, so
+# asserting what a moving surface claims would be the very NF-5 defect. They
+# `skip` by name; no threshold is lowered and nothing is silenced.
+CLAIM_FIELD_PRE_RULE = frozenset({
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1", "20260812_1",
+    "20260812_2", "20260813_1", "20260813_2", "20260814_1", "20260817_1",
+    "20260817_2", "20260817_3", "20260818_1", "20260819_1", "20260821_1",
+})
+PERSONA_CAP = 2   # no narrator archetype on more than 2 読解 surfaces
+
+
+def check_topics_claim_field():
+    """Every surface in `logs/topics.json` records WHAT IT ASSERTS, not just its topic.
+
+    THE RULE: `logs/topics.json` carries, per surface, a one-sentence `claim`
+    (what this surface ASSERTS) and, for the 読解 surfaces, a `persona` token
+    naming the narrator archetype (趣味の実践者 / 職業人 / 親 / 観察者 / 研究者 / …),
+    capped at 2 like every other closing axis. Both are author-time columns: no
+    script can derive them from prose, which is exactly why they must be
+    recorded rather than measured.
+
+    THE INCIDENT, twice. `20260821_1` F4: 問題13 and 聴解問題3-4番 ran the same
+    argument (reject the affective account of why a practice continues, install
+    a structural one, cite the people who quit as evidence) while their theme
+    tags — 科学・技術 vs スポーツ・余暇 — hid it, so no check and no theme column
+    could see it; QA caught it by reading. The round-1 root-cause table proposed
+    this field. It was not implemented, and round 2 found the same class walked
+    back in on a different pair (O1: 問題9 and 問題13, both first-person accounts
+    of a multi-year solitary physical practice whose argument rejects the naive
+    explanation of why the author keeps at it, hidden again by two theme tags
+    and two shape labels). A proposal recorded twice and implemented never is
+    not a plan; it is a defect with a bookmark.
+
+    THE REPAIR when this fails: add `claim` and `persona` maps to that test's
+    `logs/topics.json` entry while the paper is being authored — one sentence
+    per surface, written as the surface is written, in the Stage-3 topic pass.
+    Then READ the claim column down, as the closing column is read: two
+    surfaces whose claims are the same move on different subjects are one
+    essay twice, whatever their themes say.
+    """
+    print("\ntopics.json claim/persona columns")
+    tp = ROOT / "logs" / "topics.json"
+    if not tp.is_file():
+        return skip("topics.json records a claim per surface", "no logs/topics.json")
+    hist = json.loads(tp.read_text(encoding="utf-8")).get("history", [])
+    on_disk = {d.name for d, _ in generated_specs()}
+    for e in hist:
+        tid = str(e.get("test_id"))
+        if tid not in on_disk:
+            continue
+        name = f"test {tid}: logs/topics.json records a claim per surface"
+        if tid in CLAIM_FIELD_PRE_RULE:
+            skip(name, "pre-rule paper (claim/persona adopted 2026-08-24 as a "
+                       "forward requirement; the 15 papers on disk at that "
+                       "date are named in CLAIM_FIELD_PRE_RULE and are NOT "
+                       "retrofitted — see that constant's comment)")
+            continue
+        surfaces = e.get("surfaces") or {}
+        claims = e.get("claim") or {}
+        personas = e.get("persona") or {}
+        missing = [k for k in surfaces if not str(claims.get(k, "")).strip()]
+        dokkai = [k for k in surfaces if not k.startswith("聴解")]
+        no_persona = [k for k in dokkai if not str(personas.get(k, "")).strip()]
+        tally: dict[str, list[str]] = {}
+        for k in dokkai:
+            v = str(personas.get(k, "")).strip()
+            if v:
+                tally.setdefault(v, []).append(k)
+        over = {k: v for k, v in tally.items() if len(v) > PERSONA_CAP}
+        bad = []
+        if missing:
+            bad.append(f"{len(missing)} surface(s) with no `claim`: {sorted(missing)[:8]}")
+        if no_persona:
+            bad.append(f"{len(no_persona)} 読解 surface(s) with no `persona`: "
+                       f"{sorted(no_persona)[:8]}")
+        if over:
+            bad.append("; ".join(f"persona 「{k}」 ×{len(v)} {v}" for k, v in over.items()))
+        check(name, not bad,
+              "; ".join(bad) + " — a theme tag cannot see WHAT a surface "
+              "asserts or WHO is asserting it, and two papers shipped the same "
+              "argument twice behind two different theme tags. Write one "
+              f"`claim` sentence per surface and one `persona` token per 読解 "
+              f"surface (cap {PERSONA_CAP}) during the Stage-3 topic pass, then "
+              "read the claim column down for repeats "
+              "(exam-blueprint §'logs/topics.json'; this function's docstring "
+              "has the two incidents)")
+
+
 def check_harvest_provenance():
     """R12: a harvest_sha must identify a real harvest, not a date-shaped string.
 
@@ -6203,6 +6703,92 @@ def check_moji_option_reuse(test_id: str, gt: str):
     check(name, not dup, detail)
 
 
+# 問題6 option-sentence DISTRIBUTION (qa-report-20260821_1 F8), the same
+# two-level shape `check_p7_stem_distribution` uses: a FAIL envelope that every
+# current-era official sitting survives, plus the authoring target as WARNs.
+# `moji-goi.md` Part 6 carries these six numbers — change them in both files or
+# in neither.
+#
+# MEASURED 2026-08-24 with `tools/goi_profile.py` (the owner of the number), per
+# current-era sitting: means 22.9 / 23.6 / 25.8 / 26.7 / 26.8 / 27.5 / 28.8;
+# maxes 28 / 29 / 31 / 33 / 34 / 34 / 39; sentences over 30 chars 0 / 0 / 1 / 3 /
+# 3 / 4 / 8. TWO current-era sittings ship ZERO options over 30, so the report's
+# proposed "≥2 over 30" and "max ≥29" cannot be FAIL clauses — a gate that fails
+# an official paper is a wrong gate (the P7_STEM_MIN precedent above). They are
+# the author target instead, and the FAIL envelope is set outside the archive's
+# own range: mean 22–30 (archive 22.9–28.8) and max ≥26 (archive min-of-max 28).
+# The pre-2012 sittings ran systematically shorter (means 20.2–21.4) and are not
+# the calibration target for this measure — moji-goi.md Part 6 calibrates 問題6
+# length on the current era by name.
+M6_MEAN_FAIL_BAND = (22.0, 30.0)
+M6_MAX_FAIL_MIN = 26
+M6_MEAN_WARN_BAND = (23.0, 29.0)
+M6_MAX_WARN_MIN = 29
+M6_OVER30_WARN_MIN = 2
+M6_OVER30_LEN = 30
+# EMPTY, and measured so: on all 15 papers on disk the FAIL envelope passes
+# (means 23.1–29.2, maxes 29–40), so this check re-classifies no shipped paper.
+# The founding case — 20260821_1 BEFORE its F8 repair, mean 21.1, max 25 — fails
+# both FAIL clauses, i.e. the envelope catches the defect it was written for.
+M6_OPTION_LENGTH_GRANDFATHERED: set[str] = set()
+
+
+def check_mondai6_option_length(test_id: str, gt: str):
+    """問題6's twenty option sentences must be a DISTRIBUTION, not a floor (F8).
+
+    THE INCIDENT: `moji-goi.md` Part 6 recorded official's mean/median/range but
+    stated only the FLOOR as a rule ("under 18 chars is outside the current
+    era"), so `20260821_1` answered by optimising the floor — mean 21.1, median
+    21, range 18–25 (n=20), every sentence legal and the whole set in the bottom
+    third of the official range, the lowest of the 15 papers on disk (next
+    lowest 23.1; every other paper's max ≥29, its max was 25). This is the
+    identical failure mode the repo already documented and fixed for 問題7 stems
+    (`check_p7_stem_distribution`): a one-sided rule gets answered one-sidedly.
+
+    THE REPAIR: give each sentence a fuller who/when/what — six of that paper's
+    twenty sat at 18–19 chars, and raising those moves the mean without
+    touching any collocation judgement or key. Never do it by lengthening the
+    already-long ones: that moves the mean and leaves the spread unchanged.
+
+    See M6_MEAN_FAIL_BAND above for the per-sitting archive measurement that
+    decides which clause fails and which only warns.
+    """
+    rows = _goi_paper(gt, test_id)
+    lens = (GOI.measures(rows).get("opt_len_6") or []) if rows else []
+    name = f"{test_id}: 問題6 option-sentence distribution"
+    if len(lens) < 20:
+        return skip(name, f"{len(lens)} option sentences parsed, need 20")
+    mean = sum(lens) / len(lens)
+    mx = max(lens)
+    over = [n for n in lens if n > M6_OVER30_LEN]
+    measured = (f"mean {mean:.1f}, median {statistics.median(lens):g}, "
+                f"range {min(lens)}–{mx}, {len(over)} over {M6_OVER30_LEN}")
+    bad = []
+    if not M6_MEAN_FAIL_BAND[0] <= mean <= M6_MEAN_FAIL_BAND[1]:
+        bad.append(f"mean {mean:.1f} outside {M6_MEAN_FAIL_BAND[0]:g}–"
+                   f"{M6_MEAN_FAIL_BAND[1]:g}")
+    if mx < M6_MAX_FAIL_MIN:
+        bad.append(f"longest option {mx} under {M6_MAX_FAIL_MIN}")
+    full = f"{name} ({measured})"
+    detail = ("; ".join(bad) + " — official current era runs per-sitting means "
+              "22.9–28.8 and never a longest option under 28. Give the short "
+              "sentences a fuller who/when/what; do not lengthen the long ones "
+              "(question-authoring/references/moji-goi.md Part 6)")
+    if test_id in M6_OPTION_LENGTH_GRANDFATHERED:
+        warn(full, not bad, detail + GRANDFATHER_NOTE)
+    elif not check(full, not bad, detail):
+        return
+    warn(f"{test_id}: 問題6 options hit the authoring target too "
+         f"({measured})",
+         (M6_MEAN_WARN_BAND[0] <= mean <= M6_MEAN_WARN_BAND[1]
+          and mx >= M6_MAX_WARN_MIN and len(over) >= M6_OVER30_WARN_MIN),
+         f"target: mean {M6_MEAN_WARN_BAND[0]:g}–{M6_MEAN_WARN_BAND[1]:g}, "
+         f"longest ≥{M6_MAX_WARN_MIN}, at least {M6_OVER30_WARN_MIN} sentences "
+         f"over {M6_OVER30_LEN} — official medians are mean 26.0 with 3 "
+         f"sentences over 30 per sitting; a set that clears the floor but "
+         f"clusters at it reads as drill prose (moji-goi.md Part 6)")
+
+
 def check_legacy_item_repeats(sample):
     """WARN, by name: every drawn item repeated inside its own cooldown window.
 
@@ -6376,6 +6962,81 @@ def check_spec_target_items(d, gt: str, st: str, bi):
           not missing,
           "; ".join(missing) + " — author only the sampled items, or re-sample; "
           "a silent substitution corrupts rotation (exam-blueprint)")
+
+
+# F5/F9 (qa-report-20260821_1). `check_spec_target_items` above covers the three
+# categories whose pool string is a literal substring of the item it becomes
+# (問題1/問題2/問題4), so a `listening_scenarios` draw that ships in a DIFFERENT
+# MEDIUM was unchecked: 20260821_1's spec and ledger recorded 問題3-1番 as
+# 「ラジオ:睡眠の話」 while the shipped lead-in reads 「健康づくりの講座で、女の人が
+# 話しています」 — a face-to-face lecture. The reason (three consecutive broadcast
+# monologues) was written only into 聴解.md's 構成表, not into the two files the
+# NEXT paper's rotation reads.
+#
+# WHY ONLY THE MEDIUM: the report asked for the whole 問題3/問題5 draw to be
+# checked the way 問題1/2/4 are. MEASURED over all 15 papers before rejecting
+# that: probing each drawn scenario's setting half (the text before the colon)
+# against the script reports 3–12 "absent" settings PER PAPER on all 15 —
+# `listening_scenarios` display strings are topic descriptions
+# (「国内旅行消費の回復」), not lead-in text, and a real lead-in paraphrases the
+# setting freely. A check that fires 100+ times across the archive is the
+# cry-wolf shape this file rejects elsewhere (see the bare-「ではなく」 note in
+# REFRAME_CLOSING). The MEDIUM half is the decidable slice: when a pool string
+# names a broadcast or platform medium, the shipped item must name it too, or
+# the entry must carry the `origin`+`note` pair that records the change.
+DRAWN_MEDIA = ("ラジオ", "テレビ", "放送", "ポッドキャスト", "インタビュー",
+               "講演", "記者会見")
+# MEASURED 2026-08-24 over all 15 papers: 20 drawn scenarios name a medium, and
+# exactly three do not name it in their script — 20260821_1's 「ラジオ:睡眠の話」
+# (which now carries origin+note and therefore PASSES) and the two ids below,
+# which are shipped papers with an unrecorded medium change. They are exempted
+# BY NAME and print the same measurement a FAIL would carry; delete an id when
+# its spec and ledger record the change.
+DRAWN_MEDIUM_GRANDFATHERED = {
+    "20260814_1",   # 「ラジオ局:リスナーからの質問対応」 — no ラジオ in the script
+    "20260819_1",   # 「レストラン店長インタビュー」 — no インタビュー in the script
+}
+
+
+def check_choukai_drawn_medium(d, st: str):
+    """A drawn 聴解 scenario's MEDIUM must ship as drawn, or be recorded (F5).
+
+    THE RULE (`exam-blueprint` §"Rotation model", `exam-qa-review` §6.1): a
+    substitution between the spec and the paper is legal only when
+    `test_spec.json` (and the ledger entry mirroring it) carry `origin` and a
+    `note` giving the reason. Rotation reads those two files, not the 構成表.
+
+    THE INCIDENT and the scope decision: see DRAWN_MEDIA above.
+
+    THE REPAIR: add `"origin"` + `"note"` to the spec entry and mirror it in
+    `logs/ledger.json` — never rename the `scenario` string, which is the key
+    `sample_items.recency_map()` cools down.
+    """
+    spec_path = d / "test_spec.json"
+    name = f"{d.name}: every drawn 聴解 medium ships as drawn or is recorded"
+    if not spec_path.is_file() or not st:
+        return skip(name, "no test_spec.json or no 聴解スクリプト.txt")
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    if str(spec.get("test_id")) != d.name:
+        return skip(name, f"spec is for test {spec.get('test_id')}")
+    missing = []
+    for e in (spec.get("items") or {}).get("listening_scenarios") or []:
+        text = e.get("scenario") if isinstance(e, dict) else e
+        if not text:
+            continue
+        recorded = isinstance(e, dict) and e.get("origin") and e.get("note")
+        for med in DRAWN_MEDIA:
+            if med in text and med not in st and not recorded:
+                missing.append(f"「{text}」 ({med} absent from the script)")
+    detail = ("; ".join(missing) + " — the paper ships this draw in another "
+              "medium and neither test_spec.json nor logs/ledger.json says so, "
+              "so the next paper's rotation reads a scenario that was never "
+              "aired. Add `origin` + `note` to both; do NOT rename the "
+              "`scenario` string (exam-blueprint 'Rotation model'; "
+              "exam-qa-review §6.1)")
+    if d.name in DRAWN_MEDIUM_GRANDFATHERED:
+        return warn(name, not missing, detail + GRANDFATHER_NOTE)
+    check(name, not missing, detail)
 
 
 def check_script_shape(script_text: str, ct: str, m, test_id: str = ""):
@@ -7351,6 +8012,115 @@ CLOSING_SHAPE_GRANDFATHERED = {
     "20260817_1",   # key leak 2番/3番
     "20260817_2",   # key leak 2番/5番
 }
+
+
+# --- Opening frames (qa-report-20260821_1 F2) -------------------------------
+# `check_choukai_closing_turn_shape` above numbers the LAST spoken line of each
+# 問題1/2 item. Nothing numbered the FIRST one, so `20260821_1` shipped FOUR of
+# 問題2's six scored items opening on one frame — 2番「…口座を作りたいんですけ
+# ど。」 3番「登録した住所を変えたいんですけど、…」 4番「…貸し切りたいんですけど。」
+# 6番「…部屋を借りたいんですけど。」, with 4番/6番 additionally sharing
+# 「〔X〕の集まりで、…たいんですけど」 — while `exam-qa-review` §4's "if
+# openings/closings rhyme, the section is a template" had a number for closings
+# only. Official whole-paper counts of 〜たいんですけど/〜たいんですが run 0–4 and
+# are scattered across 問題1/4/5, never 4 item-openers in one section.
+#
+# Longest-first; the label is the earliest CLAUSE-FINAL match in the turn, not
+# the turn's last sentence — the errand frame is usually the first clause
+# (「…変えたいんですけど、返す時は…」), which a final-sentence reducer misses.
+OPENING_FRAMES = ("たいんですけど", "たいんですが", "たいんですけれど", "たいのですが",
+                  "たいんです", "たいので",
+                  "んですけど", "んですが", "んですけれど", "のですが", "のですけど",
+                  "ませんでしょうか", "ますでしょうか", "でしょうか", "ましょうか",
+                  "ませんか", "ください",
+                  "ますよね", "ですよね", "よね",
+                  "ますか", "ですか", "ますね", "ですね", "んです", "のです",
+                  "ます", "です")
+# Only MARKED frames are capped. 「ます」「です」「ますか」「ですか」「ますね」「ですね」
+# and `bare` are the language's default polite statement/question endings, not
+# templates: measured over all 15 papers, capping them would fire on
+# 20260812_1 問題2 (「ます」×3) and on the `bare` grab-bag of 6 papers (×3–4),
+# whose "shared" openings are in fact 「…なんだけど」「…順調?」「…ありがとう」 —
+# nothing alike. The んです/のです family, the indirect-request family
+# (でしょうか/ましょうか/ませんか/ください) and the confirmation-seeking よね family
+# are the ones a section can be built out of.
+OPENING_FRAME_CAP = 2
+OPENING_FRAMES_UNCAPPED = ("ます", "です", "ますか", "ですか", "ますね", "ですね", "bare")
+OPENING_BOUNDARY = re.compile(r"[、。？！?!]")
+
+
+def opening_frame(line: str) -> str:
+    """A first turn reduced to the earliest clause-final frame in it."""
+    body = re.sub(r"^[^:：]{1,8}[:：]", "", line).strip()
+    best = None
+    for f in OPENING_FRAMES:
+        for mt in re.finditer(re.escape(f), body):
+            end = mt.end()
+            if end == len(body) or OPENING_BOUNDARY.match(body[end]):
+                cand = (mt.start(), -len(f), f)
+                if best is None or cand[:2] < best[:2]:
+                    best = cand
+    return best[2] if best else "bare"
+
+
+def check_choukai_opening_frame(test_id: str, st: str, m):
+    """問題1/2 items may not all OPEN on one frame (F2).
+
+    THE RULE: no more than `OPENING_FRAME_CAP` scored items of one 問題 may open
+    on the same marked frame, measured on the item's first spoken line — the
+    opening-side half of `choukai-audio` §"Banned formulas" and
+    `exam-qa-review` §4's "read the first spoken line as a column".
+
+    THE INCIDENT: `20260821_1` 問題2, four of six items on 〜たいんですけど (see
+    the OPENING_FRAMES comment for the four lines and the official counts).
+
+    THE REPAIR: re-open the duplicates on a different move — a direct question
+    (「…はどう申し込めばいいですか。」), a bare statement of the errand, a
+    confirmation — keeping the errand, the key, the 消去方法 set and the 決め手
+    untouched. A script change means `make mp3 <id>` afterwards.
+
+    **Founding-case run over all 15 papers on disk, 2026-08-24, before this
+    check was accepted** (WARN-class deliberately: the frame reducer is a
+    string heuristic, and a mislabelled frame must not become a FAIL):
+      * `20260821_1` — its 問題2 repair had already landed, so it measures
+        たいんですけど ×1, max marked frame 1; on the four openers the QA report
+        quotes it reports たいんですけど ×4, i.e. the check catches its founding
+        case.
+      * `20260811_1` 問題1 たいんですが ×3 (1番/3番/5番) — a shipped paper, newly
+        reported; not re-opened here (that is a decision about that paper's
+        script and its MP3), named so the line is not silent.
+      * `20260814_1` 問題2 んですが ×4 (1番/2番/3番/4番) — likewise.
+      * The other 12 papers report no marked frame above 2, so this is not a
+        cry-wolf cap.
+    """
+    over = []
+    for sec in (1, 2):
+        span = choukai_span(st, sec)
+        if not span:
+            continue
+        frames: dict[str, list[str]] = {}
+        for lines in choukai_item_blocks(span, m, scored_only=True):
+            lab = choukai_item_label(lines[0])
+            spoken = [l for l in lines
+                      if (h := m.SPEAKER_RE.match(l.strip()))
+                      and h.group(1) in m.SPEAKER_MAP]
+            if not spoken:
+                continue
+            frames.setdefault(opening_frame(spoken[0]), []).append(lab)
+        over += [f"問題{sec}「〜{k}」×{len(v)} {v}"
+                 for k, v in frames.items()
+                 if k not in OPENING_FRAMES_UNCAPPED and len(v) > OPENING_FRAME_CAP]
+    warn(f"{test_id}: no more than {OPENING_FRAME_CAP} 聴解問題1/2 items open on "
+         f"one frame ({len(over)} frame(s) over the cap)",
+         not over,
+         "; ".join(over) + " — four items that open the same way are one item "
+         "written four times, whatever their errands; official runs 0–4 of a "
+         "given request frame per WHOLE paper, scattered across 問題1/4/5. "
+         "Re-open the extras on a different move (a direct question, a bare "
+         "statement of the errand, a confirmation), keep the key and the "
+         "決め手 untouched, then re-run `make mp3` (choukai-audio "
+         "§'Banned formulas'; exam-qa-review §4)",
+         slug="choukai_opening_frame", test_id=test_id)
 
 
 def closing_skeleton(line: str) -> str:
@@ -8712,6 +9482,7 @@ def check_tests():
             check_moji4_option_set_level(d.name, opts)
             check_moji2_option_glyphs(d.name, gt, opts, bi)
             check_moji_option_reuse(d.name, gt)
+            check_mondai6_option_length(d.name, gt)
             check_moji_stem_shape(d.name, gt)
             check_moji_stem_register(d.name, gt)
             check_moji4_stem_band(d.name, gt)
@@ -8753,6 +9524,7 @@ def check_tests():
             check_dokkai_lengths(d.name, gengo_prose, bi, origin=origin)
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
             check_dokkai_closing_reframe(d.name, gengo_prose, bi)
+            check_dokkai_closing_reframe_scope(d.name, gengo_prose, bi)
             check_dokkai_final_sentence_templates(d.name, gengo_prose, bi)
             check_dokkai_abs_quantifiers(d.name, opts)
             check_dokkai_option_length_balance(d.name, opts)
@@ -8900,6 +9672,7 @@ def check_tests():
                 check_choukai_elimination_tokens(d.name, ct, bi)
                 check_choukai_setting_adjacency(d.name, ct, bi)
                 check_choukai_closing_turn_shape(d.name, ct, st, m, bi)
+                check_choukai_opening_frame(d.name, st, m)
                 check_choukai_judgment_mix(d.name, st, ct, m, bi)
                 check_choukai_longest_key_rate(d.name, ct, st, m, bi)
                 check_choukai_q1_question_forms(d.name, st, m)
@@ -8919,6 +9692,8 @@ def check_tests():
                 check_choukai_contractions(d.name, st, m)
                 check_choukai_key_paraphrase(d.name, ct, st, m, bi)
             check_spec_target_items(d, gt, st, bi)
+            if origin == "generated":
+                check_choukai_drawn_medium(d, st)
         else:
             check("聴解スクリプト.txt present", False, "canonical name required")
 
@@ -9089,6 +9864,8 @@ def main():
         check_rotation_inputs()
         check_ledger_draw_counts(load(".agents/exam-blueprint/scripts/sample_items.py"))
         check_ledger_spec_agreement()
+        check_theme_record_agreement()
+        check_topics_claim_field()
         check_harvest_hygiene()
         check_harvest_provenance()
         check_legacy_item_repeats(SAMPLE_ITEMS)

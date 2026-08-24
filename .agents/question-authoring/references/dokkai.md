@@ -32,7 +32,44 @@ Passage inventory per paper:
 ## Thirteen surfaces, thirteen different essays — subject, closing move, AND voice
 
 The 読解 half is 13 surfaces (問題9 cloze + 問題10×5 + 問題11×4 + 問題12 +
-問題13 + 問題14). They must differ on **three** axes:
+問題13 + 問題14). They must differ on **four** axes: subject/theme, closing
+move, voice/register, and — added 2026-08-24 — the claim and the narrator.
+
+### The denominator — settled here, stated nowhere else
+
+**Three axes, three different denominators.** They are not the same number,
+and this table is the single copy. The 2026-08-19 gate change split 問題12 for
+the closing axis and nobody updated this file, so for five days the prose
+reserved the shapes for "the twelve essay-type surfaces … each capped at
+exactly 2" while `check_dokkai_final_sentence_templates` measured **thirteen**
+closings with A and B separate — a paper could satisfy one reading or the
+other, never both, and 20260821_1 shipped 条件提示 ×3 that was compliant under
+the prose and a breach under the gate (qa-report-20260821_1-round2 NF-2).
+
+| axis | denominator | rows | 問題12 | 問題14 |
+|---|---|---|---|---|
+| 1 — subject/theme | **13 theme rows** | 問題9 + 問題10×5 + 問題11×4 + 問題12 + 問題13 + 問題14 | **ONE** row — A and B are one passage pair on one subject | counted |
+| 2 — closing move AND final-sentence template | **13 closings** | 問題9 + 問題10×5 + 問題11×4 + 問題12(A) + 問題12(B) + 問題13 | **TWO** rows — two essays, two closings, printed side by side, which is the one place a shape is most likely to rhyme | **outside** the taxonomy — a flyer has no authorial closing move |
+| 3 — voice & register quotas | **12 passages** | 問9, 問10×5, 問11×4, 問12, 問13 | **ONE** passage (one （注N） scope) | outside |
+
+**問題12 A and B are TWO closings and TWO template rows, and ONE theme row.
+The ≤2-per-shape cap and the ≤2-per-template cap are counted over the
+THIRTEEN closings of axis 2.** `dokkai_closing_scopes()` in
+`check_consistency.py` is that enumeration in code, and every closing-scope
+check reads it, so the number cannot drift apart from this table again.
+(`check_dokkai_closing_reframe`, the whole-passage anti-dodge net, still
+enumerates the 12 （注N） scopes with 問題12 joint — deliberately: "does this
+passage CONTAIN the marker anywhere" is a passage-level question, not a
+closing count. Its own docstring says so.)
+
+**Arithmetic consequence, which replaces the old 問題14 carve-out:** 6 shapes ×
+cap 2 = 12 < 13, so **at least one of the thirteen closings must sit OUTSIDE
+the taxonomy** rather than force a third instance into any shape. 問題14 can no
+longer be that surface — it is already outside axis 2. The carve-out surfaces
+are 問題10's 実用文 members: a business email, a notice or an 案内 ends on an
+instruction to the reader, not on an authorial move, so label it
+**実用文・分類外** and do not spend a shape slot on it. 20260821_1 runs two
+(問題10(3) email, 問題10(4) notice), leaving 11 taxonomy closings for 12 slots.
 
 **Axis 1 — subject/theme. All thirteen carry DIFFERENT themes**
 (`exam-blueprint` §"The four theme rules" rule 3) — not "at most two per
@@ -63,7 +100,11 @@ shape:
 - 意外な観察 — an unexpected fact, then its cause (「意外にも〜。理由は〜」)
 - 反論応答 — 「〜という批判もあるが、実際には〜」
 - 随筆 — a personal observation that generalises without prescribing
-- 条件提示 — a concrete, checkable condition (「〜した自治体ほど〜」), no exhortation
+- 条件提示 — a concrete, checkable condition (「〜した自治体ほど〜」), no exhortation.
+  **This shape has ONE natural skeleton and it collides with itself**: an
+  evidential frame + a [V-た + group/period] では／ほど + a quantity going up or
+  down (`A では/ほど B が多い（相関）`). Two 条件提示 closings will land on it
+  unless you deliberately vary one — see the template list below.
 
 **The ≤2-per-shape cap is not enough alone — the two sharing a shape must
 also differ at the SENTENCE-TEMPLATE level**, not swap content words into
@@ -80,10 +121,44 @@ thirteen surfaces across six shapes, ≤2 each, every label defensible, and
 still shipped **five** finals on one skeleton (「〜のは、A そのものではなく B
 だ」 — 問題9, 問題10(3), 問題10(4), 問題11(1), 問題13), three of them on the
 same 「〜そのもの…ではなく」 sub-skeleton, because nobody put the sentences side
-by side. Normalise each final to its template as you write it down
-(`〜のは、A ではなく B だ` / `A より B のほうが〜` / `A だけではない。B こそが〜`),
-and rewrite until **no template appears more than twice** — regardless of
-what the shape labels say. Keep the column; it is the artifact QA re-reads.
+by side. Normalise each final to its template as you write it down, and
+rewrite until **no template appears more than twice** — regardless of what
+the shape labels say. Keep the column; it is the artifact QA re-reads.
+
+The named templates, which are exactly what `FINAL_SENTENCE_TEMPLATES` counts
+(`check_dokkai_final_sentence_templates`) — a template with no name here is a
+class QA cannot report and a fix cannot be asked for:
+
+| template | skeleton |
+|---|---|
+| `〜のは、A ではなく B だ` | 「（では｜じゃ）なく」 |
+| `A より B のほうが〜` | 「より（も｜は）…ほう／方が」 |
+| `A だけではない。B こそが〜` | 「だけで（は｜も）ない／なく」・「こそが」 |
+| `A というより B` | 「というより」 |
+| `A わけではない` | 「わけでは（ない｜ありません）」 |
+| `A では/ほど B が多い（相関）` | evidential frame + [V-た + 集団/期間] では／ほど + 数量の増減 |
+
+The last row was added 2026-08-24 (qa-report-20260821_1-round2 NF-2): it is
+where 条件提示 closings pile up by construction, it had no name, and so a paper
+shipped 問題11(1) 「…力を入れた**店では**、星の平均が**高くなる**一方で、…**開きが
+大きくなっていた**」 beside 問題12(A) 「…間を置いた**会ほど**、…発言した**人の数が
+多い**」 — same skeleton, different content words, both labelled 条件提示, and
+both invisible to every check and to the reviewer's own vocabulary.
+
+**Build the column BEFORE writing the passages, not after** (`20260821_1` F3,
+2026-08-24). That paper shipped **6 of 11** essay surfaces on the not-A-but-B
+reframe — 問題9「のではなく…こそが」, 問題10(2)「というより」, 問題11(2)「だけでは
+…こそが要る」, 問題11(3)「よりも…なのです」, 問題11(4)「わけではない」,
+問題13「というより」 — while `check_dokkai_closing_reframe` reported **1
+matched**, because its marker family had no 「というより」/「よりも」/「わけでは
+ない」 alternative at all. The tokens are now counted (`REFRAME_CLOSING`,
+`FINAL_SENTENCE_TEMPLATES`), but the gate is still only a proxy: the
+authoring-time procedure is to write all thirteen rows — **surface | theme |
+shape label | final-sentence template** — as the FIRST 読解 step, before any
+passage prose exists, and to reject any plan where one shape label or one
+template appears three times. Every not-A-but-B family member counts as one
+shape: 「AではなくB」「AというよりB」「AよりもB」「AだけではなくB」
+「Aわけではない」 are the same move in five surfaces of grammar.
 
 If a closing explicitly REJECTS a stated single-factor view
 (「〜という見方には無理がある」, 「〜だけでは…」) before its conclusion,
@@ -102,13 +177,14 @@ grammar. Check whether the passage's other paragraphs argue FOR a course of
 action addressed to the reader (主張) or simply narrate a realisation with
 no prescription (随筆) — the override fires only on the former.
 
-**Thirteen surfaces do not force thirteen instances of the six shapes.** 6
-shapes × cap 2 = 12 < 13, so at least one surface must sit OUTSIDE this
-taxonomy rather than forcing a 3rd instance into any shape. 問題14 is
-normally that surface — a flyer has no authorial voice or argument, and no
-closing move in this narrative sense; treat it as outside the taxonomy by
-default and reserve the six shapes for the twelve essay-type surfaces (問9,
-問10×5, 問11×4, 問12, 問13), each capped at exactly 2.
+**Thirteen closings do not force thirteen instances of the six shapes.** 6
+shapes × cap 2 = 12 < 13, so at least one closing must sit OUTSIDE this
+taxonomy rather than forcing a 3rd instance into any shape. See §"The
+denominator" above for which: 問題14 is outside axis 2 already (a flyer has no
+authorial voice, argument, or closing move in this narrative sense), so the
+carve-out is taken by 問題10's 実用文 members (email / notice / 案内 —
+label them 実用文・分類外). The six shapes are then spent on the remaining
+essay-type closings among the thirteen of axis 2, each capped at exactly 2.
 
 **The answerability consequence, which is the real damage.** When nine
 passages close the same way, their keys close the same way too —
@@ -128,6 +204,22 @@ Official 読解 passages are excerpts from published essays and books (first-per
   - ≥1 passage carrying quoted dialogue/speech 「…」
   - ≥1 passage carrying a 疑問提示文 (Shin Kanzen discourse device 4: 「〜のだろうか」「〜だろう」)
 - **※ (asterisk) symbol count**: ≤3 in the entire paper across 問題10–14 (archive 0–3, median 0).
+
+**Axis 4 — the CLAIM and the NARRATOR, recorded not measured** (added
+2026-08-24). Axes 1–3 count what a surface is about, how it closes, and in
+what register. None of them can see **what it asserts** or **who is
+asserting it**, and that is where the collisions now land: `20260821_1` ran
+問題9 and 問題13 as the same narrator — first-person, multi-year, solitary
+physical practice, rejecting the naive explanation of why the author keeps at
+it — with different themes (スポーツ・余暇 / 科学・技術) and different shape labels
+(反論応答 / 意外な観察) hiding it in every column that existed. Record, in
+`logs/topics.json` (see `exam-blueprint` §"`logs/topics.json`"), a **`claim`**
+sentence per surface and a **`persona`** token per 読解 surface
+(趣味の実践者 / 職業人 / 親 / 観察者 / 研究者 …), **capped at 2** like the closing
+shapes, and read the claim column down before finalising.
+`check_topics_claim_field()` enforces presence and the cap from the first
+paper generated after adoption; it cannot judge whether two claims are the
+same move, which is the read you still owe.
 
 ## 読解 distractors — no free eliminations
 

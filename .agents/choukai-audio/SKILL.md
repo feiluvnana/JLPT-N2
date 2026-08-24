@@ -166,7 +166,15 @@ noticing the pattern, without Japanese.
 
 - **No two items in a section may share their opening move, probe shape, or
   closing turn.** Read only the first/last line of each item in a column —
-  if they rhyme, rewrite.
+  if they rhyme, rewrite. **Both ends are now numbered**: the last line by
+  `check_choukai_closing_turn_shape`, the first by
+  `check_choukai_opening_frame` (cap **2** items per marked frame per 問題).
+  `20260821_1` shipped FOUR of 問題2's six items on 〜たいんですけど
+  (「口座を作りたいんですけど」「住所を変えたいんですけど」「貸し切りたいんですけ
+  ど」「部屋を借りたいんですけど」), two of them differing in a single word,
+  because the rule had a number for closings only. Official runs 0–4 of a given
+  request frame per WHOLE paper, scattered across 問題1/4/5 — never four
+  item-openers in one section.
 - **Turn shape & ping-pong**: generated papers have drifted into short turns
   (median 27 chars vs official 38 chars) and higher turn counts (107–198 vs
   66–143). Write substantive dialogue turns rather than rapid transaction ping-pong.

@@ -3344,6 +3344,248 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    }
+  },
+  {
+   "test_id": "20260821_1",
+   "seed": "42889837+reroll-one(quick_response:8,52774862)+reroll-one(quick_response:8,7905392)+reroll-one(quick_response:5,86496305)+reroll-one(listening_scenarios:0,35442847)+reroll-one(listening_scenarios:5,46226895)+reroll-one(listening_scenarios:11,60177663)+reroll-one(listening_scenarios:18,42977367)+reroll-one(listening_scenarios:20,82292515)+reroll-one(listening_scenarios:11,90634610)+reroll-one(listening_scenarios:20,93202058)+reroll-one(listening_scenarios:20,83673722)+reroll-one(listening_scenarios:20,74804548)+reroll-one(listening_scenarios:18,98419172)+reroll-one(listening_scenarios:18,25147286)+reroll-one(listening_scenarios:18,13248714)+reroll-one(listening_scenarios:18,58816493)+reroll-one(listening_scenarios:5,25876081)+reroll-one(listening_scenarios:5,94883310)",
+   "generated_at": "2026-08-21 17:08:01",
+   "pools_sha": "cea9612d1e0b",
+   "items": {
+    "kanji_reading": [
+     "触れる(ふれる)",
+     "第一印象(だいいちいんしょう)",
+     "造船(ぞうせん)",
+     "舞台(ぶたい)",
+     "肌着(はだぎ)"
+    ],
+    "orthography": [
+     "お手伝いさん",
+     "延長",
+     "引き返す",
+     "過程",
+     "務める(役職を)"
+    ],
+    "word_formation": [
+     "〜じみる(所帯じみる)",
+     "偽〜(偽物)",
+     "〜ずくめ(黒ずくめ)"
+    ],
+    "context_words": [
+     "見分ける",
+     "向上",
+     "狂う",
+     "気が早い",
+     "済まない",
+     "出会う",
+     "前後"
+    ],
+    "paraphrase": [
+     "でたらめ",
+     "等しい(同じだ)",
+     "大幅に",
+     "ひきょうだ(ずるい)",
+     "相互に(お互いに)"
+    ],
+    "usage": [
+     "膨大",
+     "儲ける",
+     "模索",
+     "回復する",
+     "促進"
+    ],
+    "grammar_p7": [
+     "〜にとって",
+     "〜はもちろん",
+     "〜まいか",
+     "〜を問わず",
+     "〜を契機に",
+     "〜ずにはいられない",
+     "〜そうにない",
+     "〜に伴って",
+     "〜を通して",
+     "〜わけにはいかない",
+     "〜ことから",
+     "〜たところ"
+    ],
+    "grammar_p8": [
+     "〜ないことには",
+     "〜たびに",
+     "〜わりに",
+     "〜として",
+     "仮定帰結(〜ならば…だろう)"
+    ],
+    "reading_topics": [
+     {
+      "topic": "郷土料理と記憶",
+      "theme": "食"
+     },
+     {
+      "topic": "学び直しの意義",
+      "theme": "教育"
+     },
+     {
+      "topic": "習慣化の仕組み",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "中古車のEV化",
+      "theme": "交通"
+     },
+     {
+      "topic": "里山の維持",
+      "theme": "環境"
+     },
+     {
+      "topic": "里親制度と社会的養護",
+      "theme": "子育て・家族"
+     },
+     {
+      "topic": "地方創生と移住定住",
+      "theme": "地域活性化"
+     },
+     {
+      "topic": "口コミサイトの信頼性",
+      "theme": "メディア・情報"
+     },
+     {
+      "topic": "予防接種の選択",
+      "theme": "医療・福祉"
+     },
+     {
+      "topic": "沈黙の役割",
+      "theme": "人間関係"
+     },
+     {
+      "topic": "パブリックコメント制度の意義",
+      "theme": "行政・手続き"
+     },
+     {
+      "topic": "ゲーム依存と時間管理",
+      "theme": "デジタル化"
+     }
+    ],
+    "quick_response": [
+     "少しお待ちいただければ、担当の者を呼びますので。",
+     "山田さん、明日のイベントの準備、手伝ってもらえると助かるんだけど。",
+     "明日の打ち合わせ、オンラインでの参加でもよろしいでしょうか。",
+     "次のバスは20分後に到着予定です。",
+     "こちらの席、予約が入っておりますので移動をお願いします。",
+     "開始時間が30分遅れます。",
+     "課長、先方から納期を早めてほしいとの連絡がありました。",
+     "手一杯",
+     "差し支えなければ",
+     "骨が折れる",
+     "音声ガイドは、入口で貸し出しております。"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "市役所:手続き案内",
+      "theme": "地域活性化",
+      "shipped_theme": "行政・手続き",
+      "shipped_surface": "聴解問題2-6番",
+      "note": "The pool tag did not describe the authored item. 「市役所:手続き案内」 was drawn with pools.json's theme 地域活性化, but the surface authored from it (聴解問題2-6番, 「市役所で市民センターの部屋を借りるのに次に持っていく物」) is an administrative-procedure errand end to end — the decisive turn is 「市内にお住まいの方が、会員の半分以上いることを見せていただく必要がありまして」, a rule about paperwork, and nothing in the item is about 地域活性化. logs/topics.json therefore records 行政・手続き for this surface, per exam-qa-review §5 (\"Don't trust test_spec.json… a drafted passage can wander off its pool tag\"), and this note is the reason the two records differ. RECORDED, NOT RECONCILED, on purpose: `theme` is left at the value the sampler drew so the ledger stays a faithful record of the DRAW, `scenario` is left byte-identical because sample_items.recency_map() keys on the pool string, and pools.json is NOT edited — one paper's authored surface drifting from a tag is a record-keeping fact about this paper, not a defect in the pool. QA measured that neither tag hides a collision: under either reading every theme count stays inside the <=5 listening cap and no headline theme moves. Source: F9 (qa/qa-report-20260821_1.md) and NF-4 (qa/qa-report-20260821_1-round2.md), whose own instruction to 'sync both files and record the reason' went unapplied for two rounds; check_theme_record_agreement() now reads this field."
+     },
+     {
+      "scenario": "ラジオ:睡眠の話",
+      "theme": "睡眠・健康",
+      "origin": "reauthored",
+      "note": "聴解問題3-1番 ships as an in-person 健康づくりの講座 (「1番。健康づくりの講座で、女の人が話しています。」), not as the drawn ラジオ broadcast. Sanctioned at blueprint time, one reason: this paper drew TWO broadcast scenarios (「テレビ:地域の祭りの紹介」 and 「ラジオ:睡眠の話」) and `choukai-items.md` §\"Section item mix\" admits only ONE broadcast monologue in 問題3, so one of the two had to change medium; 「テレビ:地域の祭りの紹介」 kept the broadcast (問題3-5番) and this entry moved. ONLY THE MEDIUM MOVED — the subject (体内時計を合わせているのは寝た時刻ではなく起きた時刻の方だという睡眠の話), the key (「起きる時こくをそろえること」), the three distractors and the talk length (293 JP chars) are all as drawn. This is a RE-REALISATION of 「ラジオ:睡眠の話」, not a substitution and not a cancellation, so the `scenario` string is deliberately left AS DRAWN: `sample_items.recency_map()` keys on the pool string, so renaming it (qa-report-20260821_1 §Repairs F5 proposed 「健康づくりの講座:睡眠の話」, which is in no pool) would leave 「ラジオ:睡眠の話」 un-cooled and redrawable by the next paper, and would break `check_spec_pool_resolution` / `check_ledger_spec_agreement`'s resolution of this draw. Cooldown and rotation must keep treating 「ラジオ:睡眠の話」 as drawn and used by 20260821_1. Recorded because `check_choukai_drawn_items()` reads 問題1/2/4 only, so 問題3 is unchecked; the full account is in tests/20260821_1/聴解.md 問題3 構成表 (Stage-3 修正 F5). Source: QA finding F5, qa/qa-report-20260821_1.md."
+     },
+     {
+      "scenario": "コールセンター:本人確認",
+      "theme": "働き方",
+      "shipped_theme": "デジタル化",
+      "shipped_surface": "聴解問題2-3番",
+      "note": "The pool tag did not describe the authored item. 「コールセンター:本人確認」 was drawn with pools.json's theme 働き方, but the surface authored from it (聴解問題2-3番, 「コールセンターで送り先を変えられずに困っていること」) is an online-account problem end to end — the caller's 「ネットで登録した住所を直そうとしたら、途中で止まってしまって」 and the decisive 「その番号、去年やめちゃったんです」/「お電話では、送る先を変えることができない決まりになっておりまして」 are about a registered contact number and an online form, and nothing in the item is about 働き方. logs/topics.json therefore records デジタル化 for this surface, per exam-qa-review §5, and this note is the reason the two records differ. RECORDED, NOT RECONCILED, on purpose: `theme` is left at the value the sampler drew so the ledger stays a faithful record of the DRAW, `scenario` is left byte-identical because sample_items.recency_map() keys on the pool string, and pools.json is NOT edited — one paper's authored surface drifting from a tag is a record-keeping fact about this paper, not a defect in the pool. QA measured that neither tag hides a collision: under either reading every theme count stays inside the <=5 listening cap and no headline theme moves. Source: F9 (qa/qa-report-20260821_1.md) and NF-4 (qa/qa-report-20260821_1-round2.md), whose own instruction to 'sync both files and record the reason' went unapplied for two rounds; check_theme_record_agreement() now reads this field."
+     },
+     {
+      "scenario": "国際交流会:参加者の受付",
+      "theme": "人間関係"
+     },
+     {
+      "scenario": "劇場:座席の変更依頼",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "商店街組合:イベント出店の相談",
+      "theme": "地域活性化"
+     },
+     {
+      "scenario": "スポーツクラブ:体験レッスンの申し込み",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "弁護士:初回相談",
+      "theme": "行政・手続き"
+     },
+     {
+      "scenario": "大学の研究室:環境調査の協力依頼",
+      "theme": "環境"
+     },
+     {
+      "scenario": "直売所:野菜の販売方法",
+      "theme": "食"
+     },
+     {
+      "scenario": "旅行代理店:キャンセル規定の確認",
+      "theme": "旅行・観光"
+     },
+     {
+      "scenario": "文房具:法人契約",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "プール:利用証の更新",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "歯科医院:予約の変更",
+      "theme": "医療・福祉"
+     },
+     {
+      "scenario": "ボードゲームカフェ:貸切予約",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "会社:新製品の発売延期",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "空港:搭乗手続きの案内",
+      "theme": "交通"
+     },
+     {
+      "scenario": "学会:ポスター発表の準備",
+      "theme": "教育"
+     },
+     {
+      "scenario": "不動産屋:部屋探し",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "銀行:口座開設の手続き",
+      "theme": "消費・経済",
+      "key": "銀行:口座開設"
+     },
+     {
+      "scenario": "テレビ:地域の祭りの紹介",
+      "theme": "文化・伝統"
+     }
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   }
   }
  ]
 }
