@@ -1,0 +1,44 @@
+{
+  "origin": "imported",
+  "test_id": "imported-n2-2023-12",
+  "level": "N2",
+  "imported_at": "2026-08-24T10:09:21Z",
+  "sources": {
+    "booklet": "refs/JLPT_N2_NEW/14. N2 12-2023/14.N2 12-2023.pdf",
+    "script": "refs/JLPT_N2_NEW/14. N2 12-2023/14. script N2 12-2023.pdf",
+    "audio": "refs/JLPT_N2_NEW/14. N2 12-2023/14. Nghe N2 T12-2023.mp3",
+    "answer_key": "refs/JLPT_N2_NEW/ĐÁP ÁN JLPT N2 (update 10.4.2026).pdf"
+  },
+  "notes": "Folder flag `imported-` marks origin=imported. Folders without that prefix are generated.",
+  "audio": "copied from the sitting's own MP3 (official timing, 48:56); 聴解_チャプター.json is the external stub. Already present on release 'audio' as imported-n2-2023-12.mp3 with the same sha256, so make upload-files had nothing to push.",
+  "keys_reconciled": "101/101 against refs/JLPT_N2_NEW/14. N2 12-2023/key.md — 71 gengo + 30 choukai parsed out of the imported Markdown with grade_answers.parse_*_keys and diffed mechanically, zero mismatches. Every item was also re-solved from the booklet/script before 詳細解説.json was written; no solve disagreed with the official key.",
+  "source_repairs": [
+    "問題4-17 設問 「（　）の時期にしかない」→「しかいない」（冊子PDF p.4 の画像で確認。「海にいるわけではなく」と対になる「い」の脱落）",
+    "問題5-23 選択肢1 「箪純な」→「単純な」（p.5 画像で確認。ルビ「たんじゅん」が単純を示す）",
+    "問題5-24 選択肢4 の番号が「3」と重複 →「4」に修正（p.5 画像で確認）",
+    "問題8-45 設問の余分な「、」を削除（p.9 画像で確認。実際は下線のみ）",
+    "問題12 A 「エレべーター」→「エレベーター」（ひらがな「べ」の誤植）",
+    "聴解 問題1 指示文 「質簡」→「質問」、「一つえらんでんでください」→「一つ選んでください」",
+    "聴解 問題2-2番 選択肢4 「不午分（ふうまぶん）」→「不十分」（p.34 画像で確認）",
+    "聴解 問題2-3番 選択肢4 「リサイクルジョップ」→「リサイクルショップ」（p.34 画像で確認、スクリプトも「ショップ」）",
+    "聴解 問題2-4番 選択肢1 「絵が書けるでと」→「書けること」（p.35 画像で確認）",
+    "聴解 問題2-5番 選択肢1 「アタセサリー」→「アクセサリー」（p.35 画像で確認）",
+    "聴解 問題2-6番 選択肢3 「バワー」→「パワー」（p.35 画像で確認）",
+    "聴解 問題5-2番 選択肢 「タイブ2/タイブ4」→「タイプ2/タイプ4」（p.36 画像で確認。1・3は「タイプ」と正しく印刷）",
+    "聴解スクリプト: ちょうと→ちょうど、予約しょう→しよう、テレム→テレビ、思ったんだょね→だよね、シャッ→シャツ、捨てしまう→捨ててしまう、何度でも決して→消して、ピーチコーミング→ビーチコーミング、費用をー部→一部、設置したととろ→ところ、話しでいますか→話していますか、抽選当たちゃった→当たっちゃった"
+  ],
+  "left_as_printed": [
+    "問題11(2) 「との心配があるかもわかりません」— 冊子は本文テキストレイヤーが完全（OCRではない）ため印字どおり。著者の言い回しとして保存",
+    "問題11(3) ＜結局、…からなのだ＞ と 問題13 ＜ひたすら守られる存在＞ — 原文の山かっこ強調。p.21 の画像で半角 <> の印字を確認し、Markdown が HTML タグとして飲み込まないよう全角＜＞に統一",
+    "聴解 問題5-1番 「バレー団」— 「セリフがない」から バレエ と推測できるが、スクリプトPDFのテキストレイヤーは「バレー」。正解（人形劇）に影響しないため印字どおり",
+    "問題5-22 設問末の句点なし — 印字どおり"
+  ],
+  "normalizations": [
+    "ふりがな（ルビ）は転記せず（既存の imported-* 3件と同じ方針）。詳細解説.json では対象語・難語に手作業で《》ルビを付与",
+    "（注N）等の括弧・コロンを全角に統一。＜＞は全角（上記）",
+    "聴解の指示文は jlpt-exam-structure の正規版（印刷/選んで）を冊子とスクリプトの両方に使用。原文は いんさつ／えらんで",
+    "問題14 は原文では設問70・71 が案内（右ページ）より前に印刷されているが、リポジトリ既存の体裁に合わせ 案内→設問 の順で配置。営業開始時間の結合セル「9時」は両行に展開",
+    "問題1 2番 の選択肢は原文が小書きカナ（ァィゥェ）で印字されているため、図のラベルに合わせ ア・イ・ウ・エ に統一。図は booklet p.32 の切り出しを data URI で埋め込み"
+  ],
+  "not_run": "sample_items.py / logs/ledger.json は import では触らない。exam-qa-review も実施しない（external-test-import step 2 がゲート）"
+}
