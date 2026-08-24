@@ -16,10 +16,12 @@ never touches `logs/ledger.json`, and never reuses a bare numeric id like
 `tests/5/`.
 
 The source content is authoritative — a real, already-administered exam, so
-its questions and answers are correct by construction. What can still go
-wrong is the **transcription**: OCR slips, mis-keyed rows, dropped notes,
-mojibake. Everything after authoring is a mechanical check that the copy
-matches the source and the project's format — not a content-quality review.
+its questions and answers are correct by construction. Two things can still go
+wrong: the **transcription** (OCR slips, mis-keyed rows, dropped notes,
+mojibake) and the source **print itself** (a reprinted booklet carries typos).
+Checking the copy against the source, and repairing what the source got
+plainly wrong, is the whole of the middle step — it is never a
+content-quality review of the exam.
 
 ## Origin flag (folder name) — NON-NEGOTIABLE
 
@@ -55,171 +57,173 @@ source publisher text into skill docs or redistribute the paper. Prefer
 linking paths under `refs/` or user-local files in `import_meta.json` over
 copying PDFs into `tests/`.
 
-## Workflow (run in order)
+## The pipeline — three steps, in order
+
+**原文 → 試験そのもの → 内容を目で確認 → 公式解答から模範解答**
+
+1. **Source → the test itself.** Turn the booklet/script/audio into this
+   repo's deliverables, transcribing rather than authoring.
+2. **Check the content by hand.** Read the transcription against the source
+   and repair what the source's own print/OCR got wrong. This is the gate.
+3. **Model answer, last.** Only once the content is settled and all 101 keys
+   are reconciled against the official key: author `詳細解説.json` and render
+   `模範解答.html`.
+
+There is no fourth step. An import has no authored content to critique, so it
+never runs the generation-side originality, topic-rotation, or
+`exam-qa-review` content-quality passes (`## What not to do`).
 
 Read `jlpt-exam-structure/SKILL.md` before writing any Markdown — counts,
 booklet conventions, and 例 mechanics are identical for imported tests.
 
-### 1. Choose id and scaffold
+### Step 1 — Source → the test itself
 
 ```bash
 python3 .agents/external-test-import/scripts/init_imported_test.py --slug <slug> \
   [--booklet PATH] [--script PATH] [--audio PATH] [--answer-key PATH] [--level N2]
-```
-
-Creates `tests/imported-<slug>/` and `import_meta.json`. Fails if the
-folder exists or the slug is invalid.
-
-### 2. Extract source text
-
-```bash
-python3 .agents/external-test-import/scripts/extract_pdf_text.py path/to/booklet.pdf \
+python3 .agents/external-test-import/scripts/extract_pdf_text.py <booklet.pdf> \
   -o tests/imported-<slug>/_extract/booklet.txt
-python3 .agents/external-test-import/scripts/extract_pdf_text.py path/to/script.pdf \
+python3 .agents/external-test-import/scripts/extract_pdf_text.py <script.pdf> \
   -o tests/imported-<slug>/_extract/script.txt   # optional
 ```
 
-`_extract/` is a working cache, untracked. Three failure modes:
+`init_imported_test.py` creates `tests/imported-<slug>/` + `import_meta.json`
+and fails if the folder exists or the slug is invalid. `_extract/` is an
+untracked working cache.
 
-1. **No text layer** (a scan) — every page extracts empty. OCR first; say
-   so and stop rather than inventing content.
-2. **Mojibake from a CID-keyed font** (Adobe-Japan1 + Identity-H with no
-   ToUnicode — ordinary Japanese DTP output). Text is nonsense, not empty,
-   and digits vanish (a table "extracts" with no numbers). The script
-   detects this and retries with pdfminer (`--engine pdfminer` forces it,
-   `--engine pypdf` disables it); it warns if still garbage. Never author
-   from a warned extract.
-3. **Clean text layer** — the normal path.
+**A sitting already in `refs/JLPT_N2_NEW/` is a shortcut, not an exception.**
+`make extract-archive` / `make extract-keys` have already written
+`booklet.md` (exact), `key.md` (exact) and `script.md` (**part OCR**) into its
+folder — author from those and use the PDFs to settle disputes.
+Trust rules: `question-authoring/references/reading-reference-pdfs.md`.
 
-### 3. Author project Markdown from the extract
+Three extraction failure modes: **no text layer** (a scan — OCR first, say so
+and stop rather than inventing content); **mojibake from a CID-keyed font**
+(nonsense text with the digits silently dropped — `extract_pdf_text.py`
+detects it and retries with pdfminer; never author from a warned extract);
+**clean text layer** (the normal path).
 
-Write the standard deliverable sources (same shapes as generated tests):
+Then write the deliverables (same shapes as generated tests — mirror an
+existing test for headings, layout and key tables):
 
 | File | Role |
 |------|------|
 | `言語知識・読解.md` | 問題1–14, 71 keys at end under `# 解答…` |
-| `聴解.md` | Booklet options + marksheet 例 + `# 【正解・解説】` (30 keys) |
+| `聴解.md` | Booklet options + `# 【正解・解説】` (30 keys) |
 | `聴解スクリプト.txt` | Spoken-only script (`choukai-audio` block rules) |
 
-Mirror an existing test (e.g. `tests/1/`) for headings/layout/key tables.
-Defer format facts to `jlpt-exam-structure`; script block rules to `choukai-audio`.
-
-**Fidelity rules**
-
-- Transcribe what the source says; do not "improve" items or swap keys.
-- If the source is incomplete (missing keys, missing 聴解 half), import
-  only what exists, state the gap in the final report, never invent answers.
-- Partial imports still use the `imported-` prefix.
-- **Bold emphasis on tested words & passage markers**: raw PDF extraction
-  loses underline formatting, so restore it manually — bold the target
-  tested word in 問題1/2/5/6 stems (`**相互**`), and bold all numbered
-  passage markers (`①**...**`) plus key target phrases in both the 読解
-  body and the matching stem, 1-to-1.
-- 問題8: four blanks, ★ third; key = option on ★ (same integrity rules as
-  generated tests, `make check` enforces). Explanation cell MUST start with
-  the 1-4 permutation: `語(1)→語(4)→語(3)→語(2)。 「...」`.
-- （注N） definitions must never be circular (never define a term using its
-  own kanji or same phrase).
-
-### 4. Mechanical fidelity checklist (format/transcription verification only)
-
-A copy-matches-source check, not a content review — the source is never
-wrong; only the transcription can be. Run all of these before `make check`
-in step 6.
-
-1. **Answer-key diff.** When `import_meta.json → answer_key` is set, parse
-   all 101 keys (71 gengo + 30 choukai) from the sheet and diff against the
-   imported Markdown keys — zero mismatches. A full mechanical diff catches
-   mis-transcribed digits a spot-check would miss.
-   - **Layout trap on official 聴解 answer grids:** 問題4's 7–11 answers
-     often sit on the same visual row as 問題5's headers — don't assign
-     that five-number run to 問題5, which is the separate three-number run
-     (`1番`, `2番 質問1`, `2番 質問2`). Prefer the sheet's assignment over a
-     re-solved 解説.
-   - After fixing a key, rewrite that row's 解説 from the script/booklet
-     line that actually decides it (paste, don't paraphrase).
-   - No answer-key PDF supplied → skip this step, note the gap in the final
-     report; don't invent a diff.
-2. **Stem/passage presence.** 言語知識: every 問題1–9 stem's distinctive
-   12+ char span appears in the booklet extract; 問題6's four sentences
-   each appear. 読解: passage openings and every `（注N）` label are
-   present, `中略` markers kept.
-3. **Booklet↔script sync.** 聴解: booklet options match the script for
-   問題1–2 and 問題5-2番; 例 pre-mark = announcer number (the marksheet half
-   is `make check`'s job, the dialogue-matches-options half is yours).
-4. `make serve` → imported badge renders → audio plays.
-
-**OCR / text-layer hygiene**
-
-- Scanned script PDFs need OCR (`_extract/script_ocr.txt`).
-- **Only** when working from an OCR'd scan or a step-2-flagged garbage
-  extract: replay decisive listening lines against the external MP3 before
-  trusting the transcription — especially 問題5 統合理解 and any near-
-  synonym place/reason options. A clean text-layer extraction skips this.
-- Clean obvious text-layer glitches when certain (doubled tokens like
-  「何を何を支え」→「何を支え」); ambiguous ones (`人か愛着` vs `人が愛情`)
-  need a rasterized page check — don't guess, flag it if unclear.
-- Preserve source apparatus the project format supports (`（注N）`,
-  `（中略）`, setting labels, dialogue turns) — dropping notes during
-  transcription is a fidelity bug, not cleanup. When the booklet puts a
-  place label on its own line and each speaker on the next, keep that line
-  break — don't flatten to one line (the sheet parser accepts multi-line stems).
-- 問題11: official bodies are 4 passages × 2Q even when the instruction
-  says `(1)から(3)` (a known print typo on several recent papers). Import
-  BOTH the instruction as printed and all four passages — never delete
-  passage (4) to "match" the header.
-
-### 5. Listening audio
-
-**Prefer the external MP3** when supplied (official timing):
+**Prefer the external MP3** (official timing) over synthesizing:
 
 ```bash
 cp "<audio.mp3>" "tests/imported-<slug>/聴解.mp3"
 python3 .agents/external-test-import/scripts/write_external_chapters.py \
-  tests/imported-<slug>   # minimal chapters so make check's MP3⇒chapters rule is satisfied
+  tests/imported-<slug>      # minimal chapters, so make check's MP3⇒chapters rule holds
 ```
 
-**Else** synthesize from the imported script: `make mp3 imported-<slug>`.
+Else `make mp3 imported-<slug>`. Either way the script file is still required
+— the gate and the booklet↔script sync read it.
 
-### 6. Build + gate
+Transcription rules:
+
+- Transcribe what the source says; never "improve" an item or swap a key.
+- If the source is incomplete (missing keys, no 聴解 half, **no 例 items**),
+  import only what exists and state the gap in the final report.
+  Partial imports still use the `imported-` prefix.
+- **Restore the lost underlining.** Raw extraction drops it: bold the tested
+  word in 問題1/2/5/6 stems (`**相互**`), and bold every numbered passage
+  marker (`①**…**`) plus its matching stem span, 1-to-1.
+- Keep the source's apparatus — `（注N）`, `（中略）`, setting labels
+  (`（旅館で）`), speaker line breaks, printed URLs. Dropping them is a
+  fidelity bug, not cleanup.
+- 問題8: four blanks, ★ third; key = the option on ★. The 解説 cell MUST open
+  with the 1-4 permutation: `語(1)→語(4)→語(3)→語(2)。 「…」`.
+- 問題11: official bodies are 4 passages × 2Q even when the instruction says
+  `(1)から(3)` (a known print typo on several recent papers). Import BOTH the
+  instruction as printed and all four passages — never delete passage (4).
+- **問題5 keeps the source's printed 2番 list.** The house rule that 問題5
+  prints nothing (`jlpt-exam-structure`) is a GENERATED-paper rule: it is safe
+  there because the MP3 is synthesized from the script, so the choices still
+  get spoken. An import ships the sitting's own MP3, which never reads 2番's
+  choices aloud because official prints them — strip the list and the item
+  becomes three unlabelled bubble rows. `check_mondai5_prints_nothing()` and
+  `verify_fidelity.py` both skip/handle imports for this reason.
+
+Build as you go: `make booklet imported-<slug> && make sheet imported-<slug>`.
+
+### Step 2 — Check the content by hand
+
+The source is authoritative — a real, already-administered exam — so its items
+and answers are correct by construction. What can go wrong is the **copy**:
+OCR slips, mis-transcribed digits, dropped notes, mojibake. And the source
+print itself can carry an outright typo. Both are yours to fix; nothing else
+is.
+
+1. **Answer-key diff — all 101, mechanically.** Parse the 71 gengo + 30
+   choukai keys out of the imported Markdown and diff them against the
+   official sheet. Zero mismatches. A spot-check misses a mis-typed digit.
+   - **Layout trap on official 聴解 answer grids:** 問題4's 7–11 answers often
+     sit on the same visual row as 問題5's headers — that five-number run is
+     NOT 問題5, which is the separate three-number run (`1番`, `2番 質問1`,
+     `2番 質問2`). Prefer the sheet's assignment over a re-solved 解説.
+   - After fixing a key, rewrite that row's 解説 from the script/booklet line
+     that actually decides it (paste, don't paraphrase).
+   - No answer-key source → skip and note the gap; don't invent a diff.
+2. **Coverage, both directions.** Every 問題1–9 stem and option, every 読解
+   passage opening, every `（注N）` label and `（中略）` marker must appear in
+   the import; and every source line must appear in the import unless you
+   deliberately changed it. Run it as a script over the extract, not by eye —
+   the two directions catch different defects (a dropped note vs. an
+   unintended edit).
+3. **Repair the source's blatant errors — and only those.** A reprinted
+   booklet/script carries real typos, and a learner meets them as nonsense.
+   Fix one when the correction is *determined* by the surrounding text:
+   a doubled token (`何を何を支え`), a wrong particle (`地元の人か` →
+   `人が`), a dropped negation the official key requires (`うん` → `ううん`),
+   an obvious mis-set kanji (`完店` → `売店`, `材料登` → `材料費`), a missing
+   `に` in a stem. **Leave anything you would have to guess** (a word that is
+   wrong but whose intended form is not recoverable) exactly as printed and
+   flag it in the final report. Every repair goes in the report too.
+4. **Doubtful line ⇒ open the page.** `script.md` is ~98% OCR and its errors
+   land on the kanji that carry furigana. Before trusting any decisive line —
+   especially 問題5 統合理解 and near-synonym place/reason options —
+   rasterize the page and read it: `pdftoppm -png -r 130 -f <page> -l <page>
+   <script.pdf> out`. Guessing here re-keys the item.
+5. **Booklet↔script sync.** 聴解: the printed options for 問題1–2 (and 問題5
+   2番) must match what the script says. The marksheet half is `make check`'s
+   job; this half is yours.
+6. **The gate, then the app.** `make check` — read every line, WARN included.
+   `answer_positions` checks skip when there is no `test_spec.json` for this
+   id (normal for imports). Then `make serve`: the imported badge renders, the
+   audio plays, the sheet grades.
+
+### Step 3 — Model answer from the official key (FINAL STEP)
+
+Only after step 2 is clean and `make check` is green:
 
 ```bash
-make booklet imported-<slug>
-make sheet imported-<slug>
-make check
+make scaffold-explanations imported-<slug>   # pre-fills stems/options/passages/scripts
+# author 詳細解説.json: why_correct, options_analysis, points  (exam-model-answer)
+python3 .agents/exam-model-answer/scripts/verify_fidelity.py tests/imported-<slug>
+make model-answer imported-<slug>            # -> 模範解答.html
 ```
 
-Read every `make check` line. `answer_positions` checks skip when
-`test_spec.json` isn't for this id (normal for imports). Fix format
-failures in the Markdown/script; don't paper over them.
-
-### 7. QA for imports (different from generated)
-
-Do **not** run the generation-style originality/topic-reuse pass, and do
-**not** run `exam-qa-review`'s adversarial content-quality pass — both
-exist to catch bad *authoring*, and an import has no authored content to
-critique. The gate for an import is `make check` plus the §4 checklist.
-When the official sheet and a re-solved 解説 disagree, the sheet wins.
-
-### 8. Model Answer & Detailed Explanation (FINAL STEP)
-
-```bash
-make model-answer imported-<slug>  # -> tests/imported-<slug>/模範解答.html
-```
-
-**MUST always be the final step** — run only after all 101 keys/questions
-are mechanically verified against the official source (§4), audio is
-verified, and `make check` is completely green. Generates concise,
-learner-friendly explanations with full option-by-option analysis and
-mandatory furigana; no internal metadata leaks or placeholder text.
+`exam-model-answer` owns the quality bar (one `[正解]` per item matching the
+official key, a real reason for every option, mandatory hand-checked furigana,
+no placeholders, no pipeline metadata). Two things the scaffold gets wrong on
+an import and you must fix by hand: 問題9's four stems, and 問5 2番, which the
+scaffold emits as one `問5-2` entry where the answer key needs `問5-2-1` and
+`問5-2-2`. Running it earlier is prohibited — later content fixes
+desynchronize the explanations from the exam.
 
 ## What not to do
 
 - Put an imported exam in `tests/1/` (or any id without `imported-`).
 - Run `sample_items.py`, or append/update `logs/ledger.json` during import or QA.
 - Run generation-style pool-originality, cross-test topic-rotation, or
-  `exam-qa-review`'s content-quality QA on imported tests — §4 is the gate
-  for transcription defects.
+  `exam-qa-review`'s content-quality QA on imported tests — step 2 is the gate.
+- "Fix" an item you merely find odd. Step 2 repairs only what the surrounding
+  text or the official key *determines*; anything you would have to guess is
+  transcribed as printed and reported.
 - Skip `聴解スクリプト.txt` because an external MP3 exists — the gate and
   booklet sync still need the script.
 - Treat `refs/Shinkanzen/` textbook PDFs as importable exams (calibration only).
@@ -233,11 +237,12 @@ mandatory furigana; no internal metadata leaks or placeholder text.
 | TTS MP3 (if no external audio) | `choukai-audio` / `make mp3 <id>` |
 | Answer sheet | `exam-app` / `make sheet <id>` |
 | Gate | `make check` |
-| Transcription QA | §4 above — not `exam-qa-review` |
+| Content check | Step 2 above — not `exam-qa-review` |
 | Model Answer (Final) | `exam-model-answer` / `make model-answer <id>` |
 
 ## Final report (required)
 
-State: source paths, `tests/imported-<slug>/`, what was extracted vs
-OCR-blocked, whether audio was copied or synthesized, `make check` result,
-which §4 checklist items were run (and their results), and anything skipped.
+State: source paths and `tests/imported-<slug>/`; what was extracted vs
+OCR-blocked; whether audio was copied or synthesized; how the 101 keys
+reconciled; **every repair made to the source's own text, and every doubtful
+line left as printed**; the `make check` result; and anything skipped.

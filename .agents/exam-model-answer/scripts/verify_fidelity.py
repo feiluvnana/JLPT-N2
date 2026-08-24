@@ -53,7 +53,13 @@ from build_model_answer import (  # noqa: E402
 KANJI_RANGE = "一-鿿"
 STEM_BLOCK_RE = re.compile(
     r"\*\*(?P<num>\d{1,3})\*\*[ \t]*(?P<stem>.*?)(?=\n[ \t]*1[.．][ \t]|\Z)"
-    r"(?P<optblock>.*?)(?=\n\*\*\d{1,3}\*\*|\n#{2,3}[ \t]|\Z)",
+    # `#{1,3}` not `#{2,3}`: jlpt-exam-structure's booklet layout wraps the
+    # `## 問題N` headers in `# 【文字・語彙】` / `# 【文法】` / `# 【読解】`
+    # banners, and a lone `#` used to be invisible here — the last option of
+    # every banner-terminated section came back with the next banner glued to
+    # it (`…進学した。\n\n# 【文法】`), which verify_fidelity then reported as
+    # drift in a 詳細解説.json that was in fact correct (2026-08-24).
+    r"(?P<optblock>.*?)(?=\n\*\*\d{1,3}\*\*|\n#{1,3}[ \t]|\Z)",
     re.S,
 )
 OPT_ITEM_RE = re.compile(r"[1-4][.．][ \t]*(.*?)(?=[ \t\n]*[1-4][.．][ \t]|\Z)", re.S)
@@ -111,8 +117,14 @@ def derive_gengo_raw(exam_body: str) -> dict:
         start = sec_m.end()
         next_sec = SECTION_RE.search(exam_body, start)
         end = next_sec.start() if next_sec else len(exam_body)
-        # a language-knowledge section also ends at the answer-key heading
-        key_m = re.search(r"^#\s*(?:解答|【?正解)", exam_body[start:end], re.M)
+        # A section also ends at the next `#` banner — the answer-key heading
+        # (`# 解答…`) and, in the booklet layout jlpt-exam-structure describes,
+        # the `# 【文法】` / `# 【読解】` banners that wrap the `## 問題N`
+        # headers. Stopping only at the key heading left the banner line inside
+        # the last section, where it survived the stem/option subtraction and
+        # was served as that section's reading `passage` (問題6 items reported
+        # a passage of 「# 【文法】」, 2026-08-24).
+        key_m = re.search(r"^#[ \t]*(?:解答|【)", exam_body[start:end], re.M)
         if key_m:
             end = start + key_m.start()
         body = exam_body[start:end]
@@ -191,6 +203,27 @@ def derive_choukai_options_from_md(choukai_body: str) -> dict:
                     re.split(r"[ \t]*[1-4]\.[ \t]*", block) if o.strip()]
             if opts and sec_num in (1, 2, 3):
                 out[f"問{sec_num}-{n}"] = opts
+        if sec_num == 5:
+            # 問題5 2番's four names. This repo's GENERATED papers print
+            # nothing here and speak the list instead (jlpt-exam-structure
+            # §"問題5 prints nothing" — a house rule), but every official
+            # sitting prints it and an IMPORT keeps that, because the sitting's
+            # own MP3 never reads those choices aloud. Without this, the two
+            # 質問 halves had no options to derive and 問5-2-1/問5-2-2 came back
+            # as one empty 問5-2 entry (2026-08-24).
+            item = None
+            for m in re.finditer(
+                    r"\*\*(?:(\d+)番|質問([12]))\*\*"
+                    r"(?:\n((?:[ \t]*[1-4]\.[^\n]*\n?)+))?", body):
+                if m.group(1):
+                    item = int(m.group(1))
+                    continue
+                if not (item and m.group(3)):
+                    continue
+                opts = [o.strip() for o in
+                        re.split(r"[ \t]*[1-4]\.[ \t]*", m.group(3)) if o.strip()]
+                if opts:
+                    out[f"問5-{item}-{m.group(2)}"] = opts
     return out
 
 
@@ -262,6 +295,19 @@ def derive_choukai_raw(choukai_body: str, script_text: str) -> dict:
         if not m_head:
             continue
         rest = block[m_head.end():]
+        q_keys = [f"{key_id}-{n}" for n in (1, 2)]
+        if all(k in md_options for k in q_keys):
+            # 問5 統合理解 whose 2番 options the BOOKLET prints (official
+            # layout; see derive_choukai_options_from_md). The script carries
+            # 質問1。/質問2。 but speaks no choice list, so the options come
+            # from the booklet and each 質問 becomes its own entry.
+            narration, _, questions = _split_spoken_block(rest)
+            lead_in, _ = _narration_parts(narration)
+            script = "\n".join(narration)
+            for (q_n, q_text), k in zip(questions, q_keys):
+                items[k] = {"stem": f"{lead_in}質問{q_n}\u3000{q_text}",
+                            "options": md_options[k], "script": script}
+            continue
         if key_id in md_options:
             # 問題1-2: booklet prints the options; the script's lead-in
             # sentence up to the first speaker turn is the stem, everything

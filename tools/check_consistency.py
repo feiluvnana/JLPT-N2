@@ -1260,10 +1260,21 @@ LATIN_OK = {"SNS", "AI", "IT", "CO", "PC", "DVD", "CD", "BOX", "QR", "URL",
             "TTS", "MP"}          # the last two name the pipeline, not content
 LATIN_RUN = re.compile(r"[A-Za-z]{2,}")
 RUBY_MARKUP = re.compile(r"<[^>]+>")
+# A web address is apparatus, not un-transliterated prose. Official 問題10 お知らせ
+# and 問題14 案内 print one in Latin — July 2025 prints two — and
+# `external-test-import` §4 makes dropping source apparatus a fidelity bug, so
+# the import had to either rewrite the URL or fail this line. Neither is right:
+# the check exists to catch a passage half-drafted in English
+# (「単なる無音の contrast ではない」), and a URL is not that. Strip URL-shaped
+# runs before scanning; every other Latin word is still reported, in both
+# origins (a generated paper that invents a URL is exam-qa-review's call, not
+# this line's).
+URL_RUN = re.compile(r"https?://\S+|www\.[^\s、。」）]+")
 
 
 def check_no_latin_prose(name: str, text: str):
-    bad = sorted({w for w in LATIN_RUN.findall(RUBY_MARKUP.sub(" ", text))
+    scanned = URL_RUN.sub(" ", RUBY_MARKUP.sub(" ", text))
+    bad = sorted({w for w in LATIN_RUN.findall(scanned)
                   if w.upper() not in LATIN_OK})
     check(f"{name}: no un-transliterated Latin words", not bad,
           f"{bad} — write it in katakana or Japanese")
@@ -1315,7 +1326,12 @@ def check_dokkai_span_anchor_bold(name: str, gt_prose: str):
           f"the same way in the stem (question-authoring/references/dokkai.md "
           f"§\"Marked-span quoting\")")
 
-    unbolded_markers = sorted(set(re.findall(r"[①②③④⑤](?!\*\*)", gt_prose)))
+    # 問題14 is excluded: 情報検索's flyer numbers its rows ①〜⑤ as ITEM LABELS
+    # (official July 2025 prints five numbered courses, and item 70's options
+    # read 「①と③と⑤」), which are not marked passage spans and must not be
+    # bolded. Scanning them here warned on every faithful 情報検索 table.
+    scan = re.split(r"^##\s*問題14\b", gt_prose, maxsplit=1, flags=re.M)[0]
+    unbolded_markers = sorted(set(re.findall(r"[①②③④⑤](?!\*\*)", scan)))
     warn(f"{name}: every ①/② marker is immediately bolded (①**…**), never bare",
          not unbolded_markers,
          f"marker(s) {unbolded_markers} appear without an immediately-following ** — "
@@ -7175,7 +7191,21 @@ def choukai_p5_2ban_options(script_text: str) -> list[str]:
 # speaking the same four choices and the paper has two option lists to
 # desynchronise (which is the defect the printed-vs-spoken column exists to
 # prevent, one level up).
-def check_mondai5_prints_nothing(name: str, ct: str, bi):
+def check_mondai5_prints_nothing(name: str, ct: str, origin: str, bi):
+    # GENERATED ONLY. The rule is sound exactly because a generated paper's MP3
+    # is synthesized FROM 聴解スクリプト.txt, so removing the printed list still
+    # leaves the four choices spoken. An import inverts that: the shipped audio
+    # is the sitting's own MP3, and official never speaks 2番's choices because
+    # official prints them (jlpt-exam-structure §"問題5 prints nothing" —
+    # all 31 sittings). Applying the house rule to an import therefore deletes
+    # the ONLY place the four candidate names exist, and 問題5 2番 becomes three
+    # unlabelled bubble rows — unanswerable, with `make check` green.
+    # imported-n2-2025-07 hit this on its first gate run (2026-08-24).
+    if origin != "generated":
+        return skip(f"{name}: 問題5 prints no options",
+                    "imported paper — the source booklet prints 2番's four "
+                    "names and the official MP3 does not speak them, so the "
+                    "printed list is what makes the item answerable")
     cut = bi.KEY_HEADING.search(ct)
     body = ct[: cut.start()] if cut else ct
     sec = re.search(r"^##\s*問題5\b.*", body, re.M | re.S)
@@ -9656,7 +9686,7 @@ def check_tests():
                     check("聴解スクリプト.txt passes validate_script", False, str(e).replace("\n", " ")[:300])
                 check_script_shape(st, ct, m, d.name)
                 check_example_premarks(ct, st, bi)
-            check_mondai5_prints_nothing(d.name, ct, bi)
+            check_mondai5_prints_nothing(d.name, ct, origin, bi)
             check_mondai5_enumeration(d.name, st, ct, bi)
             check_voice_casting(st, m, origin, d.name)
             # Register is a GENERATION failure mode: an imported official paper

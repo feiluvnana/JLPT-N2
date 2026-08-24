@@ -57,7 +57,7 @@ python3 -c "import sys;from pdfminer.high_level import extract_text;print(extrac
 with a real text layer whose font is CID-keyed with **no ToUnicode map**
 extracts as non-empty NONSENSE with the digits silently dropped — a 問題数
 table reads as labels with no numbers. `extract_pdf_text.py` detects that and
-falls back to pdfminer; see `external-test-import` step 2. Never calibrate off
+falls back to pdfminer; see `external-test-import` step 1. Never calibrate off
 a garbled extract.
 
 ## Step 2 — Rasterize fallback: TOC-first textbook calibration
