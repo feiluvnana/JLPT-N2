@@ -66,8 +66,8 @@ copying PDFs into `tests/`.
 2. **Check the content by hand.** Read the transcription against the source
    and repair what the source's own print/OCR got wrong. This is the gate.
 3. **Model answer, last.** Only once the content is settled and all 101 keys
-   are reconciled against the official key: author `詳細解説.json` and render
-   `模範解答.html`.
+   are reconciled against the official key: solve each item from the source,
+   confirm the key, then author `詳細解説.json` and render `模範解答.html`.
 
 There is no fourth step. An import has no authored content to critique, so it
 never runs the generation-side originality, topic-rotation, or
@@ -180,14 +180,41 @@ is.
    a doubled token (`何を何を支え`), a wrong particle (`地元の人か` →
    `人が`), a dropped negation the official key requires (`うん` → `ううん`),
    an obvious mis-set kanji (`完店` → `売店`, `材料登` → `材料費`), a missing
-   `に` in a stem. **Leave anything you would have to guess** (a word that is
-   wrong but whose intended form is not recoverable) exactly as printed and
-   flag it in the final report. Every repair goes in the report too.
-4. **Doubtful line ⇒ open the page.** `script.md` is ~98% OCR and its errors
-   land on the kanji that carry furigana. Before trusting any decisive line —
-   especially 問題5 統合理解 and near-synonym place/reason options —
-   rasterize the page and read it: `pdftoppm -png -r 130 -f <page> -l <page>
-   <script.pdf> out`. Guessing here re-keys the item.
+   `に` in a stem. Every repair goes in the final report.
+4. **When a line will not resolve, climb the ladder — and stop at the first
+   rung that settles it.** The rungs get more expensive downward; never skip
+   to the bottom, and never quietly give up above it.
+
+   1. **Re-read the extract in context.** Most OCR damage is obvious once the
+      sentence, the four options and the key are in front of you at the same
+      time.
+   2. **Cross-check inside the source.** The same fact usually appears twice:
+      a 聴解 option restates the decisive line, `key.md` and the script PDF's
+      own `（正解:N）` corroborate each other, a 読解 stem quotes the passage
+      span. Two half-legible copies of one sentence often reconstruct it.
+   3. **Rasterize the page and read the image yourself.** `script.md` is ~98%
+      OCR and its errors land on exactly the kanji that carry furigana, so the
+      text layer can be wrong where the ink is perfectly clear. Render the
+      page and LOOK at it:
+
+      ```bash
+      pdftoppm -png -r 130 -f <page> -l <page> "<source.pdf>" out      # whole page
+      pdftoppm -png -r 300 -f <page> -l <page> \
+        -x <px> -y <px> -W <px> -H <px> "<source.pdf>" out             # one line, high dpi
+      ```
+
+      **This is the last resort: reading images is slow and expensive, so
+      spend it on decisive lines only** — 問題5 統合理解, near-synonym
+      place/reason options, any line the official key depends on, any word you
+      would otherwise have to guess. Crop to the line and raise the dpi rather
+      than re-reading whole pages; a 300 dpi crop settles a single character
+      that a 130 dpi full page leaves ambiguous.
+
+   Only after rung 3 has actually been spent may a line be **left as
+   printed**. "I could not recover it" is a claim about the ink, so it has to
+   be a claim you verified by looking at the ink — record it in the report as
+   image-verified, with the page. Guessing at rung 1 and giving up at rung 2
+   are the same defect: both ship a sentence nobody checked.
 5. **Booklet↔script sync.** 聴解: the printed options for 問題1–2 (and 問題5
    2番) must match what the script says. The marksheet half is `make check`'s
    job; this half is yours.
@@ -207,12 +234,36 @@ python3 .agents/exam-model-answer/scripts/verify_fidelity.py tests/imported-<slu
 make model-answer imported-<slug>            # -> 模範解答.html
 ```
 
-`exam-model-answer` owns the quality bar (one `[正解]` per item matching the
-official key, a real reason for every option, mandatory hand-checked furigana,
-no placeholders, no pipeline metadata). Two things the scaffold gets wrong on
-an import and you must fix by hand: 問題9's four stems, and 問5 2番, which the
-scaffold emits as one `問5-2` entry where the answer key needs `問5-2-1` and
-`問5-2-2`. Running it earlier is prohibited — later content fixes
+**Solve the item before you explain it — every item, one at a time.**
+Writing `why_correct` means deriving the answer from the passage or the script
+and landing on the keyed option. Do the deriving FIRST, from the source, then
+compare with the official key, then write. An explanation written by starting
+from the key and reasoning backwards will justify a wrong key as fluently as a
+right one — that is the whole failure mode this step exists to catch, and it
+is the last point in the pipeline where a mis-key is still cheap to find.
+
+When your solve disagrees with the key:
+
+- Re-read the item. Most disagreements are your own misreading of a
+  distractor, or a line the transcription still has wrong — in which case the
+  defect is in step 2's output and belongs back there.
+- If the disagreement survives, climb step 2's ladder on the deciding line,
+  image included. A mis-transcribed negation or particle is the usual cause.
+- If it still survives, **the source wins** — key.md and the script PDF's
+  `（正解:N）` are the exam's own answer, and an import never re-keys an
+  official item. Write the explanation for the keyed option, grounded in the
+  line that best supports it, and **report the disagreement**: which item,
+  what the source's own text points to, and what you checked.
+- Never write an explanation that argues for one option while the key column
+  names another. `check_choukai_kaisetsu_keys()` fails that contradiction for
+  聴解 automatically; for 言語知識・読解 it is on you.
+
+`exam-model-answer` owns the rest of the quality bar (one `[正解]` per item
+matching the official key, a real reason for every option, mandatory
+hand-checked furigana, no placeholders, no pipeline metadata). Two things the
+scaffold gets wrong on an import and you must fix by hand: 問題9's four stems,
+and 問5 2番, which the scaffold emits as one `問5-2` entry where the answer key
+needs `問5-2-1` and `問5-2-2`. Running it earlier is prohibited — later content fixes
 desynchronize the explanations from the exam.
 
 ## What not to do
@@ -244,5 +295,7 @@ desynchronize the explanations from the exam.
 
 State: source paths and `tests/imported-<slug>/`; what was extracted vs
 OCR-blocked; whether audio was copied or synthesized; how the 101 keys
-reconciled; **every repair made to the source's own text, and every doubtful
-line left as printed**; the `make check` result; and anything skipped.
+reconciled, and every item where your own solve disagreed with the official
+key; **every repair made to the source's own text, and every doubtful line
+left as printed — each of the latter named with the page you image-verified
+it on**; the `make check` result; and anything skipped.

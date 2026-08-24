@@ -25,6 +25,17 @@ While `解答.html` is for taking the test and grading, `模範解答.html` is f
    numbered markers (`①`, `②`, `（注1）`); 聴解 — full spoken transcript with
    speaker labels.
 3. **Comprehensive & Concise Explanation**:
+   - **Solve the item before you explain it.** Derive the answer from the
+     passage/script FIRST, then compare with the answer key, then write. An
+     explanation composed backwards from the key reads just as convincing when
+     the key is wrong, so this pass is the last cheap chance to catch a
+     mis-key — in a generated paper it is the author's own mis-key, in an
+     import a mis-transcribed line. A disagreement is never resolved by
+     softening the explanation: fix the key (generated) or follow the source
+     and report it (`external-test-import` step 3 owns the import tie-break).
+     Never let `why_correct` argue for one option while the key names another
+     — `check_choukai_kaisetsu_keys()` fails that contradiction for 聴解, and
+     nothing but you checks it for 言語知識・読解.
    - **Why the correct answer is selected**: direct quotes from the
      passage/audio, grammar rules, kanji breakdowns — concise, natural,
      clear for learners.

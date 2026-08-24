@@ -28,14 +28,27 @@ The pipeline is three steps and nothing else:
 2. **Check the content by hand.** Diff all 101 keys against the official
    answer sheet (the sheet wins), check coverage in both directions, and
    repair what the source's own print/OCR got plainly wrong — only where the
-   correction is determined by the surrounding text or the key. Leave anything
-   you would have to guess as printed and flag it. Rasterize the page before
-   trusting any doubtful line. Finish with `make booklet`, `make sheet` and
-   `make check` (read every line, WARN included). No `exam-qa-review` pass.
+   correction is determined by the surrounding text or the key.
+   When a line will not resolve, climb the ladder and stop at the first rung
+   that settles it: re-read the extract in context → cross-check the same fact
+   elsewhere in the source → **rasterize the page and read the image
+   yourself**. That last rung is slow and expensive, so spend it only on
+   decisive lines (問題5 統合理解, near-synonym options, anything the official
+   key depends on) — crop to the line at high dpi rather than re-reading whole
+   pages. A line may be left as printed only after you have actually looked at
+   the ink; say which page you verified it on. Finish with `make booklet`,
+   `make sheet` and `make check` (read every line, WARN included). No
+   `exam-qa-review` pass.
 3. **Model answer, last.** Once the content is settled and the gate is green:
    author `詳細解説.json` (`exam-model-answer`), then run
    `make model-answer imported-⟨slug⟩`. Japanese only — the per-language
    pipeline was retired 2026-08-21.
+   **Solve each item from the source before you explain it, and confirm the
+   official key.** Derive the answer first, then compare with the key, then
+   write — an explanation written backwards from the key will justify a wrong
+   key just as fluently as a right one. If your solve disagrees, re-read, then
+   climb the ladder on the deciding line; if it still disagrees, the source
+   wins (never re-key an official item) and you report the disagreement.
 
 Binding points, from those two files:
 
