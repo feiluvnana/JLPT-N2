@@ -1,0 +1,104 @@
+{
+  "audio/20260807_1.mp3": {
+    "mtime_ns": 1787294839213378892,
+    "path": "tests/20260807_1/聴解.mp3",
+    "sha256": "becea152a2e0117fadd6f7ae81b337917b5e3d5fc50c6225730b138606c675a6",
+    "size": 27730701
+  },
+  "audio/20260810_1.mp3": {
+    "mtime_ns": 1787294951259857106,
+    "path": "tests/20260810_1/聴解.mp3",
+    "sha256": "3f20b379220a88ee462feaa6bca33bc4ea38963352af45a60fbba30331324748",
+    "size": 27367533
+  },
+  "audio/20260810_2.mp3": {
+    "mtime_ns": 1787295022657722188,
+    "path": "tests/20260810_2/聴解.mp3",
+    "sha256": "8ee7c1f65d5bf70bc0b2c71e00106f27031a9b1069e59aa0ab569c9869faa773",
+    "size": 28842669
+  },
+  "audio/20260811_1.mp3": {
+    "mtime_ns": 1787295102266589401,
+    "path": "tests/20260811_1/聴解.mp3",
+    "sha256": "b8617d7e1819554cb04e9de736e7ef5d06da31a0b33acb65f42f2275a0479e6f",
+    "size": 28117773
+  },
+  "audio/20260812_1.mp3": {
+    "mtime_ns": 1787295198828361361,
+    "path": "tests/20260812_1/聴解.mp3",
+    "sha256": "0ef9be009defe22a9b0e35630a14282fd8802c34cde5ae43fad6247fed3591ec",
+    "size": 32366925
+  },
+  "audio/20260812_2.mp3": {
+    "mtime_ns": 1787295288572742541,
+    "path": "tests/20260812_2/聴解.mp3",
+    "sha256": "e626569c50f616a1be087da7d62018e31fbe3dac47a4a53698ad554f6c8c0105",
+    "size": 31394349
+  },
+  "audio/20260813_1.mp3": {
+    "mtime_ns": 1787296139121297393,
+    "path": "tests/20260813_1/聴解.mp3",
+    "sha256": "9867da27df7f7024831ce227304180c35c60bf52812fb0d6bb59ff4bdf1f4da0",
+    "size": 31844205
+  },
+  "audio/20260813_2.mp3": {
+    "mtime_ns": 1787296222433304099,
+    "path": "tests/20260813_2/聴解.mp3",
+    "sha256": "067d46637d264b527d98aac7d939183af15527fd0062e9c403692eb9a2c2f8ff",
+    "size": 29184525
+  },
+  "audio/20260814_1.mp3": {
+    "mtime_ns": 1787297182386886156,
+    "path": "tests/20260814_1/聴解.mp3",
+    "sha256": "1744262bbb7781efe0a58c6b4efa5916c29bb0b7171574caddfa371040443fa3",
+    "size": 29949453
+  },
+  "audio/20260817_1.mp3": {
+    "mtime_ns": 1787296384958475366,
+    "path": "tests/20260817_1/聴解.mp3",
+    "sha256": "edf9fdcb483d55094eaf3753e4718fe67b1a383e3121662cff71955515393cb1",
+    "size": 31102605
+  },
+  "audio/20260817_2.mp3": {
+    "mtime_ns": 1787296460276242239,
+    "path": "tests/20260817_2/聴解.mp3",
+    "sha256": "37802b1210ed00669c9956ad8f47da4a4f9bf84d42d438cc5671ff1b652a14e7",
+    "size": 30542445
+  },
+  "audio/20260817_3.mp3": {
+    "mtime_ns": 1787296558321908806,
+    "path": "tests/20260817_3/聴解.mp3",
+    "sha256": "8c4ee9f17b84a7fd0bfb54be87663eabe8ceae87b28d3fef504baa232b7e6af4",
+    "size": 33356781
+  },
+  "audio/20260818_1.mp3": {
+    "mtime_ns": 1787296659308856981,
+    "path": "tests/20260818_1/聴解.mp3",
+    "sha256": "935ca34b8247065cb0664fe422bee8415eac6db49025d42e7b06c773fcdf89ab",
+    "size": 33327693
+  },
+  "audio/20260819_1.mp3": {
+    "mtime_ns": 1787297013273342974,
+    "path": "tests/20260819_1/聴解.mp3",
+    "sha256": "d58ac04dc146360efb4c78c18b57f73aad7d95880bed509df730b792be2aa67b",
+    "size": 33935949
+  },
+  "audio/20260821_1.mp3": {
+    "mtime_ns": 1787537334897911712,
+    "path": "tests/20260821_1/聴解.mp3",
+    "sha256": "09e800ad58d53eb481d18d7dfc07fe3932e9bb869344c2fcf9f23abd53c7e77b",
+    "size": 33849549
+  },
+  "audio/imported-n2-2024-12.mp3": {
+    "mtime_ns": 1787553106317004076,
+    "path": "tests/imported-n2-2024-12/聴解.mp3",
+    "sha256": "067127680d3ebd454011c7b1a9842ec6678d51cbd503b6298ebe6692ffbd245d",
+    "size": 71757428
+  },
+  "audio/imported-n2-2025-07.mp3": {
+    "mtime_ns": 1787547368287447301,
+    "path": "tests/imported-n2-2025-07/聴解.mp3",
+    "sha256": "f6b152f58c4fb5acd2c4f7ea2ab35f0f90f603a1550d75764738f82d4ddfa476",
+    "size": 40488540
+  }
+}

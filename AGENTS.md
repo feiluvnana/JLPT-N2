@@ -84,7 +84,10 @@ not route around it silently.
   (`logs/choukai_remediation_state.json`) — a long repair plan's resumable
   step list, tracked for the same reason the ledger is: the next run depends
   on it. A fresh context starts there, then re-derives what it claims by
-  measuring the artifact, never by trusting the flag. `logs/findings.json` is
+  measuring the artifact, never by trusting the flag. `logs/upload_manifest.json`
+  is tracked for the same reason: it is what stops `make upload-files` from
+  pushing 2.5 GB of unchanged binaries a second time, and a fresh clone that
+  loses it re-uploads the archive. `logs/findings.json` is
   the gate's `--json` output and is gitignored — it is recomputed in seconds.
   Each generated test's blueprint lives at `tests/<test_id>/test_spec.json`.
 - `.agents/`: The 9 skills — docs, scripts, and reference data.
@@ -127,7 +130,15 @@ and an exhausted budget makes the LFS API refuse *every* object — so
 `actions/checkout` itself failed and CI could deploy nothing (2026-08-24;
 `.gitignore` and `.gitattributes` carry the rule, `exam-app/SKILL.md` the CI
 half). All large binary files (`.mp3` and `.pdf`) are hosted via GitHub
-Releases (`audio`, `refs-audio`, `refs-pdf`) and uploaded via `make upload-files`.
+Releases and uploaded via `make upload-files`. The three tags — `audio` (one
+`<test_id>.mp3` per test), `refs-audio` and `refs-pdf` (the whole archive,
+Shinkanzen and Soumatome included, flattened to one asset per file) — are
+**fixed addresses, reused forever**: `build_interactive.py` and
+`build_model_answer.py` hard-code `…/releases/download/audio/<test_id>.mp3` as
+the player's fallback, so a new tag 404s every deployed sheet. Uploads are
+incremental — `logs/upload_manifest.json` records each asset's size and sha256,
+so a file goes over the wire once and again only when its bytes change
+(`--force` overrides, `--dry-run` reports).
 What a clone DOES get in git is the part these rules are measured against: every
 `*.md` extract (`booklet.md`, `script.md`, `key.md`, `audio_inspection.md`, the
 Shinkanzen/Soumatome reference extracts) plus `answer_keys.json` — 3.7 MB, all
@@ -247,7 +258,7 @@ restate them here or in a skill; fix them there.
 | `make extract-keys`       | `extract_jlpt_n2_key.py` — key PDF → `key.md` + JSON | §3 above |
 | `make extract-shinkanzen-dokkai` | `tools/extract_shinkanzen_dokkai.py` — Shin Kanzen Dokkai → Markdown | §3 above |
 | `make extract-shinkanzen` | `tools/extract_shinkanzen_choukai.py` — Shin Kanzen Choukai → Markdown | §3 above |
-| `make upload-files [TARGET=… [TEST=…]]` | `tools/upload_files.py` — Upload exam audio (`tests`) and ref files (`refs-audio`, `refs-pdf`) to GitHub Releases | §3 above |
+| `make upload-files [TARGET=… [TEST=…]]` | `tools/upload_files.py` — push exam audio (`tests`) and the whole `refs/` archive (`refs-audio`, `refs-pdf`) to their three fixed Releases; uploads each file **once** and re-uploads only what changed | §3 above |
 
 The pool-growth tooling (classify/promote/expand/suggest/fetch) is parked in
 `.agents/exam-blueprint/archive/` with no make targets — see its README.
