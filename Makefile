@@ -27,6 +27,11 @@ TARGET ?= tests
 # never a hand-picked or remembered number — see exam-blueprint/SKILL.md.
 SEED ?=
 SLUG ?=
+# Explanation language for `make scaffold-explanations`. `ja` scaffolds
+# 詳細解説.json (stems, options, passages pre-filled); anything else scaffolds an
+# EMPTY 詳細解説.<lang>.json — that set is written from the items, never
+# translated from the Japanese one (exam-model-answer).
+LANG ?= ja
 # GitHub Pages build output. Gitignored: CI builds it, nothing commits it.
 SITE ?= _site
 PAGES_PORT ?= 8766
@@ -51,6 +56,7 @@ help:
 	@echo "  make model-answer 1   Build model answer & explanation for test 1 (模範解答.html)"
 	@echo "  make explanation 1    Alias for make model-answer"
 	@echo "  make scaffold-explanations 1 Scaffold explanation JSON template directly from markdown"
+	@echo "  make scaffold-explanations 1 LANG=vi  Scaffold the Vietnamese explanation set (詳細解説.vi.json)"
 	@echo "  make lint-draft 1     Fast pre-linter for contractions, reaction turns, abs-quantifiers"
 	@echo "  make autofix 1        Auto-fix conversational contractions and stem formatting"
 	@echo "  make lint 1           Alias for make lint-draft"
@@ -135,7 +141,7 @@ model-answer:
 explanation: model-answer
 
 scaffold-explanations:
-	python3 tools/scaffold_explanations.py tests/$(TEST)
+	python3 tools/scaffold_explanations.py tests/$(TEST) --lang $(LANG)
 
 lint-draft:
 	python3 tools/lint_draft.py tests/$(TEST)

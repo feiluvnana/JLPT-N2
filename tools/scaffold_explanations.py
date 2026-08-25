@@ -12,9 +12,21 @@ Usage:
     python3 tools/scaffold_explanations.py tests/20260814_1
     python3 tools/scaffold_explanations.py tests/20260814_1 --overwrite
     python3 tools/scaffold_explanations.py tests/20260814_1 --lean
+    python3 tools/scaffold_explanations.py tests/20260814_1 --lang vi
 
 Outputs:
-    tests/<test_id>/詳細解説.json
+    tests/<test_id>/詳細解説.json        (--lang ja, the default)
+    tests/<test_id>/詳細解説.<lang>.json (any other language)
+
+A non-`ja` scaffold is deliberately EMPTY and carries no exam wording — no
+stem, no options, no passage, no script. 詳細解説.json is the single copy of
+the booklet's own text; a second copy would be one more surface for it to drift
+on, and `verify_fidelity.py` only knows how to police one. The author reads the
+wording out of 詳細解説.json (or the booklet) and writes the prose here.
+
+It is also NOT a translation template: the empty fields are there to be written
+from the item, not from the Japanese pane beside them (exam-model-answer
+"Two languages, two rewrites").
 """
 
 import argparse
@@ -208,11 +220,41 @@ def scaffold_test(test_dir: Path, lean: bool = False, merge_existing: bool = Tru
     return out
 
 
+def scaffold_secondary(test_dir: Path, existing: dict) -> dict:
+    """The skeleton for a non-`ja` explanation set: keys, and nothing to copy.
+
+    Item keys and the per-item option COUNT come from 詳細解説.json, so the two
+    panes always describe the same 101 items with the same number of options —
+    the parity the gate then enforces. Everything else is left empty on purpose.
+    """
+    ja_path = test_dir / "詳細解説.json"
+    if not ja_path.is_file():
+        raise FileNotFoundError(
+            f"{ja_path} is missing — author the Japanese set first; it owns the "
+            f"item keys and the booklet wording every other language is written against.")
+    ja = json.loads(ja_path.read_text(encoding="utf-8"))
+
+    out = {}
+    for key, ja_item in ja.items():
+        prev = existing.get(key, {})
+        n_opts = len(ja_item.get("options_analysis") or ja_item.get("options") or []) or 4
+        analysis = prev.get("options_analysis") or [""] * n_opts
+        if len(analysis) != n_opts:          # the Japanese set gained or lost an option
+            analysis = (analysis + [""] * n_opts)[:n_opts]
+        out[key] = {
+            "why_correct": prev.get("why_correct", ""),
+            "options_analysis": analysis,
+            "points": prev.get("points", []),
+        }
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("test_dir", help="Path to tests/<test_id>")
-    ap.add_argument("--overwrite", action="store_true", help="Overwrite existing 詳細解説.json")
+    ap.add_argument("--overwrite", action="store_true", help="Overwrite the existing file instead of merging into it")
     ap.add_argument("--lean", action="store_true", help="Exclude duplicate stem/options/passage/script (build_model_answer will pull from source markdown)")
+    ap.add_argument("--lang", default="ja", help="Explanation language (default ja -> 詳細解説.json; anything else -> 詳細解説.<lang>.json)")
     ap.add_argument("--stdout", action="store_true", help="Print JSON to stdout without writing file")
     args = ap.parse_args()
 
@@ -221,11 +263,22 @@ def main():
         print(f"Error: Directory not found: {test_dir}", file=sys.stderr)
         sys.exit(1)
 
-    dest_file = test_dir / "詳細解説.json"
+    lang = args.lang.strip().lower()
+    dest_file = test_dir / ("詳細解説.json" if lang == "ja" else f"詳細解説.{lang}.json")
     if dest_file.exists() and not args.overwrite and not args.stdout:
         print(f"File already exists: {dest_file}. Merging while preserving existing explanations...")
 
-    data = scaffold_test(test_dir, lean=args.lean, merge_existing=not args.overwrite)
+    existing = {}
+    if dest_file.is_file() and not args.overwrite:
+        try:
+            existing = json.loads(dest_file.read_text(encoding="utf-8"))
+        except Exception:
+            existing = {}
+
+    if lang == "ja":
+        data = scaffold_test(test_dir, lean=args.lean, merge_existing=not args.overwrite)
+    else:
+        data = scaffold_secondary(test_dir, existing)
 
     if args.stdout:
         print(json.dumps(data, ensure_ascii=False, indent=2))

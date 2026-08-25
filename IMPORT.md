@@ -40,9 +40,10 @@ The pipeline is three steps and nothing else:
    `make sheet` and `make check` (read every line, WARN included). No
    `exam-qa-review` pass.
 3. **Model answer, last.** Once the content is settled and the gate is green:
-   author `詳細解説.json` (`exam-model-answer`), then run
-   `make model-answer imported-⟨slug⟩`. Japanese only — the per-language
-   pipeline was retired 2026-08-21.
+   author `詳細解説.json` (Japanese), then `詳細解説.vi.json` (Vietnamese) **in a
+   separate context** — the two sets are written from the items, never
+   translated from each other, and both stay inside `exam-model-answer`'s
+   terseness bands. Then run `make model-answer imported-⟨slug⟩`.
    **Solve each item from the source before you explain it, and confirm the
    official key.** Derive the answer first, then compare with the key, then
    write — an explanation written backwards from the key will justify a wrong

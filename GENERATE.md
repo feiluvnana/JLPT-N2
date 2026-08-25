@@ -33,10 +33,17 @@ Binding points, all from those two files:
    table.
 4. **Model answer (FINAL STEP)**: After `QA: PASS`, and only then, build the
    explanation deliverable — all questions and keys must be locked first.
-   a. Author `tests/⟨test_id⟩/詳細解説.json` (`exam-model-answer`).
-   b. Run `make model-answer ⟨test_id⟩` LAST. The page is **Japanese-only**:
-      the per-language explanation pipeline was retired 2026-08-21, so there is
-      no translation step and no language to declare here.
+   a. Author `tests/⟨test_id⟩/詳細解説.json` (Japanese) — it also owns the exam
+      wording both panes print.
+   b. Author `tests/⟨test_id⟩/詳細解説.vi.json` (Vietnamese) **in a separate
+      context from (a)**. The two sets are WRITTEN, not translated: a context
+      still holding the Japanese explanations reproduces their sentences and
+      their framing without ever deciding to. One subagent per language, each
+      reading the paper rather than the other's file.
+   c. Both sets must sit inside `exam-model-answer`'s terseness bands — the gate
+      FAILs a field over the cap, and cutting to band never means replacing a
+      concrete reason with a generic one.
+   d. Run `make model-answer ⟨test_id⟩` LAST.
 5. **Commit** `tests/⟨test_id⟩/` and the updated `logs/` together when done.
 6. **Final report** per `AGENTS.md` §0.7: which skills you read, which stages
    you ran, the seed you used, every WARN you resolved or justified, and

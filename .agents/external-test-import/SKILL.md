@@ -67,7 +67,9 @@ copying PDFs into `tests/`.
    and repair what the source's own print/OCR got wrong. This is the gate.
 3. **Model answer, last.** Only once the content is settled and all 101 keys
    are reconciled against the official key: solve each item from the source,
-   confirm the key, then author `詳細解説.json` and render `模範解答.html`.
+   confirm the key, then author `詳細解説.json` and `詳細解説.vi.json` (separate
+   contexts, written not translated — `exam-model-answer`) and render
+   `模範解答.html`.
 
 There is no fourth step. An import has no authored content to critique, so it
 never runs the generation-side originality, topic-rotation, or
@@ -229,7 +231,9 @@ Only after step 2 is clean and `make check` is green:
 
 ```bash
 make scaffold-explanations imported-<slug>   # pre-fills stems/options/passages/scripts
-# author 詳細解説.json: why_correct, options_analysis, points  (exam-model-answer)
+# author 詳細解説.json, then 詳細解説.vi.json in a separate context:
+#   why_correct, options_analysis, points — inside the terseness bands
+#   (exam-model-answer)
 python3 .agents/exam-model-answer/scripts/verify_fidelity.py tests/imported-<slug>
 make model-answer imported-<slug>            # -> 模範解答.html
 ```

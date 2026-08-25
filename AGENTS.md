@@ -69,7 +69,7 @@ not route around it silently.
   6. `exam-app`: Rendering and running the exam — booklet HTML (`build_booklet.py`, no PDF), the merged answer sheet `解答.html` with in-page grading (`build_interactive.py`), the one server (`serve_sheet.py`), the static GitHub Pages build (`build_pages.py`), and CLI grading (`grade_answers.py`).
   7. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test). It also root-causes every finding back to the skill, script, or gate check that let it through, so the next test does not reproduce it.
   8. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
-  9. `exam-model-answer`: Model answer & comprehensive explanation generator — builds `模範解答.html` explaining every item (why the correct option is chosen and why each distractor is wrong) across Language Knowledge, Reading, and Listening. Japanese only.
+  9. `exam-model-answer`: Model answer & explanation generator — builds `模範解答.html` explaining every item (why the correct option is chosen and why each distractor is wrong) across Language Knowledge, Reading, and Listening. Two languages behind one segmented control (Japanese + Vietnamese), each **written**, not translated from the other, and each field inside the skill's terseness bands.
 
 ---
 
@@ -117,7 +117,8 @@ Inside `tests/<test_id>/` — this table is the single copy; skills point here:
 | User Answers Record                  | `ユーザー解答.json`                    | Saved automatically on submit from `解答.html`                                         |
 | Combined Grading Result              | `採点結果.json`                        | Generated on submit from `解答.html` or written by `grade_answers.py`. There is no Markdown report — the result is data, read back by the result screen and by the test list |
 | Model Answer & Detailed Explanation  | `模範解答.html`                        | Comprehensive model answer and explanation document for all 101 items, rendered by `build_model_answer.py` |
-| Model Answer Explanations | `詳細解説.json`                        | Hand-authored per-item explanations — the source `模範解答.html` renders (`exam-model-answer`). Japanese only: the per-language pipeline was retired 2026-08-21 |
+| Model Answer Explanations (JA)        | `詳細解説.json`                        | Hand-authored per-item explanations — the source `模範解答.html` renders (`exam-model-answer`). Also the ONE copy of the exam wording (`stem`/`options`/`passage`/`script`) both language panes print |
+| Model Answer Explanations (VI)        | `詳細解説.vi.json`                     | The Vietnamese pane. Prose only — no exam wording — and **written from the items, never translated** from `詳細解説.json` (`exam-model-answer`) |
 | Import provenance (imported only)    | `import_meta.json`                     | Written by `external-test-import` for `tests/imported-<slug>/` only — generated tests must not have this file |
 
 ---
@@ -254,7 +255,7 @@ restate them here or in a skill; fix them there.
 | `make mp3 <id>`           | `make_choukai_mp3.py` on `聴解スクリプト.txt` | `choukai-audio` |
 | `make sheet <id>`         | `build_interactive.py` → `解答.html` | `exam-app` |
 | `make model-answer <id>`  | `build_model_answer.py` → `模範解答.html` | `exam-model-answer` |
-| `make scaffold-explanations <id>` | `scaffold_explanations.py` → scaffolds `詳細解説.json` template | `exam-model-answer` |
+| `make scaffold-explanations <id> [LANG=vi]` | `scaffold_explanations.py` → scaffolds `詳細解説.json` (or an empty `詳細解説.<lang>.json`) | `exam-model-answer` |
 | `make lint-draft <id>`    | `lint_draft.py` — fast deterministic pre-lint before QA | `exam-qa-review` |
 | `make autofix <id>`       | `lint_draft.py --fix` — auto-fixes contractions and stem layout | `exam-qa-review` |
 | `make verify-scramble <id>` | `verify_scramble.py` — topological & permutation validator for 問題8 | `question-authoring` |
@@ -314,9 +315,13 @@ template, and the fix→re-review loop; read it before any generation work.
 
 **Model answer generation (`make model-answer <id>`) MUST always be the final step**
 (for both generated exams and imported exams) — run only after QA/fidelity verification
-has passed and all questions, options, and keys are locked. The page is
-Japanese-only: the per-language explanation pipeline (`詳細解説.<lang>.json`, its
-scaffold/merge targets, the in-page switcher) was retired 2026-08-21.
+has passed and all questions, options, and keys are locked. The page carries TWO
+explanation sets behind an in-page segmented control — `詳細解説.json` (Japanese)
+and `詳細解説.vi.json` (Vietnamese) — **authored in separate contexts, one per
+language, and written from the items rather than translated from each other**
+(`exam-model-answer`). Both panes print the exam's own wording, stored once,
+above the explanation. Every field is capped by that skill's terseness bands and
+the gate enforces them.
 
 The two context-isolation rules that are never optional, in any harness or
 fallback: **no long single-run authoring** (defects cluster in whatever one

@@ -94,7 +94,7 @@ UI = {
         "points_title_choukai": "【重要表現・リスニングポイント】",
         "tag_correct": "[正解]",
         "tag_wrong": "[不正解]",
-        "footer": "JLPT N2 模擬試験 模範解答・詳細解説（模範解答.html）",
+        "footer": "JLPT N2 Mock Exam Model Answer &amp; Comprehensive Explanation (模範解答.html)",
     },
     "vi": {
         "html_lang": "vi",
@@ -220,16 +220,42 @@ def format_passage_text(text: str) -> str:
     return apply_furigana_bold("<br><br>".join(rendered))
 
 
+# The verdict label is supplied by the RENDERER, from the official key, by index.
+# An author who also types it into the prose gets it printed twice, so it is
+# stripped here — in both languages.
+#
+# Vietnamese needs more care than Japanese: 「正解」 is only ever a label, but
+# `Sai` and `Đúng` are ordinary words. "Sai âm cả hai chữ" means "the reading is
+# wrong for both characters" and must survive intact, while "Sai: …" is a label.
+# So a bare verdict word is stripped ONLY when a separator marks it as one;
+# the multi-word "Đáp án đúng"/"Đáp án sai" is unambiguous and needs none.
+_VERDICT_PREFIX = re.compile(
+    r"^(?:"
+    r"\[?(?:正解|不正解|誤用|誤り)\]?[:：\s]*"          # [正解] / 正解: / 誤り:
+    r"|\(?(?:正解|不正解|誤用|誤り)\)?[:：\s]*"
+    r"|\[?Đáp\s+án\s+(?:đúng|sai)\]?\s*[:：,，]?\s*"  # Đáp án đúng: / Đáp án đúng,
+    r"|\[(?:Đúng|Sai)\]\s*"                           # [Đúng] / [Sai]
+    r"|(?:Đúng|Sai)\s*[:：]\s*"                        # Đúng: / Sai:  (separator required)
+    r")+",
+    re.IGNORECASE)
+
+
 def clean_option_analysis_text(text: str) -> str:
-    """Strip redundant prefixes like '1. 不正解: ', '[不正解]', '正解: ', '誤り: ' to prevent repeated labels."""
+    """Strip a verdict label the author typed — the renderer supplies its own."""
     if not text:
         return ""
     # Remove leading number index like '1. ' or '2. '
     text = re.sub(r"^\s*\d+[\.、\s]\s*", "", text.strip())
-    # Remove redundant tags like ○, ✗, [正解], [不正解], 誤用:, 正解:, 不正解:, 誤り:
     text = re.sub(r"^[○✗\s]*", "", text)
-    text = re.sub(r"^(?:\[?(?:正解|不正解|誤用|誤り)\]?[:：\s]*|\(?(?:正解|不正解|誤用|誤り)\)?[:：\s]*)+", "", text)
-    return text.strip()
+    text = _VERDICT_PREFIX.sub("", text).strip()
+    # Stripping "Đáp án đúng: " leaves the sentence starting lower-case. Only a
+    # CASED lower-case opener is re-capitalised: kanji, kana and digits are
+    # uncased, so `islower()` is already the whole test — and it must not be
+    # narrowed to ASCII, since the Vietnamese letters that actually open these
+    # lines (đ, ơ, ư, …) are not ASCII.
+    if text[:1].islower():
+        text = text[0].upper() + text[1:]
+    return text
 
 
 def parse_gengo_markdown(gengo_md_text: str):
@@ -360,11 +386,11 @@ def parse_choukai_scripts(script_text: str):
 
 
 HTML_TEMPLATE = """<!DOCTYPE html>
-<html lang="ja">
+<html lang="{html_lang}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>テスト {test_id}（模範解答・詳細解説）</title>
+<title>{doc_title}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
@@ -839,6 +865,37 @@ h1.title {{
 }}
 
 .header-right {{ display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }}
+/* --- language switching -----------------------------------------------------
+   ONE mechanism for the whole page: every bilingual string ships both panes and
+   `body[data-lang]` hides the other. No JS text substitution, so a label cannot
+   go missing when a new one is added — it is either in UI[lang] or it is not
+   rendered at all. A single-language page emits no .lang-pane wrappers. */
+.lang-pane {{ display: contents; }}
+body[data-lang="ja"] .lang-pane[data-lang="vi"],
+body[data-lang="vi"] .lang-pane[data-lang="ja"] {{ display: none !important; }}
+
+.lang-switch {{
+  display: inline-flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9999px;
+  padding: 0.18rem;
+  gap: 0.15rem;
+}}
+.lang-btn {{
+  border: none;
+  background: transparent;
+  color: #bfdbfe;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.28rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}}
+.lang-btn:hover {{ color: #fff; }}
+.lang-btn.active {{ background: #fff; color: var(--primary); }}
 .trans-title {{
   font-size: 0.8rem;
   font-weight: 700;
@@ -859,37 +916,39 @@ footer {{
 
 @media print {{
   header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump {{ display: none !important; }}
+  .lang-switch {{ display: none !important; }}
   body {{ background: #fff; color: #000; font-size: 10pt; }}
   .q-card {{ page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }}
 }}
 </style>
 </head>
-<body>
+<body data-lang="{default_lang}">
 
 <header class="app-header">
   <div class="header-inner">
     <div class="header-top-row">
-      <a href="解答.html?screen=result" class="header-back-btn">← 採点結果へ戻る</a>
+      <a href="解答.html?screen=result" class="header-back-btn">{lbl_back}</a>
       <div class="header-right">
+        {lang_switch_html}
         <span class="header-badge">JLPT N2 MODEL ANSWER &amp; EXPLANATION</span>
       </div>
     </div>
-    <h1 class="title">日本語能力試験 N2 模範解答・詳細解説</h1>
-    <div class="subtitle">テスト <strong>{test_id}</strong> ｜ <span>全101問（言語知識・読解 71問 ＋ 聴解 30問）完全網羅解説集</span></div>
+    <h1 class="title">{lbl_title}</h1>
+    <div class="subtitle">{lbl_subtitle}</div>
   </div>
 </header>
 
 <div class="sticky-nav">
   <div class="nav-container">
     <div class="tab-group">
-      <button class="tab-btn active" onclick="filterSection('all', this)"><span>すべて</span> (101)</button>
-      <button class="tab-btn" onclick="filterSection('goi', this)"><span>文字・語彙</span> (30)</button>
-      <button class="tab-btn" onclick="filterSection('bunpou', this)"><span>文法</span> (21)</button>
-      <button class="tab-btn" onclick="filterSection('dokkai', this)"><span>読解</span> (20)</button>
-      <button class="tab-btn" onclick="filterSection('choukai', this)"><span>聴解</span> (30)</button>
+      <button class="tab-btn active" onclick="filterSection('all', this)"><span>{tab_all}</span> (101)</button>
+      <button class="tab-btn" onclick="filterSection('goi', this)"><span>{tab_goi}</span> (30)</button>
+      <button class="tab-btn" onclick="filterSection('bunpou', this)"><span>{tab_bunpou}</span> (21)</button>
+      <button class="tab-btn" onclick="filterSection('dokkai', this)"><span>{tab_dokkai}</span> (20)</button>
+      <button class="tab-btn" onclick="filterSection('choukai', this)"><span>{tab_choukai}</span> (30)</button>
     </div>
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="問題番号・キーワード検索..." oninput="handleSearch()">
+      <input type="text" id="searchInput" placeholder="{search_placeholder}" oninput="handleSearch()">
     </div>
   </div>
 </div>
@@ -901,11 +960,41 @@ footer {{
 </div>
 
 <footer>
-  JLPT N2 Mock Exam Model Answer & Comprehensive Explanation (模範解答.html)<br>
+  {lbl_footer}<br>
   Test ID: {test_id}
 </footer>
 
 <script>
+/* The only labels JS owns: three strings that live in attributes or in text it
+   writes at runtime, so they cannot ship as .lang-pane markup. Everything else
+   on the page is rendered in both languages and switched by CSS. */
+const LANG_STRINGS = {lang_strings_json};
+const LANGS = {langs_json};
+
+function setLang(lang, persist) {{
+  if (!LANGS.includes(lang)) lang = LANGS[0];
+  document.body.dataset.lang = lang;
+  document.documentElement.lang = lang;
+  const s = LANG_STRINGS[lang] || {{}};
+  document.title = s.doc_title || document.title;
+  const search = document.getElementById('searchInput');
+  if (search) search.placeholder = s.search_placeholder || '';
+  const status = document.getElementById('audioStatus');
+  if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
+  document.querySelectorAll('.lang-btn').forEach(b => {{
+    b.classList.toggle('active', b.dataset.lang === lang);
+  }});
+  if (persist) {{
+    try {{ localStorage.setItem('kaisetsuLang', lang); }} catch (e) {{}}
+  }}
+}}
+
+(function initLang() {{
+  let saved = null;
+  try {{ saved = localStorage.getItem('kaisetsuLang'); }} catch (e) {{}}
+  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+}})();
+
 function filterSection(sec, btn) {{
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -966,7 +1055,11 @@ function playAt(seconds, label) {{
   audio.currentTime = seconds;
   audio.play();
   const status = document.getElementById('audioStatus');
-  if (status) status.innerText = '再生中: ' + label + ' (' + formatTime(seconds) + ')';
+  if (status) {{
+    const s = LANG_STRINGS[document.body.dataset.lang] || {{}};
+    status.dataset.playing = '1';
+    status.innerText = (s.audio_playing || '') + label + ' (' + formatTime(seconds) + ')';
+  }}
 }}
 
 function formatTime(sec) {{
@@ -1093,14 +1186,24 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         except Exception:
             pass
 
-    # Check for dedicated detailed explanation json
-    detailed_json_path = test_dir / "詳細解説.json"
-    detailed_data = {}
-    if detailed_json_path.is_file():
+    # The explanation sets, one file per language. `ja` (詳細解説.json) owns the
+    # exam-derived wording — stem/options/passage/script — as well as its own
+    # prose; every other language's file carries ONLY the authored prose, so the
+    # booklet's wording has exactly one copy and cannot drift between panes.
+    details = {}
+    for lg in LANGS:
+        fname = "詳細解説.json" if lg == "ja" else f"詳細解説.{lg}.json"
+        fpath = test_dir / fname
+        if not fpath.is_file():
+            continue
         try:
-            detailed_data = json.loads(detailed_json_path.read_text(encoding="utf-8"))
-        except Exception:
-            detailed_data = {}
+            details[lg] = json.loads(fpath.read_text(encoding="utf-8"))
+        except Exception as exc:
+            print(f"  ! {fname} did not parse, its pane will fall back to the booklet 解説: {exc}")
+    langs = [lg for lg in LANGS if lg in details] or ["ja"]
+    detailed_data = details.get("ja", {})
+    if len(langs) > 1:
+        print(f"  languages: {', '.join(langs)}")
 
     # Derive raw stems, options, passages, and scripts as fallback for lean explanation formats
     gengo_raw, choukai_raw = {}, {}
@@ -1127,10 +1230,11 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         
         if current_sec != sec_name:
             current_sec = sec_name
+            sec_label = {"文字・語彙": "tab_goi", "文法": "tab_bunpou"}.get(sec_name, "tab_dokkai")
             content_blocks.append(
                 f'<div class="section-banner" data-section="{sec_code}">'
-                f'<span>【{sec_name}】{tax_info["mondai"]} 〜</span>'
-                f'<small>JLPT N2 {sec_name}</small></div>'
+                + pane(langs, lambda lg: f'<span>【{UI[lg][sec_label]}】{tax_info["mondai"]} 〜</span>')
+                + f'<small>JLPT N2 {sec_name}</small></div>'
             )
 
         q_start, q_end = tax_info["range"]
@@ -1152,9 +1256,10 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
             passage_text = detail.get("passage") if "passage" in detail else raw_q.get("passage")
             if passage_text:
                 passage_html = (
-                    f'<div class="passage-box">'
-                    f'<div class="passage-title">{UI["passage_title"]}</div>'
-                    f'{format_passage_text(passage_text)}</div>')
+                    '<div class="passage-box">'
+                    '<div class="passage-title">'
+                    + pane(langs, lambda lg: UI[lg]["passage_title"])
+                    + f'</div>{format_passage_text(passage_text)}</div>')
 
             opt_items_html = []
             for i, opt in enumerate(options, 1):
@@ -1162,16 +1267,17 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
                 cls = "opt-item is-correct" if is_corr else "opt-item"
                 opt_items_html.append(f'<div class="{cls}"><span class="opt-num">{i}</span><span>{opt}</span></div>')
 
-            explanation_html = explanation_box_html(detailed_data, str(q_num), ans_val, raw_kaisetsu)
+            explanation_html = explanation_box_html(details, str(q_num), ans_val,
+                                                    raw_kaisetsu, langs)
 
             card_html = f"""
             <div class="q-card" id="q-{q_num}" data-section="{sec_code}">
               <div class="q-header">
                 <div class="q-meta">
-                  <span class="q-num-badge">第 {q_num} 問</span>
-                  <span class="q-type-badge">{tax_info["mondai"]} {tax_info["name"]}</span>
+                  <span class="q-num-badge">{pane(langs, lambda lg: UI[lg]["q_num"].format(n=q_num))}</span>
+                  <span class="q-type-badge">{pane(langs, lambda lg: tax_info["mondai"] + " " + (tax_info["name"] if lg == "ja" else tax_info["en"]))}</span>
                 </div>
-                <div class="q-ans-badge">正解: {ans_val}</div>
+                <div class="q-ans-badge">{pane(langs, lambda lg: UI[lg]["ans_badge"])}{ans_val}</div>
               </div>
               <div class="q-body">
                 {passage_html}
@@ -1187,9 +1293,9 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
 
     # 2. Choukai
     content_blocks.append(
-        f'<div class="section-banner" data-section="choukai">'
-        f'<span>【聴解】問題1〜問題5</span>'
-        f'<small>JLPT N2 Choukai</small></div>'
+        '<div class="section-banner" data-section="choukai">'
+        + pane(langs, lambda lg: f'<span>【{UI[lg]["tab_choukai"]}】問題1〜問題5</span>')
+        + '<small>JLPT N2 Choukai</small></div>'
     )
 
     all_choukai_keys = sorted(set(list(choukai_exps.keys()) + list(canonical_choukai_keys.keys()) + list(choukai_raw.keys())))
@@ -1209,8 +1315,8 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         options = [apply_furigana(opt) for opt in raw_opts]
         raw_script = detail.get("script") if "script" in detail else (raw_c.get("script") or scripts.get(key_id, "（音声スクリプト参照）"))
         script_snippet = apply_furigana(raw_script or "（音声スクリプト参照）")
-        explanation_html = explanation_box_html(detailed_data, key_id, ans_val,
-                                                raw_kaisetsu, choukai=True)
+        explanation_html = explanation_box_html(details, key_id, ans_val,
+                                                raw_kaisetsu, langs, choukai=True)
 
         opt_items_html = []
         for i, opt in enumerate(options, 1):
@@ -1223,21 +1329,21 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
             st = chapters_data[key_id]
             audio_jump_btn = (
                 f'<button class="script-audio-jump" onclick="playAt({st}, \'{key_id}\')">'
-                f'音声再生 '
-                f'({int(st//60)}:{int(st%60):02d})</button>')
+                + pane(langs, lambda lg: UI[lg]["play_btn"])
+                + f' ({int(st//60)}:{int(st%60):02d})</button>')
 
         card_html = f"""
         <div class="q-card" id="{safe_id}" data-section="choukai">
           <div class="q-header">
             <div class="q-meta">
               <span class="q-num-badge">{key_id}</span>
-              <span class="q-type-badge">聴解セクション</span>
+              <span class="q-type-badge">{pane(langs, lambda lg: UI[lg]["q_type_choukai"])}</span>
             </div>
-            <div class="q-ans-badge">正解: {ans_val}</div>
+            <div class="q-ans-badge">{pane(langs, lambda lg: UI[lg]["ans_badge"])}{ans_val}</div>
           </div>
           <div class="q-body">
             <div class="script-box">
-              <div class="passage-title">音声スクリプト</div>
+              <div class="passage-title">{pane(langs, lambda lg: UI[lg]["script_title"])}</div>
               {script_snippet}
               {audio_jump_btn}
             </div>
@@ -1259,14 +1365,43 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         fallback_url = f"https://github.com/feiluvnana/JLPT-N2/releases/download/audio/{test_id}.mp3"
         audio_player_html = f"""
         <div id="sticky-audio">
-          <span style="font-weight:700; font-size:0.85rem;">聴解音声</span>
+          <span style="font-weight:700; font-size:0.85rem;">{pane(langs, lambda lg: UI[lg]["audio_label"])}</span>
           <audio id="mainAudio" controls preload="metadata" src="聴解.mp3" data-fallback-src="{fallback_url}"></audio>
-          <span id="audioStatus" class="audio-status">準備完了</span>
+          <span id="audioStatus" class="audio-status">{UI[langs[0]]["audio_ready"]}</span>
         </div>
         """
 
+    default_lang = langs[0]
+    lang_switch_html = ""
+    if len(langs) > 1:
+        lang_switch_html = '<div class="lang-switch">' + "".join(
+            f'<button class="lang-btn" data-lang="{lg}" onclick="setLang(\'{lg}\', true)">'
+            f'{LANG_NAME[lg]}</button>' for lg in langs) + '</div>'
+
+    js_strings = {lg: {"doc_title": UI[lg]["doc_title"].format(test_id=test_id),
+                       "search_placeholder": UI[lg]["search_placeholder"],
+                       "audio_ready": UI[lg]["audio_ready"],
+                       "audio_playing": UI[lg]["audio_playing"]}
+                  for lg in langs}
+
     rendered_html = HTML_TEMPLATE.format(
         test_id=test_id,
+        html_lang=UI[default_lang]["html_lang"],
+        doc_title=UI[default_lang]["doc_title"].format(test_id=test_id),
+        search_placeholder=UI[default_lang]["search_placeholder"],
+        default_lang=default_lang,
+        lang_switch_html=lang_switch_html,
+        lang_strings_json=json.dumps(js_strings, ensure_ascii=False),
+        langs_json=json.dumps(langs),
+        lbl_back=pane(langs, lambda lg: UI[lg]["back"]),
+        lbl_title=pane(langs, lambda lg: UI[lg]["title"]),
+        lbl_subtitle=pane(langs, lambda lg: UI[lg]["subtitle"].format(test_id=test_id)),
+        lbl_footer=pane(langs, lambda lg: UI[lg]["footer"]),
+        tab_all=pane(langs, lambda lg: UI[lg]["tab_all"]),
+        tab_goi=pane(langs, lambda lg: UI[lg]["tab_goi"]),
+        tab_bunpou=pane(langs, lambda lg: UI[lg]["tab_bunpou"]),
+        tab_dokkai=pane(langs, lambda lg: UI[lg]["tab_dokkai"]),
+        tab_choukai=pane(langs, lambda lg: UI[lg]["tab_choukai"]),
         audio_player_html=audio_player_html,
         content_html="\n".join(content_blocks),
     )

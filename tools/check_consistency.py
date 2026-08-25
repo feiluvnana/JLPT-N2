@@ -473,6 +473,7 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     # from an earlier revision, so the item is re-solved and the entry rewritten.
     "kaisetsu_tag_key":               ("詳細解説.json",        "authoring"),
     "kaisetsu_language":              ("詳細解説.<lang>.json", "authoring"),
+    "kaisetsu_vi_furigana":           ("詳細解説.<lang>.json", "authoring"),
 }
 
 # The tier is a pure function of the artifact a repair touches (§5.0), so two
@@ -8703,9 +8704,9 @@ KAISETSU_ITEM_BUDGET = {"ja": 210, "vi": 380}   # vi = ja x1.8, the same allowan
 # or a later regression on it silently downgrades from FAIL to WARN.
 KAISETSU_LENGTH_GRANDFATHERED = {
     "20260807_1", "20260810_1", "20260810_2", "20260811_1", "20260812_1",
-    "20260812_2", "20260813_1", "20260813_2", "20260814_1", "20260817_1",
-    "20260817_2", "20260817_3",
-    # 20260818_1, 20260819_1, 20260821_1 removed 2026-08-25: rewritten to band in both languages
+    "20260812_2", "20260813_1", "20260813_2", "20260814_1",
+    "20260817_3",
+    # 20260817_1, 20260817_2, 20260818_1, 20260819_1, 20260821_1 removed 2026-08-25: rewritten to band in both languages
     # (594 -> 180 chars/item ja, 349 vi) and passing on merit. Leaving it here
     # would downgrade a future regression on it from FAIL to WARN — the exact
     # thing this list is not for.
@@ -8961,6 +8962,50 @@ def check_grandfather_sets_are_live():
          f"regression from FAIL to WARN")
 
 
+# A `points` entry in the Vietnamese pane hands the reader a Japanese word to
+# LEARN — 「代理」: người làm thay — so it must carry the reading. Elsewhere in
+# that pane the Japanese is a quote the reader can match against the passage
+# printed above, and ruby on it is noise; the rule is deliberately narrow
+# (exam-model-answer, scoped 2026-08-25 after measuring the first four sets).
+#
+# WARN, not FAIL: the reading has to be right, and a wrong one is a worse defect
+# than a missing one, so this points at work to do rather than blocking on it.
+_VI_POINT_TERM = re.compile(r"[一-龥々]{2,}")
+
+
+def check_kaisetsu_vi_points_furigana(test_id: str):
+    """Vietnamese `points` must gloss the reading of the Japanese words they teach."""
+    path = ROOT / "tests" / test_id / "詳細解説.vi.json"
+    if not path.is_file():
+        return
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return
+    terms = ruby = 0
+    bare = []
+    for key, item in sorted(data.items()):
+        if not isinstance(item, dict):
+            continue
+        for pt in item.get("points") or []:
+            ruby += len(re.findall(r"《[^》]+》", pt or ""))
+            for m in _VI_POINT_TERM.finditer(re.sub(r"《[^》]*》", "", pt or "")):
+                terms += 1
+                if len(bare) < 6:
+                    bare.append(f"{key}「{m.group(0)}」")
+    if not terms:
+        return
+    covered = ruby / terms
+    warn(f"{test_id}: 詳細解説.vi.json points gloss their Japanese readings "
+         f"({ruby}/{terms} = {covered:.0%})",
+         covered >= 0.5,
+         f"only {ruby} of {terms} kanji terms in the Vietnamese `points` carry a "
+         f"《reading》 — e.g. {', '.join(bare)}. A points entry hands the reader a "
+         f"word to learn, and a Vietnamese speaker cannot read it without the "
+         f"kana. Add the reading, hand-authored and verified (exam-model-answer)",
+         slug="kaisetsu_vi_furigana", test_id=test_id)
+
+
 def check_kaisetsu_band_doc():
     """exam-model-answer's band table must equal KAISETSU_BANDS.
 
@@ -9119,6 +9164,7 @@ def check_kaisetsu_prose(test_id: str):
         check_kaisetsu_tag_keys(test_id, ja, canon)
     check_kaisetsu_length(test_id, "ja", ja)
     check_kaisetsu_languages(test_id, ja)
+    check_kaisetsu_vi_points_furigana(test_id)
 
 
 # 模範解答 explains the options the candidate actually saw (G18). 詳細解説.json stores its
