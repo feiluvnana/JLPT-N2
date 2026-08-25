@@ -2648,7 +2648,7 @@
   },
   {
    "test_id": "20260817_3",
-   "seed": "42839028+reroll(listening_scenarios,76954741)+reroll(listening_scenarios,27840167)+reroll(reading_topics,5651688)+reroll(reading_topics,77649053)+reroll(reading_topics,53009255)+reroll(context_words,79773993)+reroll(orthography,97107274)+reroll-one(kanji_reading:3,17543148)",
+   "seed": "42839028+reroll(listening_scenarios,76954741)+reroll(listening_scenarios,27840167)+reroll(reading_topics,5651688)+reroll(reading_topics,77649053)+reroll(reading_topics,53009255)+reroll(context_words,79773993)+reroll(orthography,97107274)+reroll-one(kanji_reading:3,17543148)+reroll(quick_response,53081422)+reroll-one(quick_response:7,73881590)",
    "generated_at": "2026-08-18 15:06:31",
    "items": {
     "word_formation": [
@@ -2690,19 +2690,6 @@
      "目的表現(〜ように…する)",
      "結果推量(〜にちがいない)",
      "条件限定(〜ない限りは…)"
-    ],
-    "quick_response": [
-     "写真撮影はご遠慮ください。",
-     "山田さん、資料の作成、手伝ってくれて本当にありがとう。",
-     "願ってもない",
-     "社長、来期の事業計画書がまとまりましたので、ご説明させていただきます。",
-     "課長、本日の打ち合わせの議事録、作成いたしましたが、ご確認いただけますか。",
-     "この資料、もう少し数字を大きくしたほうが見やすいんじゃない？",
-     "間に合わせる",
-     "本日はお忙しいところ、お時間をいただきありがとうございます。",
-     "すみません、この申請書の書き方がよく分からないのですが、教えていただけませんか。",
-     "恐れ入りますが、こちらの書類にご署名をお願いできますでしょうか。",
-     "顔を出す"
     ],
     "listening_scenarios": [
      {
@@ -2862,6 +2849,19 @@
      "論じる(ろんじる)",
      "減る(へる)",
      "実際に(じっさいに)"
+    ],
+    "quick_response": [
+     "願ってもない",
+     "田中さん、そのやり方だと二度手間になりませんか。",
+     "気を遣う",
+     "ご提案いただいた件、社内で検討のうえ、改めてご連絡いたします。",
+     "田中さん、先ほどの会議で提出された資料、拝見しました。",
+     "すみません、この機械の使い方が分からないのですが、説明書はどこにありますか。",
+     "課長、来週の出張ですが、宿泊先を変更してもよろしいでしょうか。",
+     "手を焼く",
+     "顔を出す",
+     "お客様、恐れ入りますが、店内での撮影はご遠慮いただいております。",
+     "間に合わせる"
     ]
    },
    "draw": {
@@ -2877,7 +2877,7 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    },
-   "pools_sha": "aadf23081392"
+   "pools_sha": "cea9612d1e0b"
   },
   {
    "test_id": "20260818_1",
