@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Turn `make findings` into the 聴解 repair work order (REPORT-CHOUKAI.md §5.0).
+"""Turn `make findings` into the repair work order (REPORT-CHOUKAI.md §5.0).
+
+Both sections flow through it: `FINDING_REPAIR` declares 聴解 artifacts
+(聴解.md / 聴解スクリプト.txt / 聴解.mp3) and 読解 ones (stem/option/key-cell /
+passage prose / <surface re-author>), and `REPAIR_TIER` maps each to A/B/C/R.
+The headings below are therefore keyed by ARTIFACT, not by tier alone — a tier-B
+読解 prose repair and a tier-B 聴解 script edit share a letter and nothing else,
+and the first cut of this file printed the 読解 rows under "聴解スクリプト.txt
+(rides the next `make mp3`)", i.e. told an operator to spend 33 MB of audio
+rebuild on a kanji-density fix.
 
 This tool computes NOTHING of its own, on purpose. The gate owns the
 thresholds, `tools/choukai_profile.py` owns the measurement, `FINDING_REPAIR`
@@ -29,11 +38,32 @@ ROOT = Path(__file__).resolve().parents[1]
 FINDINGS = ROOT / "logs" / "findings.json"
 STATE = ROOT / "logs" / "choukai_remediation_state.json"
 
-TIER_TITLE = {
-    "A": "Tier A — 聴解.md only (booklet + sheet rebuild, no audio)",
-    "B": "Tier B — 聴解スクリプト.txt (rides the next `make mp3`; free if batched)",
-    "C": "Tier C — section re-authoring (C1 items / C2 whole section, by axis count)",
-    "R": "Rebuild only — `make mp3` + `make sheet`, no content change",
+ARTIFACT_TITLE = {
+    # artifact -> (tier, heading). The tier is REPAIR_TIER's, never recomputed here.
+    "聴解.md":             ("A", "Tier A — 聴解.md only (booklet + sheet rebuild, no audio)"),
+    "stem/option/key-cell": ("A", "Tier A — a 読解 stem, option or key cell (booklet + sheet rebuild)"),
+    "聴解スクリプト.txt":  ("B", "Tier B — 聴解スクリプト.txt (rides the next `make mp3`; free if batched)"),
+    "passage prose":       ("B", "Tier B — 読解 passage prose (re-opens every item anchored on that passage)"),
+    "<section re-author>": ("C", "Tier C — 聴解 section re-authoring (C1 items / C2 whole section, by axis count)"),
+    "<surface re-author>": ("C", "Tier C — 読解 surface re-authoring (subject or voice changes)"),
+    "聴解.mp3":            ("R", "Rebuild only — `make mp3` + `make sheet`, no content change"),
+}
+
+# The order headings print in: cheapest artifact first, and 聴解 before 読解
+# inside a tier so the rebuild batching stays adjacent to what forces it.
+ARTIFACT_ORDER = ["聴解.md", "stem/option/key-cell", "聴解スクリプト.txt",
+                  "passage prose", "<section re-author>", "<surface re-author>",
+                  "聴解.mp3"]
+
+# Which rebuild an artifact forces. A 読解 repair never needs `make mp3`; a
+# script edit always does, or the MP3 on disk stops speaking the script on disk
+# (choukai-audio §script_sha).
+REBUILD_CMD = {
+    "聴解スクリプト.txt":  "make mp3 {tid} && make sheet {tid}",
+    "聴解.mp3":            "make mp3 {tid} && make sheet {tid}",
+    "聴解.md":             "make booklet {tid} && make sheet {tid}",
+    "stem/option/key-cell": "make booklet {tid} && make sheet {tid}",
+    "passage prose":       "make booklet {tid} && make sheet {tid}",
 }
 
 # Where the rule behind each slug lives. One pointer per finding, so a repair
@@ -58,6 +88,20 @@ OWNER_DOC = {
     "choukai_q4_stimulus_register": "choukai-items.md §'Section item mix' 問題4",
     "choukai_voice_balance": "choukai-audio SKILL.md Part 2 §Casting",
     "choukai_pause_distribution": "choukai-audio SKILL.md Part 3 §Verify the pause DISTRIBUTION",
+    "choukai_opening_frame": "choukai-audio SKILL.md §Banned formulas (opening move)",
+    "choukai_section_mix": "choukai-items.md §'Section item mix'",
+    "dokkai_banned_stems": "dokkai.md §'Banned retrieval shapes'",
+    "dokkai_q14_stem_target": "dokkai.md §問題14",
+    "dokkai_overlap_direction": "dokkai.md §'Surface overlap'",
+    "dokkai_key_rank_spread": "dokkai.md §'Option length'",
+    "dokkai_option_length_band": "dokkai.md §'Option length'",
+    "dokkai_asterisk_rate": "dokkai.md §'Axis 3'",
+    "dokkai_q10_form_mix": "dokkai.md §問題10",
+    "dokkai_span_rate": "dokkai.md §'Marked-span quoting'",
+    "dokkai_lengths": "dokkai.md §'Length bands'",
+    "dokkai_sentence_rhythm": "dokkai.md §'Sentence rhythm'",
+    "dokkai_kanji_density": "dokkai.md §'Axis 3'",
+    "dokkai_register_voice": "dokkai.md §'Axis 3'",
 }
 
 
@@ -84,22 +128,24 @@ def declined() -> dict[str, str]:
 
 
 def render(rows: list[dict], scope: str) -> str:
-    by_tier: dict[str, list[dict]] = collections.defaultdict(list)
+    by_artifact: dict[str, list[dict]] = collections.defaultdict(list)
     for r in rows:
-        by_tier[r["tier"]].append(r)
+        by_artifact[r.get("artifact") or "(undeclared)"].append(r)
 
-    out = [f"# 聴解 repair plan — {scope}", ""]
+    out = [f"# Repair plan — {scope}", ""]
     out.append(f"Derived from `logs/findings.json` ({len(rows)} finding(s) carrying a "
                f"tier). Every field here is read, never computed: the gate owns the "
-               f"thresholds, `choukai_profile.py` the measurement, `FINDING_REPAIR` the "
-               f"artifact, and the tier follows from the artifact (REPORT-CHOUKAI.md §5.0).")
+               f"thresholds, `choukai_profile.py` / `dokkai_profile.py` the measurement, "
+               f"`FINDING_REPAIR` the artifact, and the tier follows from the artifact "
+               f"(REPORT-CHOUKAI.md §5.0, REPORT-DOKKAI.md §5.0).")
     out.append("")
 
-    for tier in ("A", "B", "C", "R"):
-        items = by_tier.get(tier)
+    for artifact in ARTIFACT_ORDER:
+        items = by_artifact.get(artifact)
         if not items:
             continue
-        out += [f"## {TIER_TITLE[tier]}", ""]
+        _tier, title = ARTIFACT_TITLE[artifact]
+        out += [f"## {title}", ""]
         out += ["| paper | finding | automation | measurement | rule |", "|---|---|---|---|---|"]
         for r in sorted(items, key=lambda x: (x.get("test_id") or "", x["slug"])):
             detail = (r.get("detail") or "").replace("\n", " ").replace("|", "/")
@@ -107,20 +153,42 @@ def render(rows: list[dict], scope: str) -> str:
                        f"| {detail[:150]} | {OWNER_DOC.get(r['slug'], '—')} |")
         out.append("")
 
-    rebuild = sorted({r["test_id"] for r in rows
-                      if r["tier"] in ("B", "R") and r.get("test_id")})
+    undeclared = by_artifact.get("(undeclared)")
+    if undeclared:
+        out += ["## Undeclared artifact — a gate defect, not a repair", "",
+                "`FINDING_REPAIR` has no entry for these slugs, so no tier could be "
+                "derived. Declare each one beside its check before repairing the paper "
+                "(REPORT-CHOUKAI.md §5.0 rule 3).", ""]
+        for r in sorted(undeclared, key=lambda x: x["slug"]):
+            out.append(f"- `{r['slug']}` ({r.get('test_id') or '—'})")
+        out.append("")
+
+    # The rebuild set, split by what each artifact actually forces. A 読解 repair
+    # never needs `make mp3`: printing one is how an operator spends 33 MB of LFS
+    # on a kanji-density fix.
+    audio: dict[str, None] = {}
+    print_only: dict[str, None] = {}
+    for r in rows:
+        tid, art = r.get("test_id"), r.get("artifact")
+        if not tid or art not in REBUILD_CMD:
+            continue
+        (audio if art in ("聴解スクリプト.txt", "聴解.mp3") else print_only)[tid] = None
+    print_only = {t: None for t in print_only if t not in audio}
+
     out += ["## The rebuild set — batch these, do not do them one at a time", ""]
-    if rebuild:
+    if audio or print_only:
         out.append("A script edit is free inside a rebuild window and costs ~33 MB of "
                    "Git LFS per paper outside one. Land every tier-B edit BEFORE running:")
         out.append("")
         out.append("```bash")
-        for tid in rebuild:
-            out.append(f"make mp3 {tid} && make sheet {tid}")
+        for tid in sorted(audio):
+            out.append(REBUILD_CMD["聴解スクリプト.txt"].format(tid=tid))
+        for tid in sorted(print_only):
+            out.append(REBUILD_CMD["passage prose"].format(tid=tid) + "   # print only — no audio touched")
         out.append("make pages && make check")
         out.append("```")
     else:
-        out.append("_Empty — no paper needs its audio rebuilt._")
+        out.append("_Empty — nothing on this plan forces a rebuild._")
     out.append("")
 
     det = sorted({r["test_id"] for r in rows

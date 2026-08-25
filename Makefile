@@ -75,7 +75,7 @@ help:
 	@echo "  make dokkai-profile [BASELINE=1] 読解 measurement: archive vs tests (--baseline for the doc tables)"
 	@echo "  make choukai-profile [BASELINE=1] 聴解 measurement: archive vs tests (--baseline for the doc tables)"
 	@echo "  make findings         Gate in --json mode -> logs/findings.json (slug/tier per finding)"
-	@echo "  make repair-plan [1] [TIER=B] 聴解 work order -> qa/[<id>/]repair-plan.{json,md}"
+	@echo "  make repair-plan [1] [TIER=B] 聴解+読解 work order -> qa/[<id>/]repair-plan.{json,md}"
 	@echo "  (any per-test target also takes TEST=<id>; default TEST=1)"
 	@echo "=========================================================================="
 

@@ -246,7 +246,7 @@ restate them here or in a skill; fix them there.
 | `make dokkai-profile [BASELINE=1]` | `tools/dokkai_profile.py` — 読解 measurement (archive vs tests); `BASELINE=1` prints the doc tables | `question-authoring` |
 | `make choukai-profile [BASELINE=1]` | `tools/choukai_profile.py` — 聴解 measurement (archive vs tests); `BASELINE=1` prints the doc tables | `choukai-audio` |
 | `make findings`           | the gate in `--json` mode → `logs/findings.json` (one record per slugged finding: slug, test id, artifact, tier) | (below) |
-| `make repair-plan [<id>] [TIER=B]` | `tools/choukai_repair_plan.py` → `qa/[<id>/]repair-plan.{json,md}` — the 聴解 work order, grouped by the tier each finding's artifact implies | `exam-qa-review` |
+| `make repair-plan [<id>] [TIER=B]` | `tools/choukai_repair_plan.py` → `qa/[<id>/]repair-plan.{json,md}` — the 聴解 **and** 読解 work order, grouped by the ARTIFACT each finding declares (the tier follows from it), so a 読解 prose repair is never printed under a `make mp3` rebuild | `exam-qa-review` |
 | `make sample <id> SEED=n` | `sample_items.py` → `test_spec.json` + ledger | `exam-blueprint` |
 | `make scaffold-sections <id>` | `scaffold_sections.py` → scaffolds `_sections/` authoring templates | `question-authoring` |
 | `make matrix`             | `matrix_helper.py` — **validate only**; both generators are hard-disabled (they had no 音訓 table and emitted kana-skeleton-violating grids — qa-report-20260819_1 F4) | `question-authoring` |
