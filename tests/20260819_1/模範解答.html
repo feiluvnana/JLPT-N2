@@ -478,6 +478,37 @@ h1.title {
 }
 
 .header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* --- language switching -----------------------------------------------------
+   ONE mechanism for the whole page: every bilingual string ships both panes and
+   `body[data-lang]` hides the other. No JS text substitution, so a label cannot
+   go missing when a new one is added — it is either in UI[lang] or it is not
+   rendered at all. A single-language page emits no .lang-pane wrappers. */
+.lang-pane { display: contents; }
+body[data-lang="ja"] .lang-pane[data-lang="vi"],
+body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
+
+.lang-switch {
+  display: inline-flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9999px;
+  padding: 0.18rem;
+  gap: 0.15rem;
+}
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: #bfdbfe;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.28rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.lang-btn:hover { color: #fff; }
+.lang-btn.active { background: #fff; color: var(--primary); }
 .trans-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -498,18 +529,20 @@ footer {
 
 @media print {
   header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump { display: none !important; }
+  .lang-switch { display: none !important; }
   body { background: #fff; color: #000; font-size: 10pt; }
   .q-card { page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }
 }
 </style>
 </head>
-<body>
+<body data-lang="ja">
 
 <header class="app-header">
   <div class="header-inner">
     <div class="header-top-row">
       <a href="解答.html?screen=result" class="header-back-btn">← 採点結果へ戻る</a>
       <div class="header-right">
+        
         <span class="header-badge">JLPT N2 MODEL ANSWER &amp; EXPLANATION</span>
       </div>
     </div>
@@ -554,7 +587,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>先輩<rt>せんぱい</rt></ruby>は<ruby>大勢<rt>おおぜい</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>で<ruby>短<rt>みじか</rt></ruby>い<strong><ruby>演説<rt>えんぜつ</rt></ruby></strong>をした。</div>
+                <div class="q-stem">先輩は大勢の前で短い<strong>演説</strong>をした。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>えんせつ</span></div><div class="opt-item"><span class="opt-num">2</span><span>えんぜい</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>えんぜつ</span></div><div class="opt-item"><span class="opt-num">4</span><span>えんせい</span></div>
                 </div>
@@ -582,7 +615,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>私<rt>わたし</rt></ruby>は<ruby>山<rt>やま</rt></ruby>の<ruby>中<rt>なか</rt></ruby>で<strong><ruby>方角<rt>ほうがく</rt></ruby></strong>を<ruby>見失<rt>みうしな</rt></ruby>いました。</div>
+                <div class="q-stem">私は山の中で<strong>方角</strong>を見失いました。</div>
                 <div class="options-grid">
                   <div class="opt-item is-correct"><span class="opt-num">1</span><span>ほうがく</span></div><div class="opt-item"><span class="opt-num">2</span><span>ほうかく</span></div><div class="opt-item"><span class="opt-num">3</span><span>ぼうかく</span></div><div class="opt-item"><span class="opt-num">4</span><span>ぼうがく</span></div>
                 </div>
@@ -592,7 +625,7 @@ footer {
                   <div class="exp-content">「<ruby>方角<rt>ほうがく</rt></ruby>」は「ほうがく」と読みます。方は「ホウ」、角は「カク」ですが、「方角」では角が<ruby>濁<rt>にご</rt></ruby>って「ガク」になります。<ruby>東西南北<rt>とうざいなんぼく</rt></ruby>の<ruby>向<rt>む</rt></ruby>きのことです。山の中で進む向きが分からなくなったという文なので、「方角を見失いました」となります。正解は1です。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
-                    <li><strong>1.</strong> <span class="opt-tag-correct">[正解]</span> ほうがく：方＝ホウ、角＝ガクという正しい<ruby>組<rt>く</rt></ruby>み<ruby>合<rt>あ</rt></ruby>わせです。「北の方角」「方角が分からない」の形で使います。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> ほうかく：角を「<ruby>角度<rt>かくど</rt></ruby>」のように<ruby>清音<rt>せいおん</rt></ruby>で読んだ形です。「方角」では角が濁って「ガク」になります。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> ぼうかく：方を「ボウ」と濁らせた形ですが、方に「ボウ」という<ruby>音読<rt>おんよ</rt></ruby>みはありません。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> ぼうがく：これも方を「ボウ」と読んだ形で、「ぼうがく」という言葉はありません。</li>
+                    <li><strong>1.</strong> <span class="opt-tag-correct">[正解]</span> ほうがく：方＝ホウ、角＝ガクという正しい<ruby>組<rt>く</rt></ruby>み<ruby>合<rt>あ</rt></ruby>わせです。「北の方角」「それがまだ分からないんです」の形で使います。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> ほうかく：角を「<ruby>角度<rt>かくど</rt></ruby>」のように<ruby>清音<rt>せいおん</rt></ruby>で読んだ形です。「方角」では角が濁って「ガク」になります。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> ぼうかく：方を「ボウ」と濁らせた形ですが、方に「ボウ」という<ruby>音読<rt>おんよ</rt></ruby>みはありません。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> ぼうがく：これも方を「ボウ」と読んだ形で、「ぼうがく」という言葉はありません。</li>
                   </ul>
                   <div class="exp-section-title">【重要語彙・文法ポイント】</div><div><span class="vocab-pill"><ruby>方角<rt>ほうがく</rt></ruby>：東西南北の向き。例：<ruby>地図<rt>ちず</rt></ruby>で方角を<ruby>確<rt>たし</rt></ruby>かめる。</span><span class="vocab-pill"><ruby>方<rt>ホウ</rt></ruby>：<ruby>方向<rt>ほうこう</rt></ruby>・<ruby>方法<rt>ほうほう</rt></ruby>・<ruby>地方<rt>ちほう</rt></ruby>。<ruby>訓読<rt>くんよ</rt></ruby>みは「<ruby>方<rt>かた</rt></ruby>」。</span><span class="vocab-pill"><ruby>角<rt>カク・ガク</rt></ruby>：角度・<ruby>三角<rt>さんかく</rt></ruby>は「カク」、方角では「ガク」と濁る。訓読みは「<ruby>角<rt>かど</rt></ruby>」「<ruby>角<rt>つの</rt></ruby>」。</span><span class="vocab-pill"><ruby>迷<rt>まよ</rt></ruby>う：どちらへ行くか分からなくなる。例：<ruby>山道<rt>やまみち</rt></ruby>で道に迷う。</span><span class="vocab-pill"><ruby>見失<rt>みうしな</rt></ruby>う：それまで分かっていたものが分からなくなる。例：人ごみで<ruby>友人<rt>ゆうじん</rt></ruby>を見失う。</span></div>
                 </div>
@@ -610,14 +643,14 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>祖母<rt>そぼ</rt></ruby>は<ruby>困<rt>こま</rt></ruby>っている<ruby>人<rt>ひと</rt></ruby>に<strong><ruby>情<rt>なさ</rt></ruby>け</strong>をかける。</div>
+                <div class="q-stem">祖母は困っている人に<strong>情け</strong>をかける。</div>
                 <div class="options-grid">
                   <div class="opt-item is-correct"><span class="opt-num">1</span><span>なさけ</span></div><div class="opt-item"><span class="opt-num">2</span><span>たすけ</span></div><div class="opt-item"><span class="opt-num">3</span><span>しつけ</span></div><div class="opt-item"><span class="opt-num">4</span><span>いいつけ</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
                   <div class="exp-section-title">【正解の理由・根拠】</div>
-                  <div class="exp-content">「<ruby>情<rt>なさ</rt></ruby>け」は「なさけ」と読みます。<ruby>情<rt>ジョウ</rt></ruby>の<ruby>訓読<rt>くんよ</rt></ruby>みが「なさけ」で、<ruby>他人<rt>たにん</rt></ruby>を<ruby>思<rt>おも</rt></ruby>いやる気持ちのことです。「情けをかける」で、<ruby>困<rt>こま</rt></ruby>っている人に思いやりを<ruby>示<rt>しめ</rt></ruby>すという意味になります。文は「困っている人に〜をかける」という<ruby>内容<rt>ないよう</rt></ruby>なので、「情け」が入ります。正解は1です。</div>
+                  <div class="exp-content">「<ruby>情<rt>なさ</rt></ruby>け」は「なさけ」と読みます。<ruby>情<rt>ジョウ</rt></ruby>の<ruby>訓読<rt>くんよ</rt></ruby>みが「なさけ」で、<ruby>他人<rt>たにん</rt></ruby>を<ruby>思<rt>おも</rt></ruby>いやる気持ちのことです。「情けをかける」で、<ruby>困<rt>こま</rt></ruby>っている人に思いやりを<ruby>示<rt>しめ</rt></ruby>すという意味になります。文は「使っている人に、必要な数を聞いておきますか」という<ruby>内容<rt>ないよう</rt></ruby>なので、「情け」が入ります。正解は1です。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
                     <li><strong>1.</strong> <span class="opt-tag-correct">[正解]</span> なさけ：情の訓読みです。「情けをかける」「情け<ruby>深<rt>ぶか</rt></ruby>い人」の形で使います。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> たすけ：<ruby>漢字<rt>かんじ</rt></ruby>では「助け」と書きます。<ruby>実際<rt>じっさい</rt></ruby>に手を<ruby>貸<rt>か</rt></ruby>すことで、情の読みではありません。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> しつけ：子どもに<ruby>礼儀<rt>れいぎ</rt></ruby>や<ruby>習慣<rt>しゅうかん</rt></ruby>を教えることです。漢字では「仕付け」と書き、情とは<ruby>関係<rt>かんけい</rt></ruby>がありません。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> いいつけ：漢字では「言い付け」。上の<ruby>立場<rt>たちば</rt></ruby>の人からの<ruby>命令<rt>めいれい</rt></ruby>のことで、情の読みではありません。</li>
@@ -638,7 +671,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">この<ruby>野菜<rt>やさい</rt></ruby>は<ruby>明日<rt>あした</rt></ruby>の<ruby>朝<rt>あさ</rt></ruby><strong><ruby>出荷<rt>しゅっか</rt></ruby></strong>されます。</div>
+                <div class="q-stem">この野菜は明日の朝<strong>出荷</strong>されます。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>しゅうか</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>しゅっか</span></div><div class="opt-item"><span class="opt-num">3</span><span>しゅっが</span></div><div class="opt-item"><span class="opt-num">4</span><span>しゅうが</span></div>
                 </div>
@@ -666,7 +699,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>父<rt>ちち</rt></ruby>は<ruby>出<rt>で</rt></ruby>かける<ruby>前<rt>まえ</rt></ruby>に<ruby>戸締<rt>とじ</rt></ruby>まりを<strong><ruby>常<rt>つね</rt></ruby>に</strong><ruby>確<rt>たし</rt></ruby>かめる。</div>
+                <div class="q-stem">父は出かける前に戸締まりを<strong>常に</strong>確かめる。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>すでに</span></div><div class="opt-item"><span class="opt-num">2</span><span>ただちに</span></div><div class="opt-item"><span class="opt-num">3</span><span>しだいに</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>つねに</span></div>
                 </div>
@@ -694,7 +727,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">この<strong>かんわ</strong><ruby>辞典<rt>じてん</rt></ruby>はとても<ruby>便利<rt>べんり</rt></ruby>です。</div>
+                <div class="q-stem">この<strong>かんわ</strong>辞典はとても便利です。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>漢話</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>漢和</span></div><div class="opt-item"><span class="opt-num">3</span><span>緩話</span></div><div class="opt-item"><span class="opt-num">4</span><span>緩和</span></div>
                 </div>
@@ -722,7 +755,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>地球<rt>ちきゅう</rt></ruby>は<ruby>一日<rt>いちにち</rt></ruby>に<ruby>一度<rt>いちど</rt></ruby><strong>かいてん</strong>する。</div>
+                <div class="q-stem">地球は一日に一度<strong>かいてん</strong>する。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>開転</span></div><div class="opt-item"><span class="opt-num">2</span><span>開店</span></div><div class="opt-item"><span class="opt-num">3</span><span>回店</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>回転</span></div>
                 </div>
@@ -750,7 +783,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>無駄<rt>むだ</rt></ruby>な<ruby>出費<rt>しゅっぴ</rt></ruby>を<ruby>三割<rt>さんわり</rt></ruby><strong>さくげん</strong>した。</div>
+                <div class="q-stem">無駄な出費を三割<strong>さくげん</strong>した。</div>
                 <div class="options-grid">
                   <div class="opt-item is-correct"><span class="opt-num">1</span><span>削減</span></div><div class="opt-item"><span class="opt-num">2</span><span>作限</span></div><div class="opt-item"><span class="opt-num">3</span><span>作減</span></div><div class="opt-item"><span class="opt-num">4</span><span>削限</span></div>
                 </div>
@@ -778,7 +811,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">「<ruby>静<rt>しず</rt></ruby>かだ」は<strong>けいようどうし</strong>と<ruby>呼<rt>よ</rt></ruby>ばれます。</div>
+                <div class="q-stem">「静かだ」は<strong>けいようどうし</strong>と呼ばれます。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>型容動詞</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>形容動詞</span></div><div class="opt-item"><span class="opt-num">3</span><span>形要動詞</span></div><div class="opt-item"><span class="opt-num">4</span><span>型要動詞</span></div>
                 </div>
@@ -806,7 +839,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>兄<rt>あに</rt></ruby>は<ruby>来月<rt>らいげつ</rt></ruby>アパートへ<strong>ひっこし</strong>する。</div>
+                <div class="q-stem">兄は来月アパートへ<strong>ひっこし</strong>する。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>弾越し</span></div><div class="opt-item"><span class="opt-num">2</span><span>引超し</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>引越し</span></div><div class="opt-item"><span class="opt-num">4</span><span>弾超し</span></div>
                 </div>
@@ -834,9 +867,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>資料<rt>しりょう</rt></ruby>の<ruby>説明<rt>せつめい</rt></ruby>が（　）<ruby>十分<rt>じゅうぶん</rt></ruby>で、<ruby>参加者<rt>さんかしゃ</rt></ruby>から<ruby>質問<rt>しつもん</rt></ruby>が<ruby>相次<rt>あいつ</rt></ruby>ぎました。</div>
+                <div class="q-stem">資料の説明が（　）十分で、参加者から質問が相次ぎました。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>未<rt>み</rt></ruby></span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>不<rt>ふ</rt></ruby></span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>無<rt>む</rt></ruby></span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>非<rt>ひ</rt></ruby></span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>未</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>不</span></div><div class="opt-item"><span class="opt-num">3</span><span>無</span></div><div class="opt-item"><span class="opt-num">4</span><span>非</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -862,9 +895,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>新<rt>あたら</rt></ruby>しくできた<ruby>遊歩道<rt>ゆうほどう</rt></ruby>は、<ruby>線路<rt>せんろ</rt></ruby>（　）に<ruby>一<rt>いち</rt></ruby>キロほど<ruby>続<rt>つづ</rt></ruby>いている。</div>
+                <div class="q-stem">新しくできた遊歩道は、線路（　）に一キロほど続いている。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>向<rt>む</rt></ruby>き</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>寄<rt>よ</rt></ruby>り</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span><ruby>沿<rt>そ</rt></ruby>い</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>行<rt>ゆ</rt></ruby>き</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>向き</span></div><div class="opt-item"><span class="opt-num">2</span><span>寄り</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>沿い</span></div><div class="opt-item"><span class="opt-num">4</span><span>行き</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -890,7 +923,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>長<rt>なが</rt></ruby>く<ruby>使<rt>つか</rt></ruby>われていなかった<ruby>倉庫<rt>そうこ</rt></ruby>の<ruby>棚<rt>たな</rt></ruby>は、どれもほこり（　）だった。</div>
+                <div class="q-stem">長く使われていなかった倉庫の棚は、どれもほこり（　）だった。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>ずくめ</span></div><div class="opt-item"><span class="opt-num">2</span><span>がち</span></div><div class="opt-item"><span class="opt-num">3</span><span>ぎみ</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>まみれ</span></div>
                 </div>
@@ -918,9 +951,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>今<rt>いま</rt></ruby>の<ruby>空模様<rt>そらもよう</rt></ruby>では、<ruby>山<rt>やま</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>は（　）<ruby>雪<rt>ゆき</rt></ruby>になっているだろう。</div>
+                <div class="q-stem">今の空模様では、山の上は（　）雪になっているだろう。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>まさか</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>恐<rt>おそ</rt></ruby>らく</span></div><div class="opt-item"><span class="opt-num">3</span><span>いかにも</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>案<rt>あん</rt></ruby>の<ruby>定<rt>じょう</rt></ruby></span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>まさか</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>恐らく</span></div><div class="opt-item"><span class="opt-num">3</span><span>いかにも</span></div><div class="opt-item"><span class="opt-num">4</span><span>案の定</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -946,9 +979,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>長年<rt>ながねん</rt></ruby><ruby>勤<rt>つと</rt></ruby>めた<ruby>会社<rt>かいしゃ</rt></ruby>を<ruby>辞<rt>や</rt></ruby>め、<ruby>父<rt>ちち</rt></ruby>から<ruby>受<rt>う</rt></ruby>け<ruby>継<rt>つ</rt></ruby>いだ<ruby>技術<rt>ぎじゅつ</rt></ruby>を<ruby>生<rt>い</rt></ruby>かして（　）を<ruby>始<rt>はじ</rt></ruby>めた。</div>
+                <div class="q-stem">長年勤めた会社を辞め、父から受け継いだ技術を生かして（　）を始めた。</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>自営業<rt>じえいぎょう</rt></ruby></span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>副業<rt>ふくぎょう</rt></ruby></span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>兼業<rt>けんぎょう</rt></ruby></span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>分業<rt>ぶんぎょう</rt></ruby></span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>自営業</span></div><div class="opt-item"><span class="opt-num">2</span><span>副業</span></div><div class="opt-item"><span class="opt-num">3</span><span>兼業</span></div><div class="opt-item"><span class="opt-num">4</span><span>分業</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -974,9 +1007,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>大根<rt>だいこん</rt></ruby>は、だし<ruby>汁<rt>しる</rt></ruby>でやわらかくなるまでじっくり（　）とよい。</div>
+                <div class="q-stem">大根は、だし汁でやわらかくなるまでじっくり（　）とよい。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>焼<rt>や</rt></ruby>く</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>蒸<rt>む</rt></ruby>す</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>炒<rt>いた</rt></ruby>める</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>煮<rt>に</rt></ruby>る</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>焼く</span></div><div class="opt-item"><span class="opt-num">2</span><span>蒸す</span></div><div class="opt-item"><span class="opt-num">3</span><span>炒める</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>煮る</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1002,9 +1035,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>休<rt>やす</rt></ruby>みの<ruby>予定<rt>よてい</rt></ruby>ばかり<ruby>考<rt>かんが</rt></ruby>えてしまい、<ruby>今週<rt>こんしゅう</rt></ruby>は<ruby>自分<rt>じぶん</rt></ruby>の<ruby>仕事<rt>しごと</rt></ruby>に（　）。</div>
+                <div class="q-stem">休みの予定ばかり考えてしまい、今週は自分の仕事に（　）。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>気<rt>き</rt></ruby>が<ruby>済<rt>す</rt></ruby>まなかった</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>歯<rt>は</rt></ruby>が<ruby>立<rt>た</rt></ruby>たなかった</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span><ruby>身<rt>み</rt></ruby>が<ruby>入<rt>はい</rt></ruby>らなかった</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>目<rt>め</rt></ruby>が<ruby>届<rt>とど</rt></ruby>かなかった</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>気が済まなかった</span></div><div class="opt-item"><span class="opt-num">2</span><span>歯が立たなかった</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>身が入らなかった</span></div><div class="opt-item"><span class="opt-num">4</span><span>目が届かなかった</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1030,9 +1063,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>資格<rt>しかく</rt></ruby>に<ruby>必要<rt>ひつよう</rt></ruby>な<ruby>実務経験<rt>じつむけいけん</rt></ruby>が<ruby>半年<rt>はんとし</rt></ruby>ほど（　）ことが<ruby>分<rt>わ</rt></ruby>かりました。</div>
+                <div class="q-stem">資格に必要な実務経験が半年ほど（　）ことが分かりました。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>減少<rt>げんしょう</rt></ruby>している</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>低下<rt>ていか</rt></ruby>している</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>消耗<rt>しょうもう</rt></ruby>している</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>不足<rt>ふそく</rt></ruby>している</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>減少している</span></div><div class="opt-item"><span class="opt-num">2</span><span>低下している</span></div><div class="opt-item"><span class="opt-num">3</span><span>消耗している</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>不足している</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1058,9 +1091,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">その<ruby>会社<rt>かいしゃ</rt></ruby>は、<ruby>水<rt>みず</rt></ruby>をほとんど<ruby>使<rt>つか</rt></ruby>わずに<ruby>布<rt>ぬの</rt></ruby>を<ruby>染<rt>そ</rt></ruby>める<ruby>技術<rt>ぎじゅつ</rt></ruby>の（　）に<ruby>成功<rt>せいこう</rt></ruby>した。</div>
+                <div class="q-stem">その会社は、水をほとんど使わずに布を染める技術の（　）に成功した。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>開拓<rt>かいたく</rt></ruby></span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>発掘<rt>はっくつ</rt></ruby></span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span><ruby>開発<rt>かいはつ</rt></ruby></span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>製造<rt>せいぞう</rt></ruby></span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>開拓</span></div><div class="opt-item"><span class="opt-num">2</span><span>発掘</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>開発</span></div><div class="opt-item"><span class="opt-num">4</span><span>製造</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1086,9 +1119,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>二人<rt>ふたり</rt></ruby>は、いつかまたここで<ruby>会<rt>あ</rt></ruby>おうと（　）<ruby>約束<rt>やくそく</rt></ruby>を<ruby>交<rt>まじ</rt></ruby>わして<ruby>別<rt>わか</rt></ruby>れた。</div>
+                <div class="q-stem">二人は、いつかまたここで会おうと（　）約束を交わして別れた。</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>固<rt>かた</rt></ruby>い</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>厚<rt>あつ</rt></ruby>い</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>濃<rt>こ</rt></ruby>い</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>重<rt>おも</rt></ruby>い</span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>固い</span></div><div class="opt-item"><span class="opt-num">2</span><span>厚い</span></div><div class="opt-item"><span class="opt-num">3</span><span>濃い</span></div><div class="opt-item"><span class="opt-num">4</span><span>重い</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1114,9 +1147,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>庭<rt>にわ</rt></ruby>の<ruby>草<rt>くさ</rt></ruby>に<strong>うっすら</strong><ruby>雪<rt>ゆき</rt></ruby>が<ruby>積<rt>つ</rt></ruby>もっていました。</div>
+                <div class="q-stem">庭の草に<strong>うっすら</strong>雪が積もっていました。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>すっかり</span></div><div class="opt-item"><span class="opt-num">2</span><span>たっぷり</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>厚<rt>あつ</rt></ruby>く</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>わずかに</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>すっかり</span></div><div class="opt-item"><span class="opt-num">2</span><span>たっぷり</span></div><div class="opt-item"><span class="opt-num">3</span><span>厚く</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>わずかに</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1124,7 +1157,7 @@ footer {
                   <div class="exp-content">「うっすら」＝ごく<ruby>薄<rt>うす</rt></ruby>く、ほんの少しという意味の<ruby>副詞<rt>ふくし</rt></ruby>です。<ruby>庭<rt>にわ</rt></ruby>の<ruby>草<rt>くさ</rt></ruby>に<ruby>雪<rt>ゆき</rt></ruby>が薄く<ruby>積<rt>つ</rt></ruby>もっている<ruby>様子<rt>ようす</rt></ruby>を表しているので、「わずかに」と<ruby>置<rt>お</rt></ruby>き<ruby>換<rt>か</rt></ruby>えられます。「庭の草にわずかに雪が積もっていました」となり、意味が変わりません。正解は4です。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
-                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> すっかり：<ruby>残<rt>のこ</rt></ruby>らず<ruby>全部<rt>ぜんぶ</rt></ruby>という意味で、ほんの少しという「うっすら」とは<ruby>反対<rt>はんたい</rt></ruby>になります。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> たっぷり：<ruby>量<rt>りょう</rt></ruby>が多いという意味で、薄く積もった<ruby>状態<rt>じょうたい</rt></ruby>は表しません。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> 厚く：<ruby>層<rt>そう</rt></ruby>が厚く量が多いという意味で、これも「うっすら」と反対の<ruby>内容<rt>ないよう</rt></ruby>になります。</li><li><strong>4.</strong> <span class="opt-tag-correct">[正解]</span> わずかに：ほんの少し。「うっすら雪が積もる」＝「わずかに雪が積もる」で、意味がそのまま<ruby>重<rt>かさ</rt></ruby>なります。</li>
+                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> すっかり：<ruby>残<rt>のこ</rt></ruby>らず<ruby>全部<rt>ぜんぶ</rt></ruby>という意味で、ほんの少しという「うっすら」とは<ruby>反対<rt>はんたい</rt></ruby>になります。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> たっぷり：<ruby>量<rt>りょう</rt></ruby>が多いという意味で、薄く積もった<ruby>状態<rt>じょうたい</rt></ruby>は表しません。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> 厚く：<ruby>層<rt>そう</rt></ruby>が厚く量が多いという意味で、これも「うっすら」と反対の<ruby>内容<rt>ないよう</rt></ruby>になります。</li><li><strong>4.</strong> <span class="opt-tag-correct">[正解]</span> わずかに：ほんの少し。「うっすら雪が積もる」＝「 「庭の草にわずかに雪が積もっていました」」で、意味がそのまま<ruby>重<rt>かさ</rt></ruby>なります。</li>
                   </ul>
                   <div class="exp-section-title">【重要語彙・文法ポイント】</div><div><span class="vocab-pill">うっすら：ごく薄く。例：うっすらと<ruby>汗<rt>あせ</rt></ruby>をかく／うっすら<ruby>覚<rt>おぼ</rt></ruby>えている。</span><span class="vocab-pill">わずか：ほんの少し。例：わずかな<ruby>差<rt>さ</rt></ruby>で<ruby>勝<rt>か</rt></ruby>つ／<ruby>残<rt>のこ</rt></ruby>りはわずかだ。</span><span class="vocab-pill">すっかり：<ruby>完全<rt>かんぜん</rt></ruby>に、残らず。例：すっかり<ruby>忘<rt>わす</rt></ruby>れる。</span><span class="vocab-pill">たっぷり：量が十分に多いようす。例：時間はたっぷりある。</span><span class="vocab-pill"><ruby>積<rt>つ</rt></ruby>もる：雪やほこりなどが<ruby>重<rt>かさ</rt></ruby>なってたまる。例：雪が三十センチ積もる。</span></div>
                 </div>
@@ -1142,9 +1175,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>彼<rt>かれ</rt></ruby>は<strong>うつろな</strong><ruby>目<rt>め</rt></ruby>で<ruby>窓<rt>まど</rt></ruby>の<ruby>外<rt>そと</rt></ruby>を<ruby>見<rt>み</rt></ruby>ていました。</div>
+                <div class="q-stem">彼は<strong>うつろな</strong>目で窓の外を見ていました。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>思<rt>おも</rt></ruby>いつめた</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>ぼんやりした</span></div><div class="opt-item"><span class="opt-num">3</span><span>けわしい</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>落<rt>お</rt></ruby>ち<ruby>着<rt>つ</rt></ruby>きのない</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>思いつめた</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>ぼんやりした</span></div><div class="opt-item"><span class="opt-num">3</span><span>けわしい</span></div><div class="opt-item"><span class="opt-num">4</span><span>落ち着きのない</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1170,9 +1203,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>値上<rt>ねあ</rt></ruby>げが<ruby>続<rt>つづ</rt></ruby>き、<ruby>家計<rt>かけい</rt></ruby>は<strong>いっそう</strong><ruby>厳<rt>きび</rt></ruby>しくなった。</div>
+                <div class="q-stem">値上げが続き、家計は<strong>いっそう</strong>厳しくなった。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>多少<rt>たしょう</rt></ruby></span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>一時的<rt>いちじてき</rt></ruby>に</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>さらに</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>思<rt>おも</rt></ruby>ったより</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>多少</span></div><div class="opt-item"><span class="opt-num">2</span><span>一時的に</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>さらに</span></div><div class="opt-item"><span class="opt-num">4</span><span>思ったより</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1180,7 +1213,7 @@ footer {
                   <div class="exp-content">「いっそう（<ruby>一層<rt>いっそう</rt></ruby>）」＝前よりも<ruby>程度<rt>ていど</rt></ruby>が<ruby>増<rt>ま</rt></ruby>すという意味の<ruby>副詞<rt>ふくし</rt></ruby>です。「<ruby>値上<rt>ねあ</rt></ruby>げが続き」が<ruby>変化<rt>へんか</rt></ruby>の<ruby>理由<rt>りゆう</rt></ruby>を<ruby>示<rt>しめ</rt></ruby>し、<ruby>以前<rt>いぜん</rt></ruby>と<ruby>比<rt>くら</rt></ruby>べて<ruby>厳<rt>きび</rt></ruby>しさが増したという文なので、「さらに」と<ruby>置<rt>お</rt></ruby>き<ruby>換<rt>か</rt></ruby>えられます。「<ruby>家計<rt>かけい</rt></ruby>はさらに厳しくなった」となります。正解は3です。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
-                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> 多少：「少しは」という意味で、変化の<ruby>幅<rt>はば</rt></ruby>が小さいことを表すだけです。前より程度が増すという<ruby>比較<rt>ひかく</rt></ruby>は<ruby>含<rt>ふく</rt></ruby>みません。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> 一時的に：短い間だけの変化を表す語で、値上げが続いた<ruby>結果<rt>けっか</rt></ruby>としての変化には合いません。</li><li><strong>3.</strong> <span class="opt-tag-correct">[正解]</span> さらに：それまでより程度が増すこと。「いっそう厳しくなった」＝「さらに厳しくなった」となります。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> 思ったより：<ruby>予想<rt>よそう</rt></ruby>との比較を表す語で、以前の<ruby>状態<rt>じょうたい</rt></ruby>との比較にはなりません。</li>
+                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> 多少：「少しは」という意味で、変化の<ruby>幅<rt>はば</rt></ruby>が小さいことを表すだけです。前より程度が増すという<ruby>比較<rt>ひかく</rt></ruby>は<ruby>含<rt>ふく</rt></ruby>みません。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> 一時的に：短い間だけの変化を表す語で、値上げが続いた<ruby>結果<rt>けっか</rt></ruby>としての変化には合いません。</li><li><strong>3.</strong> <span class="opt-tag-correct">[正解]</span> さらに：それまでより程度が増すこと。「 「家計はさらに厳しくなった」」＝「さらに厳しくなった」となります。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> 思ったより：<ruby>予想<rt>よそう</rt></ruby>との比較を表す語で、以前の<ruby>状態<rt>じょうたい</rt></ruby>との比較にはなりません。</li>
                   </ul>
                   <div class="exp-section-title">【重要語彙・文法ポイント】</div><div><span class="vocab-pill">いっそう（<ruby>一層<rt>いっそう</rt></ruby>）：前よりもっと。例：いっそう<ruby>努力<rt>どりょく</rt></ruby>する／<ruby>寒<rt>さむ</rt></ruby>さがいっそう厳しくなる。</span><span class="vocab-pill">さらに：その上に、もっと。例：さらに<ruby>値上<rt>ねあ</rt></ruby>がりする。</span><span class="vocab-pill"><ruby>多少<rt>たしょう</rt></ruby>：少しは。例：多少の<ruby>遅<rt>おく</rt></ruby>れは<ruby>仕方<rt>しかた</rt></ruby>がない。</span><span class="vocab-pill"><ruby>一時的<rt>いちじてき</rt></ruby>：短い間だけ。例：一時的な<ruby>混雑<rt>こんざつ</rt></ruby>。</span><span class="vocab-pill"><ruby>家計<rt>かけい</rt></ruby>：<ruby>家庭<rt>かてい</rt></ruby>のお金の<ruby>出入<rt>でい</rt></ruby>り。例：家計が<ruby>苦<rt>くる</rt></ruby>しい／家計を<ruby>助<rt>たす</rt></ruby>ける。</span></div>
                 </div>
@@ -1198,9 +1231,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">その<ruby>事故<rt>じこ</rt></ruby>の<ruby>映像<rt>えいぞう</rt></ruby>は<strong><ruby>衝撃的<rt>しょうげきてき</rt></ruby>な</strong>ものでした。</div>
+                <div class="q-stem">その事故の映像は<strong>衝撃的な</strong>ものでした。</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>強<rt>つよ</rt></ruby>い<ruby>驚<rt>おどろ</rt></ruby>きを<ruby>与<rt>あた</rt></ruby>える</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>心<rt>こころ</rt></ruby>を<ruby>温<rt>あたた</rt></ruby>かくする</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>思<rt>おも</rt></ruby>わず<ruby>笑<rt>わら</rt></ruby>ってしまう</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>少<rt>すこ</rt></ruby>しも<ruby>珍<rt>めずら</rt></ruby>しくない</span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>強い驚きを与える</span></div><div class="opt-item"><span class="opt-num">2</span><span>心を温かくする</span></div><div class="opt-item"><span class="opt-num">3</span><span>思わず笑ってしまう</span></div><div class="opt-item"><span class="opt-num">4</span><span>少しも珍しくない</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1226,9 +1259,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">シャッターを<ruby>押<rt>お</rt></ruby>してからの<ruby>反応<rt>はんのう</rt></ruby>が<strong><ruby>鈍<rt>にぶ</rt></ruby>い</strong>。</div>
+                <div class="q-stem">シャッターを押してからの反応が<strong>鈍い</strong>。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>弱<rt>よわ</rt></ruby>い</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>遅<rt>おそ</rt></ruby>い</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>短<rt>みじか</rt></ruby>い</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>大<rt>おお</rt></ruby>きい</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>弱い</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>遅い</span></div><div class="opt-item"><span class="opt-num">3</span><span>短い</span></div><div class="opt-item"><span class="opt-num">4</span><span>大きい</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1254,9 +1287,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><strong><ruby>特定<rt>とくてい</rt></ruby></strong></div>
+                <div class="q-stem"><strong>特定</strong></div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>工事<rt>こうじ</rt></ruby>の<ruby>開始日<rt>かいしび</rt></ruby>は、<ruby>天候<rt>てんこう</rt></ruby>を<ruby>見<rt>み</rt></ruby>ながら<ruby>来週<rt>らいしゅう</rt></ruby><strong><ruby>特定<rt>とくてい</rt></ruby>する</strong>ことにした。</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>調査<rt>ちょうさ</rt></ruby>の<ruby>結果<rt>けっか</rt></ruby>、<ruby>川<rt>かわ</rt></ruby>の<ruby>水質<rt>すいしつ</rt></ruby>の<ruby>汚染<rt>おせん</rt></ruby>を<ruby>引<rt>ひ</rt></ruby>き<ruby>起<rt>お</rt></ruby>こした<ruby>工場<rt>こうじょう</rt></ruby>が<strong><ruby>特定<rt>とくてい</rt></ruby>された</strong>。</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>駅前<rt>えきまえ</rt></ruby>の<ruby>再開発<rt>さいかいはつ</rt></ruby>について、<ruby>住民<rt>じゅうみん</rt></ruby>の<ruby>考<rt>かんが</rt></ruby>えを<strong><ruby>特定<rt>とくてい</rt></ruby>する</strong>ためのアンケートを<ruby>行<rt>い</rt></ruby>った。</span></div><div class="opt-item"><span class="opt-num">4</span><span>この<ruby>装置<rt>そうち</rt></ruby>は、<ruby>水<rt>みず</rt></ruby>そうの<ruby>水温<rt>すいおん</rt></ruby>を<ruby>一定<rt>いってい</rt></ruby>に<strong><ruby>特定<rt>とくてい</rt></ruby>する</strong>ために<ruby>使<rt>つか</rt></ruby>われている。</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>工事の開始日は、天候を見ながら来週<strong>特定する</strong>ことにした。</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>調査の結果、川の水質の汚染を引き起こした工場が<strong>特定された</strong>。</span></div><div class="opt-item"><span class="opt-num">3</span><span>駅前の再開発について、住民の考えを<strong>特定する</strong>ためのアンケートを行った。</span></div><div class="opt-item"><span class="opt-num">4</span><span>この装置は、水そうの水温を一定に<strong>特定する</strong>ために使われている。</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1282,9 +1315,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><strong><ruby>切<rt>き</rt></ruby>れる</strong></div>
+                <div class="q-stem"><strong>切れる</strong></div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>料理<rt>りょうり</rt></ruby>の<ruby>途中<rt>とちゅう</rt></ruby>でしょうゆが<strong><ruby>切<rt>き</rt></ruby>れて</strong>しまい、<ruby>近所<rt>きんじょ</rt></ruby>の<ruby>店<rt>みせ</rt></ruby>まで<ruby>走<rt>はし</rt></ruby>った。</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>相手<rt>あいて</rt></ruby>が<ruby>黙<rt>だま</rt></ruby>り<ruby>込<rt>こ</rt></ruby>んでしまい、そこで<ruby>話<rt>はなし</rt></ruby>が<strong><ruby>切<rt>き</rt></ruby>れて</strong>しまった。</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>机<rt>つくえ</rt></ruby>から<ruby>落<rt>お</rt></ruby>ちたガラスのコップは、<ruby>床<rt>ゆか</rt></ruby>にぶつかって<ruby>粉々<rt>こなごな</rt></ruby>に<strong><ruby>切<rt>き</rt></ruby>れた</strong>。</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>日照<rt>ひで</rt></ruby>りが<ruby>何日<rt>なんにち</rt></ruby>も<ruby>続<rt>つづ</rt></ruby>いたせいで、<ruby>庭<rt>にわ</rt></ruby>の<ruby>草木<rt>くさき</rt></ruby>がすっかり<strong><ruby>切<rt>き</rt></ruby>れて</strong>しまった。</span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>料理の途中でしょうゆが<strong>切れて</strong>しまい、近所の店まで走った。</span></div><div class="opt-item"><span class="opt-num">2</span><span>相手が黙り込んでしまい、そこで話が<strong>切れて</strong>しまった。</span></div><div class="opt-item"><span class="opt-num">3</span><span>机から落ちたガラスのコップは、床にぶつかって粉々に<strong>切れた</strong>。</span></div><div class="opt-item"><span class="opt-num">4</span><span>日照りが何日も続いたせいで、庭の草木がすっかり<strong>切れて</strong>しまった。</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1310,9 +1343,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><strong><ruby>分解<rt>ぶんかい</rt></ruby></strong></div>
+                <div class="q-stem"><strong>分解</strong></div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>大<rt>おお</rt></ruby>きな<ruby>仕事<rt>しごと</rt></ruby>だったので、<ruby>三人<rt>さんにん</rt></ruby>で<ruby>作業<rt>さぎょう</rt></ruby>を<strong><ruby>分解<rt>ぶんかい</rt></ruby>して</strong><ruby>進<rt>すす</rt></ruby>めることにした。</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>意見<rt>いけん</rt></ruby>が<ruby>対立<rt>たいりつ</rt></ruby>し、<ruby>話<rt>はな</rt></ruby>し<ruby>合<rt>あ</rt></ruby>いは<ruby>結論<rt>けつろん</rt></ruby>が<ruby>出<rt>で</rt></ruby>ないまま<strong><ruby>分解<rt>ぶんかい</rt></ruby>した</strong>。</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span><ruby>動<rt>うご</rt></ruby>かなくなった<ruby>古<rt>ふる</rt></ruby>いラジオを<strong><ruby>分解<rt>ぶんかい</rt></ruby>して</strong>、<ruby>故障<rt>こしょう</rt></ruby>の<ruby>原因<rt>げんいん</rt></ruby>を<ruby>調<rt>しら</rt></ruby>べた。</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>支店<rt>してん</rt></ruby>が<ruby>増<rt>ふ</rt></ruby>えたので、<ruby>来月<rt>らいげつ</rt></ruby>から<ruby>営業部<rt>えいぎょうぶ</rt></ruby>を<ruby>二<rt>ふた</rt></ruby>つに<strong><ruby>分解<rt>ぶんかい</rt></ruby>する</strong>。</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>大きな仕事だったので、三人で作業を<strong>分解して</strong>進めることにした。</span></div><div class="opt-item"><span class="opt-num">2</span><span>意見が対立し、話し合いは結論が出ないまま<strong>分解した</strong>。</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>動かなくなった古いラジオを<strong>分解して</strong>、故障の原因を調べた。</span></div><div class="opt-item"><span class="opt-num">4</span><span>支店が増えたので、来月から営業部を二つに<strong>分解する</strong>。</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1338,9 +1371,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><strong><ruby>吟味<rt>ぎんみ</rt></ruby></strong></div>
+                <div class="q-stem"><strong>吟味</strong></div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>先生<rt>せんせい</rt></ruby>は<ruby>出席簿<rt>しゅっせきぼ</rt></ruby>の<ruby>名前<rt>なまえ</rt></ruby>を<ruby>一<rt>ひと</rt></ruby>つずつ<strong><ruby>吟味<rt>ぎんみ</rt></ruby>して</strong>から、<ruby>授業<rt>じゅぎょう</rt></ruby>を<ruby>始<rt>はじ</rt></ruby>めた。</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>この<ruby>店<rt>みせ</rt></ruby>は、その<ruby>日<rt>ひ</rt></ruby>の<ruby>朝<rt>あさ</rt></ruby>に<ruby>市場<rt>しじょう</rt></ruby>で<strong><ruby>吟味<rt>ぎんみ</rt></ruby>した</strong><ruby>魚<rt>さかな</rt></ruby>だけを<ruby>客<rt>きゃく</rt></ruby>に<ruby>出<rt>だ</rt></ruby>す。</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>地震<rt>じしん</rt></ruby>で<ruby>崩<rt>くず</rt></ruby>れた<ruby>塀<rt>へい</rt></ruby>を<strong><ruby>吟味<rt>ぎんみ</rt></ruby>して</strong>、<ruby>元<rt>もと</rt></ruby>の<ruby>形<rt>かたち</rt></ruby>に<ruby>戻<rt>もど</rt></ruby>す<ruby>作業<rt>さぎょう</rt></ruby>が<ruby>続<rt>つづ</rt></ruby>いている。</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>駅<rt>えき</rt></ruby>からの<ruby>道<rt>みち</rt></ruby>が<ruby>分<rt>わ</rt></ruby>からず、<ruby>持<rt>も</rt></ruby>っていた<ruby>地図<rt>ちず</rt></ruby>を<ruby>何度<rt>なんど</rt></ruby>も<strong><ruby>吟味<rt>ぎんみ</rt></ruby>した</strong>。</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>先生は出席簿の名前を一つずつ<strong>吟味して</strong>から、授業を始めた。</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>この店は、その日の朝に市場で<strong>吟味した</strong>魚だけを客に出す。</span></div><div class="opt-item"><span class="opt-num">3</span><span>地震で崩れた塀を<strong>吟味して</strong>、元の形に戻す作業が続いている。</span></div><div class="opt-item"><span class="opt-num">4</span><span>駅からの道が分からず、持っていた地図を何度も<strong>吟味した</strong>。</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1366,9 +1399,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><strong><ruby>重<rt>かさ</rt></ruby>なる</strong></div>
+                <div class="q-stem"><strong>重なる</strong></div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>新<rt>あたら</rt></ruby>しい<ruby>駅<rt>えき</rt></ruby>ができてから、この<ruby>町<rt>まち</rt></ruby>の<ruby>人口<rt>じんこう</rt></ruby>は<ruby>年々<rt>ねんねん</rt></ruby><strong><ruby>重<rt>かさ</rt></ruby>なって</strong>きている。</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>大量<rt>たいりょう</rt></ruby>の<ruby>荷物<rt>にもつ</rt></ruby>を<ruby>運<rt>はこ</rt></ruby>び<ruby>終<rt>お</rt></ruby>えるのに、<ruby>朝<rt>あさ</rt></ruby>から<ruby>夕方<rt>ゆうがた</rt></ruby>まで<strong><ruby>重<rt>かさ</rt></ruby>なった</strong>。</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>暖<rt>あたた</rt></ruby>かい<ruby>日<rt>ひ</rt></ruby>が<ruby>続<rt>つづ</rt></ruby>き、<ruby>桜<rt>さくら</rt></ruby>のつぼみが<ruby>日<rt>ひ</rt></ruby>ごとに<strong><ruby>重<rt>かさ</rt></ruby>なって</strong>きた。</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>祖母<rt>そぼ</rt></ruby>の<ruby>法事<rt>ほうじ</rt></ruby>と<ruby>息子<rt>むすこ</rt></ruby>の<ruby>入学式<rt>にゅうがくしき</rt></ruby>が<ruby>同<rt>おな</rt></ruby>じ<ruby>日<rt>ひ</rt></ruby>に<strong><ruby>重<rt>かさ</rt></ruby>なって</strong>しまった。</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>新しい駅ができてから、この町の人口は年々<strong>重なって</strong>きている。</span></div><div class="opt-item"><span class="opt-num">2</span><span>大量の荷物を運び終えるのに、朝から夕方まで<strong>重なった</strong>。</span></div><div class="opt-item"><span class="opt-num">3</span><span>暖かい日が続き、桜のつぼみが日ごとに<strong>重なって</strong>きた。</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>祖母の法事と息子の入学式が同じ日に<strong>重なって</strong>しまった。</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1395,9 +1428,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>試験<rt>しけん</rt></ruby>の<ruby>結果<rt>けっか</rt></ruby>は<ruby>気<rt>き</rt></ruby>にしないつもりでいたが、やはり（　）。</div>
+                <div class="q-stem">試験の結果は気にしないつもりでいたが、やはり（　）。</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>気<rt>き</rt></ruby>になってならない</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>気<rt>き</rt></ruby>にしていられない</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>気<rt>き</rt></ruby>にしてはならない</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>気<rt>き</rt></ruby>になるものではない</span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>気になってならない</span></div><div class="opt-item"><span class="opt-num">2</span><span>気にしていられない</span></div><div class="opt-item"><span class="opt-num">3</span><span>気にしてはならない</span></div><div class="opt-item"><span class="opt-num">4</span><span>気になるものではない</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1423,9 +1456,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>連休<rt>れんきゅう</rt></ruby>で（　）、<ruby>思<rt>おも</rt></ruby>い<ruby>切<rt>き</rt></ruby>って<ruby>車<rt>くるま</rt></ruby>で<ruby>行<rt>い</rt></ruby>ってみることにした。</div>
+                <div class="q-stem">連休で（　）、思い切って車で行ってみることにした。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>道<rt>みち</rt></ruby>も<ruby>空<rt>す</rt></ruby>いているばかりに</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>道<rt>みち</rt></ruby>も<ruby>空<rt>す</rt></ruby>いているどころか</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span><ruby>道<rt>みち</rt></ruby>も<ruby>空<rt>す</rt></ruby>いていることだし</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>道<rt>みち</rt></ruby>も<ruby>空<rt>す</rt></ruby>いているくせに</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>道も空いているばかりに</span></div><div class="opt-item"><span class="opt-num">2</span><span>道も空いているどころか</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>道も空いていることだし</span></div><div class="opt-item"><span class="opt-num">4</span><span>道も空いているくせに</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1451,9 +1484,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">（<ruby>会社<rt>かいしゃ</rt></ruby>で）<br>A「サーバーの<ruby>復旧<rt>ふっきゅう</rt></ruby>はいつになりそうですか。」<br>B「<ruby>原因<rt>げんいん</rt></ruby>が<ruby>分<rt>わ</rt></ruby>からない<ruby>以上<rt>いじょう</rt></ruby>、<ruby>業者<rt>ぎょうしゃ</rt></ruby>の<ruby>到着<rt>とうちゃく</rt></ruby>を（　）ですね。」</div>
+                <div class="q-stem">（会社で）<br>A「サーバーの復旧はいつになりそうですか。」<br>B「原因が分からない以上、業者の到着を（　）ですね。」</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>待<rt>ま</rt></ruby>つよりほかない</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>待<rt>ま</rt></ruby>つわけにはいかない</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>待<rt>ま</rt></ruby>つに<ruby>違<rt>ちが</rt></ruby>いない</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>待<rt>ま</rt></ruby>つべきではない</span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>待つよりほかない</span></div><div class="opt-item"><span class="opt-num">2</span><span>待つわけにはいかない</span></div><div class="opt-item"><span class="opt-num">3</span><span>待つに違いない</span></div><div class="opt-item"><span class="opt-num">4</span><span>待つべきではない</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1479,14 +1512,14 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>駅前<rt>えきまえ</rt></ruby>の<ruby>再開発<rt>さいかいはつ</rt></ruby>が<ruby>終<rt>お</rt></ruby>わってから、この<ruby>町<rt>まち</rt></ruby>は<ruby>静<rt>しず</rt></ruby>かになった。<ruby>新<rt>あたら</rt></ruby>しい（　）、<ruby>人<rt>ひと</rt></ruby>の<ruby>流<rt>なが</rt></ruby>れが<ruby>大通<rt>おおどお</rt></ruby>りの<ruby>向<rt>む</rt></ruby>こう<ruby>側<rt>がわ</rt></ruby>へ<ruby>移<rt>うつ</rt></ruby>ってしまったのだ。</div>
+                <div class="q-stem">駅前の再開発が終わってから、この町は静かになった。新しい（　）、人の流れが大通りの向こう側へ移ってしまったのだ。</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>駅<rt>えき</rt></ruby>ビルの<ruby>完成<rt>かんせい</rt></ruby>とともに</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>駅<rt>えき</rt></ruby>ビルの<ruby>完成<rt>かんせい</rt></ruby>に<ruby>応<rt>おう</rt></ruby>じて</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>駅<rt>えき</rt></ruby>ビルの<ruby>完成<rt>かんせい</rt></ruby>に<ruby>先立<rt>さきだ</rt></ruby>って</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>駅<rt>えき</rt></ruby>ビルの<ruby>完成<rt>かんせい</rt></ruby>をもとに</span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>駅ビルの完成とともに</span></div><div class="opt-item"><span class="opt-num">2</span><span>駅ビルの完成に応じて</span></div><div class="opt-item"><span class="opt-num">3</span><span>駅ビルの完成に先立って</span></div><div class="opt-item"><span class="opt-num">4</span><span>駅ビルの完成をもとに</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
                   <div class="exp-section-title">【正解の理由・根拠】</div>
-                  <div class="exp-content">「（名詞）＋とともに」は、ある<ruby>出来事<rt>できごと</rt></ruby>が起こるのと<ruby>並行<rt>へいこう</rt></ruby>して、もう<ruby>一方<rt>いっぽう</rt></ruby>の<ruby>変化<rt>へんか</rt></ruby>が進むことを表します。「新しい駅ビルの<ruby>完成<rt>かんせい</rt></ruby>とともに、人の流れが<ruby>大通<rt>おおどお</rt></ruby>りの<ruby>向<rt>む</rt></ruby>こう<ruby>側<rt>がわ</rt></ruby>へ<ruby>移<rt>うつ</rt></ruby>ってしまった」で、完成と人の流れの<ruby>移動<rt>いどう</rt></ruby>が同じ<ruby>時期<rt>じき</rt></ruby>に進んだ、という説明になります。前の文の「この町は静かになった」理由を述べる流れにも合います。正解は1です。</div>
+                  <div class="exp-content">「（名詞）＋とともに」は、ある<ruby>出来事<rt>できごと</rt></ruby>が起こるのと<ruby>並行<rt>へいこう</rt></ruby>して、もう<ruby>一方<rt>いっぽう</rt></ruby>の<ruby>変化<rt>へんか</rt></ruby>が進むことを表します。「新しい（　）、人の流れが大通りの向こう側へ移ってしまったのだ」で、完成と人の流れの<ruby>移動<rt>いどう</rt></ruby>が同じ<ruby>時期<rt>じき</rt></ruby>に進んだ、という説明になります。前の文の「この町は静かになった」理由を述べる流れにも合います。正解は1です。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
                     <li><strong>1.</strong> <span class="opt-tag-correct">[正解]</span> 駅ビルの完成とともに：ある出来事と並行して別の変化が起こることを表します。完成と人の流れの移動が<ruby>同時<rt>どうじ</rt></ruby>に進んだ、というこの文の内容にぴったりです。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> 駅ビルの完成に応じて：「〜に応じて」は、変化する<ruby>基準<rt>きじゅん</rt></ruby>に合わせて別のものも変わることを表します（例：<ruby>収入<rt>しゅうにゅう</rt></ruby>に応じて<ruby>額<rt>がく</rt></ruby>が決まる）。<ruby>段階<rt>だんかい</rt></ruby>的に変わる基準がこの文にはありません。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> 駅ビルの完成に先立って：「〜に先立って」は「〜より前に」という意味です。人の流れが移ったのは完成した後なので、時間の<ruby>順序<rt>じゅんじょ</rt></ruby>が<ruby>逆<rt>ぎゃく</rt></ruby>になります。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> 駅ビルの完成をもとに：「〜をもとに」は判断や<ruby>制作<rt>せいさく</rt></ruby>の<ruby>材料<rt>ざいりょう</rt></ruby>を示します（例：<ruby>実話<rt>じつわ</rt></ruby>をもとに書く）。完成を材料にして人の流れが移る、とは言えません。</li>
@@ -1507,9 +1540,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>値段<rt>ねだん</rt></ruby>の<ruby>高<rt>たか</rt></ruby>さに<ruby>迷<rt>まよ</rt></ruby>った<ruby>末<rt>すえ</rt></ruby>に<ruby>買<rt>か</rt></ruby>い<ruby>替<rt>か</rt></ruby>えた<ruby>掃除機<rt>そうじき</rt></ruby>だが、<ruby>音<rt>おと</rt></ruby>が（　）、<ruby>吸<rt>す</rt></ruby>い<ruby>込<rt>こ</rt></ruby>む<ruby>力<rt>ちから</rt></ruby>は<ruby>前<rt>まえ</rt></ruby>のものに<ruby>及<rt>およ</rt></ruby>ばない。</div>
+                <div class="q-stem">値段の高さに迷った末に買い替えた掃除機だが、音が（　）、吸い込む力は前のものに及ばない。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>静<rt>しず</rt></ruby>かなわりに</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>静<rt>しず</rt></ruby>かなものの</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>静<rt>しず</rt></ruby>かなばかりに</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>静<rt>しず</rt></ruby>かなうえに</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>静かなわりに</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>静かなものの</span></div><div class="opt-item"><span class="opt-num">3</span><span>静かなばかりに</span></div><div class="opt-item"><span class="opt-num">4</span><span>静かなうえに</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1535,9 +1568,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">A「<ruby>発表<rt>はっぴょう</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>になると、どうしても<ruby>手<rt>て</rt></ruby>が<ruby>震<rt>ふる</rt></ruby>えてしまって。」<br>B「そういうときは、まず<ruby>息<rt>いき</rt></ruby>を<ruby>長<rt>なが</rt></ruby>く（　）。」</div>
+                <div class="q-stem">A「発表の前になると、どうしても手が震えてしまって。」<br>B「そういうときは、まず息を長く（　）。」</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>吐<rt>は</rt></ruby>くことだ</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>吐<rt>は</rt></ruby>くことだろう</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>吐<rt>は</rt></ruby>くことにする</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>吐<rt>は</rt></ruby>くものだ</span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>吐くことだ</span></div><div class="opt-item"><span class="opt-num">2</span><span>吐くことだろう</span></div><div class="opt-item"><span class="opt-num">3</span><span>吐くことにする</span></div><div class="opt-item"><span class="opt-num">4</span><span>吐くものだ</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1563,9 +1596,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">この<ruby>仕事<rt>しごと</rt></ruby>を（　）、<ruby>体力<rt>たいりょく</rt></ruby>より<ruby>大切<rt>たいせつ</rt></ruby>なのは、<ruby>人<rt>ひと</rt></ruby>の<ruby>話<rt>はなし</rt></ruby>を<ruby>最後<rt>さいご</rt></ruby>まで<ruby>聞<rt>き</rt></ruby>く<ruby>姿勢<rt>しせい</rt></ruby>だと<ruby>思<rt>おも</rt></ruby>う。</div>
+                <div class="q-stem">この仕事を（　）、体力より大切なのは、人の話を最後まで聞く姿勢だと思う。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>長<rt>なが</rt></ruby>く<ruby>続<rt>つづ</rt></ruby>けていくうちに</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>長<rt>なが</rt></ruby>く<ruby>続<rt>つづ</rt></ruby>けていく<ruby>上<rt>うえ</rt></ruby>に</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span><ruby>長<rt>なが</rt></ruby>く<ruby>続<rt>つづ</rt></ruby>けていく<ruby>上<rt>うえ</rt></ruby>で</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>長<rt>なが</rt></ruby>く<ruby>続<rt>つづ</rt></ruby>けていく<ruby>末<rt>すえ</rt></ruby>に</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>長く続けていくうちに</span></div><div class="opt-item"><span class="opt-num">2</span><span>長く続けていく上に</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>長く続けていく上で</span></div><div class="opt-item"><span class="opt-num">4</span><span>長く続けていく末に</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1591,9 +1624,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>保険<rt>ほけん</rt></ruby>は、<ruby>契約<rt>けいやく</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<ruby>細<rt>こま</rt></ruby>かい<ruby>条件<rt>じょうけん</rt></ruby>まで<ruby>確認<rt>かくにん</rt></ruby>しておく（　）。もっとも、<ruby>読<rt>よ</rt></ruby>み<ruby>通<rt>とお</rt></ruby>すには<ruby>時間<rt>じかん</rt></ruby>がかかる。</div>
+                <div class="q-stem">保険は、契約の前に細かい条件まで確認しておく（　）。もっとも、読み通すには時間がかかる。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>にすぎない</span></div><div class="opt-item"><span class="opt-num">2</span><span>はずがない</span></div><div class="opt-item"><span class="opt-num">3</span><span>とは<ruby>限<rt>かぎ</rt></ruby>らない</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>に<ruby>越<rt>こ</rt></ruby>したことはない</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>にすぎない</span></div><div class="opt-item"><span class="opt-num">2</span><span>はずがない</span></div><div class="opt-item"><span class="opt-num">3</span><span>とは限らない</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>に越したことはない</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1619,9 +1652,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>駅前<rt>えきまえ</rt></ruby>に<ruby>大型<rt>おおがた</rt></ruby>のスーパー（　）、<ruby>昔<rt>むかし</rt></ruby>からある<ruby>商店街<rt>しょうてんがい</rt></ruby>の<ruby>人通<rt>ひとどお</rt></ruby>りはめっきり<ruby>減<rt>へ</rt></ruby>ってしまった。</div>
+                <div class="q-stem">駅前に大型のスーパー（　）、昔からある商店街の人通りはめっきり減ってしまった。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>ができしだい</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>ができて<ruby>以来<rt>いらい</rt></ruby></span></div><div class="opt-item"><span class="opt-num">3</span><span>ができるうちに</span></div><div class="opt-item"><span class="opt-num">4</span><span>ができないかぎり</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>ができしだい</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>ができて以来</span></div><div class="opt-item"><span class="opt-num">3</span><span>ができるうちに</span></div><div class="opt-item"><span class="opt-num">4</span><span>ができないかぎり</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1647,7 +1680,7 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">（<ruby>電話<rt>でんわ</rt></ruby>で）<br>A「<ruby>山本<rt>やまもと</rt></ruby>さん、もう<ruby>会場<rt>かいじょう</rt></ruby>に<ruby>着<rt>つ</rt></ruby>いているでしょうか。」<br>B「<ruby>用心深<rt>ようじんぶか</rt></ruby>い<ruby>彼女<rt>かのじょ</rt></ruby>（　）、<ruby>道<rt>みち</rt></ruby>が<ruby>混<rt>こ</rt></ruby>むのを<ruby>見越<rt>みこ</rt></ruby>して<ruby>早<rt>はや</rt></ruby>めに<ruby>家<rt>いえ</rt></ruby>を<ruby>出<rt>で</rt></ruby>ているはずですよ。」</div>
+                <div class="q-stem">（電話で）<br>A「山本さん、もう会場に着いているでしょうか。」<br>B「用心深い彼女（　）、道が混むのを見越して早めに家を出ているはずですよ。」</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>のことにしては</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>のことだから</span></div><div class="opt-item"><span class="opt-num">3</span><span>のことだけあって</span></div><div class="opt-item"><span class="opt-num">4</span><span>のこととあって</span></div>
                 </div>
@@ -1675,14 +1708,14 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">まだ<ruby>締<rt>し</rt></ruby>め<ruby>切<rt>き</rt></ruby>りまで<ruby>二週間<rt>にしゅうかん</rt></ruby>ある。そんなに（　）よ。</div>
+                <div class="q-stem">まだ締め切りまで二週間ある。そんなに（　）よ。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>慌<rt>あわ</rt></ruby>てるどころではない</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>慌<rt>あわ</rt></ruby>てずにはいられない</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>慌<rt>あわ</rt></ruby>てようがない</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>慌<rt>あわ</rt></ruby>てることはない</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>慌てるどころではない</span></div><div class="opt-item"><span class="opt-num">2</span><span>慌てずにはいられない</span></div><div class="opt-item"><span class="opt-num">3</span><span>慌てようがない</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>慌てることはない</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
                   <div class="exp-section-title">【正解の理由・根拠】</div>
-                  <div class="exp-content">「〜ことはない」は「その<ruby>必要<rt>ひつよう</rt></ruby>はない」と相手を<ruby>落<rt>お</rt></ruby>ち<ruby>着<rt>つ</rt></ruby>かせる言い方です。前の文の「まだ<ruby>締<rt>し</rt></ruby>め<ruby>切<rt>き</rt></ruby>りまで二週間ある」が根拠になり、「そんなに<ruby>慌<rt>あわ</rt></ruby>てることはないよ」＝そんなに慌てなくてよい、と続きます。程度を表す副詞「そんなに」も自然に受けられます。正解は4です。</div>
+                  <div class="exp-content">「〜ことはない」は「その<ruby>必要<rt>ひつよう</rt></ruby>はない」と相手を<ruby>落<rt>お</rt></ruby>ち<ruby>着<rt>つ</rt></ruby>かせる言い方です。前の文の「まだ<ruby>締<rt>し</rt></ruby>め<ruby>切<rt>き</rt></ruby>りまで二週間ある」が根拠になり、「減ることはないので」＝そんなに慌てなくてよい、と続きます。程度を表す副詞「そんなに」も自然に受けられます。正解は4です。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
                     <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> 慌てるどころではない：「〜どころではない」は、事情があってそれができる<ruby>状況<rt>じょうきょう</rt></ruby>ではない、という意味です（例：<ruby>忙<rt>いそが</rt></ruby>しくて<ruby>旅行<rt>りょこう</rt></ruby>どころではない）。相手を安心させる働きがなく、「そんなに」という程度の副詞も受けられません。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> 慌てずにはいられない：どうしても慌ててしまう、という意味です。時間に<ruby>余裕<rt>よゆう</rt></ruby>があると<ruby>伝<rt>つた</rt></ruby>えて安心させる流れと逆になります。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> 慌てようがない：慌てるための<ruby>手段<rt>しゅだん</rt></ruby>や手がかりがない、という意味です（例：<ruby>連絡先<rt>れんらくさき</rt></ruby>が分からず知らせようがない）。余裕があるから必要ない、という話にはなりません。</li><li><strong>4.</strong> <span class="opt-tag-correct">[正解]</span> 慌てることはない：「その必要はない」と相手を落ち着かせる言い方です。「まだ二週間ある」という根拠とまっすぐつながります。</li>
@@ -1703,9 +1736,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem">お<ruby>問<rt>と</rt></ruby>い<ruby>合<rt>あ</rt></ruby>わせの<ruby>修理<rt>しゅうり</rt></ruby>の<ruby>件<rt>けん</rt></ruby>ですが、<ruby>部品<rt>ぶひん</rt></ruby>の<ruby>在庫<rt>ざいこ</rt></ruby>を（　）、どれくらい<ruby>日数<rt>にっすう</rt></ruby>がかかるかは<ruby>何<rt>なん</rt></ruby>とも<ruby>申<rt>もう</rt></ruby>し<ruby>上<rt>あ</rt></ruby>げられません。</div>
+                <div class="q-stem">お問い合わせの修理の件ですが、部品の在庫を（　）、どれくらい日数がかかるかは何とも申し上げられません。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>調<rt>しら</rt></ruby>べたからには</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>調<rt>しら</rt></ruby>べるからこそ</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>調<rt>しら</rt></ruby>べるにあたって</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>調<rt>しら</rt></ruby>べてからでないと</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>調べたからには</span></div><div class="opt-item"><span class="opt-num">2</span><span>調べるからこそ</span></div><div class="opt-item"><span class="opt-num">3</span><span>調べるにあたって</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>調べてからでないと</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1731,9 +1764,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>祖父<rt>そふ</rt></ruby>は、<ruby>周<rt>まわ</rt></ruby>りの<ruby>農家<rt>のうか</rt></ruby>が<ruby>新<rt>あたら</rt></ruby>しい<ruby>道具<rt>どうぐ</rt></ruby>に<ruby>頼<rt>たよ</rt></ruby>るようになった<ruby>今<rt>いま</rt></ruby>も、<ruby>畑<rt>はたけ</rt></ruby>に<ruby>出<rt>で</rt></ruby>る<ruby>日<rt>ひ</rt></ruby>を＿＿ ＿＿ ★ ＿＿。</div>
+                <div class="q-stem">祖父は、周りの農家が新しい道具に頼るようになった今も、畑に出る日を＿＿ ＿＿ ★ ＿＿。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>そうだ</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>決<rt>き</rt></ruby>めている</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>長年<rt>ながねん</rt></ruby>の<ruby>経験<rt>けいけん</rt></ruby>に</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>基<rt>もと</rt></ruby>づいて</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>そうだ</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>決めている</span></div><div class="opt-item"><span class="opt-num">3</span><span>長年の経験に</span></div><div class="opt-item"><span class="opt-num">4</span><span>基づいて</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1759,9 +1792,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>駅前<rt>えきまえ</rt></ruby>の<ruby>古<rt>ふる</rt></ruby>い<ruby>写真館<rt>しゃしんかん</rt></ruby>が<ruby>急<rt>きゅう</rt></ruby>に<ruby>店<rt>みせ</rt></ruby>を<ruby>閉<rt>し</rt></ruby>めた。＿＿ ＿＿ ★ ＿＿ ということだろう。</div>
+                <div class="q-stem">駅前の古い写真館が急に店を閉めた。＿＿ ＿＿ ★ ＿＿ ということだろう。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>つまり</span></div><div class="opt-item"><span class="opt-num">2</span><span>あの<ruby>技術<rt>ぎじゅつ</rt></ruby>を</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>身内<rt>みうち</rt></ruby>にいなかった</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>受<rt>う</rt></ruby>け<ruby>継<rt>つ</rt></ruby>ぐ<ruby>人<rt>ひと</rt></ruby>が</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>つまり</span></div><div class="opt-item"><span class="opt-num">2</span><span>あの技術を</span></div><div class="opt-item"><span class="opt-num">3</span><span>身内にいなかった</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>受け継ぐ人が</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1787,9 +1820,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>窓口<rt>まどぐち</rt></ruby>の<ruby>担当者<rt>たんとうしゃ</rt></ruby>は、＿＿ ＿＿ ★ ＿＿。</div>
+                <div class="q-stem">窓口の担当者は、＿＿ ＿＿ ★ ＿＿。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>不備<rt>ふび</rt></ruby>が</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>課長<rt>かちょう</rt></ruby>に<ruby>報告<rt>ほうこく</rt></ruby>せねばならない</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>申請書<rt>しんせいしょ</rt></ruby>の</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>見<rt>み</rt></ruby>つかった<ruby>場合<rt>ばあい</rt></ruby>は</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>不備が</span></div><div class="opt-item"><span class="opt-num">2</span><span>課長に報告せねばならない</span></div><div class="opt-item"><span class="opt-num">3</span><span>申請書の</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>見つかった場合は</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1815,9 +1848,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>初<rt>はじ</rt></ruby>めての<ruby>土地<rt>とち</rt></ruby>で<ruby>暮<rt>く</rt></ruby>らしていると、＿＿ ＿＿ ★ ＿＿。</div>
+                <div class="q-stem">初めての土地で暮らしていると、＿＿ ＿＿ ★ ＿＿。</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>心細<rt>こころぼそ</rt></ruby>いものは</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>体<rt>からだ</rt></ruby>を<ruby>壊<rt>こわ</rt></ruby>した</span></div><div class="opt-item"><span class="opt-num">3</span><span>ときほど</span></div><div class="opt-item"><span class="opt-num">4</span><span>ない</span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>心細いものは</span></div><div class="opt-item"><span class="opt-num">2</span><span>体を壊した</span></div><div class="opt-item"><span class="opt-num">3</span><span>ときほど</span></div><div class="opt-item"><span class="opt-num">4</span><span>ない</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1843,9 +1876,9 @@ footer {
               </div>
               <div class="q-body">
                 
-                <div class="q-stem"><ruby>同<rt>おな</rt></ruby>じ<ruby>料理<rt>りょうり</rt></ruby>でも<ruby>店<rt>みせ</rt></ruby>で<ruby>食<rt>た</rt></ruby>べるとおいしく<ruby>感<rt>かん</rt></ruby>じられるのは、<ruby>客<rt>きゃく</rt></ruby>の<ruby>感<rt>かん</rt></ruby>じ<ruby>方<rt>かた</rt></ruby>を＿＿ ＿＿ ★ ＿＿。</div>
+                <div class="q-stem">同じ料理でも店で食べるとおいしく感じられるのは、客の感じ方を＿＿ ＿＿ ★ ＿＿。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>からだ</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>変<rt>か</rt></ruby>えている</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>や<ruby>明<rt>あか</rt></ruby>るさも</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>味<rt>あじ</rt></ruby>だけでなく</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>からだ</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>変えている</span></div><div class="opt-item"><span class="opt-num">3</span><span>皿の色や明るさも</span></div><div class="opt-item"><span class="opt-num">4</span><span>味だけでなく</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1901,7 +1934,7 @@ footer {
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>持ち出せる重さ<br><br>　災害に備えて非常持ち出し袋を用意する家庭が増えている。水、食料、着替え、薬、電池。並べてみると、どれも外しがたい。あれもこれもと入れていくうちに、袋は肩に食い込むほど重くなる。用意された袋は、家族の命を守るために玄関に置かれている。（　48　）、一度も背負われないまま何年も過ぎていくことが珍しくない。<br><br>　ある自治体の防災講習では、参加者に自分の袋を背負って階段を上ってもらうそうだ。二階に着く前に立ち止まる人が半分ほど出るという。平らな道を少し歩くだけなら運べる重さでも、暗い中を、子どもの手を引きながら、足元の悪い道を進むとなれば話は別である。持ち出せない備えは、いざというとき（　49　）。<br><br>　そこで広まりつつあるのが、備えを二つに分ける考え方である。最初の一日をしのぐものだけを袋に入れ、残りは家の中や車に置いておく。水は一本、食料は一食分、それに薬と眼鏡と現金。三日分と聞いて三日分すべてを背負おうとするから重くなるのであって、押し入れに積んである水も、取りに戻れる場所にあるなら立派な備えである。持ち出す量と家に置く量を同じにしようとするところに、（　50　）。<br><br>　中身を減らせば安心も減るように思えるが、袋を軽くするとは、備えを減らすことではなく、（　51　）ことなのである。ある市の防災担当者は、講習で一度でも袋の重さを量った家庭では、その後、中身の入れ替えや置き場所についての問い合わせが増えると話す。重さを量ってから中身を決めた袋は、置き場所まで家族に共有されていることが多い。</div>
                 <div class="q-stem"><ruby>文章全体<rt>ぶんしょうぜんたい</rt></ruby>の<ruby>趣旨<rt>しゅし</rt></ruby>を<ruby>踏<rt>ふ</rt></ruby>まえて、（　49　）に<ruby>入<rt>はい</rt></ruby>る<ruby>最<rt>もっと</rt></ruby>もよいものを、1・2・3・4から<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>びなさい。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>役<rt>やく</rt></ruby>に<ruby>立<rt>た</rt></ruby>たないわけがない</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>役<rt>やく</rt></ruby>に<ruby>立<rt>た</rt></ruby>たないわけにはいかない</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span><ruby>役<rt>やく</rt></ruby>に<ruby>立<rt>た</rt></ruby>たないわけだ</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>役<rt>やく</rt></ruby>に<ruby>立<rt>た</rt></ruby>たないわけではない</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>役に立たないわけがない</span></div><div class="opt-item"><span class="opt-num">2</span><span>役に立たないわけにはいかない</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>役に立たないわけだ</span></div><div class="opt-item"><span class="opt-num">4</span><span>役に立たないわけではない</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -1929,12 +1962,12 @@ footer {
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>持ち出せる重さ<br><br>　災害に備えて非常持ち出し袋を用意する家庭が増えている。水、食料、着替え、薬、電池。並べてみると、どれも外しがたい。あれもこれもと入れていくうちに、袋は肩に食い込むほど重くなる。用意された袋は、家族の命を守るために玄関に置かれている。（　48　）、一度も背負われないまま何年も過ぎていくことが珍しくない。<br><br>　ある自治体の防災講習では、参加者に自分の袋を背負って階段を上ってもらうそうだ。二階に着く前に立ち止まる人が半分ほど出るという。平らな道を少し歩くだけなら運べる重さでも、暗い中を、子どもの手を引きながら、足元の悪い道を進むとなれば話は別である。持ち出せない備えは、いざというとき（　49　）。<br><br>　そこで広まりつつあるのが、備えを二つに分ける考え方である。最初の一日をしのぐものだけを袋に入れ、残りは家の中や車に置いておく。水は一本、食料は一食分、それに薬と眼鏡と現金。三日分と聞いて三日分すべてを背負おうとするから重くなるのであって、押し入れに積んである水も、取りに戻れる場所にあるなら立派な備えである。持ち出す量と家に置く量を同じにしようとするところに、（　50　）。<br><br>　中身を減らせば安心も減るように思えるが、袋を軽くするとは、備えを減らすことではなく、（　51　）ことなのである。ある市の防災担当者は、講習で一度でも袋の重さを量った家庭では、その後、中身の入れ替えや置き場所についての問い合わせが増えると話す。重さを量ってから中身を決めた袋は、置き場所まで家族に共有されていることが多い。</div>
                 <div class="q-stem"><ruby>文章全体<rt>ぶんしょうぜんたい</rt></ruby>の<ruby>趣旨<rt>しゅし</rt></ruby>を<ruby>踏<rt>ふ</rt></ruby>まえて、（　50　）に<ruby>入<rt>はい</rt></ruby>る<ruby>最<rt>もっと</rt></ruby>もよいものを、1・2・3・4から<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>びなさい。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>そもそもきりがない</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>そもそも<ruby>無理<rt>むり</rt></ruby>がある</span></div><div class="opt-item"><span class="opt-num">3</span><span>そもそも<ruby>変<rt>か</rt></ruby>わりはない</span></div><div class="opt-item"><span class="opt-num">4</span><span>そもそも<ruby>差<rt>さ</rt></ruby>し<ruby>支<rt>つか</rt></ruby>えない</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>そもそもきりがない</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>そもそも無理がある</span></div><div class="opt-item"><span class="opt-num">3</span><span>そもそも変わりはない</span></div><div class="opt-item"><span class="opt-num">4</span><span>そもそも差し支えない</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
                   <div class="exp-section-title">【正解の理由・根拠】</div>
-                  <div class="exp-content">この段落は、「三日分と聞いて三日分すべてを背負おうとするから重くなる」と述べ、<ruby>押<rt>お</rt></ruby>し<ruby>入<rt>い</rt></ruby>れに<ruby>積<rt>つ</rt></ruby>んである水も、取りに<ruby>戻<rt>もど</rt></ruby>れる場所にあるなら<ruby>立派<rt>りっぱ</rt></ruby>な備えだと説明しています。そのうえで「持ち出す量と家に置く量を同じにしようとするところに、（　）」と続くので、そうしようとする考え方そのものに<ruby>欠陥<rt>けっかん</rt></ruby>があると指摘する2「そもそも<ruby>無理<rt>むり</rt></ruby>がある」が入ります。「〜ところに無理がある」＝そこに無理がある、という形です。</div>
+                  <div class="exp-content">この段落は、「三日分と聞いて三日分すべてを背負おうとするから重くなる」と述べ、<ruby>押<rt>お</rt></ruby>し<ruby>入<rt>い</rt></ruby>れに<ruby>積<rt>つ</rt></ruby>んである水も、取りに<ruby>戻<rt>もど</rt></ruby>れる場所にあるなら<ruby>立派<rt>りっぱ</rt></ruby>な備えだと説明しています。そのうえで「持ち出す量と家に置く量を同じにしようとするところに、（　50　）」と続くので、そうしようとする考え方そのものに<ruby>欠陥<rt>けっかん</rt></ruby>があると指摘する2「そもそも<ruby>無理<rt>むり</rt></ruby>がある」が入ります。「〜ところに無理がある」＝そこに無理がある、という形です。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
                     <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> そもそもきりがない：<ruby>際限<rt>さいげん</rt></ruby>なく続いて終わらない、という意味の言い方です（例：<ruby>数<rt>かぞ</rt></ruby>え<ruby>始<rt>はじ</rt></ruby>めればきりがない）。「〜ところに」を受ける形にはなりません。</li><li><strong>2.</strong> <span class="opt-tag-correct">[正解]</span> そもそも無理がある：考え方そのものに無理がある、と<ruby>発想<rt>はっそう</rt></ruby>の欠陥を指摘する形です。「〜ところに」を受けて、量をそろえようとする<ruby>発想<rt>はっそう</rt></ruby><ruby>自体<rt>じたい</rt></ruby>を問題にする段落の流れに合います。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> そもそも変わりはない：二つのものに違いがない、と述べる形です。ここには<ruby>比<rt>くら</rt></ruby>べる相手が書かれていません。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> そもそも<ruby>差<rt>さ</rt></ruby>し<ruby>支<rt>つか</rt></ruby>えない：問題がない、<ruby>構<rt>かま</rt></ruby>わない、という意味です。同じにしようとするから重くなる、という段落の説明と矛盾します。</li>
@@ -1957,12 +1990,12 @@ footer {
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>持ち出せる重さ<br><br>　災害に備えて非常持ち出し袋を用意する家庭が増えている。水、食料、着替え、薬、電池。並べてみると、どれも外しがたい。あれもこれもと入れていくうちに、袋は肩に食い込むほど重くなる。用意された袋は、家族の命を守るために玄関に置かれている。（　48　）、一度も背負われないまま何年も過ぎていくことが珍しくない。<br><br>　ある自治体の防災講習では、参加者に自分の袋を背負って階段を上ってもらうそうだ。二階に着く前に立ち止まる人が半分ほど出るという。平らな道を少し歩くだけなら運べる重さでも、暗い中を、子どもの手を引きながら、足元の悪い道を進むとなれば話は別である。持ち出せない備えは、いざというとき（　49　）。<br><br>　そこで広まりつつあるのが、備えを二つに分ける考え方である。最初の一日をしのぐものだけを袋に入れ、残りは家の中や車に置いておく。水は一本、食料は一食分、それに薬と眼鏡と現金。三日分と聞いて三日分すべてを背負おうとするから重くなるのであって、押し入れに積んである水も、取りに戻れる場所にあるなら立派な備えである。持ち出す量と家に置く量を同じにしようとするところに、（　50　）。<br><br>　中身を減らせば安心も減るように思えるが、袋を軽くするとは、備えを減らすことではなく、（　51　）ことなのである。ある市の防災担当者は、講習で一度でも袋の重さを量った家庭では、その後、中身の入れ替えや置き場所についての問い合わせが増えると話す。重さを量ってから中身を決めた袋は、置き場所まで家族に共有されていることが多い。</div>
                 <div class="q-stem"><ruby>文章全体<rt>ぶんしょうぜんたい</rt></ruby>の<ruby>趣旨<rt>しゅし</rt></ruby>を<ruby>踏<rt>ふ</rt></ruby>まえて、（　51　）に<ruby>入<rt>はい</rt></ruby>る<ruby>最<rt>もっと</rt></ruby>もよいものを、1・2・3・4から<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>びなさい。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>一日分<rt>いちにちぶん</rt></ruby>の<ruby>水<rt>みず</rt></ruby>と<ruby>食料<rt>しょくりょう</rt></ruby>だけを<ruby>備<rt>そな</rt></ruby>える</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>三日<rt>みっか</rt></ruby><ruby>分<rt>ぶん</rt></ruby>を<ruby>一<rt>ひと</rt></ruby>つの<ruby>袋<rt>ふくろ</rt></ruby>にまとめる</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>玄関<rt>げんかん</rt></ruby>に<ruby>置<rt>お</rt></ruby>く<ruby>場所<rt>ばしょ</rt></ruby>を<ruby>家族<rt>かぞく</rt></ruby>で<ruby>決<rt>き</rt></ruby>める</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>持<rt>も</rt></ruby>ち<ruby>出<rt>だ</rt></ruby>す<ruby>分<rt>ぶん</rt></ruby>と<ruby>残<rt>のこ</rt></ruby>す<ruby>分<rt>ぶん</rt></ruby>に<ruby>分<rt>わ</rt></ruby>ける</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>一日分の水と食料だけを備える</span></div><div class="opt-item"><span class="opt-num">2</span><span>三日分を一つの袋にまとめる</span></div><div class="opt-item"><span class="opt-num">3</span><span>玄関に置く場所を家族で決める</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>持ち出す分と残す分に分ける</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
                   <div class="exp-section-title">【正解の理由・根拠】</div>
-                  <div class="exp-content">文章全体は、最初の一日をしのぐものだけを袋に入れ、<ruby>残<rt>のこ</rt></ruby>りは家の中や車に置いておく、という「備えを二つに分ける考え方」を<ruby>勧<rt>すす</rt></ruby>めています。ですから「袋を<ruby>軽<rt>かる</rt></ruby>くするとは、備えを<ruby>減<rt>へ</rt></ruby>らすことではなく、（　）ことなのである」の空欄には、<ruby>総量<rt>そうりょう</rt></ruby>を<ruby>削<rt>けず</rt></ruby>るのではなく、置き場所によって<ruby>振<rt>ふ</rt></ruby>り<ruby>分<rt>わ</rt></ruby>けるという意味の4が入り、全体の<ruby>趣旨<rt>しゅし</rt></ruby>と合います。</div>
+                  <div class="exp-content">文章全体は、最初の一日をしのぐものだけを袋に入れ、<ruby>残<rt>のこ</rt></ruby>りは家の中や車に置いておく、という「備えを二つに分ける考え方」を<ruby>勧<rt>すす</rt></ruby>めています。ですから「中身を減らせば安心も減るように思えるが、袋を軽くするとは、備えを減らすことではなく、（　51　）ことなのである」の空欄には、<ruby>総量<rt>そうりょう</rt></ruby>を<ruby>削<rt>けず</rt></ruby>るのではなく、置き場所によって<ruby>振<rt>ふ</rt></ruby>り<ruby>分<rt>わ</rt></ruby>けるという意味の4が入り、全体の<ruby>趣旨<rt>しゅし</rt></ruby>と合います。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
                     <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> 一日分の水と<ruby>食料<rt>しょくりょう</rt></ruby>だけを備える：残りは家や車に置くという第三段落の説明が<ruby>抜<rt>ぬ</rt></ruby>けており、備え自体を一日分に減らすことになります。「備えを減らすことではなく」という文の形とも食い違います。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> 三日分を一つの袋にまとめる：「三日分すべてを背負おうとするから重くなる」という説明と正反対で、袋を軽くする話になりません。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> 玄関に置く場所を家族で決める：最後の段落に出てくる結果の一つで、袋を軽くするという作業そのものの中身ではありません。</li><li><strong>4.</strong> <span class="opt-tag-correct">[正解]</span> 持ち出す分と残す分に分ける：最初の一日分だけを袋に入れ、残りは家や車に置くという、文章全体が勧める考え方をそのまま言い表しています。備えの総量は減らさず、置き場所で振り分けるという趣旨に合います。</li>
@@ -1984,7 +2017,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>市が河川敷の草刈りをあらため、水辺を刈らずに残したところ、荒れて見えるという苦情が届いた。刈られた土手のほうが歩きやすいのは確かだ。それでも刈り残しをやめないのは、丈の高い植生（注1）が、川と林とをつなぐ回廊（注2）になっているからだ。いったん刈り取ってしまえば、生き物の通り道はそこで切れ、何年たってももとには戻らない。刈り残したあたりで数えた虫の種類は、刈りこんだ土手の三倍にのぼる。<br><br>（注1）植生：その土地に生えている草や木の全体<br>（注2）回廊：生き物が行き来できるようにつながった細長い場所</div>
-                <div class="q-stem"><ruby>市<rt>し</rt></ruby>が<ruby>刈<rt>か</rt></ruby>り<ruby>残<rt>のこ</rt></ruby>しを<ruby>続<rt>つづ</rt></ruby>けているのはなぜか。</div>
+                <div class="q-stem">市が刈り残しを続けているのはなぜか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>草丈が高いままのほうが、土手を歩く人の安全を保ちやすいと考えたから</span></div><div class="opt-item"><span class="opt-num">2</span><span>苦情が届いたあとで、草刈りにかかる費用を抑える必要が生じたから</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>分断されると元に戻らない生き物の行き来の筋を、保つ必要があるから</span></div><div class="opt-item"><span class="opt-num">4</span><span>昆虫の種類を数える調査を、刈り込む作業の前に終える必要があるから</span></div>
                 </div>
@@ -2012,9 +2045,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>以下は、ある会社が社員に送ったメールである。<br><br>製造部各位<br><br>　人材育成課の岡本です。来月の設備研修の内容を一部改めます。<br>　これまで手順を覚えることに充てていた時間の半分を、ふだんと違う音や振動を書き留める練習に振り替えます。<br>　同じ設備を先に入れた第二工場で、立ち上げ（注1）の遅れが最も短かったのは、操作に慣れた班ではありませんでした。伝票の余白に気づいたことを書き残す習慣のあった班です。手ごたえの違いを言葉に直す習慣が、不具合を見つける早さを支えていたのです。<br><br>（注1）立ち上げ：新しい設備を動かし始め、通常の生産に移すまでの作業</div>
-                <div class="q-stem">このメールで<ruby>最<rt>もっと</rt></ruby>も<ruby>伝<rt>つた</rt></ruby>えたいことは<ruby>何<rt>なに</rt></ruby>か。</div>
+                <div class="q-stem">このメールで最も伝えたいことは何か。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>操作<rt>そうさ</rt></ruby>の<ruby>手順<rt>てじゅん</rt></ruby>を<ruby>覚<rt>おぼ</rt></ruby>えるための<ruby>時間<rt>じかん</rt></ruby>を、これまでより<ruby>長<rt>なが</rt></ruby>く<ruby>取<rt>と</rt></ruby>るということ</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>手順<rt>てじゅん</rt></ruby>を<ruby>覚<rt>おぼ</rt></ruby>える<ruby>時間<rt>じかん</rt></ruby>を<ruby>減<rt>へ</rt></ruby>らし、<ruby>異変<rt>いへん</rt></ruby>を<ruby>言葉<rt>ことば</rt></ruby>に<ruby>直<rt>なお</rt></ruby>す<ruby>練習<rt>れんしゅう</rt></ruby>を<ruby>増<rt>ふ</rt></ruby>やすということ</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>設備研修<rt>せつびけんしゅう</rt></ruby>の<ruby>日程<rt>にってい</rt></ruby>を、<ruby>来月<rt>らいげつ</rt></ruby>から<ruby>先<rt>さき</rt></ruby>に<ruby>延<rt>の</rt></ruby>ばすことになったということ</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>伝票<rt>でんぴょう</rt></ruby>の<ruby>書式<rt>しょしき</rt></ruby>を、<ruby>余白<rt>よはく</rt></ruby>を<ruby>広<rt>ひろ</rt></ruby>く<ruby>取<rt>と</rt></ruby>ったものに<ruby>作<rt>つく</rt></ruby>り<ruby>直<rt>なお</rt></ruby>すことにしたということ</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>操作の手順を覚えるための時間を、これまでより長く取るということ</span></div><div class="opt-item"><span class="opt-num">2</span><span>伝票の書式を、余白を広く取ったものに作り直すことにしたということ</span></div><div class="opt-item"><span class="opt-num">3</span><span>設備研修の日程を、来月から先に延ばすことになったということ</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>手順を覚える時間を減らし、異変を言葉に直す練習を増やすということ</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -2022,7 +2055,7 @@ footer {
                   <div class="exp-content"><ruby>社内<rt>しゃない</rt></ruby>メールの<ruby>問題<rt>もんだい</rt></ruby>では、<ruby>書<rt>か</rt></ruby>き<ruby>手<rt>て</rt></ruby>がこのメールで<ruby>何<rt>なに</rt></ruby>を<ruby>知<rt>し</rt></ruby>らせたいのかを<ruby>読<rt>よ</rt></ruby>み<ruby>取<rt>と</rt></ruby>ります。<ruby>本文<rt>ほんぶん</rt></ruby>に「これまで<ruby>手順<rt>てじゅん</rt></ruby>を<ruby>覚<rt>おぼ</rt></ruby>えることに<ruby>充<rt>あ</rt></ruby>てていた<ruby>時間<rt>じかん</rt></ruby>の<ruby>半分<rt>はんぶん</rt></ruby>を、ふだんと<ruby>違<rt>ちが</rt></ruby>う<ruby>音<rt>おと</rt></ruby>や<ruby>振動<rt>しんどう</rt></ruby>を<ruby>書<rt>か</rt></ruby>き<ruby>留<rt>と</rt></ruby>める<ruby>練習<rt>れんしゅう</rt></ruby>に<ruby>振<rt>ふ</rt></ruby>り<ruby>替<rt>か</rt></ruby>えます」とあります。<ruby>第二工場<rt>だいにこうじょう</rt></ruby>の<ruby>話<rt>はなし</rt></ruby>は、そう<ruby>変<rt>か</rt></ruby>える<ruby>理由<rt>りゆう</rt></ruby>として<ruby>挙<rt>あ</rt></ruby>げられているものです。手順を覚える時間を<ruby>減<rt>へ</rt></ruby>らし、いつもと違う<ruby>様子<rt>ようす</rt></ruby>を<ruby>言葉<rt>ことば</rt></ruby>にする練習を<ruby>増<rt>ふ</rt></ruby>やす、と<ruby>言<rt>い</rt></ruby>いかえた2が<ruby>正解<rt>せいかい</rt></ruby>です。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
-                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>操作<rt>そうさ</rt></ruby>の<ruby>手順<rt>てじゅん</rt></ruby>を<ruby>覚<rt>おぼ</rt></ruby>えるための<ruby>時間<rt>じかん</rt></ruby>を、これまでより<ruby>長<rt>なが</rt></ruby>く<ruby>取<rt>と</rt></ruby>るということ：本文は手順を覚える時間の「<ruby>半分<rt>はんぶん</rt></ruby>」を<ruby>別<rt>べつ</rt></ruby>の<ruby>練習<rt>れんしゅう</rt></ruby>に<ruby>回<rt>まわ</rt></ruby>すと<ruby>述<rt>の</rt></ruby>べています。長くするのではなく、<ruby>短<rt>みじか</rt></ruby>くします。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>手順<rt>てじゅん</rt></ruby>を<ruby>覚<rt>おぼ</rt></ruby>える<ruby>時間<rt>じかん</rt></ruby>を<ruby>減<rt>へ</rt></ruby>らし、<ruby>異変<rt>いへん</rt></ruby>を<ruby>言葉<rt>ことば</rt></ruby>に<ruby>直<rt>なお</rt></ruby>す<ruby>練習<rt>れんしゅう</rt></ruby>を<ruby>増<rt>ふ</rt></ruby>やすということ：「ふだんと違う音や振動を書き留める練習に振り替えます」に<ruby>対応<rt>たいおう</rt></ruby>します。<ruby>異変<rt>いへん</rt></ruby>＝ふだんと<ruby>違<rt>ちが</rt></ruby>う<ruby>音<rt>おと</rt></ruby>や<ruby>振動<rt>しんどう</rt></ruby>のことです。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>設備研修<rt>せつびけんしゅう</rt></ruby>の<ruby>日程<rt>にってい</rt></ruby>を、<ruby>来月<rt>らいげつ</rt></ruby>から<ruby>先<rt>さき</rt></ruby>に<ruby>延<rt>の</rt></ruby>ばすことになったということ：<ruby>改<rt>あらた</rt></ruby>めるのは研修の「<ruby>内容<rt>ないよう</rt></ruby>」で、<ruby>日程<rt>にってい</rt></ruby>については<ruby>何<rt>なに</rt></ruby>も<ruby>書<rt>か</rt></ruby>かれていません。</li><li><strong>4.</strong> <span class="opt-tag-correct">[正解]</span> <ruby>伝票<rt>でんぴょう</rt></ruby>の<ruby>書式<rt>しょしき</rt></ruby>を、<ruby>余白<rt>よはく</rt></ruby>を<ruby>広<rt>ひろ</rt></ruby>く<ruby>取<rt>と</rt></ruby>ったものに<ruby>作<rt>つく</rt></ruby>り<ruby>直<rt>なお</rt></ruby>すことにしたということ：伝票の余白は、第二工場で書き<ruby>残<rt>のこ</rt></ruby>す<ruby>習慣<rt>しゅうかん</rt></ruby>があった<ruby>班<rt>はん</rt></ruby>の<ruby>例<rt>れい</rt></ruby>として<ruby>出<rt>で</rt></ruby>てくるだけです。書式を<ruby>変<rt>か</rt></ruby>えるとは述べていません。</li>
+                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>操作<rt>そうさ</rt></ruby>の<ruby>手順<rt>てじゅん</rt></ruby>を<ruby>覚<rt>おぼ</rt></ruby>えるための<ruby>時間<rt>じかん</rt></ruby>を、これまでより<ruby>長<rt>なが</rt></ruby>く<ruby>取<rt>と</rt></ruby>るということ：本文は手順を覚える時間の「<ruby>半分<rt>はんぶん</rt></ruby>」を<ruby>別<rt>べつ</rt></ruby>の<ruby>練習<rt>れんしゅう</rt></ruby>に<ruby>回<rt>まわ</rt></ruby>すと<ruby>述<rt>の</rt></ruby>べています。長くするのではなく、<ruby>短<rt>みじか</rt></ruby>くします。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>伝票<rt>でんぴょう</rt></ruby>の<ruby>書式<rt>しょしき</rt></ruby>を、<ruby>余白<rt>よはく</rt></ruby>を<ruby>広<rt>ひろ</rt></ruby>く<ruby>取<rt>と</rt></ruby>ったものに<ruby>作<rt>つく</rt></ruby>り<ruby>直<rt>なお</rt></ruby>すことにしたということ：伝票の余白は、第二工場で書き<ruby>残<rt>のこ</rt></ruby>す<ruby>習慣<rt>しゅうかん</rt></ruby>があった<ruby>班<rt>はん</rt></ruby>の<ruby>例<rt>れい</rt></ruby>として<ruby>出<rt>で</rt></ruby>てくるだけです。書式を<ruby>変<rt>か</rt></ruby>えるとは述べていません。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>設備研修<rt>せつびけんしゅう</rt></ruby>の<ruby>日程<rt>にってい</rt></ruby>を、<ruby>来月<rt>らいげつ</rt></ruby>から<ruby>先<rt>さき</rt></ruby>に<ruby>延<rt>の</rt></ruby>ばすことになったということ：<ruby>改<rt>あらた</rt></ruby>めるのは研修の「<ruby>内容<rt>ないよう</rt></ruby>」で、<ruby>日程<rt>にってい</rt></ruby>については<ruby>何<rt>なに</rt></ruby>も<ruby>書<rt>か</rt></ruby>かれていません。</li><li><strong>4.</strong> <span class="opt-tag-correct">[正解]</span> <ruby>手順<rt>てじゅん</rt></ruby>を<ruby>覚<rt>おぼ</rt></ruby>える<ruby>時間<rt>じかん</rt></ruby>を<ruby>減<rt>へ</rt></ruby>らし、<ruby>異変<rt>いへん</rt></ruby>を<ruby>言葉<rt>ことば</rt></ruby>に<ruby>直<rt>なお</rt></ruby>す<ruby>練習<rt>れんしゅう</rt></ruby>を<ruby>増<rt>ふ</rt></ruby>やすということ：「ふだんと違う音や振動を書き留める練習に振り替えます」に<ruby>対応<rt>たいおう</rt></ruby>します。<ruby>異変<rt>いへん</rt></ruby>＝ふだんと<ruby>違<rt>ちが</rt></ruby>う<ruby>音<rt>おと</rt></ruby>や<ruby>振動<rt>しんどう</rt></ruby>のことです。</li>
                   </ul>
                   <div class="exp-section-title">【重要語彙・文法ポイント】</div><div><span class="vocab-pill"><ruby>振<rt>ふ</rt></ruby>り<ruby>替<rt>か</rt></ruby>える：<ruby>予定<rt>よてい</rt></ruby>していた<ruby>中身<rt>なかみ</rt></ruby>を、<ruby>別<rt>べつ</rt></ruby>のものに<ruby>入<rt>い</rt></ruby>れかえる。例：<ruby>休日<rt>きゅうじつ</rt></ruby>を<ruby>平日<rt>へいじつ</rt></ruby>に振り替える。</span><span class="vocab-pill"><ruby>立<rt>た</rt></ruby>ち<ruby>上<rt>あ</rt></ruby>げ：<ruby>新<rt>あたら</rt></ruby>しい<ruby>設備<rt>せつび</rt></ruby>を<ruby>動<rt>うご</rt></ruby>かし<ruby>始<rt>はじ</rt></ruby>め、<ruby>通常<rt>つうじょう</rt></ruby>の<ruby>生産<rt>せいさん</rt></ruby>に<ruby>移<rt>うつ</rt></ruby>すまでの<ruby>作業<rt>さぎょう</rt></ruby>（本文の注1）。</span><span class="vocab-pill"><ruby>異変<rt>いへん</rt></ruby>：いつもと<ruby>違<rt>ちが</rt></ruby>う<ruby>様子<rt>ようす</rt></ruby>。ここでは、ふだんと違う<ruby>音<rt>おと</rt></ruby>や<ruby>振動<rt>しんどう</rt></ruby>のこと。</span><span class="vocab-pill"><ruby>余白<rt>よはく</rt></ruby>：<ruby>紙<rt>かみ</rt></ruby>の、<ruby>何<rt>なに</rt></ruby>も<ruby>書<rt>か</rt></ruby>かれていない<ruby>部分<rt>ぶぶん</rt></ruby>。</span><span class="vocab-pill"><ruby>手<rt>て</rt></ruby>ごたえ：手に<ruby>伝<rt>つた</rt></ruby>わってくる<ruby>感<rt>かん</rt></ruby>じ。ここでは<ruby>機械<rt>きかい</rt></ruby>を<ruby>操作<rt>そうさ</rt></ruby>したときの<ruby>感触<rt>かんしょく</rt></ruby>。</span><span class="vocab-pill">お<ruby>知<rt>し</rt></ruby>らせやメールの<ruby>問題<rt>もんだい</rt></ruby>は、<ruby>細<rt>こま</rt></ruby>かい<ruby>事実<rt>じじつ</rt></ruby>ではなく「この<ruby>文書<rt>ぶんしょ</rt></ruby>は<ruby>何<rt>なに</rt></ruby>のために<ruby>書<rt>か</rt></ruby>かれたか」を<ruby>問<rt>と</rt></ruby>うことが<ruby>多<rt>おお</rt></ruby>い。<ruby>理由<rt>りゆう</rt></ruby>として<ruby>挙<rt>あ</rt></ruby>げられた<ruby>例<rt>れい</rt></ruby>を、伝えたいことと<ruby>取<rt>と</rt></ruby>り<ruby>違<rt>ちが</rt></ruby>えないようにする。</span></div>
                 </div>
@@ -2040,9 +2073,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>以下は、ある市民ホールが掲示したお知らせである。<br><br>春のフリーマーケット　出店者募集のご案内<br><br>　あおば市民ホール前の広場で、四月十二日にフリーマーケットを開きます。<br>　出店できるのは市内にお住まいの方か市内の団体で、市外の方は申し込めません。出店料は一区画千円、当日受付でお支払いください。前もっての振り込みはできません。<br>　食べ物と飲み物は、手作りかどうかにかかわらずお売りになれません。<br>　申し込みは往復はがきで三月十日必着です。雨天は五月十日に延期し、中止にはなりません。</div>
-                <div class="q-stem">このお<ruby>知<rt>し</rt></ruby>らせが、<ruby>出店<rt>しゅってん</rt></ruby>を<ruby>希望<rt>きぼう</rt></ruby>する<ruby>人<rt>ひと</rt></ruby>に<ruby>伝<rt>つた</rt></ruby>えたいことは<ruby>何<rt>なに</rt></ruby>か。</div>
+                <div class="q-stem">このお知らせが、出店を希望する人に伝えたいことは何か。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>めるのは<ruby>市内<rt>しない</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>や<ruby>団体<rt>だんたい</rt></ruby>に<ruby>限<rt>かぎ</rt></ruby>られ、<ruby>期日<rt>きじつ</rt></ruby>までに<ruby>往復<rt>おうふく</rt></ruby>はがきで<ruby>送<rt>おく</rt></ruby>る<ruby>必要<rt>ひつよう</rt></ruby>があること</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>出店料<rt>しゅってんりょう</rt></ruby>は<ruby>前<rt>まえ</rt></ruby>もって<ruby>振<rt>ふ</rt></ruby>り<ruby>込<rt>こ</rt></ruby>んでおき、<ruby>当日<rt>とうじつ</rt></ruby>は<ruby>受付<rt>うけつけ</rt></ruby>で<ruby>番号<rt>ばんごう</rt></ruby>を<ruby>伝<rt>つた</rt></ruby>えればよいということ</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>手作<rt>てづく</rt></ruby>りの<ruby>菓子<rt>かし</rt></ruby>であれば、<ruby>当日<rt>とうじつ</rt></ruby>その<ruby>場<rt>ば</rt></ruby>で<ruby>売<rt>う</rt></ruby>ることも<ruby>認<rt>みと</rt></ruby>められるということ</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>雨<rt>あめ</rt></ruby>が<ruby>降<rt>ふ</rt></ruby>った<ruby>場合<rt>ばあい</rt></ruby>は、その<ruby>日<rt>ひ</rt></ruby>のうちに<ruby>屋内<rt>おくない</rt></ruby>の<ruby>会議室<rt>かいぎしつ</rt></ruby>へ<ruby>会場<rt>かいじょう</rt></ruby>を<ruby>移<rt>うつ</rt></ruby>すということ</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>出店料は前もって振り込んでおき、当日は受付で番号を伝えるだけでよいということ</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>申し込めるのは市内の人や団体に限られ、期日までに往復はがきで送る必要があること</span></div><div class="opt-item"><span class="opt-num">3</span><span>手作りの菓子であれば、当日その場で売ることも認められるということ</span></div><div class="opt-item"><span class="opt-num">4</span><span>雨が降った場合は、その日のうちに屋内の会議室へ会場を移して開くということ</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -2050,7 +2083,7 @@ footer {
                   <div class="exp-content"><ruby>募集<rt>ぼしゅう</rt></ruby>のお<ruby>知<rt>し</rt></ruby>らせは、<ruby>応募<rt>おうぼ</rt></ruby>しようとする<ruby>人<rt>ひと</rt></ruby>が<ruby>守<rt>まも</rt></ruby>るべき<ruby>条件<rt>じょうけん</rt></ruby>を<ruby>伝<rt>つた</rt></ruby>えるために<ruby>書<rt>か</rt></ruby>かれます。<ruby>本文<rt>ほんぶん</rt></ruby>には「<ruby>出店<rt>しゅってん</rt></ruby>できるのは<ruby>市内<rt>しない</rt></ruby>にお<ruby>住<rt>す</rt></ruby>まいの<ruby>方<rt>かた</rt></ruby>か<ruby>市内<rt>しない</rt></ruby>の<ruby>団体<rt>だんたい</rt></ruby>で、<ruby>市外<rt>しがい</rt></ruby>の方は<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>めません」「申し込みは<ruby>往復<rt>おうふく</rt></ruby>はがきで<ruby>三月<rt>さんがつ</rt></ruby><ruby>十日<rt>とおか</rt></ruby><ruby>必着<rt>ひっちゃく</rt></ruby>です」とあります。だれが申し込めるのかと、どう申し込むのかの<ruby>二<rt>ふた</rt></ruby>つをまとめた1が<ruby>正解<rt>せいかい</rt></ruby>です。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
-                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>めるのは<ruby>市内<rt>しない</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>や<ruby>団体<rt>だんたい</rt></ruby>に<ruby>限<rt>かぎ</rt></ruby>られ、<ruby>期日<rt>きじつ</rt></ruby>までに<ruby>往復<rt>おうふく</rt></ruby>はがきで<ruby>送<rt>おく</rt></ruby>る<ruby>必要<rt>ひつよう</rt></ruby>があること：「<ruby>市外<rt>しがい</rt></ruby>の方は申し込めません」「往復はがきで<ruby>三月十日必着<rt>ひっちゃく</rt></ruby>」の二か<ruby>所<rt>にかしょ</rt></ruby>に<ruby>対応<rt>たいおう</rt></ruby>します。</li><li><strong>2.</strong> <span class="opt-tag-correct">[正解]</span> <ruby>出店料<rt>しゅってんりょう</rt></ruby>は<ruby>前<rt>まえ</rt></ruby>もって<ruby>振<rt>ふ</rt></ruby>り<ruby>込<rt>こ</rt></ruby>んでおき、<ruby>当日<rt>とうじつ</rt></ruby>は<ruby>受付<rt>うけつけ</rt></ruby>で<ruby>番号<rt>ばんごう</rt></ruby>を<ruby>伝<rt>つた</rt></ruby>えればよいということ：「当日受付でお<ruby>支払<rt>しはら</rt></ruby>いください。前もっての振り込みはできません」とあり、<ruby>逆<rt>ぎゃく</rt></ruby>です。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>手作<rt>てづく</rt></ruby>りの<ruby>菓子<rt>かし</rt></ruby>であれば、<ruby>当日<rt>とうじつ</rt></ruby>その<ruby>場<rt>ば</rt></ruby>で<ruby>売<rt>う</rt></ruby>ることも<ruby>認<rt>みと</rt></ruby>められるということ：「<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>と<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>は、手作りかどうかにかかわらずお<ruby>売<rt>う</rt></ruby>りになれません」とあります。<ruby>菓子<rt>かし</rt></ruby>は食べ物です。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>雨<rt>あめ</rt></ruby>が<ruby>降<rt>ふ</rt></ruby>った<ruby>場合<rt>ばあい</rt></ruby>は、その<ruby>日<rt>ひ</rt></ruby>のうちに<ruby>屋内<rt>おくない</rt></ruby>の<ruby>会議室<rt>かいぎしつ</rt></ruby>へ<ruby>会場<rt>かいじょう</rt></ruby>を<ruby>移<rt>うつ</rt></ruby>すということ：「<ruby>雨天<rt>うてん</rt></ruby>は<ruby>五月<rt>ごがつ</rt></ruby><ruby>十日<rt>とおか</rt></ruby>に<ruby>延期<rt>えんき</rt></ruby>し、<ruby>中止<rt>ちゅうし</rt></ruby>にはなりません」とあり、<ruby>日<rt>ひ</rt></ruby>を<ruby>改<rt>あらた</rt></ruby>めます。</li>
+                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>出店料<rt>しゅってんりょう</rt></ruby>は<ruby>前<rt>まえ</rt></ruby>もって<ruby>振<rt>ふ</rt></ruby>り<ruby>込<rt>こ</rt></ruby>んでおき、<ruby>当日<rt>とうじつ</rt></ruby>は<ruby>受付<rt>うけつけ</rt></ruby>で<ruby>番号<rt>ばんごう</rt></ruby>を<ruby>伝<rt>つた</rt></ruby>えればよいということ：「当日受付でお<ruby>支払<rt>しはら</rt></ruby>いください。前もっての振り込みはできません」とあり、<ruby>逆<rt>ぎゃく</rt></ruby>です。</li><li><strong>2.</strong> <span class="opt-tag-correct">[正解]</span> <ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>めるのは<ruby>市内<rt>しない</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>や<ruby>団体<rt>だんたい</rt></ruby>に<ruby>限<rt>かぎ</rt></ruby>られ、<ruby>期日<rt>きじつ</rt></ruby>までに<ruby>往復<rt>おうふく</rt></ruby>はがきで<ruby>送<rt>おく</rt></ruby>る<ruby>必要<rt>ひつよう</rt></ruby>があること：「<ruby>市外<rt>しがい</rt></ruby>の方は申し込めません」「往復はがきで<ruby>三月十日必着<rt>ひっちゃく</rt></ruby>」の二か<ruby>所<rt>にかしょ</rt></ruby>に<ruby>対応<rt>たいおう</rt></ruby>します。</li><li><strong>3.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>手作<rt>てづく</rt></ruby>りの<ruby>菓子<rt>かし</rt></ruby>であれば、<ruby>当日<rt>とうじつ</rt></ruby>その<ruby>場<rt>ば</rt></ruby>で<ruby>売<rt>う</rt></ruby>ることも<ruby>認<rt>みと</rt></ruby>められるということ：「<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>と<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>は、手作りかどうかにかかわらずお<ruby>売<rt>う</rt></ruby>りになれません」とあります。<ruby>菓子<rt>かし</rt></ruby>は食べ物です。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>雨<rt>あめ</rt></ruby>が<ruby>降<rt>ふ</rt></ruby>った<ruby>場合<rt>ばあい</rt></ruby>は、その<ruby>日<rt>ひ</rt></ruby>のうちに<ruby>屋内<rt>おくない</rt></ruby>の<ruby>会議室<rt>かいぎしつ</rt></ruby>へ<ruby>会場<rt>かいじょう</rt></ruby>を<ruby>移<rt>うつ</rt></ruby>すということ：「<ruby>雨天<rt>うてん</rt></ruby>は<ruby>五月<rt>ごがつ</rt></ruby><ruby>十日<rt>とおか</rt></ruby>に<ruby>延期<rt>えんき</rt></ruby>し、<ruby>中止<rt>ちゅうし</rt></ruby>にはなりません」とあり、<ruby>日<rt>ひ</rt></ruby>を<ruby>改<rt>あらた</rt></ruby>めます。</li>
                   </ul>
                   <div class="exp-section-title">【重要語彙・文法ポイント】</div><div><span class="vocab-pill"><ruby>必着<rt>ひっちゃく</rt></ruby>：その<ruby>日<rt>ひ</rt></ruby>までに<ruby>相手<rt>あいて</rt></ruby>に<ruby>届<rt>とど</rt></ruby>いていなければならないこと。「<ruby>消印<rt>けしいん</rt></ruby><ruby>有効<rt>ゆうこう</rt></ruby>」との<ruby>違<rt>ちが</rt></ruby>いに<ruby>注意<rt>ちゅうい</rt></ruby>。</span><span class="vocab-pill"><ruby>往復<rt>おうふく</rt></ruby>はがき：<ruby>返事<rt>へんじ</rt></ruby>を<ruby>書<rt>か</rt></ruby>く<ruby>分<rt>ぶん</rt></ruby>がついた<ruby>二枚<rt>にまい</rt></ruby>つづきのはがき。<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みによく<ruby>使<rt>つか</rt></ruby>われる。</span><span class="vocab-pill"><ruby>延期<rt>えんき</rt></ruby>：<ruby>予定<rt>よてい</rt></ruby>の<ruby>日<rt>ひ</rt></ruby>を<ruby>先<rt>さき</rt></ruby>に<ruby>延<rt>の</rt></ruby>ばすこと。<ruby>中止<rt>ちゅうし</rt></ruby>＝やめてしまうこと、とは<ruby>違<rt>ちが</rt></ruby>う。</span><span class="vocab-pill">〜にかかわらず：〜に<ruby>関係<rt>かんけい</rt></ruby>なく。例：<ruby>天候<rt>てんこう</rt></ruby>にかかわらず<ruby>開催<rt>かいさい</rt></ruby>します。</span><span class="vocab-pill"><ruby>一区画<rt>ひとくかく</rt></ruby>：<ruby>区切<rt>くぎ</rt></ruby>られた<ruby>場所<rt>ばしょ</rt></ruby>の<ruby>一<rt>ひと</rt></ruby>つ<ruby>分<rt>ぶん</rt></ruby>。</span><span class="vocab-pill"><ruby>条件<rt>じょうけん</rt></ruby>が<ruby>並<rt>なら</rt></ruby>ぶお<ruby>知<rt>し</rt></ruby>らせでは、「できる／できない」を一つずつ<ruby>表<rt>ひょう</rt></ruby>のように<ruby>読<rt>よ</rt></ruby>み<ruby>分<rt>わ</rt></ruby>けると、<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正誤<rt>せいご</rt></ruby>が<ruby>確<rt>たし</rt></ruby>かめやすい。</span></div>
                 </div>
@@ -2068,9 +2101,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>お年寄りは暑さに弱いと言われますが、その弱さの中身は一つではありません。<br>　人は皮膚と体の奥とで温度を感じとり、その差をたよりに放熱（注1）をはじめます。年をとると、まずこの感じとる力がおとろえ、部屋が三十度を超えていても暑いと感じません。<br>　おとろえるものはもう一つあって、汗腺（注2）の数は変わらないのに、はたらく汗腺の割合が減ります。暑いと気づけても、体をひやす側がついてきません。<br>　家の中で倒れる方が多いのは、この二つが同じころに進むからです。強いか弱いかというものさしだけで考えているかぎり、備えは半分しか用意できないと私は思います。<br><br>（注1）放熱：体の中の熱を外へ逃がすこと<br>（注2）汗腺：皮膚にあり、汗を作り出す小さな器官</div>
-                <div class="q-stem"><ruby>高齢者<rt>こうれいしゃ</rt></ruby>が<ruby>暑<rt>あつ</rt></ruby>さに<ruby>弱<rt>よわ</rt></ruby>いということについて、<ruby>筆者<rt>ひっしゃ</rt></ruby>はどのように<ruby>考<rt>かんが</rt></ruby>えているか。</div>
+                <div class="q-stem">高齢者が暑さに弱いということについて、筆者はどのように考えているか。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>皮膚<rt>ひふ</rt></ruby>と<ruby>体<rt>からだ</rt></ruby>の<ruby>奥<rt>おく</rt></ruby>の<ruby>温度<rt>おんど</rt></ruby>の<ruby>差<rt>さ</rt></ruby>が<ruby>広<rt>ひろ</rt></ruby>がり、<ruby>汗<rt>あせ</rt></ruby>の<ruby>量<rt>りょう</rt></ruby>が<ruby>必要<rt>ひつよう</rt></ruby><ruby>以上<rt>いじょう</rt></ruby>に<ruby>増<rt>ふ</rt></ruby>えてしまうということ</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>年<rt>とし</rt></ruby>をとると<ruby>汗腺<rt>かんせん</rt></ruby>の<ruby>数<rt>かず</rt></ruby>そのものが<ruby>減<rt>へ</rt></ruby>り、<ruby>熱<rt>ねつ</rt></ruby>を<ruby>外<rt>そと</rt></ruby>へ<ruby>逃<rt>に</rt></ruby>がせなくなるということ</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span><ruby>気<rt>き</rt></ruby>づく<ruby>力<rt>ちから</rt></ruby>と<ruby>冷<rt>ひ</rt></ruby>やす<ruby>力<rt>ちから</rt></ruby>は<ruby>別々<rt>べつべつ</rt></ruby>に<ruby>落<rt>お</rt></ruby>ちるので、<ruby>一<rt>ひと</rt></ruby>つの<ruby>尺度<rt>しゃくど</rt></ruby>で<ruby>考<rt>かんが</rt></ruby>えては<ruby>備<rt>そな</rt></ruby>えが<ruby>足<rt>た</rt></ruby>りないということ</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>室温<rt>しつおん</rt></ruby>が<ruby>三十度<rt>さんじゅうど</rt></ruby>を<ruby>超<rt>こ</rt></ruby>えるまでは、<ruby>体<rt>からだ</rt></ruby>の<ruby>奥<rt>おく</rt></ruby>の<ruby>温度<rt>おんど</rt></ruby>が<ruby>上<rt>あ</rt></ruby>がらない<ruby>仕組<rt>しく</rt></ruby>みだということ</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>皮膚と体の奥の温度の差が広がって、汗の量が必要以上に増えてしまうということ</span></div><div class="opt-item"><span class="opt-num">2</span><span>年をとると汗腺の数そのものが減り、熱を外へ逃がせなくなるということ</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>気づく力と冷やす力は別々に落ちるので、一つの尺度で考えては備えが足りないということ</span></div><div class="opt-item"><span class="opt-num">4</span><span>部屋が三十度を超えるまでは、体の奥の温度は上がらない仕組みになっているということ</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -2096,7 +2129,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>ひとり親の家庭への支援は、この十年でたしかに数が増えました。手当、学びの援助、住まいの補助、仕事さがしの相談。ならべれば手厚いはずですが、まどぐちにすわる私のところに、届かないという声は絶えません。<br>　制度の多くは申請主義（注1）をとっており、そのうえ、まどぐちが制度ごとに分かれ、それぞれに別の書類が要ります。ある市の調べでは、二つ目のまどぐちまで進んだ人は、一つ目に来た人の半分にも届いていませんでした。<br>　支援のしくみをいくつ用意したかを数える前に、必要な方が何か所を回らされているのかを数えてみるべきではないでしょうか。<br><br>（注1）申請主義：本人からの申し出がなければ制度が動かないという考え方</div>
-                <div class="q-stem"><ruby>筆者<rt>ひっしゃ</rt></ruby>が<ruby>最<rt>もっと</rt></ruby>も<ruby>言<rt>い</rt></ruby>いたいことは<ruby>何<rt>なに</rt></ruby>か。</div>
+                <div class="q-stem">筆者が最も言いたいことは何か。</div>
                 <div class="options-grid">
                   <div class="opt-item is-correct"><span class="opt-num">1</span><span>支援策を増やす前に、申請に要する手間の多さを見直す必要がある</span></div><div class="opt-item"><span class="opt-num">2</span><span>平日の昼間に窓口へ出向ける人を増やす仕組みを、早く整えるべきだ</span></div><div class="opt-item"><span class="opt-num">3</span><span>制度ごとに担当の課を分け、それぞれの専門性をもっと高めるべきだ</span></div><div class="opt-item"><span class="opt-num">4</span><span>手当や住まいの補助の額を、家庭の状況に応じて手厚くしてほしい</span></div>
                 </div>
@@ -2124,9 +2157,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>災害が起きた直後、私たちは限られた材料で第一報（注1）を出しますが、数字はあとから動きます。避難した人の数、通行止めのくぎり、水の止まった地区。最初に伝えた数と、三日後に落ち着いた数とが同じだったことは、ほとんどありません。<br><br>　この十年、誤った第一報がくり返し批判されてきましたし、速さを競うのをやめれば誤りは減る、という声も根強くあります。私のいた放送局でも、裏取り（注2）が済むまでは数字を出さない、というやり方を試したことがありました。ところが、その空いた時間に流れ込んだのは、真偽（注3）の確かめられていない書き込みだったのです。何も出さない時間帯を、人は黙って待ってはくれません。それを先に埋めてしまうのは錯綜（注4）した話のほうで、風評（注5）はそこから育ちます。<br><br>　（中略）<br><br>　災害報道を長く担ってきた同僚に聞くと、現場が第一報で分けているのは、確かめた事実と、確かめている最中の事柄と、まだ手がついていない領域の三つだといいます。この三つを言い分けて数字を出しておけば、あとから数が動いても、受け取った側の理解は崩れません。ところが、区別のない数字は、動いたとたんに全体の信用を持っていってしまいます。<br><br>　現場がみがいてきたのは、一報をかんぺきにする技術よりも、誤りに気づいてから直し終えるまでを短くする段取りのほうでした。<br><br>（注1）第一報：ある出来事について最初に伝えられる知らせ<br>（注2）裏取り：伝える前に、別の相手に当たって事実かどうかを確かめる作業<br>（注3）真偽：本当かうそかということ<br>（注4）錯綜：いろいろな知らせが入り乱れて、筋道が立たなくなること<br>（注5）風評：確かな根拠のないまま広まる世間のうわさ</div>
-                <div class="q-stem">「それ」が<ruby>指<rt>さ</rt></ruby>しているのは<ruby>何<rt>なに</rt></ruby>か。</div>
+                <div class="q-stem">「それ」が指しているのは何か。</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span><ruby>放送局<rt>ほうそうきょく</rt></ruby>が<ruby>数字<rt>すうじ</rt></ruby>を<ruby>出<rt>だ</rt></ruby>さないまま<ruby>過<rt>す</rt></ruby>ぎていく<ruby>時間<rt>じかん</rt></ruby></span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>裏取<rt>うらど</rt></ruby>りが<ruby>済<rt>す</rt></ruby>むまでに<ruby>記者<rt>きしゃ</rt></ruby>が<ruby>集<rt>あつ</rt></ruby>めた<ruby>材料<rt>ざいりょう</rt></ruby></span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>最初<rt>さいしょ</rt></ruby>に<ruby>伝<rt>つた</rt></ruby>えた<ruby>数<rt>かず</rt></ruby>と、<ruby>三日後<rt>みっかご</rt></ruby>に<ruby>確定<rt>かくてい</rt></ruby>した<ruby>数<rt>かず</rt></ruby>との<ruby>開<rt>ひら</rt></ruby>き</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>誤<rt>あやま</rt></ruby>りに<ruby>気<rt>き</rt></ruby>づいてから<ruby>訂正<rt>ていせい</rt></ruby>を<ruby>出<rt>だ</rt></ruby>し<ruby>終<rt>お</rt></ruby>えるまでの<ruby>手順<rt>てじゅん</rt></ruby></span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>放送局が数字を出さないまま過ぎていく時間</span></div><div class="opt-item"><span class="opt-num">2</span><span>裏取りが済むまでに記者が集めた材料</span></div><div class="opt-item"><span class="opt-num">3</span><span>最初に伝えた数と、三日後に確定した数との開き</span></div><div class="opt-item"><span class="opt-num">4</span><span>誤りに気づいてから訂正を出し終えるまでの手順</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -2152,7 +2185,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>災害が起きた直後、私たちは限られた材料で第一報（注1）を出しますが、数字はあとから動きます。避難した人の数、通行止めのくぎり、水の止まった地区。最初に伝えた数と、三日後に落ち着いた数とが同じだったことは、ほとんどありません。<br><br>　この十年、誤った第一報がくり返し批判されてきましたし、速さを競うのをやめれば誤りは減る、という声も根強くあります。私のいた放送局でも、裏取り（注2）が済むまでは数字を出さない、というやり方を試したことがありました。ところが、その空いた時間に流れ込んだのは、真偽（注3）の確かめられていない書き込みだったのです。何も出さない時間帯を、人は黙って待ってはくれません。それを先に埋めてしまうのは錯綜（注4）した話のほうで、風評（注5）はそこから育ちます。<br><br>　（中略）<br><br>　災害報道を長く担ってきた同僚に聞くと、現場が第一報で分けているのは、確かめた事実と、確かめている最中の事柄と、まだ手がついていない領域の三つだといいます。この三つを言い分けて数字を出しておけば、あとから数が動いても、受け取った側の理解は崩れません。ところが、区別のない数字は、動いたとたんに全体の信用を持っていってしまいます。<br><br>　現場がみがいてきたのは、一報をかんぺきにする技術よりも、誤りに気づいてから直し終えるまでを短くする段取りのほうでした。<br><br>（注1）第一報：ある出来事について最初に伝えられる知らせ<br>（注2）裏取り：伝える前に、別の相手に当たって事実かどうかを確かめる作業<br>（注3）真偽：本当かうそかということ<br>（注4）錯綜：いろいろな知らせが入り乱れて、筋道が立たなくなること<br>（注5）風評：確かな根拠のないまま広まる世間のうわさ</div>
-                <div class="q-stem"><ruby>筆者<rt>ひっしゃ</rt></ruby>の<ruby>考<rt>かんが</rt></ruby>えに<ruby>合<rt>あ</rt></ruby>うのはどれか。</div>
+                <div class="q-stem">筆者の考えに合うのはどれか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>第一報の数字が後から動くこと自体を、報道機関はもっと重く受け止めるべきだ</span></div><div class="opt-item"><span class="opt-num">2</span><span>確認が取れるまで数字を伏せる方針は、誤りを減らす方法としてかなり有効である</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>確かさの度合いを分けて示し、訂正を早く出すほうが混乱は小さい</span></div><div class="opt-item"><span class="opt-num">4</span><span>災害の報道は、放送よりも書き込みのほうが速く広く届くようになっている</span></div>
                 </div>
@@ -2180,9 +2213,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>地方の鉄道が消えるとき、話し合いはたいてい存廃（注1）の一点にしぼられ、地元の自治体は署名を集め、事業者は赤字の額を示す。決まりがついたあとで、代わりのバスが走りはじめる。<br><br>　問題はその先で、国の資料をもとに、やめてから三年後の輸送人員（注2）をならべてみると、地域による開きがとても大きく、鉄道のころの七割を保っているところがあれば、三割を切ったところもある。同じ人口の減り方の下で、この差が出る。過疎（注3）の進み方も、お年寄りの割合も、どちらもほとんど変わらないのにである。<br><br>　分かれ目は、代わりのバスの道すじをいつ引き始めたかにあった。三割を切ったところでは、やめると正式に決まってから、はじめて路線図を開いている。鉄道の最終日とバスの初日のあいだが空き、その数か月のうちに、住民は家族に車を出してもらう形へ移ってしまう。一度移した足は、乗り合い（注4）の便には戻らない。<br><br>　七割を保ったところは逆で、やめるかどうかの話し合いが続いているあいだに、通学と通院の時刻を住民から集め、駅を起点（注5）にするのをやめて、高校と病院の前を通る道すじを先に引いていた。（中略）鉄道が消えた日から始まるのは、路線図を引く仕事ではなく、引いておいた路線図を走らせる仕事である。<br><br>（注1）存廃：そのまま残すか、やめてしまうかということ<br>（注2）輸送人員：一定の期間に乗り物が運んだ人の数<br>（注3）過疎：人が住まなくなり、地域の人口がひどく少なくなること<br>（注4）乗り合い：見知らぬ客どうしが一台に同乗する形<br>（注5）起点：物事や道筋が始まるところ</div>
-                <div class="q-stem"><ruby>筆者<rt>ひっしゃ</rt></ruby>によると、<ruby>廃止<rt>はいし</rt></ruby>から<ruby>三年後<rt>さんねんご</rt></ruby>の<ruby>利用<rt>りよう</rt></ruby>に<ruby>地域差<rt>ちいきさ</rt></ruby>が<ruby>生<rt>う</rt></ruby>まれたのはなぜか。</div>
+                <div class="q-stem">筆者によると、廃止から三年後の利用に地域差が生まれたのはなぜか。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>鉄道の赤字が膨らんだ時期が、地域によって十年ほどずれていたこと</span></div><div class="opt-item"><span class="opt-num">2</span><span>存続を求める署名を集めた住民の数に、地域ごとの開きがあったこと</span></div><div class="opt-item"><span class="opt-num">3</span><span>高齢者の割合の増え方が、三割を切った地域では特に速かったこと</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>代わりのバスの経路づくりに取りかかった時期が、地域ごとに違うこと</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>鉄道の赤字が膨らみはじめた時期が、地域によって十年ほどずれていたこと</span></div><div class="opt-item"><span class="opt-num">2</span><span>存続を求める署名を集めた住民の数に、地域ごとの開きがあったこと</span></div><div class="opt-item"><span class="opt-num">3</span><span>お年寄りの割合のふえ方が、三割を切ったところではとくに速かったこと</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>代わりのバスの経路づくりに取りかかった時期が、地域ごとに違うこと</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -2208,7 +2241,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>地方の鉄道が消えるとき、話し合いはたいてい存廃（注1）の一点にしぼられ、地元の自治体は署名を集め、事業者は赤字の額を示す。決まりがついたあとで、代わりのバスが走りはじめる。<br><br>　問題はその先で、国の資料をもとに、やめてから三年後の輸送人員（注2）をならべてみると、地域による開きがとても大きく、鉄道のころの七割を保っているところがあれば、三割を切ったところもある。同じ人口の減り方の下で、この差が出る。過疎（注3）の進み方も、お年寄りの割合も、どちらもほとんど変わらないのにである。<br><br>　分かれ目は、代わりのバスの道すじをいつ引き始めたかにあった。三割を切ったところでは、やめると正式に決まってから、はじめて路線図を開いている。鉄道の最終日とバスの初日のあいだが空き、その数か月のうちに、住民は家族に車を出してもらう形へ移ってしまう。一度移した足は、乗り合い（注4）の便には戻らない。<br><br>　七割を保ったところは逆で、やめるかどうかの話し合いが続いているあいだに、通学と通院の時刻を住民から集め、駅を起点（注5）にするのをやめて、高校と病院の前を通る道すじを先に引いていた。（中略）鉄道が消えた日から始まるのは、路線図を引く仕事ではなく、引いておいた路線図を走らせる仕事である。<br><br>（注1）存廃：そのまま残すか、やめてしまうかということ<br>（注2）輸送人員：一定の期間に乗り物が運んだ人の数<br>（注3）過疎：人が住まなくなり、地域の人口がひどく少なくなること<br>（注4）乗り合い：見知らぬ客どうしが一台に同乗する形<br>（注5）起点：物事や道筋が始まるところ</div>
-                <div class="q-stem"><ruby>七<rt>なな</rt></ruby><ruby>割<rt>わり</rt></ruby>を<ruby>保<rt>たも</rt></ruby>った<ruby>地域<rt>ちいき</rt></ruby>について、<ruby>筆者<rt>ひっしゃ</rt></ruby>はどのように<ruby>述<rt>の</rt></ruby>べているか。</div>
+                <div class="q-stem">七割を保った地域について、筆者はどのように述べているか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>鉄道の最終日を遅らせる交渉を、事業者と根気よく続けていたと述べている</span></div><div class="opt-item"><span class="opt-num">2</span><span>廃止に反対する署名を集め、存続の可能性を最後まで根気よく探ったとしている</span></div><div class="opt-item"><span class="opt-num">3</span><span>鉄道の駅を中心に置いたまま、バスの経路を組み直していたと述べている</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>廃止が決まる前から、住民の動く時刻を集めて経路を引いていたと述べている</span></div>
                 </div>
@@ -2236,7 +2269,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>母が亡くなって半年たった秋に、簞笥（注1）の引き出しから一冊のノートが出てきた。表紙に「これからのこと」とだけ書いてある。市の公民館で配っていた、いわゆるエンディングノート（注2）だった。<br><br>　開く前は、財産の話が並んでいるのだろうと身構えた。ところが、預金や保険の欄はほとんど空白のままで、代わりに罫線（注3）の細い行に、こまごまとした覚え書きが詰まっていた。玄関の鍵の予備は台所の茶筒の中。裏の畑を借りている地主さんの名前。猫の餌の銘柄と、量を減らしてはいけないという注意書き。隣の家から預かったままの鉢の返し先。<br><br>　私は少し笑い、それから読み進められなくなった。母は、自分が消えたあとに残る困りごとを、一つずつ数えていたのだ。①<strong>残しておいたのは手続きではなかった</strong>。<br><br>　（中略）<br><br>　終活（注4）という言葉には、身辺を整理して片づけるという響きがある。世間で配られる手引きも、葬儀の希望や資産の一覧を書く欄が大半を占める。だが母のノートを読むかぎり、書き留められていたのは、片づけようのない結び目（注5）のほうだった。誰かに返すもの、誰かに頼むこと、誰かが困ること。<br><br>　私はまだ自分の分を書けていない。ただ、あの細い罫線の間に並んでいた覚え書きを、母が誰に向けて書いたのかは、今なら分かる気がする。<br><br>（注1）簞笥：衣類などをしまう、引き出しのついた家具<br>（注2）エンディングノート：自分の死後に備え、家族に伝えたいことを書いておく冊子<br>（注3）罫線：紙に等しい間隔で引かれた細い線<br>（注4）終活：人生の終わりに備えて、身の回りのことをあらかじめ整えておく活動<br>（注5）結び目：ここでは、人との間に残っていて簡単には解けない関わり</div>
-                <div class="q-stem">①<strong><ruby>残<rt>のこ</rt></ruby>しておいたのは<ruby>手続<rt>てつづ</rt></ruby>きではなかった</strong>とあるが、<ruby>母<rt>はは</rt></ruby>が<ruby>書<rt>か</rt></ruby>き<ruby>残<rt>のこ</rt></ruby>していたのはどのようなことか。</div>
+                <div class="q-stem">①<strong>残しておいたのは手続きではなかった</strong>とあるが、母が書き残していたのはどのようなことか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>葬儀の希望や資産の一覧など、公民館の手引きが勧めている項目</span></div><div class="opt-item"><span class="opt-num">2</span><span>娘に伝えたかった感謝の言葉と、これまでの暮らしの振り返り</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>自分がいなくなったあとに人が困る、細かな用事のこと</span></div><div class="opt-item"><span class="opt-num">4</span><span>預金や保険の手続きを進めるために必要になる書類の置き場所</span></div>
                 </div>
@@ -2264,9 +2297,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>母が亡くなって半年たった秋に、簞笥（注1）の引き出しから一冊のノートが出てきた。表紙に「これからのこと」とだけ書いてある。市の公民館で配っていた、いわゆるエンディングノート（注2）だった。<br><br>　開く前は、財産の話が並んでいるのだろうと身構えた。ところが、預金や保険の欄はほとんど空白のままで、代わりに罫線（注3）の細い行に、こまごまとした覚え書きが詰まっていた。玄関の鍵の予備は台所の茶筒の中。裏の畑を借りている地主さんの名前。猫の餌の銘柄と、量を減らしてはいけないという注意書き。隣の家から預かったままの鉢の返し先。<br><br>　私は少し笑い、それから読み進められなくなった。母は、自分が消えたあとに残る困りごとを、一つずつ数えていたのだ。①<strong>残しておいたのは手続きではなかった</strong>。<br><br>　（中略）<br><br>　終活（注4）という言葉には、身辺を整理して片づけるという響きがある。世間で配られる手引きも、葬儀の希望や資産の一覧を書く欄が大半を占める。だが母のノートを読むかぎり、書き留められていたのは、片づけようのない結び目（注5）のほうだった。誰かに返すもの、誰かに頼むこと、誰かが困ること。<br><br>　私はまだ自分の分を書けていない。ただ、あの細い罫線の間に並んでいた覚え書きを、母が誰に向けて書いたのかは、今なら分かる気がする。<br><br>（注1）簞笥：衣類などをしまう、引き出しのついた家具<br>（注2）エンディングノート：自分の死後に備え、家族に伝えたいことを書いておく冊子<br>（注3）罫線：紙に等しい間隔で引かれた細い線<br>（注4）終活：人生の終わりに備えて、身の回りのことをあらかじめ整えておく活動<br>（注5）結び目：ここでは、人との間に残っていて簡単には解けない関わり</div>
-                <div class="q-stem"><ruby>筆者<rt>ひっしゃ</rt></ruby>が<ruby>最<rt>もっと</rt></ruby>も<ruby>言<rt>い</rt></ruby>いたいことは<ruby>何<rt>なに</rt></ruby>か。</div>
+                <div class="q-stem">筆者が最も言いたいことは何か。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>終活は、財産の一覧を作るところから始めるのが確実な進め方だ</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>母が書き残したのは、人との間に残る用事という片づかないものだった</span></div><div class="opt-item"><span class="opt-num">3</span><span>エンディングノートは、公民館などでもっと広く配るべき冊子である</span></div><div class="opt-item"><span class="opt-num">4</span><span>身辺の整理は、体が動くうちに済ませたほうが家族の負担が軽い</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>終活は、まず財産の一覧を作るところから始めるのが確実な進め方だ</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>母が書き残したのは、人との間に残る用事という片づかないものだった</span></div><div class="opt-item"><span class="opt-num">3</span><span>エンディングノートは、公民館などでもっと広く配るべき冊子である</span></div><div class="opt-item"><span class="opt-num">4</span><span>身のまわりの整理は、体が動くうちに済ませたほうが家族の負担は軽い</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -2292,7 +2325,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>共同で住む家といえば、家賃を抑えたい若い人の集まる場所だと思われてきた。私が半年ほど暮らした家も、はじめはそのつもりで選んだ。ところが住んでみると、隣の部屋は子どもを育てている夫婦で、その隣は勤めを終えたばかりの人だった。仕事場を兼ねて使う人もいて、台所ではいろいろな年ごろの人が、入れかわり立ちかわり湯をわかしていた。<br><br>　運営する会社が力を入れているのは、住む人どうしのつながりを生む呼び水（注1）である。広い共用の居間、月に一度の食事会、当番で回す掃除。見学に来た人の多くは、その写真を見て申し込みを決めるという。ところが、①<strong>看板を高く掲げた家ほど短命だった</strong>。三十軒あまりの記録を追った調べによると、交流を売り物にした家では、一年のうちに出ていく人の割合が、そうでない家の二倍近くに上っていた。<br><br>　長く続いている家に目立つのは、意外なほど地味な作りである。共用の居間はせまく、食事会もない。あるのは、洗濯機の順番を書きこむ板と、荷物を置ける土間（注2）ぐらいだ。住んでいる人は、洗濯を待つ数分のあいだに二言三言かわし、話したくない日は、そのまま部屋へ戻っていく。<br><br>　交流を約束した家では、親しさが行事の形をとる。行事には日どりがあり、日どりは出るか出ないかの返事を求めてくる。顔を出さない人は、出ないという意思を示したことになってしまう。「今日はやめておきます」と一度言えば、次の月にはもう誘われない。約束された親しさは、加わらない自由をその人から取り上げてしまうのである。<br><br>（注1）呼び水：あることを引き起こすきっかけ<br>（注2）土間：家の中で床板を張らず、地面のままにしてある場所</div>
-                <div class="q-stem">①<strong><ruby>看板<rt>かんばん</rt></ruby>を<ruby>高<rt>たか</rt></ruby>く<ruby>掲<rt>かか</rt></ruby>げた<ruby>家<rt>いえ</rt></ruby>ほど<ruby>短命<rt>たんめい</rt></ruby>だった</strong>とあるが、どういうことか。</div>
+                <div class="q-stem">①<strong>看板を高く掲げた家ほど短命だった</strong>とあるが、どういうことか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>交流を売り物にした家ほど、運営会社が早い時期に手を引くことになったということ</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>つながりを前面に出した家ほど、一年以内に去る入居者が多かったということ</span></div><div class="opt-item"><span class="opt-num">3</span><span>共用の居間を広く取った家ほど、家賃の設定が高くなる傾向にあったということ</span></div><div class="opt-item"><span class="opt-num">4</span><span>食事会を長く続けた家ほど、見学に来る人の数が減っていったということ</span></div>
                 </div>
@@ -2320,7 +2353,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>共同で住む家といえば、家賃を抑えたい若い人の集まる場所だと思われてきた。私が半年ほど暮らした家も、はじめはそのつもりで選んだ。ところが住んでみると、隣の部屋は子どもを育てている夫婦で、その隣は勤めを終えたばかりの人だった。仕事場を兼ねて使う人もいて、台所ではいろいろな年ごろの人が、入れかわり立ちかわり湯をわかしていた。<br><br>　運営する会社が力を入れているのは、住む人どうしのつながりを生む呼び水（注1）である。広い共用の居間、月に一度の食事会、当番で回す掃除。見学に来た人の多くは、その写真を見て申し込みを決めるという。ところが、①<strong>看板を高く掲げた家ほど短命だった</strong>。三十軒あまりの記録を追った調べによると、交流を売り物にした家では、一年のうちに出ていく人の割合が、そうでない家の二倍近くに上っていた。<br><br>　長く続いている家に目立つのは、意外なほど地味な作りである。共用の居間はせまく、食事会もない。あるのは、洗濯機の順番を書きこむ板と、荷物を置ける土間（注2）ぐらいだ。住んでいる人は、洗濯を待つ数分のあいだに二言三言かわし、話したくない日は、そのまま部屋へ戻っていく。<br><br>　交流を約束した家では、親しさが行事の形をとる。行事には日どりがあり、日どりは出るか出ないかの返事を求めてくる。顔を出さない人は、出ないという意思を示したことになってしまう。「今日はやめておきます」と一度言えば、次の月にはもう誘われない。約束された親しさは、加わらない自由をその人から取り上げてしまうのである。<br><br>（注1）呼び水：あることを引き起こすきっかけ<br>（注2）土間：家の中で床板を張らず、地面のままにしてある場所</div>
-                <div class="q-stem"><ruby>筆者<rt>ひっしゃ</rt></ruby>によると、<ruby>長<rt>なが</rt></ruby>く<ruby>続<rt>つづ</rt></ruby>いた<ruby>家<rt>いえ</rt></ruby>に<ruby>見<rt>み</rt></ruby>られるのはどのような<ruby>点<rt>てん</rt></ruby>か。</div>
+                <div class="q-stem">筆者によると、長く続いた家に見られるのはどのような点か。</div>
                 <div class="options-grid">
                   <div class="opt-item is-correct"><span class="opt-num">1</span><span>話すきっかけは残しつつ、加わらない選択もできる作りであった点</span></div><div class="opt-item"><span class="opt-num">2</span><span>共用の居間を広く取り、住人が自然に集まりやすいようにしていた点</span></div><div class="opt-item"><span class="opt-num">3</span><span>入居できる年齢や職業を絞り、住人の顔ぶれをそろえていた点</span></div><div class="opt-item"><span class="opt-num">4</span><span>家賃を低く抑え、若い世代がとくに入りやすいようにしていた点</span></div>
                 </div>
@@ -2348,7 +2381,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>　在宅勤務が続く職場で、上司がまず困るのは、部下の働いている姿が見えないことだろう。そこへ入ってきたのが、決まった時間ごとに画面を写しておく道具や、席にいるかどうかを色で見せる表示である。私はこのやり方には反対で、すわっていた時間をいくら集めても、その日に何が前へ進んだのかは一行も分からないからである。要るのは、週のはじめに今週終える仕事を三つまで書き出しておき、金曜にその三つをならべて確かめる、それだけの手順ではないか。書き出せない仕事は、そもそも指示のほうがあいまいだったということになる。在宅勤務をどう評価するかは、測る道具をえらぶ話ではなく、何を仕事の成果と呼ぶのかを先に言葉にしておく話である。<br><br><strong>B</strong><br>　在宅勤務の評価を、出てきたものと締め切りで測る。この考え方は分かりやすく、私もおおすじでは賛成だ。席にいる時間を数えても仕事の中身は見えない、という点もそのとおりだと思う。ただ、職場には表に出てこない仕事がある。行きづまった同僚の相談に三十分つきあう、入ったばかりの人の質問に答える、決まりかけた案の穴をはやめに言う。どれも成果の欄には書けないが、抜ければ何か月かあとに必ず響いてくる。在宅では、こうしたはたらきかけが目に入りにくい。見えにくい仕事を評価の表に書きこんでおかないかぎり、在宅勤務は、記録に残る作業だけを残してやせていくだろう。</div>
-                <div class="q-stem"><ruby>在宅勤務<rt>ざいたくきんむ</rt></ruby>の<ruby>評価<rt>ひょうか</rt></ruby>について、AとBが<ruby>共通<rt>きょうつう</rt></ruby>して<ruby>述<rt>の</rt></ruby>べていることは<ruby>何<rt>なに</rt></ruby>か。</div>
+                <div class="q-stem">在宅勤務の評価について、AとBが共通して述べていることは何か。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>職場に出てくる日を決めておくことが、評価を公平にする助けになる</span></div><div class="opt-item"><span class="opt-num">2</span><span>上司と部下が、評価の項目をあらかじめ話し合っておく必要がある</span></div><div class="opt-item"><span class="opt-num">3</span><span>成果物と締め切りだけを見る評価は、いずれ行き詰まることになる</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>席に着いている時間を記録しても、仕事の中身は見えてこない</span></div>
                 </div>
@@ -2376,9 +2409,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>　在宅勤務が続く職場で、上司がまず困るのは、部下の働いている姿が見えないことだろう。そこへ入ってきたのが、決まった時間ごとに画面を写しておく道具や、席にいるかどうかを色で見せる表示である。私はこのやり方には反対で、すわっていた時間をいくら集めても、その日に何が前へ進んだのかは一行も分からないからである。要るのは、週のはじめに今週終える仕事を三つまで書き出しておき、金曜にその三つをならべて確かめる、それだけの手順ではないか。書き出せない仕事は、そもそも指示のほうがあいまいだったということになる。在宅勤務をどう評価するかは、測る道具をえらぶ話ではなく、何を仕事の成果と呼ぶのかを先に言葉にしておく話である。<br><br><strong>B</strong><br>　在宅勤務の評価を、出てきたものと締め切りで測る。この考え方は分かりやすく、私もおおすじでは賛成だ。席にいる時間を数えても仕事の中身は見えない、という点もそのとおりだと思う。ただ、職場には表に出てこない仕事がある。行きづまった同僚の相談に三十分つきあう、入ったばかりの人の質問に答える、決まりかけた案の穴をはやめに言う。どれも成果の欄には書けないが、抜ければ何か月かあとに必ず響いてくる。在宅では、こうしたはたらきかけが目に入りにくい。見えにくい仕事を評価の表に書きこんでおかないかぎり、在宅勤務は、記録に残る作業だけを残してやせていくだろう。</div>
-                <div class="q-stem"><ruby>在宅勤務<rt>ざいたくきんむ</rt></ruby>の<ruby>評価<rt>ひょうか</rt></ruby>の<ruby>仕方<rt>しかた</rt></ruby>について、AとBはどのように<ruby>述<rt>の</rt></ruby>べているか。</div>
+                <div class="q-stem">在宅勤務の評価の仕方について、AとBはどのように述べているか。</div>
                 <div class="options-grid">
-                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>Aは終える仕事を先に言葉にすることを勧め、Bは表に出ない働きかけも評価に入れるよう求める</span></div><div class="opt-item"><span class="opt-num">2</span><span>Aは画面を記録する道具をできるだけ広く使うよう勧め、Bは締め切りで測るよう求めている</span></div><div class="opt-item"><span class="opt-num">3</span><span>Aは同僚どうしで互いに評価し合うことを勧め、Bは上司が面談の回数を増やすよう求めている</span></div><div class="opt-item"><span class="opt-num">4</span><span>Aは出社の回数を評価に加えるよう勧め、Bは勤務の時間帯をそろえるよう求めている</span></div>
+                  <div class="opt-item is-correct"><span class="opt-num">1</span><span>Aは終える仕事を先に言葉にすることを勧め、Bは表に出ない働きかけも評価に入れるよう求める</span></div><div class="opt-item"><span class="opt-num">2</span><span>Aは画面を写しておく道具をできるだけ広く使うよう勧め、Bは締め切りだけで測るよう求めている</span></div><div class="opt-item"><span class="opt-num">3</span><span>Aは同僚どうしで互いに評価し合うことを勧め、Bは上司が面談の回数を増やすよう求めている</span></div><div class="opt-item"><span class="opt-num">4</span><span>Aは出社の回数を評価に加えるよう勧め、Bは勤務の時間帯をそろえるよう求めている</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -2404,7 +2437,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>その土地の言葉が消えていくことを心配する人は多く、国の調べでも、家の中で方言を使うと答えた人の割合は、七十代以上と二十代とで倍以上ひらいているという。放っておけば失われる、という言い方はそのとおりだと思う。ただ、失われ方には順序がある。<br><br>　言葉がおとろえていく道すじを調べた研究によれば、まず単語のほうから先におきかわるのだそうだ。次に文の形が変わり、抑揚（注1）が最後まで残る。実際、若い人の話し方を聞いていると、単語も文末の言い方もすっかり共通語になっているのに、声の高さの動きだけはその土地のものが残っていることが多い。<br><br>　各地の取りくみは、大きく二つに分かれる。一つは記録で、年をとった話し手にあつまってもらって声をとり、言い回しと使われ方を辞典の形にまとめていく。研究者の手が入れば、何十年か先にも読めるものがのこる。もう一つは継承（注2）で、学校の授業に土地の言い回しを持ちこんだり、祭りのかけ声を子どもに覚えてもらったり、店の看板に土地の言葉を使ったりする。（中略）<br><br>　この二つは、同じ「方言を残す」という言葉で呼ばれてきたが、要るものはまるで違う。記録に要るのは、話し手をさがす手間と、書きとる技術と、しまっておく場所である。継承に要るのは、その言葉を口に出してもいいと思える場面の数である。前のものは資料を増やし、あとのものは機会を増やす。<br><br>　かつて学校には方言札（注3）があって、その土地の言い方は直すべきものとされていた。共通語のほうが正しいという見方が長くつづいてきたところでは、辞典が一冊できたところで、人前で使う気持ちまでは戻らない。ある県は二十年かけて分厚い方言辞典を作り上げたが、出来上がった年の調べでも、若い人の使う割合は下がりつづけていた。辞典を持たない別の町では、商店街の放送と学校の朝の挨拶に土地の言い方を入れたところ、家でも使うと答える子どもがふえたという。<br><br>　記録が言葉を資料に変える仕事であるのに対して、継承は、言葉を口に出せる場面を増やす仕事である。二つを同じ名前で呼んできたあいだに、資料は厚くなるのに使う場面は減っていくということが、あちこちで同時に進んでいた。<br><br>（注1）抑揚：話すときの声の高さの上がり下がり<br>（注2）継承：受け継いで、次の世代へ渡していくこと<br>（注3）方言札：昔、学校で方言を話した子どもの首に掛けさせた罰の札</div>
-                <div class="q-stem"><ruby>筆者<rt>ひっしゃ</rt></ruby>によると、<ruby>若<rt>わか</rt></ruby>い<ruby>世代<rt>せだい</rt></ruby>の<ruby>話<rt>はな</rt></ruby>し<ruby>方<rt>かた</rt></ruby>はどうなっているか。</div>
+                <div class="q-stem">筆者によると、若い世代の話し方はどうなっているか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>単語は土地のものが残り、声の上げ下げだけが共通語に近づいている</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>単語や文末の言い方は共通語に近づいたが、声の高さの動きは残っている</span></div><div class="opt-item"><span class="opt-num">3</span><span>単語も声の上げ下げも共通語になり、文の形だけが土地のものである</span></div><div class="opt-item"><span class="opt-num">4</span><span>単語は共通語に変わったが、文の形と声の上げ下げは今も土地のままである</span></div>
                 </div>
@@ -2432,7 +2465,7 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>その土地の言葉が消えていくことを心配する人は多く、国の調べでも、家の中で方言を使うと答えた人の割合は、七十代以上と二十代とで倍以上ひらいているという。放っておけば失われる、という言い方はそのとおりだと思う。ただ、失われ方には順序がある。<br><br>　言葉がおとろえていく道すじを調べた研究によれば、まず単語のほうから先におきかわるのだそうだ。次に文の形が変わり、抑揚（注1）が最後まで残る。実際、若い人の話し方を聞いていると、単語も文末の言い方もすっかり共通語になっているのに、声の高さの動きだけはその土地のものが残っていることが多い。<br><br>　各地の取りくみは、大きく二つに分かれる。一つは記録で、年をとった話し手にあつまってもらって声をとり、言い回しと使われ方を辞典の形にまとめていく。研究者の手が入れば、何十年か先にも読めるものがのこる。もう一つは継承（注2）で、学校の授業に土地の言い回しを持ちこんだり、祭りのかけ声を子どもに覚えてもらったり、店の看板に土地の言葉を使ったりする。（中略）<br><br>　この二つは、同じ「方言を残す」という言葉で呼ばれてきたが、要るものはまるで違う。記録に要るのは、話し手をさがす手間と、書きとる技術と、しまっておく場所である。継承に要るのは、その言葉を口に出してもいいと思える場面の数である。前のものは資料を増やし、あとのものは機会を増やす。<br><br>　かつて学校には方言札（注3）があって、その土地の言い方は直すべきものとされていた。共通語のほうが正しいという見方が長くつづいてきたところでは、辞典が一冊できたところで、人前で使う気持ちまでは戻らない。ある県は二十年かけて分厚い方言辞典を作り上げたが、出来上がった年の調べでも、若い人の使う割合は下がりつづけていた。辞典を持たない別の町では、商店街の放送と学校の朝の挨拶に土地の言い方を入れたところ、家でも使うと答える子どもがふえたという。<br><br>　記録が言葉を資料に変える仕事であるのに対して、継承は、言葉を口に出せる場面を増やす仕事である。二つを同じ名前で呼んできたあいだに、資料は厚くなるのに使う場面は減っていくということが、あちこちで同時に進んでいた。<br><br>（注1）抑揚：話すときの声の高さの上がり下がり<br>（注2）継承：受け継いで、次の世代へ渡していくこと<br>（注3）方言札：昔、学校で方言を話した子どもの首に掛けさせた罰の札</div>
-                <div class="q-stem"><ruby>記録<rt>きろく</rt></ruby>と<ruby>継承<rt>けいしょう</rt></ruby>の<ruby>違<rt>ちが</rt></ruby>いについて、<ruby>筆者<rt>ひっしゃ</rt></ruby>はどのように<ruby>述<rt>の</rt></ruby>べているか。</div>
+                <div class="q-stem">記録と継承の違いについて、筆者はどのように述べているか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>記録は研究者が担い、継承は自治体が担うという、担い手の違いがある</span></div><div class="opt-item"><span class="opt-num">2</span><span>記録は短い期間で終わるが、継承には長い年月がかかるという違いがある</span></div><div class="opt-item"><span class="opt-num">3</span><span>記録は単語を扱い、継承は抑揚を扱うという、対象とする範囲の違いがある</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>記録は残す資料を増やし、継承は口に出す機会を増やす点で違う</span></div>
                 </div>
@@ -2460,9 +2493,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>その土地の言葉が消えていくことを心配する人は多く、国の調べでも、家の中で方言を使うと答えた人の割合は、七十代以上と二十代とで倍以上ひらいているという。放っておけば失われる、という言い方はそのとおりだと思う。ただ、失われ方には順序がある。<br><br>　言葉がおとろえていく道すじを調べた研究によれば、まず単語のほうから先におきかわるのだそうだ。次に文の形が変わり、抑揚（注1）が最後まで残る。実際、若い人の話し方を聞いていると、単語も文末の言い方もすっかり共通語になっているのに、声の高さの動きだけはその土地のものが残っていることが多い。<br><br>　各地の取りくみは、大きく二つに分かれる。一つは記録で、年をとった話し手にあつまってもらって声をとり、言い回しと使われ方を辞典の形にまとめていく。研究者の手が入れば、何十年か先にも読めるものがのこる。もう一つは継承（注2）で、学校の授業に土地の言い回しを持ちこんだり、祭りのかけ声を子どもに覚えてもらったり、店の看板に土地の言葉を使ったりする。（中略）<br><br>　この二つは、同じ「方言を残す」という言葉で呼ばれてきたが、要るものはまるで違う。記録に要るのは、話し手をさがす手間と、書きとる技術と、しまっておく場所である。継承に要るのは、その言葉を口に出してもいいと思える場面の数である。前のものは資料を増やし、あとのものは機会を増やす。<br><br>　かつて学校には方言札（注3）があって、その土地の言い方は直すべきものとされていた。共通語のほうが正しいという見方が長くつづいてきたところでは、辞典が一冊できたところで、人前で使う気持ちまでは戻らない。ある県は二十年かけて分厚い方言辞典を作り上げたが、出来上がった年の調べでも、若い人の使う割合は下がりつづけていた。辞典を持たない別の町では、商店街の放送と学校の朝の挨拶に土地の言い方を入れたところ、家でも使うと答える子どもがふえたという。<br><br>　記録が言葉を資料に変える仕事であるのに対して、継承は、言葉を口に出せる場面を増やす仕事である。二つを同じ名前で呼んできたあいだに、資料は厚くなるのに使う場面は減っていくということが、あちこちで同時に進んでいた。<br><br>（注1）抑揚：話すときの声の高さの上がり下がり<br>（注2）継承：受け継いで、次の世代へ渡していくこと<br>（注3）方言札：昔、学校で方言を話した子どもの首に掛けさせた罰の札</div>
-                <div class="q-stem"><ruby>筆者<rt>ひっしゃ</rt></ruby>が<ruby>最<rt>もっと</rt></ruby>も<ruby>言<rt>い</rt></ruby>いたいことは<ruby>何<rt>なに</rt></ruby>か。</div>
+                <div class="q-stem">筆者が最も言いたいことは何か。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span>分厚い辞典を作る取り組みは、方言を残す方法として選ぶべきではない</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>記録と継承は別の作業であり、一つの言葉でまとめて呼ぶことはできない</span></div><div class="opt-item"><span class="opt-num">3</span><span>若い世代に方言を伝えるには、学校の授業に入れるのが最も速い</span></div><div class="opt-item"><span class="opt-num">4</span><span>方言の失われ方には順序があり、抑揚から先に消えていくものだ</span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>分厚い辞典を作る取り組みは、方言を残す方法としてえらぶべきではない</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>記録と継承は別の作業であり、一つの言葉でまとめて呼ぶことはできない</span></div><div class="opt-item"><span class="opt-num">3</span><span>若い世代に方言を伝えるには、学校の授業に入れるのが最も速い</span></div><div class="opt-item"><span class="opt-num">4</span><span>方言の失われ方には順序があり、抑揚のほうから先に消えていくものだ</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -2488,9 +2521,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>みなと市観光協会　まちなか共通観覧券のご案内<br><br>　港町に残る五つの施設を、一枚の券でご覧いただけます。券は下の三種類です。お求めになる前に、券の使える期間と、それぞれの施設の休館日をお確かめください。<br><br><table><thead><tr><th>券の種類</th><th>料金</th><th>使える期間</th></tr></thead><tbody><tr><td>一日券</td><td>800円</td><td>買った日のみ</td></tr><tr><td>二日券</td><td>1,200円</td><td>買った日と翌日</td></tr><tr><td>学生券</td><td>600円</td><td>買った日と翌日</td></tr></tbody></table><br><br><table><thead><tr><th>施設名</th><th>通常の入館料</th><th>共通券での利用</th><th>休館日</th></tr></thead><tbody><tr><td>郷土博物館</td><td>400円</td><td>一回</td><td>月曜日</td></tr><tr><td>港の見える丘展望塔</td><td>300円</td><td>何度でも</td><td>なし</td></tr><tr><td>旧丸屋商家</td><td>200円</td><td>一回</td><td>水曜日</td></tr><tr><td>市立美術館</td><td>600円</td><td>一回</td><td>月曜日</td></tr><tr><td>港町資料館</td><td>300円</td><td>一回</td><td>火曜日</td></tr></tbody></table><br><br>【お求めになる場所】<br>・駅前の観光案内所と、上の五施設の窓口でお求めになれます。観光案内所は午前九時から午後五時まで開いています。<br>・学生券をお求めの方は、学生証を窓口でお見せください。中学生以下のお子様は、どの施設も入館無料ですので、券は必要ありません。<br><br>【ご利用のきまり】<br>・展望塔は、券の使える期間内であれば何度でもご入場になれますが、ほかの四施設は、一施設につき一回のご利用となります。<br>・市立美術館の特別展は共通券の対象外ですので、ご覧になる場合は、別に800円が必要です。<br>・共通券と、ほかの割引とを合わせてお使いになることはできません。<br>・十名以上の団体でご利用の方は、三日前までに観光協会へご連絡ください。当日のお申し込みは承れません。<br><br>※雨や雪の日は、旧丸屋商家の庭にはお入りになれず、建物の中のみのご見学となります。<br>※お買い求めになった券の払い戻しはいたしかねますので、日付や券の種類をお確かめのうえ、お求めください。</div>
-                <div class="q-stem"><ruby>大学生<rt>だいがくせい</rt></ruby>の<ruby>川口<rt>かわぐち</rt></ruby>さんは、<ruby>土曜日<rt>どようび</rt></ruby>にみなと<ruby>市<rt>し</rt></ruby>を<ruby>訪<rt>おとず</rt></ruby>れ、<ruby>市立<rt>しりつ</rt></ruby><ruby>美術館<rt>びじゅつかん</rt></ruby>の<ruby>特別展<rt>とくべつてん</rt></ruby>と、<ruby>港<rt>みなと</rt></ruby>の<ruby>見<rt>み</rt></ruby>える<ruby>丘<rt>おか</rt></ruby><ruby>展望塔<rt>てんぼうとう</rt></ruby>と、<ruby>郷土<rt>きょうど</rt></ruby><ruby>博物館<rt>はくぶつかん</rt></ruby>を<ruby>見<rt>み</rt></ruby>て<ruby>回<rt>まわ</rt></ruby>りたいと<ruby>考<rt>かんが</rt></ruby>えている。<ruby>学生証<rt>がくせいしょう</rt></ruby>は<ruby>持<rt>も</rt></ruby>っている。<ruby>川口<rt>かわぐち</rt></ruby>さんが<ruby>払<rt>はら</rt></ruby>う<ruby>金額<rt>きんがく</rt></ruby>は、<ruby>全部<rt>ぜんぶ</rt></ruby>でいくらになるか。</div>
+                <div class="q-stem">大学生の川口さんは、土曜日にみなと市を訪れ、市立美術館の特別展と、港の見える丘展望塔と、郷土博物館を見て回りたいと考えている。学生証は持っている。川口さんが払う金額は、全部でいくらになるか。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>六百円<rt>ろっぴゃくえん</rt></ruby></span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>八百円<rt>はっぴゃくえん</rt></ruby></span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>千円<rt>せんえん</rt></ruby></span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span><ruby>千四百円<rt>せんよんひゃくえん</rt></ruby></span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>六百円</span></div><div class="opt-item"><span class="opt-num">2</span><span>八百円</span></div><div class="opt-item"><span class="opt-num">3</span><span>千円</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>千四百円</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -2516,9 +2549,9 @@ footer {
               </div>
               <div class="q-body">
                 <div class="passage-box"><div class="passage-title">本文 / 資料</div>みなと市観光協会　まちなか共通観覧券のご案内<br><br>　港町に残る五つの施設を、一枚の券でご覧いただけます。券は下の三種類です。お求めになる前に、券の使える期間と、それぞれの施設の休館日をお確かめください。<br><br><table><thead><tr><th>券の種類</th><th>料金</th><th>使える期間</th></tr></thead><tbody><tr><td>一日券</td><td>800円</td><td>買った日のみ</td></tr><tr><td>二日券</td><td>1,200円</td><td>買った日と翌日</td></tr><tr><td>学生券</td><td>600円</td><td>買った日と翌日</td></tr></tbody></table><br><br><table><thead><tr><th>施設名</th><th>通常の入館料</th><th>共通券での利用</th><th>休館日</th></tr></thead><tbody><tr><td>郷土博物館</td><td>400円</td><td>一回</td><td>月曜日</td></tr><tr><td>港の見える丘展望塔</td><td>300円</td><td>何度でも</td><td>なし</td></tr><tr><td>旧丸屋商家</td><td>200円</td><td>一回</td><td>水曜日</td></tr><tr><td>市立美術館</td><td>600円</td><td>一回</td><td>月曜日</td></tr><tr><td>港町資料館</td><td>300円</td><td>一回</td><td>火曜日</td></tr></tbody></table><br><br>【お求めになる場所】<br>・駅前の観光案内所と、上の五施設の窓口でお求めになれます。観光案内所は午前九時から午後五時まで開いています。<br>・学生券をお求めの方は、学生証を窓口でお見せください。中学生以下のお子様は、どの施設も入館無料ですので、券は必要ありません。<br><br>【ご利用のきまり】<br>・展望塔は、券の使える期間内であれば何度でもご入場になれますが、ほかの四施設は、一施設につき一回のご利用となります。<br>・市立美術館の特別展は共通券の対象外ですので、ご覧になる場合は、別に800円が必要です。<br>・共通券と、ほかの割引とを合わせてお使いになることはできません。<br>・十名以上の団体でご利用の方は、三日前までに観光協会へご連絡ください。当日のお申し込みは承れません。<br><br>※雨や雪の日は、旧丸屋商家の庭にはお入りになれず、建物の中のみのご見学となります。<br>※お買い求めになった券の払い戻しはいたしかねますので、日付や券の種類をお確かめのうえ、お求めください。</div>
-                <div class="q-stem"><ruby>原田<rt>はらだ</rt></ruby>さんは、<ruby>七十歳<rt>ななじゅっさい</rt></ruby>の<ruby>母<rt>はは</rt></ruby>と<ruby>中学生<rt>ちゅうがくせい</rt></ruby>の<ruby>息子<rt>むすこ</rt></ruby>との<ruby>三人<rt>さんにん</rt></ruby>で、<ruby>日曜日<rt>にちようび</rt></ruby>と<ruby>月曜日<rt>げつようび</rt></ruby>の<ruby>二日間<rt>ふつかかん</rt></ruby>みなと<ruby>市<rt>し</rt></ruby>に<ruby>滞在<rt>たいざい</rt></ruby>し、<ruby>表<rt>ひょう</rt></ruby>にある<ruby>五<rt>いつ</rt></ruby>つの<ruby>施設<rt>しせつ</rt></ruby>を<ruby>回<rt>まわ</rt></ruby>りたいと<ruby>考<rt>かんが</rt></ruby>えている。<ruby>原田<rt>はらだ</rt></ruby>さんたちは、日曜日にどの<ruby>施設<rt>しせつ</rt></ruby>を<ruby>回<rt>まわ</rt></ruby>っておかなければならないか。</div>
+                <div class="q-stem">原田さんは、七十歳の母と中学生の息子との三人で、日曜日と月曜日の二日間みなと市に滞在し、表にある五つの施設を回りたいと考えている。原田さんたちは、日曜日にどの施設を回っておかなければならないか。</div>
                 <div class="options-grid">
-                  <div class="opt-item"><span class="opt-num">1</span><span><ruby>港<rt>みなと</rt></ruby>の<ruby>見<rt>み</rt></ruby>える<ruby>丘<rt>おか</rt></ruby><ruby>展望塔<rt>てんぼうとう</rt></ruby>と<ruby>旧丸屋商家<rt>きゅうまるやしょうか</rt></ruby></span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>郷土<rt>きょうど</rt></ruby><ruby>博物館<rt>はくぶつかん</rt></ruby>と<ruby>市立<rt>しりつ</rt></ruby><ruby>美術館<rt>びじゅつかん</rt></ruby></span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>旧丸屋商家<rt>きゅうまるやしょうか</rt></ruby>と<ruby>港町資料館<rt>みなとまちしりょうかん</rt></ruby></span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>郷土<rt>きょうど</rt></ruby><ruby>博物館<rt>はくぶつかん</rt></ruby>と<ruby>港町資料館<rt>みなとまちしりょうかん</rt></ruby></span></div>
+                  <div class="opt-item"><span class="opt-num">1</span><span>港の見える丘展望塔と旧丸屋商家</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span>郷土博物館と市立美術館</span></div><div class="opt-item"><span class="opt-num">3</span><span>旧丸屋商家と港町資料館</span></div><div class="opt-item"><span class="opt-num">4</span><span>郷土博物館と港町資料館</span></div>
                 </div>
                 <div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -3497,11 +3530,41 @@ footer {
 </div>
 
 <footer>
-  JLPT N2 Mock Exam Model Answer & Comprehensive Explanation (模範解答.html)<br>
+  JLPT N2 Mock Exam Model Answer &amp; Comprehensive Explanation (模範解答.html)<br>
   Test ID: 20260819_1
 </footer>
 
 <script>
+/* The only labels JS owns: three strings that live in attributes or in text it
+   writes at runtime, so they cannot ship as .lang-pane markup. Everything else
+   on the page is rendered in both languages and switched by CSS. */
+const LANG_STRINGS = {"ja": {"doc_title": "テスト 20260819_1（模範解答・詳細解説）", "search_placeholder": "問題番号・キーワード検索...", "audio_ready": "準備完了", "audio_playing": "再生中: "}};
+const LANGS = ["ja"];
+
+function setLang(lang, persist) {
+  if (!LANGS.includes(lang)) lang = LANGS[0];
+  document.body.dataset.lang = lang;
+  document.documentElement.lang = lang;
+  const s = LANG_STRINGS[lang] || {};
+  document.title = s.doc_title || document.title;
+  const search = document.getElementById('searchInput');
+  if (search) search.placeholder = s.search_placeholder || '';
+  const status = document.getElementById('audioStatus');
+  if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist) {
+    try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
+  }
+}
+
+(function initLang() {
+  let saved = null;
+  try { saved = localStorage.getItem('kaisetsuLang'); } catch (e) {}
+  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+})();
+
 function filterSection(sec, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -3562,7 +3625,11 @@ function playAt(seconds, label) {
   audio.currentTime = seconds;
   audio.play();
   const status = document.getElementById('audioStatus');
-  if (status) status.innerText = '再生中: ' + label + ' (' + formatTime(seconds) + ')';
+  if (status) {
+    const s = LANG_STRINGS[document.body.dataset.lang] || {};
+    status.dataset.playing = '1';
+    status.innerText = (s.audio_playing || '') + label + ' (' + formatTime(seconds) + ')';
+  }
 }
 
 function formatTime(sec) {
