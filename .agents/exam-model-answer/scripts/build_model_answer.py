@@ -47,21 +47,100 @@ CHOUKAI_TAXONOMY = {
     "問題5": {"name": "統合理解", "en": "Integrated Comprehension", "section": "聴解"},
 }
 
-# The labels the BUILDER interpolates — the page's own chrome (header, tabs,
-# search box, audio strip) is static Japanese text inside HTML_TEMPLATE and does
-# not belong here twice. A label that appears in both places is the drift this
-# dict exists to prevent, so keep each one in exactly one of the two.
+# ---------------------------------------------------------------- languages
+# 模範解答.html carries the explanation set in TWO languages, switched in-page by
+# a segmented control. The two sets are INDEPENDENTLY AUTHORED, never translated
+# from one another (exam-model-answer/SKILL.md "Two languages, two rewrites") —
+# a Vietnamese learner needs a different explanation of a Japanese item than a
+# Japanese-reading one does, and a sentence-for-sentence translation reproduces
+# the source's framing instead of the reader's.
+#
+# `ja` is required; `vi` renders only when 詳細解説.vi.json exists, so a paper
+# still mid-migration prints exactly the page it printed before, switcher and
+# all suppressed. LANGS is the order the segments appear in.
+LANGS = ["ja", "vi"]
+
+LANG_NAME = {"ja": "日本語", "vi": "Tiếng Việt"}
+
+# Every label the page prints outside the exam's own wording lives here, once
+# per language — so a label cannot be typed twice and drift.
 UI = {
-    "passage_title": "本文 / 資料",
-    "exp_heading": "詳細解説",
-    "why_title": "【正解の理由・根拠】",
-    "why_title_choukai": "【正解の理由・聞き取りポイント】",
-    "options_title": "【各選択肢の解説】",
-    "points_title": "【重要語彙・文法ポイント】",
-    "points_title_choukai": "【重要表現・リスニングポイント】",
-    "tag_correct": "[正解]",
-    "tag_wrong": "[不正解]",
+    "ja": {
+        "html_lang": "ja",
+        "doc_title": "テスト {test_id}（模範解答・詳細解説）",
+        "back": "← 採点結果へ戻る",
+        "title": "日本語能力試験 N2 模範解答・詳細解説",
+        "subtitle": "テスト <strong>{test_id}</strong> ｜ <span>全101問（言語知識・読解 71問 ＋ 聴解 30問）完全網羅解説集</span>",
+        "tab_all": "すべて",
+        "tab_goi": "文字・語彙",
+        "tab_bunpou": "文法",
+        "tab_dokkai": "読解",
+        "tab_choukai": "聴解",
+        "search_placeholder": "問題番号・キーワード検索...",
+        "passage_title": "本文 / 資料",
+        "script_title": "音声スクリプト",
+        "play_btn": "音声再生",
+        "audio_label": "聴解音声",
+        "audio_ready": "準備完了",
+        "audio_playing": "再生中: ",
+        "ans_badge": "正解: ",
+        "q_num": "第 {n} 問",
+        "q_type_choukai": "聴解セクション",
+        "exp_heading": "詳細解説",
+        "why_title": "【正解の理由・根拠】",
+        "why_title_choukai": "【正解の理由・聞き取りポイント】",
+        "options_title": "【各選択肢の解説】",
+        "points_title": "【重要語彙・文法ポイント】",
+        "points_title_choukai": "【重要表現・リスニングポイント】",
+        "tag_correct": "[正解]",
+        "tag_wrong": "[不正解]",
+        "footer": "JLPT N2 模擬試験 模範解答・詳細解説（模範解答.html）",
+    },
+    "vi": {
+        "html_lang": "vi",
+        "doc_title": "Đề {test_id}（Đáp án mẫu・Giải thích chi tiết）",
+        "back": "← Về kết quả chấm",
+        "title": "JLPT N2 — Đáp án mẫu và giải thích chi tiết",
+        "subtitle": "Đề <strong>{test_id}</strong> ｜ <span>Giải thích đầy đủ 101 câu (Kiến thức ngôn ngữ・Đọc hiểu 71 câu ＋ Nghe 30 câu)</span>",
+        "tab_all": "Tất cả",
+        "tab_goi": "Chữ Hán・Từ vựng",
+        "tab_bunpou": "Ngữ pháp",
+        "tab_dokkai": "Đọc hiểu",
+        "tab_choukai": "Nghe",
+        "search_placeholder": "Tìm theo số câu hoặc từ khoá...",
+        "passage_title": "Đoạn văn / Tư liệu",
+        "script_title": "Lời thoại audio",
+        "play_btn": "Phát audio",
+        "audio_label": "Audio phần nghe",
+        "audio_ready": "Sẵn sàng",
+        "audio_playing": "Đang phát: ",
+        "ans_badge": "Đáp án: ",
+        "q_num": "Câu {n}",
+        "q_type_choukai": "Phần nghe",
+        "exp_heading": "Giải thích chi tiết",
+        "why_title": "【Lý do chọn đáp án đúng】",
+        "why_title_choukai": "【Lý do đúng・Điểm cần nghe ra】",
+        "options_title": "【Phân tích từng lựa chọn】",
+        "points_title": "【Từ vựng・Ngữ pháp cần nhớ】",
+        "points_title_choukai": "【Mẫu câu・Điểm nghe cần nhớ】",
+        "tag_correct": "[Đúng]",
+        "tag_wrong": "[Sai]",
+        "footer": "Đề thi thử JLPT N2 — Đáp án mẫu và giải thích chi tiết (模範解答.html)",
+    },
 }
+
+
+def pane(langs: list, render) -> str:
+    """One `.lang-pane` per active language — the page's ONE switching mechanism.
+
+    Chrome labels and explanation bodies both go through here, so the segmented
+    control needs no JS text substitution: it flips `body[data-lang]` and CSS
+    hides the other pane. `render(lang)` returns that language's HTML.
+    """
+    if len(langs) == 1:
+        return render(langs[0])
+    return "".join(f'<span class="lang-pane" data-lang="{lg}">{render(lg)}</span>'
+                   for lg in langs)
 
 
 def apply_furigana_bold(text: str) -> str:
@@ -902,15 +981,16 @@ function formatTime(sec) {{
 """
 
 
-def explanation_box_html(data: dict, item_key: str, ans_val: int,
-                         raw_kaisetsu: str, choukai: bool = False) -> str:
-    """One .explanation-box for one item.
+def _one_explanation_box(detail: dict, lang: str, ans_val: int,
+                         raw_kaisetsu: str, choukai: bool) -> str:
+    """This language's .explanation-box for one item.
 
-    The [正解] tag is applied by INDEX against the official key, never taken
-    from the explanation text, so a rewritten 解説 cannot move the correct
-    answer.
+    The [正解]/[Đúng] tag is applied by INDEX against the official key, never
+    taken from the explanation text, so a rewritten 解説 cannot move the correct
+    answer — and the two languages cannot disagree about which option is right
+    even if one of them was authored against a stale key.
     """
-    detail = data.get(item_key) or {}
+    ui = UI[lang]
     why = apply_furigana(detail.get("why_correct") or raw_kaisetsu)
     analysis = detail.get("options_analysis") or []
     points = [apply_furigana(pt) for pt in (detail.get("points") or [])]
@@ -918,8 +998,8 @@ def explanation_box_html(data: dict, item_key: str, ans_val: int,
     opt_exp_li = []
     if analysis:
         for idx, opt_an in enumerate(analysis, 1):
-            tag = (f'<span class="opt-tag-correct">{UI["tag_correct"]}</span>' if idx == ans_val
-                   else f'<span class="opt-tag-wrong">{UI["tag_wrong"]}</span>')
+            tag = (f'<span class="opt-tag-correct">{ui["tag_correct"]}</span>' if idx == ans_val
+                   else f'<span class="opt-tag-wrong">{ui["tag_wrong"]}</span>')
             clean_an = apply_furigana(clean_option_analysis_text(opt_an))
             opt_exp_li.append(f'<li><strong>{idx}.</strong> {tag} {clean_an}</li>')
     else:
@@ -928,19 +1008,32 @@ def explanation_box_html(data: dict, item_key: str, ans_val: int,
     points_html = ""
     if points:
         pills = "".join(f'<span class="vocab-pill">{pt}</span>' for pt in points)
-        title = UI["points_title_choukai"] if choukai else UI["points_title"]
+        title = ui["points_title_choukai"] if choukai else ui["points_title"]
         points_html = f'<div class="exp-section-title">{title}</div><div>{pills}</div>'
 
     return f"""<div class="explanation-box">
-                  <div class="exp-heading">{UI["exp_heading"]}</div>
-                  <div class="exp-section-title">{UI["why_title_choukai"] if choukai else UI["why_title"]}</div>
+                  <div class="exp-heading">{ui["exp_heading"]}</div>
+                  <div class="exp-section-title">{ui["why_title_choukai"] if choukai else ui["why_title"]}</div>
                   <div class="exp-content">{why}</div>
-                  <div class="exp-section-title">{UI["options_title"]}</div>
+                  <div class="exp-section-title">{ui["options_title"]}</div>
                   <ul class="exp-options-list">
                     {"".join(opt_exp_li)}
                   </ul>
                   {points_html}
                 </div>"""
+
+
+def explanation_box_html(details: dict, item_key: str, ans_val: int,
+                         raw_kaisetsu: str, langs: list,
+                         choukai: bool = False) -> str:
+    """One .explanation-box PER LANGUAGE, wrapped in the shared `.lang-pane`.
+
+    `details` is {lang: {item_key: {...}}}. A language whose file has no entry
+    for this item still gets a pane — it falls back to the booklet's own 解説
+    line, so the switcher never lands the reader on a blank box.
+    """
+    return pane(langs, lambda lg: _one_explanation_box(
+        (details.get(lg) or {}).get(item_key) or {}, lg, ans_val, raw_kaisetsu, choukai))
 
 
 def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:

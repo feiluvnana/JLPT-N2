@@ -183,11 +183,12 @@
    "deps": [
     "P4-rebuild-batch"
    ],
-   "status": "todo",
+   "status": "done",
    "artifact": "<section re-author>",
    "tier": "C",
    "test_id": "20260818_1",
-   "note": "Frame monoculture + 問題5-1番 repeating 20260817_3's archetype. Rewrite 2 of 6 + 1 item."
+   "note": "Frame monoculture + 問題5-1番 repeating 20260817_3's archetype. Rewrite 2 of 6 + 1 item.",
+   "audit": "2026-08-25: 問題1 2番 re-authored as a どう直す item, 4番 as the paper's non-dialogue item (留守番電話, same 取材 scenario), 5番 re-framed to 物・提出 with a grounded key. Escalated to the whole section as on 20260819_1: 問題2 3番/6番 converted to 内容・発言 (mix now 理由2/内容2/どのように2), five 問題3 talks trimmed into 220-300, 問題4 given a second casual stimulus and three male role labels (voice balance 73% -> 55%). make check green."
   },
   {
    "id": "P5C1-20260817_3-mondai1",
