@@ -457,6 +457,8 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     "dokkai_asterisk_rate":           ("stem/option/key-cell", "assisted"),
     "dokkai_q10_form_mix":            ("stem/option/key-cell", "authoring"),
     "dokkai_span_rate":               ("stem/option/key-cell", "authoring"),
+    # The key TABLE, not a key cell: the repair is the missing heading above it.
+    "dokkai_key_table_parses":        ("stem/option/key-cell", "assisted"),
     "dokkai_lengths":                 ("passage prose",        "assisted"),
     "dokkai_sentence_rhythm":         ("passage prose",        "assisted"),
     "dokkai_kanji_density":           ("passage prose",        "assisted"),
@@ -2487,6 +2489,40 @@ def check_slot_theme_repeat():
                "re-slot the scenario, or say in the report why the two "
                "subjects are genuinely unrelated "
                "(jlpt-test-generation §'One topic, one surface')")
+
+
+def check_dokkai_key_table_parses(name: str, body: str):
+    r"""The 読解 answer table must be where the profiler looks for it.
+
+    `dokkai_profile._parse_generated_dokkai` finds the 読解 keys with
+    `re.search(r"##\s*読解\s*\n…")`. When that heading is missing the regex
+    matches nothing, every 読解 item silently defaults to key=1, and the whole
+    key-dependent half of the profile — overlap direction, key rank spread,
+    longest-key share, verbatim-lift — is computed against the wrong answers and
+    reported as if it were measured. 20260810_2 shipped exactly that: its 読解
+    table carried no heading, so the gate printed key-rank and overlap numbers
+    for 20 items whose keys it had all read as 1 (found 2026-08-25 while
+    repairing that paper; the table itself was correct — only the heading above
+    it was gone).
+
+    A silently-wrong measurement is worse than a missing one, so this FAILs.
+    """
+    import re as _re
+    m = _re.search(r"##\s*読解\s*\n([\s\S]*?)(?=\n##|\Z)", body)
+    rows = _re.findall(r"\|\s*\*?(\d{2})\*?\s*\|\s*([1-4])\s*\|",
+                       m.group(1)) if m else []
+    keyed = sorted({int(q) for q, _ in rows if 52 <= int(q) <= 71})
+    check(f"{name}: the 読解 key table is under a 「## 読解」 heading "
+          f"({len(keyed)} of 20 items keyed)",
+          len(keyed) == 20,
+          ("no 「## 読解」 heading in the answer section" if not m
+           else f"only {len(keyed)} of items 52–71 keyed under it")
+          + " — dokkai_profile finds the 読解 keys by that heading and silently "
+            "defaults every item to key=1 without it, so overlap direction, key "
+            "rank spread and longest-key share get reported against answers the "
+            "gate never read (20260810_2, 2026-08-25). Add the heading; do not "
+            "move the table.",
+          slug="dokkai_key_table_parses", test_id=name)
 
 
 def check_dokkai_lengths(name: str, body: str, bi, origin: str = "generated"):
@@ -8668,8 +8704,8 @@ KAISETSU_ITEM_BUDGET = {"ja": 210, "vi": 380}   # vi = ja x1.8, the same allowan
 KAISETSU_LENGTH_GRANDFATHERED = {
     "20260807_1", "20260810_1", "20260810_2", "20260811_1", "20260812_1",
     "20260812_2", "20260813_1", "20260813_2", "20260814_1", "20260817_1",
-    "20260817_2", "20260817_3", "20260819_1", "20260821_1",
-    # 20260818_1 removed 2026-08-25: rewritten to band in both languages
+    "20260817_2", "20260817_3",
+    # 20260818_1, 20260819_1, 20260821_1 removed 2026-08-25: rewritten to band in both languages
     # (594 -> 180 chars/item ja, 349 vi) and passing on merit. Leaving it here
     # would downgrade a future regression on it from FAIL to WARN — the exact
     # thing this list is not for.
@@ -8984,15 +9020,35 @@ def check_kaisetsu_band_doc():
 # applies [正解] BY INDEX from the canonical key, so the badge sits on the right
 # option while the sentence next to it explains a different one. A learner
 # reading that has no way to tell which is the mistake.
+# The same drift also hides in PROSE. `why_correct` habitually closes 「…4が正解
+# です」, and when an item's options are reordered that ordinal is left behind
+# while the tag beside it gets fixed — so the badge is right, the tag is right,
+# and the sentence under both names a different option. Found 2026-08-25 in
+# 20260819_1 items 53 and 54, where every other signal on the item was correct;
+# a tag-only check reports `ok` on exactly this shape.
+#
+# The repair is the same as for a bad tag and for the same reason: an ordinal
+# that no longer matches means the prose predates the item's current options, so
+# the entry is re-solved and rewritten. The durable fix is not to name option
+# numbers in `why_correct` at all — 問題8 (43–47) excepted, where the ordinal IS
+# the answer.
+_KEY_ORDINAL = re.compile(r"([1-4１-４])\s*(?:が|は)?\s*正解")
+
+
 def check_kaisetsu_tag_keys(test_id: str, data: dict, keys: dict):
-    """The [正解]-tagged option in 詳細解説.json must be the official key."""
-    mismatched, multi, none_tagged = [], [], []
+    """The [正解] tag AND any 「Nが正解」 in the prose must name the official key."""
+    mismatched, multi, none_tagged, prose_bad = [], [], [], []
     for item_key, item in sorted(data.items()):
         if not isinstance(item, dict):
             continue
         analysis = item.get("options_analysis") or []
         if not analysis or item_key not in keys:
             continue
+        for m in _KEY_ORDINAL.finditer(item.get("why_correct", "") or ""):
+            n = int(m.group(1).translate(str.maketrans("１２３４", "1234")))
+            if n != keys[item_key]:
+                prose_bad.append(f"{item_key}(prose says {n}, key is {keys[item_key]})")
+            break
         idx = [i for i, o in enumerate(analysis, 1)
                if re.match(r"\s*\[(?:正解|Đúng)\]", o or "")]
         if len(idx) > 1:
@@ -9009,17 +9065,23 @@ def check_kaisetsu_tag_keys(test_id: str, data: dict, keys: dict):
     if multi:
         bits.append(f"{len(multi)} item(s) tag more than one option correct: "
                     f"{', '.join(multi[:6])}{' …' if len(multi) > 6 else ''}")
-    detail = (" | ".join(bits) + " — the tag is the only part of the 解説 prose a "
-              "machine can pair with the key, and a mismatch has always meant the "
-              "WHOLE entry is stale prose from an earlier revision of that item "
-              "(why_correct included). Re-solve the item from the booklet and "
-              "rewrite the entry; never just move the tag. The rendered page "
-              "applies [正解] by index from the key, so the badge and the "
-              "sentence beside it currently disagree (exam-model-answer)"
+    if prose_bad:
+        bits.append(f"{len(prose_bad)} item(s) whose why_correct names the wrong "
+                    f"option number: {', '.join(prose_bad[:6])}"
+                    f"{' …' if len(prose_bad) > 6 else ''}")
+    detail = (" | ".join(bits) + " — the tag and a 「Nが正解」 ordinal are the two "
+              "parts of the 解説 a machine can pair with the key, and a mismatch "
+              "in either has always meant the entry predates the item's current "
+              "options. Re-solve from the booklet and rewrite the entry; never "
+              "just move the tag or edit the number. The rendered page applies "
+              "[正解] by index from the key, so the badge and the sentence beside "
+              "it currently disagree — and the durable fix is to stop naming "
+              "option numbers in why_correct at all, 問題8 excepted, where the "
+              "ordinal is the answer (exam-model-answer)"
               ) if bits else ""
     # Untagged items are the terse style's normal state — the renderer supplies
     # the tag — so they are counted, not failed.
-    name = (f"{test_id}: 詳細解説.json tags the official key "
+    name = (f"{test_id}: 詳細解説.json names the official key in tag and prose "
             f"({len(data) - len(none_tagged)} tagged, {len(none_tagged)} untagged)")
     check(name, not detail, detail, slug="kaisetsu_tag_key", test_id=test_id)
 
@@ -10163,6 +10225,7 @@ def check_tests():
         check_note_band(d.name, gt)
         check_note_band_reuse(d.name, gt, st_text, origin)
         if origin == "generated":
+            check_dokkai_key_table_parses(d.name, gt)
             check_dokkai_lengths(d.name, gengo_prose, bi, origin=origin)
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
             check_dokkai_closing_reframe(d.name, gengo_prose, bi)
