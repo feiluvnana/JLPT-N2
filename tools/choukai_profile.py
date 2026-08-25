@@ -233,7 +233,12 @@ def classify_q1_form(question: str) -> str:
         return "まず"
     if re.search(r"どう直|どのように|どう変更|手直し|仕上げ", q):
         return "どう直す・方法"
-    if re.search(r"どの(?:番号|順番|席|順|部屋)|どれを選", q):
+    # Any 「どの＋名詞」 question is a condition match; the first cut of this
+    # allowlist named five nouns (番号/順番/席/順/部屋) and so read a perfectly
+    # official 「どの回に申し込みますか」 as その他 — the paper then measured as
+    # carrying no condition-match item while shipping one (2026-08-25,
+    # 20260819_1 問題1 4番). Keep it a 「どの」 test, not a noun test.
+    if re.search(r"どの[ぁ-んァ-ヶ一-鿿]{1,5}(?:を|に|が|で|へ|は)", q) or re.search(r"どれを選", q):
         return "条件一致"
     if re.search(r"何を(?:持って|出|書|買|用意|提出)", q):
         return "物・提出"

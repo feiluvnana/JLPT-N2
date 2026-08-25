@@ -8925,7 +8925,17 @@ def check_choukai_probe_carousel(test_id: str, st: str, m):
     heavy_items = []
     for it in items:
         lab = choukai_item_label(it[0])
-        proposals = sum(1 for l in it if CHOUKAI.PROPOSAL_RE.search(re.sub(r"[。！？\?]+$", "", l.strip()))
+        # Count SPOKEN turns only. The item's own marker line and its repeated
+        # closing question both end 「…しますか。」 and matched PROPOSAL_RE, so
+        # every item was scored +2 before a single proposal was made and the
+        # check fired on items carrying one real proposal (found 2026-08-25 on
+        # 20260819_1, whose 問題1 4番 has exactly one). `choukai_profile.Item.
+        # proposal_turn_count` — the owner of this measurement — has always
+        # counted turns; this is the gate's copy drifting from it, the defect
+        # class REPORT-CHOUKAI.md §D1 exists to end.
+        spoken = [l for l in it if re.match(r"^[^:：]{1,8}[:：]", l.strip())]
+        proposals = sum(1 for l in spoken
+                        if CHOUKAI.PROPOSAL_RE.search(re.sub(r"[。！？\?]+$", "", l.strip()))
                         or l.strip().endswith(("ましょうか。", "ますか。", "はどうですか。", "はいかがですか。")))
         if proposals >= 3:
             heavy_items.append(lab)
