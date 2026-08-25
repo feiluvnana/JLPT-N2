@@ -11,90 +11,426 @@
   "Tier is DERIVED from the artifact a repair touches; the mapping lives in tools/check_consistency.py FINDING_REPAIR + REPAIR_TIER, and `make repair-plan` prints the work order. Do not assign a tier by hand (§5.0)."
  ],
  "steps": [
-  {"id": "D1-one-parse", "deps": [], "status": "done", "artifact": "tools/choukai_profile.py",
-   "note": "2026-08-21: profile exists, but three doc numbers still did not come from it (問題1 frame shares, 問題4 casual 49%, 問題3 median 305). Docs now paste --baseline output; --baseline extended to §§6-7 plus a printed parse rule per row."},
-  {"id": "D2-pitch-margin", "deps": [], "status": "done", "artifact": "choukai-audio/SKILL.md Part 2",
-   "note": "Semitone margin (FAIL <1.0, target >=1.9) in doc + gate; the reversed precedent recorded in qa/qa-report-20260811_1.md §6 as D2 step 3 required."},
-  {"id": "D3-repair-scope", "deps": ["P1-profile"], "status": "done", "artifact": "(policy)",
-   "note": "Re-derived after Phase 1, per §Risks. One consequence: the 問題3 talk floor of 175 sat INSIDE the archive's range (official ships a 158-char talk), so 20260807_1's 168-170 chars is a distribution WARN, not a gate-FAIL axis. Its C2 axis count drops from 3 to 2 -- recorded, not acted on, because its casting axis was repaired instead."},
-  {"id": "P1-profile", "deps": ["D1-one-parse"], "status": "done", "artifact": "tools/choukai_profile.py",
-   "audit": "SPEAKER_MAP was hand-copied into the profile and already lagged Phase 4.1's labels; it now loads from the synthesis script. Service-formula bands were hardcoded in the gate (2/1/0) and two of seven were wrong in opposite directions; they are measured now."},
-  {"id": "P2.1-q1-forms", "deps": ["P1-profile"], "status": "done", "artifact": "jlpt-exam-structure/SKILL.md",
-   "audit": "Table shipped with the report's illustrative shares (~40/37/12/5/4/3) under a header claiming 31 sittings; replaced with the profile's (36.8/31.0/18.1/5.8/3.2/3.2/1.9)."},
-  {"id": "P2.2-quotas", "deps": ["P1-profile"], "status": "done", "artifact": "question-authoring/references/choukai-items.md",
-   "audit": "8 'Official' cells retyped from the report; refreshed from --baseline. Probe-carousel gate wording said >3 items where the code FAILs above 2. Grandfather sets were named in the gate only -- the owner doc now carries the table (house rule)."},
-  {"id": "P2.3-register-casting-pacing", "deps": ["D2-pitch-margin"], "status": "done", "artifact": "choukai-audio/SKILL.md",
-   "audit": "Part 3 still documented turn gaps as a flat GAP_BETWEEN_LINES=0.9 after the jitter ladder replaced it -- the constant had become dead code with no doc and no gate. Ladders documented, gated, and measured."},
-  {"id": "P2.4-pacing-register-refs", "deps": ["P1-profile"], "status": "done", "artifact": "choukai-audio/references/*.md",
-   "audit": "official_register.md §6 still said 'not committed as a script' and §7.4 still asserted median 305; official_pacing.md had neither the Shin Kanzen third corpus nor the distribution method. All three landed."},
-  {"id": "P3-gate-lines", "deps": ["P2.2-quotas"], "status": "done", "artifact": "tools/check_consistency.py",
-   "audit": "check_choukai_pause_distribution was missing entirely; check_choukai_q4_stimulus_register measured the empty string on every item (so it could never pass and its grandfather set could never empty); voice balance shipped the FAIL edge without the 70% WARN; the 問題3 band's ceiling (450) came from no measurement and its floor (175) sat inside the archive's range. All repaired, plus the ladder invariants and the q1 rare-frame targets."},
-  {"id": "P4.1-gendered-labels", "deps": ["D2-pitch-margin"], "status": "done", "artifact": "make_choukai_mp3.py",
-   "audit": "BOTH naming schemes shipped (男性職員 … and the rejected 職員2 …), i.e. 8 unused duplicate labels for the same speakers. The 職員2 set is removed; pacing_sha unaffected."},
-  {"id": "P4.2-pause-jitter", "deps": [], "status": "done", "artifact": "make_choukai_mp3.py",
-   "audit": "The turn-gap ladder alone left the spike share at 46% against a 35% cap, because within-turn pauses (~480 per paper vs ~120 turn boundaries) were still clamped to exactly 0.5 s. Added WITHIN_TURN_LADDER; measured on 20260807_1: spikes 60% -> 46% -> 18%. The plan's 10-25% tail target is NOT reachable by pacing alone (only turn boundaries may exceed 0.9 s), so the gate floor is 7% and the residual is turn shape -- an authoring change, recorded in official_pacing.md §6.1."},
-  {"id": "P4.3-20260807_1-cast", "deps": ["D2-pitch-margin"], "status": "done", "artifact": "聴解スクリプト.txt", "tier": "B", "test_id": "20260807_1",
-   "note": "The only FAIL-class casting defect on disk (0.16 st). Verified repaired: 男性係員 vs 夫 = 2.94 st, 妻 female."},
-  {"id": "P5.0-tier-derivation", "deps": ["P3-gate-lines"], "status": "done", "artifact": "tools/check_consistency.py",
-   "note": "FINDING_REPAIR + REPAIR_TIER + the meta-check. Extended: every slug a check emits must be declared (FAIL) and every declaration must be attached to a check (WARN); slugs added to 13 existing choukai checks; `make findings` (--json) and `make repair-plan` built -- both were missing."},
-  {"id": "P5.0.1-autofix", "deps": ["P5.0-tier-derivation"], "status": "done", "artifact": "tools/lint_draft.py",
-   "note": "Split-turn join and voice-margin recast added. The margin recast SIMULATES each candidate swap: the naive version moved 20260814_1 問題5-2番 from a 1.42 st female pair to a 1.12 st male one. Also split the contraction table into casual/polite ladders -- the single table was turning keigo service lines into 「承っとくね」, which is F4's drift committed by the tool meant to fix it."},
-  {"id": "P5A-20260817_2-shoukyo", "deps": [], "status": "done", "artifact": "聴解.md", "tier": "A", "test_id": "20260817_2",
-   "note": "消去方法 tokens re-derived to the closed nine (landed in b27071c; re-verified)."},
-  {"id": "P5B-tier-b-batch", "deps": ["P4.1-gendered-labels", "D2-pitch-margin"], "status": "done", "artifact": "聴解スクリプト.txt", "tier": "B",
+  {
+   "id": "D1-one-parse",
+   "deps": [],
+   "status": "done",
+   "artifact": "tools/choukai_profile.py",
+   "note": "2026-08-21: profile exists, but three doc numbers still did not come from it (問題1 frame shares, 問題4 casual 49%, 問題3 median 305). Docs now paste --baseline output; --baseline extended to §§6-7 plus a printed parse rule per row."
+  },
+  {
+   "id": "D2-pitch-margin",
+   "deps": [],
+   "status": "done",
+   "artifact": "choukai-audio/SKILL.md Part 2",
+   "note": "Semitone margin (FAIL <1.0, target >=1.9) in doc + gate; the reversed precedent recorded in qa/qa-report-20260811_1.md §6 as D2 step 3 required."
+  },
+  {
+   "id": "D3-repair-scope",
+   "deps": [
+    "P1-profile"
+   ],
+   "status": "done",
+   "artifact": "(policy)",
+   "note": "Re-derived after Phase 1, per §Risks. One consequence: the 問題3 talk floor of 175 sat INSIDE the archive's range (official ships a 158-char talk), so 20260807_1's 168-170 chars is a distribution WARN, not a gate-FAIL axis. Its C2 axis count drops from 3 to 2 -- recorded, not acted on, because its casting axis was repaired instead."
+  },
+  {
+   "id": "P1-profile",
+   "deps": [
+    "D1-one-parse"
+   ],
+   "status": "done",
+   "artifact": "tools/choukai_profile.py",
+   "audit": "SPEAKER_MAP was hand-copied into the profile and already lagged Phase 4.1's labels; it now loads from the synthesis script. Service-formula bands were hardcoded in the gate (2/1/0) and two of seven were wrong in opposite directions; they are measured now."
+  },
+  {
+   "id": "P2.1-q1-forms",
+   "deps": [
+    "P1-profile"
+   ],
+   "status": "done",
+   "artifact": "jlpt-exam-structure/SKILL.md",
+   "audit": "Table shipped with the report's illustrative shares (~40/37/12/5/4/3) under a header claiming 31 sittings; replaced with the profile's (36.8/31.0/18.1/5.8/3.2/3.2/1.9)."
+  },
+  {
+   "id": "P2.2-quotas",
+   "deps": [
+    "P1-profile"
+   ],
+   "status": "done",
+   "artifact": "question-authoring/references/choukai-items.md",
+   "audit": "8 'Official' cells retyped from the report; refreshed from --baseline. Probe-carousel gate wording said >3 items where the code FAILs above 2. Grandfather sets were named in the gate only -- the owner doc now carries the table (house rule)."
+  },
+  {
+   "id": "P2.3-register-casting-pacing",
+   "deps": [
+    "D2-pitch-margin"
+   ],
+   "status": "done",
+   "artifact": "choukai-audio/SKILL.md",
+   "audit": "Part 3 still documented turn gaps as a flat GAP_BETWEEN_LINES=0.9 after the jitter ladder replaced it -- the constant had become dead code with no doc and no gate. Ladders documented, gated, and measured."
+  },
+  {
+   "id": "P2.4-pacing-register-refs",
+   "deps": [
+    "P1-profile"
+   ],
+   "status": "done",
+   "artifact": "choukai-audio/references/*.md",
+   "audit": "official_register.md §6 still said 'not committed as a script' and §7.4 still asserted median 305; official_pacing.md had neither the Shin Kanzen third corpus nor the distribution method. All three landed."
+  },
+  {
+   "id": "P3-gate-lines",
+   "deps": [
+    "P2.2-quotas"
+   ],
+   "status": "done",
+   "artifact": "tools/check_consistency.py",
+   "audit": "check_choukai_pause_distribution was missing entirely; check_choukai_q4_stimulus_register measured the empty string on every item (so it could never pass and its grandfather set could never empty); voice balance shipped the FAIL edge without the 70% WARN; the 問題3 band's ceiling (450) came from no measurement and its floor (175) sat inside the archive's range. All repaired, plus the ladder invariants and the q1 rare-frame targets."
+  },
+  {
+   "id": "P4.1-gendered-labels",
+   "deps": [
+    "D2-pitch-margin"
+   ],
+   "status": "done",
+   "artifact": "make_choukai_mp3.py",
+   "audit": "BOTH naming schemes shipped (男性職員 … and the rejected 職員2 …), i.e. 8 unused duplicate labels for the same speakers. The 職員2 set is removed; pacing_sha unaffected."
+  },
+  {
+   "id": "P4.2-pause-jitter",
+   "deps": [],
+   "status": "done",
+   "artifact": "make_choukai_mp3.py",
+   "audit": "The turn-gap ladder alone left the spike share at 46% against a 35% cap, because within-turn pauses (~480 per paper vs ~120 turn boundaries) were still clamped to exactly 0.5 s. Added WITHIN_TURN_LADDER; measured on 20260807_1: spikes 60% -> 46% -> 18%. The plan's 10-25% tail target is NOT reachable by pacing alone (only turn boundaries may exceed 0.9 s), so the gate floor is 7% and the residual is turn shape -- an authoring change, recorded in official_pacing.md §6.1."
+  },
+  {
+   "id": "P4.3-20260807_1-cast",
+   "deps": [
+    "D2-pitch-margin"
+   ],
+   "status": "done",
+   "artifact": "聴解スクリプト.txt",
+   "tier": "B",
+   "test_id": "20260807_1",
+   "note": "The only FAIL-class casting defect on disk (0.16 st). Verified repaired: 男性係員 vs 夫 = 2.94 st, 妻 female."
+  },
+  {
+   "id": "P5.0-tier-derivation",
+   "deps": [
+    "P3-gate-lines"
+   ],
+   "status": "done",
+   "artifact": "tools/check_consistency.py",
+   "note": "FINDING_REPAIR + REPAIR_TIER + the meta-check. Extended: every slug a check emits must be declared (FAIL) and every declaration must be attached to a check (WARN); slugs added to 13 existing choukai checks; `make findings` (--json) and `make repair-plan` built -- both were missing."
+  },
+  {
+   "id": "P5.0.1-autofix",
+   "deps": [
+    "P5.0-tier-derivation"
+   ],
+   "status": "done",
+   "artifact": "tools/lint_draft.py",
+   "note": "Split-turn join and voice-margin recast added. The margin recast SIMULATES each candidate swap: the naive version moved 20260814_1 問題5-2番 from a 1.42 st female pair to a 1.12 st male one. Also split the contraction table into casual/polite ladders -- the single table was turning keigo service lines into 「承っとくね」, which is F4's drift committed by the tool meant to fix it."
+  },
+  {
+   "id": "P5A-20260817_2-shoukyo",
+   "deps": [],
+   "status": "done",
+   "artifact": "聴解.md",
+   "tier": "A",
+   "test_id": "20260817_2",
+   "note": "消去方法 tokens re-derived to the closed nine (landed in b27071c; re-verified)."
+  },
+  {
+   "id": "P5B-tier-b-batch",
+   "deps": [
+    "P4.1-gendered-labels",
+    "D2-pitch-margin"
+   ],
+   "status": "done",
+   "artifact": "聴解スクリプト.txt",
+   "tier": "B",
    "test_id": "20260814_1,20260817_1,20260817_2,20260817_3,20260818_1,20260819_1",
-   "note": "The 6 non-C2 papers (§5C.1 scope). Service formulas brought inside the measured archive bands in all six; 「そうですね」 raised to the archive median (it is a FLOOR, not a ceiling); 20260814_1's reaction share 10.7% -> 13.2% by letting the other speaker land a beat mid-explanation; 20260814_1 例 and 20260819_1 問題5-2番 recast for the margin, with 20260819_1's 構成表 casting note corrected -- it had documented the 14 Hz split as compliance."},
-  {"id": "P4-rebuild-batch", "deps": ["P4.2-pause-jitter", "P5B-tier-b-batch"], "status": "doing", "artifact": "聴解.mp3", "test_id": "*",
-   "note": "make mp3 + make booklet + make sheet for all 14, then make pages. Empties PACING_SHA_GRANDFATHERED."},
-  {"id": "P5C1-20260819_1-mondai1", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260819_1",
-   "note": "6 of 6 on the まず frame, deciders 冒頭/中盤 throughout. Rewrite 3 of 6 to the new 質問型 quota including one non-dialogue item -- this is the worked example the next author copies (§5C C1)."},
-  {"id": "P5C1-20260818_1-mondai1", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260818_1",
-   "note": "Frame monoculture + 問題5-1番 repeating 20260817_3's archetype. Rewrite 2 of 6 + 1 item."},
-  {"id": "P5C1-20260817_3-mondai1", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260817_3",
-   "note": "Frame monoculture; 例 shares 「ビジネスホテルのフロント」 with 5番. Rewrite 2 of 6 + re-angle the 例."},
-  {"id": "P5C2-20260813_2-reroll", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "test_spec.json", "test_id": "20260813_2",
-   "note": "C2 papers are re-drawn before anything is authored against them: sample_items.py --reroll listening_scenarios and --reroll quick_response with a fresh RNG seed (§5C.2). Pool depth verified for 8 papers with no cooldown relaxation (§5C.3) -- re-run --check-depth first anyway, since the newest papers have consumed draws since."},
-  {"id": "P5C2-20260813_2", "deps": ["P5C2-20260813_2-reroll"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260813_2",
-   "note": "3 axes: 問題1 5/5 service counter with late deciders, 9 split turns, 問題4 9/11 already-done."},
-  {"id": "P5C2-20260813_1-reroll", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "test_spec.json", "test_id": "20260813_1"},
-  {"id": "P5C2-20260813_1", "deps": ["P5C2-20260813_1-reroll"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260813_1",
-   "note": "3 axes: no >=3-speaker 問題5, 20/20 「〜について」 options, no 構成表."},
-  {"id": "P5C2-20260812_2-reroll", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "test_spec.json", "test_id": "20260812_2"},
-  {"id": "P5C2-20260812_2", "deps": ["P5C2-20260812_2-reroll"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260812_2",
-   "note": "5 axes: 問題2 all six deciders at 0.64, no >=3-speaker 問題5, 5 same-voice items, 20/20 「〜について」, no 構成表."},
-  {"id": "P5C2-20260812_1-reroll", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "test_spec.json", "test_id": "20260812_1"},
-  {"id": "P5C2-20260812_1", "deps": ["P5C2-20260812_1-reroll"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260812_1",
-   "note": "4 axes: 20/20 「〜について」, filler count 50 (band 9-48), 問題5-2番 casting, no 構成表."},
-  {"id": "P5C2-20260811_1-reroll", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "test_spec.json", "test_id": "20260811_1"},
-  {"id": "P5C2-20260811_1", "deps": ["P5C2-20260811_1-reroll"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260811_1",
-   "note": "5 axes: 問題3 174-181, no >=3-speaker 問題5, 4 same-voice items, 20/20 「〜について」, no 構成表."},
-  {"id": "P5C2-20260810_2-reroll", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "test_spec.json", "test_id": "20260810_2"},
-  {"id": "P5C2-20260810_2", "deps": ["P5C2-20260810_2-reroll"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260810_2",
-   "note": "4 axes: 問題3 144-166, 問題4 8/11 already-done, 問題5-2番 casting, no 構成表."},
-  {"id": "P5C2-20260810_1-reroll", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "test_spec.json", "test_id": "20260810_1"},
-  {"id": "P5C2-20260810_1", "deps": ["P5C2-20260810_1-reroll"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260810_1",
-   "note": "4 axes: 問題2 6/6 keyed 一番, 問題3 132-166, 問題5-2番 casting, no 構成表."},
-  {"id": "P5C2-20260807_1-reroll", "deps": ["P4-rebuild-batch"], "status": "todo", "artifact": "test_spec.json", "test_id": "20260807_1"},
-  {"id": "P5C2-20260807_1", "deps": ["P5C2-20260807_1-reroll"], "status": "todo", "artifact": "<section re-author>", "tier": "C", "test_id": "20260807_1",
-   "note": "Was 3 axes; the talk-length axis dissolved when the floor was re-measured (see D3-repair-scope) and the casting axis is repaired, so it is now a 1-axis paper and belongs in C1, not C2 -- but it still has no 構成表, which is a 構成表 grandfather id. Decide when the C1 queue is reached; do not silently drop it."},
-  {"id": "P5-rebuild-batch", "deps": ["P5C1-20260819_1-mondai1", "P5C1-20260818_1-mondai1", "P5C1-20260817_3-mondai1"],
-   "status": "todo", "artifact": "聴解.mp3", "test_id": "*",
-   "note": "Rebuild #2: every C1/C2 paper's mp3 + booklet + sheet in ONE batch, then make pages. Splitting it per paper turns one 460 MB LFS write into eleven."},
-  {"id": "P5D-c1-c2-tail", "deps": ["P5-rebuild-batch"], "status": "todo", "artifact": "詳細解説.json + 模範解答.html", "test_id": "*",
-   "note": "Per repaired paper, IN THIS ORDER: fresh-eyes exam-qa-review (a context that authored nothing, AGENTS.md §5) -> 詳細解説.json -> make model-answer. 模範解答.html is always last. The Vietnamese half of §5D no longer applies: the per-language pipeline was retired 2026-08-21 (AGENTS.md §5), so 詳細解説.vi.json is not authored and 20260819_1's missing vi file is not a gap."},
-  {"id": "P6-next-paper", "deps": ["P5D-c1-c2-tail"], "status": "todo", "artifact": "(a new test)",
-   "note": "The acceptance test: one new paper that hits every Phase 2 quota with NO new grandfather entry. If a quota needs one for a paper written after Phase 2, the quota is wrong -- fix the quota."},
-  {"id": "P7-shinkanzen-extract", "deps": [], "status": "done", "artifact": "refs/Shinkanzen/choukai_script.md",
-   "note": "Extractor + make target + AGENTS.md §3 pointer landed in b27071c; the extract carries the OCR/secondary-evidence trust header. Step 4 (feed it to the profile as a third front-end) is NOT done -- see P7.4."},
-  {"id": "P7.4-profile-third-frontend", "deps": ["P7-shinkanzen-extract"], "status": "todo", "artifact": "tools/choukai_profile.py",
-   "note": "Phase 7 step 4: read refs/Shinkanzen/choukai_script.md as a third corpus so the register inventory can quote a non-OCR-of-a-stencil source. Secondary evidence only -- it corroborates shape and register, never a count the 31-sitting archive can set."}
+   "note": "The 6 non-C2 papers (§5C.1 scope). Service formulas brought inside the measured archive bands in all six; 「そうですね」 raised to the archive median (it is a FLOOR, not a ceiling); 20260814_1's reaction share 10.7% -> 13.2% by letting the other speaker land a beat mid-explanation; 20260814_1 例 and 20260819_1 問題5-2番 recast for the margin, with 20260819_1's 構成表 casting note corrected -- it had documented the 14 Hz split as compliance."
+  },
+  {
+   "id": "P4-rebuild-batch",
+   "deps": [
+    "P4.2-pause-jitter",
+    "P5B-tier-b-batch"
+   ],
+   "status": "done",
+   "artifact": "聴解.mp3",
+   "test_id": "*",
+   "note": "make mp3 + make booklet + make sheet for all 14, then make pages. Empties PACING_SHA_GRANDFATHERED.",
+   "audit": "2026-08-25: re-derived by measuring, not by the flag (R.4.3). All 14 聴解.mp3 report pacing_sha 4d623645a38d = today's, all 14 pass check_choukai_pause_distribution's >1.05 s tail, and PACING_SHA_GRANDFATHERED is empty. The step had completed; the interrupted run died before marking it."
+  },
+  {
+   "id": "P5C1-20260819_1-mondai1",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260819_1",
+   "note": "6 of 6 on the まず frame, deciders 冒頭/中盤 throughout. Rewrite 3 of 6 to the new 質問型 quota including one non-dialogue item -- this is the worked example the next author copies (§5C C1)."
+  },
+  {
+   "id": "P5C1-20260818_1-mondai1",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260818_1",
+   "note": "Frame monoculture + 問題5-1番 repeating 20260817_3's archetype. Rewrite 2 of 6 + 1 item."
+  },
+  {
+   "id": "P5C1-20260817_3-mondai1",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260817_3",
+   "note": "Frame monoculture; 例 shares 「ビジネスホテルのフロント」 with 5番. Rewrite 2 of 6 + re-angle the 例."
+  },
+  {
+   "id": "P5C2-20260813_2-reroll",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "test_spec.json",
+   "test_id": "20260813_2",
+   "note": "C2 papers are re-drawn before anything is authored against them: sample_items.py --reroll listening_scenarios and --reroll quick_response with a fresh RNG seed (§5C.2). Pool depth verified for 8 papers with no cooldown relaxation (§5C.3) -- re-run --check-depth first anyway, since the newest papers have consumed draws since."
+  },
+  {
+   "id": "P5C2-20260813_2",
+   "deps": [
+    "P5C2-20260813_2-reroll"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260813_2",
+   "note": "3 axes: 問題1 5/5 service counter with late deciders, 9 split turns, 問題4 9/11 already-done."
+  },
+  {
+   "id": "P5C2-20260813_1-reroll",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "test_spec.json",
+   "test_id": "20260813_1"
+  },
+  {
+   "id": "P5C2-20260813_1",
+   "deps": [
+    "P5C2-20260813_1-reroll"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260813_1",
+   "note": "3 axes: no >=3-speaker 問題5, 20/20 「〜について」 options, no 構成表."
+  },
+  {
+   "id": "P5C2-20260812_2-reroll",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "test_spec.json",
+   "test_id": "20260812_2"
+  },
+  {
+   "id": "P5C2-20260812_2",
+   "deps": [
+    "P5C2-20260812_2-reroll"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260812_2",
+   "note": "5 axes: 問題2 all six deciders at 0.64, no >=3-speaker 問題5, 5 same-voice items, 20/20 「〜について」, no 構成表."
+  },
+  {
+   "id": "P5C2-20260812_1-reroll",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "test_spec.json",
+   "test_id": "20260812_1"
+  },
+  {
+   "id": "P5C2-20260812_1",
+   "deps": [
+    "P5C2-20260812_1-reroll"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260812_1",
+   "note": "4 axes: 20/20 「〜について」, filler count 50 (band 9-48), 問題5-2番 casting, no 構成表."
+  },
+  {
+   "id": "P5C2-20260811_1-reroll",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "test_spec.json",
+   "test_id": "20260811_1"
+  },
+  {
+   "id": "P5C2-20260811_1",
+   "deps": [
+    "P5C2-20260811_1-reroll"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260811_1",
+   "note": "5 axes: 問題3 174-181, no >=3-speaker 問題5, 4 same-voice items, 20/20 「〜について」, no 構成表."
+  },
+  {
+   "id": "P5C2-20260810_2-reroll",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "test_spec.json",
+   "test_id": "20260810_2"
+  },
+  {
+   "id": "P5C2-20260810_2",
+   "deps": [
+    "P5C2-20260810_2-reroll"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260810_2",
+   "note": "4 axes: 問題3 144-166, 問題4 8/11 already-done, 問題5-2番 casting, no 構成表."
+  },
+  {
+   "id": "P5C2-20260810_1-reroll",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "test_spec.json",
+   "test_id": "20260810_1"
+  },
+  {
+   "id": "P5C2-20260810_1",
+   "deps": [
+    "P5C2-20260810_1-reroll"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260810_1",
+   "note": "4 axes: 問題2 6/6 keyed 一番, 問題3 132-166, 問題5-2番 casting, no 構成表."
+  },
+  {
+   "id": "P5C2-20260807_1-reroll",
+   "deps": [
+    "P4-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "test_spec.json",
+   "test_id": "20260807_1"
+  },
+  {
+   "id": "P5C2-20260807_1",
+   "deps": [
+    "P5C2-20260807_1-reroll"
+   ],
+   "status": "todo",
+   "artifact": "<section re-author>",
+   "tier": "C",
+   "test_id": "20260807_1",
+   "note": "Was 3 axes; the talk-length axis dissolved when the floor was re-measured (see D3-repair-scope) and the casting axis is repaired, so it is now a 1-axis paper and belongs in C1, not C2 -- but it still has no 構成表, which is a 構成表 grandfather id. Decide when the C1 queue is reached; do not silently drop it."
+  },
+  {
+   "id": "P5-rebuild-batch",
+   "deps": [
+    "P5C1-20260819_1-mondai1",
+    "P5C1-20260818_1-mondai1",
+    "P5C1-20260817_3-mondai1"
+   ],
+   "status": "todo",
+   "artifact": "聴解.mp3",
+   "test_id": "*",
+   "note": "Rebuild #2: every C1/C2 paper's mp3 + booklet + sheet in ONE batch, then make pages. Splitting it per paper turns one 460 MB LFS write into eleven."
+  },
+  {
+   "id": "P5D-c1-c2-tail",
+   "deps": [
+    "P5-rebuild-batch"
+   ],
+   "status": "todo",
+   "artifact": "詳細解説.json + 模範解答.html",
+   "test_id": "*",
+   "note": "Per repaired paper, IN THIS ORDER: fresh-eyes exam-qa-review (a context that authored nothing, AGENTS.md §5) -> 詳細解説.json -> make model-answer. 模範解答.html is always last. The Vietnamese half of §5D no longer applies: the per-language pipeline was retired 2026-08-21 (AGENTS.md §5), so 詳細解説.vi.json is not authored and 20260819_1's missing vi file is not a gap."
+  },
+  {
+   "id": "P6-next-paper",
+   "deps": [
+    "P5D-c1-c2-tail"
+   ],
+   "status": "todo",
+   "artifact": "(a new test)",
+   "note": "The acceptance test: one new paper that hits every Phase 2 quota with NO new grandfather entry. If a quota needs one for a paper written after Phase 2, the quota is wrong -- fix the quota."
+  },
+  {
+   "id": "P7-shinkanzen-extract",
+   "deps": [],
+   "status": "done",
+   "artifact": "refs/Shinkanzen/choukai_script.md",
+   "note": "Extractor + make target + AGENTS.md §3 pointer landed in b27071c; the extract carries the OCR/secondary-evidence trust header. Step 4 (feed it to the profile as a third front-end) is NOT done -- see P7.4."
+  },
+  {
+   "id": "P7.4-profile-third-frontend",
+   "deps": [
+    "P7-shinkanzen-extract"
+   ],
+   "status": "todo",
+   "artifact": "tools/choukai_profile.py",
+   "note": "Phase 7 step 4: read refs/Shinkanzen/choukai_script.md as a third corpus so the register inventory can quote a non-OCR-of-a-stencil source. Secondary evidence only -- it corroborates shape and register, never a count the 31-sitting archive can set."
+  }
  ],
  "runs": [
-  {"at": "2026-08-21", "steps_done": ["D1-one-parse", "D2-pitch-margin", "D3-repair-scope", "P1-profile",
-   "P2.1-q1-forms", "P2.2-quotas", "P2.3-register-casting-pacing", "P2.4-pacing-register-refs",
-   "P3-gate-lines", "P4.1-gendered-labels", "P4.2-pause-jitter", "P4.3-20260807_1-cast",
-   "P5.0-tier-derivation", "P5.0.1-autofix", "P5A-20260817_2-shoukyo", "P5B-tier-b-batch"],
+  {
+   "at": "2026-08-21",
+   "steps_done": [
+    "D1-one-parse",
+    "D2-pitch-margin",
+    "D3-repair-scope",
+    "P1-profile",
+    "P2.1-q1-forms",
+    "P2.2-quotas",
+    "P2.3-register-casting-pacing",
+    "P2.4-pacing-register-refs",
+    "P3-gate-lines",
+    "P4.1-gendered-labels",
+    "P4.2-pause-jitter",
+    "P4.3-20260807_1-cast",
+    "P5.0-tier-derivation",
+    "P5.0.1-autofix",
+    "P5A-20260817_2-shoukyo",
+    "P5B-tier-b-batch"
+   ],
    "ended": "in-progress",
-   "note": "Audit-and-repair pass over the first implementation: every phase re-derived from the artifact rather than from the previous run's claim."}
+   "note": "Audit-and-repair pass over the first implementation: every phase re-derived from the artifact rather than from the previous run's claim."
+  }
  ]
 }

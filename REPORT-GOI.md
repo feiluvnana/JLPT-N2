@@ -2,16 +2,37 @@
 
 Date: 2026-08-21 (measurements run 2026-08-20). Read-only analysis; nothing on disk was changed.
 
-> **Status, 2026-08-21 — partly consumed.** The pipeline half of the plan has
-> landed: `tools/goi_profile.py` + `make goi-profile` (Phase 1), every rule
-> change in Phase 2, ten gate lines in Phase 3, and the F9 repair on
-> `20260813_2`. F10's three numbers were re-measured and the docs edited to what
-> the script prints; §D2's proposed 10 % longest-key floor was **refuted** by
-> that measurement (six official sittings run 0 %). The per-paper repairs
-> (Phase 5 tiers A–C) and Phase 7's book extracts are **not** done — the queue
-> is `qa/goi-remediation-report.md` and the gate's own grandfather sets. Numbers
-> in the findings below are the audit's original parse; where this report and
-> `goi_profile.py` differ (coverage 98.9 % vs 96.9 %, and the register
+> **Status, 2026-08-25 — consumed, except Phase 7 step 4.** Re-derived by
+> measuring the repo, not by trusting the previous run's claim (the sibling
+> plans' rule R.4.3).
+>
+> *Pipeline half* (commit `40cef83`): `tools/goi_profile.py` + `make goi-profile`
+> (Phase 1), every rule change in Phase 2, ten gate lines in Phase 3, and the F9
+> repair on `20260813_2`. F10's three numbers were re-measured and the docs
+> edited to what the script prints; §D2's proposed 10 % longest-key floor was
+> **refuted** by that measurement (six official sittings run 0 %).
+>
+> *Per-paper half* (commit `e082439`, the same day — this is what the earlier
+> status paragraph, written before it, said was outstanding): 29 target items
+> re-drawn across 13 papers, the stem contract applied to all 14, and **every**
+> 文字・語彙 grandfather set emptied — `MOJI_STEM`, `MOJI_REGISTER`, `MOJI4_STEM`,
+> `MOJI2_COMPOSITION`, `MOJI_OPTION_REUSE`, `MONDAI1_KUN`, `M6_OPTION_LENGTH`,
+> `MOJI_GLYPH`. F8's eleven live item repeats are gone: the gate prints
+> `0 live repeat(s) queued for a re-draw`. Phase 6's acceptance test is met by
+> `20260821_1`, which is in no 文字・語彙 grandfather set and raises no per-paper
+> 文字・語彙 warning.
+>
+> *Phase 7*: steps 1–3 landed (`extract_kanji_tables.py`,
+> `extract_shinkanzen_goi.py` with the Soumatome front-end, the two make targets,
+> and the three extracts in `refs/`). **Step 4 is the remainder** — re-enable
+> `matrix_helper.py`'s two generators against the real 音訓 table, restore the
+> two-訓読み gate, and feed Shin Kanzen's typeset 語彙 模擬試験 to `goi_profile.py`
+> as a third front-end. F11's other half — a `provenance` field per `pools.json`
+> entry — is also still open: a grep for it in that file returns nothing, so a
+> key's band still cannot be audited after the fact.
+>
+> Numbers in the findings below are the audit's original parse; where this report
+> and `goi_profile.py` differ (coverage 98.9 % vs 96.9 %, and the register
 > classifier), **the script is the owner** (§D1).
 
 **Corpora actually opened**
