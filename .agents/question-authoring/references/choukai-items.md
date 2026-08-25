@@ -172,7 +172,7 @@ binding; write it into the 構成表 and check it there.
 | 2 | ≥1 item keyed to a speaker's 気持ち (Shin Kanzen: 「理由や目的、話し手の気持ち」) | 2–5% | target / QA |
 | 3 | ≤2 of 6 institutional announcements; **≥3 must be an ordinary person's 主張・意図・経験** | 33.8% institutional / 39.0% person | FAIL at 5 of 6 institutional |
 | 3 | Talk length: target **220–300 spoken chars** (band, not floor) | per item median 243 [p10 202, p90 320]; current era 158–397 | FAIL outside [150, 400] |
-| 4 | **≥5 of 12 stimuli clearly casual**; ≤2 keigo counter prompts; no class-addressed stimulus (「〜の方は、…窓口へ」) | 20.7% casual / 9.1% keigo, rest neutral | FAIL at 0 casual; WARN below 5 casual or above 4 keigo |
+| 4 | **2–4 of 12 stimuli clearly casual**; ≤2 keigo counter prompts; no class-addressed stimulus (「〜の方は、…窓口へ」) | 20.7% casual (median **1** per sitting, max 6) / 9.1% keigo (median 0, max 2), rest neutral | FAIL at 0 casual; WARN below 2 casual or above 4 keigo |
 | 4 | ≤2 of 12 items may carry an already-done distractor (**target**; archive ceiling 3, gate FAILs at >3 — §即時応答); ≤2 may key a reply opening 「あ、」 | median 1, max 3 | FAIL at >3 done |
 | 5 | 1番 ≥3 speakers cast on distinguishable voices (≥1.9 st margin); 2番 the OTHER official type; no shared template | 31/31 sittings ≥3 spk | FAIL at 0 items with ≥3 spk |
 
@@ -204,6 +204,19 @@ moment that paper's 聴解 is repaired** — never by widening a threshold:
 | 問題4 stimulus register | `CHOUKAI_Q4_REGISTER_GRANDFATHERED` | all 14 — 0 casual stimuli anywhere |
 | 聴解 voice balance | `CHOUKAI_VOICE_BALANCE_GRANDFATHERED` | all 14 |
 | 聴解.mp3 pacing freshness | `PACING_SHA_GRANDFATHERED` | 13 — the Phase 4.2 jitter rebuild is still pending; **this set is not a policy, it is a to-do** |
+
+**問題4's register is fixed by the DRAW, not by the writing.** `quick_response`
+holds two kinds of entry: bare idioms and patterns (目を通す, 〜に決まってる),
+where you invent the setting and therefore choose the register, and complete
+service-counter sentences (「保険証の有効期限が切れております」), where the
+register arrives with the draw. 80 of the pool's 200 entries are the second
+kind, so an unconstrained draw of 11 landed ~4.4 keigo stimuli in every paper —
+against an archive median of 0 and a maximum of 2. `sample_items.py`'s
+`sample_keigo_capped()` now caps the drawn keigo sentences at the archive's
+maximum (`KEIGO_CAP`), so the casual/neutral target is reachable by writing.
+A paper drawn before 2026-08-25 carries the old, keigo-heavy draw; repairing its
+問題4 means `--reroll quick_response`, not re-wording a stimulus whose tested
+phrase is the keigo (core Item integrity #20 keeps the sampled expression).
 
 **問題1's default is not a customer at a counter.** Official 問題1 is
 overwhelmingly a superior, teacher or colleague handing out work (7/2025: 図書館

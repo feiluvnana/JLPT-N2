@@ -7123,7 +7123,9 @@ DRAWN_MEDIA = ("ラジオ", "テレビ", "放送", "ポッドキャスト", "イ
 # its spec and ledger record the change.
 DRAWN_MEDIUM_GRANDFATHERED = {
     "20260814_1",   # 「ラジオ局:リスナーからの質問対応」 — no ラジオ in the script
-    "20260819_1",   # 「レストラン店長インタビュー」 — no インタビュー in the script
+    # 20260819_1 left this set on 2026-08-25: its 「レストラン店長インタビュー」
+    # draw now carries origin+note in both test_spec.json and logs/ledger.json,
+    # which is what the rule asks for — a set is a queue, not an amnesty.
 }
 
 
@@ -9012,9 +9014,20 @@ def check_choukai_q4_stimulus_register(test_id: str, st: str, m):
     else:
         check(name, ok, detail, slug="choukai_q4_stimulus_register", test_id=test_id)
     # The two target halves, WARN-class: the gate FAILs only at zero casual.
-    if ok and casual_count < 5:
-        warn(f"{test_id}: 問題4 casual stimuli meet the ≥5-of-12 target", False,
-             f"{casual_count} of {len(items)} stimuli are clearly casual — target ≥5 "
+    #
+    # The casual target was ≥5 of 12 until 2026-08-25 and that number was ABOVE
+    # the archive it cites: re-measured with `classify_p4_stimulus` over the 11
+    # sittings whose 問題4 the extracts parse, official runs 0,0,1,1,1,1,2,2,2,2,6
+    # casual stimuli — median 1, and the 20.7% in this check's own docstring is
+    # 2.3 of 11. A target of 5 therefore WARNed every paper that matched official
+    # and pushed authors to twice the archive's rate; it is the defect class
+    # REPORT-GOI.md §D2 caught on the other side (a floor no official sitting
+    # clears). The floor is now the archive's own middle, and the ceiling below
+    # it stays the archive's own maximum.
+    if ok and casual_count < 2:
+        warn(f"{test_id}: 問題4 casual stimuli meet the ≥2-of-12 target", False,
+             f"{casual_count} of {len(items)} stimuli are clearly casual — target 2–4, "
+             f"official median 1 and 20.7% overall, max 6 in one sitting "
              f"(choukai-items.md §問題4)", slug="choukai_q4_stimulus_register", test_id=test_id)
     if keigo_count > 4:
         warn(f"{test_id}: 問題4 keigo counter prompts ≤4", False,

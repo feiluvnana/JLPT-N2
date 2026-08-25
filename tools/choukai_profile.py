@@ -658,7 +658,7 @@ def format_baseline_markdown(official_profiles: list[dict[str, Any]], current_on
     lines.append(f"- Stimulus register (single label, keigo tested first — `classify_p4_stimulus`): "
                  f"**{q4_stimuli.get('casual', 0) / q4_total_stim:.1%}** casual vs "
                  f"**{q4_stimuli.get('keigo', 0) / q4_total_stim:.1%}** keigo counter prompts, "
-                 f"rest neutral (n={q4_total_stim}) — target ≥5 of 12 casual, ≤2 keigo; gate FAILs at 0 casual")
+                 f"rest neutral (n={q4_total_stim}) — target 2–4 of 12 casual, ≤2 keigo; gate FAILs at 0 casual, WARNs below 2 casual or above 4 keigo")
     lines.append(f"- Already-done distractors: **{sum(p['q4_done_count'] for p in official_profiles)}** items across "
                  f"{len(official_profiles)} sittings (gate FAILs above 3 per paper)")
     lines.append(f"- Replies opening はい/いいえ/では: **{sum(p['q4_yes_no_replies'] for p in official_profiles)}** "

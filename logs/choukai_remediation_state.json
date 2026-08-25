@@ -171,11 +171,12 @@
    "deps": [
     "P4-rebuild-batch"
    ],
-   "status": "todo",
+   "status": "done",
    "artifact": "<section re-author>",
    "tier": "C",
    "test_id": "20260819_1",
-   "note": "6 of 6 on the まず frame, deciders 冒頭/中盤 throughout. Rewrite 3 of 6 to the new 質問型 quota including one non-dialogue item -- this is the worked example the next author copies (§5C C1)."
+   "note": "6 of 6 on the まず frame, deciders 冒頭/中盤 throughout. Rewrite 3 of 6 to the new 質問型 quota including one non-dialogue item -- this is the worked example the next author copies (§5C C1).",
+   "audit": "2026-08-25: 問題1 items 2/4/5 re-authored onto the DRAWN scenarios (管理会社 / 空港 / ボランティア), frames まず2・どう直す1・条件一致1・何をしますか1, one non-dialogue item. Escalated beyond the C1 row: the same pass repaired 問題2's 質問型 mix (2 content items), 問題3's five talk lengths (306-337 -> 276-299), and 問題4 wholesale after a --reroll quick_response, because the 問題4 register finding cannot be repaired by writing — the draw fixes it. Keys re-slotted to test_spec's prescribed answer_positions. make check green."
   },
   {
    "id": "P5C1-20260818_1-mondai1",

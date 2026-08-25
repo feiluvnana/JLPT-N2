@@ -109,6 +109,20 @@ KUN_CAP = {"kanji_reading": 2}
 # `check_mondai1_reading_type_mix()`.
 KUN_FLOOR = {"kanji_reading": 1}
 
+# 問題4 stimulus register, enforced during the draw by `sample_keigo_capped()`
+# (REPORT-CHOUKAI.md §F4, measured 2026-08-25). `quick_response` holds two kinds
+# of entry: bare idioms and patterns (目を通す, 〜に決まってる) where the AUTHOR
+# writes the stimulus and picks its register, and complete service-counter
+# sentences (「保険証の有効期限が切れております」) where the register is fixed by
+# the draw. 80 of the pool's 200 entries are the fixed-keigo kind, so an
+# unconstrained draw of 11 lands ~4.4 keigo stimuli EVERY paper — against an
+# archive that runs a median of 0 and never more than 2 in a sitting (31
+# sittings, `classify_p4_stimulus`; the 11 sittings whose 問題4 the extract
+# parses carry 0,0,1,1,1,1,2,2,2 keigo). That is why all 14 papers measure
+# keigo-heavy 問題4s: no amount of authoring can fix a register the draw has
+# already fixed. The cap is the archive's own maximum.
+KEIGO_CAP = {"quick_response": 2}
+
 # 問題2 composition, enforced during the draw by `sample_wago_floor()`
 # (REPORT-GOI.md §F3). Measured over 31 of 31 sittings: 1–3 of the five 問題2
 # items are 和語 targets with printed okurigana (median 2) and 1–3 are bare
@@ -356,6 +370,57 @@ def sample_kun_capped(rng: random.Random, eligible: list, n: int,
     picked = pick(plain, n - k) + pick(kun, k)
     rng.shuffle(picked)
     return picked
+
+
+def sample_keigo_capped(rng: random.Random, eligible: list, n: int, cap: int,
+                        name: str, kept: list | tuple = (), weight_fn=None) -> list:
+    """`n` `quick_response` entries with at most `cap` fixed-keigo stimuli.
+
+    Same shape and the same reason as `sample_kun_capped()`: the pool's own
+    share of a property (40% fixed-keigo sentences) is far above the archive's
+    (median 0 of 11, max 2), so an unbounded draw reproduces the POOL's
+    distribution instead of the exam's. `kept` is what a `--reroll-one` keeps,
+    counted against the cap so a one-entry redraw cannot push a paper over it.
+    """
+    keigo = [e for e in eligible if is_keigo_stimulus(e)]
+    plain = [e for e in eligible if not is_keigo_stimulus(e)]
+    have = sum(1 for x in kept if is_keigo_stimulus(x))
+    room = max(0, cap - have)
+
+    def pick(pool: list, count: int) -> list:
+        if count <= 0 or not pool:
+            return []
+        count = min(count, len(pool))
+        if weight_fn:
+            return weighted_sample_no_replacement(
+                rng, pool, [weight_fn(e) for e in pool], count)
+        return rng.sample(pool, count)
+
+    take_k = min(room, len(keigo), n)
+    if len(plain) < n - take_k:
+        print(f"  warning: pool '{name}' has too few non-keigo entries "
+              f"({len(plain)}) to fill {n - take_k} of {n} slots — falling back "
+              f"to an uncapped draw; grow the casual/neutral side of this pool")
+        return pick(eligible, n)
+    picked = pick(plain, n - take_k) + pick(keigo, take_k)
+    rng.shuffle(picked)
+    return picked
+
+
+def is_keigo_stimulus(entry) -> bool:
+    """True when a `quick_response` entry is a complete keigo sentence whose
+    register the author cannot choose.
+
+    The markers are `choukai_profile.classify_p4_stimulus`'s keigo set — the
+    single owner of that classification — restated here only because the
+    sampler must not import the profile (it runs before any test exists).
+    A bare idiom or pattern entry (目を通す, 〜に決まってる) is never keigo: it
+    has no sentence to carry the register.
+    """
+    text = item_text(entry)
+    if len(text) < 12 or text.startswith("〜"):
+        return False
+    return bool(re.search(r"ございます|いただ|ておりま|申し訳|伺|存じ|いらっしゃ|なさ|くださ", text))
 
 
 def sample_wago_floor(rng: random.Random, eligible: list, n: int, floor: int,
@@ -1206,6 +1271,10 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
                     rng, eligible, n, KUN_TARGET_RATE[name], KUN_CAP[name],
                     name, already=sum(1 for x in kept if is_kun_target(x)),
                     weight_fn=weight, floor=KUN_FLOOR.get(name, 0)), cool
+            if name in KEIGO_CAP:
+                return sample_keigo_capped(
+                    rng, eligible, n, KEIGO_CAP[name], name, kept=kept,
+                    weight_fn=weight), cool
             if name in WAGO_FLOOR:
                 return sample_wago_floor(
                     rng, eligible, n, WAGO_FLOOR[name], COMPOUND_CAP[name],

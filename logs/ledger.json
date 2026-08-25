@@ -3114,9 +3114,9 @@
   },
   {
    "test_id": "20260819_1",
-   "seed": "66485076+reroll(listening_scenarios,6632264)+reroll-one(listening_scenarios:14,22851928)+reroll-one(listening_scenarios:14,94983450)+reroll-one(listening_scenarios:20,81268927)+reroll-one(listening_scenarios:18,24665361)+reroll-one(listening_scenarios:1,20779005)+reroll-one(listening_scenarios:19,67079477)+reroll-one(listening_scenarios:20,20290168)+reroll-one(reading_topics:0,72590665)+reroll-one(quick_response:10,96707738)+reroll-one(grammar_p8:0,29028873)+reroll-one(grammar_p8:4,35312257)+reroll-one(kanji_reading:0,74013109)+reroll-one(kanji_reading:3,19524231)+reroll-one(orthography:4,29681945)",
+   "seed": "66485076+reroll(listening_scenarios,6632264)+reroll-one(listening_scenarios:14,22851928)+reroll-one(listening_scenarios:14,94983450)+reroll-one(listening_scenarios:20,81268927)+reroll-one(listening_scenarios:18,24665361)+reroll-one(listening_scenarios:1,20779005)+reroll-one(listening_scenarios:19,67079477)+reroll-one(listening_scenarios:20,20290168)+reroll-one(reading_topics:0,72590665)+reroll-one(quick_response:10,96707738)+reroll-one(grammar_p8:0,29028873)+reroll-one(grammar_p8:4,35312257)+reroll-one(kanji_reading:0,74013109)+reroll-one(kanji_reading:3,19524231)+reroll-one(orthography:4,29681945)+reroll(quick_response,34782910)+reroll-one(quick_response:6,1895633)",
    "generated_at": "2026-08-20 10:02:49",
-   "pools_sha": "aadf23081392",
+   "pools_sha": "cea9612d1e0b",
    "items": {
     "word_formation": [
      "不〜(不満)",
@@ -3243,7 +3243,9 @@
      },
      {
       "scenario": "レストラン店長インタビュー",
-      "theme": "食"
+      "theme": "食",
+      "origin": "reauthored",
+      "note": "聴解問題3-1番 ships as a radio monologue by the owner (「1番。ラジオで、店長が話しています。」), not as the drawn インタビュー: 問題3 is 概要理解 and official 問題3 lead-ins are setting + speaker only, never a two-voice interview (choukai-items.md §概要理解). The errand and the theme ship as drawn; only the medium changed. Recorded 2026-08-25 while repairing this paper's 聴解 (REPORT-CHOUKAI Phase 5C1)."
      }
     ],
     "reading_topics": [
@@ -3296,19 +3298,6 @@
       "theme": "睡眠・健康"
      }
     ],
-    "quick_response": [
-     "診察券をお持ちでない方は、初めての方窓口へ。",
-     "急なお願いで申し訳ありませんが、代わりに出席していただけませんか。",
-     "保険証の有効期限が切れております。",
-     "騒音に関する苦情が入っております。",
-     "〜に決まってる",
-     "先方からスケジュールの変更の連絡が入ったのですが、確認していただけますか。",
-     "口が堅い",
-     "手を焼く",
-     "恐縮ですが、締め切りを一日だけ延ばしていただけないでしょうか。",
-     "先方の担当者様、明日10時に弊社へお越しいただくことになっております。",
-     "指定席と自由席、どちらをご希望ですか。"
-    ],
     "grammar_p8": [
      "〜に基づいて",
      "換言要約(〜つまり…ということだ)",
@@ -3329,6 +3318,19 @@
      "削減",
      "形容動詞",
      "引越し"
+    ],
+    "quick_response": [
+     "課長、こちらの資料、ご覧いただけたでしょうか。",
+     "ご担当者様、先ほどメールでお送りした見積書、届いておりますでしょうか。",
+     "口が堅い",
+     "気が置けない",
+     "田中さん、今日の飲み会、急に仕事が入っちゃって行けなくなっちゃったんだ。",
+     "二の足を踏む",
+     "台風接近に伴い、本日は早めに閉店します。",
+     "念のため",
+     "お目にかかる",
+     "話が弾む",
+     "頭が下がる"
     ]
    },
    "draw": {
