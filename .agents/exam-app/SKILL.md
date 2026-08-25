@@ -136,7 +136,7 @@ same screens ship as a static Pages site — only where answers are kept differs
 
 | # | Screen | Where it lives | What it does |
 | - | ------ | -------------- | ------------ |
-| 1 | テスト一覧 | `GET /` — `serve_sheet.py` | every test in `tests/`, answered count, last score, origin badge (`imported`/`generated`) |
+| 1 | テスト一覧 | `GET /` — `serve_sheet.py` | every test in `tests/`, answered count, last score, origin badge (`imported`/`generated`), under two collapsed `<details>` groups + a search box |
 | 2 | 受験 | `GET /tests/<id>/解答.html` | the exam; each click autosaves |
 | 3 | 採点結果 | same page, `#screen-result` | rendered on 「採点する」 or fetched from `採点結果.json` |
 
@@ -276,6 +276,20 @@ sheet contains no localStorage code at all. `make check` asserts every
 （JSON）」 button and a 「バックアップを保存/読み込む」 pair — one JSON per
 test's two documents, and how answers move between browsers. Say so on the
 page: clearing site data loses the lot.
+
+### Screen 1 groups the cards — collapsed by default
+
+`origin` already decides the badge, so it decides the grouping: 公式過去問
+(`imported-*`) and 模擬試験 (everything else) are two `<details>`, **shut on
+load** — twenty cards opened flat is a scroll, two summary lines is a choice.
+Each summary carries its own 件数 and 採点済み count. The search box above them
+filters on id + origin (space-separated terms, all must match) and force-opens
+whichever group holds a hit; a group with no hit renders 「該当するテストは
+ありません。」 rather than vanishing, so the two halves stay in the same places.
+Open/shut is kept in JS (`OPEN`), because `refreshList()` re-renders on every
+`pageshow` and a group must not snap shut on the way back from a graded exam.
+The search box lives in the static shell, NOT inside `#cards` — re-rendering
+the list must not destroy the field being typed into.
 
 ## On-screen layout — one design across three screens
 

@@ -15,6 +15,11 @@ over `GET /api/tests`; the Pages build bakes a manifest of the static half
 localStorage. Only the *source* differs — the cards, the CSS and the actions are
 this file.
 
+The cards are not a flat list: they hang under two collapsible `<details>`
+groups keyed on `origin` (imported past papers vs generated mocks), both shut on
+load, plus a search box that filters on id/origin and force-opens whichever
+group holds a hit.
+
 Keep it dependency-free (see app_style.py): `make serve` must start without the
 authoring dependencies installed.
 """
@@ -114,6 +119,37 @@ code{background:#f1f5f9;padding:.15em .45em;border-radius:4px;font-size:9.5pt;bo
 .tools{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin:0 0 1.6em}
 .tools .note{font-size:9.5pt;color:var(--muted)}
 .tools input[type=file]{display:none}
+/* Search box + the two origin groups. A group is a <details>: shut until it is
+   clicked, so the list opens as two lines instead of twenty cards. A live query
+   force-opens whichever group holds a hit — a match hidden inside a collapsed
+   group reads as "no results". */
+.searchbar{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;margin:0 0 1.3em}
+.searchbar input{flex:1 1 18em;min-width:0;font-family:var(--ui);font-size:11pt;
+  padding:.6em .9em;border:1px solid #cbd5e1;border-radius:8px;background:#fff;
+  color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,0.03)}
+.searchbar input:focus{outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.searchbar .hits{font-size:9.5pt;color:var(--muted);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.group{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:1em;
+  box-shadow:0 1px 3px rgba(0,0,0,0.03);overflow:hidden}
+.group>summary{display:flex;align-items:center;gap:.75em;cursor:pointer;
+  padding:.9em 1.2em;font-size:12pt;font-weight:800;color:#0f172a;
+  list-style:none;-webkit-user-select:none;user-select:none}
+.group>summary::-webkit-details-marker{display:none}
+.group>summary::before{content:"▶";flex:0 0 auto;font-size:8.5pt;color:var(--muted);
+  transition:transform .15s ease}
+.group[open]>summary::before{transform:rotate(90deg)}
+.group>summary:hover{background:#f8fafc}
+.group .g-count{font-size:9.5pt;font-weight:700;color:#475569;background:#f1f5f9;
+  border:1px solid #e2e8f0;border-radius:9999px;padding:.15em .7em;
+  font-variant-numeric:tabular-nums}
+.group .g-sub{margin-left:auto;font-size:9.5pt;font-weight:500;color:var(--muted);
+  font-variant-numeric:tabular-nums}
+.group .g-body{padding:.9em 1.2em 1.1em;border-top:1px solid #f1f5f9}
+.group .g-body .card{margin-bottom:.8em}
+.group .g-body .card:last-child{margin-bottom:0}
+.group .g-empty{padding:.4em .2em;color:var(--muted);font-size:10pt}
 @media screen and (max-width: 54em){
   main{padding:1.2em 1em 4em}
   .card{grid-template-columns:1fr auto;grid-template-rows:auto auto auto auto auto;
@@ -129,6 +165,10 @@ code{background:#f1f5f9;padding:.15em .45em;border-radius:4px;font-size:9.5pt;bo
   .acts .ui-btn{padding:.45em .9em;font-size:10pt;min-height:38px}
   .tools{gap:.7em}
   .tools .ui-btn{width:100%;justify-content:center}
+  .searchbar .ui-btn{min-height:38px}
+  .group>summary{padding:.85em .95em;font-size:11.5pt;flex-wrap:wrap}
+  .group .g-sub{margin-left:0;width:100%}
+  .group .g-body{padding:.8em .95em 1em}
 }
 """
 
@@ -249,15 +289,64 @@ function cardHtml(t){
        + '<div class="acts">' + acts.join('') + '</div></div>';
 }
 
-function render(tests){
+/* ------------------------------------------------------- groups and search
+   Origin already decides the badge, so it decides the grouping too — the two
+   halves of tests/ (imported past papers, generated mocks) are what a reader
+   actually picks between. Each group is a <details>, shut on load: twenty cards
+   opened flat is a scroll, two summary lines is a choice. */
+var GROUPS = [
+  {key: 'imported',  label: '公式過去問（imported）',
+   test: function(t){ return t.origin === 'imported'; }},
+  {key: 'generated', label: '模擬試験（generated）',
+   test: function(t){ return t.origin !== 'imported'; }}
+];
+var TESTS = [];            // last rendered list, kept by render() itself
+var QUERY = '';
+/* Open/shut has to survive a re-render: refreshList() runs on every pageshow,
+   so a group must not snap shut on the way back from a graded exam. Only a real
+   click writes here — innerHTML builds an already-open <details>, which fires
+   no toggle event. */
+var OPEN = {imported: false, generated: false};
+
+function matchesQuery(t){
+  if (!QUERY) return true;
+  var hay = (t.id + ' ' + (t.origin || '')).toLowerCase();
+  return QUERY.split(/\\s+/).every(function(w){ return !w || hay.indexOf(w) >= 0; });
+}
+
+function groupHtml(g, tests){
+  var graded = tests.filter(function(t){ return t.result; }).length;
+  // A live query force-opens the groups holding its hits — a match left inside
+  // a collapsed group reads as "nothing found".
+  var open = ((QUERY && tests.length) || OPEN[g.key]) ? ' open' : '';
   var body = tests.length
     ? tests.map(cardHtml).join('')
+    : '<div class="g-empty">該当するテストはありません。</div>';
+  return '<details class="group" data-group="' + g.key + '"' + open + '>'
+       + '<summary><span class="g-name">' + g.label + '</span>'
+       + '<span class="g-count">' + tests.length + ' 件</span>'
+       + '<span class="g-sub">採点済み ' + graded + ' 件</span></summary>'
+       + '<div class="g-body">' + body + '</div></details>';
+}
+
+function render(tests){
+  TESTS = tests;     // the search re-renders from here — one assignment, one place
+  var shown = tests.filter(matchesQuery);
+  var body = tests.length
+    ? GROUPS.map(function(g){ return groupHtml(g, shown.filter(g.test)); }).join('')
     : '<div class="empty">tests/ にテストがありません。'
       + '<code>make sheet &lt;test_id&gt;</code> で解答用紙を生成してください。</div>';
   document.getElementById('cards').innerHTML = body;
   var graded = tests.filter(function(t){ return t.result; }).length;
   document.getElementById('counts').textContent =
     'テスト ' + tests.length + ' 件 / 採点済み ' + graded + ' 件';
+  var hits = document.getElementById('hits');
+  if (hits) hits.textContent = QUERY ? shown.length + ' 件が一致' : '';
+}
+
+function setQuery(v){
+  QUERY = String(v || '').trim().toLowerCase();
+  render(TESTS);
 }
 
 async function refreshList(){
@@ -333,9 +422,26 @@ function importAll(input){
 }
 
 document.addEventListener('click', function(ev){
-  var btn = ev.target && ev.target.closest && ev.target.closest('[data-clear]');
-  if (btn) clearTestProgress(btn.getAttribute('data-clear'));
+  var el = ev.target;
+  if (!el || !el.closest) return;
+  var btn = el.closest('[data-clear]');
+  if (btn){ clearTestProgress(btn.getAttribute('data-clear')); return; }
+  if (el.closest('#q-clear')){
+    var box = document.getElementById('q');
+    if (box){ box.value = ''; box.focus(); }
+    setQuery('');
+  }
 });
+document.addEventListener('input', function(ev){
+  if (ev.target && ev.target.id === 'q') setQuery(ev.target.value);
+});
+// `toggle` does not bubble — capture it, and record only what the user clicked.
+document.addEventListener('toggle', function(ev){
+  var d = ev.target;
+  if (d && d.classList && d.classList.contains('group')){
+    OPEN[d.getAttribute('data-group')] = d.open;
+  }
+}, true);
 // The list must be live: coming back from a graded exam has to show the score.
 window.addEventListener('pageshow', refreshList);
 """
@@ -345,13 +451,28 @@ def index_js() -> str:
     return INDEX_JS % {"total": QUESTION_COUNT, "sheet": json.dumps(SHEET, ensure_ascii=False)}
 
 
+GROUP_NOTE = ('テストは<b>公式過去問（imported）</b>と<b>模擬試験（generated）</b>の'
+              '2グループに分かれています。見出しをクリックすると開きます。'
+              '検索欄に入力すると、一致したテストを含むグループが自動で開きます。')
+
 LEDE_SERVER = ('受験するテストを選んでください。'
                '解答は選択するたびに保存され、採点結果は 採点結果.json に残ります。'
-               '「結果を削除」で採点結果と解答の両方を消せます。')
+               '「結果を削除」で採点結果と解答の両方を消せます。<br>' + GROUP_NOTE)
 LEDE_LOCAL = ('受験するテストを選んでください。解答と採点結果は'
               '<b>このブラウザ内（localStorage）にのみ</b>保存されます。'
               '別の端末やブラウザには引き継がれず、閲覧データを消去すると失われるため、'
-              '残しておきたい結果は「バックアップを保存」で書き出してください。')
+              '残しておきたい結果は「バックアップを保存」で書き出してください。<br>'
+              + GROUP_NOTE)
+
+# Static shell, outside #cards: re-rendering the list must not blow away the box
+# the user is typing in (or its focus and caret).
+SEARCHBAR = ('<div class="searchbar">'
+             '<input id="q" type="search" autocomplete="off" spellcheck="false" '
+             'aria-label="テストを検索" '
+             'placeholder="テストを検索（テスト ID / imported / generated）">'
+             '<button type="button" class="ui-btn" id="q-clear">クリア</button>'
+             '<span class="hits" id="hits"></span>'
+             '</div>')
 
 TOOLS_LOCAL = ('<div class="tools">'
                '<button type="button" class="ui-btn" onclick="exportAll()">'
@@ -402,6 +523,7 @@ def index_html(mode: str = "server", tests: list | None = None) -> str:
         '</div></header>'
         f'<main><p class="lede">{LEDE_LOCAL if local else LEDE_SERVER}</p>'
         f'{TOOLS_LOCAL if local else ""}'
+        f'{SEARCHBAR}'
         '<div id="cards"></div></main>'
         f'<script>{index_js()}</script>'
         '<script>refreshList();</script></body></html>')
