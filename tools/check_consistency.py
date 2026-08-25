@@ -3148,10 +3148,17 @@ def check_dokkai_register(name: str, gt: str, origin: str = "generated"):
     # surfaces and so are not essay passages, which is why 5 authored です・ます
     # surfaces yield 3 here); the other 14 papers are written throughout in
     # だ/である and stay at 0, so this widening grandfathers nothing.
+    # The trailing particle set (か|ね|よ|な|わ) is part of the ending, not a
+    # break in it: 「〜ではないでしょうか。」 is the 疑問提示文 dokkai.md §'Axis 3'
+    # asks every paper to carry, and the first cut of this regex — which
+    # required the polite form to sit immediately before 。 — scored it as
+    # PLAIN. 20260819_1's 問題10(5) closes on exactly that sentence and read
+    # False, so the check was pushing authors away from a shape the same file
+    # requires (found 2026-08-25 while repairing that paper).
     polite_cnt = sum(
         1 for p in passages
         if p.is_essay and re.search(
-            r"(です|ます|ました|ません|でした|でしょう|ください|ましょう)[。！？]?$",
+            r"(です|ます|ました|ません|でした|でしょう|ください|ましょう)[かねよな]?[。！？]?$",
             re.sub(r"^\s*[（(]注\s*\d*[）)].*$", "", p.text, flags=re.M).strip())
     )
     warn(f"{name}: 読解 polite voice (です・ます) passages >= 3 (got {polite_cnt})",
