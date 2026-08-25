@@ -293,10 +293,14 @@ def check_filename_contracts():
     retired = ["言語知識・読解_解答.html", "聴解_解答.html", "採点結果_",
                "採点結果.md", "user_answers", "マークシート.pdf",
                "make serve 1", "make serve <test_id>",
-               # The model-answer translation pipeline, retired 2026-08-21:
-               # 模範解答.html is Japanese-only by design, so a doc naming a
-               # per-language explanation file or its make targets is stale.
-               "詳細解説.<lang>.json", "exam-answer-translation",
+               # The model-answer TRANSLATION pipeline, retired 2026-08-21 and
+               # still retired. 模範解答.html regained a second language on
+               # 2026-08-25, but by a different contract: 詳細解説.vi.json is
+               # WRITTEN, not translated, it carries no exam wording, and it is
+               # scaffolded by `make scaffold-explanations … LANG=vi` — there is
+               # no translate/merge step and no skill to run one. A doc naming
+               # the old machinery is describing a pipeline that does not exist.
+               "exam-answer-translation",
                "make scaffold-translation", "make merge-translation"]
     exonerated = re.compile(r"gone|no per-section|legacy|removed|retired|replaces|there are no")
     offenders = []
@@ -457,6 +461,16 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     "dokkai_sentence_rhythm":         ("passage prose",        "assisted"),
     "dokkai_kanji_density":           ("passage prose",        "assisted"),
     "dokkai_register_voice":          ("<surface re-author>",  "authoring"),
+    # 詳細解説 (exam-model-answer). Both findings are repaired in the explanation
+    # file alone — the paper itself is frozen by the time this pass runs, so
+    # neither may ever be "fixed" by touching a stem, an option or a key.
+    # Cutting prose to band is mechanical enough to be assisted; writing a whole
+    # second language is authoring.
+    "kaisetsu_length":                ("詳細解説.json",        "assisted"),
+    # A mis-tag is never repaired by moving the tag: the entry is stale prose
+    # from an earlier revision, so the item is re-solved and the entry rewritten.
+    "kaisetsu_tag_key":               ("詳細解説.json",        "authoring"),
+    "kaisetsu_language":              ("詳細解説.<lang>.json", "authoring"),
 }
 
 # The tier is a pure function of the artifact a repair touches (§5.0), so two
@@ -474,6 +488,11 @@ REPAIR_TIER = {
     "stem/option/key-cell": "A",
     "passage prose": "B",
     "<surface re-author>": "C",
+    # 詳細解説 artifacts. Neither re-opens the paper — the explanation set is
+    # written after the content is locked — so both sit at tier A even though
+    # the second language is a large job. Tier ranks BLAST RADIUS, not effort.
+    "詳細解説.json": "A",
+    "詳細解説.<lang>.json": "A",
 }
 
 
@@ -1603,6 +1622,26 @@ def passage_prose(sec: str, bi) -> str:
             continue
         keep.append(ln)
     return "\n".join(keep)
+
+
+# The 大問 instruction line (「次の(1)から(5)の文章を読んで、後の質問に対する答え
+# として最もよいものを、1・2・3・4から一つ選びなさい。」 and 問題14's 「右のページは
+# …」 variant) is fixed official boilerplate: no paper can reword it, and every
+# paper carries five of them. `passage_prose` keeps it — the length bands in
+# DOKKAI_CEILING/DOKKAI_FLOOR were measured WITH it on both corpora, so it stays
+# there — but a check that counts a keyed grammar form inside "the prose" must
+# not read it. 「として」 lives in that one sentence, so any paper keying 「として」
+# in 問題7 scored ×5 before a single passage was written and could never satisfy
+# KEY_EXPOSURE_MAX (found on 20260813_1, 2026-08-25; the ×10 recorded for
+# 20260813_2 in check_key_grammar_exposure's founding table is half boilerplate).
+INSTRUCTION_LINE = re.compile(
+    r"^\s*(次の|右のページは|下のページは|次のページは).*(選びなさい|答えなさい)。\s*$")
+
+
+def strip_instruction_lines(text: str) -> str:
+    """Drop the 大問 instruction boilerplate from passage prose."""
+    return "\n".join(ln for ln in text.splitlines()
+                     if not INSTRUCTION_LINE.match(ln))
 
 
 # RE-MEASURED on the archive (official_calibration §2, §9). The old floors were
@@ -3709,7 +3748,8 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
     cut = bi.KEY_HEADING.search(gt)
     body = gt[:cut.start()] if cut else gt
     prose = re.sub(r"\s+", "", "".join(
-        passage_prose(dokkai_section(body, n), bi) for n in range(10, 15)))
+        strip_instruction_lines(passage_prose(dokkai_section(body, n), bi))
+        for n in range(10, 15)))
     if not prose:
         return skip(f"{test_id}: keyed grammar is not also 読解 running text",
                     "no 問題10-14 passage prose parsed")
@@ -8583,6 +8623,442 @@ def check_choukai_longest_key_rate(test_id: str, ct: str, st: str, m, bi):
          f"(choukai-items.md §'Key length carries no information')")
 
 
+# ------------------------------------------------- 詳細解説: length and languages
+# THE TERSENESS BANDS. Measured across all 20 papers on 2026-08-25, before the
+# rule existed: why_correct averaged 101 chars (newest three papers 139/148/173),
+# each option analysis 50, each point 34 across 4.0 points — 42,500 authored
+# characters per paper, and CLIMBING, because nothing bounded it. The cost lands
+# twice: the authoring pass is the slowest stage in the pipeline, and a learner
+# reading a 170-character paragraph to find out why option 2 is wrong is not
+# being served by the extra 120 characters.
+#
+# The bands halve that. They are a POLICY CAP, not an archive measurement — the
+# owner is this constant, and moji-goi.md/official_calibration.md do not restate
+# it. Furigana 《…》 and the [正解]/[不正解] tag are stripped before counting, so
+# ruby markup can never push a line over.
+#
+# Vietnamese runs longer than Japanese for the same content — Vietnamese writes
+# in words where Japanese writes in kanji — so its caps are the Japanese ones
+# ×1.8, rounded. That factor is a DESIGN ALLOWANCE, not a measurement — nothing
+# had been authored in Vietnamese when it was set. Re-measure it against the
+# first few papers that are, and change the number here if they disagree; this
+# constant is its only owner.
+KAISETSU_BANDS = {
+    "ja": {"why": 90, "opt": 50, "point": 45},
+    "vi": {"why": 160, "opt": 90, "point": 80},
+}
+KAISETSU_POINTS_RANGE = (2, 4)   # both languages: fewer is under-filled, more is a lecture
+
+# The per-field caps above are a CEILING, and a ceiling is not a target. The
+# measurement makes that concrete: the fleet mean was already 50 for an option
+# analysis and 34 for a point, so those two caps trim the tail and cut nothing
+# from the average. What halves a paper is a budget on the ITEM — why_correct
+# plus every option analysis plus every point, one number.
+#
+# Measured mean was 421 authored characters per item. The budget is half of it.
+# An item that spends it well reads like: one sentence of evidence, one clause
+# of reason per option, two glosses — about 140 characters, comfortably inside.
+KAISETSU_ITEM_BUDGET = {"ja": 210, "vi": 380}   # vi = ja x1.8, the same allowance
+
+# Every paper on disk was authored before the bands existed and every one of them
+# breaches them — that is the finding the measurement above records, not a reason
+# to soften the rule. They are exempted BY NAME and print the same numbers a FAIL
+# would carry. DELETE AN ID the moment that paper's 詳細解説 is rewritten to band,
+# or a later regression on it silently downgrades from FAIL to WARN.
+KAISETSU_LENGTH_GRANDFATHERED = {
+    "20260807_1", "20260810_1", "20260810_2", "20260811_1", "20260812_1",
+    "20260812_2", "20260813_1", "20260813_2", "20260814_1", "20260817_1",
+    "20260817_2", "20260817_3", "20260819_1", "20260821_1",
+    # 20260818_1 removed 2026-08-25: rewritten to band in both languages
+    # (594 -> 180 chars/item ja, 349 vi) and passing on merit. Leaving it here
+    # would downgrade a future regression on it from FAIL to WARN — the exact
+    # thing this list is not for.
+    "imported-n2-2023-07", "imported-n2-2023-12", "imported-n2-2024-07",
+    "imported-n2-2024-12", "imported-n2-2025-07",
+}
+
+# The same 20 papers ship no Vietnamese pane yet. Same rule: delete an id when
+# that paper's 詳細解説.vi.json is authored.
+KAISETSU_VI_GRANDFATHERED = set(KAISETSU_LENGTH_GRANDFATHERED)
+
+
+def _load_build_model_answer():
+    """The renderer module — imported so the gate measures what the page prints."""
+    path = ROOT / ".agents/exam-model-answer/scripts/build_model_answer.py"
+    spec = importlib.util.spec_from_file_location("_bma_for_gate", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+try:
+    _BMA = _load_build_model_answer()
+except Exception:                                  # pragma: no cover
+    _BMA = None
+
+
+def _kaisetsu_len(text: str) -> int:
+    """Authored length: furigana ruby and the verdict label do not count.
+
+    The verdict label is re-applied by INDEX at render time, so whether the
+    author typed one is not a length the reader ever sees. What counts as a
+    label is `build_model_answer.clean_option_analysis_text` — IMPORTED, not
+    re-implemented, because the two definitions disagreeing is how a budget
+    stops describing the page. (It bit once already: the gate knew only the
+    bracketed `[Đúng]`, so 101 Vietnamese lines opening "Đáp án đúng: " were
+    charged 13 characters for a label the renderer strips and re-supplies.)
+    """
+    text = re.sub(r"《[^》]*》", "", text or "")
+    if _BMA is not None:
+        text = _BMA.clean_option_analysis_text(text)
+    else:
+        text = re.sub(r"^\s*\[(?:正解|不正解|Đúng|Sai)\]\s*", "", text)
+    return len(text.strip())
+
+
+def check_kaisetsu_length(test_id: str, lang: str, data: dict):
+    """詳細解説 prose must stay inside the terseness bands (KAISETSU_BANDS)."""
+    band = KAISETSU_BANDS[lang]
+    budget = KAISETSU_ITEM_BUDGET[lang]
+    fname = "詳細解説.json" if lang == "ja" else f"詳細解説.{lang}.json"
+    over, n_pts_bad, over_budget = [], [], []
+    lo, hi = KAISETSU_POINTS_RANGE
+    for key, item in sorted(data.items()):
+        if not isinstance(item, dict):
+            continue
+        n = _kaisetsu_len(item.get("why_correct", ""))
+        if n > band["why"]:
+            over.append(f"{key}.why_correct {n}>{band['why']}")
+        for i, opt in enumerate(item.get("options_analysis") or [], 1):
+            n = _kaisetsu_len(opt)
+            if n > band["opt"]:
+                over.append(f"{key}.options_analysis[{i}] {n}>{band['opt']}")
+        points = item.get("points") or []
+        for i, pt in enumerate(points, 1):
+            n = _kaisetsu_len(pt)
+            if n > band["point"]:
+                over.append(f"{key}.points[{i}] {n}>{band['point']}")
+        if not (lo <= len(points) <= hi):
+            n_pts_bad.append(f"{key}({len(points)})")
+
+        spent = (_kaisetsu_len(item.get("why_correct", ""))
+                 + sum(_kaisetsu_len(o) for o in (item.get("options_analysis") or []))
+                 + sum(_kaisetsu_len(pt) for pt in points))
+        if spent > budget:
+            over_budget.append(f"{key}({spent})")
+
+    name = f"{test_id}: {fname} inside the terseness bands"
+    detail = ""
+    if over or n_pts_bad or over_budget:
+        bits = []
+        if over_budget:
+            worst = sorted(over_budget, key=lambda x: -int(x.split("(")[1][:-1]))
+            bits.append(f"{len(over_budget)} item(s) over the {budget}-char budget: "
+                        f"{', '.join(worst[:8])}{' …' if len(worst) > 8 else ''}")
+        if over:
+            bits.append(f"{len(over)} field(s) over: "
+                        f"{'; '.join(over[:5])}{' …' if len(over) > 5 else ''}")
+        if n_pts_bad:
+            bits.append(f"{len(n_pts_bad)} item(s) outside {lo}-{hi} points: "
+                        f"{', '.join(n_pts_bad[:8])}{' …' if len(n_pts_bad) > 8 else ''}")
+        detail = (" | ".join(bits) + f" — for {lang} the item budget is {budget} chars "
+                  f"(why + all options + all points) and the per-field caps are "
+                  f"why<={band['why']}, option<={band['opt']}, {lo}-{hi} points"
+                  f"<={band['point']} (furigana and the [正解] tag not counted). "
+                  f"The BUDGET is what shortens a paper; the caps only stop one "
+                  f"field eating it. Cut, do not reword into a placeholder: a "
+                  f"generic line is a different defect (exam-model-answer)")
+    if test_id in KAISETSU_LENGTH_GRANDFATHERED:
+        return warn(name, not detail, detail + GRANDFATHER_NOTE,
+                    slug="kaisetsu_length", test_id=test_id)
+    check(name, not detail, detail, slug="kaisetsu_length", test_id=test_id)
+
+
+# 模範解答.html ships TWO independently-authored explanation sets behind one
+# segmented control. The failure this guards is the cheap way to produce the
+# second one: run the Japanese through a translator and paste it in. That gives
+# a Vietnamese reader Japanese-shaped reasoning ("代は「ダイ」、理は「リ」" reads as a
+# fact to a Japanese reader and as an unexplained assertion to someone who has
+# never met 音読み), and it makes the second pane worth less than the effort of
+# reading it. Nothing here can prove a rewrite, but three things are decidable:
+#   * PARITY — same items, same option count, so the panes cannot describe
+#     different papers or leave one option unexplained.
+#   * NO EXAM WORDING — 詳細解説.json is the single copy of the booklet's stem,
+#     options, passage and script. A second copy is a drift surface, and
+#     verify_fidelity.py only knows how to police one file.
+#   * NO WHOLESALE JAPANESE — a Vietnamese explanation quotes Japanese
+#     constantly (in 「」, and as furigana), which is correct. What is not
+#     correct is a long unquoted run of kana/kanji: that is the source pane,
+#     pasted.
+_JA_RUN = re.compile(r"[ぁ-んァ-ヶ一-龥々]{12,}")
+
+
+def check_kaisetsu_languages(test_id: str, ja: dict):
+    """The non-`ja` panes: present, in parity with `ja`, and not a paste of it."""
+    for lang in ("vi",):
+        fname = f"詳細解説.{lang}.json"
+        path = ROOT / "tests" / test_id / fname
+        name = f"{test_id}: {fname} present and in parity with 詳細解説.json"
+        if not path.is_file():
+            miss = (f"no {fname} — 模範解答.html renders its segmented control only "
+                    f"when the second set exists, so this paper ships one language. "
+                    f"Author it with `make scaffold-explanations {test_id} LANG={lang}` "
+                    f"and write it FROM THE ITEMS, never by translating 詳細解説.json "
+                    f"(exam-model-answer)")
+            if test_id in KAISETSU_VI_GRANDFATHERED:
+                warn(name, False, miss + GRANDFATHER_NOTE,
+                     slug="kaisetsu_language", test_id=test_id)
+            else:
+                check(name, False, miss, slug="kaisetsu_language", test_id=test_id)
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as e:
+            check(f"{test_id}: {fname} parses", False, str(e),
+                  slug="kaisetsu_language", test_id=test_id)
+            continue
+
+        problems = []
+        missing = sorted(set(ja) - set(data))
+        extra = sorted(set(data) - set(ja))
+        if missing:
+            problems.append(f"{len(missing)} item(s) missing: {', '.join(missing[:8])}"
+                            f"{' …' if len(missing) > 8 else ''}")
+        if extra:
+            problems.append(f"{len(extra)} item(s) not in 詳細解説.json: "
+                            f"{', '.join(extra[:8])}{' …' if len(extra) > 8 else ''}")
+
+        wording, count_bad, empty, pasted = [], [], [], []
+        for key, item in sorted(data.items()):
+            if not isinstance(item, dict):
+                continue
+            dupes = [f for f in ("stem", "options", "passage", "script") if f in item]
+            if dupes:
+                wording.append(f"{key}({'/'.join(dupes)})")
+            n_ja = len((ja.get(key) or {}).get("options_analysis") or [])
+            n_lg = len(item.get("options_analysis") or [])
+            if n_ja and n_lg != n_ja:
+                count_bad.append(f"{key}({n_lg} vs {n_ja})")
+            if not (item.get("why_correct") or "").strip():
+                empty.append(key)
+            for field in [item.get("why_correct", "")] + list(item.get("options_analysis") or []):
+                stripped = re.sub(r"「[^」]*」|『[^』]*』|《[^》]*》", "", field or "")
+                if _JA_RUN.search(stripped):
+                    pasted.append(f"{key}「{_JA_RUN.search(stripped).group(0)[:16]}…」")
+                    break
+
+        if wording:
+            problems.append(f"{len(wording)} item(s) carry exam wording that belongs "
+                            f"only in 詳細解説.json: {', '.join(wording[:6])}"
+                            f"{' …' if len(wording) > 6 else ''}")
+        if count_bad:
+            problems.append(f"{len(count_bad)} item(s) analyse a different number of "
+                            f"options than 詳細解説.json: {', '.join(count_bad[:6])}"
+                            f"{' …' if len(count_bad) > 6 else ''}")
+        if empty:
+            problems.append(f"{len(empty)} item(s) have an empty why_correct — the pane "
+                            f"falls back to the booklet's Japanese 解説: "
+                            f"{', '.join(empty[:8])}{' …' if len(empty) > 8 else ''}")
+        if pasted:
+            problems.append(f"{len(pasted)} item(s) contain a long UNQUOTED Japanese run, "
+                            f"which is what a pasted/translated 詳細解説.json looks like: "
+                            f"{', '.join(pasted[:4])}{' …' if len(pasted) > 4 else ''}")
+
+        detail = " | ".join(problems)
+        if test_id in KAISETSU_VI_GRANDFATHERED and detail:
+            warn(name, False, detail + GRANDFATHER_NOTE,
+                 slug="kaisetsu_language", test_id=test_id)
+        else:
+            check(name, not detail, detail, slug="kaisetsu_language", test_id=test_id)
+
+        if not detail or test_id not in KAISETSU_VI_GRANDFATHERED:
+            check_kaisetsu_length(test_id, lang, data)
+
+
+# A grandfather entry that is no longer needed is invisible: `warn(name, True)`
+# prints the same `ok` line a real pass prints, so nothing tells you the paper
+# has been repaired and the exemption is now dead weight. Dead weight is not
+# harmless here — every one of these lists carries the same warning, that
+# leaving a repaired id in DOWNGRADES its next regression from FAIL to WARN
+# (P7_DISTRIBUTION_GRANDFATHERED's comment says so in as many words, and
+# 20260817_3 was removed from it for exactly this reason).
+#
+# It bit during the 2026-08-25 rewrite: an id was deleted from the WRONG one of
+# two sets that held identical id lists, and neither the removal nor the
+# corruption changed a single line of gate output.
+def check_grandfather_sets_are_live():
+    """Flag a grandfathered paper that now passes on merit — delete its entry."""
+    print("\n詳細解説 grandfather lists still earning their entries")
+    stale = []
+    for tid in sorted(KAISETSU_LENGTH_GRANDFATHERED):
+        path = ROOT / "tests" / tid / "詳細解説.json"
+        if not path.is_file():
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        band, budget = KAISETSU_BANDS["ja"], KAISETSU_ITEM_BUDGET["ja"]
+        lo, hi = KAISETSU_POINTS_RANGE
+        breaches = False
+        for item in data.values():
+            if not isinstance(item, dict):
+                continue
+            opts = item.get("options_analysis") or []
+            pts = item.get("points") or []
+            spent = (_kaisetsu_len(item.get("why_correct", ""))
+                     + sum(_kaisetsu_len(o) for o in opts)
+                     + sum(_kaisetsu_len(x) for x in pts))
+            if (spent > budget or not (lo <= len(pts) <= hi)
+                    or _kaisetsu_len(item.get("why_correct", "")) > band["why"]
+                    or any(_kaisetsu_len(o) > band["opt"] for o in opts)
+                    or any(_kaisetsu_len(x) > band["point"] for x in pts)):
+                breaches = True
+                break
+        if not breaches and (ROOT / "tests" / tid / "詳細解説.vi.json").is_file():
+            stale.append(tid)
+    warn(f"no repaired paper is still grandfathered ({len(KAISETSU_LENGTH_GRANDFATHERED)} entries)",
+         not stale,
+         f"{', '.join(stale)} now pass(es) on merit — delete the id from "
+         f"KAISETSU_LENGTH_GRANDFATHERED (and so from KAISETSU_VI_GRANDFATHERED, "
+         f"which is derived from it). Leaving it downgrades that paper's next "
+         f"regression from FAIL to WARN")
+
+
+def check_kaisetsu_band_doc():
+    """exam-model-answer's band table must equal KAISETSU_BANDS.
+
+    The doc restates the numbers because an author reads the doc, not this file
+    — and a restated number is a number that drifts. This is the same contract
+    `make goi-profile --baseline` gives the 文字・語彙 tables: the constant is
+    the owner, the table is a copy, and the copy is asserted.
+    """
+    print("\n詳細解説 terseness bands ↔ exam-model-answer/SKILL.md")
+    doc = (ROOT / ".agents/exam-model-answer/SKILL.md").read_text(encoding="utf-8")
+    rows = {
+        "why": r"\|\s*`why_correct`\s*\|\s*≤\s*(\d+)\s*\|\s*≤\s*(\d+)\s*\|",
+        "opt": r"\|\s*each `options_analysis` entry\s*\|\s*≤\s*(\d+)\s*\|\s*≤\s*(\d+)\s*\|",
+        "point": r"\|\s*each `points` entry\s*\|\s*≤\s*(\d+)\s*\|\s*≤\s*(\d+)\s*\|",
+    }
+    for field, pat in rows.items():
+        m = re.search(pat, doc)
+        if not m:
+            check(f"SKILL.md states the {field} band", False,
+                  "the band table row is missing or reworded — it is the copy the "
+                  "author reads; keep it parseable or the constant is unchecked")
+            continue
+        want = (KAISETSU_BANDS["ja"][field], KAISETSU_BANDS["vi"][field])
+        got = (int(m.group(1)), int(m.group(2)))
+        check(f"SKILL.md {field} band matches KAISETSU_BANDS {want}", got == want,
+              f"doc says {got} — KAISETSU_BANDS is the owner; refresh the table from it")
+    m = re.search(r"\|\s*\*\*whole item\*\*[^|]*\|\s*≤\s*(\d+)\s*\|\s*≤\s*(\d+)\s*\|", doc)
+    want = (KAISETSU_ITEM_BUDGET["ja"], KAISETSU_ITEM_BUDGET["vi"])
+    check(f"SKILL.md item budget matches KAISETSU_ITEM_BUDGET {want}",
+          bool(m) and (int(m.group(1)), int(m.group(2))) == want,
+          f"doc says {m.groups() if m else 'nothing parseable'} — the budget is the "
+          f"row that actually shortens a paper; it must be stated and must match")
+    lo, hi = KAISETSU_POINTS_RANGE
+    m = re.search(r"\|\s*number of `points`\s*\|\s*(\d+)–(\d+)\s*\|\s*(\d+)–(\d+)\s*\|", doc)
+    check(f"SKILL.md points count matches KAISETSU_POINTS_RANGE {lo}–{hi}",
+          bool(m) and (int(m.group(1)), int(m.group(2))) == (lo, hi)
+          and (int(m.group(3)), int(m.group(4))) == (lo, hi),
+          f"doc says {m.groups() if m else 'nothing parseable'}")
+
+
+# The 解説 must argue for the option the KEY names. `check_choukai_kaisetsu_keys`
+# has policed this inside 聴解.md for a while; nothing policed it inside
+# 詳細解説.json, and exam-model-answer/SKILL.md said so in as many words —
+# "nothing but you checks it for 言語知識・読解". Measured 2026-08-25, the day
+# this check was written: THREE items were already wrong on disk (20260818_1
+# item 54 tags option 2, key is 4; 20260819_1 items 53 and 54 likewise), and in
+# every case the whole entry — `why_correct` too — was prose left behind by an
+# earlier revision of that item, still arguing a question the paper no longer
+# asks.
+#
+# It survived because `check_model_answer_option_sync` compares the stored
+# `options` ARRAY against the booklet, and that array had been re-synced. The
+# PROSE beside it had not, and nothing paired the two. The tag index is the one
+# part of the prose a machine can pair with the key, so it is checked here.
+#
+# The rendered page makes this worse rather than better: build_model_answer.py
+# applies [正解] BY INDEX from the canonical key, so the badge sits on the right
+# option while the sentence next to it explains a different one. A learner
+# reading that has no way to tell which is the mistake.
+def check_kaisetsu_tag_keys(test_id: str, data: dict, keys: dict):
+    """The [正解]-tagged option in 詳細解説.json must be the official key."""
+    mismatched, multi, none_tagged = [], [], []
+    for item_key, item in sorted(data.items()):
+        if not isinstance(item, dict):
+            continue
+        analysis = item.get("options_analysis") or []
+        if not analysis or item_key not in keys:
+            continue
+        idx = [i for i, o in enumerate(analysis, 1)
+               if re.match(r"\s*\[(?:正解|Đúng)\]", o or "")]
+        if len(idx) > 1:
+            multi.append(f"{item_key}({idx})")
+        elif not idx:
+            none_tagged.append(item_key)
+        elif idx[0] != keys[item_key]:
+            mismatched.append(f"{item_key}(tags {idx[0]}, key is {keys[item_key]})")
+
+    bits = []
+    if mismatched:
+        bits.append(f"{len(mismatched)} item(s) argue for the wrong option: "
+                    f"{', '.join(mismatched[:6])}{' …' if len(mismatched) > 6 else ''}")
+    if multi:
+        bits.append(f"{len(multi)} item(s) tag more than one option correct: "
+                    f"{', '.join(multi[:6])}{' …' if len(multi) > 6 else ''}")
+    detail = (" | ".join(bits) + " — the tag is the only part of the 解説 prose a "
+              "machine can pair with the key, and a mismatch has always meant the "
+              "WHOLE entry is stale prose from an earlier revision of that item "
+              "(why_correct included). Re-solve the item from the booklet and "
+              "rewrite the entry; never just move the tag. The rendered page "
+              "applies [正解] by index from the key, so the badge and the "
+              "sentence beside it currently disagree (exam-model-answer)"
+              ) if bits else ""
+    # Untagged items are the terse style's normal state — the renderer supplies
+    # the tag — so they are counted, not failed.
+    name = (f"{test_id}: 詳細解説.json tags the official key "
+            f"({len(data) - len(none_tagged)} tagged, {len(none_tagged)} untagged)")
+    check(name, not detail, detail, slug="kaisetsu_tag_key", test_id=test_id)
+
+
+def check_kaisetsu_prose(test_id: str):
+    """Entry point for both 詳細解説 contracts: terseness, and the second language.
+
+    The exam's own wording is NOT this pass's business — `stem`/`options`/
+    `passage`/`script` are checked by check_model_answer_option_sync() against
+    the booklet and by verify_fidelity.py against the Markdown. Both panes of
+    模範解答.html print that wording identically, above the explanation, because
+    it is stored once and rendered outside the language panes.
+    """
+    path = ROOT / "tests" / test_id / "詳細解説.json"
+    if not path.is_file():
+        return skip(f"{test_id}: 詳細解説 prose contracts",
+                    "no 詳細解説.json (run make scaffold-explanations)")
+    try:
+        ja = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        return check(f"{test_id}: 詳細解説.json parses", False, str(e),
+                     slug="kaisetsu_length", test_id=test_id)
+    td = ROOT / "tests" / test_id
+    try:
+        exam_app = ROOT / ".agents/exam-app/scripts"
+        if str(exam_app) not in sys.path:
+            sys.path.insert(0, str(exam_app))
+        import grade_answers as _ga
+        canon = {str(k): v for k, v in _ga.parse_gengo_keys(td / "言語知識・読解.md").items()}
+        canon.update(_ga.parse_choukai_keys(td / "聴解.md"))
+    except Exception as exc:
+        canon = {}
+        skip(f"{test_id}: 詳細解説.json tags the official key", f"keys unreadable ({exc})")
+    if canon:
+        check_kaisetsu_tag_keys(test_id, ja, canon)
+    check_kaisetsu_length(test_id, "ja", ja)
+    check_kaisetsu_languages(test_id, ja)
+
+
 # 模範解答 explains the options the candidate actually saw (G18). 詳細解説.json stores its
 # own copy of every option's text — hand-authored, furigana included — and
 # build_model_answer.py PREFERS that copy over the one it parses out of the booklet
@@ -9858,6 +10334,9 @@ def check_tests():
                 check_choukai_contractions(d.name, st, m)
                 check_choukai_key_paraphrase(d.name, ct, st, m, bi)
             check_spec_target_items(d, gt, st, bi)
+            # Origin-agnostic: an import's 詳細解説 is written by the same pass, to
+            # the same bands, in the same two languages as a generated paper's.
+            check_kaisetsu_prose(d.name)
             if origin == "generated":
                 check_choukai_drawn_medium(d, st)
         else:
@@ -10012,6 +10491,8 @@ def main():
         check_skills()
         check_filename_contracts()
         check_makefile_help()
+        check_kaisetsu_band_doc()
+        check_grandfather_sets_are_live()
         check_deployments()
         check_every_choukai_finding_declares_repair()
         check_remediation_state()
