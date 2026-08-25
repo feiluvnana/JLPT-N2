@@ -2,6 +2,29 @@
 
 Date: 2026-08-20. Read-only analysis; nothing on disk was changed.
 
+**Status, 2026-08-25 — the remediation plan is consumed on the authoring side.**
+All 14 generated papers have had their reading half repaired (commits
+`d19fb20`…`2f3c48a`). Every 読解 axis `tools/check_consistency.py` measures is
+now inside its band on every paper: kanji density, median sentence length and
+short-sentence share, polite and first-person voice, span-anchored and 指示語
+stem counts, section and per-passage lengths, 問題10 apparatus INTENT stems and
+考え share, overlap direction (key − best distractor), key rank spread,
+longest-key share, closing-move variety, （注N） counts, 問題6 option and 問題7 stem
+bands, 問題9 option-set reuse, and keyed-form exposure in the passage prose. Two
+gate defects were found and fixed while doing it, both recorded in
+`check_consistency.py`'s own docstrings: `passage_prose` counted the 大問
+instruction line as prose (making KEY_EXPOSURE_MAX unsatisfiable for any paper
+keying 「として」), and a missing 「## 読解」 heading made `dokkai_profile` default
+every 読解 key to 1 and report overlap/key-rank numbers against answers it had
+never read (`check_dokkai_key_table_parses` now FAILs on that).
+
+**Still open** (tracked in `logs/dokkai_remediation_state.json`): the P5Q
+fresh-eyes blind solves — `exam-qa-review` is owed on every repaired paper and
+must run in a context that authored nothing; P6; P7.4; and the draw-level
+warnings a prose edit cannot reach (a 問題7↔問題8 grammar form inside its cooldown
+on eight papers, 20260814_1's two repeated headline themes, and its 問題14 sharing
+its decisive number with a 聴解 item — those need `--reroll` or a 聴解 rewrite).
+
 **Corpora actually opened**
 
 | Corpus | What was read | n |
