@@ -8702,15 +8702,18 @@ KAISETSU_ITEM_BUDGET = {"ja": 210, "vi": 380}   # vi = ja x1.8, the same allowan
 # to soften the rule. They are exempted BY NAME and print the same numbers a FAIL
 # would carry. DELETE AN ID the moment that paper's 詳細解説 is rewritten to band,
 # or a later regression on it silently downgrades from FAIL to WARN.
-KAISETSU_LENGTH_GRANDFATHERED = {
-    # Every GENERATED paper (20260807_1 .. 20260821_1) was rewritten to band in
-    # BOTH languages during the 2026-08-25/26 terseness pass and passes on
-    # merit; only the imports below predate the rewrite. Leaving a repaired id
-    # here would downgrade its next regression from FAIL to WARN — the exact
-    # thing this list is not for. check_grandfather_sets_are_live() flags a
-    # stale entry, which is how this comment stays honest as imports clear too.
-    "imported-n2-2025-07",
-}
+# EMPTY as of 2026-08-27: every paper in the fleet — all 15 generated
+# (20260807_1 .. 20260821_1) and all 5 imports (imported-n2-2023-07 ..
+# imported-n2-2025-07) — was rewritten to band in BOTH languages during the
+# 2026-08-25/27 terseness pass and passes on merit. A future paper (generated
+# or imported) starts un-grandfathered by default: FAIL, not WARN, is correct
+# for it from the moment it exists. Add an id here ONLY if a paper genuinely
+# cannot meet the bands yet and you are deliberately deferring that work — see
+# the P7_DISTRIBUTION_GRANDFATHERED pattern above for how that is done
+# honestly (the exemption prints the same FAIL-strength message a real FAIL
+# would). check_grandfather_sets_are_live() flags a stale entry the moment one
+# exists, so this set staying empty is itself checked, not just claimed.
+KAISETSU_LENGTH_GRANDFATHERED = set()
 
 # The same 20 papers ship no Vietnamese pane yet. Same rule: delete an id when
 # that paper's 詳細解説.vi.json is authored.
