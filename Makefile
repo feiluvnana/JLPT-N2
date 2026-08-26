@@ -31,7 +31,16 @@ SLUG ?=
 # 詳細解説.json (stems, options, passages pre-filled); anything else scaffolds an
 # EMPTY 詳細解説.<lang>.json — that set is written from the items, never
 # translated from the Japanese one (exam-model-answer).
-LANG ?= ja
+#
+# LANG is also the LOCALE environment variable, so `LANG ?= ja` inherited the
+# shell's C.UTF-8 and a bare `make scaffold-explanations <id>` wrote
+# 詳細解説.c.utf-8.json (2026-08-26). Honour LANG only when given on the
+# command line; the environment's locale is never a language choice.
+ifeq ($(origin LANG),command line)
+EXPL_LANG := $(LANG)
+else
+EXPL_LANG := ja
+endif
 # GitHub Pages build output. Gitignored: CI builds it, nothing commits it.
 SITE ?= _site
 PAGES_PORT ?= 8766
@@ -141,7 +150,7 @@ model-answer:
 explanation: model-answer
 
 scaffold-explanations:
-	python3 tools/scaffold_explanations.py tests/$(TEST) --lang $(LANG)
+	python3 tools/scaffold_explanations.py tests/$(TEST) --lang $(EXPL_LANG)
 
 lint-draft:
 	python3 tools/lint_draft.py tests/$(TEST)
