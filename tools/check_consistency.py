@@ -8709,7 +8709,7 @@ KAISETSU_LENGTH_GRANDFATHERED = {
     # here would downgrade its next regression from FAIL to WARN — the exact
     # thing this list is not for. check_grandfather_sets_are_live() flags a
     # stale entry, which is how this comment stays honest as imports clear too.
-    "imported-n2-2023-07", "imported-n2-2023-12", "imported-n2-2024-07",
+    "imported-n2-2023-12", "imported-n2-2024-07",
     "imported-n2-2024-12", "imported-n2-2025-07",
 }
 
