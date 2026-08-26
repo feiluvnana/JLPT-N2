@@ -8704,12 +8704,15 @@ KAISETSU_ITEM_BUDGET = {"ja": 210, "vi": 380}   # vi = ja x1.8, the same allowan
 # or a later regression on it silently downgrades from FAIL to WARN.
 KAISETSU_LENGTH_GRANDFATHERED = {
     "20260807_1", "20260810_1", "20260810_2", "20260811_1", "20260812_1",
-    "20260813_1", "20260814_1",
+    "20260814_1",
     # Removed 2026-08-25 as each was rewritten to band in BOTH languages and
     # passed on merit: 20260812_2, 20260817_1, 20260817_2, 20260817_3,
     # 20260818_1, 20260819_1, 20260821_1. Leaving a repaired id here would
     # downgrade its next regression from FAIL to WARN — the exact thing this
     # list is not for. check_grandfather_sets_are_live() flags a stale entry.
+    # Removed 2026-08-26: 20260813_1, rewritten to band in BOTH languages
+    # (ja mean 322->155; vi mean 343.5->304, max 380->336) and passing on
+    # merit in both.
     "imported-n2-2023-07", "imported-n2-2023-12", "imported-n2-2024-07",
     "imported-n2-2024-12", "imported-n2-2025-07",
 }
