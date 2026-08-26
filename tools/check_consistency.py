@@ -8703,7 +8703,7 @@ KAISETSU_ITEM_BUDGET = {"ja": 210, "vi": 380}   # vi = ja x1.8, the same allowan
 # would carry. DELETE AN ID the moment that paper's 詳細解説 is rewritten to band,
 # or a later regression on it silently downgrades from FAIL to WARN.
 KAISETSU_LENGTH_GRANDFATHERED = {
-    "20260807_1", "20260810_1", "20260810_2", "20260812_1",
+    "20260807_1", "20260810_1", "20260810_2",
     # Removed 2026-08-25 as each was rewritten to band in BOTH languages and
     # passed on merit: 20260812_2, 20260817_1, 20260817_2, 20260817_3,
     # 20260818_1, 20260819_1, 20260821_1. Leaving a repaired id here would
