@@ -478,6 +478,37 @@ h1.title {
 }
 
 .header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* --- language switching -----------------------------------------------------
+   ONE mechanism for the whole page: every bilingual string ships both panes and
+   `body[data-lang]` hides the other. No JS text substitution, so a label cannot
+   go missing when a new one is added — it is either in UI[lang] or it is not
+   rendered at all. A single-language page emits no .lang-pane wrappers. */
+.lang-pane { display: contents; }
+body[data-lang="ja"] .lang-pane[data-lang="vi"],
+body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
+
+.lang-switch {
+  display: inline-flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9999px;
+  padding: 0.18rem;
+  gap: 0.15rem;
+}
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: #bfdbfe;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.28rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.lang-btn:hover { color: #fff; }
+.lang-btn.active { background: #fff; color: var(--primary); }
 .trans-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -498,18 +529,20 @@ footer {
 
 @media print {
   header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump { display: none !important; }
+  .lang-switch { display: none !important; }
   body { background: #fff; color: #000; font-size: 10pt; }
   .q-card { page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }
 }
 </style>
 </head>
-<body>
+<body data-lang="ja">
 
 <header class="app-header">
   <div class="header-inner">
     <div class="header-top-row">
       <a href="解答.html?screen=result" class="header-back-btn">← 採点結果へ戻る</a>
       <div class="header-right">
+        
         <span class="header-badge">JLPT N2 MODEL ANSWER &amp; EXPLANATION</span>
       </div>
     </div>
@@ -2347,7 +2380,7 @@ footer {
                 <div class="q-ans-badge">正解: 4</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>部下に仕事を教えるとき、多くの仕事を一気に教え込もうとする人がいる。早く仕事を覚えてほしいという気持ちは理解できるが、仕事を覚える側の負担を考えていないのは問題だ。仕事を正確に覚えてもらうには、部下がどんな知識や経験を持ち、何ができるのかを考えて教えることが大切だ。<br><br>私が実践しているのは、仕事を一度に教えようとしないで、すぐに担当してもらう仕事に絞って教えることだ。教える内容を限定すれば、部下が難しいと感じることは時間をかけて説明したり、部下が得意なことは一人でやらせてみたりして、部下のレベルに合わせた内容やスピードで教えることができる。部下の立場に立って教えることが、確実に仕事を覚えてもらうための近道だ。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>会社で働いていれば、部下に仕事を教える立場になることがあるだろう。そんなとき、私はできるだけ社内用語や専門用語を使わずに、誰が聞いても分かる言葉で説明するようにしている。教える側と教えられる側の知識や経験には大きな差があるからだ。<br><br>いずれ覚えなければならないからと思って最初から難しい言葉を使って説明すると、仕事自体が難しいという印象を与え、部下が仕事を理解しようという意欲を失ってしまう。大切なのは、部下の能力に応じた教え方をすることではないだろうか。部下にとって分かりやすい言葉で仕事をしっかり理解させ、やる気を引き出すことは、上司の大事な役目だ。<br><br><strong>B</strong><br>部下に仕事を教えるとき、多くの仕事を一気に教え込もうとする人がいる。早く仕事を覚えてほしいという気持ちは理解できるが、仕事を覚える側の負担を考えていないのは問題だ。仕事を正確に覚えてもらうには、部下がどんな知識や経験を持ち、何ができるのかを考えて教えることが大切だ。<br><br>私が実践しているのは、仕事を一度に教えようとしないで、すぐに担当してもらう仕事に絞って教えることだ。教える内容を限定すれば、部下が難しいと感じることは時間をかけて説明したり、部下が得意なことは一人でやらせてみたりして、部下のレベルに合わせた内容やスピードで教えることができる。部下の立場に立って教えることが、確実に仕事を覚えてもらうための近道だ。</div>
                 <div class="q-stem">AとBは、それぞれ仕事をどのように教えていると述べているか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>AもBも、難しい言葉を使わずに簡単な言葉で教えていると述べている。</span></div><div class="opt-item"><span class="opt-num">2</span><span>AもBも、部下が担当する仕事と一緒に、関連する仕事も教えていると述べている。</span></div><div class="opt-item"><span class="opt-num">3</span><span>Aは部下がすぐに覚えられる仕事を先に教えていると述べ、Bは仕事の内容を絞って教えていると述べている。</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>Aは部下が理解しやすい言葉を使って教えていると述べ、Bは部下が担当する仕事に限定して教えていると述べている。</span></div>
@@ -2375,7 +2408,7 @@ footer {
                 <div class="q-ans-badge">正解: 3</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>部下に仕事を教えるとき、多くの仕事を一気に教え込もうとする人がいる。早く仕事を覚えてほしいという気持ちは理解できるが、仕事を覚える側の負担を考えていないのは問題だ。仕事を正確に覚えてもらうには、部下がどんな知識や経験を持ち、何ができるのかを考えて教えることが大切だ。<br><br>私が実践しているのは、仕事を一度に教えようとしないで、すぐに担当してもらう仕事に絞って教えることだ。教える内容を限定すれば、部下が難しいと感じることは時間をかけて説明したり、部下が得意なことは一人でやらせてみたりして、部下のレベルに合わせた内容やスピードで教えることができる。部下の立場に立って教えることが、確実に仕事を覚えてもらうための近道だ。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>会社で働いていれば、部下に仕事を教える立場になることがあるだろう。そんなとき、私はできるだけ社内用語や専門用語を使わずに、誰が聞いても分かる言葉で説明するようにしている。教える側と教えられる側の知識や経験には大きな差があるからだ。<br><br>いずれ覚えなければならないからと思って最初から難しい言葉を使って説明すると、仕事自体が難しいという印象を与え、部下が仕事を理解しようという意欲を失ってしまう。大切なのは、部下の能力に応じた教え方をすることではないだろうか。部下にとって分かりやすい言葉で仕事をしっかり理解させ、やる気を引き出すことは、上司の大事な役目だ。<br><br><strong>B</strong><br>部下に仕事を教えるとき、多くの仕事を一気に教え込もうとする人がいる。早く仕事を覚えてほしいという気持ちは理解できるが、仕事を覚える側の負担を考えていないのは問題だ。仕事を正確に覚えてもらうには、部下がどんな知識や経験を持ち、何ができるのかを考えて教えることが大切だ。<br><br>私が実践しているのは、仕事を一度に教えようとしないで、すぐに担当してもらう仕事に絞って教えることだ。教える内容を限定すれば、部下が難しいと感じることは時間をかけて説明したり、部下が得意なことは一人でやらせてみたりして、部下のレベルに合わせた内容やスピードで教えることができる。部下の立場に立って教えることが、確実に仕事を覚えてもらうための近道だ。</div>
                 <div class="q-stem">仕事を教える際に重要なこととして、AとBが共通して述べていることは何か。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>部下のやる気を引き出すこと</span></div><div class="opt-item"><span class="opt-num">2</span><span>部下の長所を見つけて伸ばすこと</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>部下の能力に合わせて指導すること</span></div><div class="opt-item"><span class="opt-num">4</span><span>部下とのよい関係を維持すること</span></div>
@@ -3497,11 +3530,41 @@ footer {
 </div>
 
 <footer>
-  JLPT N2 Mock Exam Model Answer & Comprehensive Explanation (模範解答.html)<br>
+  JLPT N2 Mock Exam Model Answer &amp; Comprehensive Explanation (模範解答.html)<br>
   Test ID: imported-n2-2023-07
 </footer>
 
 <script>
+/* The only labels JS owns: three strings that live in attributes or in text it
+   writes at runtime, so they cannot ship as .lang-pane markup. Everything else
+   on the page is rendered in both languages and switched by CSS. */
+const LANG_STRINGS = {"ja": {"doc_title": "テスト imported-n2-2023-07（模範解答・詳細解説）", "search_placeholder": "問題番号・キーワード検索...", "audio_ready": "準備完了", "audio_playing": "再生中: "}};
+const LANGS = ["ja"];
+
+function setLang(lang, persist) {
+  if (!LANGS.includes(lang)) lang = LANGS[0];
+  document.body.dataset.lang = lang;
+  document.documentElement.lang = lang;
+  const s = LANG_STRINGS[lang] || {};
+  document.title = s.doc_title || document.title;
+  const search = document.getElementById('searchInput');
+  if (search) search.placeholder = s.search_placeholder || '';
+  const status = document.getElementById('audioStatus');
+  if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist) {
+    try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
+  }
+}
+
+(function initLang() {
+  let saved = null;
+  try { saved = localStorage.getItem('kaisetsuLang'); } catch (e) {}
+  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+})();
+
 function filterSection(sec, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -3562,7 +3625,11 @@ function playAt(seconds, label) {
   audio.currentTime = seconds;
   audio.play();
   const status = document.getElementById('audioStatus');
-  if (status) status.innerText = '再生中: ' + label + ' (' + formatTime(seconds) + ')';
+  if (status) {
+    const s = LANG_STRINGS[document.body.dataset.lang] || {};
+    status.dataset.playing = '1';
+    status.innerText = (s.audio_playing || '') + label + ' (' + formatTime(seconds) + ')';
+  }
 }
 
 function formatTime(sec) {

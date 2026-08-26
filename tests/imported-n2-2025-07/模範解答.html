@@ -478,6 +478,37 @@ h1.title {
 }
 
 .header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* --- language switching -----------------------------------------------------
+   ONE mechanism for the whole page: every bilingual string ships both panes and
+   `body[data-lang]` hides the other. No JS text substitution, so a label cannot
+   go missing when a new one is added — it is either in UI[lang] or it is not
+   rendered at all. A single-language page emits no .lang-pane wrappers. */
+.lang-pane { display: contents; }
+body[data-lang="ja"] .lang-pane[data-lang="vi"],
+body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
+
+.lang-switch {
+  display: inline-flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9999px;
+  padding: 0.18rem;
+  gap: 0.15rem;
+}
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: #bfdbfe;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.28rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.lang-btn:hover { color: #fff; }
+.lang-btn.active { background: #fff; color: var(--primary); }
 .trans-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -498,18 +529,20 @@ footer {
 
 @media print {
   header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump { display: none !important; }
+  .lang-switch { display: none !important; }
   body { background: #fff; color: #000; font-size: 10pt; }
   .q-card { page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }
 }
 </style>
 </head>
-<body>
+<body data-lang="ja">
 
 <header class="app-header">
   <div class="header-inner">
     <div class="header-top-row">
       <a href="解答.html?screen=result" class="header-back-btn">← 採点結果へ戻る</a>
       <div class="header-right">
+        
         <span class="header-badge">JLPT N2 MODEL ANSWER &amp; EXPLANATION</span>
       </div>
     </div>
@@ -2347,7 +2380,7 @@ footer {
                 <div class="q-ans-badge">正解: 2</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>スポーツを観戦する魅力とは何だろうか。試合の結果がどうなるか分からない状況を見ていて味わう緊張感だと言う人がいる。確かに試合中は予期しないことが起こるので最後まで勝敗が予想できず、はらはらどきどきするというのも魅力の一つだ。だが、私が感じる魅力は、選手と同じように喜んだり悔しく思ったりできることだ。点が入ったり奪われたりするシーンだけでなく、試合を見ていると、選手と同様の心理や感情になってくる。このような体験をするには、ルールを理解しておくといい。チームや選手の戦略が分かるからだ。細かいルールをすべて知っている必要はないが、試合が理解できる程度の知識があれば、スポーツ観戦の魅力が分かるだろう。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>私はスポーツを観戦するのが好きだ。レベルの高いプレーが見られるのも魅力の一つだが、選手と感情を共有できるというのが最大の魅力だ。応援したチームや選手が勝てばうれしいと感じ、選手がミスをしたときは悔しいと感じる。必死に戦う選手の姿を見ていると、まるで自分が選手と一緒にその場にいてプレーしているかのような感覚になるのだ。<br><br>スポーツ観戦に興味がないと言う人の中には、ルールを知らないから試合が理解できず楽しめないと思い込んでいる人もいるようだ。しかし、私は、知らなくても十分楽しめると思う。ルールのことは気にせず、気軽にスポーツ観戦を楽しんでほしい。<br><br><strong>B</strong><br>スポーツを観戦する魅力とは何だろうか。試合の結果がどうなるか分からない状況を見ていて味わう緊張感だと言う人がいる。確かに試合中は予期しないことが起こるので最後まで勝敗が予想できず、はらはらどきどきするというのも魅力の一つだ。だが、私が感じる魅力は、選手と同じように喜んだり悔しく思ったりできることだ。点が入ったり奪われたりするシーンだけでなく、試合を見ていると、選手と同様の心理や感情になってくる。このような体験をするには、ルールを理解しておくといい。チームや選手の戦略が分かるからだ。細かいルールをすべて知っている必要はないが、試合が理解できる程度の知識があれば、スポーツ観戦の魅力が分かるだろう。</div>
                 <div class="q-stem">スポーツ<ruby>観戦<rt>かんせん</rt></ruby>の<ruby>魅力<rt>みりょく</rt></ruby>について、AとBが<ruby>共通<rt>きょうつう</rt></ruby>して<ruby>述<rt>の</rt></ruby>べていることはどれか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span><ruby>選手<rt>せんしゅ</rt></ruby>の<ruby>高度<rt>こうど</rt></ruby>なプレーが<ruby>見<rt>み</rt></ruby>られること。</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>選手<rt>せんしゅ</rt></ruby>と<ruby>同<rt>おな</rt></ruby>じ<ruby>気持<rt>きも</rt></ruby>ちになれること。</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>応援<rt>おうえん</rt></ruby>したチームや<ruby>選手<rt>せんしゅ</rt></ruby>が<ruby>勝<rt>か</rt></ruby>つこと。</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>緊張感<rt>きんちょうかん</rt></ruby>が<ruby>味<rt>あじ</rt></ruby>わえること。</span></div>
@@ -2375,7 +2408,7 @@ footer {
                 <div class="q-ans-badge">正解: 3</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>スポーツを観戦する魅力とは何だろうか。試合の結果がどうなるか分からない状況を見ていて味わう緊張感だと言う人がいる。確かに試合中は予期しないことが起こるので最後まで勝敗が予想できず、はらはらどきどきするというのも魅力の一つだ。だが、私が感じる魅力は、選手と同じように喜んだり悔しく思ったりできることだ。点が入ったり奪われたりするシーンだけでなく、試合を見ていると、選手と同様の心理や感情になってくる。このような体験をするには、ルールを理解しておくといい。チームや選手の戦略が分かるからだ。細かいルールをすべて知っている必要はないが、試合が理解できる程度の知識があれば、スポーツ観戦の魅力が分かるだろう。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>私はスポーツを観戦するのが好きだ。レベルの高いプレーが見られるのも魅力の一つだが、選手と感情を共有できるというのが最大の魅力だ。応援したチームや選手が勝てばうれしいと感じ、選手がミスをしたときは悔しいと感じる。必死に戦う選手の姿を見ていると、まるで自分が選手と一緒にその場にいてプレーしているかのような感覚になるのだ。<br><br>スポーツ観戦に興味がないと言う人の中には、ルールを知らないから試合が理解できず楽しめないと思い込んでいる人もいるようだ。しかし、私は、知らなくても十分楽しめると思う。ルールのことは気にせず、気軽にスポーツ観戦を楽しんでほしい。<br><br><strong>B</strong><br>スポーツを観戦する魅力とは何だろうか。試合の結果がどうなるか分からない状況を見ていて味わう緊張感だと言う人がいる。確かに試合中は予期しないことが起こるので最後まで勝敗が予想できず、はらはらどきどきするというのも魅力の一つだ。だが、私が感じる魅力は、選手と同じように喜んだり悔しく思ったりできることだ。点が入ったり奪われたりするシーンだけでなく、試合を見ていると、選手と同様の心理や感情になってくる。このような体験をするには、ルールを理解しておくといい。チームや選手の戦略が分かるからだ。細かいルールをすべて知っている必要はないが、試合が理解できる程度の知識があれば、スポーツ観戦の魅力が分かるだろう。</div>
                 <div class="q-stem">スポーツ<ruby>観戦<rt>かんせん</rt></ruby>でその<ruby>競技<rt>きょうぎ</rt></ruby>のルールを<ruby>知<rt>し</rt></ruby>っているかどうかについて、AとBはどのように<ruby>述<rt>の</rt></ruby>べているか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>AもBも、ルールを<ruby>全<rt>まった</rt></ruby>く<ruby>知<rt>し</rt></ruby>らなくても<ruby>楽<rt>たの</rt></ruby>しめると<ruby>述<rt>の</rt></ruby>べている。</span></div><div class="opt-item"><span class="opt-num">2</span><span>AもBも、できるだけ<ruby>多<rt>おお</rt></ruby>くのルールを<ruby>理解<rt>りかい</rt></ruby>しておくほうがいいと<ruby>述<rt>の</rt></ruby>べている。</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>Aは<ruby>必<rt>かなら</rt></ruby>ずしもルールを<ruby>知<rt>し</rt></ruby>らなくてもいいと<ruby>述<rt>の</rt></ruby>べ、Bはルールの<ruby>基本<rt>きほん</rt></ruby>を<ruby>理解<rt>りかい</rt></ruby>しておくほうがいいと<ruby>述<rt>の</rt></ruby>べている。</span></div><div class="opt-item"><span class="opt-num">4</span><span>Aは<ruby>知<rt>し</rt></ruby>らなくても、<ruby>観戦<rt>かんせん</rt></ruby>しながらルールを<ruby>学<rt>まな</rt></ruby>べると<ruby>述<rt>の</rt></ruby>べ、Bは<ruby>細<rt>こま</rt></ruby>かいルールまで<ruby>知<rt>し</rt></ruby>っているほうがいいと<ruby>述<rt>の</rt></ruby>べている。</span></div>
@@ -3497,11 +3530,41 @@ footer {
 </div>
 
 <footer>
-  JLPT N2 Mock Exam Model Answer & Comprehensive Explanation (模範解答.html)<br>
+  JLPT N2 Mock Exam Model Answer &amp; Comprehensive Explanation (模範解答.html)<br>
   Test ID: imported-n2-2025-07
 </footer>
 
 <script>
+/* The only labels JS owns: three strings that live in attributes or in text it
+   writes at runtime, so they cannot ship as .lang-pane markup. Everything else
+   on the page is rendered in both languages and switched by CSS. */
+const LANG_STRINGS = {"ja": {"doc_title": "テスト imported-n2-2025-07（模範解答・詳細解説）", "search_placeholder": "問題番号・キーワード検索...", "audio_ready": "準備完了", "audio_playing": "再生中: "}};
+const LANGS = ["ja"];
+
+function setLang(lang, persist) {
+  if (!LANGS.includes(lang)) lang = LANGS[0];
+  document.body.dataset.lang = lang;
+  document.documentElement.lang = lang;
+  const s = LANG_STRINGS[lang] || {};
+  document.title = s.doc_title || document.title;
+  const search = document.getElementById('searchInput');
+  if (search) search.placeholder = s.search_placeholder || '';
+  const status = document.getElementById('audioStatus');
+  if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist) {
+    try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
+  }
+}
+
+(function initLang() {
+  let saved = null;
+  try { saved = localStorage.getItem('kaisetsuLang'); } catch (e) {}
+  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+})();
+
 function filterSection(sec, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -3562,7 +3625,11 @@ function playAt(seconds, label) {
   audio.currentTime = seconds;
   audio.play();
   const status = document.getElementById('audioStatus');
-  if (status) status.innerText = '再生中: ' + label + ' (' + formatTime(seconds) + ')';
+  if (status) {
+    const s = LANG_STRINGS[document.body.dataset.lang] || {};
+    status.dataset.playing = '1';
+    status.innerText = (s.audio_playing || '') + label + ' (' + formatTime(seconds) + ')';
+  }
 }
 
 function formatTime(sec) {

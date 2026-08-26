@@ -478,6 +478,37 @@ h1.title {
 }
 
 .header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* --- language switching -----------------------------------------------------
+   ONE mechanism for the whole page: every bilingual string ships both panes and
+   `body[data-lang]` hides the other. No JS text substitution, so a label cannot
+   go missing when a new one is added — it is either in UI[lang] or it is not
+   rendered at all. A single-language page emits no .lang-pane wrappers. */
+.lang-pane { display: contents; }
+body[data-lang="ja"] .lang-pane[data-lang="vi"],
+body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
+
+.lang-switch {
+  display: inline-flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9999px;
+  padding: 0.18rem;
+  gap: 0.15rem;
+}
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: #bfdbfe;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.28rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.lang-btn:hover { color: #fff; }
+.lang-btn.active { background: #fff; color: var(--primary); }
 .trans-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -498,18 +529,20 @@ footer {
 
 @media print {
   header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump { display: none !important; }
+  .lang-switch { display: none !important; }
   body { background: #fff; color: #000; font-size: 10pt; }
   .q-card { page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }
 }
 </style>
 </head>
-<body>
+<body data-lang="ja">
 
 <header class="app-header">
   <div class="header-inner">
     <div class="header-top-row">
       <a href="解答.html?screen=result" class="header-back-btn">← 採点結果へ戻る</a>
       <div class="header-right">
+        
         <span class="header-badge">JLPT N2 MODEL ANSWER &amp; EXPLANATION</span>
       </div>
     </div>
@@ -2347,7 +2380,7 @@ footer {
                 <div class="q-ans-badge">正解: 3</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>新しい商品を企画するには、これまでとは異なるアイディアが必要だ。現在流行している商品の情報を集めるだけでは、他社に勝つことはできないだろう。私はアイディアを生み出すために、一般的に考えられていることとは逆の発想をするようにしている。現在流行している商品が若者向けの物なら高齢者向けにできないかと考えたり、多機能の物なら機能を一つに絞れないかと考えたりするのである。<br><br>アイディアは一部の才能がある人しか生み出せないものだという印象があるせいか、生み出し方を知ろうとしない人が多いと思う。才能がないからといってあきらめるのではなく、思い切って発想を転換してみれば、いいアイディアにつながっていく。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>新しい商品を企画するとき、いいアイディアがなかなか思いつかないことがある。そんなとき、自分には才能がないからだと思い込み、自信をなくしてしまうのはよくない。アイディアは生まれつきの能力に関係なく、努力次第で誰でも生み出すことができる。<br><br>アイディアは、情報の組み合わせによって生まれることがほとんどだ。そのため、日ごろから情報を集めておくことが有効だ。担当する商品に関連する情報だけを集めていると、似たようなアイディアばかりになってしまう。発想の幅を広げるには、関連する分野以外の情報も頭に入れておくほうがいい。ふだんから視野を広げてさまざまな情報を蓄積しておけば、必ずアイディアの役に立つはずだ。<br><br><strong>B</strong><br>新しい商品を企画するには、これまでとは異なるアイディアが必要だ。現在流行している商品の情報を集めるだけでは、他社に勝つことはできないだろう。私はアイディアを生み出すために、一般的に考えられていることとは逆の発想をするようにしている。現在流行している商品が若者向けの物なら高齢者向けにできないかと考えたり、多機能の物なら機能を一つに絞れないかと考えたりするのである。<br><br>アイディアは一部の才能がある人しか生み出せないものだという印象があるせいか、生み出し方を知ろうとしない人が多いと思う。才能がないからといってあきらめるのではなく、思い切って発想を転換してみれば、いいアイディアにつながっていく。</div>
                 <div class="q-stem">アイディアを<ruby>生<rt>う</rt></ruby>み<ruby>出<rt>だ</rt></ruby>すことについて、AとBが<ruby>共通<rt>きょうつう</rt></ruby>して<ruby>述<rt>の</rt></ruby>べていることは<ruby>何<rt>なに</rt></ruby>か。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>アイディアの<ruby>生<rt>う</rt></ruby>み<ruby>出<rt>だ</rt></ruby>し<ruby>方<rt>かた</rt></ruby>は、<ruby>簡単<rt>かんたん</rt></ruby>に<ruby>身<rt>み</rt></ruby>につけることができる。</span></div><div class="opt-item"><span class="opt-num">2</span><span><ruby>多<rt>おお</rt></ruby>くの<ruby>情報<rt>じょうほう</rt></ruby>を<ruby>得<rt>え</rt></ruby>ることで、アイディアを<ruby>生<rt>う</rt></ruby>み<ruby>出<rt>だ</rt></ruby>しやすくなる。</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span><ruby>特別<rt>とくべつ</rt></ruby>な<ruby>能力<rt>のうりょく</rt></ruby>がなくても、アイディアを<ruby>生<rt>う</rt></ruby>み<ruby>出<rt>だ</rt></ruby>すことができる。</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>発想<rt>はっそう</rt></ruby>のしかたを<ruby>大<rt>おお</rt></ruby>きく<ruby>変<rt>か</rt></ruby>えなければ、アイディアは<ruby>生<rt>う</rt></ruby>み<ruby>出<rt>だ</rt></ruby>せない。</span></div>
@@ -2375,7 +2408,7 @@ footer {
                 <div class="q-ans-badge">正解: 4</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>新しい商品を企画するには、これまでとは異なるアイディアが必要だ。現在流行している商品の情報を集めるだけでは、他社に勝つことはできないだろう。私はアイディアを生み出すために、一般的に考えられていることとは逆の発想をするようにしている。現在流行している商品が若者向けの物なら高齢者向けにできないかと考えたり、多機能の物なら機能を一つに絞れないかと考えたりするのである。<br><br>アイディアは一部の才能がある人しか生み出せないものだという印象があるせいか、生み出し方を知ろうとしない人が多いと思う。才能がないからといってあきらめるのではなく、思い切って発想を転換してみれば、いいアイディアにつながっていく。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>新しい商品を企画するとき、いいアイディアがなかなか思いつかないことがある。そんなとき、自分には才能がないからだと思い込み、自信をなくしてしまうのはよくない。アイディアは生まれつきの能力に関係なく、努力次第で誰でも生み出すことができる。<br><br>アイディアは、情報の組み合わせによって生まれることがほとんどだ。そのため、日ごろから情報を集めておくことが有効だ。担当する商品に関連する情報だけを集めていると、似たようなアイディアばかりになってしまう。発想の幅を広げるには、関連する分野以外の情報も頭に入れておくほうがいい。ふだんから視野を広げてさまざまな情報を蓄積しておけば、必ずアイディアの役に立つはずだ。<br><br><strong>B</strong><br>新しい商品を企画するには、これまでとは異なるアイディアが必要だ。現在流行している商品の情報を集めるだけでは、他社に勝つことはできないだろう。私はアイディアを生み出すために、一般的に考えられていることとは逆の発想をするようにしている。現在流行している商品が若者向けの物なら高齢者向けにできないかと考えたり、多機能の物なら機能を一つに絞れないかと考えたりするのである。<br><br>アイディアは一部の才能がある人しか生み出せないものだという印象があるせいか、生み出し方を知ろうとしない人が多いと思う。才能がないからといってあきらめるのではなく、思い切って発想を転換してみれば、いいアイディアにつながっていく。</div>
                 <div class="q-stem"><ruby>新<rt>あたら</rt></ruby>しい<ruby>商品<rt>しょうひん</rt></ruby>を<ruby>企画<rt>きかく</rt></ruby>することについて、AとBはどのようなアドバイスをしているか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>AもBも、いろいろな<ruby>分野<rt>ぶんや</rt></ruby>の<ruby>情報<rt>じょうほう</rt></ruby>をできるだけ<ruby>多<rt>おお</rt></ruby>く<ruby>集<rt>あつ</rt></ruby>めるといいと<ruby>述<rt>の</rt></ruby>べている。</span></div><div class="opt-item"><span class="opt-num">2</span><span>AもBも、<ruby>流行<rt>りゅうこう</rt></ruby>している<ruby>商品<rt>しょうひん</rt></ruby>について<ruby>詳<rt>くわ</rt></ruby>しく<ruby>調<rt>しら</rt></ruby>べるといいと<ruby>述<rt>の</rt></ruby>べている。</span></div><div class="opt-item"><span class="opt-num">3</span><span>Aは<ruby>関連<rt>かんれん</rt></ruby>する<ruby>分野<rt>ぶんや</rt></ruby>の<ruby>他社<rt>たしゃ</rt></ruby>の<ruby>商品<rt>しょうひん</rt></ruby>の<ruby>情報<rt>じょうほう</rt></ruby>を<ruby>集<rt>あつ</rt></ruby>めるといいと<ruby>述<rt>の</rt></ruby>べ、Bは<ruby>流行<rt>りゅうこう</rt></ruby>に<ruby>逆<rt>さか</rt></ruby>らった<ruby>考<rt>かんが</rt></ruby>え<ruby>方<rt>かた</rt></ruby>をするといいと<ruby>述<rt>の</rt></ruby>べている。</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>Aは<ruby>関連<rt>かんれん</rt></ruby>する<ruby>分野<rt>ぶんや</rt></ruby>だけでなく、ほかの<ruby>分野<rt>ぶんや</rt></ruby>の<ruby>情報<rt>じょうほう</rt></ruby>も<ruby>得<rt>え</rt></ruby>るといいと<ruby>述<rt>の</rt></ruby>べ、Bは<ruby>普通<rt>ふつう</rt></ruby>とは<ruby>反対<rt>はんたい</rt></ruby>のことを<ruby>考<rt>かんが</rt></ruby>えるといいと<ruby>述<rt>の</rt></ruby>べている。</span></div>
@@ -3497,11 +3530,41 @@ footer {
 </div>
 
 <footer>
-  JLPT N2 Mock Exam Model Answer & Comprehensive Explanation (模範解答.html)<br>
+  JLPT N2 Mock Exam Model Answer &amp; Comprehensive Explanation (模範解答.html)<br>
   Test ID: imported-n2-2024-07
 </footer>
 
 <script>
+/* The only labels JS owns: three strings that live in attributes or in text it
+   writes at runtime, so they cannot ship as .lang-pane markup. Everything else
+   on the page is rendered in both languages and switched by CSS. */
+const LANG_STRINGS = {"ja": {"doc_title": "テスト imported-n2-2024-07（模範解答・詳細解説）", "search_placeholder": "問題番号・キーワード検索...", "audio_ready": "準備完了", "audio_playing": "再生中: "}};
+const LANGS = ["ja"];
+
+function setLang(lang, persist) {
+  if (!LANGS.includes(lang)) lang = LANGS[0];
+  document.body.dataset.lang = lang;
+  document.documentElement.lang = lang;
+  const s = LANG_STRINGS[lang] || {};
+  document.title = s.doc_title || document.title;
+  const search = document.getElementById('searchInput');
+  if (search) search.placeholder = s.search_placeholder || '';
+  const status = document.getElementById('audioStatus');
+  if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist) {
+    try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
+  }
+}
+
+(function initLang() {
+  let saved = null;
+  try { saved = localStorage.getItem('kaisetsuLang'); } catch (e) {}
+  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+})();
+
 function filterSection(sec, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -3562,7 +3625,11 @@ function playAt(seconds, label) {
   audio.currentTime = seconds;
   audio.play();
   const status = document.getElementById('audioStatus');
-  if (status) status.innerText = '再生中: ' + label + ' (' + formatTime(seconds) + ')';
+  if (status) {
+    const s = LANG_STRINGS[document.body.dataset.lang] || {};
+    status.dataset.playing = '1';
+    status.innerText = (s.audio_playing || '') + label + ' (' + formatTime(seconds) + ')';
+  }
 }
 
 function formatTime(sec) {

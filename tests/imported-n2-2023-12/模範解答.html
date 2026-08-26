@@ -478,6 +478,37 @@ h1.title {
 }
 
 .header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* --- language switching -----------------------------------------------------
+   ONE mechanism for the whole page: every bilingual string ships both panes and
+   `body[data-lang]` hides the other. No JS text substitution, so a label cannot
+   go missing when a new one is added — it is either in UI[lang] or it is not
+   rendered at all. A single-language page emits no .lang-pane wrappers. */
+.lang-pane { display: contents; }
+body[data-lang="ja"] .lang-pane[data-lang="vi"],
+body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
+
+.lang-switch {
+  display: inline-flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9999px;
+  padding: 0.18rem;
+  gap: 0.15rem;
+}
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: #bfdbfe;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.28rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.lang-btn:hover { color: #fff; }
+.lang-btn.active { background: #fff; color: var(--primary); }
 .trans-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -498,18 +529,20 @@ footer {
 
 @media print {
   header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump { display: none !important; }
+  .lang-switch { display: none !important; }
   body { background: #fff; color: #000; font-size: 10pt; }
   .q-card { page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }
 }
 </style>
 </head>
-<body>
+<body data-lang="ja">
 
 <header class="app-header">
   <div class="header-inner">
     <div class="header-top-row">
       <a href="解答.html?screen=result" class="header-back-btn">← 採点結果へ戻る</a>
       <div class="header-right">
+        
         <span class="header-badge">JLPT N2 MODEL ANSWER &amp; EXPLANATION</span>
       </div>
     </div>
@@ -2347,7 +2380,7 @@ footer {
                 <div class="q-ans-badge">正解: 4</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>私は、運動を始めてもなかなか続けられなかった。そんなとき、仕事のあとで仲間と一緒にランニングを始めた。仲間と互いに成果を報告し合ったり、情報交換したりすることで、運動への関心を高めることができた。また、仕事で疲れて運動するのが面倒なときや運動するのがつらいと感じるときでも、話を聞いてもらうことで、気分転換ができた。<br><br>確かに、一人で運動するほうが自分のペースでできるので気楽だという人もいる。しかし、一人では、やる気がしないときに続けることは難しい。仲間と一緒に楽しく運動すれば、頑張ろうという意欲がわいてくる。運動は続けていくことに意味があると思う。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>かつて私は仕事が忙しく、運動が続けられずに悩んでいた。自分に合った運動方法を探しているうちに、無理やり時間を確保するよりも、日常生活の中に取り入れたほうがいいと思うようになった。現在は通勤や買い物に行くとき、車を使わずに歩いたり、エレベーターではなく階段を利用したりするようにしている。また、歩くときは、ふだんより早足で歩くようにしている。そうすれば時間が取れなくても、毎日運動ができる。体を動かすことを習慣にすることが大事だと思う。<br><br>運動には体の健康だけでなく、ストレスを解消するなど心の健康を保つ効果もある。これからもずっと無理せずに続けていきたい。<br><br><strong>B</strong><br>私は、運動を始めてもなかなか続けられなかった。そんなとき、仕事のあとで仲間と一緒にランニングを始めた。仲間と互いに成果を報告し合ったり、情報交換したりすることで、運動への関心を高めることができた。また、仕事で疲れて運動するのが面倒なときや運動するのがつらいと感じるときでも、話を聞いてもらうことで、気分転換ができた。<br><br>確かに、一人で運動するほうが自分のペースでできるので気楽だという人もいる。しかし、一人では、やる気がしないときに続けることは難しい。仲間と一緒に楽しく運動すれば、頑張ろうという意欲がわいてくる。運動は続けていくことに意味があると思う。</div>
                 <div class="q-stem">AとBは、それぞれどのように運動していると述べているか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>AもBも、さまざまな運動に取り組んでいると述べている。</span></div><div class="opt-item"><span class="opt-num">2</span><span>AもBも、簡単にできる運動をしていると述べている。</span></div><div class="opt-item"><span class="opt-num">3</span><span>Aは生活の中でできるだけ長く運動していると述べ、Bは仲間と成果を競いながら運動していると述べている。</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>Aは生活の中で体を動かしていると述べ、Bは仲間と一緒に運動していると述べている。</span></div>
@@ -2375,7 +2408,7 @@ footer {
                 <div class="q-ans-badge">正解: 4</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>私は、運動を始めてもなかなか続けられなかった。そんなとき、仕事のあとで仲間と一緒にランニングを始めた。仲間と互いに成果を報告し合ったり、情報交換したりすることで、運動への関心を高めることができた。また、仕事で疲れて運動するのが面倒なときや運動するのがつらいと感じるときでも、話を聞いてもらうことで、気分転換ができた。<br><br>確かに、一人で運動するほうが自分のペースでできるので気楽だという人もいる。しかし、一人では、やる気がしないときに続けることは難しい。仲間と一緒に楽しく運動すれば、頑張ろうという意欲がわいてくる。運動は続けていくことに意味があると思う。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>かつて私は仕事が忙しく、運動が続けられずに悩んでいた。自分に合った運動方法を探しているうちに、無理やり時間を確保するよりも、日常生活の中に取り入れたほうがいいと思うようになった。現在は通勤や買い物に行くとき、車を使わずに歩いたり、エレベーターではなく階段を利用したりするようにしている。また、歩くときは、ふだんより早足で歩くようにしている。そうすれば時間が取れなくても、毎日運動ができる。体を動かすことを習慣にすることが大事だと思う。<br><br>運動には体の健康だけでなく、ストレスを解消するなど心の健康を保つ効果もある。これからもずっと無理せずに続けていきたい。<br><br><strong>B</strong><br>私は、運動を始めてもなかなか続けられなかった。そんなとき、仕事のあとで仲間と一緒にランニングを始めた。仲間と互いに成果を報告し合ったり、情報交換したりすることで、運動への関心を高めることができた。また、仕事で疲れて運動するのが面倒なときや運動するのがつらいと感じるときでも、話を聞いてもらうことで、気分転換ができた。<br><br>確かに、一人で運動するほうが自分のペースでできるので気楽だという人もいる。しかし、一人では、やる気がしないときに続けることは難しい。仲間と一緒に楽しく運動すれば、頑張ろうという意欲がわいてくる。運動は続けていくことに意味があると思う。</div>
                 <div class="q-stem">AとBが共通して大切だと述べていることは何か。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>効果を理解したうえで運動すること。</span></div><div class="opt-item"><span class="opt-num">2</span><span>自分に合った運動を見つけること。</span></div><div class="opt-item"><span class="opt-num">3</span><span>楽しみながら運動すること。</span></div><div class="opt-item is-correct"><span class="opt-num">4</span><span>継続して運動すること。</span></div>
@@ -3497,11 +3530,41 @@ footer {
 </div>
 
 <footer>
-  JLPT N2 Mock Exam Model Answer & Comprehensive Explanation (模範解答.html)<br>
+  JLPT N2 Mock Exam Model Answer &amp; Comprehensive Explanation (模範解答.html)<br>
   Test ID: imported-n2-2023-12
 </footer>
 
 <script>
+/* The only labels JS owns: three strings that live in attributes or in text it
+   writes at runtime, so they cannot ship as .lang-pane markup. Everything else
+   on the page is rendered in both languages and switched by CSS. */
+const LANG_STRINGS = {"ja": {"doc_title": "テスト imported-n2-2023-12（模範解答・詳細解説）", "search_placeholder": "問題番号・キーワード検索...", "audio_ready": "準備完了", "audio_playing": "再生中: "}};
+const LANGS = ["ja"];
+
+function setLang(lang, persist) {
+  if (!LANGS.includes(lang)) lang = LANGS[0];
+  document.body.dataset.lang = lang;
+  document.documentElement.lang = lang;
+  const s = LANG_STRINGS[lang] || {};
+  document.title = s.doc_title || document.title;
+  const search = document.getElementById('searchInput');
+  if (search) search.placeholder = s.search_placeholder || '';
+  const status = document.getElementById('audioStatus');
+  if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist) {
+    try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
+  }
+}
+
+(function initLang() {
+  let saved = null;
+  try { saved = localStorage.getItem('kaisetsuLang'); } catch (e) {}
+  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+})();
+
 function filterSection(sec, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -3562,7 +3625,11 @@ function playAt(seconds, label) {
   audio.currentTime = seconds;
   audio.play();
   const status = document.getElementById('audioStatus');
-  if (status) status.innerText = '再生中: ' + label + ' (' + formatTime(seconds) + ')';
+  if (status) {
+    const s = LANG_STRINGS[document.body.dataset.lang] || {};
+    status.dataset.playing = '1';
+    status.innerText = (s.audio_playing || '') + label + ' (' + formatTime(seconds) + ')';
+  }
 }
 
 function formatTime(sec) {

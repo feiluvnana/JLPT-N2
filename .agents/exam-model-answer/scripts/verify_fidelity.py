@@ -144,6 +144,26 @@ def derive_gengo_raw(exam_body: str) -> dict:
                     _strip_stem_option_spans(sub_body, sub_stems, sub_start))
                 sub_stem_matches.append(sub_stems)
 
+            # 問題12's `### A` / `### B` are NOT independent passages the way
+            # 問題10/11's `### (1)`, `### (2)` are — the section is ONE
+            # comparison item and both texts belong to every question in it.
+            # Treating them like numbered passages bound stems 65/66 to B's
+            # span alone and dropped A entirely, so every scaffold ever
+            # generated stored only text B and 模範解答.html rendered half the
+            # comparison (found 2026-08-26: 13 papers × 2 items on disk).
+            titles = [m.group(1).strip() for m in subsections]
+            if titles == ["A", "B"]:
+                combined = "\n\n".join(
+                    f"**{t}**\n{txt.strip()}"
+                    for t, txt in zip(titles, sub_texts) if txt.strip())
+                for m in stem_matches:
+                    items[int(m.group("num"))] = {
+                        "stem": m.group("stem").strip(),
+                        "options": _split_options(m.group("optblock")),
+                        "passage": combined or None,
+                    }
+                continue
+
             in_any_sub = {m for stems in sub_stem_matches for m in stems}
             orphan_stems = [m for m in stem_matches if m not in in_any_sub]
 

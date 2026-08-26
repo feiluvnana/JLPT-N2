@@ -478,6 +478,37 @@ h1.title {
 }
 
 .header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* --- language switching -----------------------------------------------------
+   ONE mechanism for the whole page: every bilingual string ships both panes and
+   `body[data-lang]` hides the other. No JS text substitution, so a label cannot
+   go missing when a new one is added — it is either in UI[lang] or it is not
+   rendered at all. A single-language page emits no .lang-pane wrappers. */
+.lang-pane { display: contents; }
+body[data-lang="ja"] .lang-pane[data-lang="vi"],
+body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
+
+.lang-switch {
+  display: inline-flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9999px;
+  padding: 0.18rem;
+  gap: 0.15rem;
+}
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: #bfdbfe;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.28rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.lang-btn:hover { color: #fff; }
+.lang-btn.active { background: #fff; color: var(--primary); }
 .trans-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -498,18 +529,20 @@ footer {
 
 @media print {
   header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump { display: none !important; }
+  .lang-switch { display: none !important; }
   body { background: #fff; color: #000; font-size: 10pt; }
   .q-card { page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }
 }
 </style>
 </head>
-<body>
+<body data-lang="ja">
 
 <header class="app-header">
   <div class="header-inner">
     <div class="header-top-row">
       <a href="解答.html?screen=result" class="header-back-btn">← 採点結果へ戻る</a>
       <div class="header-right">
+        
         <span class="header-badge">JLPT N2 MODEL ANSWER &amp; EXPLANATION</span>
       </div>
     </div>
@@ -2347,7 +2380,7 @@ footer {
                 <div class="q-ans-badge">正解: 2</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>暗記したことを忘れないようにするには、どうしたらいいだろうか。記憶に残るようにするには、いつ暗記するかが重要だ。脳が最も働くのは朝や午前中だといわれているが、暗記には、夜寝る前の30分が最も適している。覚えた知識が睡眠中に脳内で整理され、記憶に残りやすくなるからだ。暗記を終えたら、テレビを見るなど余計なことはせずにすぐに寝る。翌朝に復習すれば、記憶はより強化されるだろう。<br><br>暗記したことを忘れてしまうのは記憶力のせいではなく、暗記のしかたが間違っているのだ。脳の働きを理解し上手に利用すれば、無理なく暗記することができる。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>暗記することに苦手意識を持つ人は多い。必死に暗記してもなかなか記憶に残らなくて嫌になる気持ちは理解できるが、覚えられないのは自分の記憶力がよくないからだと考えるのは問題だ。暗記ができる人は、生まれつき記憶力がよいのではなく、暗記のしかたを工夫しているのだ。<br><br>暗記するときは、目で見るだけでなく、ほかの感覚も働かせるのが効果的だ。声に出すことで、耳からも情報がインプットされ、さらに確かなものになる。書くことで、あいまいな内容が整理され、論理的に理解しやすくなる。このようにいくつかの感覚から脳に刺激を与えることで、記憶力をアップさせることができる。<br><br><strong>B</strong><br>暗記したことを忘れないようにするには、どうしたらいいだろうか。記憶に残るようにするには、いつ暗記するかが重要だ。脳が最も働くのは朝や午前中だといわれているが、暗記には、夜寝る前の30分が最も適している。覚えた知識が睡眠中に脳内で整理され、記憶に残りやすくなるからだ。暗記を終えたら、テレビを見るなど余計なことはせずにすぐに寝る。翌朝に復習すれば、記憶はより強化されるだろう。<br><br>暗記したことを忘れてしまうのは記憶力のせいではなく、暗記のしかたが間違っているのだ。脳の働きを理解し上手に利用すれば、無理なく暗記することができる。</div>
                 <div class="q-stem"><ruby>暗記<rt>あんき</rt></ruby>について、AとBが<ruby>共通<rt>きょうつう</rt></ruby>して<ruby>述<rt>の</rt></ruby>べていることは<ruby>何<rt>なに</rt></ruby>か。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span><ruby>暗記<rt>あんき</rt></ruby>したあとに<ruby>復習<rt>ふくしゅう</rt></ruby>することで、<ruby>記憶力<rt>きおくりょく</rt></ruby>が<ruby>上<rt>あ</rt></ruby>がる。</span></div><div class="opt-item is-correct"><span class="opt-num">2</span><span><ruby>暗記<rt>あんき</rt></ruby>したことを<ruby>忘<rt>わす</rt></ruby>れるのは、<ruby>記憶力<rt>きおくりょく</rt></ruby>の<ruby>問題<rt>もんだい</rt></ruby>ではない。</span></div><div class="opt-item"><span class="opt-num">3</span><span><ruby>暗記<rt>あんき</rt></ruby>をし<ruby>続<rt>つづ</rt></ruby>けても、<ruby>記憶力<rt>きおくりょく</rt></ruby>は<ruby>強化<rt>きょうか</rt></ruby>しきれない。</span></div><div class="opt-item"><span class="opt-num">4</span><span><ruby>暗記<rt>あんき</rt></ruby>に<ruby>対<rt>たい</rt></ruby>して<ruby>苦手<rt>にがて</rt></ruby><ruby>意識<rt>いしき</rt></ruby>があると、<ruby>記憶力<rt>きおくりょく</rt></ruby>もよくならない。</span></div>
@@ -2375,7 +2408,7 @@ footer {
                 <div class="q-ans-badge">正解: 3</div>
               </div>
               <div class="q-body">
-                <div class="passage-box"><div class="passage-title">本文 / 資料</div>暗記したことを忘れないようにするには、どうしたらいいだろうか。記憶に残るようにするには、いつ暗記するかが重要だ。脳が最も働くのは朝や午前中だといわれているが、暗記には、夜寝る前の30分が最も適している。覚えた知識が睡眠中に脳内で整理され、記憶に残りやすくなるからだ。暗記を終えたら、テレビを見るなど余計なことはせずにすぐに寝る。翌朝に復習すれば、記憶はより強化されるだろう。<br><br>暗記したことを忘れてしまうのは記憶力のせいではなく、暗記のしかたが間違っているのだ。脳の働きを理解し上手に利用すれば、無理なく暗記することができる。</div>
+                <div class="passage-box"><div class="passage-title">本文 / 資料</div><strong>A</strong><br>暗記することに苦手意識を持つ人は多い。必死に暗記してもなかなか記憶に残らなくて嫌になる気持ちは理解できるが、覚えられないのは自分の記憶力がよくないからだと考えるのは問題だ。暗記ができる人は、生まれつき記憶力がよいのではなく、暗記のしかたを工夫しているのだ。<br><br>暗記するときは、目で見るだけでなく、ほかの感覚も働かせるのが効果的だ。声に出すことで、耳からも情報がインプットされ、さらに確かなものになる。書くことで、あいまいな内容が整理され、論理的に理解しやすくなる。このようにいくつかの感覚から脳に刺激を与えることで、記憶力をアップさせることができる。<br><br><strong>B</strong><br>暗記したことを忘れないようにするには、どうしたらいいだろうか。記憶に残るようにするには、いつ暗記するかが重要だ。脳が最も働くのは朝や午前中だといわれているが、暗記には、夜寝る前の30分が最も適している。覚えた知識が睡眠中に脳内で整理され、記憶に残りやすくなるからだ。暗記を終えたら、テレビを見るなど余計なことはせずにすぐに寝る。翌朝に復習すれば、記憶はより強化されるだろう。<br><br>暗記したことを忘れてしまうのは記憶力のせいではなく、暗記のしかたが間違っているのだ。脳の働きを理解し上手に利用すれば、無理なく暗記することができる。</div>
                 <div class="q-stem"><ruby>暗記<rt>あんき</rt></ruby>のしかたについて、AとBはどのようなアドバイスをしているか。</div>
                 <div class="options-grid">
                   <div class="opt-item"><span class="opt-num">1</span><span>AもBも、<ruby>様々<rt>さまざま</rt></ruby>な<ruby>方法<rt>ほうほう</rt></ruby>を<ruby>試<rt>ため</rt></ruby>しながら<ruby>自分<rt>じぶん</rt></ruby>に<ruby>合<rt>あ</rt></ruby>った<ruby>方法<rt>ほうほう</rt></ruby>を<ruby>見<rt>み</rt></ruby>つけて<ruby>暗記<rt>あんき</rt></ruby>するといいと<ruby>述<rt>の</rt></ruby>べている。</span></div><div class="opt-item"><span class="opt-num">2</span><span>AもBも、<ruby>内容<rt>ないよう</rt></ruby>に<ruby>応<rt>おう</rt></ruby>じて、<ruby>朝<rt>あさ</rt></ruby>か<ruby>夜<rt>よる</rt></ruby>かを<ruby>変<rt>か</rt></ruby>えながら<ruby>暗記<rt>あんき</rt></ruby>するといいと<ruby>述<rt>の</rt></ruby>べている。</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>Aは<ruby>複数<rt>ふくすう</rt></ruby>の<ruby>感覚<rt>かんかく</rt></ruby>を<ruby>使<rt>つか</rt></ruby>って<ruby>暗記<rt>あんき</rt></ruby>するといいと<ruby>述<rt>の</rt></ruby>べ、Bは<ruby>夜<rt>よる</rt></ruby><ruby>寝<rt>ね</rt></ruby>る<ruby>前<rt>まえ</rt></ruby>に<ruby>重点的<rt>じゅうてんてき</rt></ruby>に<ruby>暗記<rt>あんき</rt></ruby>するといいと<ruby>述<rt>の</rt></ruby>べている。</span></div><div class="opt-item"><span class="opt-num">4</span><span>Aは<ruby>声<rt>こえ</rt></ruby>に<ruby>出<rt>だ</rt></ruby>したり<ruby>書<rt>か</rt></ruby>いたりして<ruby>暗記<rt>あんき</rt></ruby>するといいと<ruby>述<rt>の</rt></ruby>べ、Bは<ruby>自分<rt>じぶん</rt></ruby>で<ruby>暗記<rt>あんき</rt></ruby>に<ruby>適<rt>てき</rt></ruby>した<ruby>時間<rt>じかん</rt></ruby>を<ruby>見<rt>み</rt></ruby>つけて<ruby>暗記<rt>あんき</rt></ruby>するといいと<ruby>述<rt>の</rt></ruby>べている。</span></div>
@@ -3497,11 +3530,41 @@ footer {
 </div>
 
 <footer>
-  JLPT N2 Mock Exam Model Answer & Comprehensive Explanation (模範解答.html)<br>
+  JLPT N2 Mock Exam Model Answer &amp; Comprehensive Explanation (模範解答.html)<br>
   Test ID: imported-n2-2024-12
 </footer>
 
 <script>
+/* The only labels JS owns: three strings that live in attributes or in text it
+   writes at runtime, so they cannot ship as .lang-pane markup. Everything else
+   on the page is rendered in both languages and switched by CSS. */
+const LANG_STRINGS = {"ja": {"doc_title": "テスト imported-n2-2024-12（模範解答・詳細解説）", "search_placeholder": "問題番号・キーワード検索...", "audio_ready": "準備完了", "audio_playing": "再生中: "}};
+const LANGS = ["ja"];
+
+function setLang(lang, persist) {
+  if (!LANGS.includes(lang)) lang = LANGS[0];
+  document.body.dataset.lang = lang;
+  document.documentElement.lang = lang;
+  const s = LANG_STRINGS[lang] || {};
+  document.title = s.doc_title || document.title;
+  const search = document.getElementById('searchInput');
+  if (search) search.placeholder = s.search_placeholder || '';
+  const status = document.getElementById('audioStatus');
+  if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist) {
+    try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
+  }
+}
+
+(function initLang() {
+  let saved = null;
+  try { saved = localStorage.getItem('kaisetsuLang'); } catch (e) {}
+  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+})();
+
 function filterSection(sec, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -3562,7 +3625,11 @@ function playAt(seconds, label) {
   audio.currentTime = seconds;
   audio.play();
   const status = document.getElementById('audioStatus');
-  if (status) status.innerText = '再生中: ' + label + ' (' + formatTime(seconds) + ')';
+  if (status) {
+    const s = LANG_STRINGS[document.body.dataset.lang] || {};
+    status.dataset.playing = '1';
+    status.innerText = (s.audio_playing || '') + label + ' (' + formatTime(seconds) + ')';
+  }
 }
 
 function formatTime(sec) {
