@@ -363,11 +363,13 @@ the artifact**:
 
 An option with no quotable line is fabricated noise: delete it and take one
 from the script. This cell is what QA reads; its absence means the item is
-not shippable. `make check` WARNs (not FAILs — 5/44 official options also miss
-a token match, since official distractors are often paraphrased) when a
-問題1/2 option shares no ≥2-char kanji/katakana token with its script block;
-the mechanical check can't tell "reassigned" from "never said" — the written
-grounding line is what does.
+not shippable. `make check` (`check_choukai_option_grounding`, added
+2026-08-27 per qa-report-20260810_1-choukai-repair.md F5 — this line
+described the WARN for a long time before any function implemented it) WARNs
+(not FAILs — 5/44 official options also miss a token match, since official
+distractors are often paraphrased) when a 問題1/2 option shares no ≥2-char
+kanji/katakana token with its script block; the mechanical check can't tell
+"reassigned" from "never said" — the written grounding line is what does.
 
 ## The 解説 QUOTES the script; the OPTION restates it
 

@@ -4116,8 +4116,30 @@ def check_dokkai_longest_key_rate(name: str, keys: dict[int, int],
 # 聴解 key has quoted four lines of dialogue that were not in the script; a
 # 問題2-6番 key has quoted a 「3日前」 rule the script gives as 1週間前, and
 # named two speakers (アンさん・キムさん) the script never introduces.
-QUOTE = re.compile(r"「([^」]{14,})」")
-QUOTE_ELLIPSIS = re.compile(r"[…‥]+")
+#
+# GATE-WRONG (qa-report-20260810_1-choukai-repair.md F3, 2026-08-27): this
+# regex used to floor at 14 raw chars while the match loop below only demands
+# 8 FLAT chars per part — a dead zone of 8-13 char quotes that were never even
+# extracted as candidates. 「書類などは特にございません」, a 100% fabricated
+# 13-char quote (「書類」 occurs zero times in the script), slipped through
+# that gap undetected. Floored at 8 to close the gap exactly at the part-match
+# floor below, not just past this one incident's length — re-run against
+# every paper on disk before trusting a green `make check` (P5C2-20260810_1
+# round 1 identified the false-positive risk as 6-char vocabulary glosses
+# like 「劣っている」, still well clear of 8).
+QUOTE = re.compile(r"「([^」]{8,})」")
+# 〜 joins …/‥ as a split point, not because it means "omitted" the same way —
+# this repo's own 解説/構成表 prose uses a LEADING 〜 as shorthand for "the
+# tail end reads exactly this" (「〜という方も多いですよ」, quoting only a
+# sentence's closing clause). Lowering QUOTE's floor above exposed that
+# `imported-n2-2023-07` 問題3-3番 does exactly this against a script whose
+# matching line is 「…いいという方も多いですよ」 — genuine, not fabricated, but
+# invisible to a straight substring check because nothing on the source side
+# carries a literal 〜. Splitting here treats it exactly like the trailing
+# fragment of an ellipsis: each side still has to clear the 8-char floor
+# below on its own, so this loses no coverage the … handling didn't already
+# accept.
+QUOTE_ELLIPSIS = re.compile(r"[…‥〜]+")
 
 
 def _flat(s: str) -> str:
@@ -4297,11 +4319,26 @@ def check_explanation_quotes(name: str, key_section: str, source: str):
     # break a match that already held (it only ever removes text both strings
     # carry), while stripping the source alone would newly break a 解説 that
     # quotes the parenthetical verbatim.
+    #
+    # That symmetry claim held only while the 8-flat-char part floor kept
+    # short parenthetical CONTENT below the reach of this check. Lowering the
+    # QUOTE floor (P5C2-20260810_1 F3, GATE-WRONG) exposed the case it never
+    # covered: a passage that puts primary content — not a gloss — inside
+    # parens, e.g. a flyer's `（13:00〜17:00）`, and a 解説 that quotes just the
+    # inner span, `「13:00〜17:00」`, with no parens of its own to strip
+    # symmetrically. `strip_annotations(source)` then deletes the one span
+    # that would have matched, and the SOURCE side is the one that broke, not
+    # the quote. Fall back to the un-stripped source for exactly that case:
+    # it can only recover a match `IN_WORD_ANNOTATION` wrongly destroyed,
+    # never manufacture a false match `IN_WORD_ANNOTATION` was written to
+    # prevent (that class needs the stripped side to match at all, which this
+    # fallback never substitutes for).
     src = _flat(strip_annotations(source))
+    src_raw = _flat(source)
     missing = []
     for q in QUOTE.findall(key_section):
         parts = [_flat(strip_annotations(p)) for p in QUOTE_ELLIPSIS.split(q)]
-        if any(len(p) >= 8 and p not in src for p in parts):
+        if any(len(p) >= 8 and p not in src and p not in src_raw for p in parts):
             missing.append(q[:38] + ("…" if len(q) > 38 else ""))
     warn(f"{name}: 解説 quotes trace to the passage/script", not missing,
          f"not found in the source: {missing} — quote by copy-paste; if the "
@@ -8557,6 +8594,62 @@ def check_choukai_key_paraphrase(test_id: str, ct: str, st: str, m, bi):
          f"(choukai-items.md §'The 解説 QUOTES the script')")
 
 
+def check_choukai_option_grounding(test_id: str, ct: str, st: str, m, bi):
+    """Every printed 問題1/2 option should share vocabulary with its item's
+    script block (RULE-EXISTS/GATE-BLIND, qa-report-20260810_1-choukai-repair.md
+    F5, 2026-08-27).
+
+    THE GAP: `check_explanation_quotes` only reads 「…」 spans in the 解説, so a
+    distractor "eliminated" by pure unquoted prose slips it entirely — 問題1-2番
+    of `20260810_1` denied 「店で品物を受け取る」 with the bare inference
+    「受け取りは会計を済ませたあと」, which states a fact the script never gives
+    (no line orders pickup relative to payment), and no `「」` span existed for
+    the quote check to even look at. choukai-items.md has documented this exact
+    WARN — "make check WARNs when a 問題1/2 option shares no ≥2-char
+    kanji/katakana token with its script block" — since before that incident;
+    no function ever implemented it. This is that function.
+
+    Reported, not enforced (WARN only, no grandfather set — it never FAILs):
+    official distractors are legitimately paraphrased away from the script's
+    own words, and choukai-items.md's own measurement puts that at 5/44 (~11%)
+    of official 問題1/2 options. A hit here is a prompt to re-read the item by
+    eye against 聴解スクリプト.txt, not proof the option is fabricated — the
+    written 解説 grounding line is still what decides shippability.
+    """
+    printed = choukai_printed_options(ct, bi)
+    misses, total = [], 0
+    for sec in (1, 2):
+        blocks = {choukai_item_label(l[0]): "".join(l)
+                  for l in choukai_item_blocks(choukai_span(st, sec), m)}
+        for (s, lab), opts in printed.items():
+            if s != sec or lab not in blocks:
+                continue
+            block = blocks[lab]
+            for n, opt in sorted(opts.items()):
+                toks = set(re.findall(r"[一-鿿]{2,}|[゠-ヿ]{2,}", opt))
+                if not toks:
+                    continue
+                total += 1
+                if not any(t in block for t in toks):
+                    misses.append(f"問題{sec}-{lab}-{n}「{opt}」")
+    if not total:
+        return skip(f"{test_id}: 問題1/2 options share vocabulary with their "
+                    "script block", "no printed option/script pair to compare")
+    rate = len(misses) / total
+    warn(f"{test_id}: 問題1/2 options share vocabulary with their script block "
+         f"({len(misses)}/{total} = {rate:.0%}, official baseline ~11%)",
+         not misses,
+         "; ".join(misses[:8])
+         + (f" (+{len(misses) - 8} more)" if len(misses) > 8 else "")
+         + " — no ≥2-char kanji/katakana token of this option occurs anywhere "
+         "in its item's script block. Does not decide: official paraphrases "
+         "distractors too (choukai-items.md, 5/44 baseline). Re-read the item "
+         "by eye — if the option truly has no basis in the script, it is "
+         "fabricated noise and must be rewritten from a real script line, not "
+         "kept with an invented 解説 (choukai-items.md §'An option with no "
+         "quotable line is fabricated noise')")
+
+
 # 聴解 keys carry no length information (G16). Measured 2026-08-18 after the
 # user reported "it tends to make the longer key the correct answer": across the
 # 11 papers on disk the key was the UNIQUELY LONGEST of its options in 52 % of
@@ -10486,6 +10579,7 @@ def check_tests():
                 # G17 — the sentences themselves, vs Shin Kanzen 実力養成編.
                 check_choukai_contractions(d.name, st, m)
                 check_choukai_key_paraphrase(d.name, ct, st, m, bi)
+                check_choukai_option_grounding(d.name, ct, st, m, bi)
             check_spec_target_items(d, gt, st, bi)
             # Origin-agnostic: an import's 詳細解説 is written by the same pass, to
             # the same bands, in the same two languages as a generated paper's.
