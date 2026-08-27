@@ -416,6 +416,27 @@ as "N1"/"N3", so a single source's label was never sufficient.
 - **問題8:** splice stem+options in 解説 order, read end to end, no word
   twice. Then try each option in each other slot — a floating adverb that
   reads naturally in two slots is two ★ answers.
+- **問題8 — a subject/topic-marker card (裸の「が」/「は」止まり) can double-bind
+  by zero-anaphora; `verify_scramble.py`'s `free_unit_count()` cannot see this.**
+  When the 解説 excludes a rival ordering by asserting "card X's only possible
+  predicate is the verb inside card Y", write down EVERY card that contains a
+  verb/predicate X could bind to — including the FINAL card — before accepting
+  that claim. Japanese zero-anaphora lets a が/は-marked subject serve as the
+  covert subject of a LATER clause too, not only the nearest one: `20260827_2`
+  問題8-47 keyed 彼のような→温厚な人が→感情的になったとしても→声を荒げるなど
+  あろうはずがない (★=2) on the claim that 「温厚な人が」's only predicate is
+  「なった」 inside the としても-card — false, because 「温厚な人が」 equally binds
+  to 「あろうはずがない」 in the final card, making 感情的になったとしても→彼のような
+  →温厚な人が→…あろうはずがない (★=3) an equally grammatical, equally natural
+  rival (concessive としても-clauses routinely precede their own subject via
+  zero-anaphora, e.g. 「疲れたとしても、彼は休まない」). This is the
+  TWO-FREE-PRE-PREDICATE-UNITS defect (`bunpou.md` §"At most ONE card may be a
+  FREELY-ORDERABLE PRE-PREDICATE UNIT") in a form `free_unit_count()`'s
+  string-merging cannot catch, because it folded the subject block and the
+  concessive card into one chain on the strength of the same now-refuted claim
+  (`FREE UNITS: 1` was printed; the true count is 2). A 解説's per-card proof is
+  only sound if it tested the final card as a candidate host too, not just the
+  nearest one (`qa-report-20260827_2.md` F1).
 - **問題9 cloze:** read stem+option aloud as one sentence, all four options.
   Name each blank's category (論理接続表現/文末モーダル表現/内容推論/慣用・
   形式名詞); fail if two+ blanks share a category, or if none requires
