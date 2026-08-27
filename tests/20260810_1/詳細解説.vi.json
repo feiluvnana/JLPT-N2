@@ -923,12 +923,12 @@
     ]
   },
   "問1-1": {
-    "why_correct": "Nhân viên nói「予約番号が書いてありますので…見ていただけますか」, khách đáp「メールを探してみます」.",
+    "why_correct": "Nhân viên hỏi tên và số điện thoại đặt trước, khách đáp ngay theo yêu cầu.",
     "options_analysis": [
-      "Trả tiền hủy là「次にご来店いただいたときで結構です」, không phải ngay.",
-      "Đúng, khách tìm email chứa mã đặt hàng trước.",
-      "Nhân viên nói「書類などは特にございません」, không cần đến lấy giấy.",
-      "Thủ tục do「こちらで手続きをいたします」, không phải khách gọi làm."
+      "Không cần xác nhận qua email, chỉ cần đọc số điện thoại.",
+      "Đúng, khách đọc tên và số đặt trước ngay khi được hỏi.",
+      "Nhân viên nói không cần giấy tờ gì cả.",
+      "Nhân viên tự xử lý việc hủy, khách không cần làm gì thêm."
     ],
     "points": [
       "予約番号《よやくばんごう》: mã số đặt trước.",
@@ -936,352 +936,352 @@
     ]
   },
   "問1-2": {
-    "why_correct": "Nhân viên yêu cầu「この番号にお振り込みいただけますか」, khách đáp「今から振り込みます」.",
+    "why_correct": "Nghe tin cửa hàng chỉ nhận tiền mặt, khách đáp sẽ chuẩn bị tiền mặt mang theo.",
     "options_analysis": [
-      "Đúng, khách chuyển khoản trước tiên.",
-      "Nhận biên lai giao cùng lúc nhận hàng, tức sau khi chuyển khoản.",
-      "Nhận hàng tại cửa hàng diễn ra sau khi xác nhận chuyển khoản.",
-      "Chờ 10 phút là thời gian cửa hàng chuẩn bị hàng, không phải việc khách làm trước."
+      "Đúng, khách chuẩn bị tiền mặt vì chỉ nhận tiền mặt.",
+      "Hóa đơn được đưa cùng lúc giao hàng, chưa nhận ngay.",
+      "Hàng chỉ giao sau khi thanh toán xong, chưa nhận ngay.",
+      "Không bắt buộc mang theo số thứ tự."
     ],
     "points": [
-      "振《ふ》り込《こ》む: chuyển khoản.",
-      "レシート: biên lai."
+      "会計《かいけい》: thanh toán, tính tiền.",
+      "整理番号《せいりばんごう》: số thứ tự."
     ]
   },
   "問1-3": {
-    "why_correct": "Nhân viên hỏi「ご都合のいい日にちはお決まりですか」, khách đáp ngay「再来週の水曜日で」.",
+    "why_correct": "Được hỏi ngày hẹn mong muốn, nữ chọn ngay ngày rảnh của mình.",
     "options_analysis": [
-      "Nhân viên nói rõ「返送は必要ありません」.",
-      "Chụp X-quang là việc trong ngày khám, chưa phải bây giờ.",
-      "Đúng, khách báo ngày mong muốn khám.",
-      "Điền phiếu là việc chuẩn bị mang theo, không phải làm ngay."
+      "Nhân viên nói rõ không cần gửi lại phiếu khám.",
+      "Chụp X-quang làm tại phòng khám vào ngày hẹn, không thể làm qua điện thoại.",
+      "Đúng, nữ chọn ngày hẹn ngay trong cuộc gọi.",
+      "Phiếu khám gửi đến nhà trước, phải đợi nhận rồi mới điền."
     ],
     "points": [
-      "問診票《もんしんひょう》: phiếu khai bệnh sử.",
-      "都合《つごう》のいい日《ひ》にち: ngày thuận tiện."
+      "定期検診《ていきけんしん》: khám định kỳ.",
+      "問診票《もんしんひょう》: phiếu khai khám bệnh."
     ]
   },
   "問1-4": {
-    "why_correct": "Nam nói「メールが届いてますよね。そこのリンクを開くところから」, nữ đáp「メールを開いてみます」.",
+    "why_correct": "Thông báo yêu cầu nhập mật khẩu mới gồm số và chữ, từ 8 ký tự trở lên.",
     "options_analysis": [
-      "Đặt mật khẩu mới diễn ra sau khi đăng nhập, tức sau bước mở link.",
-      "Đúng, nữ mở email và bấm link trước.",
-      "Nam nói rõ「報告はいりません」.",
-      "Gửi mật khẩu tạm là việc nam đã làm trước đó."
+      "Hệ thống tự báo cấp trên, không cần tự báo cáo.",
+      "Đúng, nhập mật khẩu mới đủ 8 ký tự gồm số và chữ.",
+      "Nhấp link email là bước trước đó, đã xong.",
+      "Mật khẩu tạm do công ty gửi, không phải khách tự gửi."
     ],
     "points": [
       "仮《かり》パスワード: mật khẩu tạm thời.",
-      "案内《あんない》に沿《そ》って: theo hướng dẫn."
+      "8桁《けた》以上《いじょう》: từ 8 ký tự trở lên."
     ]
   },
   "問1-5": {
-    "why_correct": "Giảng viên yêu cầu「隣の人とペアを組んでください」, học viên đáp「隣の人に声をかけます」.",
+    "why_correct": "Giảng viên nói việc đầu tiên là ghép cặp với người bên cạnh.",
     "options_analysis": [
-      "Kiểm tra micro diễn ra sau khi đã ghép cặp.",
-      "Đọc kịch bản diễn ra sau khi ghi âm.",
-      "Lấy danh thiếp diễn ra sau khi kiểm tra micro xong.",
-      "Đúng, học viên bắt cặp với người bên cạnh trước."
+      "Chỉ làm sau khi đã ghép cặp xong, chưa đến lượt.",
+      "Đọc kịch bản diễn ra sau khi ghi âm, còn xa, chưa thể làm.",
+      "Nhận danh thiếp chỉ sau khi kiểm tra micro, chưa đến lượt.",
+      "Đúng, ghép cặp là việc đầu tiên cần làm."
     ],
     "points": [
-      "ペアを組《く》む: bắt cặp, ghép đôi.",
-      "台本《だいほん》の読《よ》み合《あ》わせ: cùng đọc kịch bản."
+      "ペアを組《く》む: ghép thành cặp.",
+      "台本《だいほん》を読《よ》み合《あ》わせる: đọc kịch bản cùng nhau."
     ]
   },
   "問2-1": {
-    "why_correct": "Cô gái nói「新しい事業に関わってみたいと、前から自分で手を挙げていたので」.",
+    "why_correct": "Nữ nói lý do chính là tự nguyện xin tham gia dự án kinh doanh mới.",
     "options_analysis": [
-      "Cô nói rõ「人手はむしろ足りているそうです」.",
-      "Cô nói rõ「評価とは全く関係ありません」.",
-      "Cô nói rõ「給与も…ほとんど変わらない」.",
-      "Đúng, cô chủ động xin chuyển vì muốn thử việc mới."
+      "Nữ nói rõ nhân lực bên đó「không thiếu」, không phải lý do.",
+      "Nữ nói「không liên quan」đến đánh giá công việc.",
+      "Nữ nói lương「hầu như không đổi」, không phải vì tăng lương.",
+      "Đúng, cô chủ động xin tham gia dự án kinh doanh mới."
     ],
     "points": [
-      "手《て》を挙《あ》げる: chủ động xung phong.",
-      "異動《いどう》: điều chuyển công tác."
+      "手《て》を挙《あ》げる: chủ động xung phong, đề xuất.",
+      "異動《いどう》: thuyên chuyển công tác."
     ]
   },
   "問2-2": {
-    "why_correct": "Nhân viên nhấn「コンビニなら、その場で待たずに受け取れますよ。ここが大きいところです」.",
+    "why_correct": "Nhân viên nói lấy tại cửa hàng tiện lợi không phải chờ, đây là điểm tiện lợi chính.",
     "options_analysis": [
-      "Phí thấp hơn chỉ là chi tiết phụ, không phải điểm nhấn mạnh nhất.",
-      "Bưu điện mất vài ngày mới nhận, là điểm bất lợi chứ không tiện.",
-      "Đúng, không phải chờ đợi là điểm nổi bật nhất.",
-      "Thẻ số định danh là điều kiện bắt buộc, không phải điểm khen."
+      "Phí rẻ hơn chỉ là chi tiết phụ.",
+      "Đây là nhược điểm của gửi bưu điện, mất vài ngày.",
+      "Đúng, điểm chính là không phải xếp hàng chờ.",
+      "Thẻ My Number vẫn cần chuẩn bị, không phải là không cần."
     ],
     "points": [
-      "手数料《てすうりょう》: phí thủ tục.",
-      "順番待《じゅんばんま》ち: chờ đến lượt."
+      "マイナンバーカード: thẻ số cá nhân.",
+      "手数料《てすうりょう》: phí dịch vụ."
     ]
   },
   "問2-3": {
-    "why_correct": "Người đàn ông nói「相手が何を狙っているかを読んで、その上を行こうとする駆け引きです。あれに尽きます」.",
+    "why_correct": "Anh nói thích nhất là đấu trí đoán ý đối thủ rồi vượt qua.",
     "options_analysis": [
-      "Anh nói「負けた対局のほうが後で思い出す」, thắng thua không quan trọng nhất.",
-      "Không tốn công chuẩn bị chỉ là chi tiết phụ, không phải sức hút chính.",
-      "Tự luyện một mình cũng chỉ là chi tiết phụ.",
-      "Đúng, đấu trí tâm lý là điều anh nhấn mạnh hấp dẫn nhất."
+      "Thắng thì vui nhưng ván thua đáng nhớ hơn, không phải điểm thích nhất.",
+      "Gọn nhẹ chỉ là sự thật được nhắc qua.",
+      "Anh nói rõ tự luyện một mình không phải điều anh thích.",
+      "Đúng, anh thích cuộc đấu trí với đối thủ."
     ],
     "points": [
       "駆《か》け引《ひ》き: đấu trí, mặc cả tâm lý.",
-      "尽《つ》きる: chỉ có vậy, không gì hơn."
+      "対局《たいきょく》: một ván cờ."
     ]
   },
   "問2-4": {
-    "why_correct": "Nhân viên nói「契約する前に、全部でいくらになるのかを必ず確かめてください」.",
+    "why_correct": "Nhân viên nói cần xác nhận tổng chi phí trước khi ký hợp đồng.",
     "options_analysis": [
-      "Khoảng cách quan trọng nhưng không phải điều nhấn mạnh nhất.",
-      "Đúng, tổng chi phí trước khi ký hợp đồng được nhấn mạnh nhất.",
-      "Chỉ nhìn tiền thuê nhà là ví dụ về rủi ro, không phải lời khuyên chính.",
-      "Phí bảo lãnh chỉ là một phần chi phí ban đầu, không riêng biệt."
+      "Khoảng cách ga không phải điều được nhấn mạnh.",
+      "Đúng, cần xác nhận tổng chi phí trước khi ký.",
+      "Chỉ nhìn giá thuê rẻ dễ bất ngờ vì chi phí ban đầu cao.",
+      "Phí bảo lãnh chỉ là một phần của tổng chi phí."
     ],
     "points": [
-      "初期《しょき》費用《ひよう》: chi phí ban đầu.",
-      "保証《ほしょう》会社《がいしゃ》: công ty bảo lãnh."
+      "契約《けいやく》: hợp đồng.",
+      "保証会社《ほしょうがいしゃ》: công ty bảo lãnh."
     ]
   },
   "問2-5": {
-    "why_correct": "Người phụ trách nói「レシートの日付…もう精算できない」rồi「うちで一番多いのがそれ」.",
+    "why_correct": "Người phụ trách nói ngày trên hóa đơn không được quá hạn một tháng.",
     "options_analysis": [
-      "Đúng, ngày hết hạn nộp là điều cần chú ý nhất.",
-      "Định dạng tờ khai được nói là tự do, không cần chú ý.",
-      "Lỗi nhập sai số tiền kế toán phát hiện được, ít nghiêm trọng hơn.",
-      "Gộp chung phiếu chi phí đi lại được xác nhận không cần tách."
+      "Đúng, cần chú ý ngày hóa đơn chưa quá hạn một tháng.",
+      "Mẫu giấy dán hóa đơn là tự do, không cố định.",
+      "Lỗi nhập sai số tiền, phía kế toán tự phát hiện được.",
+      "Dùng chung một tờ cho các khoản chi, không cần tách riêng."
     ],
     "points": [
-      "精算《せいさん》できない: không thể quyết toán.",
-      "打《う》ち間違《まちが》い: nhập/gõ sai số liệu."
+      "精算《せいさん》: quyết toán.",
+      "申請《しんせい》: nộp đơn xin."
     ]
   },
   "問2-6": {
-    "why_correct": "Nhân viên kết「早いか遅いかは、出版社の在庫次第ですね」.",
+    "why_correct": "Nhân viên nói còn hàng ở nhà xuất bản hay không quyết định thời gian nhận sách.",
     "options_analysis": [
-      "Tồn kho cửa hàng được nói không liên quan tốc độ đặt hàng.",
-      "Phương thức thanh toán cũng không ảnh hưởng số ngày.",
-      "Đúng, kho hàng nhà xuất bản là yếu tố quyết định chính.",
-      "Chờ tái bản chỉ là hệ quả khi hết hàng, không phải yếu tố chính."
+      "Tồn kho tại cửa hàng không liên quan đến tốc độ đặt hàng.",
+      "Phương thức thanh toán không ảnh hưởng thời gian.",
+      "Đúng, còn hàng ở nhà xuất bản là yếu tố quyết định.",
+      "Chờ tái bản chỉ là kết quả khi hết hàng, không phải yếu tố quyết định."
     ],
     "points": [
-      "在庫《ざいこ》: hàng tồn kho.",
+      "出版社《しゅっぱんしゃ》: nhà xuất bản.",
       "増刷《ぞうさつ》: tái bản, in thêm."
     ]
   },
   "問3-1": {
-    "why_correct": "Phát thanh viên nói「車道の左側に青い線を引いて、自転車が通る場所をはっきり示す工事」.",
+    "why_correct": "Người đàn ông kể làn xe đạp được kẻ vạch rõ ràng trên đường.",
     "options_analysis": [
-      "Không đề cập kiểm định xe hơi.",
-      "Không đề cập tăng chuyến xe buýt.",
-      "Đúng, mở rộng làn xe đạp là nội dung chính.",
-      "Hạ bụi cây là biện pháp tăng tầm nhìn, không liên quan gạch nổi."
+      "Không nhắc đến kiểm định ô tô.",
+      "Không nhắc đến số chuyến xe buýt.",
+      "Đúng, nội dung chính là mở rộng làn đường cho xe đạp.",
+      "Cắt bụi cây là để dễ nhìn thấy nhau, không liên quan gạch dẫn đường."
     ],
     "points": [
-      "自転車《じてんしゃ》専用《せんよう》レーン: làn đường riêng xe đạp.",
-      "事故《じこ》: tai nạn."
+      "自転車《じてんしゃ》専用《せんよう》レーン: làn đường riêng cho xe đạp.",
+      "見通《みとお》し: tầm nhìn."
     ]
   },
   "問3-2": {
-    "why_correct": "Phóng viên nói「こうした宿はここ数年で急に増えていて」.",
+    "why_correct": "Chủ nhà trọ nói「こういう宿を探すお客さんが急に増えていて」, chủ đề là số nhà trọ cho mang thú cưng ngày càng tăng.",
     "options_analysis": [
-      "Không đề cập thực đơn bữa sáng.",
-      "Không đề cập tỷ lệ bảo hiểm thú cưng.",
-      "Không đề cập kiểm tra hành lý sân bay.",
-      "Đúng, tăng cơ sở lưu trú cho thú cưng là nội dung chính."
+      "Không nhắc đến thực đơn bữa sáng.",
+      "Không nhắc đến bảo hiểm thú cưng.",
+      "Không nhắc đến kiểm tra hành lý sân bay.",
+      "Đúng, nội dung chính là sự gia tăng của cơ sở lưu trú cho mang theo thú cưng."
     ],
     "points": [
-      "同伴《どうはん》する: đi cùng, mang theo.",
-      "予約《よやく》が取《と》りにくい: khó đặt chỗ."
+      "同伴《どうはん》: đi cùng, mang theo.",
+      "急《きゅう》に増《ふ》える: tăng lên đột ngột."
     ]
   },
   "問3-3": {
-    "why_correct": "Cán bộ nói「使われていない家の情報を…住みたい方に直接見ていただける仕組み」.",
+    "why_correct": "Cán bộ nói đăng thông tin nhà bỏ trống lên web giúp người dân chuyển đến sống.",
     "options_analysis": [
-      "Không đề cập ga shinkansen mới.",
-      "Đúng, hỗ trợ di cư qua ngân hàng nhà bỏ trống.",
-      "Không đề cập doanh thu cửa hàng nông sản.",
-      "Không đề cập tỷ lệ tuyển dụng doanh nghiệp."
+      "Không nhắc đến ga tàu shinkansen mới.",
+      "Đúng, nội dung chính là hỗ trợ di cư bằng cách giới thiệu nhà bỏ trống.",
+      "Không nhắc đến cửa hàng bán nông sản trực tiếp.",
+      "Không nhắc đến tỷ lệ tuyển dụng."
     ],
     "points": [
-      "空《あ》き家《や》バンク: ngân hàng nhà bỏ trống.",
-      "移住《いじゅう》: di cư, chuyển đến nơi khác."
+      "空《あ》き家《や》バンク: hệ thống đăng ký nhà bỏ trống.",
+      "移《うつ》り住《す》む: chuyển đến sinh sống."
     ]
   },
   "問3-4": {
-    "why_correct": "Phát thanh viên nói「75歳以上の方が自分から運転免許を返した場合…券を配る自治体」.",
+    "why_correct": "Người phụ nữ kể trả bằng lái được đổi vé xe buýt, taxi, hỗ trợ đi lại sau đó.",
     "options_analysis": [
-      "Không đề cập kéo dài tập huấn gia hạn bằng lái.",
-      "Không đề cập trợ cấp giới trẻ thi bằng lái.",
-      "Đúng, hỗ trợ người cao tuổi trả bằng lái.",
-      "Không đề cập tăng hình phạt vi phạm giao thông."
+      "Không nhắc đến thời gian tập huấn gia hạn bằng lái.",
+      "Không nhắc đến trợ cấp cho người trẻ lấy bằng lái.",
+      "Đúng, nội dung chính là hỗ trợ người cao tuổi trả bằng lái.",
+      "Không nhắc đến hình phạt vi phạm giao thông."
     ],
     "points": [
-      "運転《うんてん》免許《めんきょ》を返《かえ》す: trả bằng lái.",
-      "自治体《じちたい》: chính quyền địa phương."
+      "返納《へんのう》: trả lại (giấy tờ, bằng lái).",
+      "移動《いどう》を支《ささ》える: hỗ trợ đi lại."
     ]
   },
   "問3-5": {
-    "why_correct": "Chuyên gia nói「一番多かったのは、家にあって使わなくなった物を手放すため」.",
+    "why_correct": "Người đàn ông nói nhiều người muốn bán đồ không dùng hơn là mua đồ mới.",
     "options_analysis": [
-      "Đúng, xử lý đồ không dùng qua ứng dụng chợ trời.",
-      "Không đề cập tăng giá sản phẩm mới.",
-      "Không đề cập thay đổi phí giao hàng.",
-      "Không đề cập thẻ tích điểm cửa hàng."
+      "Đúng, nội dung chính là bán đồ không dùng đến qua ứng dụng chợ trời.",
+      "Không nhắc đến việc tăng giá sản phẩm mới.",
+      "Không nhắc đến thay đổi phí vận chuyển.",
+      "Không nhắc đến việc xem lại chế độ thẻ tích điểm."
     ],
     "points": [
-      "不要品《ふようひん》を手放《てばな》す: bỏ đồ không cần.",
-      "惜《お》しい: tiếc, đáng tiếc khi vứt bỏ."
+      "フリマアプリ: ứng dụng chợ trời (mua bán đồ cũ).",
+      "手放《てばな》す: từ bỏ, bán đi (đồ không cần)."
     ]
   },
   "問4-1": {
-    "why_correct": "「代わってもらえないかな」cần trả lời trực tiếp; từ chối khéo「すみません、来週は用事があって」phù hợp.",
+    "why_correct": "Được nhờ đổi ca trực, câu đáp phù hợp là từ chối khéo vì có việc「すみません、来週はちょっと用事があって」.",
     "options_analysis": [
-      "Chỉ nói lịch trực bình thường, không trả lời có đổi ca hay không.",
-      "Đúng, câu từ chối khéo léo hợp lý.",
-      "Chỉ chỉ vị trí bảng phân công, không đáp lại lời nhờ."
+      "Chuyển câu hỏi sang nhờ田中さん, không trực tiếp đáp lại người đang nhờ mình.",
+      "Đúng, từ chối khéo léo vì bận việc riêng.",
+      "Chỉ nơi dán bảng phân công, không đáp lại lời nhờ đổi ca."
     ],
     "points": [
-      "代《か》わってもらえないかな: nhờ đổi ca giúp.",
-      "用事《ようじ》がある: có việc bận."
+      "代《か》わる: thay, đổi (ca trực).",
+      "当番《とうばん》: người trực, ca trực."
     ]
   },
   "問4-2": {
-    "why_correct": "Lời khen「引けを取らない」cần đồng tình,「そうですね、これから期待できそうです」đúng mạch.",
+    "why_correct": "「引けを取らない」nghĩa là không thua kém, đồng tình với lời khen là「そうですね、これから期待できそうです」.",
     "options_analysis": [
-      "Đúng, tiếp nối đúng mạch khen ngợi.",
-      "Chuyển sang đề xuất tăng người kinh nghiệm, lạc đề.",
-      "Hiểu ngược nghĩa「引けを取らない」thành cần rèn thêm."
+      "Đúng, đồng tình và kỳ vọng vào nhân viên mới.",
+      "Chuyển sang đề xuất tăng người có kinh nghiệm, lạc đề khỏi lời khen.",
+      "Ngược nghĩa lời khen, ngụ ý nhân viên còn thiếu kinh nghiệm."
     ],
     "points": [
-      "引《ひ》けを取《と》らない: không thua kém.",
-      "期待《きたい》できそうだ: có vẻ đáng mong đợi."
+      "引《ひ》けを取《と》らない: không thua kém, không kém cạnh.",
+      "期待《きたい》できる: có thể kỳ vọng, hứa hẹn."
     ]
   },
   "問4-3": {
-    "why_correct": "「ご存じですか」cần khiêm nhường ngữ,「はい、存じております」đúng cách.",
+    "why_correct": "Cấp trên hỏi có biết việc họp ngày mai không, đáp khiêm nhường「はい、存じております」.",
     "options_analysis": [
-      "「了解です」quá suồng sã với cấp trên.",
-      "「かしこまりました」đáp yêu cầu, không trả lời câu hỏi biết hay không.",
-      "Đúng, cách trả lời khiêm tốn chính xác."
+      "Hiểu nhầm thời điểm, coi cuộc họp ngày mai như đã kết thúc.",
+      "Đáp như đang nhận một yêu cầu, không trả lời câu hỏi có biết hay không.",
+      "Đúng, xác nhận đã biết bằng thể khiêm nhường."
     ],
     "points": [
-      "存《ぞん》じております: biết (khiêm nhường ngữ).",
-      "ご存《ぞん》じですか: cách hỏi lịch sự có biết không."
+      "存《ぞん》じております: biết (thể khiêm nhường của 知っている).",
+      "ご存《ぞん》じですか: ngài có biết không (kính ngữ)."
     ]
   },
   "問4-4": {
-    "why_correct": "Hỏi về phiếu bảo hành cần hành động cụ thể,「少々お待ちください、かばんを見てみます」đúng.",
+    "why_correct": "Nhân viên nói có phiếu bảo hành thì sửa miễn phí, khách đáp sẽ tìm phiếu「少々お待ちください、かばんを見てみます」.",
     "options_analysis": [
-      "Hiểu sai thành phải mua phiếu bảo hành.",
-      "Đúng, đi tìm phiếu bảo hành trong túi.",
-      "Hiểu ngược ý gốc — có bảo hành thì sửa miễn phí."
+      "Hiểu nhầm phiếu bảo hành là thứ phải mua, trong khi đang được hỏi có sẵn không.",
+      "Đúng, khách đi tìm phiếu bảo hành đang có sẵn.",
+      "Ngược nghĩa lời nhân viên, thực ra sửa miễn phí chứ không mất phí."
     ],
     "points": [
       "保証書《ほしょうしょ》: phiếu bảo hành.",
-      "無料《むりょう》で修理《しゅうり》できる: sửa miễn phí."
+      "無料《むりょう》で修理《しゅうり》: sửa chữa miễn phí."
     ]
   },
   "問4-5": {
-    "why_correct": "Mất điện khiến thang máy hỏng cần chấp nhận đi cầu thang,「そうですか。じゃあ、階段で上がります」đúng.",
+    "why_correct": "Được báo thang máy hỏng do mất điện, khách chấp nhận đi cầu thang.",
     "options_analysis": [
-      "Đúng, chấp nhận đi cầu thang bộ.",
-      "Mâu thuẫn — thang máy hỏng nhưng lại nói sẽ gọi thang máy.",
-      "Hiểu sai nguyên nhân, bật đèn không liên quan thang máy."
+      "Đúng, chấp nhận tình huống và chọn đi bộ lên cầu thang.",
+      "Ngược nghĩa thông báo, thang máy không dùng được nhưng lại định gọi thang máy.",
+      "Coi như đã lên cầu thang xong rồi, trong khi việc đó còn chưa xảy ra."
     ],
     "points": [
       "停電《ていでん》: mất điện.",
-      "階段《かいだん》で上《あ》がる: đi lên bằng cầu thang bộ."
+      "エレベーターが使《つか》えない: thang máy không dùng được."
     ]
   },
   "問4-6": {
-    "why_correct": "Lời mời「ご遠慮なくどうぞ」cần nhận lời,「それでは、遠慮なくいただきます」đúng.",
+    "why_correct": "Được mời lấy hàng mẫu tự do「ご遠慮なくどうぞ」, khách nhận lời「それでは、遠慮なくいただきます」.",
     "options_analysis": [
-      "Lặp kiểu nói người mời, không ăn khớp vai trò hội thoại.",
-      "Đúng, câu nhận lời mời phù hợp.",
-      "Lời động viên không liên quan việc nhận quà."
+      "Hiểu nhầm lời mời lấy tự do thành chuyện giảm giá.",
+      "Đúng, khách nhận lời mời lấy hàng mẫu.",
+      "Lời động viên không liên quan đến việc nhận hàng mẫu."
     ],
     "points": [
-      "ご遠慮《えんりょ》なく: đừng ngại, cứ tự nhiên.",
-      "試供品《しきょうひん》: hàng mẫu dùng thử."
+      "試供品《しきょうひん》: hàng mẫu dùng thử.",
+      "ご遠慮《えんりょ》なく: xin đừng ngại, cứ tự nhiên."
     ]
   },
   "問4-7": {
-    "why_correct": "Báo cáo「折り返しお電話いたします」cần phản hồi ngắn của cấp trên,「うん、分かった。よろしく頼むよ」đúng.",
+    "why_correct": "Nhân viên báo sẽ gọi lại đối tác, cấp trên xác nhận và dặn dò làm việc.",
     "options_analysis": [
-      "Đúng, phản hồi phù hợp của cấp trên.",
-      "Câu chào xã giao với đối tác ngoài, không phải phản hồi nội bộ.",
-      "Hiểu sai — người nói đã tự nhận sẽ gọi lại."
+      "Đúng, cấp trên xác nhận và giao phó công việc.",
+      "Câu chào xã giao dùng với đối tác bên ngoài, không phù hợp đáp lại báo cáo của nhân viên.",
+      "Coi như đã nhận điện thoại rồi, mâu thuẫn với việc nhân viên nói sẽ gọi lại."
     ],
     "points": [
-      "折《お》り返《かえ》しお電話《でんわ》いたします: sẽ gọi lại ngay.",
-      "よろしく頼《たの》むよ: nhờ cậy, phó thác việc."
+      "折《お》り返《かえ》し: gọi lại (điện thoại).",
+      "先方《せんぽう》: bên đối tác, phía kia."
     ]
   },
   "問4-8": {
-    "why_correct": "Xác nhận giờ hẹn cần đồng ý trực tiếp,「その時間で大丈夫です。お願いします」đúng.",
+    "why_correct": "Được hỏi xác nhận giờ hẹn lần sau, khách đồng ý「その時間で大丈夫です。お願いします」.",
     "options_analysis": [
-      "Chỉ định người phụ trách, không trả lời về thời gian.",
-      "Yêu cầu đổi người phụ trách, không đáp câu hỏi thời gian.",
-      "Đúng, đồng ý trực tiếp với thời gian đề xuất."
+      "Nói về lần trước thay vì xác nhận giờ hẹn lần sau, nhầm thời điểm.",
+      "Chuyển câu hỏi sang nhờ田中さん, không tự trả lời xác nhận.",
+      "Đúng, khách đồng ý với giờ hẹn được đề xuất."
     ],
     "points": [
-      "ご都合《つごう》はよろしいですか: xin xác nhận thuận tiện.",
-      "大丈夫《だいじょうぶ》です: được, ổn."
+      "予約《よやく》: đặt hẹn, đặt chỗ.",
+      "次回《じかい》: lần tới, lần sau."
     ]
   },
   "問4-9": {
-    "why_correct": "Hỏi về túi tính phí cần trả lời rõ,「持ってきているので、大丈夫です」đúng vì đã mang túi riêng.",
+    "why_correct": "Được hỏi có cần túi tính phí không, khách từ chối vì đã mang sẵn「持ってきているので、大丈夫です」.",
     "options_analysis": [
-      "Chuyển sang thanh toán, không liên quan việc có cần túi.",
-      "Nói về biên lai, không đáp câu hỏi về túi.",
-      "Đúng, đã mang túi riêng nên không cần mua thêm."
+      "Chuyển câu hỏi cần túi ngay bây giờ thành chuyện mua vào lần sau, nhầm thời điểm.",
+      "Hiểu ngược 有料 thành 無料, hỏi xin miễn phí.",
+      "Đúng, từ chối vì đã mang túi riêng theo."
     ],
     "points": [
       "有料《ゆうりょう》: có tính phí.",
-      "持《も》ってきている: đã mang theo sẵn."
+      "レジ袋《ぶくろ》: túi ni lông ở quầy tính tiền."
     ]
   },
   "問4-10": {
-    "why_correct": "Báo trẻ lạc cần phản ứng nhanh,「すぐ行くから、そこで見ていて」đúng.",
+    "why_correct": "Được báo có trẻ lạc, cửa hàng trưởng phản ứng ngay「すぐ行くから、そこで見ていて」.",
     "options_analysis": [
-      "Hiểu sai chủ ngữ, coi là bản thân bị lạc.",
-      "Hướng dẫn đến chỗ ngồi, không liên quan báo cáo trẻ lạc.",
-      "Đúng, phản ứng nhanh và yêu cầu trông chừng."
+      "Đúng, cửa hàng trưởng đến ngay và nhờ trông chừng.",
+      "Hiểu nhầm 迷子 (trẻ lạc) thành bản thân mình bị lạc đường.",
+      "Chuyển báo cáo hiện tại sang chuyện hôm qua, nhầm thời điểm."
     ],
     "points": [
-      "迷子《まいご》: trẻ em bị lạc.",
-      "そこで見《み》ていて: hãy trông chừng ở đó."
+      "迷子《まいご》: trẻ em (hoặc người) bị lạc.",
+      "すぐ行《い》く: đi ngay lập tức."
     ]
   },
   "問4-11": {
-    "why_correct": "Xác nhận đặt hàng chờ cần đồng ý,「待てますので、それでお願いします」đúng.",
+    "why_correct": "Được báo hàng ít phải đặt về, khách đồng ý chờ「待てますので、それでお願いします」.",
     "options_analysis": [
-      "Mâu thuẫn tiền đề phải chờ, lại nói muốn mang về ngay.",
-      "Đúng, khách chấp nhận chờ đặt hàng về.",
-      "Chuyển sang trả hàng, không đáp câu hỏi về đặt hàng."
+      "Mâu thuẫn với tiền đề phải đặt hàng chờ, lại nói muốn mang về ngay.",
+      "Đúng, khách chấp nhận chờ đặt hàng.",
+      "Đùn đẩy quyết định sang cửa hàng trưởng thay vì tự trả lời."
     ],
     "points": [
-      "取《と》り寄《よ》せ: đặt hàng từ nơi khác.",
-      "待《ま》てます: có thể chờ được."
+      "取《と》り寄《よ》せ: đặt hàng từ nơi khác chuyển đến.",
+      "在庫《ざいこ》が少《すく》ない: hàng tồn kho ít."
     ]
   },
   "問5-1": {
-    "why_correct": "Kết luận「まずは相談窓口を新しく設けて、一人で抱えている不安を減らす」.",
+    "why_correct": "Cuối cùng quyết định lập quầy tư vấn mới để giảm bất an cho nhân viên.",
     "options_analysis": [
-      "Người nói xác nhận「禁止するかどうかは…議題に上がっていません」.",
-      "Người nói xác nhận「給与を削るための制度ではありません」.",
-      "Đúng, lập quầy tư vấn hỗ trợ là phương châm được chọn.",
-      "Người nói xác nhận「あちらは見送りになりました…続けます」."
+      "Việc cấm hoàn toàn không được đưa ra bàn.",
+      "Đề xuất giảm lương không được xem xét.",
+      "Đúng, quyết định lập quầy tư vấn hỗ trợ.",
+      "Đề xuất chuyển đào tạo ra ngoài bị hoãn, đào tạo nội bộ vẫn tiếp tục."
     ],
     "points": [
-      "相談《そうだん》窓口《まどぐち》: quầy tư vấn.",
+      "相談窓口《そうだんまどぐち》: quầy tư vấn.",
       "副業《ふくぎょう》: công việc làm thêm."
     ]
   },
   "問5-2-1": {
-    "why_correct": "Nữ nói「かき氷かな。暑いし、溶ける前にはけると思う」, nam chốt「初日はかき氷にしよう」.",
+    "why_correct": "Nữ chọn đá bào cho ngày nắng đông khách, bán hết trước khi tan.",
     "options_analysis": [
-      "Đúng, đá bào được chọn vì trời nắng, đông khách.",
-      "Hotdog dùng cho ngày hai (trời mưa), không phải ngày đầu.",
-      "Taiyaki bị loại vì lo xếp hàng dài khi đông khách.",
-      "Chè trái cây bị loại vì không có tủ lạnh."
+      "Đúng, đá bào được chọn cho ngày đầu trời nắng.",
+      "Hotdog được chọn cho ngày hai trời mưa, không phải ngày đầu.",
+      "Bị loại vì lo xếp hàng dài khi đông khách.",
+      "Bị loại vì không có tủ lạnh bảo quản."
     ],
     "points": [
       "溶《と》ける前《まえ》にはける: bán hết trước khi tan.",
@@ -1289,16 +1289,16 @@
     ]
   },
   "問5-2-2": {
-    "why_correct": "Nữ nói「この雨なら温かいものの方が喜ばれると思う。二日目はホットドッグにしよう」.",
+    "why_correct": "Nữ chọn hotdog cho ngày mưa vì món ấm được ưa chuộng và dễ bảo quản.",
     "options_analysis": [
-      "Đá bào đã chọn cho ngày đầu (trời nắng), không phải ngày mưa.",
-      "Đúng, hotdog hợp thời tiết lạnh và giữ được lâu.",
-      "Taiyaki bị gạt ngay vì trời mưa nên món ấm được ưa hơn.",
-      "Chè trái cây không dùng được do thiếu tủ lạnh."
+      "Đá bào được chọn cho ngày đầu trời nắng, không phải ngày hai.",
+      "Đúng, hotdog phù hợp trời mưa và bảo quản được nếu ế.",
+      "Không phụ thuộc thời tiết nhưng bị gạt vì món ấm được ưu tiên hơn.",
+      "Không thể bán vì thiếu thiết bị giữ lạnh."
     ],
     "points": [
       "肌寒《はだざむ》い: se lạnh.",
-      "売《う》れ残《のこ》っても保存《ほぞん》がきく: ế vẫn bảo quản được."
+      "売《う》れ残《のこ》る: bán không hết."
     ]
   }
 }

@@ -3588,6 +3588,241 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    }
+  },
+  {
+   "test_id": "20260827_1",
+   "seed": "74159933+reroll-one(listening_scenarios:19,1503727)+reroll-one(listening_scenarios:20,1067650)+reroll(reading_topics,88418643)+reroll-one(listening_scenarios:19,78275936)+reroll-one(listening_scenarios:20,45419472)+reroll-one(listening_scenarios:19,65200737)+reroll-one(listening_scenarios:20,4105188)+reroll-one(listening_scenarios:19,22936980)+reroll-one(listening_scenarios:20,33783736)+reroll-one(listening_scenarios:19,34703743)+reroll-one(listening_scenarios:20,26175696)+reroll-one(listening_scenarios:19,86762872)+reroll-one(listening_scenarios:20,55501699)+reroll-one(listening_scenarios:19,99227395)+reroll-one(listening_scenarios:20,18469859)+reroll-one(listening_scenarios:19,79919866)+reroll-one(listening_scenarios:20,43850833)+reroll-one(listening_scenarios:19,6011042)+reroll-one(listening_scenarios:20,65307134)+reroll-one(listening_scenarios:19,32507993)+reroll-one(listening_scenarios:20,62316180)+reroll-one(listening_scenarios:19,82992831)+reroll-one(listening_scenarios:20,85945345)+reroll-one(listening_scenarios:19,77173862)+reroll-one(listening_scenarios:20,83891024)+reroll-one(listening_scenarios:19,81504797)+reroll-one(listening_scenarios:20,62033773)+reroll-one(listening_scenarios:19,49121662)+reroll-one(listening_scenarios:20,99690490)+reroll-one(listening_scenarios:19,60757161)+reroll-one(listening_scenarios:20,80841231)",
+   "generated_at": "2026-08-27 14:07:53",
+   "pools_sha": "cea9612d1e0b",
+   "items": {
+    "kanji_reading": [
+     "輸入(ゆにゅう)",
+     "片道切符(かたみちきっぷ)",
+     "作曲家(さっきょくか)",
+     "豊作(ほうさく)",
+     "悪口(わるぐち)"
+    ],
+    "orthography": [
+     "記号",
+     "幼い",
+     "押さえる(場所を)",
+     "効率",
+     "下旬"
+    ],
+    "word_formation": [
+     "中〜(中途)",
+     "総〜(総人口)",
+     "広〜(広域)"
+    ],
+    "context_words": [
+     "あらゆる",
+     "持ち出す",
+     "名勝負",
+     "離婚",
+     "発明",
+     "変動",
+     "はるか"
+    ],
+    "paraphrase": [
+     "ゆとり",
+     "おのおの(それぞれ)",
+     "もったいない(惜しい)",
+     "だます",
+     "温暖だ"
+    ],
+    "usage": [
+     "分かれる",
+     "軽減する",
+     "呑気",
+     "トラブル",
+     "あふれる"
+    ],
+    "grammar_p7": [
+     "〜に応じて",
+     "〜にあたって",
+     "〜どころか",
+     "〜っぽい",
+     "〜に決まっている",
+     "〜か〜ないかのうちに",
+     "〜ながらも",
+     "〜にほかならない",
+     "〜一方だ",
+     "〜からには",
+     "〜ばかりだ",
+     "〜以上は"
+    ],
+    "grammar_p8": [
+     "基準準拠(〜に沿って…進める)",
+     "経過状況(〜つつ…する)",
+     "〜をきっかけに",
+     "〜次第",
+     "心理変化(〜意欲が湧いてくる)"
+    ],
+    "quick_response": [
+     "社長、来期の事業計画書がまとまりましたので、ご説明させていただきます。",
+     "急なご依頼で大変恐縮ですが、明日までにこちらのデータをご確認いただけますでしょうか。",
+     "定期券の更新は向かいの窓口で承っております。",
+     "何かお困りのことがございましたら、遠慮なくお申し付けください。",
+     "恐縮ですが、締め切りを一日だけ延ばしていただけないでしょうか。",
+     "お客様、ただいま満席となっておりますので、少々お待ちいただけますでしょうか。",
+     "保険証の有効期限が切れております。",
+     "解約の場合、一か月前までにご連絡ください。",
+     "先方の担当者様、明日10時に弊社へお越しいただくことになっております。",
+     "お疲れ様です。先ほどのメール、確認いただけましたでしょうか。",
+     "今日は定時で上がらせていただいてもよろしいでしょうか。"
+    ],
+    "reading_topics": [
+     {
+      "topic": "地域清掃ボランティアの参加募集",
+      "theme": "環境",
+      "key": "ボランティア募集案内"
+     },
+     {
+      "topic": "オーバーツーリズム対策",
+      "theme": "旅行・観光"
+     },
+     {
+      "topic": "ベッドタウンの再編",
+      "theme": "住まい"
+     },
+     {
+      "topic": "一人時間の効用",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "topic": "きょうだい児が抱える悩み",
+      "theme": "子育て・家族"
+     },
+     {
+      "topic": "オンラインでの人付き合いの距離感",
+      "theme": "人間関係"
+     },
+     {
+      "topic": "市民農園の利用者募集要項",
+      "theme": "地域活性化"
+     },
+     {
+      "topic": "スマートウォッチによる健康管理",
+      "theme": "睡眠・健康"
+     },
+     {
+      "topic": "行政サービスのワンストップ化",
+      "theme": "行政・手続き"
+     },
+     {
+      "topic": "フリーランスの社会保障",
+      "theme": "働き方"
+     },
+     {
+      "topic": "雪と生活の知恵",
+      "theme": "防災"
+     },
+     {
+      "topic": "匿名掲示板の責任問題",
+      "theme": "メディア・情報"
+     }
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "駅:定期券の払い戻し",
+      "theme": "交通"
+     },
+     {
+      "scenario": "信用金庫:ローン相談",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "講演会:食品ロス削減の工夫",
+      "theme": "食"
+     },
+     {
+      "scenario": "出張の手配",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "イベントでの台風接近に伴う対応策",
+      "theme": "防災"
+     },
+     {
+      "scenario": "大学:履修登録の相談",
+      "theme": "教育"
+     },
+     {
+      "scenario": "居酒屋:貸切相談",
+      "theme": "食"
+     },
+     {
+      "scenario": "アルバイトのシフト変更の相談",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "消防署:消火器点検",
+      "theme": "防災"
+     },
+     {
+      "scenario": "管理人室:騒音の相談",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "ラジオ:趣味の話",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "セミナーの会場準備と受付担当",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "花屋:配達の手配",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "病院での受診受付と注意事項の説明",
+      "theme": "医療・福祉"
+     },
+     {
+      "scenario": "図書館での資料の検索と貸出延長",
+      "theme": "教育"
+     },
+     {
+      "scenario": "ジム:体験入会",
+      "theme": "スポーツ・余暇",
+      "key": "ジム:入会"
+     },
+     {
+      "scenario": "セミナー:プレゼンの組み立て方",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "研修:電話応対の基本",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "歯科:定期検診",
+      "theme": "医療・福祉"
+     },
+     {
+      "scenario": "高速バス:座席指定",
+      "theme": "交通"
+     },
+     {
+      "scenario": "警察署:遺失物届",
+      "theme": "行政・手続き"
+     }
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   }
   }
  ]
 }
