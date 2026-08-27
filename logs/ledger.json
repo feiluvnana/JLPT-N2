@@ -3591,9 +3591,9 @@
   },
   {
    "test_id": "20260827_1",
-   "seed": "74159933+reroll-one(listening_scenarios:19,1503727)+reroll-one(listening_scenarios:20,1067650)+reroll(reading_topics,88418643)+reroll-one(listening_scenarios:19,78275936)+reroll-one(listening_scenarios:20,45419472)+reroll-one(listening_scenarios:19,65200737)+reroll-one(listening_scenarios:20,4105188)+reroll-one(listening_scenarios:19,22936980)+reroll-one(listening_scenarios:20,33783736)+reroll-one(listening_scenarios:19,34703743)+reroll-one(listening_scenarios:20,26175696)+reroll-one(listening_scenarios:19,86762872)+reroll-one(listening_scenarios:20,55501699)+reroll-one(listening_scenarios:19,99227395)+reroll-one(listening_scenarios:20,18469859)+reroll-one(listening_scenarios:19,79919866)+reroll-one(listening_scenarios:20,43850833)+reroll-one(listening_scenarios:19,6011042)+reroll-one(listening_scenarios:20,65307134)+reroll-one(listening_scenarios:19,32507993)+reroll-one(listening_scenarios:20,62316180)+reroll-one(listening_scenarios:19,82992831)+reroll-one(listening_scenarios:20,85945345)+reroll-one(listening_scenarios:19,77173862)+reroll-one(listening_scenarios:20,83891024)+reroll-one(listening_scenarios:19,81504797)+reroll-one(listening_scenarios:20,62033773)+reroll-one(listening_scenarios:19,49121662)+reroll-one(listening_scenarios:20,99690490)+reroll-one(listening_scenarios:19,60757161)+reroll-one(listening_scenarios:20,80841231)",
+   "seed": "74159933+reroll-one(listening_scenarios:19,1503727)+reroll-one(listening_scenarios:20,1067650)+reroll(reading_topics,88418643)+reroll-one(listening_scenarios:19,78275936)+reroll-one(listening_scenarios:20,45419472)+reroll-one(listening_scenarios:19,65200737)+reroll-one(listening_scenarios:20,4105188)+reroll-one(listening_scenarios:19,22936980)+reroll-one(listening_scenarios:20,33783736)+reroll-one(listening_scenarios:19,34703743)+reroll-one(listening_scenarios:20,26175696)+reroll-one(listening_scenarios:19,86762872)+reroll-one(listening_scenarios:20,55501699)+reroll-one(listening_scenarios:19,99227395)+reroll-one(listening_scenarios:20,18469859)+reroll-one(listening_scenarios:19,79919866)+reroll-one(listening_scenarios:20,43850833)+reroll-one(listening_scenarios:19,6011042)+reroll-one(listening_scenarios:20,65307134)+reroll-one(listening_scenarios:19,32507993)+reroll-one(listening_scenarios:20,62316180)+reroll-one(listening_scenarios:19,82992831)+reroll-one(listening_scenarios:20,85945345)+reroll-one(listening_scenarios:19,77173862)+reroll-one(listening_scenarios:20,83891024)+reroll-one(listening_scenarios:19,81504797)+reroll-one(listening_scenarios:20,62033773)+reroll-one(listening_scenarios:19,49121662)+reroll-one(listening_scenarios:20,99690490)+reroll-one(listening_scenarios:19,60757161)+reroll-one(listening_scenarios:20,80841231)+reroll-one(quick_response:0,55905621)+reroll-one(quick_response:1,20518228)+reroll-one(quick_response:2,73381331)+reroll-one(quick_response:3,36226477)+reroll-one(quick_response:4,21105550)+reroll-one(quick_response:5,18036337)+reroll-one(quick_response:6,85639498)+reroll-one(quick_response:7,95351110)+reroll-one(quick_response:8,67309618)+reroll-one(quick_response:9,43201980)+reroll-one(quick_response:10,60609992)+reroll-one(quick_response:0,2356840)",
    "generated_at": "2026-08-27 14:07:53",
-   "pools_sha": "cea9612d1e0b",
+   "pools_sha": "37704aadda35",
    "items": {
     "kanji_reading": [
      "輸入(ゆにゅう)",
@@ -3657,19 +3657,6 @@
      "〜をきっかけに",
      "〜次第",
      "心理変化(〜意欲が湧いてくる)"
-    ],
-    "quick_response": [
-     "社長、来期の事業計画書がまとまりましたので、ご説明させていただきます。",
-     "急なご依頼で大変恐縮ですが、明日までにこちらのデータをご確認いただけますでしょうか。",
-     "定期券の更新は向かいの窓口で承っております。",
-     "何かお困りのことがございましたら、遠慮なくお申し付けください。",
-     "恐縮ですが、締め切りを一日だけ延ばしていただけないでしょうか。",
-     "お客様、ただいま満席となっておりますので、少々お待ちいただけますでしょうか。",
-     "保険証の有効期限が切れております。",
-     "解約の場合、一か月前までにご連絡ください。",
-     "先方の担当者様、明日10時に弊社へお越しいただくことになっております。",
-     "お疲れ様です。先ほどのメール、確認いただけましたでしょうか。",
-     "今日は定時で上がらせていただいてもよろしいでしょうか。"
     ],
     "reading_topics": [
      {
@@ -3808,6 +3795,19 @@
       "scenario": "警察署:遺失物届",
       "theme": "行政・手続き"
      }
+    ],
+    "quick_response": [
+     "悪いんだけど、今日ちょっと手伝ってくれない？",
+     "本日はお忙しいところ、お時間をいただきありがとうございます。",
+     "社長、来期の事業計画書がまとまりましたので、ご説明させていただきます。",
+     "火災報知器が作動しました。避難してください。",
+     "課長、本日の打ち合わせの議事録、作成いたしましたが、ご確認いただけますか。",
+     "何かお困りのことがございましたら、遠慮なくお申し付けください。",
+     "急なお願いで申し訳ありませんが、代わりに出席していただけませんか。",
+     "急なご依頼で大変恐縮ですが、明日までにこちらのデータをご確認いただけますでしょうか。",
+     "先生、レポートの提出期限を延ばしていただくことは可能でしょうか。",
+     "終電が近いので、そろそろお引き取りください。",
+     "この路線は本日運休しております。"
     ]
    },
    "draw": {

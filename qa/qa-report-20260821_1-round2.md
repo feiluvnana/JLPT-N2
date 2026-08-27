@@ -469,7 +469,7 @@ every row above is a claim about these bytes.
    re-read it and agree with that disposition, and it remains an open reconciliation task
    against `exam-blueprint`.
 
-## QA: FAIL (5 findings, 0 automatic)
+## QA: FAIL (5 findings, 0 automatic) — as of this report's writing, 2026-08-24
 
 Two paper findings (NF-2 問題11(1)/問題12(A) closing-skeleton pair, NF-3 聴解問題2-1番's
 un-re-quoted 解説), two record findings (NF-4 the unapplied F9 sync, NF-5 two notes the
@@ -480,3 +480,39 @@ while its gate fix regressed; one (F9) was not applied at all.** No repair intro
 mis-key, a second defensible answer, an ungrounded distractor, an untraceable 解説 quote or
 a length-ceiling breach — the 36 re-solved items came back 36/36 and all four 読解 sections
 sit inside their ceilings with 13–35 chars to spare.
+
+## Post-hoc verification (2026-08-27) — all 5 findings closed, this report's own verdict is stale
+
+This "Skips, stated" §4 ("No fix was applied. All five findings are left open.") and the
+FAIL verdict above describe the state at the moment this report was drafted. **The same
+commit that shipped this report (`18e91bc`) also shipped fixes for all five findings**, and
+the report text was never updated to say so — the exact "note describing a step as 未実施
+after it was implemented" defect class NF-5(a) itself names, now applying to this report.
+Verified by re-reading current disk state before generating the next paper (`20260827_1`),
+since the pipeline rule blocks sampling while any test's QA is open:
+
+- **NF-1** — `tools/check_consistency.py` splits the check as prescribed:
+  `check_dokkai_closing_reframe` stays the whole-passage anti-dodge net (「というより」
+  removed from its family), and `check_dokkai_closing_reframe_scope` (new) reads the
+  final-two-sentence closing scope, generalised via `dokkai_closing_scopes()`. Measured
+  across all 15 papers before landing (comment block at `tools/check_consistency.py:1765`).
+- **NF-2** — `question-authoring/references/dokkai.md` §"The denominator" (added 2026-08-24)
+  settles the 12-vs-13 conflict (問題12 = two closings/two templates, one theme row) and adds
+  the `A では/ほど B が多い（相関）` template. `20260821_1`'s 問題11(1)/問題12(A) pair is
+  explicitly grandfathered as compliant under the resolved rule, not rewritten — recorded in
+  the doc, not silently dropped.
+- **NF-3** — `tests/20260821_1/聴解.md` 問題2 解説 1番, option 1's quote now reads 「座席の
+  分のお金だけは、二十日前より早くご連絡いただいても、そのままいただきます。」, with an
+  explicit note dated 2026-08-24 citing this finding by id.
+- **NF-4** — `test_spec.json` and `logs/ledger.json` both carry a `note` on the
+  `市役所:手続き案内` and `コールセンター:本人確認` draws explaining the deliberate
+  record/tag split, and `check_theme_record_agreement()` now reads it (`tools/
+  check_consistency.py:5548`).
+- **NF-5** — `tests/20260821_1/聴解.md`'s 問題3 構成表 note now says 実施済み and describes
+  what changed; `logs/topics.json` entry 15's `notes` field replaced the stale 446/WARN
+  paragraph with a dated re-measurement.
+
+`make check` run 2026-08-27 names zero lines for `20260821_1` (one unrelated pre-existing
+FAIL on `20260810_1`, a different in-flight repair track, not touched here). **Verdict
+stands corrected: QA: PASS (applied under the round-2-FAIL fallback, same day, per
+`jlpt-test-generation/SKILL.md`).**

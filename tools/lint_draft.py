@@ -492,18 +492,28 @@ def lint_gengo_dokkai(gengo_text: str, report: LintReport, fix: bool = False) ->
                 if word in line and re.match(r"^[1-4][.．]", line.strip()):
                     report.warn("DOKKAI-ABS-QUANT", f"Dokkai choice contains '{word}': {line.strip()[:60]}")
 
-    # Check Dokkai option length balance (max/min <= 1.30)
+    # Check Dokkai option length balance — WARN > 1.65, FAIL > 2.50, 問題14 (70-71)
+    # exempt. This mirrors check_consistency.py's check_dokkai_option_length_balance():
+    # the old max/min <= 1.30 clamp here was replaced repo-wide on 2026-08-21
+    # after re-measuring the official archive (dokkai.md §"読解 keys — unpredictable
+    # option lengths" — the 1.30 clamp failed 34.3% of official current-era items).
+    # This copy still had the pre-2026-08-21 threshold; keep both in sync.
     for m in re.finditer(r"\*\*(\d+)\*\*[ \t]*(.*?)(?=\n\*\*\d+\*\*|\n#|\Z)", gengo_text, re.S):
         q_num = int(m.group(1))
-        if 52 <= q_num <= 71:
+        if 52 <= q_num <= 69:
             block = m.group(2)
             opts = re.findall(r"[1-4][.．][ \t]*(.+?)(?=[ \t]+[1-4][.．]|\n|\Z)", block)
             if len(opts) == 4:
-                lens = [len(re.sub(r"[\s\d\.\(\)（）「」『』【】、。・/]", "", o)) for o in opts]
+                lens = [len(re.sub(r"\s+", "", o)) for o in opts]
                 mx, mn = max(lens), min(lens)
-                if mn > 0 and mx / mn > 1.30:
-                    report.error("DOKKAI-OPTION-RATIO",
-                                 f"Question {q_num} option length ratio {mx/mn:.2f}x ({lens}) exceeds 1.30 cap.")
+                if mn > 0:
+                    ratio = mx / mn
+                    if ratio > 2.50:
+                        report.error("DOKKAI-OPTION-RATIO",
+                                     f"Question {q_num} option length ratio {ratio:.2f}x ({lens}) exceeds 2.50 cap.")
+                    elif ratio > 1.65:
+                        report.warn("DOKKAI-OPTION-RATIO",
+                                    f"Question {q_num} option length ratio {ratio:.2f}x ({lens}) exceeds 1.65 (official p90 1.61).")
 
     return gengo_text
 
