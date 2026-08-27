@@ -349,20 +349,21 @@
       "deps": [
         "P4-rebuild-batch"
       ],
-      "status": "todo",
+      "status": "done",
       "artifact": "test_spec.json",
-      "test_id": "20260807_1"
+      "test_id": "20260807_1",
+      "note": "2026-08-27: quick_response was drawn pre-KEIGO_CAP (2026-08-25 fix). Measured with sample_items.is_keigo_stimulus: old draw 4/11 keigo (over KEIGO_CAP=2). Ran `sample_items.py --reroll quick_response --seed 61662667 --test-id 20260807_1`; new draw 2/11 keigo, answer_positions unchanged (聴解_問題4 stayed [3,3,2,1,1,2,2,1,1,2,3])."
     },
     {
       "id": "P5C2-20260807_1",
       "deps": [
         "P5C2-20260807_1-reroll"
       ],
-      "status": "todo",
+      "status": "done",
       "artifact": "<section re-author>",
       "tier": "C",
       "test_id": "20260807_1",
-      "note": "Was 3 axes; the talk-length axis dissolved when the floor was re-measured (see D3-repair-scope) and the casting axis is repaired, so it is now a 1-axis paper and belongs in C1, not C2 -- but it still has no 構成表, which is a 構成表 grandfather id. Decide when the C1 queue is reached; do not silently drop it. | 2026-08-25 re-measured: this paper still reports 11 聴解 lines from make check (script register — contraction rate, filler count, courtesy formulas, split turns; 問題1 質問型 monoculture まず 5/5; 問題4 casual/keigo register; 問題3 talk length and 100%-one-voice; closing-turn leaks; no non-dialogue item). Unchanged in kind from the plan's note — NOT started."
+      "note": "2026-08-27, P5C2-20260807_1: full 聴解 section re-author (問題1-5, 聴解.md + 聴解スクリプト.txt), grounded fresh in this test's own test_spec.json and a re-measured `choukai_profile.py` baseline (did not trust the 2026-08-25 note). quick_response rerolled first (see P5C2-20260807_1-reroll) since it was over KEIGO_CAP; listening_scenarios kept as-drawn — every item's 場面/topic and answer_positions position preserved except where the reroll changed 問題4's content. Added the previously-missing セクション構成表 for 問題1-5. Before -> after (measured): 問題1 質問型 まず 5/5 -> 1/5 scored (物・提出1/何をしますか1/どう直す・方法1/時・額・場所1/まず1), and 問題1 gained a non-dialogue item (5番, 税務署の案内テープ). 問題1 決め手の位置 column added (冒頭3/中盤2/終盤1). 問題1 avoids probe-carousel: 0/6 items with >=3 proposal turns. 問題1 消去方法 now the closed 9-token vocabulary, all rows <=2. 問題2 質問型: 内容・発言1->2, added a 気持ち item (6番, traded off one 理由 item to do so -- 理由 stayed at 1, documented in the 問題2 構成表 note as a target/QA tradeoff, not a gate failure). 問題3: institutional 5/5 -> institutional 2 / ordinary-person 3 (of 5 scored), talk length 168-188 chars -> 229-276 chars (inside the 220-300 target band, up from below the archive floor), voice balance 0% male/100% female -> 3 male/3 female across the 6 rows (incl. 例). 問題4: casual stimuli 0 -> 2, keigo stimuli unmeasured -> 3 (both inside target/gate bands), already-done distractors stayed at 0-1, 'あ,'-opening keys reduced from 4 to 2 (target cap). Also fixed while rewriting: banned-formula overuse (かしこまりました 3->1, 〜ていただけますか 5->2, 〜た方がいいですか 1->0, そうですね 0->raised to the archive-median floor), contraction rate 18.0/10k (below archive minimum, pre-existing FAIL) -> 42.5/10k (inside 22.4-67.4 band), 「まず」 density inside 問題1 dialogue reduced from ~28.5/10k to ~1 occurrence (announcement item only), 聴解 key-length rate 36% uniquely-longest (FAIL, target <=35%) -> 14%, closing-turn rhymes 1 -> 0 and key-in-last-line leaks 6 -> 3 (the 3 remaining leaks are all 問題1-5番, the single-turn announcement item, where the whole turn IS the last turn by construction -- accepted as an inherent tradeoff of the non-dialogue item shape, not fixed further). 問題5-2番 casting (男性係員 vs 夫, 2.94 st) left untouched as instructed. Residual, not fixed: short reaction-turn rate stayed low (8%->9% of turns <=12 chars, official ~18%, WARN-class only); 問題1-5番's 3 closing-line leaks (see above, CLOSING_SHAPE_GRANDFATHERED keeps this id). `make check` after the rewrite: 1 FAIL repo-wide, and it is this test's own 詳細解説.json/詳細解説.vi.json option-text desync from the rewritten booklet -- expected and deliberately NOT fixed here per the task's instruction that explanation-file refresh is a separate later step; do not run make model-answer until that step. Removed 20260807_1 from CHOUKAI_Q1_FORMS_GRANDFATHERED, CHOUKAI_DECIDER_GRANDFATHERED, CHOUKAI_PROBE_GRANDFATHERED, CHOUKAI_Q2_MIX_GRANDFATHERED, CHOUKAI_Q4_REGISTER_GRANDFATHERED, CHOUKAI_TALK_BAND_GRANDFATHERED, CHOUKAI_VOICE_BALANCE_GRANDFATHERED in tools/check_consistency.py (verified each now reads 'ok' for this test id). Left in CLOSING_SHAPE_GRANDFATHERED (3 leaks remain, structural) and in SETTING_ADJACENCY_GRANDFATHERED is not applicable (that set is empty and this paper introduces no 場面 repeat). ELIMINATION_VOCAB_GRANDFATHERED never listed this id and still doesn't need to (問題1 消去方法 now reads 'ok' against the closed vocabulary). Not touched: 文字語彙/文法/読解 sections, 詳細解説.json, 詳細解説.vi.json, 模範解答.html -- pre-existing DOKKAI-OPTION-RATIO lint FAILs on Q52/53/56 (言語知識・読解.md) are unrelated and out of this repair's scope (verified present before this change too, via git stash)."
     },
     {
       "id": "P5-rebuild-batch",

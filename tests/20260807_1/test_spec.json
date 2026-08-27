@@ -1,17 +1,28 @@
 {
- "seed": "15212088+reroll(usage,56459537)+reroll(word_formation,124145653)+reroll-one(orthography:4,31425245)+reroll-one(kanji_reading:0,2177799)+reroll-one(kanji_reading:3,31346296)",
+ "seed": "15212088+reroll(usage,56459537)+reroll(word_formation,124145653)+reroll-one(orthography:4,31425245)+reroll-one(kanji_reading:0,2177799)+reroll-one(kanji_reading:3,31346296)+reroll(quick_response,61662667)",
  "generated_at": "2026-08-07 18:26:24",
  "test_id": "20260807_1",
  "rotation": {
   "recency_source": "ledger",
-  "history_len": 13,
+  "history_len": 14,
   "cooldown": 2,
   "legacy": true,
   "legacy_note": "Generated before check_spec_rotation()/assert_rotation() verified each category against its OWN cooldown_for() window; the recorded `cooldown` here is the single weakest-category scalar the old checks used and is not a reliable per-category rotation proof. Grandfathered per the never-re-sample-an-already-authored-test rule (exam-blueprint 'Rotation model', 2026-08-17).",
   "verified_items": [
+   "〜に決まってる",
+   "かしこまりました",
+   "この資料、もう少し数字を大きくしたほうが見やすいんじゃない？",
+   "めどが立つ",
+   "写真撮影はご遠慮ください。",
    "包装(ほうそう)",
    "呼吸(こきゅう)",
-   "招く"
+   "山田さん、急で申し訳ないんだけど、この書類、今日中に英訳してもらえる？",
+   "心当たりがない",
+   "折り入って",
+   "招く",
+   "板につく",
+   "気が進まない",
+   "皆さんのおかげで無事に終えることができました。"
   ]
  },
  "items": {
@@ -86,17 +97,17 @@
    "条件限定(〜ない限りは…)"
   ],
   "quick_response": [
-   "心当たりがない",
-   "部長、来週の会議の資料、印刷して机の上に置いておきました。",
-   "部長、急なご相談で大変恐縮なのですが、10分ほどお時間をいただけますでしょうか。",
    "かしこまりました",
-   "今日は定時で上がらせていただいてもよろしいでしょうか。",
-   "息が合う",
-   "避難経路は、各階の掲示をご確認ください。",
+   "心当たりがない",
    "皆さんのおかげで無事に終えることができました。",
-   "めどが立つ",
-   "この路線は本日運休しております。",
-   "部長がお呼びですので、至急会議室までお願いいたします。"
+   "写真撮影はご遠慮ください。",
+   "板につく",
+   "山田さん、急で申し訳ないんだけど、この書類、今日中に英訳してもらえる？",
+   "折り入って",
+   "〜に決まってる",
+   "気が進まない",
+   "この資料、もう少し数字を大きくしたほうが見やすいんじゃない？",
+   "めどが立つ"
   ],
   "listening_scenarios": [
    {
@@ -501,5 +512,5 @@
   }
  ],
  "harvest_sha": "165eb22f8fd9",
- "pools_sha": "aadf23081392"
+ "pools_sha": "cea9612d1e0b"
 }

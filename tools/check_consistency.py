@@ -9358,36 +9358,56 @@ def check_choukai_judgment_mix(test_id: str, st: str, ct: str, m, bi):
 
 
 CHOUKAI_Q1_FORMS_GRANDFATHERED = {
-    "20260807_1", "20260810_1", "20260811_1",
+    # 20260807_1 removed 2026-08-27: P5C2-20260807_1 rewrote 問題1 to
+    # まず:1/物・提出:1/何をしますか:1/どう直す・方法:1/時・額・場所:1 (no
+    # frame above 4) — verified with `make check`.
+    "20260810_1", "20260811_1",
     "20260812_1", "20260812_2", "20260813_1", "20260813_2",
     "20260814_1", "20260817_1", "20260817_2", "20260817_3",
     "20260818_1", "20260819_1",
 }
 CHOUKAI_DECIDER_GRANDFATHERED = {
-    "20260807_1", "20260810_1", "20260811_1",
+    # 20260807_1 removed 2026-08-27: P5C2-20260807_1 added the 決め手の位置
+    # column (冒頭3/中盤2/終盤1, no bucket over 3) — verified with `make check`.
+    "20260810_1", "20260811_1",
     "20260812_1", "20260812_2", "20260813_1", "20260813_2",
     "20260814_1", "20260817_1", "20260817_2", "20260817_3",
     "20260818_1", "20260819_1",
 }
 CHOUKAI_PROBE_GRANDFATHERED = {
-    "20260807_1", "20260817_3", "20260818_1", "20260819_1",
+    # 20260807_1 removed 2026-08-27: P5C2-20260807_1 rewrote 問題1 with 0/6
+    # items carrying >=3 proposal turns — verified with `make check`.
+    "20260817_3", "20260818_1", "20260819_1",
 }
 CHOUKAI_Q2_MIX_GRANDFATHERED = {
-    "20260807_1", "20260810_1", "20260811_1",
+    # 20260807_1 removed 2026-08-27: P5C2-20260807_1 rewrote 問題2 to
+    # 内容・発言:2/一番・優先:1/理由:1/どのように:1/気持ち:1 — verified with
+    # `make check` (理由=1 is a documented target/QA tradeoff, not a gate
+    # failure; see the 構成表's 問題2 note).
+    "20260810_1", "20260811_1",
     "20260812_1", "20260812_2", "20260813_1", "20260814_1",
     "20260817_1", "20260817_2", "20260817_3", "20260818_1", "20260819_1",
 }
 CHOUKAI_Q4_REGISTER_GRANDFATHERED = {
-    "20260807_1", "20260810_1", "20260811_1",
+    # 20260807_1 removed 2026-08-27: P5C2-20260807_1 rewrote 問題4 to 2
+    # casual / 3 keigo stimuli (>=1 casual, <=4 keigo) — verified with
+    # `make check`.
+    "20260810_1", "20260811_1",
     "20260812_1", "20260812_2", "20260813_1", "20260813_2",
     "20260814_1", "20260817_1", "20260817_2", "20260817_3",
     "20260818_1", "20260819_1",
 }
 CHOUKAI_TALK_BAND_GRANDFATHERED = {
-    "20260807_1", "20260810_1", "20260811_1",
+    # 20260807_1 removed 2026-08-27: P5C2-20260807_1 rewrote 問題3 to
+    # 229-276 spoken chars per talk, inside the 220-300 target band —
+    # verified with `make check`.
+    "20260810_1", "20260811_1",
 }
 CHOUKAI_VOICE_BALANCE_GRANDFATHERED = {
-    "20260807_1", "20260810_1", "20260811_1",
+    # 20260807_1 removed 2026-08-27: P5C2-20260807_1 rewrote 問題3's speaker
+    # genders to a 3-female/3-male split (worst section now 問題5 at 52%) —
+    # verified with `make check`.
+    "20260810_1", "20260811_1",
     "20260812_1", "20260812_2", "20260813_1", "20260813_2",
     "20260814_1", "20260817_1", "20260817_2", "20260817_3",
     "20260818_1", "20260819_1",
