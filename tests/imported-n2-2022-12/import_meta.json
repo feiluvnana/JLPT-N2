@@ -1,0 +1,40 @@
+{
+  "origin": "imported",
+  "test_id": "imported-n2-2022-12",
+  "level": "N2",
+  "imported_at": "2026-08-28T08:42:10Z",
+  "sources": {
+    "booklet": "refs/JLPT_N2_NEW/13. N2 12-2022/13. N2 12-2022.pdf",
+    "script": "refs/JLPT_N2_NEW/13. N2 12-2022/13. N2 12-2022(script).pdf",
+    "audio": "refs/JLPT_N2_NEW/13. N2 12-2022/13. Nghe N2 T12-2022.mp3",
+    "answer_key": "refs/JLPT_N2_NEW/ĐÁP ÁN JLPT N2 (update 10.4.2026).pdf (extracted to refs/JLPT_N2_NEW/13. N2 12-2022/key.md); cross-checked against refs/JLPT_N2_NEW/answer_keys.json exams[\"13. N2 12-2022\"] (identical)"
+  },
+  "notes": "Folder flag `imported-` marks origin=imported. Folders without that prefix are generated.",
+  "audio": "copied verbatim from the sitting's own MP3 (official timing, 45:05); 聴解_チャプター.json is the external stub written by write_external_chapters.py (no TTS timeline to stamp).",
+  "keys_reconciled": "101/101 against refs/JLPT_N2_NEW/13. N2 12-2022/key.md and answer_keys.json[\"13. N2 12-2022\"] — 71 gengo + 30 choukai parsed out of the imported Markdown with grade_answers.parse_gengo_keys/parse_choukai_keys and diffed mechanically against every official item record, zero mismatches after two repair passes (see source_repairs). Every item was re-solved from the booklet/script text before the key table was finalized; three of those solves (52/59/60/67 area) initially disagreed with the key because of a same-topic passage (問題11(2), 読書感想文) whose options happened to closely echo a different already-completed import's passage on a related subject — re-solving from this sitting's own passage text (confirmed against booklet.md directly) resolved all three in the source's favor, see source_repairs.",
+  "source_repairs": [
+    "聴解スクリプト 問題1-3番: script.md prints 「女：はい。販売価格を少し高めに設定したので…消費者の目に止まりにくいように思うんですよ。少し目立つ色を入れたりするとか、してみてくれます？」 as one 女 turn immediately followed by a second 女 turn （「女：あ、はい。そうですね。じゃあ、価格については？」） — two consecutive 女 lines with no 男 turn between them, image-verified on script PDF p.2 (150/300dpi crops) to be printed exactly that way. Content requires a boss（男）giving the box-color feedback and 女 agreeing, so the clause from 「そう、この案だと…」through「…してみてくれます？」was reassigned to 男 in 聴解スクリプト.txt (the source's own dropped speaker-tag, not a re-authored line — every word is unchanged)",
+    "聴解スクリプト 問題2-1番: 「猗麗」（not a real word）→「綺麗」— OCR mis-render of 綺 in script.md, confirmed nonsensical in context (「夕日が沈む海の映像、〜だったなあ」)",
+    "聴解スクリプト 問題3-2番: 「料学的に明らかにされてきています」→「科学的に明らかにされてきています」— OCR mis-render of 科 as 料",
+    "聴解スクリプト 問題3-3番 choices: script.md's OCR fence prints the four options out of order — 「高齢者をサポートする役割」then a stray「2．取り扱っている商品の豊富さ」then a bare「1.」on its own line then 「3．…」「4．…」 — reassembled to 1〜4 in printed order using the 正解:1 anchor and content sense (the stray leading line is option 1's own number, separated from its text by the OCR's line wrap)",
+    "聴解スクリプト 問題3-5番 choices: same OCR line-reordering defect as 3-3番 — 「医師不足による市民への影響」printed after option 2, with a bare「1.」floating below it — reassembled to 1〜4 in printed order using the 正解:2 anchor",
+    "聴解スクリプト 問題4-4番: 「負けないって言じてるんだね」→「負けないって信じてるんだね」— OCR mis-render of 信 as 言（じてる only makes sense as 信じてる, \"you believe\"）",
+    "言語知識・読解.md 問題14: source booklet prints questions 70/71 BEFORE the course-info flyer (案内は右ページ, but linear PDF text order is 設問→案内); reordered to 案内→設問 to match this repo's existing convention for problem 14 (matches tests/imported-n2-2023-12's own normalization) and so build_booklet.py's box_passages() can find and box the passage (it expects passage text before the first **NN** stem)",
+    "言語知識・読解.md 問題8-43: stem prints on two lines in the raw extraction (context sentence, then the ★ blank sentence) — merged onto one line so check_consistency's 問題8 parser (which reads only the first line after **43**) can see the ★; wording is unchanged, and the ★'s position (2nd of 4 blanks, an official divergence from this repo's own ★-3rd convention) is the source's own, per external-test-import's imported-papers rule",
+    "言語知識・読解.md （注N） gloss lines: several passages print two notes on one line (e.g. 「（注1）のめりこむ：熱中する （注2）〜ありき：ここでは、優先」); split onto separate lines (one （注N） per line) so check_note_pairing can parse both — wording and note numbers unchanged, only the line break added",
+    "言語知識・読解.md 問題11(2) 59/60/67: my first-pass key table mis-keyed these three (59→4, 60→4, 67→2) during authoring — re-solved directly from this sitting's own passage text and corrected to the official key (59→3, 60→1, 67→4); see keys_reconciled"
+  ],
+  "left_as_printed": [
+    "聴解.md 問題1-2番: booklet page 28 prints options as a labeled diagram (a poster with four circled positions 1=生花の写真, 2=タイトル文字, 3=日時, 4=場所) rather than text options — no image pipeline convention existed for this repo's imports beyond tests/imported-n2-2023-12's own precedent (a seat-map JPEG data-URI under 問題1-2番), so the same pattern was followed: the diagram was cropped from the booklet PDF page 28 (pdftoppm r300, PIL crop+grayscale JPEG) and embedded as a data URI under the bare '1/2/3/4' option list, image-verified against the source page",
+    "言語知識・読解.md 問題10(2)/(4): apparatus text (お知らせ/メール headers, addressee lines, phone numbers, URL) transcribed as printed, including the ASCII '－' in the phone number and URL (062－241－3998, Akiharamori－tennis.jp) — this is the source's own printed character, not a repair candidate",
+    "聴解スクリプト 問題1-4番/5番, 問題2 all items, 問題3-1番/4番: script.md's text-layer OCR reads cleanly with no OCR-fence anomalies here (context and answer both make sense as printed) — left as printed with no repair"
+  ],
+  "normalizations": [
+    "ふりがな（ルビ）は転記せず（既存の imported-* と同じ方針）",
+    "（注N）等の括弧は全角に統一。原文の半角ハイフンはそのまま（left_as_printed 参照）",
+    "聴解の指示文は本冊子（このsitting自身のprint）の文言をそのまま両ファイルに使用 — jlpt-exam-structure の canonical 文言（July 2025 sitting由来）ではなく、この12/2022冊子の実際の印字（「いんさつ」等のかな表記含む）を booklet と script の両方に転記して同期",
+    "この回の booklet には 問題1〜4 いずれも「例」が印刷されていない（page 28 画像・script.md 双方で確認）— tests/imported-n2-2023-12 と同じ形で 解答用紙 に '（この回の出典には練習問題「例」の行がないため、例の欄はありません。）' と明記し、例なしで1番から開始",
+    "問題5 は external-test-import の規則通り、原文が印刷している2番の四択（10月/11月/12月/1月）を 聴解.md にそのまま印刷（1番は原文・本ルール双方とも非印刷）"
+  ],
+  "not_run": "sample_items.py / logs/ledger.json は import では触らない（未変更を確認）。exam-qa-review の内容品質QAも実施しない（external-test-import Step 2 がゲート）。Step 3（詳細解説.json / 模範解答.html）は別途の依頼で実施予定のため未実施。"
+}
