@@ -1,0 +1,921 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet"><title>聴解</title>
+<!-- src_sha: 聴解.md=ffd4046c6a62 -->
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+body { font-family: "YuMincho", "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", "Noto Serif CJK JP", serif;
+       font-size: 11.5pt; line-height: 1.9; color: #1a1a1a; }
+h1 { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 15pt;
+     border-bottom: 2.5px solid #1a1a1a; padding-bottom: 5px;
+     margin: 30px 0 14px; page-break-after: avoid; }
+h2 { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 12pt;
+     background: #efefef; border-left: 5px solid #444; padding: 5px 10px;
+     margin: 26px 0 12px; page-break-after: avoid; }
+h3 { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 11pt;
+     margin: 20px 0 8px; page-break-after: avoid; }
+p { margin: 12px 0; }
+/* Furigana: WeasyPrint has NO ruby layout (and ignores ruby-position), so the
+   reading is stacked manually. rt is taken out of flow and pinned above the
+   base, which keeps the base glyphs on the text baseline and leaves line
+   spacing untouched. Do NOT go back to display:inline-table -- WeasyPrint
+   drops the base onto its own line under the reading. */
+ruby {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: baseline;
+  /* line-height 1 keeps the ruby box hugging its glyphs; with a taller
+     inherited line-height the box grows and `bottom: 100%` would push the
+     reading far above the text. */
+  line-height: 1;
+}
+rb { display: inline; }
+rt {
+  position: absolute;
+  bottom: calc(100% + 0.1em);
+  left: -0.6em;
+  right: -0.6em;
+  font-size: 0.5em;
+  line-height: 1;
+  font-weight: normal;
+  color: #333;
+  white-space: nowrap;
+  text-align: center;
+}
+rp { display: none; }
+/* Only blocks that actually carry furigana get extra leading, so the reading
+   clears the descenders of the line above without loosening plain text. */
+p.furi, li.furi { line-height: 2.1; }
+.vocab-notes { margin-top: 8px; font-size: 9.5pt; color: #333; line-height: 1.6; border-top: 1px dashed #aaa; padding-top: 6px; }
+table { border-collapse: collapse; margin: 10px 0; width: 100%; page-break-inside: avoid; }
+th, td { border: 1px solid #888; padding: 4px 9px; font-size: 10pt;
+         line-height: 1.6; }
+th { background: #f0f0f0; font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
+blockquote { border: 1px solid #999; background: #fafafa; margin: 10px 0;
+             padding: 10px 14px; page-break-inside: avoid; }
+/* 問題9-14: the passage/notice text official booklets print inside a ruled
+   box, separate from the questions below it. See box_passages(). */
+.passage-box { border: 1px solid #999; background: #fafafa; margin: 10px 0 16px;
+                padding: 10px 16px; page-break-inside: avoid; overflow-x: auto; }
+.passage-box > *:first-child { margin-top: 0; }
+.passage-box > *:last-child { margin-bottom: 0; }
+hr { border: none; border-top: 1px dashed #999; margin: 22px 0; }
+strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; }
+
+@media screen {
+  :root { --gutter: 1.6em; }
+  body { max-width: 60em; margin: 0 auto; padding: 2.5em var(--gutter) 6em;
+         background: #fff; }
+  table { max-width: 100%; }
+}
+@media screen and (max-width: 48em) {
+  :root { --gutter: 0.8em; }
+  body { padding: 1.2em var(--gutter) 4em; font-size: 11pt; }
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  blockquote { padding: 8px 10px; margin: 8px 0; }
+  h1 { font-size: 13.5pt; margin: 22px 0 10px; }
+  h2 { font-size: 11pt; padding: 4px 8px; margin: 18px 0 10px; }
+}
+</style></head><body><h1>【聴解】</h1>
+<h2>問題1</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>1では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby style="min-width:3.50em">乗車券<rt>じょうしゃけん</rt></ruby>を<ruby>提示<rt>ていじ</rt></ruby>する<br />
+ 2. <ruby>用紙<rt>ようし</rt></ruby>に<ruby>必要<rt>ひつよう</rt></ruby>なことを<ruby>書<rt>か</rt></ruby>く<br />
+ 3. <ruby>今<rt>いま</rt></ruby>すぐ<ruby>手数料<rt>てすうりょう</rt></ruby>を<ruby>支払<rt>しはら</rt></ruby>う<br />
+ 4. <ruby>口頭<rt>こうとう</rt></ruby>で<ruby style="min-width:1.50em">新<rt>あたら</rt></ruby>しい<ruby>日<rt>にち</rt></ruby>にちを<ruby>伝<rt>つた</rt></ruby>える</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. リンクを<ruby>画面<rt>がめん</rt></ruby>のさらに<ruby>下<rt>した</rt></ruby>の<ruby>方<rt>かた</rt></ruby>に<ruby>追加<rt>ついか</rt></ruby>する<br />
+ 2. リンクの<ruby>色<rt>いろ</rt></ruby>を<ruby>変<rt>か</rt></ruby>える<br />
+ 3. リンクを<ruby style="min-width:3.00em">入力<rt>にゅうりょく</rt></ruby><ruby>欄<rt>らん</rt></ruby>の<ruby>下<rt>した</rt></ruby>に<ruby>移動<rt>いどう</rt></ruby>する<br />
+ 4. <ruby>動作<rt>どうさ</rt></ruby>のテストを<ruby style="min-width:1.50em">行<rt>おこな</rt></ruby>う</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>待ち合<rt>まちあ</rt></ruby>わせ<ruby>場所<rt>ばしょ</rt></ruby>を<ruby>変<rt>か</rt></ruby>える<br />
+ 2. <ruby style="min-width:1.50em">男<rt>おとこ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>と<ruby>午前中<rt>ごぜんちゅう</rt></ruby>に<ruby>会<rt>あ</rt></ruby>う<br />
+ 3. <ruby style="min-width:1.50em">男<rt>おとこ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>に<ruby>電話<rt>でんわ</rt></ruby>で<ruby>返事<rt>へんじ</rt></ruby>をする<br />
+ 4. <ruby>頼<rt>たの</rt></ruby>まれていた<ruby>資料<rt>しりょう</rt></ruby>を<ruby>今<rt>いま</rt></ruby>からすぐに<ruby>準備<rt>じゅんび</rt></ruby>する</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. いつも<ruby>通<rt>とう</rt></ruby>り<ruby>飲<rt>の</rt></ruby>んでいるお<ruby style="min-width:1.50em">薬<rt>くすり</rt></ruby>を<ruby>全部<rt>ぜんぶ</rt></ruby>やめる<br />
+ 2. お<ruby style="min-width:1.50em">薬<rt>くすり</rt></ruby><ruby>手帳<rt>てちょう</rt></ruby>を<ruby>用意<rt>ようい</rt></ruby>する<br />
+ 3. <ruby>予約時<rt>よやくじ</rt></ruby><ruby>間<rt>かん</rt></ruby>より<ruby>早<rt>はや</rt></ruby>く<ruby>来<rt>く</rt></ruby>る<br />
+ 4. <ruby style="min-width:3.00em">朝食<rt>ちょうしょく</rt></ruby>を<ruby>抜<rt>ぬ</rt></ruby>き、<ruby>保険証<rt>ほけんしょう</rt></ruby>を<ruby>持<rt>も</rt></ruby>っていく</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>設置場所<rt>せっちばしょ</rt></ruby>を<ruby>決<rt>き</rt></ruby>める<br />
+ 2. <ruby>案内<rt>あんない</rt></ruby>のチラシの<ruby>原稿<rt>げんこう</rt></ruby>を<ruby>作<rt>つく</rt></ruby>る<br />
+ 3. <ruby style="min-width:2.50em">業者<rt>ぎょうしゃ</rt></ruby>にすぐに<ruby style="min-width:2.50em">発注<rt>はっちゅう</rt></ruby>の<ruby>連絡<rt>れんらく</rt></ruby>を<ruby>入<rt>い</rt></ruby>れる<br />
+ 4. チラシを<ruby>配布<rt>はいふ</rt></ruby>する</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>古<rt>ふる</rt></ruby>い<ruby>冷蔵庫<rt>れいぞうこ</rt></ruby>の<ruby>中身<rt>なかみ</rt></ruby>を<ruby>先<rt>さき</rt></ruby>に<ruby>空<rt>そら</rt></ruby>にしておく<br />
+ 2. <ruby>設置場所<rt>せっちばしょ</rt></ruby>と<ruby>通路<rt>つうろ</rt></ruby>の<ruby>幅<rt>はば</rt></ruby>を<ruby>測<rt>はか</rt></ruby>っておく<br />
+ 3. <ruby>型番<rt>かたばん</rt></ruby>を<ruby>控<rt>ひか</rt></ruby>えておく<br />
+ 4. <ruby>配送<rt>はいそう</rt></ruby>を<ruby>無料<rt>むりょう</rt></ruby>にしてもらう</p>
+<h2>問題2</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>2では、まず<ruby>質問<rt>しつもん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。そのあと、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>を<ruby>見<rt>み</rt></ruby>てください。<ruby>読<rt>よ</rt></ruby>む<ruby>時間<rt>じかん</rt></ruby>があります。それから<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>の1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong><br />
+ 1. <ruby>花<rt>はな</rt></ruby>の<ruby>在庫<rt>ざいこ</rt></ruby>が<ruby>足<rt>た</rt></ruby>りないから<br />
+ 2. <ruby>配達員<rt>はいたついん</rt></ruby>の<ruby>人数<rt>にんずう</rt></ruby>が<ruby>足<rt>た</rt></ruby>りないから<br />
+ 3. お<ruby>祝<rt>いわ</rt></ruby>いの<ruby>日<rt>にち</rt></ruby>にちを<ruby>間違<rt>まちが</rt></ruby>えたから<br />
+ 4. <ruby>会場付近<rt>かいじょうふきん</rt></ruby>が<ruby>交通規制<rt>こうつうきせい</rt></ruby>になるから</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>仕上<rt>しあ</rt></ruby>がりの<ruby style="min-width:2.50em">印象<rt>いんしょう</rt></ruby>が<ruby>保<rt>たも</rt></ruby>たれて、<ruby>安心<rt>あんしん</rt></ruby>している<br />
+ 2. <ruby>予約<rt>よやく</rt></ruby>をやり<ruby>直<rt>なお</rt></ruby>すことになり、<ruby>面倒<rt>めんどう</rt></ruby>に<ruby>思<rt>おも</rt></ruby>っている<br />
+ 3. <ruby style="min-width:2.50em">料金<rt>りょうきん</rt></ruby>が<ruby>上<rt>あ</rt></ruby>がることを、<ruby>残念<rt>ざんねん</rt></ruby>に<ruby>思<rt>おも</rt></ruby>っている<br />
+ 4. デザインが<ruby style="min-width:1.50em">全<rt>まった</rt></ruby>く<ruby>決<rt>き</rt></ruby>められず、<ruby>困<rt>こま</rt></ruby>っている</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>今日<rt>こんにち</rt></ruby>は<ruby>予定<rt>よてい</rt></ruby>どおりハードに<ruby>運動<rt>うんどう</rt></ruby>すること<br />
+ 2. こまめな<ruby>水分<rt>すいぶん</rt></ruby><ruby>補給<rt>ほきゅう</rt></ruby>を<ruby style="min-width:1.50em">心<rt>こころ</rt></ruby>がけること<br />
+ 3. <ruby style="min-width:2.50em">体重<rt>たいじゅう</rt></ruby>をすぐに<ruby>落<rt>お</rt></ruby>とすこと<br />
+ 4. <ruby>運動<rt>うんどう</rt></ruby>の<ruby>前後<rt>ぜんご</rt></ruby>だけ<ruby>水<rt>みず</rt></ruby>を<ruby>飲<rt>の</rt></ruby>むこと</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>去年<rt>きょねん</rt></ruby><ruby>泊<rt>と</rt></ruby>まった<ruby style="min-width:3.50em">宿泊先<rt>しゅくはくさき</rt></ruby>で<ruby>大<rt>おお</rt></ruby>きな<ruby>苦情<rt>くじょう</rt></ruby>が<ruby>何度<rt>なんど</rt></ruby>もあったから<br />
+ 2. <ruby>参加人数<rt>さんかにんずう</rt></ruby>が<ruby>増<rt>ふ</rt></ruby>えたから<br />
+ 3. <ruby>工事<rt>こうじ</rt></ruby>のため、<ruby>去年<rt>きょねん</rt></ruby>のホテルが<ruby style="min-width:2.50em">営業<rt>えいぎょう</rt></ruby>を<ruby>休<rt>やす</rt></ruby>んでいるから<br />
+ 4. <ruby>予算<rt>よさん</rt></ruby>が<ruby>足<rt>た</rt></ruby>りなくなったから</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>今回<rt>こんかい</rt></ruby>の<ruby>同窓会<rt>どうそうかい</rt></ruby>から<ruby>会費<rt>かいひ</rt></ruby>が<ruby>例年<rt>れいねん</rt></ruby>よりも<ruby>大<rt>おお</rt></ruby>きく<ruby>値上<rt>ねあ</rt></ruby>がりしたこと<br />
+ 2. <ruby>同窓会<rt>どうそうかい</rt></ruby>の<ruby>日<rt>にち</rt></ruby>にちが<ruby>変<rt>か</rt></ruby>わったこと<br />
+ 3. <ruby>返事<rt>へんじ</rt></ruby>が<ruby>届<rt>とど</rt></ruby>いていない<ruby>人<rt>ひと</rt></ruby>に、<ruby>早<rt>はや</rt></ruby>めの<ruby>連絡<rt>れんらく</rt></ruby>を<ruby>求<rt>もと</rt></ruby>めていること<br />
+ 4. <ruby style="min-width:2.50em">会場<rt>かいじょう</rt></ruby>が<ruby>使<rt>つか</rt></ruby>えなくなったこと</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>予約<rt>よやく</rt></ruby>していた<ruby>部屋<rt>へや</rt></ruby>のタイプが<ruby style="min-width:1.50em">急<rt>きゅう</rt></ruby>に<ruby>変<rt>か</rt></ruby>わること<br />
+ 2. <ruby>一人<rt>ひとり</rt></ruby>あたりの<ruby>負担<rt>ふたん</rt></ruby><ruby style="min-width:1.50em">額<rt>ひたい</rt></ruby>が<ruby>増<rt>ふ</rt></ruby>えること<br />
+ 3. キャンセル<ruby style="min-width:1.50em">料<rt>りょう</rt></ruby>がかかること<br />
+ 4. <ruby style="min-width:3.00em">朝食<rt>ちょうしょく</rt></ruby>の<ruby>時間<rt>じかん</rt></ruby>が<ruby>変<rt>か</rt></ruby>わること</p>
+<p class="furi"><strong>6<ruby>番<rt>ばん</rt></ruby></strong><br />
+ 1. <ruby>消費税<rt>しょうひぜい</rt></ruby>の<ruby>税率<rt>ぜいりつ</rt></ruby>が、<ruby>去年<rt>きょねん</rt></ruby>よりもさらに<ruby>大<rt>おお</rt></ruby>きく<ruby>上<rt>あ</rt></ruby>がったから<br />
+ 2. <ruby style="min-width:4.00em">駐輪場<rt>ちゅうりんじょう</rt></ruby>の<ruby>台数<rt>だいすう</rt></ruby>が<ruby>減<rt>へ</rt></ruby>ったから<br />
+ 3. <ruby>管理<rt>かんり</rt></ruby><ruby>会社<rt>かいしゃ</rt></ruby>が<ruby>変<rt>か</rt></ruby>わったから<br />
+ 4. <ruby>屋根付<rt>やねづけ</rt></ruby>きの<ruby>区画<rt>くかく</rt></ruby>だけ、<ruby style="min-width:1.50em">新<rt>あたら</rt></ruby>しく<ruby style="min-width:3.50em">別料金<rt>べつりょうきん</rt></ruby>になったから</p>
+<h2>問題3</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>3では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。この<ruby>問題<rt>もんだい</rt></ruby>は、<ruby>全体<rt>ぜんたい</rt></ruby>としてどんな<ruby>内容<rt>ないよう</rt></ruby>かを<ruby>聞<rt>き</rt></ruby>く<ruby>問題<rt>もんだい</rt></ruby>です。<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<ruby>質問<rt>しつもん</rt></ruby>はありません。まず<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、<ruby>質問<rt>しつもん</rt></ruby>とせんたくしを<ruby>聞<rt>き</rt></ruby>いて、1から4の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<h2>問題4</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>4では、<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>に<ruby>何<rt>なに</rt></ruby>も<ruby>印刷<rt>いんさつ</rt></ruby>されていません。まず<ruby>文<rt>ぶん</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いてください。それから、それに<ruby>対<rt>たい</rt></ruby>する<ruby>返事<rt>へんじ</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いて、1から3の<ruby>中<rt>なか</rt></ruby>から、<ruby style="min-width:1.50em">最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つ<ruby>選<rt>えら</rt></ruby>んでください。</p>
+<p class="furi"><strong><ruby>例<rt>れい</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>3<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>4<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>5<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>6<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>7<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>8<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>9<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>10<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<p class="furi"><strong>11<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3</p>
+<h2>問題5</h2>
+<p class="furi"><ruby>問題<rt>もんだい</rt></ruby>5では、<ruby>長<rt>なが</rt></ruby>めの<ruby style="min-width:1.50em">話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>きます。この<ruby>問題<rt>もんだい</rt></ruby>には<ruby style="min-width:2.50em">練習<rt>れんしゅう</rt></ruby>はありません。<ruby>問題<rt>もんだい</rt></ruby><ruby>用紙<rt>ようし</rt></ruby>にメモをとってもかまいません。</p>
+<p>（メモ）</p>
+<p class="furi"><strong>1<ruby>番<rt>ばん</rt></ruby></strong> 1 ・ 2 ・ 3 ・ 4</p>
+<p class="furi"><strong>2<ruby>番<rt>ばん</rt></ruby></strong><br />
+<strong><ruby>質問<rt>しつもん</rt></ruby>1</strong> 1 ・ 2 ・ 3 ・ 4<br />
+<strong><ruby>質問<rt>しつもん</rt></ruby>2</strong> 1 ・ 2 ・ 3 ・ 4</p>
+<h1>解答用紙(マークシート)</h1>
+<p>答えの番号に○をつけてください。</p>
+<h2>問題1</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td>1 2 <strong>(3)</strong> 4</td>
+<td>1 2 <strong>(3)</strong> 4</td>
+<td>1 2 3 <strong>(4)</strong></td>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td>1 <strong>(2)</strong> 3 4</td>
+</tr>
+</tbody>
+</table>
+<h2>問題2</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+<th>6番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 2 3 <strong>(4)</strong></td>
+<td><strong>(1)</strong> 2 3 4</td>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td>1 2 <strong>(3)</strong> 4</td>
+<td>1 2 <strong>(3)</strong> 4</td>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td>1 2 3 <strong>(4)</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>問題3</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>(1)</strong> 2 3 4</td>
+<td>1 2 <strong>(3)</strong> 4</td>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td><strong>(1)</strong> 2 3 4</td>
+<td>1 2 <strong>(3)</strong> 4</td>
+</tr>
+</tbody>
+</table>
+<h2>問題4</h2>
+<table>
+<thead>
+<tr>
+<th>例</th>
+<th>1番</th>
+<th>2番</th>
+<th>3番</th>
+<th>4番</th>
+<th>5番</th>
+<th>6番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>(1)</strong> 2 3</td>
+<td>1 2 <strong>(3)</strong></td>
+<td><strong>(1)</strong> 2 3</td>
+<td><strong>(1)</strong> 2 3</td>
+<td>1 <strong>(2)</strong> 3</td>
+<td>1 <strong>(2)</strong> 3</td>
+<td>1 2 <strong>(3)</strong></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>7番</th>
+<th>8番</th>
+<th>9番</th>
+<th>10番</th>
+<th>11番</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>(1)</strong> 2 3</td>
+<td>1 2 <strong>(3)</strong></td>
+<td>1 <strong>(2)</strong> 3</td>
+<td><strong>(1)</strong> 2 3</td>
+<td><strong>(1)</strong> 2 3</td>
+</tr>
+</tbody>
+</table>
+<h2>問題5</h2>
+<table>
+<thead>
+<tr>
+<th>1番</th>
+<th>2番-質問1</th>
+<th>2番-質問2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 <strong>(2)</strong> 3 4</td>
+<td>1 2 <strong>(3)</strong> 4</td>
+<td><strong>(1)</strong> 2 3 4</td>
+</tr>
+</tbody>
+</table>
+<h1>【正解・解説】※解き終わってから見てください</h1>
+<h2>問題1</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>3</td>
+<td>1 ✗「いや、それが、下だと目立たないから、もっと上、入力欄のすぐ下に置いてほしいらしいんだ。」→明確に否定／2 ✗「色は、このままで問題ないよ。変える必要はないから。」→明確に否定／4 ✗「テストは、鈴木さんの担当になってるから、田中さんがやらなくて大丈夫。」→別の人に割り当て。男の人が「もっと上、入力欄のすぐ下に置いてほしい」と頼んでいるため、3が正解。</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>3</td>
+<td>1 ✗「場所は、いつもの駅前のままでいいよ。」→明確に否定／2 ✗「実は急に午前中に別の用事が入っちゃって」→実行不可／4 ✗「資料は僕の方でもう用意してあるから、そっちで準備してくれなくて大丈夫。」→既に完了。メッセージの最後で「十四時で大丈夫か、一度、こちらまで連絡をくれるかな。」と頼んでいるため、3が正解。</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>4</td>
+<td>1 ✗「お薬は、いつも通り飲んでいただいて大丈夫です。」→明確に否定／2 ✗「お薬手帳は、今、システムに登録されていますので、お持ちいただかなくて結構です。」→不要／3 ✗「特に早く来ていただく必要はありませんので、予約のお時間で結構です。」→不要。女性職員が「朝食を抜いていらしてください。保険証も、…忘れずにお持ちください。」と述べているため、4が正解。</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>2</td>
+<td>1 ✗「場所については、管理組合の方で決めることになっていますので、田中さんが決める必要はありません。」→別の人に割り当て／3 ✗「発注についても、管理会社の方が担当しますので、田中さんが手配する必要はありません。」→別の人に割り当て／4 ✗「それができてから、こちらでもお手伝いします。」→後回し。男性職員が「先に、そのチラシの原稿を作っていただけますか。」と頼んでいるため、2が正解。</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>2</td>
+<td>1 ✗「当日、中身を空にしておいてくださいましたら、あとはこちらで運びますので、今は大丈夫です。」→後回し／3 ✗「型番の控えが必要なのは、伝票を失くされた場合だけです。今回はお持ちですので、控えていただく必要はありません。」→条件不足／4 ✗「今回の商品は、配送料無料キャンペーンの対象外でして」→規則で不可。男性店員が「設置場所の幅と、そこまでの通路の幅を測っておいてもらえますか。」と頼んでいるため、2が正解。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題2</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>1</td>
+<td>2 ✗ 予約をやり直す話は出ていない／3 ✗ 料金はむしろ「少しお安くなります」と述べられている／4 ✗ デザインは「シンプルな方でお願いします」と決まっている。客が「全然違うデザインになるのは嫌だなと思ってたので、雰囲気が変わらないなら、うれしいです。」と述べているため、1が正解。</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>2</td>
+<td>1 ✗「久しぶりの日にハードにやると、体を痛めやすいので、今日は軽めにしましょう。」→明確に否定／3 ✗「焦らなくて大丈夫ですよ。」→明確に否定／4 ✗「運動の前後だけでなく、運動の途中でも、少しずつ飲んでください。」→事実誤認。トレーナーが「水分をこまめに取ることの方が大事です。」と述べているため、2が正解。</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>3</td>
+<td>1 ✗「苦情があったわけじゃないよ。去年のアンケートでも、評判は良かった」→明確に否定／2 ✗「人数は去年とほぼ変わらないよ。」→明確に否定／4 ✗「予算は例年通りで大丈夫。」→明確に否定。男の人が「去年のホテル、今、大規模な改装工事をしていて、来月いっぱいは営業していないみたいなんだ。」と述べているため、3が正解。</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>3</td>
+<td>1 ✗「会費は最初のままだよ。」→明確に否定／2 ✗「日にちはそのまま。」→明確に否定／4 ✗「使えなくなったわけじゃなくて」→明確に否定。幹事が「まだ出欠のはがきを出してない人には、できるだけ早く出してほしいなって。」と述べているため、3が正解。</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>2</td>
+<td>1 ✗「それは変えなくて大丈夫です。」→明確に否定／3 ✗「今回は人数の変更ですので、キャンセル料は発生いたしません。」→明確に否定／4 ✗「朝食のお時間も、今まで通りで問題ございません。」→明確に否定。幹事が「人数が減った分、一人当たりの料金が上がったりしないか、それが一番心配で。」と述べているため、2が正解。</td>
+</tr>
+<tr>
+<td>6番</td>
+<td>4</td>
+<td>1 ✗「税率は変わっていません。」→明確に否定／2 ✗「台数はそのままです。」→明確に否定／3 ✗「管理会社も変わっていません。」→明確に否定。女性係員が「今年から、屋根付きのエリアと、屋根なしのエリアで、料金を分けることになったんです。」と述べているため、4が正解。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題3</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>3</td>
+<td>本文引用「深夜便は通常より本数を減らして運行いたします」「最終便の発車時刻は、平日は二十三時五十分、土日祝日は二十三時二十分となります」— 話全体が、年末年始の深夜バスの運行時間の変更についてであるため、3が正解。1 ✗ 回数券の話は出ていない。2 ✗ 荷物の置き方には触れていない。4 ✗ 座席の予約方法は述べていない。</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>2</td>
+<td>本文引用「一人で黙々と通っていた会員ほど早くやめてしまう傾向がはっきりと出ています」「友人や家族を誘って一緒に来ませんかと必ず声をかけるようにしてる」— 話全体が、誰かと一緒に通うことの大切さについてであるため、2が正解。1 ✗ 筋トレのメニューには触れていない。3 ✗ 会費の話は出ていない。4 ✗ 退会の手続きは述べていない。</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>2</td>
+<td>本文引用「平均には、極端に大きい数字や小さい数字が混ざると、実感とずれた値になるという弱点があります」「中央値は、極端な数字に引っ張られにくく」— 話全体が、平均値と中央値の違いについてであるため、2が正解。1 ✗ 標準偏差には触れていない。3 ✗ グラフの種類は述べていない。4 ✗ アンケートの作り方は出ていない。</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>1</td>
+<td>本文引用「まず確認するのは、質問の内容を事前にもらえるかどうかです」「答えにくい質問には、無理にその場で答えようとせず」— 話全体が、取材を受けるときの心構えについてであるため、1が正解。2 ✗ プレスリリースの書き方には触れていない。3 ✗ 社内報の発行スケジュールは出ていない。4 ✗ 記者会見の会場は述べていない。</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>3</td>
+<td>本文引用「私たちが最も重視していたのは、間違いを恐れずに話せるかどうかでした」「点数だけでなく、話す姿勢も見ることが、本当に合ったクラス分けにつながる」— 話全体が、話す姿勢を重視したレベル分けの考え方についてであるため、3が正解。1 ✗ 入学金の割引には触れていない。2 ✗ 発音の練習方法は出ていない。4 ✗ 留学先の選び方は述べていない。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題4</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>3</td>
+<td>サイズ交換は一度のみと案内され、今回はこのサイズで我慢すると答える3が正解。1は初めての交換だと、話にない前提を主張している（誤った前提）。2はすでに別のサイズに交換したと述べており、案内された制限と噛み合わない（既に完了）。</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>1</td>
+<td>指定席と自由席のどちらかを尋ねられ、指定席で窓側を頼む1が正解。2はすでに自由席の切符を買ったと述べ、尋ねられた選択に答えていない（既に完了）。3は禁煙席かどうかという、尋ねられていない話題にそれている（論点のずれ）。</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>1</td>
+<td>代理出席を頼まれ、開始時刻を尋ねて応じる1が正解（間接的な承諾）。2はその会議がもう中止になったと、話にない前提を主張している（誤った前提）。3は再来週の会議のことだと、日程を取り違えている（時制の誤り）。</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>2</td>
+<td>計画がうまくいかないという発言に、水を差すような言い方をとがめる2が正解。1は「水道」の話だと取り違えている（対象の取り違え）。3は「水を差す」を文字通りの水の意味に取り違えている（語義の取り違え）。</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>2</td>
+<td>次回の予約が同じ時間でよいか確認され、その時間でお願いすると答える2が正解。1は先週の予定と間違えていないかと、話にない前提を主張している（誤った前提）。3は料金の支払い方法を尋ねており、日時の確認とは関係のない話題にそれている（論点のずれ）。</td>
+</tr>
+<tr>
+<td>6番</td>
+<td>3</td>
+<td>試着室の利用を案内され、礼を言って応じる3が正解。1は試着をあとに回すと答えており、今すぐの案内と噛み合わない（時制の誤り）。2は利用料を尋ねており、無料の案内を有料だと取り違えている（語義の取り違え）。</td>
+</tr>
+<tr>
+<td>7番</td>
+<td>1</td>
+<td>資料を印刷して置いておいたと報告され、礼を言って応じる1が正解。2はオンライン会議のはずだったと、話にない前提を主張している（誤った前提）。3は会議室の予約について尋ねており、資料の報告とは関係のない話題にそれている（対象の取り違え）。</td>
+</tr>
+<tr>
+<td>8番</td>
+<td>3</td>
+<td>診察券のない人は初めての方の窓口へと案内され、初めて来たことを伝えて応じる3が正解。1は受付時間を尋ねており、案内された窓口の区別とは関係のない話題にそれている（論点のずれ）。2は自分が案内する側であるかのように答えており、案内された客の返事になっていない（立場の逆転）。</td>
+</tr>
+<tr>
+<td>9番</td>
+<td>2</td>
+<td>鍵の持ち主に心当たりがあるか尋ねられ、自分も分からないと答える2が正解。1は来週使う鍵だと、話にない前提を主張している（時制の誤り）。3は自分が預かっておくと答えており、尋ねられた質問（誰の鍵か）に答えていない（立場の逆転）。</td>
+</tr>
+<tr>
+<td>10番</td>
+<td>1</td>
+<td>料金改定の話を知っているか尋ねられ、承知していると答える1が正解。2は自分から説明しようかと申し出ており、尋ねられた質問（知っているかどうか）に答えていない（立場の逆転）。3は「会議室」のことかと、改定の対象を取り違えている（語義の取り違え）。</td>
+</tr>
+<tr>
+<td>11番</td>
+<td>1</td>
+<td>バーベキューに誘われ、都合が悪いことを伝えて断る1が正解（間接的な断り）。2はバーベキューの日にちを来月だと取り違えている（時制の誤り）。3は天候の話をしており、誘いへの返事になっていない（論点のずれ）。</td>
+</tr>
+</tbody>
+</table>
+<h2>問題5</h2>
+<table>
+<thead>
+<tr>
+<th>番号</th>
+<th>正解</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>2</td>
+<td>1 ✗「クーポンは、前回のキャンペーンでもやったし、目新しさがないかも。」＋「今回はクーポンの原資があまり取れないんだよね。」→目新しさと予算の両面から早々に見送り／3 ✗「体験イベントは、正直、準備の時間が足りない気がする。会場の予約とか、今からだと厳しいよ。」→実行不可。動画配信案と店舗イベント案は、それぞれ単独では「代わり映えしない」「準備の時間が足りない」という弱点を抱えていたが、男2が「店舗でお客さんが商品を試している様子を、その場で動画に撮って、SNSで流す」と、二つの案の要素を組み合わせた第四の案を提示し、女が「イベントほど大がかりな準備はいらないし、動画にも、ちゃんと店舗の雰囲気が映る。」と同意しているため、2が正解。</td>
+</tr>
+<tr>
+<td>2番-質問1</td>
+<td>3</td>
+<td>夫は「体を動かしたいから、山を歩くのがいいな。」と登山アクティブプランを希望したが、出発日が出張の予定と重なることが分かり、「観光地めぐりの方なら、出発日は選べますか。」と尋ねたうえで「僕は、そちらにします。」と述べているため、3が正解。1・4 ✗ 夫が最後に選んだのは観光地めぐりプランであり、温泉ゆったりプランやグルメ満喫プランには触れていない。2 ✗ 登山アクティブプランは出張の予定と重なり、断念している。</td>
+</tr>
+<tr>
+<td>2番-質問2</td>
+<td>1</td>
+<td>妻は最初から「歩くのはちょっと疲れちゃうから、のんびりできる方がいいかも。」と述べ、最後まで「私は、最初のとおり、温泉ゆったりプランでお願いします。」と変えていないため、1が正解。2・4 ✗ 妻は登山アクティブプランにもグルメ満喫プランにも触れていない。3 ✗ 観光地めぐりプランを選んだのは夫であり、妻ではない。</td>
+</tr>
+</tbody>
+</table>
+<h2>セクション構成表（作問監査用）</h2>
+<h3>問題1</h3>
+<p>消去方法は閉じた語彙 <code>{既に完了 / 別の人に割り当て / 順番待ち / 後回し / 実行不可 / 規則で不可 / 条件不足 / 不要 / 明確に否定}</code> の1語＋根拠の台本引用で記す（選択肢の番号順、正解は除く）。</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>場面</th>
+<th>主導</th>
+<th>正解</th>
+<th>消去方法</th>
+<th>決め手の位置</th>
+<th>決め手の種類</th>
+<th>質問型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>例</td>
+<td>駅の窓口（指定席の日にち変更）</td>
+<td>客→職員</td>
+<td>用紙に必要なことを書く</td>
+<td>既に完了（「あ、はい、これです」＝乗車券は提示済み）／順番待ち（「手数料は…まとめて伺いますので、今はまだ結構です」）／規則で不可（「口頭でのご案内はお受けできない決まりになっておりまして」）</td>
+<td>中盤（4行目）</td>
+<td>規則・制度</td>
+<td>この後まず</td>
+</tr>
+<tr>
+<td>1番</td>
+<td>会社（システム仕様の変更）</td>
+<td>部下→（上司の指示で）修正</td>
+<td>リンクを入力欄の下に移動する</td>
+<td>明確に否定（「いや、それが…もっと上、入力欄のすぐ下に」／「色は、このままで問題ないよ」）／別の人に割り当て（「テストは、鈴木さんの担当になっている」）</td>
+<td>中盤（5行目）</td>
+<td>設備・故障</td>
+<td>どう直す・方法</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>留守番電話（待ち合わせ時間の変更・話し手一人）</td>
+<td>男性からのメッセージ→女の人</td>
+<td>男の人に電話で返事をする</td>
+<td>不要（「場所は、いつもの駅前のままでいいよ」）／実行不可（「実は急に午前中に別の用事が入っちゃって」）／既に完了（「資料は僕の方でもう用意してある」）</td>
+<td>終盤（メッセージ最後の依頼）</td>
+<td>時刻・日程</td>
+<td>何をしますか</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>病院の受付（次回来院の準備）</td>
+<td>職員→患者</td>
+<td>朝食を抜き、保険証を持っていく</td>
+<td>明確に否定（「お薬は、いつも通り飲んでいただいて大丈夫です」）／不要（「お薬手帳は…お持ちいただかなくて結構です」／「早く来ていただく必要はありません」）</td>
+<td>終盤（最後の案内）</td>
+<td>身体・飲食の制約</td>
+<td>この後まず</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>マンション管理事務室（置き配ボックスの準備）</td>
+<td>職員→住民（理事）</td>
+<td>案内のチラシの原稿を作る</td>
+<td>別の人に割り当て（「場所については、管理組合の方で決めることになっています」／「発注についても、管理会社の方が担当します」）／後回し（「それができてから、こちらでもお手伝いします」＝原稿が仕上がるまで配布を待つ）</td>
+<td>終盤（7行目）</td>
+<td>人手・担当</td>
+<td>まず何をしますか</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>家電量販店（冷蔵庫の配送手配）</td>
+<td>客→店員</td>
+<td>設置場所と通路の幅を測っておく</td>
+<td>後回し（「当日、中身を空にしておいてくださいましたら…今は大丈夫です」）／条件不足（「型番の控えが必要なのは、伝票を失くされた場合だけです。今回はお持ちですので」）／規則で不可（「配送料無料キャンペーンの対象外」）</td>
+<td>冒頭（2行目）</td>
+<td>場所・経路</td>
+<td>何を用意する</td>
+</tr>
+</tbody>
+</table>
+<p><strong>消去方法の行数（例を含む6行が母数、上限は1トークンにつき2行）</strong>：既に完了2（例・2番）／順番待ち1（例）／規則で不可2（例・5番）／明確に否定2（1番・3番）／別の人に割り当て2（1番・4番）／不要1（3番）／実行不可1（2番）／後回し2（4番・5番）／条件不足1（5番）。上限を超えるトークンはない。</p>
+<p><strong>場面の内訳</strong>：仕事を割り当てる型＝1番・4番・5番の3件（quota ≥3、1番は上司の依頼を修正する型、4番は職員からの依頼、5番は客からの依頼で担当が動く型）。サービス応対型＝例の1件（quota ≤2）。2番は話し手が一人の留守番電話メッセージで、公式の16%にあたる非対話項目。同じ種類の窓口・施設が二つ入る行はない（駅／会社／留守番電話／病院／マンション管理事務室／家電量販店）。正解の行動は6件すべて異なる。</p>
+<p><strong>決め手の位置</strong>：冒頭1（5番）／中盤2（例・1番）／終盤3（2番・3番・4番）。1つのバケツに3行までで上限内。</p>
+<p><strong>決め手の種類の行数（例を含む6行が母数、上限は1トークンにつき2行）</strong>：規則・制度1（例）／設備・故障1（1番）／時刻・日程1（2番）／身体・飲食の制約1（3番）／人手・担当1（4番）／場所・経路1（5番）。6行すべて異なるトークンで、上限を超えるトークンはない。</p>
+<p><strong>質問型の内訳（採点対象5件）</strong>：この後まず3（3番・4番、例と合わせて3/6でquota上限）／どう直す・方法1（1番、quota ≥1）／何をしますか1（2番、まずを含まない型）／何を用意する1（5番、quota ≥1の対象枠）。5件のうち「まず」を使うのは3番・4番の2件＋例の1件で計3/6（quota上限ちょうど）。</p>
+<h3>問題2</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>場面</th>
+<th>主導</th>
+<th>開始の型（第一発話）</th>
+<th>正解</th>
+<th>消去方法（誤答）</th>
+<th>鍵の言い換え</th>
+<th>決め手の種類</th>
+<th>質問型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>例</td>
+<td>花屋（電話での配達時間の変更）</td>
+<td>客→店員</td>
+<td>客が予約内容を確認する（「お届けの予定でしたよね」）</td>
+<td>会場付近が交通規制になるから</td>
+<td>話に出ていない（在庫の話なし）／話に出ていない（配達員人数の話なし）／話に出ていない（日にち間違いの話なし）</td>
+<td>「配達のトラックが会場周辺の道路を通れなくなる」→〈会場付近が交通規制になる〉</td>
+<td>場所・経路</td>
+<td>どうして</td>
+</tr>
+<tr>
+<td>1番</td>
+<td>ネイルサロン（デザインの相談）</td>
+<td>客→店員</td>
+<td>客が困りごとを伝える（「線が細かいみたいで」）</td>
+<td>仕上がりの印象が保たれて、安心している</td>
+<td>話に出ていない（予約のやり直しの話なし）／事実誤認（料金はむしろ安くなると述べられている）／事実誤認（デザインはシンプルな方で決まっている）</td>
+<td>「雰囲気が変わらないなら、うれしいです」→〈仕上がりの印象が保たれて安心〉</td>
+<td>費用・金額</td>
+<td>気持ち</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>スポーツジム（体調管理の相談）</td>
+<td>客→トレーナー</td>
+<td>客が相談を切り出す（「今日はハードにやろうと思うんですけど」）</td>
+<td>こまめな水分補給を心がけること</td>
+<td>明確に否定（「今日は軽めにしましょう」）／明確に否定（「焦らなくて大丈夫ですよ」）／事実誤認（前後だけでなく運動の途中でもと述べられている）</td>
+<td>「水分をこまめに取ることの方が大事です」→〈こまめな水分補給を心がける〉</td>
+<td>身体・飲食の制約</td>
+<td>内容・発言</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>会社（新入社員研修の会場手配）</td>
+<td>後輩→先輩</td>
+<td>後輩が確認を切り出す（「去年と同じホテルでいいですか」）</td>
+<td>工事のため、去年のホテルが営業を休んでいるから</td>
+<td>明確に否定（「苦情があったわけじゃないよ」）／明確に否定（「人数は去年とほぼ変わらないよ」）／明確に否定（「予算は例年通りで大丈夫」）</td>
+<td>「大規模な改装工事をしていて…営業していない」→〈工事のため営業を休んでいる〉</td>
+<td>設備・故障</td>
+<td>どうして</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>電話（同窓会の出欠確認）</td>
+<td>幹事→同級生</td>
+<td>幹事が用件を切り出す（「同窓会の件で、電話したんだけど」）</td>
+<td>返事が届いていない人に、早めの連絡を求めていること</td>
+<td>明確に否定（「会費は最初のままだよ」）／明確に否定（「日にちはそのまま」）／明確に否定（「使えなくなったわけじゃなくて」）</td>
+<td>「まだ出欠のはがきを出してない人には、できるだけ早く出してほしい」→〈返事が届いていない人に早めの連絡を求める〉</td>
+<td>連絡・情報の不足</td>
+<td>内容・発言</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>電話（ホテルの団体予約変更）</td>
+<td>幹事→ホテル係員</td>
+<td>幹事が変更内容を伝える（「人数が…減りそうで」）</td>
+<td>一人あたりの負担額が増えること</td>
+<td>明確に否定（「それは変えなくて大丈夫です」）／明確に否定（「キャンセル料は発生いたしません」）／明確に否定（「今まで通りで問題ございません」）</td>
+<td>「一人当たりの料金が上がったりしないか、それが一番心配で」→〈一人あたりの負担額が増える〉</td>
+<td>費用・金額</td>
+<td>一番</td>
+</tr>
+<tr>
+<td>6番</td>
+<td>駐輪場管理事務所（定期券の料金）</td>
+<td>客→係員</td>
+<td>客が疑問を切り出す（「少し高くなっていて」＋自分の推測を尋ねる）</td>
+<td>屋根付きの区画だけ、新しく別料金になったから</td>
+<td>明確に否定（「税率は変わっていません」）／明確に否定（「台数はそのままです」）／明確に否定（「管理会社も変わっていません」）</td>
+<td>「屋根付きのエリアと、屋根なしのエリアで、料金を分けることになった」→〈屋根付きの区画だけ別料金になった〉</td>
+<td>規則・制度</td>
+<td>どうして</td>
+</tr>
+</tbody>
+</table>
+<p><strong>質問型の内訳（採点対象6件）</strong>：どうして3（例・3番・6番、quota ≤3で上限ちょうど）／内容・発言2（2番・4番、quota ≥2）／気持ち1（1番、quota ≥1）／一番1（5番、quota ≤2）。正解の内容は7件すべて異なり、同じ種類の店・窓口が二度出る行はない（花屋／ネイルサロン／スポーツジム／会社／電話（同窓会）／電話（ホテル）／駐輪場管理事務所）。<strong>鍵の言い換え欄の矢印は等式として読むこと</strong>——左辺（台本の引用）が主張していないことを右辺（選択肢）が主張している行はない。いずれの行も、キーの核となる語（印象/こまめな水分補給/営業を休んでいる/早めの連絡/負担額/別料金）を、台本の引用そのままの語からずらして言い換えてある。</p>
+<p><strong>決め手の種類の行数（例を含む7行が母数、上限は1トークンにつき2行）</strong>：場所・経路1（例）／費用・金額2（1番・5番）／身体・飲食の制約1（2番）／設備・故障1（3番）／連絡・情報の不足1（4番）／規則・制度1（6番）。上限を超えるトークンはない。</p>
+<p><strong>開始の型（第一発話）を列として読む</strong>：客・後輩・幹事など話し手が用件や困りごとを切り出す形が6件（例・1番・2番・3番・4番・5番はそれぞれ表現が異なる）、疑問を切り出す形が1件（6番）。「〜たいんですけど」型の開口部はこの大問には一つもない。同型の対はない。</p>
+<h3>問題3</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>場面</th>
+<th>話者</th>
+<th>正解</th>
+<th>種別</th>
+<th>話の長さ</th>
+<th>質問型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>例</td>
+<td>年金事務所の窓口</td>
+<td>女性職員</td>
+<td>年金を早く受け取るための手続きの流れ</td>
+<td>施設からの案内</td>
+<td>231</td>
+<td>何について</td>
+</tr>
+<tr>
+<td>1番</td>
+<td>バス会社の窓口</td>
+<td>アナウンス</td>
+<td>年末年始の深夜バスの運行時間の変更</td>
+<td>施設からの案内</td>
+<td>267</td>
+<td>何について</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>スポーツクラブ</td>
+<td>男の人</td>
+<td>誰かと一緒に通うことの大切さ</td>
+<td>人物の経験・主張</td>
+<td>224</td>
+<td>何について</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>大学の公開講座</td>
+<td>男の人</td>
+<td>平均値と中央値の違い</td>
+<td>講座・人物の主張</td>
+<td>225</td>
+<td>何について</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>会社の広報の集まり</td>
+<td>女の人</td>
+<td>取材を受けるときの心構え</td>
+<td>人物の主張</td>
+<td>250</td>
+<td>何について</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>地域の講演会</td>
+<td>男の人</td>
+<td>話す姿勢を重視したレベル分けの考え方</td>
+<td>講演・人物の主張</td>
+<td>224</td>
+<td>何について</td>
+</tr>
+</tbody>
+</table>
+<p>施設からの案内＝例・1番の2件、<code>classify_p3_speaker</code> の institutional は職員／アナウンスの語で当たる2件（quota ≤2）。人物の経験・主張＝2番・3番・4番・5番の4件（quota ≥3、リード文はいずれも「男の人」「女の人」で人物として導入し、講師・専門家などの職名は本文の話者ラベルのみに使い、リード文自体には置いていない）。<code>BROADCAST_RE</code>（ラジオ／テレビ／ニュース／講演／講座／インタビュー／番組／広報…）が当たるのは3番（講座）・4番（広報）・5番（講演）の3件（下限3）。話の長さは採点対象5件で223〜267、目標帯220〜300の内側にある。選択肢はすべて「〜について」を付けない裸の名詞句で、どの話も自分の誤答選択肢に言及しておらず、打ち消しのまとめ（「Xの話ではありませんし…」）は書いていない。同じ種類の施設・機関が二度出る行はない（年金事務所／バス会社／スポーツクラブ／大学の公開講座／会社の広報／地域の講演会）。</p>
+<h3>問題4</h3>
+<p>本節の11項目は <code>test_spec.json</code> の <code>quick_response</code> プールをそのまま用いた（リロールなし）。うち7項目（1・2・3・5・6・7・8番）は完全文の抽選エントリで、語調は抽選そのものが決めるため作問側の裁量では動かせない（<code>choukai-items.md</code> §即時応答）。残り4項目（4・9・10・11番、それぞれ「水を差す」「心当たりがない」「存じております」「あいにくですが」）は慣用句・パターン型で、場面と語調を自由に発明したうえで、キーとなる返答の中に抽選された表現をそのまま使っている。</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>場面（刺激）</th>
+<th>刺激の語調</th>
+<th>正解の型</th>
+<th>誤答の型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>例</td>
+<td>自宅：写真の撮影時期を聞かれる</td>
+<td>neutral</td>
+<td>時期を答える</td>
+<td>論点のずれ／論点のずれ</td>
+</tr>
+<tr>
+<td>1番</td>
+<td>靴屋：サイズ交換は一度のみと案内される</td>
+<td>neutral</td>
+<td>今回は我慢すると受け入れる</td>
+<td>誤った前提／既に完了</td>
+</tr>
+<tr>
+<td>2番</td>
+<td>駅の窓口：指定席か自由席か尋ねられる</td>
+<td>neutral</td>
+<td>指定席で希望を伝える</td>
+<td>既に完了／論点のずれ</td>
+</tr>
+<tr>
+<td>3番</td>
+<td>会社：同僚から代理出席を頼まれる（keigo）</td>
+<td>keigo</td>
+<td>開始時刻を尋ねる（間接的な承諾）</td>
+<td>誤った前提／時制の誤り</td>
+</tr>
+<tr>
+<td>4番</td>
+<td>友人同士：計画への否定的な発言（casual）</td>
+<td>casual</td>
+<td>水を差す発言をとがめる</td>
+<td>対象の取り違え／語義の取り違え</td>
+</tr>
+<tr>
+<td>5番</td>
+<td>美容院：次回の予約時間を確認される</td>
+<td>neutral</td>
+<td>その時間でお願いすると答える</td>
+<td>誤った前提／論点のずれ</td>
+</tr>
+<tr>
+<td>6番</td>
+<td>洋服店：試着室の利用を案内される（keigo）</td>
+<td>keigo</td>
+<td>礼を言って応じる（「あ、」）</td>
+<td>時制の誤り／語義の取り違え</td>
+</tr>
+<tr>
+<td>7番</td>
+<td>会社：部下から資料準備の報告を受ける</td>
+<td>neutral</td>
+<td>礼を言って応じる</td>
+<td>誤った前提／対象の取り違え</td>
+</tr>
+<tr>
+<td>8番</td>
+<td>病院受付：診察券のない客に窓口を案内する</td>
+<td>neutral（機械分類はcasual）</td>
+<td>初めて来たことを伝える</td>
+<td>論点のずれ／立場の逆転</td>
+</tr>
+<tr>
+<td>9番</td>
+<td>自宅：鍵の持ち主を尋ねられる（casual）</td>
+<td>neutral</td>
+<td>心当たりがないと答える</td>
+<td>時制の誤り／立場の逆転</td>
+</tr>
+<tr>
+<td>10番</td>
+<td>取引先：料金改定を知っているか尋ねられる</td>
+<td>neutral</td>
+<td>存じておりますと答える</td>
+<td>立場の逆転／語義の取り違え</td>
+</tr>
+<tr>
+<td>11番</td>
+<td>友人：バーベキューに誘われる（casual）</td>
+<td>neutral（機械分類はcasual）</td>
+<td>あいにくですがと断る（間接的な断り）</td>
+<td>時制の誤り／論点のずれ</td>
+</tr>
+</tbody>
+</table>
+<p><strong>刺激の語調（機械分類 <code>classify_p4_stimulus</code>、採点対象11件）</strong>：casual 3件（4番・5番・8番）／keigo 2件（3番・6番、<code>KEIGO_CAP</code>＝2にちょうど一致）／neutral 6件（1・2・7・9・10・11番）。5番と8番は文面上は敬語調の完全文（「よろしいですか」「窓口へどうぞ」）だが、機械分類は語尾の部分文字列一致（「時間で<strong>よろしい</strong>」の「でよ」、「窓口へ<strong>どうぞ</strong>」の「ぞ」）を casual と誤検出しており、内容としては neutral の完全文である。例（自宅の場面）も含めた12件では casual 3件、目標帯「2〜4件が casual」の範囲内。keigo は目安の「≤2」にちょうど一致している。</p>
+<p><strong>誤答22件の型の内訳</strong>：誤った前提4件（1番・3番・5番・7番）／時制の誤り4件（3番・6番・9番・11番）／既に完了2件（1番・2番）／対象の取り違え2件（4番・7番）／論点のずれ4件（2番・5番・8番・11番）／立場の逆転3件（8番・9番・10番）／語義の取り違え3件（4番・6番・10番）。最も多い型でも22件中4件（約18%、上限40%以内）。誤答の型の組み合わせ（順不同、11項目すべて別）：1番{誤った前提・既に完了}／2番{既に完了・論点のずれ}／3番{誤った前提・時制の誤り}／4番{対象の取り違え・語義の取り違え}／5番{誤った前提・論点のずれ}／6番{時制の誤り・語義の取り違え}／7番{誤った前提・対象の取り違え}／8番{論点のずれ・立場の逆転}／9番{時制の誤り・立場の逆転}／10番{立場の逆転・語義の取り違え}／11番{時制の誤り・論点のずれ}——11項目すべて異なる組み合わせ。<code>ALREADY_DONE_RE</code>（もう/すでに/既に/さっき/先ほど/今しがた/たった今）に当たる誤答は1番（「もう別のサイズに交換済みです」）・2番（「もう自由席の切符を買いました」）・3番（「もう中止になったと聞きましたが」）の3件で、上限3にちょうど一致する（公式中央値1・上限3。3件はそれぞれ独立した誤答理由から生じたもので、語を言い換えても既に完了に類する状況そのものは残るため、この3件が上限として許容される）。正解が「あ」で始まる項目は6番・11番の2件（<code>startswith("あ")</code> 判定、quota ≤2にちょうど一致）。疑問文の形で返す正解は3番・9番の2件（公式帯0–15の内側）。返事33件に はい／いいえ／では で始まるものは0件。</p>
+<p><strong>問題4と他の面の題材の重なり</strong>：3番（会社・代理出席の依頼）と7番（会社・資料準備の報告）はいずれも「会社」だが用件は異なる（依頼への応諾 対 報告への応対）。1番（靴屋・サイズ交換）と6番（洋服店・試着室）はいずれも衣料品の小売店だが、業態（靴／衣類）と用件（交換の制限 対 試着室の案内）が異なる。8番（病院受付・診察券）は問題1-3番の病院受付（次回来院の準備）と施設種別は同じだが、用件（初診の窓口案内 対 次回予約の持ち物確認）は異なる。9番（自宅・鍵）は問題4の例（自宅・写真）と同じく個人宅の場面だが、話題は無関係。3番・7番の「会社」は、問題1-1番（会社・システム仕様）、問題2-3番（会社・会場手配相談）、問題5-1番（会社・企画会議）とも、部署・用件がいずれも異なる。</p>
+<h3>問題5</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>場面</th>
+<th>型</th>
+<th>話者数</th>
+<th>正解</th>
+<th>質問型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1番</td>
+<td>会社（キャンペーン企画会議）</td>
+<td>複数人の意見整理（二案融合型）</td>
+<td>3（女・男1・男2）</td>
+<td>店舗での様子を撮影し、SNSで動画配信する</td>
+<td>三人はキャンペーンの内容をどうすることにしたか</td>
+</tr>
+<tr>
+<td>2番-質問1</td>
+<td>旅行代理店（夫婦それぞれのツアー選び）</td>
+<td>列挙→個別選択（一方が予定重複で変更）</td>
+<td>3（男性店員の列挙＋夫・妻の判断）</td>
+<td>観光地めぐりプラン</td>
+<td>夫は結局どのツアーを選んだか</td>
+</tr>
+<tr>
+<td>2番-質問2</td>
+<td>同上</td>
+<td>同上</td>
+<td>3（男性店員の列挙＋夫・妻の判断）</td>
+<td>温泉ゆったりプラン</td>
+<td>妻は結局どのツアーを選んだか</td>
+</tr>
+</tbody>
+</table>
+<p><strong>1番の決定構造は、直近の papers のどれとも変えてある。</strong> <code>20260817_3</code> は三案を別々の理由で退け最後に出た新しい案を採る逐次消去＋後出し採用型、<code>20260818_1</code> は冒頭提案が条件付きで保留され話の最後に条件が満たされて確定する型、<code>20260819_1</code> は提案者自身が第一案を撤回し二番目の案が中盤で確定する撤回＋中盤確定型、<code>20260821_1</code> は冒頭提案がその場で条件を突きつけられ中盤でその条件が検証される型、<code>20260827_1</code> は窓側四席という冒頭提案がいったん費用理由で退けられたのち、却下理由そのものが誤りだったと判明して最初の案がそのまま復活する型、<code>20260827_2</code> は提案順に出た三案がそれぞれ別の基準で退けられ、最後に残った第四の案の弱点（懸念）が長所として意味づけ直されて採用される型だった。本問が採るのは、これらのどれとも異なる<strong>二案融合型</strong>——SNS動画案・店舗イベント案・割引クーポン案の三案が出たあと、クーポン案は目新しさと予算の両面から早々に退けられ（<code>20260827_2</code>のような「弱点の意味づけ転換」ではなく、単純な却下）、残る動画案とイベント案は、それぞれ単独では「代わり映えしない」「準備が間に合わない」という別々の弱点を抱えたまま並んでいたが、どちらか一方を選ぶのではなく、<strong>男2が二案の要素（動画という媒体＋店舗イベントの臨場感）を組み合わせた第四の案を新たに提示し、それがそのまま採用される</strong>。単独の案の復活でも、単独の案の意味づけ転換でも、単独の案への撤回でもなく、二つの異なる案の要素を統合した案が採用される点が、記録済みの六papersのいずれとも異なる。</p>
+<p><strong>2番の決定構造も、直近の papers のどれとも変えてある。</strong> <code>20260817_1</code> は単独逐次消去、<code>20260817_2</code> は共同逐次消去、<code>20260817_3</code> は入れ替わり型、<code>20260818_1</code> は共同決定＋用途別の第二選択、<code>20260819_1</code> は早期確定＋長考の非対称型、<code>20260821_1</code> は共同で絞ってから新情報で選び直す型（見る部屋≠申し込む部屋という行為の分岐）、<code>20260827_1</code> は兄妹がそれぞれ自分自身の忘れ物を物理的特徴で識別する識別・照合型、<code>20260827_2</code> は二人が最初同じ候補（屋外コート）に一致したのち、天候という新情報で二人そろって別の同じ候補へ乗り換える型だった。本問が採るのは、夫婦それぞれが<strong>最初から異なる好み</strong>（夫は活動的なプラン、妻はのんびりできるプラン）を持って<strong>別々の日程で構わない</strong>と述べ、共同で一つの結論を選ぶのではなく個別に選択する点で<code>20260827_2</code>（二人で同じ結論に至る）とも<code>20260821_1</code>（同じ行為を二人で分担）とも異なり、また、二人がそれぞれ<strong>自分の所有物を識別する</strong><code>20260827_1</code>とも異なる——ここでの分岐は所有物の同定ではなく、<strong>個人の好みに基づく選択</strong>である。さらに、夫の選択だけが会話の途中で<strong>予定の重複という新情報</strong>により変更される（妻の選択は最初から最後まで変わらない）という非対称な構造も、二人がそろって同じ理由で乗り換える<code>20260827_2</code>とは異なる。四つの候補は男性店員が一つ目〜四つ目の順に列挙し、読み上げの選択肢も同じ順序（温泉ゆったりプラン／登山アクティブプラン／観光地めぐりプラン／グルメ満喫プラン）。決め手となる発話はいずれも候補の<strong>名前</strong>（「登山アクティブプラン」「観光地めぐりプラン」「温泉ゆったりプラン」）で示されており、序数（〜つ目）による後方参照は使っていない。読み上げる四つの名前に決め手の属性（出発日や施設の特徴）は付けていない。話者は 夫（−12Hz）／妻（+16Hz）／男性店員（+12Hz）。夫と男性店員は同性だが、120Hz基準で3.47半音の差があり、識別margin（1.9半音）を上回る。1番の 男1（+18Hz）／男2（−16Hz）は120Hz基準で4.90半音。</p>
+<p><strong>場面の重なりの確認</strong>：問題5の2行（会社／旅行代理店）に同じ種類の施設はない。問題1-1番の会社（システム仕様の変更）、問題2-3番の会社（新入社員研修の会場手配の相談）、問題4-3番・7番の会社とも、問題5-1番の会社（キャンペーン企画会議）とは、部署・用件がいずれも異なる。問題1-例の駅（指定席の日にち変更）と問題5-2番の旅行代理店（ツアー選び）は、いずれも交通・旅行に関わる場面だが、機関の種類（駅の窓口／旅行代理店）と用件（乗車券の変更／ツアーの選択）が異なる。</p>
+<h2>得点の目安</h2>
+<p>聴解は30問、各問1点の合計30点を60点満点に換算します（1問=2点）。18点以上（60点満点で36点以上）が合格の目安です。</p></body></html>

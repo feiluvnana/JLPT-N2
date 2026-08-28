@@ -4057,6 +4057,241 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    }
+  },
+  {
+   "test_id": "20260828_1",
+   "seed": "45902235+reroll-one(reading_topics:10,37003698)+reroll-one(reading_topics:10,94976152)+reroll-one(reading_topics:10,93622828)+reroll-one(reading_topics:10,23277038)+reroll-one(reading_topics:10,32058679)+reroll-one(reading_topics:10,3156443)+reroll-one(reading_topics:10,80932160)+reroll-one(reading_topics:10,43616838)+reroll-one(reading_topics:10,3568699)+reroll-one(reading_topics:10,25184610)+reroll-one(reading_topics:10,41727507)+reroll-one(reading_topics:10,38007200)+reroll-one(reading_topics:10,835608)+reroll-one(reading_topics:10,46140406)+reroll-one(reading_topics:10,56421328)+reroll-one(reading_topics:10,27048039)+reroll-one(reading_topics:10,60102986)+reroll-one(reading_topics:10,2798883)+reroll-one(reading_topics:10,37751197)+reroll-one(reading_topics:10,74412488)+reroll-one(reading_topics:10,50905566)+reroll-one(reading_topics:10,65730628)+reroll-one(reading_topics:10,94970679)+reroll-one(reading_topics:10,53656886)+reroll-one(reading_topics:10,53151843)+reroll-one(reading_topics:10,54776333)+reroll-one(reading_topics:10,54892606)+reroll-one(reading_topics:10,84266209)+reroll-one(reading_topics:10,36775770)+reroll-one(reading_topics:10,94413885)+reroll-one(reading_topics:10,51709973)+reroll-one(reading_topics:10,51019675)+reroll-one(reading_topics:10,29889722)+reroll-one(reading_topics:10,80962786)+reroll-one(reading_topics:10,31065500)+reroll-one(reading_topics:10,54673414)+reroll-one(reading_topics:10,73263395)+reroll-one(reading_topics:10,15920823)+reroll-one(reading_topics:10,32127358)+reroll-one(reading_topics:10,70449234)+reroll-one(reading_topics:10,44133753)+reroll-one(reading_topics:10,69401608)+reroll-one(reading_topics:11,31814626)+reroll-one(reading_topics:11,84850731)+reroll-one(reading_topics:11,88776648)+reroll-one(reading_topics:11,61949771)+reroll-one(reading_topics:11,33720140)+reroll-one(reading_topics:11,23996599)+reroll-one(reading_topics:11,24409439)+reroll-one(reading_topics:11,49089723)+reroll-one(reading_topics:11,44975802)+reroll-one(reading_topics:11,5068975)+reroll-one(reading_topics:11,58757809)+reroll-one(reading_topics:11,11700168)+reroll-one(reading_topics:11,38388594)+reroll-one(reading_topics:11,44110957)+reroll-one(reading_topics:11,62956693)+reroll-one(reading_topics:11,77093406)+reroll-one(reading_topics:11,35283345)+reroll-one(reading_topics:11,13894634)+reroll-one(reading_topics:11,77561133)+reroll-one(reading_topics:11,9243543)+reroll-one(reading_topics:11,60251872)+reroll-one(reading_topics:11,81510438)+reroll-one(reading_topics:11,67617555)+reroll-one(reading_topics:11,88810615)+reroll-one(reading_topics:11,32761056)+reroll-one(reading_topics:11,57384584)+reroll-one(reading_topics:11,29520042)+reroll-one(reading_topics:11,87426641)+reroll-one(reading_topics:11,87344032)+reroll-one(reading_topics:11,97970947)+reroll-one(reading_topics:11,50453766)+reroll-one(reading_topics:11,96411329)+reroll-one(reading_topics:11,94564150)+reroll-one(reading_topics:11,43394843)+reroll-one(reading_topics:11,67859940)+reroll-one(reading_topics:11,60355898)+reroll-one(reading_topics:11,29879911)+reroll-one(reading_topics:11,29887390)+reroll-one(reading_topics:11,68752134)+reroll-one(reading_topics:11,53962223)+reroll-one(reading_topics:11,74915315)+reroll-one(reading_topics:11,30638028)+reroll-one(reading_topics:11,9102631)+reroll-one(reading_topics:11,81262589)+reroll-one(reading_topics:11,62171230)+reroll-one(reading_topics:11,24580090)+reroll-one(reading_topics:11,91915893)+reroll-one(reading_topics:11,57258739)+reroll-one(reading_topics:11,81485402)+reroll-one(reading_topics:11,52188344)+reroll-one(reading_topics:11,11838242)+reroll-one(reading_topics:11,48992274)+reroll-one(reading_topics:11,9810996)+reroll-one(reading_topics:11,59417083)+reroll-one(reading_topics:11,23559638)+reroll-one(reading_topics:11,36955237)+reroll-one(reading_topics:11,89191257)+reroll-one(reading_topics:11,86406289)+reroll-one(reading_topics:11,72677741)+reroll-one(reading_topics:11,86390519)+reroll-one(reading_topics:11,57844925)+reroll-one(reading_topics:11,24564768)+reroll-one(reading_topics:11,44514737)+reroll-one(reading_topics:11,14918855)+reroll-one(reading_topics:11,69445191)+reroll-one(reading_topics:11,48769467)+reroll-one(reading_topics:11,54431859)+reroll-one(reading_topics:11,82650322)+reroll-one(reading_topics:11,85153522)+reroll-one(reading_topics:11,50792455)+reroll-one(reading_topics:11,55850768)+reroll-one(reading_topics:11,90237994)+reroll-one(reading_topics:11,57625417)+reroll-one(reading_topics:11,36419128)+reroll-one(reading_topics:11,14748392)+reroll-one(reading_topics:11,79204060)+reroll-one(reading_topics:11,88460964)+reroll-one(reading_topics:11,17806359)+reroll-one(reading_topics:11,31568815)+reroll-one(reading_topics:11,85873397)+reroll-one(reading_topics:11,27874078)+reroll-one(reading_topics:11,34403834)+reroll-one(reading_topics:11,25234609)+reroll-one(reading_topics:11,32686178)+reroll-one(reading_topics:11,32489036)+reroll-one(reading_topics:11,80347640)+reroll-one(reading_topics:11,71005692)+reroll-one(reading_topics:11,45572152)+reroll-one(reading_topics:11,95985086)+reroll-one(reading_topics:11,37652439)+reroll-one(reading_topics:11,97240645)+reroll-one(reading_topics:11,48833783)+reroll-one(reading_topics:11,37889067)+reroll-one(reading_topics:11,9122846)+reroll-one(reading_topics:11,98152685)+reroll-one(reading_topics:11,74742146)+reroll-one(reading_topics:11,5206190)+reroll-one(reading_topics:11,76862373)+reroll-one(reading_topics:11,69570721)+reroll-one(reading_topics:11,63682238)+reroll-one(reading_topics:11,31239575)+reroll-one(reading_topics:11,59800137)+reroll-one(reading_topics:11,83299759)+reroll-one(reading_topics:11,96912275)+reroll-one(reading_topics:11,61801832)+reroll-one(reading_topics:11,53927934)+reroll-one(reading_topics:11,8770349)+reroll-one(reading_topics:11,25378222)+reroll-one(reading_topics:11,55578479)+reroll-one(reading_topics:11,31834465)+reroll-one(reading_topics:11,94156600)+reroll-one(reading_topics:11,64946253)+reroll-one(reading_topics:11,13951168)",
+   "generated_at": "2026-08-28 11:16:26",
+   "pools_sha": "37704aadda35",
+   "items": {
+    "kanji_reading": [
+     "下記(かき)",
+     "人生(じんせい)",
+     "分割(ぶんかつ)",
+     "埋め立てる(うめたてる)",
+     "追う(おう)"
+    ],
+    "orthography": [
+     "解放",
+     "温室",
+     "引き出す",
+     "破れる(紙)",
+     "基盤"
+    ],
+    "word_formation": [
+     "後〜(後半戦)",
+     "低〜(低価格)",
+     "〜感(安心感)"
+    ],
+    "context_words": [
+     "ばったり",
+     "怠け者",
+     "金遣い",
+     "詐欺",
+     "ついて(い)る",
+     "負かす",
+     "じょじょに"
+    ],
+    "paraphrase": [
+     "じっくり(よく考えて)",
+     "単なる(ただの)",
+     "愚かだ(馬鹿げている)",
+     "情けない(恥ずかしい)",
+     "しくじる"
+    ],
+    "usage": [
+     "提案する",
+     "援助する",
+     "ペース",
+     "取り入れる",
+     "催促"
+    ],
+    "grammar_p7": [
+     "〜はずがない",
+     "敬語:お目にかかる",
+     "〜にかけては",
+     "敬語:承る",
+     "〜ないわけにはいかない",
+     "〜末に",
+     "〜限り",
+     "〜限りでは",
+     "〜わけではない",
+     "〜だけ(のことは)ある",
+     "〜を通じて",
+     "〜たいものだ・てほしいものだ"
+    ],
+    "grammar_p8": [
+     "逆説仮定(〜としても…ない)",
+     "原因理由構文(〜ばかりに…てしまった)",
+     "〜からといって",
+     "同時進行(〜ながら…する)",
+     "状況限定(〜状況において…)"
+    ],
+    "quick_response": [
+     "サイズ交換は一度のみ可能です。",
+     "部長、来週の会議の資料、印刷して机の上に置いておきました。",
+     "指定席と自由席、どちらをご希望ですか。",
+     "次回の予約、来週の同じ時間でよろしいですか。",
+     "急なお願いで申し訳ありませんが、代わりに出席していただけませんか。",
+     "試着室、こちらをご利用ください。",
+     "水を差す",
+     "診察券をお持ちでない方は、初めての方窓口へ。",
+     "心当たりがない",
+     "存じております",
+     "あいにくですが"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "鉄道:指定席変更",
+      "theme": "交通"
+     },
+     {
+      "scenario": "花屋:配達指定",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "ネイル:デザイン相談",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "開発:仕様変更",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "企画会議でのアイデア出しと絞り込み",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "大学の授業:統計の読み方",
+      "theme": "教育"
+     },
+     {
+      "scenario": "フィットネスジム:体調管理の相談",
+      "theme": "睡眠・健康"
+     },
+     {
+      "scenario": "バス会社:深夜バスの時刻確認",
+      "theme": "交通"
+     },
+     {
+      "scenario": "年金事務所:手続き",
+      "theme": "行政・手続き",
+      "key": "年金事務所:手続き案内"
+     },
+     {
+      "scenario": "広報:取材対応",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "新入社員研修の宿泊施設手配",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "旅行代理店:プラン変更",
+      "theme": "旅行・観光",
+      "key": "旅行代理店:ツアー・プラン変更"
+     },
+     {
+      "scenario": "家電量販:配送日",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "スポーツクラブ:退会手続きの確認",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "病院:再診予約",
+      "theme": "医療・福祉"
+     },
+     {
+      "scenario": "留守番電話:約束変更",
+      "theme": "人間関係"
+     },
+     {
+      "scenario": "同窓会:出欠確認の電話",
+      "theme": "人間関係"
+     },
+     {
+      "scenario": "駐輪場:定期券",
+      "theme": "交通"
+     },
+     {
+      "scenario": "ホテル:団体予約の変更",
+      "theme": "旅行・観光"
+     },
+     {
+      "scenario": "マンション:置き配ボックスの設置",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "語学学校:レベル分け",
+      "theme": "教育"
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "海洋プラスチック問題",
+      "theme": "環境"
+     },
+     {
+      "topic": "高齢化社会における地域コミュニティ",
+      "theme": "地域活性化"
+     },
+     {
+      "topic": "語学学校の夏期集中講座開講案内",
+      "theme": "教育"
+     },
+     {
+      "topic": "液状化現象と埋立地の危険性",
+      "theme": "防災"
+     },
+     {
+      "topic": "動画配信と著作権",
+      "theme": "メディア・情報"
+     },
+     {
+      "topic": "廃校を活用した宿泊施設",
+      "theme": "旅行・観光"
+     },
+     {
+      "topic": "科学技術の進歩と倫理的思考",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "国際結婚と文化",
+      "theme": "人間関係"
+     },
+     {
+      "topic": "多胎児家庭への支援",
+      "theme": "子育て・家族"
+     },
+     {
+      "topic": "コンパクトシティ構想",
+      "theme": "住まい"
+     },
+     {
+      "topic": "敬語と距離感",
+      "theme": "文化・伝統"
+     },
+     {
+      "topic": "花粉症対策の新技術",
+      "theme": "睡眠・健康"
+     }
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   }
   }
  ]
 }
