@@ -119,6 +119,11 @@
     "sha256": "f6b152f58c4fb5acd2c4f7ea2ab35f0f90f603a1550d75764738f82d4ddfa476",
     "size": 40488540
   },
+  "audio/imported-n2-2025-12.mp3": {
+    "mtime_ns": 1787907508494194057,
+    "sha256": "d18c7cad5140402e02d0df4e5d4b41f91c583ccb1653d7b5e5ecd6f2cb4c96d6",
+    "size": 44793976
+  },
   "refs/JLPT_N2_NEW.zip": {
     "fingerprint": "eed78f1cf33a2b7e1c64c00ecc7a7a35631c3d7cc07814aafb97ee31714c7ba9",
     "member_bytes": 1312880101,
