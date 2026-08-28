@@ -1131,135 +1131,135 @@
     ]
   },
   "問4-1": {
-    "why_correct": "Nhờ xem hồ sơ trước sáng mai — trả lời tự nhiên nhất là nhận lời xem trong hôm nay.",
+    "why_correct": "Được hỏi tiến độ, trả lời triển vọng xong trong tháng tới — đáp án 3.",
     "options_analysis": [
-      "Dựa tiền đề sai (dự án đã hủy) — không có trong câu hỏi.",
-      "Hiểu nhầm thành tuần sau, không khớp「ngày mai」.",
-      "Khớp: nhận lời xem hồ sơ trong hôm nay."
+      "Đẩy trách nhiệm cho người khác.",
+      "Coi triển vọng đã rõ trong khi câu hỏi là \"đã rõ chưa\".",
+      "Trả lời cụ thể \"có thể xong trong tháng tới\"."
     ],
     "points": [
-      "Phân biệt lời nhận lời trực tiếp với tiền đề sai.",
-      "朝一《あさいち》: việc đầu tiên buổi sáng."
+      "めどが立つ: triển vọng trở nên rõ ràng.",
+      "「そろそろ」: thúc giục về thời điểm sắp tới."
     ]
   },
   "問4-10": {
-    "why_correct": "Nhắc đeo khẩu trang — trả lời tự nhiên là nhận lỗi quên và thực hiện ngay.",
+    "why_correct": "Đón nhận lời khen, cảm ơn và nói đã quen dần — đáp án 1.",
     "options_analysis": [
-      "Khớp: nhận lỗi quên và đeo ngay.",
-      "Nhầm nội dung, hỏi nơi bán khẩu trang.",
-      "Lạc đề, hỏi về khách khác trong khi nhắc trực tiếp người nghe."
+      "Đón nhận lời khen, nói cảm nhận đã quen việc.",
+      "Giả định còn chưa quen, lệch với lời khen.",
+      "Đẩy quyết định cho trưởng phòng."
     ],
     "points": [
-      "Câu「あ、すみません」là mẫu nhận lỗi và chấp nhận phổ biến.",
-      "着用《ちゃくよう》: mặc, đeo (khẩu trang)."
+      "板につく: trở nên phù hợp, quen thuộc với vai trò/công việc.",
+      "Khi được khen nên đáp lại bằng lời cảm ơn trước."
     ]
   },
   "問4-11": {
-    "why_correct": "Xin phép về đúng giờ — trả lời là nêu điều kiện rồi mới đồng ý.",
+    "why_correct": "Đón nhận thái độ nghiêm túc, khuyến khích nói tiếp — đáp án 3.",
     "options_analysis": [
-      "Giả định đã qua giờ làm — tiền đề không có thật.",
-      "Nhầm nghĩa「định時」(giờ làm cố định) với giờ bắt đầu.",
-      "Khớp: nêu điều kiện rồi đồng ý, vẫn là chấp nhận."
+      "Chuyển sang người khác trước khi nghe nội dung.",
+      "Xem nhẹ chuyện nghiêm túc, thiếu lịch sự.",
+      "Đón nhận thái độ nghiêm túc, khuyến khích nói ra."
     ],
     "points": [
-      "Câu trả lời gián tiếp kèm điều kiện vẫn thể hiện đồng ý.",
-      "定時《ていじ》: giờ hành chính cố định."
+      "折り入って: một cách trang trọng, nghiêm túc.",
+      "「何かな？」: cách hỏi nhẹ nhàng khuyến khích nói tiếp."
     ]
   },
   "問4-2": {
-    "why_correct": "Đáp lại chào xã giao công việc: cảm ơn đối phương đã dành thời gian.",
+    "why_correct": "Đáp lại lịch sự trước lời hứa sẽ nhắn lại — đáp án 2.",
     "options_analysis": [
-      "Giả định cuộc gọi kết thúc — tiền đề không có thật.",
-      "Khớp: cảm ơn đã dành thời gian.",
-      "Đề nghị chuyển máy — lạc đề, không tiếp nối lời chào."
+      "Nói đã giải quyết xong, không khớp mạch chuyện.",
+      "Đáp lại lịch sự lời hứa nhắn tin.",
+      "Từ chối nhắn lại, chuyển sang tự đến gặp trực tiếp."
     ],
     "points": [
-      "Câu chào mở đầu công việc được đáp bằng câu chào tương ứng.",
-      "お世話《せわ》になる: chịu ơn (lời chào xã giao)."
+      "申し伝える: kính ngữ khiêm nhường của \"truyền đạt\".",
+      "戻り次第: ngay khi quay lại."
     ]
   },
   "問4-3": {
-    "why_correct": "Nhờ xác nhận thay đổi lịch trình — trả lời trực tiếp là nhận lời xác nhận ngay.",
+    "why_correct": "Hiểu tình huống mất điện, chấp nhận đi cầu thang — đáp án 1.",
     "options_analysis": [
-      "Khớp: nhận lời xác nhận ngay nội dung.",
-      "Giả định không có thay đổi — trái với thông báo.",
-      "Né tránh trách nhiệm — không phải câu trả lời của người được nhờ."
+      "Hiểu tình huống, nêu hành động thay thế.",
+      "Đưa ra giả định về thang máy khẩn cấp không có trong lời nói.",
+      "Câu nói kiểu nhân viên, không tự nhiên với vai khách."
     ],
     "points": [
-      "Câu nhờ xác nhận thường đáp bằng lời nhận lời ngay.",
-      "先方《せんぽう》: phía đối tác."
+      "停電: mất điện.",
+      "「〜ため」: chỉ nguyên nhân."
     ]
   },
   "問4-4": {
-    "why_correct": "Hỏi đã xem email chưa — trả lời tự nhiên là xác nhận đã xem và hẹn trả lời.",
+    "why_correct": "Đồng ý với góp ý và sẽ sửa — đáp án 3.",
     "options_analysis": [
-      "Nhầm đối tượng, hỏi ngược đã gửi ai — không đáp câu hỏi.",
-      "Lạc đề sang phương tiện khác — không đáp câu hỏi.",
-      "Khớp: xác nhận đã xem, hẹn trả lời hôm nay."
+      "Giả định đã sửa rồi, không đúng thực tế.",
+      "Phản bác lại góp ý, gây căng thẳng.",
+      "Đồng ý sửa lớn hơn một chút."
     ],
     "points": [
-      "Câu hỏi xác nhận cần trả lời trực tiếp, không né chủ đề khác.",
-      "拝見《はいけん》する: khiêm nhường ngữ của 見る."
+      "「〜んじゃない？」: cách đề nghị nhẹ nhàng.",
+      "Sửa số liệu để dễ nhìn hơn."
     ]
   },
   "問4-5": {
-    "why_correct": "Yêu cầu chờ để được hướng dẫn chuyển tuyến — trả lời tự nhiên là đồng ý chờ.",
+    "why_correct": "Chấp nhận không sửa được, đề xuất mua máy mới — đáp án 2.",
     "options_analysis": [
-      "Nhầm đối tượng, chỉ hướng quầy khác — sai vai trò khách.",
-      "Khớp: đồng ý chờ, khớp lời đề nghị.",
-      "Giả định đã được hướng dẫn — tiền đề không có thật."
+      "Phủ định lại điều vừa nói là không sửa được.",
+      "Chấp nhận và đề xuất mua máy mới.",
+      "Lạc sang máy in khác."
     ],
     "points": [
-      "Lời đề nghị「xin chờ chút」đáp bằng lời đồng ý đơn giản.",
-      "乗《の》り換《か》え: chuyển tuyến (tàu, xe)."
+      "「〜ようがない」: không có cách nào để làm.",
+      "買い替え: thay đồ cũ bằng đồ mới."
     ]
   },
   "問4-6": {
-    "why_correct": "Thông báo bảo hiểm hết hạn — trả lời tự nhiên là hỏi lại cần mang gì lần sau.",
+    "why_correct": "Được hỏi phương thức thanh toán, trả lời trực tiếp — đáp án 3.",
     "options_analysis": [
-      "Giả định đã gia hạn tháng trước — tiền đề không có thật.",
-      "Nhầm đối tượng, tưởng nói về thẻ khám bệnh.",
-      "Khớp: hỏi lại cần mang gì lần sau."
+      "Giả định thẻ không dùng được, điều chưa được nói đến.",
+      "Không trả lời phương thức thanh toán, nhảy sang chuyện hóa đơn.",
+      "Trả lời trực tiếp là thanh toán bằng thẻ."
     ],
     "points": [
-      "Một số câu trả lời đúng ở dạng hỏi ngược lại.",
-      "有効期限《ゆうこうきげん》: thời hạn hiệu lực."
+      "よろしいですか: cách hỏi lịch sự về mong muốn của đối phương.",
+      "お会計: việc thanh toán tiền."
     ]
   },
   "問4-7": {
-    "why_correct": "Thông báo hết chỗ, cần chờ — trả lời tự nhiên là hỏi lại thời gian chờ.",
+    "why_correct": "Đồng ý đổi ca, hỏi rõ ngày — đáp án 2.",
     "options_analysis": [
-      "Nhầm vai trò, tưởng mình thông báo cho khách khác.",
-      "Khớp: hỏi lại thời gian chờ cụ thể.",
-      "Lạc đề, hỏi đặt chỗ trước trong khi thông báo chỉ nói hết chỗ."
+      "Né tránh, bảo nhờ người khác.",
+      "Nhận lời và hỏi rõ thứ mấy.",
+      "Từ chối vì đã có lịch, không phải nhận lời."
     ],
     "points": [
-      "Phân biệt vai trò nhân viên và khách để chọn phản ứng đúng.",
-      "満席《まんせき》: hết chỗ ngồi."
+      "当番: phiên trực, luân phiên.",
+      "「〜だっけ」: hỏi lại điều đã quên."
     ]
   },
   "問4-8": {
-    "why_correct": "Nhắc kiểm tra bảng thông báo lối thoát hiểm — trả lời là nhận lời đi xem ngay.",
+    "why_correct": "Đáp lại lời cảm ơn một cách lịch sự, tương xứng — đáp án 3.",
     "options_analysis": [
-      "Nhầm vai trò, tưởng mình là người dán thông báo.",
-      "Nhầm đối tượng, hỏi lại có phải diễn tập không.",
-      "Khớp: nhận lời và đi xem bảng thông báo ngay."
+      "Lạc sang chuyện lần trước, không liên quan.",
+      "Đột ngột chuyển sang hỏi lịch tuần sau.",
+      "Đáp lại lời cảm ơn bằng câu đáp lễ lịch sự."
     ],
     "points": [
-      "Câu bắt đầu bằng「あ」báo hiệu người nghe vừa nhớ ra.",
-      "避難経路《ひなんけいろ》: lối thoát hiểm."
+      "恐縮: cảm thấy áy náy trước thịnh tình của đối phương.",
+      "「こちらこそ」: đáp lại nguyên lời đối phương vừa nói."
     ]
   },
   "問4-9": {
-    "why_correct": "Xin chút thời gian tư vấn gấp — trả lời là nêu tình huống và đề xuất giờ khác.",
+    "why_correct": "Được nhờ hướng dẫn cách viết, giải thích theo từng mục — đáp án 2.",
     "options_analysis": [
-      "Giả định đã nghe vấn đề rồi — tiền đề không có thật.",
-      "Khớp: nêu tình huống, đề xuất giờ khác, vẫn là chấp nhận.",
-      "Đảo vai trò, đề nghị đến chỗ người kia — sai vai trò."
+      "Lạc sang chuyện thay đổi mẫu đơn.",
+      "Giải thích cụ thể cách điền từng mục.",
+      "Lạc sang nơi phát đơn, không đáp câu hỏi về cách viết."
     ],
     "points": [
-      "Câu trả lời gián tiếp (đề xuất khác) vẫn là chấp nhận.",
-      "恐縮《きょうしゅく》: cảm thấy áy náy, ngại ngùng."
+      "「〜ていただけませんか」: mẫu nhờ vả lịch sự.",
+      "申請書: đơn xin, đơn đăng ký."
     ]
   },
   "問5-1": {

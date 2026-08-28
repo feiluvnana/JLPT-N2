@@ -4919,7 +4919,7 @@ def check_spec_errand_rotation(d, spec: dict, sample, pools: dict):
         if not xs or cat not in pools:
             continue
         keyed[cat] = 0
-        cool = sample.cooldown_for(cat, len(pools[cat]))
+        cool = sample.cooldown_for(cat, pools[cat])
         recent: dict[str, str] = {}
         for entry in prior[-cool:] if cool > 0 else []:
             tid = str(entry.get("test_id"))
@@ -5113,7 +5113,7 @@ def check_grammar_cross_category_rotation(d, spec: dict, sample, pools: dict):
         xs = (spec.get("items") or {}).get(cat) or []
         if not xs or cat not in pools:
             continue
-        cool = sample.cooldown_for(cat, len(pools[cat]))
+        cool = sample.cooldown_for(cat, pools[cat])
         recent: dict[str, tuple[str, str, str]] = {}
         for entry in prior[-cool:] if cool > 0 else []:
             tid = str(entry.get("test_id"))
@@ -5931,7 +5931,7 @@ def check_spec_rotation(d, spec: dict, sample, pools: dict):
             xs = [x for x in xs if pool_entry_text(x) in legacy_verified]
             if not xs:
                 continue              # still grandfathered — counted below
-        cool = sample.cooldown_for(cat, len(pools[cat]))
+        cool = sample.cooldown_for(cat, pools[cat])
         if cool <= 0:
             continue
         recent: dict[str, str] = {}
@@ -7062,7 +7062,7 @@ def check_legacy_item_repeats(sample):
     hits = []
     for cat in ("kanji_reading", "orthography", "word_formation",
                 "context_words", "paraphrase", "usage"):
-        cool = sample.cooldown_for(cat, len(pools.get(cat, [])))
+        cool = sample.cooldown_for(cat, pools.get(cat, []))
         seen: dict[str, tuple[int, str]] = {}
         for i, entry in enumerate(hist):
             for x in (entry.get("items") or {}).get(cat) or []:

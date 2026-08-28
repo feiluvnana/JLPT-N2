@@ -132,6 +132,26 @@ by pattern, or stops testing a skill the exam tests:
    ならなくなった」). Write one or two 問題1/2 items per test where a
    first-mentioned plan (an email, a booking, an order) is complicated or
    reversed by a new fact one speaker didn't have at the start.
+8. **A turn-length fix must not zero out reaction turns — count both, every
+   time.** Found 2026-08-27: `20260827_1`/`20260827_2` both shipped short
+   reaction turns at **7%** (`check_choukai_reaction_rate`'s own WARN line),
+   half the gate's 12% floor and well under official's 16.9%, right after
+   turn-shape rule 178 ("write substantive dialogue turns rather than rapid
+   transaction ping-pong") pushed average turn length UP (42–48 chars/turn,
+   now above official's 38-char median — the ping-pong problem is fixed).
+   Two consecutive papers on the same class = systemic, not a slip: writing
+   longer, more substantive turns silently crowded out the SHORT reaction
+   turns that give the other speaker room to land, because nothing tied the
+   two rules together. **Rule: lengthening a turn must not remove a
+   reaction — add reactions as separate lines from the OTHER speaker
+   instead.** Before finalizing a 大問, run `make choukai-profile` and read
+   this test's `reactions:`/`openers:` numbers against the printed official
+   row (target ≥18% reactions, ≥35% filler/reaction openers; gate floor is
+   12% reactions) — the tool already measures every shipped test, so use it
+   DURING drafting, not just after `make check` WARNs on the finished file.
+   A 大問 that reads as substantive-but-flat (no 「うん」「そうですね」「ああ」
+   between the long turns) needs MORE short lines added, never shorter long
+   ones.
 
 ### Banned formulas — each one shipped, with the count that banned it
 

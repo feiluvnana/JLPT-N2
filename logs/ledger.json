@@ -3591,7 +3591,7 @@
   },
   {
    "test_id": "20260827_1",
-   "seed": "74159933+reroll-one(listening_scenarios:19,1503727)+reroll-one(listening_scenarios:20,1067650)+reroll(reading_topics,88418643)+reroll-one(listening_scenarios:19,78275936)+reroll-one(listening_scenarios:20,45419472)+reroll-one(listening_scenarios:19,65200737)+reroll-one(listening_scenarios:20,4105188)+reroll-one(listening_scenarios:19,22936980)+reroll-one(listening_scenarios:20,33783736)+reroll-one(listening_scenarios:19,34703743)+reroll-one(listening_scenarios:20,26175696)+reroll-one(listening_scenarios:19,86762872)+reroll-one(listening_scenarios:20,55501699)+reroll-one(listening_scenarios:19,99227395)+reroll-one(listening_scenarios:20,18469859)+reroll-one(listening_scenarios:19,79919866)+reroll-one(listening_scenarios:20,43850833)+reroll-one(listening_scenarios:19,6011042)+reroll-one(listening_scenarios:20,65307134)+reroll-one(listening_scenarios:19,32507993)+reroll-one(listening_scenarios:20,62316180)+reroll-one(listening_scenarios:19,82992831)+reroll-one(listening_scenarios:20,85945345)+reroll-one(listening_scenarios:19,77173862)+reroll-one(listening_scenarios:20,83891024)+reroll-one(listening_scenarios:19,81504797)+reroll-one(listening_scenarios:20,62033773)+reroll-one(listening_scenarios:19,49121662)+reroll-one(listening_scenarios:20,99690490)+reroll-one(listening_scenarios:19,60757161)+reroll-one(listening_scenarios:20,80841231)+reroll-one(quick_response:0,55905621)+reroll-one(quick_response:1,20518228)+reroll-one(quick_response:2,73381331)+reroll-one(quick_response:3,36226477)+reroll-one(quick_response:4,21105550)+reroll-one(quick_response:5,18036337)+reroll-one(quick_response:6,85639498)+reroll-one(quick_response:7,95351110)+reroll-one(quick_response:8,67309618)+reroll-one(quick_response:9,43201980)+reroll-one(quick_response:10,60609992)+reroll-one(quick_response:0,2356840)",
+   "seed": "74159933+reroll-one(listening_scenarios:19,1503727)+reroll-one(listening_scenarios:20,1067650)+reroll(reading_topics,88418643)+reroll-one(listening_scenarios:19,78275936)+reroll-one(listening_scenarios:20,45419472)+reroll-one(listening_scenarios:19,65200737)+reroll-one(listening_scenarios:20,4105188)+reroll-one(listening_scenarios:19,22936980)+reroll-one(listening_scenarios:20,33783736)+reroll-one(listening_scenarios:19,34703743)+reroll-one(listening_scenarios:20,26175696)+reroll-one(listening_scenarios:19,86762872)+reroll-one(listening_scenarios:20,55501699)+reroll-one(listening_scenarios:19,99227395)+reroll-one(listening_scenarios:20,18469859)+reroll-one(listening_scenarios:19,79919866)+reroll-one(listening_scenarios:20,43850833)+reroll-one(listening_scenarios:19,6011042)+reroll-one(listening_scenarios:20,65307134)+reroll-one(listening_scenarios:19,32507993)+reroll-one(listening_scenarios:20,62316180)+reroll-one(listening_scenarios:19,82992831)+reroll-one(listening_scenarios:20,85945345)+reroll-one(listening_scenarios:19,77173862)+reroll-one(listening_scenarios:20,83891024)+reroll-one(listening_scenarios:19,81504797)+reroll-one(listening_scenarios:20,62033773)+reroll-one(listening_scenarios:19,49121662)+reroll-one(listening_scenarios:20,99690490)+reroll-one(listening_scenarios:19,60757161)+reroll-one(listening_scenarios:20,80841231)+reroll-one(quick_response:0,55905621)+reroll-one(quick_response:1,20518228)+reroll-one(quick_response:2,73381331)+reroll-one(quick_response:3,36226477)+reroll-one(quick_response:4,21105550)+reroll-one(quick_response:5,18036337)+reroll-one(quick_response:6,85639498)+reroll-one(quick_response:7,95351110)+reroll-one(quick_response:8,67309618)+reroll-one(quick_response:9,43201980)+reroll-one(quick_response:10,60609992)+reroll-one(quick_response:0,2356840)+reroll(quick_response,1001)+reroll(quick_response,3001)+reroll(quick_response,3002)+reroll(quick_response,3003)+reroll(quick_response,3004)+reroll(quick_response,3005)+reroll-one(quick_response:4,5001)",
    "generated_at": "2026-08-27 14:07:53",
    "pools_sha": "37704aadda35",
    "items": {
@@ -3797,17 +3797,17 @@
      }
     ],
     "quick_response": [
+     "この路線は本日運休しております。",
+     "恐縮ですが、締め切りを一日だけ延ばしていただけないでしょうか。",
+     "会場までは駅から歩いて15分ほどかかりますが、よろしいでしょうか。",
+     "先輩、この前借りた本、まだ読み終わってないんだよ。",
+     "この企画書、明日の朝一で見てもらえるかな。",
      "悪いんだけど、今日ちょっと手伝ってくれない？",
-     "本日はお忙しいところ、お時間をいただきありがとうございます。",
-     "社長、来期の事業計画書がまとまりましたので、ご説明させていただきます。",
-     "火災報知器が作動しました。避難してください。",
-     "課長、本日の打ち合わせの議事録、作成いたしましたが、ご確認いただけますか。",
-     "何かお困りのことがございましたら、遠慮なくお申し付けください。",
-     "急なお願いで申し訳ありませんが、代わりに出席していただけませんか。",
-     "急なご依頼で大変恐縮ですが、明日までにこちらのデータをご確認いただけますでしょうか。",
-     "先生、レポートの提出期限を延ばしていただくことは可能でしょうか。",
-     "終電が近いので、そろそろお引き取りください。",
-     "この路線は本日運休しております。"
+     "〜に決まってる",
+     "今度の旅行、結局どこに行くことになったのかな。",
+     "駅前のカフェ、今日はもう閉まってるんじゃない？",
+     "気が進まない",
+     "今日、鍵をうっかり忘れて、家に入れないんだ。"
     ]
    },
    "draw": {
@@ -3826,7 +3826,7 @@
   },
   {
    "test_id": "20260827_2",
-   "seed": "54230014+reroll-one(listening_scenarios:10,78719297)+reroll-one(listening_scenarios:3,5782241)+reroll-one(listening_scenarios:3,78306702)+reroll-one(listening_scenarios:3,9473546)+reroll-one(listening_scenarios:3,94767409)+reroll-one(listening_scenarios:3,94409768)+reroll-one(listening_scenarios:3,59572258)",
+   "seed": "54230014+reroll-one(listening_scenarios:10,78719297)+reroll-one(listening_scenarios:3,5782241)+reroll-one(listening_scenarios:3,78306702)+reroll-one(listening_scenarios:3,9473546)+reroll-one(listening_scenarios:3,94767409)+reroll-one(listening_scenarios:3,94409768)+reroll-one(listening_scenarios:3,59572258)+reroll(quick_response,2002)+reroll(quick_response,4001)+reroll(quick_response,4002)+reroll(quick_response,4003)+reroll(quick_response,4004)+reroll(quick_response,4005)+reroll(quick_response,4006)+reroll(quick_response,4007)+reroll(quick_response,4008)+reroll(quick_response,4005)+reroll-one(quick_response:5,6001)+reroll-one(quick_response:5,6002)",
    "generated_at": "2026-08-27 18:28:23",
    "pools_sha": "37704aadda35",
    "items": {
@@ -3892,19 +3892,6 @@
      "補足追加(〜なお…)",
      "逆説対比(〜のに対して…は)",
      "否定強調(〜などあろうはずがない)"
-    ],
-    "quick_response": [
-     "この企画書、明日の朝一で見てもらえるかな。",
-     "こちらこそ、いつもお世話になっております。",
-     "先方からスケジュールの変更の連絡が入ったのですが、確認していただけますか。",
-     "お疲れ様です。先ほどのメール、確認いただけましたでしょうか。",
-     "乗り換え案内をいたしますので、少々お待ちください。",
-     "保険証の有効期限が切れております。",
-     "お客様、ただいま満席となっておりますので、少々お待ちいただけますでしょうか。",
-     "避難経路は、各階の掲示をご確認ください。",
-     "部長、急なご相談で大変恐縮なのですが、10分ほどお時間をいただけますでしょうか。",
-     "マスクの着用にご協力ください。",
-     "今日は定時で上がらせていただいてもよろしいでしょうか。"
     ],
     "reading_topics": [
      {
@@ -4042,6 +4029,19 @@
       "scenario": "社内システム変更に伴うパスワード更新",
       "theme": "デジタル化"
      }
+    ],
+    "quick_response": [
+     "めどが立つ",
+     "申し伝えます",
+     "停電のため、エレベーターは使えません。",
+     "この資料、もう少し数字を大きくしたほうが見やすいんじゃない？",
+     "〜ようがない",
+     "お会計、カードと現金、どちらがよろしいですか。",
+     "山田さん、来週の当番、代わってもらえないかな。",
+     "本日はお忙しいところ、お時間をいただきありがとうございます。",
+     "すみません、この申請書の書き方がよく分からないのですが、教えていただけませんか。",
+     "板につく",
+     "折り入って"
     ]
    },
    "draw": {

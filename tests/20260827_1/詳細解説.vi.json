@@ -1131,135 +1131,135 @@
     ]
   },
   "問4-1": {
-    "why_correct": "Nhận lời gián tiếp — giúp ngay sau khi xong việc đang làm.",
+    "why_correct": "Được hỏi tiến độ, trả lời triển vọng xong trong tháng tới — đáp án 3.",
     "options_analysis": [
-      "「もう終わらせておいたよ」nói đã xong, không khớp lời đang nhờ.",
-      "「山田さんの方じゃない」nhầm đối tượng cần giúp.",
-      "「今の作業が終わったら、すぐ行くよ」đúng."
+      "Hiểu nhầm ngừng chạy thành chậm giờ.",
+      "Câu nói kiểu nhân viên, không tự nhiên với vai khách.",
+      "Chấp nhận việc ngừng chạy, hỏi phương án thay thế."
     ],
     "points": [
-      "間接的《かんせつてき》な承諾《しょうだく》: nhận lời vòng vo.",
-      "作業《さぎょう》: công việc đang làm."
+      "運休《うんきゅう》: ngừng chạy hoàn toàn, không phải chậm trễ.",
+      "「〜ております」: thể lịch sự khi giải thích tình trạng."
     ]
   },
   "問4-10": {
-    "why_correct": "Sắp hết giờ tàu cuối, được mời rời quán — nhờ tính tiền.",
+    "why_correct": "Đồng cảm và nói không cần cố đến — đáp án 2.",
     "options_analysis": [
-      "「終電は、まだ十分時間がある」phủ nhận, mâu thuẫn lời nhắc.",
-      "「お会計をお願いします」đúng.",
-      "「お引き取りというのは、忘れ物」hiểu sai nghĩa từ."
+      "Đề xuất đổi lịch, không khớp tâm trạng không muốn đi.",
+      "Đón nhận cảm xúc, nói không cần miễn cưỡng.",
+      "Khái quát hóa cảm xúc, không đáp đúng tâm sự."
     ],
     "points": [
-      "お引《ひ》き取《と》りください: mời khách rời đi.",
-      "終電《しゅうでん》: chuyến tàu cuối cùng."
+      "気《き》が進《すす》まない: không có hứng, không muốn làm.",
+      "Nên thể hiện thông cảm trước với tâm trạng tiêu cực của đối phương."
     ]
   },
   "問4-11": {
-    "why_correct": "Tuyến nghỉ chạy hôm nay — hỏi vị trí xe buýt thay thế.",
+    "why_correct": "Đưa giải pháp cụ thể là cho mượn chìa khóa dự phòng — đáp án 2.",
     "options_analysis": [
-      "「悪天候のためですよね」giả định lý do không có trong thông báo.",
-      "「振替のバスは、どちらから出ていますか」đúng.",
-      "「電車が遅れるという意味ですか」hiểu sai nghĩa từ."
+      "Lạc sang chuyện chỗ để chìa khóa, không giải quyết việc bị khóa ngoài.",
+      "Giải quyết trực tiếp bằng cách cho mượn chìa khóa dự phòng.",
+      "Chỉ là đề xuất tạm hoãn vấn đề."
     ],
     "points": [
-      "運休《うんきゅう》: ngừng vận hành.",
-      "振替《ふりかえ》バス: xe buýt thay thế."
+      "うっかり: sơ ý, vô ý quên việc gì đó.",
+      "合鍵《あいかぎ》: chìa khóa dự phòng giống hệt."
     ]
   },
   "問4-2": {
-    "why_correct": "Lời chào cảm ơn của khách cần đáp lại tương xứng.",
+    "why_correct": "Thông cảm hoàn cảnh cấp dưới, đồng ý gia hạn có điều kiện — đáp án 3.",
     "options_analysis": [
-      "「先週もお越しいただきましたよね」giả định việc không có trong câu.",
-      "「来週のご予定でしたか」nhầm thời điểm.",
-      "「こちらこそ、足をお運びいただき恐縮です」đúng."
+      "Trách đã báo trước, không khớp với lời xin phép.",
+      "Đẩy trách nhiệm quyết định cho người khác.",
+      "Thông cảm hoàn cảnh, đồng ý cho thêm một ngày."
     ],
     "points": [
-      "足《あし》をお運《はこ》びいただく: kính ngữ khách đến thăm.",
-      "恐縮《きょうしゅく》です: cảm ơn khiêm nhường."
+      "恐縮《きょうしゅく》: cách nói lịch sự thể hiện áy náy, xin lỗi.",
+      "「〜ていただけないでしょうか」: mẫu nhờ vả khiêm nhường."
     ]
   },
   "問4-3": {
-    "why_correct": "Được đề nghị giải thích, nhận lời nhưng giới hạn thời gian.",
+    "why_correct": "Nghe thời gian đi bộ, trả lời trực tiếp là không vấn đề — đáp án 2.",
     "options_analysis": [
-      "「もう目を通しておいたよ」mâu thuẫn việc sắp nghe giải thích.",
-      "「十分だけ時間をもらえるかな」đúng.",
-      "「コピー機の調子はどうですか」lạc đề."
+      "Giả định đã gọi taxi, điều chưa được nói đến.",
+      "Chấp nhận thời gian đi bộ, trả lời ổn.",
+      "Phản ứng thái quá với chỉ 15 phút đi bộ."
     ],
     "points": [
-      "説明《せつめい》させていただく: xin phép giải thích.",
-      "事業計画書《じぎょうけいかくしょ》: kế hoạch kinh doanh."
+      "「よろしいでしょうか」: cách hỏi lịch sự xác nhận ý kiến đối phương.",
+      "「〜ほど」: chỉ mức độ ước chừng."
     ]
   },
   "問4-4": {
-    "why_correct": "Được yêu cầu sơ tán khẩn cấp — mang đồ và ra ngoài ngay.",
+    "why_correct": "Trấn an không cần vội, đọc từ từ — đáp án 3.",
     "options_analysis": [
-      "「点検か何かですか」giả định sai là kiểm tra định kỳ.",
-      "「そちらの商品は」lạc đề, hỏi việc mua hàng.",
-      "「荷物だけ持って、すぐ外に出ます」đúng."
+      "Đề nghị giải thích thay, lạc đề so với việc mượn sách.",
+      "Chuyển hướng sang việc cho người khác mượn.",
+      "\"Đọc từ từ\" thể hiện sự thoải mái, không trách móc."
     ],
     "points": [
-      "火災報知器《かさいほうちき》: chuông báo cháy.",
-      "避難《ひなん》する: sơ tán."
+      "「〜んだよ」: đuôi câu giải thích lý do, thân mật.",
+      "Cách nói giữa tiền bối và hậu bối thân thiết."
     ]
   },
   "問4-5": {
-    "why_correct": "Được nhờ xem biên bản họp, chỉ đạo gián tiếp đặt lên bàn.",
+    "why_correct": "Nhận lời và hẹn xem trong ngày — đáp án 1.",
     "options_analysis": [
-      "「机に置いておいてくれるかな」đúng.",
-      "「明日の打ち合わせの分」nhầm sang biên bản ngày mai.",
-      "「部長に見てもらった方が」đùn việc sang người khác."
+      "Nhận lời và nói thời điểm sẽ xem.",
+      "Chỉ hỏi lại nghĩa của \"朝一\", không đáp lời nhờ.",
+      "Đẩy trách nhiệm cho người khác, không phải đã gửi."
     ],
     "points": [
-      "議事録《ぎじろく》: biên bản cuộc họp.",
-      "打《う》ち合《あ》わせ: cuộc họp trao đổi."
+      "朝一: đầu giờ sáng, sớm nhất trong ngày.",
+      "目を通す: xem lướt qua để kiểm tra."
     ]
   },
   "問4-6": {
-    "why_correct": "Được mời hỏi khi có vướng mắc — nêu ngay câu hỏi đang có.",
+    "why_correct": "Nhận lời giúp, hỏi cụ thể cần làm gì — đáp án 2.",
     "options_analysis": [
-      "「お困りなのは、そちらの方ですよね」đảo ngược vai trò.",
-      "「少し伺いたいことがあるんですが」đúng.",
-      "「申し付けるのは、後日でも」hiểu sai nghĩa thành hẹn sau."
+      "Cho rằng đã nhờ người khác, không khớp.",
+      "Nhận lời và hỏi rõ nội dung công việc.",
+      "Từ chối hôm nay, không phải nhận lời."
     ],
     "points": [
-      "お申《もう》し付《つ》けください: mời khách yêu cầu.",
-      "遠慮《えんりょ》なく: đừng ngại."
+      "「悪いんだけど」: lời mở đầu khi nhờ vả.",
+      "Nhận lời trực tiếp bằng 「いいよ」cũng tự nhiên ở N2."
     ]
   },
   "問4-7": {
-    "why_correct": "Được nhờ dự họp thay — hỏi thêm chi tiết rồi nhận lời.",
+    "why_correct": "Hỏi lại căn cứ của sự tự tin — đáp án 3.",
     "options_analysis": [
-      "「会議室は、何階でしたか」lạc đề.",
-      "「鈴木さんに頼んだ方が」nhầm đối tượng.",
-      "「何時からか、資料はありますか」đúng."
+      "Giả định đã thành công, còn quá sớm.",
+      "Chỉ nhắc lại lời cũ, không đáp đúng ý.",
+      "Phản ứng với mức độ tự tin \"chắc chắn\"."
     ],
     "points": [
-      "代《か》わりに出席《しゅっせき》する: dự họp thay.",
-      "急《きゅう》なお願《ねが》い: lời nhờ gấp."
+      "「〜に決まってる」: cách nói khẳng định chắc chắn, thân mật.",
+      "「言い切れる」: dám khẳng định dứt khoát."
     ]
   },
   "問4-8": {
-    "why_correct": "Được nhờ kiểm tra dữ liệu trước hạn ngày mai — nhận lời kiểm tra ngay.",
+    "why_correct": "Trả lời thật là chưa quyết định — đáp án 3.",
     "options_analysis": [
-      "「来週でも大丈夫でしょうか」mâu thuẫn hạn「đến ngày mai」.",
-      "「鈴木さんの方ですよね」nhầm đối tượng.",
-      "「今日中に見ておきます」đúng."
+      "Giả định đã đặt chỗ, điều chưa xảy ra.",
+      "Né tránh bằng cách bảo hỏi người khác.",
+      "Trả lời trung thực là chưa quyết định."
     ],
     "points": [
-      "恐縮《きょうしゅく》です: khiêm nhường khi nhờ gấp.",
-      "確認《かくにん》する: kiểm tra, xác nhận."
+      "「結局」: hỏi về kết quả cuối cùng.",
+      "「〜のかな」: đuôi câu hỏi như tự nói với mình."
     ]
   },
   "問4-9": {
-    "why_correct": "Được xin gia hạn nộp báo cáo — trực tiếp đồng ý một ngày.",
+    "why_correct": "Sửa lại nhận định sai bằng sự thật về giờ mở cửa — đáp án 1.",
     "options_analysis": [
-      "「一日くらいなら、大丈夫だよ」đúng.",
-      "「来月頭までだったと思うけど」giả định sai về hạn nộp.",
-      "「他の人に聞いてみてくれるかな」đùn việc sang người khác."
+      "Sửa lại bằng sự thật \"mở đến 10 giờ tối\".",
+      "Chấp nhận theo giả định sai là đã đóng cửa.",
+      "Lạc sang chuyện đóng cửa từ tháng sau."
     ],
     "points": [
-      "提出期限《ていしゅつきげん》を延《の》ばす: gia hạn nộp.",
-      "レポート: báo cáo, tiểu luận."
+      "「〜んじゃない？」: cách hỏi xác nhận suy đoán, thân mật.",
+      "Nên sửa nhận định sai bằng sự thật cụ thể."
     ]
   },
   "問5-1": {

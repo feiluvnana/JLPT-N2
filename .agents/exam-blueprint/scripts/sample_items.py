@@ -825,7 +825,7 @@ COOLDOWN_MARGIN = 2  # draws of headroom left below full pool exhaustion, so
                      # straight from a long cooldown to 0
 
 
-def cooldown_for(cat: str, pool_size: int) -> int:
+def cooldown_for(cat: str, pool) -> int:
     """How many previous draws make an item in `cat` ineligible.
 
     A single flat COOLDOWN=2 protected every category as weakly as the
@@ -838,9 +838,34 @@ def cooldown_for(cat: str, pool_size: int) -> int:
     and COOLDOWN_MARGIN keeps every pool's window a little short of full
     exhaustion so it can still relax gracefully (see `draw()`) rather than
     jump straight to cool=0 the moment the pool grows by a handful of items.
+
+    A capped category needs its narrowest SUB-pool's depth, not the whole
+    pool's. `quick_response` draws n=11/test but KEIGO_CAP holds keigo to
+    <=2 of them, so the PLAIN side alone supplies ~9/test forever — sizing
+    the window off all 206 entries (`pool_size // 11` = 16) promised a
+    window the 130-entry plain side can't actually sustain once every test
+    draws 9 from it (real depth 130 // 9 = 14). `20260827_1`/`20260827_2`
+    (16-17 capped draws deep) hit exactly that: the plain side ran out
+    inside the promised 16-draw window, and `draw()`'s cooldown search
+    either had to relax below the number `assert_rotation` was proving
+    against (its own hard error: "a bug in draw(), not a reason to lower
+    cooldown_for()") or silently blow the cap (the bug `sample_keigo_capped`
+    shipped with). Compute the window each sub-pool can actually sustain and
+    take the tighter one, so the number this function returns is the number
+    `draw()` can keep and `assert_rotation` can prove — never a promise
+    bigger than the pool.
     """
     n = DRAW[cat]
-    depth = pool_size // n if n else 0
+    pool_size = len(pool)
+    if cat in KEIGO_CAP:
+        cap = KEIGO_CAP[cat]
+        keigo_n = sum(1 for x in pool if is_keigo_stimulus(item_text(x)))
+        plain_n = pool_size - keigo_n
+        plain_depth = plain_n // max(1, n - cap)
+        keigo_depth = keigo_n // max(1, cap)
+        depth = min(plain_depth, keigo_depth)
+    else:
+        depth = pool_size // n if n else 0
     return max(COOLDOWN_FLOOR, depth - COOLDOWN_MARGIN)
 
 
@@ -1250,7 +1275,29 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
     for cool in range(cool_max, -1, -1):
         eligible = [x for x in pool
                     if not (taken_tokens(x) & taken) and ago(x) >= cool]
-        if len(eligible) >= n:
+        # A capped category needs its SUB-pool sufficient too, not just the
+        # total. Found 2026-08-27: `quick_response`'s KEIGO_CAP throttles
+        # keigo draws to <=2/test while plain draws run ~9/test, so the plain
+        # side burns through its rotation cooldown far faster than keigo
+        # does. Once total eligible >= n this loop used to stop relaxing
+        # `cool` right there and hand the snapshot to `sample_keigo_capped()`,
+        # which silently gave up on the cap and drew straight from `eligible`
+        # whenever that snapshot didn't hold enough plain entries — by
+        # `20260827_1`/`20260827_2` (16-17 capped draws deep) the plain side
+        # was cooled out of the snapshot and the fallback shipped 10 of 11
+        # stimuli keigo, against a cap of 2. Keep relaxing `cool` here until
+        # the PLAIN sub-pool alone can fill what the cap can't, so
+        # `sample_keigo_capped()`'s own fallback stays the true last resort
+        # (cool == 0) instead of firing years before the pool is really out.
+        sufficient = len(eligible) >= n
+        if sufficient and name in KEIGO_CAP:
+            have_keigo_kept = sum(1 for x in kept if is_keigo_stimulus(x))
+            room = max(0, KEIGO_CAP[name] - have_keigo_kept)
+            keigo_elig = sum(1 for x in eligible if is_keigo_stimulus(x))
+            plain_elig = len(eligible) - keigo_elig
+            take_k = min(room, keigo_elig, n)
+            sufficient = plain_elig >= n - take_k
+        if sufficient:
             if cool == 0:
                 print(f"  WARNING: pool '{name}' exhausted its rotation — "
                       f"drawing with NO cooldown. Grow this pool.")
@@ -1392,7 +1439,7 @@ def check_theme_spread(picked: list, cat: str) -> list[str]:
 
 def assert_rotation(spec_items: dict, history: list, pools: dict) -> None:
     """R10 proof: nothing drawn may appear inside ITS OWN category's cooldown
-    window (`cooldown_for(cat, len(pools[cat]))`) — never a single spec-wide
+    window (`cooldown_for(cat, pools[cat])`) — never a single spec-wide
     scalar. `spec["rotation"]["cooldown"]` records only the WEAKEST cooldown
     any category relaxed to (documented as such), so checking every category
     against that one number under-checks every category deeper than the
@@ -1407,7 +1454,7 @@ def assert_rotation(spec_items: dict, history: list, pools: dict) -> None:
         return
     clashes = []
     for cat, xs in spec_items.items():
-        cool = cooldown_for(cat, len(pools.get(cat, [])))
+        cool = cooldown_for(cat, pools.get(cat, []))
         if cool <= 0:
             continue
         recent: dict[str, str] = {}
@@ -1521,9 +1568,26 @@ def main():
         # (「目的結果(〜ために…なった)」, drawn by 20260813_2 six draws back).
         # The kept entries stay excluded through `taken_text` below, which is
         # an in-test collision guard, not cooldown history.
-        updated_recency = recency_map([h for h in history
-                                       if h is not own_entry])
-        cool_max = cooldown_for(cat, len(pools[cat]))
+        #
+        # PRIOR history only, not "everything but this entry" (found
+        # 2026-08-27): rerolling a test that is not the ledger's newest entry
+        # (e.g. `20260827_1`, rerolled after `20260827_2` already existed)
+        # must not count a chronologically LATER test as recency evidence —
+        # `check_spec_rotation` proves each test against `hist[:self_idx]`
+        # (strictly prior draws), so a redraw that instead excludes only its
+        # own slot sees one fewer entry between itself and an old item than
+        # the gate does, silently narrowing the window by exactly the later
+        # tests it should never have seen. `--reroll quick_response` on
+        # `20260827_1` reproduced this: excluding only its own entry made
+        # `20260811_1` look one draw further away than the gate's own
+        # prior-only window counts it, and the redraw landed on
+        # `20260811_1`'s item.
+        self_idx = next((i for i, h in enumerate(history) if h is own_entry),
+                        None)
+        prior_history = history[:self_idx] if self_idx is not None else \
+            [h for h in history if h is not own_entry]
+        updated_recency = recency_map(prior_history)
+        cool_max = cooldown_for(cat, pools[cat])
         picked, cool = draw(rng, pools[cat], updated_recency,
                             DRAW[cat], cat, taken_text, cool_max)
         if staging_by_cat:
@@ -1619,9 +1683,26 @@ def main():
         # (「目的結果(〜ために…なった)」, drawn by 20260813_2 six draws back).
         # The kept entries stay excluded through `taken_text` below, which is
         # an in-test collision guard, not cooldown history.
-        updated_recency = recency_map([h for h in history
-                                       if h is not own_entry])
-        cool_max = cooldown_for(cat, len(pools[cat]))
+        #
+        # PRIOR history only, not "everything but this entry" (found
+        # 2026-08-27): rerolling a test that is not the ledger's newest entry
+        # (e.g. `20260827_1`, rerolled after `20260827_2` already existed)
+        # must not count a chronologically LATER test as recency evidence —
+        # `check_spec_rotation` proves each test against `hist[:self_idx]`
+        # (strictly prior draws), so a redraw that instead excludes only its
+        # own slot sees one fewer entry between itself and an old item than
+        # the gate does, silently narrowing the window by exactly the later
+        # tests it should never have seen. `--reroll quick_response` on
+        # `20260827_1` reproduced this: excluding only its own entry made
+        # `20260811_1` look one draw further away than the gate's own
+        # prior-only window counts it, and the redraw landed on
+        # `20260811_1`'s item.
+        self_idx = next((i for i, h in enumerate(history) if h is own_entry),
+                        None)
+        prior_history = history[:self_idx] if self_idx is not None else \
+            [h for h in history if h is not own_entry]
+        updated_recency = recency_map(prior_history)
+        cool_max = cooldown_for(cat, pools[cat])
         picked, cool = draw(rng, pools[cat], updated_recency, 1, cat,
                             taken_text, cool_max, kept=kept)
         # No adjunct pass: ADJUNCT_CAP of a 1-item draw is 0 by construction
@@ -1658,7 +1739,7 @@ def main():
         for cat, n in DRAW.items():
             if cat not in pools:
                 sys.exit(f"category '{cat}' is in DRAW but missing from pools.json")
-            cool_max = cooldown_for(cat, len(pools[cat]))
+            cool_max = cooldown_for(cat, pools[cat])
             picked, cool = draw(rng, pools[cat], recency, n, cat, taken, cool_max)
             effective_cool = cool if effective_cool is None else min(effective_cool, cool)
             if staging_by_cat:
@@ -1714,8 +1795,22 @@ def main():
     # ledger — everything recorded under a DIFFERENT test id. Do not reach
     # for history[-1] here: on the reroll path this test's entry can sit
     # anywhere in the list.
-    prior_history = [h for h in history
-                     if str(h.get("test_id")) != str(args.test_id)]
+    #
+    # PRIOR (chronologically earlier) entries only, not merely
+    # "different test_id" (found 2026-08-27): the two are the same set only
+    # when this test is the ledger's newest entry. Rerolling an EARLIER test
+    # after a later one already exists — `20260827_1` after `20260827_2` —
+    # made a same-test_id-only filter count the later test as recency
+    # evidence against the earlier one, which `check_spec_rotation` (the
+    # actual gate) never does: it proves each test against `hist[:self_idx]`.
+    # The mismatch let this self-check reject a draw the gate would accept,
+    # and — worse — a draw this self-check DID accept for the later test could
+    # still collide with what an earlier test's reroll needs, because the
+    # later test's own validation window still included the earlier one.
+    self_idx = next((i for i, h in enumerate(history)
+                     if str(h.get("test_id")) == str(args.test_id)), None)
+    prior_history = history[:self_idx] if self_idx is not None else \
+        [h for h in history if str(h.get("test_id")) != str(args.test_id)]
     spec["rotation"]["history_len"] = len(prior_history)
     assert_rotation(rotation_check_items, prior_history, pools)
 
