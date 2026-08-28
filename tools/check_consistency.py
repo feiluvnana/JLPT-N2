@@ -10019,6 +10019,14 @@ def check_passage_boxes(d):
         per[m.group(1)] = m.group(2).count(bb.BOX_START)
     expected = {"問題9": 1, "問題10": 5, "問題11": 4,
                 "問題12": 2, "問題13": 1, "問題14": 1}
+    # 問題11 ran 3 passages (not 4) through 7/2022; the 4x2 shape started
+    # 12/2022 (jlpt-exam-structure §"問題11 shape"). An import of an earlier
+    # sitting transcribes what the source printed, not the current-era
+    # shape, so exempt those by slug rather than flag a fidelity bug that
+    # isn't one (imported-n2-2022-07, 2026-08-28).
+    m = re.match(r"imported-n2-(\d{4})-(\d{2})$", d.name)
+    if m and (int(m.group(1)), int(m.group(2))) < (2022, 12):
+        expected["問題11"] = 3
     missing = [f"{k} boxes {per.get(k, 0)}, expected {v}"
                for k, v in expected.items() if per.get(k, 0) != v]
     check(f"{d.name}: 読解 Markdown boxes every passage ({want}/14)",
