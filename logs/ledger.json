@@ -4292,6 +4292,239 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    }
+  },
+  {
+   "test_id": "20260828_2",
+   "seed": "36669345+reroll(listening_scenarios,36669345)+reroll(listening_scenarios,36669345)+reroll(listening_scenarios,32252489)+reroll-one(listening_scenarios:18,10101)+reroll-one(listening_scenarios:14,20220)+reroll-one(listening_scenarios:14,55219)+reroll-one(listening_scenarios:18,71234)+reroll-one(listening_scenarios:18,88821)+reroll-one(listening_scenarios:18,39104)+reroll-one(listening_scenarios:18,60215)+reroll-one(listening_scenarios:18,15599)+reroll-one(listening_scenarios:18,39104)+reroll-one(context_words:6,48213)",
+   "generated_at": "2026-08-28 17:34:53",
+   "pools_sha": "37704aadda35",
+   "items": {
+    "kanji_reading": [
+     "頼りない(たよりない)",
+     "要因(よういん)",
+     "破片(はへん)",
+     "突き当たり(つきあたり)",
+     "借金(しゃっきん)"
+    ],
+    "orthography": [
+     "稽古",
+     "撤回",
+     "見る(一般)",
+     "火口",
+     "敗れる(試合)"
+    ],
+    "word_formation": [
+     "少〜(少数)",
+     "〜層(若者層)",
+     "〜ぶる(偉ぶる)"
+    ],
+    "paraphrase": [
+     "わりに(比較的)",
+     "衛生的だ",
+     "相次いで(続々と)",
+     "いざ(いざとなったら)",
+     "かすかに"
+    ],
+    "usage": [
+     "憧れる",
+     "削減する",
+     "物騒",
+     "横断する",
+     "臨時"
+    ],
+    "grammar_p7": [
+     "〜(のこと)となると",
+     "〜にしたがって",
+     "〜ではあるまいか",
+     "〜はもとより",
+     "〜どころではない",
+     "〜にくい",
+     "〜(か)と思うと・(か)と思ったら",
+     "〜といった",
+     "〜ぬきにして",
+     "敬語:伺う",
+     "〜とみえる",
+     "〜といい〜といい"
+    ],
+    "grammar_p8": [
+     "〜でなければ",
+     "目的表現(〜ように…する)",
+     "条件限定(〜ない限りは…)",
+     "並列付加(〜ばかりか…も)",
+     "順接接続(〜したがって…)"
+    ],
+    "quick_response": [
+     "割り勘",
+     "かしこまりました",
+     "立て込んでいる",
+     "本日の研修、非常に有意義な内容で感銘を受けました。",
+     "部長がお呼びですので、至急会議室までお願いいたします。",
+     "先方の担当者様、明日10時に弊社へお越しいただくことになっております。",
+     "部長、急なご相談で大変恐縮なのですが、10分ほどお時間をいただけますでしょうか。",
+     "息が合う",
+     "〜てばかりいる",
+     "大目に見る",
+     "腑に落ちない"
+    ],
+    "reading_topics": [
+     {
+      "topic": "フェイクニュース対策",
+      "theme": "メディア・情報"
+     },
+     {
+      "topic": "災害時の情報伝達手段",
+      "theme": "防災"
+     },
+     {
+      "topic": "自治体窓口の多言語対応",
+      "theme": "行政・手続き"
+     },
+     {
+      "topic": "最低賃金引上げ",
+      "theme": "働き方"
+     },
+     {
+      "topic": "食文化の歴史とグローバル化の影響",
+      "theme": "食"
+     },
+     {
+      "topic": "自主性とモチベーションの心理学",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "日本の伝統工芸と後継者育成の課題",
+      "theme": "文化・伝統"
+     },
+     {
+      "topic": "大学の学費と奨学金",
+      "theme": "教育"
+     },
+     {
+      "topic": "介護離職を防ぐ制度",
+      "theme": "医療・福祉"
+     },
+     {
+      "topic": "訪日客のマナー啓発",
+      "theme": "旅行・観光"
+     },
+     {
+      "topic": "高齢者の運転免許返納",
+      "theme": "交通"
+     },
+     {
+      "topic": "LGBTQと制度",
+      "theme": "人間関係"
+     }
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "児童館:イベント参加申し込み",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "着物レンタル店:着付け予約",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "不動産屋:ペット可物件の相談",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "大学の事務窓口での手続き案内",
+      "theme": "教育"
+     },
+     {
+      "scenario": "博物館:展示解説の音声ガイド",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "市の環境課:ごみ収集変更の説明",
+      "theme": "環境"
+     },
+     {
+      "scenario": "工場見学の集合場所と注意事項",
+      "theme": "教育"
+     },
+     {
+      "scenario": "動物園:イベントの案内",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "タクシー:配車アプリの使い方",
+      "theme": "交通"
+     },
+     {
+      "scenario": "会社:会議の準備",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "地域センター:食品寄付の受付",
+      "theme": "地域活性化"
+     },
+     {
+      "scenario": "家具店:配達変更の電話",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "映画館:上映スケジュールの確認",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "小学校:保護者会の連絡",
+      "theme": "教育"
+     },
+     {
+      "scenario": "市役所:オンライン申請の操作案内",
+      "theme": "デジタル化"
+     },
+     {
+      "scenario": "精肉店:注文変更",
+      "theme": "食"
+     },
+     {
+      "scenario": "会社:席替えとレイアウト変更",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "農園:収穫体験の受付",
+      "theme": "食"
+     },
+     {
+      "scenario": "学童:延長利用",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "ラジオ:転職の話",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "動物園:年間パス",
+      "theme": "スポーツ・余暇"
+     }
+    ],
+    "context_words": [
+     "揚げる",
+     "うながす",
+     "犯人扱い",
+     "かじる",
+     "言い訳",
+     "ぴったり",
+     "跡"
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   }
   }
  ]
 }
