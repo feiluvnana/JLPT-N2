@@ -100,7 +100,12 @@ rotation depends on the history of past draws. Commit new tests and the updated
 ledger together with the pipeline changes that produced them. Gitignored
 build/cache paths: `tests/*/segments/`, `tests/*/_extract/`,
 `tests/*/_sections/`, `qa/*/` (keyless renders —
-`qa/qa-report-*.md` stays tracked), `_site/`.
+`qa/qa-report-*.md` stays tracked), `_site/`. **`tests/*/聴解.mp3` is
+gitignored too** — the audio is a release asset, not a committed deliverable
+(§3). Ignoring a path does not untrack one already in the index, which is how
+16 of them stayed tracked for ten days after LFS was dropped; `make check` now
+fails on any that are, and the repair is
+`git rm --cached -- 'tests/*/聴解.mp3'` (the files stay on disk).
 
 ### Deliverables Naming Convention (Japanese File Names Mandatory)
 
@@ -149,7 +154,12 @@ not optional** — `logs/upload_manifest.json` records each asset's fingerprint,
 so a file goes over the wire once and a zip is rebuilt only when one of its
 members changes. Add a binary, run `make upload-files`, commit the manifest with
 it; never re-push the archive to "make sure" (`--dry-run` tells you what would
-move, `--force` is for when you know the remote is wrong).
+move, `--force` is for when you know the remote is wrong). Since git carries no
+exam MP3, an un-uploaded one exists on exactly one disk and 404s for every other
+reader — `make check` fails on any `聴解.mp3` whose bytes are not the ones the
+manifest says went up. Uploading needs a `gh` account with push access to the
+repo; the uploader now says so up front, because GitHub answers an unauthorized
+asset overwrite with a 404 that reads like a corrupt release.
 
 **If a binary you need is not on the machine, STOP and ask the user.** Name the
 exact path (e.g. `refs/JLPT_N2_NEW/16. N2 7-2025/Nghe N2 T7-2025.mp3`), say what

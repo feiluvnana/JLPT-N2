@@ -95,6 +95,30 @@ def ensure_gh_cli() -> None:
                  "Install via: brew install gh (macOS) or see https://cli.github.com/")
 
 
+def require_push_access() -> None:
+    """Fail early, and legibly, when the ACTIVE `gh` account cannot write here.
+
+    GitHub answers an unauthorized asset delete with 404 rather than 403, so
+    `gh release upload --clobber` run under a read-only account dies on
+    `HTTP 404: Not Found (…/releases/assets/<id>)` — which reads like a corrupt
+    release, not like an auth problem, and sends the reader looking at the wrong
+    thing (2026-09-03: a second logged-in account was active on the machine and
+    had pull-only access to the repo). One API call up front says it plainly.
+    """
+    proc = subprocess.run(["gh", "api", "repos/{owner}/{repo}", "--jq", ".permissions.push"],
+                          capture_output=True, text=True)
+    if proc.returncode != 0:
+        return      # no repo context, offline, or an old gh — let the upload report it
+    if proc.stdout.strip() == "true":
+        return
+    who = subprocess.run(["gh", "api", "user", "--jq", ".login"],
+                         capture_output=True, text=True).stdout.strip()
+    sys.exit(f"Error: the active gh account ({who or 'unknown'}) has no push access to "
+             f"this repo, so `gh release upload` would fail with a misleading HTTP 404.\n"
+             f"       Pick the account that owns the repo — `gh auth status` lists who is "
+             f"logged in, `gh auth switch --user <owner>` activates one — then re-run.")
+
+
 def load_manifest() -> dict:
     if MANIFEST.is_file():
         try:
@@ -380,6 +404,8 @@ def main():
         args.target = ALIASES[args.target]
 
     ensure_gh_cli()
+    if not args.dry_run:
+        require_push_access()
     manifest = load_manifest()
     targets = ["tests", "refs"] if args.target == "all" else [args.target]
 

@@ -269,6 +269,9 @@ GitHub Actions**. `_site/` is a build artifact: gitignored, never committed.
 | `refs/` PDFs/MP3s are missing entirely | Expected on a fresh clone — the archive is gitignored and lives in the `refs` release ([Binaries live in Releases](#binaries-live-in-releases)). The `*.md` extracts beside them are tracked and enough for most work. |
 | `tests/*/聴解.mp3` is missing and the player shows nothing | The clone has no binaries. Either `gh release download audio -p '<id>.mp3' -O 'tests/<id>/聴解.mp3'`, or just take the test online — the deployed sheet falls back to the `audio` release URL. |
 | A `make extract-*` or PDF read fails on a missing `refs/` file | Fetch that source's zip: `gh release download refs -p 'JLPT_N2_NEW.zip' -D /tmp && unzip -n /tmp/JLPT_N2_NEW.zip -d refs/`. Never re-source or re-commit the archive. |
+| `make upload-files` dies on `HTTP 404: Not Found (…/releases/assets/<id>)` | The active `gh` account cannot write to this repo — GitHub returns 404, not 403, for an unauthorized asset overwrite. `gh auth status` shows who is active; `gh auth switch --user <owner>` picks the account that owns the repo. |
+| `make check` fails `no exam MP3 is tracked in git` | A `聴解.mp3` is still in the index from before the MP3s were gitignored. `git rm --cached -- 'tests/*/聴解.mp3'` untracks them; the files stay on disk. |
+| `make check` fails `exam MP3(s) are on the `audio` release` | Those MP3s were synthesized but never uploaded, and git no longer carries them — run `make upload-files` and commit `logs/upload_manifest.json`. |
 | `This repository exceeded its LFS budget` | You are on a pre-2026-08-24 clone. LFS is gone: there is no `.gitattributes`, and `refs/**/*.{pdf,mp3}` plus `tests/**/*.mp3` are gitignored. Never re-add an LFS rule — an exhausted budget makes checkout itself fail. |
 | `skip grader parity — node not installed` | Expected. Install Node.js to enable that check. |
 

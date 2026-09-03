@@ -400,6 +400,65 @@ def check_deployments():
           "4cad944 removed them")
 
 
+# ------------------------------------------------------------- exam audio hosting
+def check_exam_audio_hosting():
+    """`tests/*/聴解.mp3` lives on the `audio` release, and NOT in git.
+
+    Both halves shipped broken. `tests/**/*.mp3` was gitignored on 2026-08-24
+    when Git LFS was dropped (AGENTS.md §3), but .gitignore does not apply to a
+    path git already tracks, so 16 MP3s stayed in the index: every
+    re-synthesis then surfaced as a 30 MB binary diff nobody wanted to commit.
+    Untracking them (2026-09-03) makes the release the ONLY copy — which is why
+    the second half exists: six of those files were sitting in git in a version
+    the release did not have, and the deployed sheet reads
+    `…/releases/download/audio/<test_id>.mp3` (exam-app), so an un-uploaded MP3
+    is a player that 404s for everyone but the machine that synthesized it.
+
+    Cheap by construction: the manifest caches each sha against (size, mtime_ns),
+    so an unchanged MP3 is never re-hashed and the gate stays a seconds-long
+    read-only pass. That trust is deliberate and shared with the uploader — a
+    file whose size AND mtime still match the record is taken at its word by
+    both, so the two can never disagree about what is up there; a re-synthesis
+    moves both and gets hashed for real.
+    """
+    print("\n聴解 audio hosting (GitHub release `audio`, never git)")
+    gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    check("tests/**/*.mp3 is gitignored", "tests/**/*.mp3" in gitignore,
+          "exam audio is a release asset — re-adding it to git (or an LFS rule) "
+          "is what broke checkout for everyone in 2026-08-24")
+
+    try:
+        out = subprocess.run(["git", "ls-files", "--", "tests/*/聴解.mp3"], cwd=ROOT,
+                             capture_output=True, text=True, check=True).stdout
+        indexed = [ln for ln in out.splitlines() if ln.strip()]
+    except (OSError, subprocess.CalledProcessError):
+        indexed = []            # not a git checkout — nothing is tracked
+    check("no exam MP3 is tracked in git", not indexed,
+          f"{len(indexed)} still in the index (e.g. {indexed[:2]}) — gitignore does "
+          "not untrack a tracked path; run `git rm --cached -- 'tests/*/聴解.mp3'` "
+          "(the files stay on disk) and commit the removal")
+
+    on_disk = sorted((ROOT / "tests").glob("*/聴解.mp3"))
+    manifest_path = ROOT / "logs" / "upload_manifest.json"
+    if not on_disk:
+        skip("exam MP3s are on the `audio` release",
+             "no 聴解.mp3 on this machine — they are gitignored, so a fresh clone "
+             "has none (README 'Setup' says how to fetch one)")
+    elif not manifest_path.is_file():
+        skip("exam MP3s are on the `audio` release",
+             f"no {manifest_path.relative_to(ROOT)} — run `make upload-files`")
+    else:
+        sha256 = load("tools/upload_files.py").file_sha256
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        stale = [d.parent.name for d in on_disk
+                 if manifest.get(f"audio/{d.parent.name}.mp3", {}).get("sha256")
+                 != sha256(d, manifest.get(f"audio/{d.parent.name}.mp3"))]
+        check(f"{len(on_disk)} exam MP3(s) are on the `audio` release", not stale,
+              f"{stale} differ from what was uploaded (or were never uploaded) — "
+              "git no longer carries them, so this machine holds the only copy: "
+              "run `make upload-files` and commit logs/upload_manifest.json")
+
+
 def check_makefile_help():
     """`make help` is hand-written; nothing else stops it drifting from the
     target list, while the SKILL.md files get exactly this class of drift
@@ -10749,6 +10808,7 @@ def main():
         check_kaisetsu_band_doc()
         check_grandfather_sets_are_live()
         check_deployments()
+        check_exam_audio_hosting()
         check_every_choukai_finding_declares_repair()
         check_remediation_state()
         check_pacing()
