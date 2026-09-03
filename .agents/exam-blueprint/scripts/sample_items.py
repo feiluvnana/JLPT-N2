@@ -866,6 +866,26 @@ def cooldown_for(cat: str, pool) -> int:
         depth = min(plain_depth, keigo_depth)
     else:
         depth = pool_size // n if n else 0
+    # The same narrowest-sub-pool rule for 問題2's floor'd 和語 side. Found
+    # 2026-09-03 drawing `20260903_1`: `orthography` is 249 entries but only 38
+    # of them are 和語, and `sample_wago_floor()` takes 1-3 of them (WAGO_DIST)
+    # in EVERY paper. Sized off the whole pool the window was 249//5 - 2 = 47,
+    # a promise 38 entries cannot keep: twenty papers in, all 38 sat inside it
+    # (oldest 18-19 draws back), so `sample_wago_floor()` drew 0 和語 and
+    # `check_moji2_composition` hard-FAILed the paper — with its documented
+    # repair (`--reroll orthography`) unable to help, because no seed can pick
+    # from an empty sub-pool. `draw()` relaxing `cool` cannot fix it either:
+    # `assert_rotation()` recomputes THIS function and aborts on anything drawn
+    # below it ("a bug in draw(), not a reason to lower cooldown_for()"), so the
+    # window has to be honest here or the draw dies there.
+    # Divide by the MOST a paper can take (max(WAGO_DIST) = 3), not the mode,
+    # exactly as the KEIGO_CAP branch divides by its cap: a window sized off the
+    # mode (17) leaves 7 eligible entries against draws of up to 3 and re-breaks
+    # within a paper or two, where the worst case (12 - 2 = 10) leaves 21.
+    if cat in WAGO_FLOOR or cat in WAGO_DIST:
+        want = max(list(WAGO_DIST.get(cat) or [WAGO_FLOOR.get(cat, 1)]))
+        wago_n = sum(1 for x in pool if is_wago_orthography(x))
+        depth = min(depth, wago_n // max(1, want))
     return max(COOLDOWN_FLOOR, depth - COOLDOWN_MARGIN)
 
 
@@ -1297,6 +1317,30 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
             plain_elig = len(eligible) - keigo_elig
             take_k = min(room, keigo_elig, n)
             sufficient = plain_elig >= n - take_k
+        # The same hole on the other floor'd sub-pool. Found 2026-09-03 while
+        # drawing `20260903_1`: `orthography`'s window is sized off all 249
+        # entries (49 - margin = 47) but only 38 of them are 和語, and every
+        # paper must take at least WAGO_FLOOR of them. Twenty papers in, all 38
+        # sat inside the 47-draw window (oldest 19 ago), so this loop saw
+        # `len(eligible) >= n` on the compound side alone, stopped relaxing, and
+        # handed `sample_wago_floor()` a snapshot with ZERO 和語 entries — which
+        # printed its "too few 和語" warning and drew 0/5, exactly the
+        # `sample_keigo_capped()` failure above. `check_moji2_composition` then
+        # hard-FAILs the paper, and its documented repair (`--reroll
+        # orthography`) cannot help: no seed can pick from an empty sub-pool.
+        # Relax `cool` until the 和語 side alone can fill its floor, so the
+        # warning inside `sample_wago_floor()` stays the true last resort.
+        # This guards the FLOOR (1), not `WAGO_DIST`'s author target (2), the
+        # same way the branch above guards what the cap REQUIRES — so a paper
+        # with exactly 1 eligible 和語 still prints "too few 和語 entries (1) to
+        # fill 2 of 5 slots", draws 1, and legitimately passes at
+        # MOJI2_WAGO_FLOOR. That warning is not this blocker; the blocker was
+        # 和語 eligibility of ZERO.
+        if sufficient and name in WAGO_FLOOR:
+            have_wago_kept = sum(1 for x in kept if is_wago_orthography(x))
+            want_w = max(0, WAGO_FLOOR[name] - have_wago_kept)
+            wago_elig = sum(1 for x in eligible if is_wago_orthography(x))
+            sufficient = wago_elig >= want_w
         if sufficient:
             if cool == 0:
                 print(f"  WARNING: pool '{name}' exhausted its rotation — "

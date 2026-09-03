@@ -91,6 +91,21 @@ median 6**; generated papers without this rule ran 23–33.
 headroom) and prints the per-marker split — a WARN here is a rewrite
 instruction, not noise.
 
+**Only the UPPER side of 5–9 is enforced, and that is deliberate** (stated
+2026-09-03, `RC-D`). The 5–9 figure is the official *range*; the gate has one
+threshold, `RHETORIC_CEILING = 12`, and no floor, because the failure mode this
+axis exists to catch is **one closing family swallowing the paper** — the
+generated 23–33 above, `20260810_1`'s nine-of-ten. **A total below 5 is not a
+defect.** Variety is verified by the per-shape cap below — no more than 2 of
+the 13 surfaces sharing one closing move — not by the marker total: a paper can
+reach 13 distinct closings while using few of this family's markers at all,
+and a paper can sit inside 5–9 with six surfaces on one shape. The case that
+exposed the gap: `20260903_1` measured **3** and read as out-of-band with
+nothing to say whether that mattered, while its independent per-shape read was
+13 finals over 7 shapes, none over the cap
+(`qa-report-20260903_1.md` handed item #7(b)). If you are at 3, check the shape
+column, not the marker count.
+
 **How to comply while drafting** — write each passage's closing move beside
 its theme, and vary the list. No more than **two** passages may share one
 shape:

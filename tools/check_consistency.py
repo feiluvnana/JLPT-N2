@@ -496,6 +496,11 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     # re-author.
     "choukai_opening_frame":          ("聴解スクリプト.txt",  "assisted"),
     "choukai_q1_question_forms":      ("<section re-author>", "authoring"),
+    # RC-C (qa-report-20260903_1): rotating the non-dialogue item's MEDIUM
+    # means a new setting, new turns and new distractors for that item, and
+    # moving its slot re-orders 聴解.md and the key table — the same blast
+    # radius as the 質問型 mix above, so the same artifact and tier.
+    "choukai_nondialogue_rotation":   ("<section re-author>", "authoring"),
     "choukai_q2_question_mix":        ("<section re-author>", "authoring"),
     "choukai_decider_position":       ("<section re-author>", "authoring"),
     "choukai_probe_carousel":         ("<section re-author>", "authoring"),
@@ -3764,6 +3769,174 @@ KEY_EXPOSURE_GRANDFATHERED = {
 }
 
 
+# --------------------------------------------------------- the FRAME predicate
+# GATE-BLIND, qa-report-20260903_1 (F1, F2), applied 2026-09-03. The rule
+# `exam-qa-review` §3 states has always had two halves — "at most ONE occurrence
+# in the 読解 prose, AND never in the same syntactic frame as the stem" — and the
+# exemption that makes the second half usable ("A 連体 use of a form keyed in a
+# 文末 frame is not a hit") was written as prose NOTHING READ. The gate counted
+# occurrences and stopped, so every same-frame breach at n=1 passed:
+#
+#   * `20260817_3` keyed 「そうとは限らない」 at 問題9-51 (cloze: 「…削るのでは、
+#     （　51　）。」 → 文末) while 問題11(4) printed 「…判断できるようになるとは
+#     限らない。」 → 文末. The count branch could not even SEE it: it matches the
+#     whole keyed option, and 「そうとは限らない」 does not occur — the prose drops
+#     the pro-form. n was 0, not 1.
+#   * `20260903_1` F1 keyed 「のも当然だろう」 at 問題9-51 (「値段は大きく上下する
+#     （　51　）。」 → 文末) while 問題12(A) printed 「…見直しが進んでいるのも
+#     当然だろう。」 → 文末. One occurrence: 1 ≤ 1, green.
+#   * `20260903_1` F2: 問題8-44's drawn target 変化推移(〜につれて…ていく), and a
+#     Stage-3 （注N） gloss repair that wrote 「（注3）変遷：時代が進むにつれて、
+#     少しずつ変わっていくこと」 — the whole discontinuous frame, in the booklet.
+#     Again ×1, green. (The gloss was ALREADY inside the scanned corpus:
+#     `passage_prose` keeps （注N） definition lines by design. What was missing
+#     was the frame predicate, not the corpus.)
+#
+# THE REPAIR when this fires: reword the 読解 occurrence (a connective always has
+# a synonym; a 文末 modal always has a paraphrase — 「…のはうなずける。」 for
+# 「…のも当然だろう。」), or re-key the item. Do NOT delete the （注N） gloss: it is
+# apparatus other checks count.
+#
+# Three scoping decisions, each of them load-bearing:
+#
+#   1. **The keyed form is matched by its CORE**, not by the whole option string:
+#      one leading pro-form (そう/こう/ああ…, KEY_FRAME_PROFORMS) and one trailing
+#      copula/modal tail (だ/だろう/である/のだ…, KEY_FRAME_TAILS) are stripped,
+#      and the stripped tail is put back in front of the stem's own continuation
+#      when the STEM side is classified, so the two sides are measured on the
+#      same string. Without the pro-form strip the 20260817_3 founding case is
+#      invisible; without the tail strip 「のも当然だろう」 could only ever be
+#      caught verbatim. A core shorter than KEY_FRAME_CORE_MIN is never taken —
+#      「ものだ」→「もの」 and 「わけだ」→「わけ」 are ordinary nouns and would fire on
+#      any expository sentence.
+#   2. **A 問題9 blank tagged [論理接続] is exempt.** That blank draws on a closed
+#      class of ~20 conjunctions (しかし／つまり／ところが／そこで…) and expository
+#      読解 prose cannot avoid them — the same reasoning, and the same tag, that
+#      `P9_SET_REUSE_MAX` already grants the class. Measured: without the
+#      exemption the predicate fires on 20260812_2 「しかし」, 20260817_2 「つまり」
+#      and 20260827_1 「ところが」, all sentence-initial, none a defect. They stay
+#      under the COUNT rule, which is what caught 20260817_3's 「ところが」×3.
+#   3. **A DISCONTINUOUS 問題8 target is a same-frame hit at n=1 by
+#      construction.** 「〜のは…からだ」 or 「〜につれて…ていく」 is not a token, it is
+#      a frame; 読解 prose that reproduces both chunks in order inside one
+#      sentence has reproduced the frame, and there is no second class to
+#      compare against. Single-chunk 問題8 targets (`対比表現(〜一方…だ)` reduces to
+#      「一方」) keep the count rule only — 「一方」 is also a noun.
+KEY_FRAME_PROFORMS = ("そんなに", "こんなに", "そう", "こう", "ああ")
+KEY_FRAME_TAILS = ("のである", "でしょう", "のです", "だろう", "である",
+                   "でした", "だった", "のだ", "です", "だ")
+KEY_FRAME_TAIL_RE = re.compile("(?:%s)*" % "|".join(KEY_FRAME_TAILS + ("ろう",)))
+KEY_FRAME_CORE_MIN = 3
+# 連体 = the form modifies a following noun. Kanji/katakana/長音 is the
+# string-decidable signal for "a noun starts here"; 「の」+noun covers a nominal
+# form modifying through の (「はずの種が」).
+KEY_FRAME_NOUNISH = re.compile(r"[一-龥々ァ-ヶー]")
+KEY_FRAME_SENTENCE_END = "。．」』？！?!\n"
+
+
+def key_form_core(keyed: str) -> str:
+    """The keyed form reduced to the string both sides are measured on."""
+    s = keyed.lstrip("〜～")
+    for p in KEY_FRAME_PROFORMS:
+        if s.startswith(p) and len(s) - len(p) >= 4:
+            s = s[len(p):]
+            break
+    for t in KEY_FRAME_TAILS:          # longest-first; take the first match only
+        if s.endswith(t):
+            if len(s) - len(t) >= KEY_FRAME_CORE_MIN:
+                s = s[: -len(t)]
+            break
+        # 「のである」 must not fall through to 「だ」 and leave 「のであ」.
+    return s
+
+
+def key_frame_class(tail: str) -> str | None:
+    """文末 / 連用 / 連体 for a form followed by `tail`, or None if undecidable.
+
+    文末 is read THROUGH an optional copula/modal chain (だろう／でしょう／のだ／
+    である…), so 「のも当然」+「だろう。」 and 「のも当然だろう」+「。」 are one class.
+    Anything else — a particle, an inflectional tail — returns None: the safe
+    direction, since a None never produces a hit.
+    """
+    if not tail:
+        return "文末"
+    rest = tail[KEY_FRAME_TAIL_RE.match(tail).end():]
+    if rest == "" or rest[0] in KEY_FRAME_SENTENCE_END:
+        return "文末"
+    if tail[0] in "、，,":
+        return "連用"
+    if KEY_FRAME_NOUNISH.match(tail[0]):
+        return "連体"
+    if tail.startswith("の") and len(tail) > 1 and tail[1] not in "でがはをにともかだ":
+        return "連体"
+    return None
+
+
+def dokkai_frame_lines(body: str, bi) -> list[str]:
+    """問題10–14 prose as LINES — one string per source line, spaces squeezed.
+
+    The count branch flattens the whole half into one string, which is right for
+    counting and wrong for frames: it destroys end-of-line, so a 文末 use on the
+    last line of a paragraph or in a （注N） definition line reads as running into
+    the next line's first character. （注N） definition lines are prose here for
+    the same reason they are prose in `passage_prose` — they are printed in the
+    booklet and the candidate reads them (F2).
+    """
+    out = []
+    for n in range(10, 15):
+        text = strip_instruction_lines(passage_prose(dokkai_section(body, n), bi))
+        out += [ln for ln in (re.sub(r"\s+", "", x) for x in text.splitlines()) if ln]
+    return out
+
+
+def key_blank_tail(body: str, q: int) -> str | None:
+    """What follows question q's blank — the stem side of the frame comparison.
+
+    問題7 (31–42) prints its blank as 「（　）」 inside a `**NN**` stem block.
+    問題9 (48–51) prints it inside the cloze passage, as 「（　50　）」 in papers
+    from 20260817_1 on and as a bare 「 50 」 in the earlier ones — both notations
+    are read, because the `##` heading names 「48から51」 and the option blocks
+    repeat the numbers, so the search region is the passage only.
+    """
+    if q <= 42:
+        m = re.search(rf"^\*\*{q}\*\*(.*?)(?=^\s*\d\.\s|\Z)", body, re.M | re.S)
+        if not m:
+            return None
+        ctx = re.sub(r"\s+", "", m.group(1))
+        bm = re.search(r"[（(]\s*[）)]", ctx)
+        return ctx[bm.end():] if bm else None
+    m = re.search(r"^##\s*問題9\b.*?(?=^##\s*問題10\b|\Z)", body, re.M | re.S)
+    if not m:
+        return None
+    sec = strip_instruction_lines(re.sub(r"^##.*$", "", m.group(0), flags=re.M))
+    sec = re.split(r"^\*\*(?:4[89]|5[01])\*\*", sec, maxsplit=1, flags=re.M)[0]
+    flat = re.sub(r"[ \t　]+", "", sec)
+    bm = (re.search(rf"[（(]\s*{q}\s*[）)]", flat)
+          or re.search(rf"(?<![0-9]){q}(?![0-9])", flat))
+    return re.sub(r"\s+", "", flat[bm.end():]) if bm else None
+
+
+# Papers breaching the FRAME half the day it landed (2026-09-03) that were not
+# already on KEY_EXPOSURE_GRANDFATHERED. Measured over all 20 generated papers
+# on disk; every hit was re-read by hand and every one is a real same-frame
+# exposure, so the rule is not loosened for them — they are simply pre-rule
+# papers, and clearing one means rewording one 読解 sentence. Delete an id when
+# that lands. (`20260813_1`, `20260813_2`, `20260814_1`, `20260817_2` also gain
+# frame lines and are already grandfathered; `20260903_1` is deliberately NOT
+# here — it is the paper the rule was written for, and its two findings are open
+# content repairs.)
+KEY_FRAME_GRANDFATHERED = {
+    "20260817_1",   # 問題7-35 keyed 「といえば」 連用; 問題10 prose 「議会といえば、」
+    "20260819_1",   # 問題8 target 「〜のは…からだ」 reproduced whole in 問題10(1)
+                    # 「…続けたのは、…回廊になっているからである。」 — the R2-F5
+                    # founding case, cut from ×2 to ×1 by the 2026-08-19 repair,
+                    # which the count rule (>1) then stopped seeing
+    "20260827_1",   # 問題7-31 keyed 「に応じて」 連用; （注1） gloss 「都合に応じて、」
+    "20260828_1",   # 問題7-39 keyed 「わけではない」 文末; 問題11 prose
+                    # 「…免罪符を与えられるわけではない。」
+}
+
+
 def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
                                opts: dict[int, list[str]], spec: dict, bi):
     """A form keyed in 問題7/8/9 appears at most once in the 読解 prose (F10).
@@ -3840,6 +4013,54 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
     sentence (「…電話で分量を教わったところ、伯母は少し笑って…」) it reports 1,
     i.e. it catches its founding case; the shipped prose reads 「…教わると、」 and
     reports 0.
+
+    F1/F2 (qa-report-20260903_1), `GATE-BLIND`, 2026-09-03 — the rule's second
+    half GENERALISED from the 14-connective list to a real frame predicate. The
+    mechanics, the three scoping decisions and the three incidents are documented
+    at KEY_FRAME_PROFORMS above; in one line: each 問題7/8/9 keyed form's CORE is
+    classified 文末 / 連用 / 連体 on the stem side and on every 問題10–14
+    occurrence, and an occurrence in the SAME class is a hit at n=1. This is the
+    exemption `exam-qa-review` §3 already states in prose — "A 連体 use of a form
+    keyed in a 文末 frame is not a hit" — written as something that runs.
+
+    FOUNDING-CASE MEASUREMENT, run before this landed:
+
+        20260817_3 問題9-51, reconstructed pre-repair (§6.5: "if the incident
+                   predates the paper on disk, reconstruct the offending string
+                   and run the predicate on it directly" — the shipped paper was
+                   repaired in an earlier round and keys 「本末転倒だ」 now):
+                   keyed 「そうとは限らない」 -> core 「とは限らない」, stem
+                   「…削るのでは、（　51　）。」 -> 文末; 問題11(4) 「…判断できる
+                   ようになるとは限らない。」 -> 文末.  HIT (the count branch
+                   reported 0 — the whole option string never occurs).
+        20260903_1 F1  問題9-51 「のも当然だろう」 -> core 「のも当然」, stem 文末;
+                       問題12(A) 「…見直しが進んでいるのも当然だろう。」 文末. HIT.
+                   F2  問題8-44 変化推移(〜につれて…ていく) reproduced whole in
+                       「（注3）変遷：時代が進むにつれて、少しずつ変わっていくこと」.
+                       HIT.
+        負例        keyed 「〜はずだ」 vs 問題11 「…姿を消したはずの種が、」 -> the
+                   core does not occur (連体 use), SILENT; and with a core that
+                   does occur in 連体 position — keyed 「わけではない」 文末 vs
+                   「それが正しいわけではない理由を、」 -> 連体 ≠ 文末, SILENT.
+
+    CORPUS RUN, all 20 generated papers on disk 2026-09-03. Ids that move, all
+    re-read by hand, all real:
+
+        20260813_1  + 問題9-50 「のである」 文末; + 問題8「〜ほど…はない」 whole
+        20260813_2  + 問題9-50 「のである」 文末
+        20260814_1  + 問題9-49 「わけではない」 文末
+        20260817_2  + 問題9-50 「にとどまらず」 連用
+            (the four above were already in KEY_EXPOSURE_GRANDFATHERED)
+        20260817_1  + 問題7-35 「といえば」 連用          <- new, grandfathered
+        20260819_1  + 問題8「〜のは…からだ」 whole        <- new, grandfathered
+        20260827_1  + 問題7-31 「に応じて」 連用 (in a （注N） gloss)  <- new, gf
+        20260828_1  + 問題7-39 「わけではない」 文末       <- new, grandfathered
+        20260903_1  + F1 and F2                          <- NOT grandfathered:
+                      the live paper, two open content repairs
+        the other 11 papers stay clean.
+
+    See KEY_FRAME_GRANDFATHERED for why the four new ids are named rather than
+    the rule loosened, and §6.5's rule on widened thresholds.
     """
     cut = bi.KEY_HEADING.search(gt)
     body = gt[:cut.start()] if cut else gt
@@ -3849,7 +4070,10 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
     if not prose:
         return skip(f"{test_id}: keyed grammar is not also 読解 running text",
                     "no 問題10-14 passage prose parsed")
+    frame_lines = dokkai_frame_lines(body, bi)
+    tags = mondai9_tags(gt, bi)
     hits = []
+    counted = set()
     for q in list(range(31, 43)) + list(P9_BLANKS):
         row, k = opts.get(q) or [], keys.get(q)
         if not row or not k or k > len(row):
@@ -3860,16 +4084,40 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
         n = prose.count(keyed)
         if n > KEY_EXPOSURE_MAX:
             hits.append(f"問{q}「{keyed}」×{n}")
+            counted.add(q)
         elif (conn := next((c for c in CONNECTIVE_KEY_FORMS
                             if keyed.endswith(c)), None)):
             # The rule's SECOND half (F7): one occurrence is allowed, the same
             # syntactic frame never is.
             nf = connective_frame_hits(prose, conn)
             if nf:
+                counted.add(q)
                 hits.append(f"問{q}「{keyed}」 same frame ×{nf} "
                             f"(読解 prose uses 「〜{conn}、」 clause-finally, the "
                             f"frame the item keys)")
+        # The FRAME half: one occurrence in the SAME class as the keyed stem is
+        # a breach, whatever the count says. [論理接続] is exempt (see above).
+        if q in counted or (q in P9_BLANKS and tags.get(q) == "論理接続"):
+            continue
+        core = key_form_core(keyed)
+        after = key_blank_tail(body, q)
+        if len(core) < 2 or after is None or core not in keyed:
+            continue
+        stem_frame = key_frame_class(keyed[keyed.rindex(core) + len(core):] + after)
+        if not stem_frame:
+            continue
+        # One hit line per question — the first same-frame occurrence is the
+        # repair instruction; the rest are found by the same re-read.
+        same_frame = ((ln, om) for ln in frame_lines
+                      for om in re.finditer(re.escape(core), ln)
+                      if key_frame_class(ln[om.end():]) == stem_frame)
+        if (found := next(same_frame, None)):
+            ln, om = found
+            quote = ln[max(0, om.start() - 16):om.end() + 12]
+            hits.append(f"問{q}「{core}」 in the same {stem_frame} frame as "
+                        f"the stem: 「…{quote}…」")
     prose8 = _copula_norm(prose)
+    prose8_lines = _copula_norm("\n".join(frame_lines))
     for e in (spec.get("items") or {}).get("grammar_p8") or []:
         parts = [_copula_norm(p) for p in SAMPLE_ITEMS.grammar_form_parts(e)
                  if len(p) >= 2]
@@ -3881,14 +4129,30 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
         if n > KEY_EXPOSURE_MAX:
             hits.append(f"問題8 target「{'…'.join(parts)}」×{n} "
                         f"(pool entry: {pool_entry_text(e)})")
+            continue
+        if len(parts) < 2:
+            continue
+        # A discontinuous frame reproduced whole is a same-frame hit at n=1.
+        within_line = re.compile(("[^。\n]{0,%d}?" % KEY_EXPOSURE_GAP)
+                                 .join(map(re.escape, parts)))
+        if (m8 := within_line.search(prose8_lines)):
+            hits.append(f"問題8 target「{'…'.join(parts)}」 reproduced whole in "
+                        f"one 読解 sentence: 「…{m8.group(0)[:44]}…」 "
+                        f"(pool entry: {pool_entry_text(e)})")
     name = (f"{test_id}: no 問題7/8/9 keyed form appears more than "
-            f"{KEY_EXPOSURE_MAX}× in the 問題10-14 prose")
+            f"{KEY_EXPOSURE_MAX}× in the 問題10-14 prose, or even once in the "
+            f"same 文末/連用/連体 frame as its stem")
     detail = ("; ".join(hits) + " — the tested form is ordinary running text a "
               "few pages later, so the item measures recall of a word the "
-              "paper itself keeps teaching. Rewrite the reading occurrences or "
-              "re-key the item; a 連体 use of a 文末 key is not a hit "
+              "paper itself keeps teaching, and a same-frame occurrence hands "
+              "the candidate the answer in its own syntax. Rewrite the reading "
+              "occurrence (a connective has a synonym, a 文末 modal has a "
+              "paraphrase — 「…のはうなずける。」 for 「…のも当然だろう。」) or re-key "
+              "the item; keep （注N） glosses, they are apparatus other checks "
+              "count. A 連体 use of a 文末 key is NOT a hit — that is what the "
+              "frame classes are for "
               "(exam-qa-review §3 'One grammar point, one KEY per paper')")
-    if test_id in KEY_EXPOSURE_GRANDFATHERED:
+    if test_id in KEY_EXPOSURE_GRANDFATHERED | KEY_FRAME_GRANDFATHERED:
         return warn(name, not hits, detail + GRANDFATHER_NOTE)
     check(name, not hits, detail)
 
@@ -5837,6 +6101,108 @@ def check_topics_claim_field():
               "has the two incidents)")
 
 
+# The three papers that dropped `shapes` while no check read it (measured
+# 2026-09-03 over all 20 rows: 16 carry the field with 33 entries each, on
+# every paper through 20260827_1; these three do not). They are named rather
+# than retrofitted for the CLAIM_FIELD_PRE_RULE reason — a shape written for a
+# shipped paper months later is an assertion about an item nobody is holding —
+# and, unlike a pre-rule set, this one is a to-do and not a policy: `shapes`
+# was ALWAYS required by exam-blueprint §"logs/topics.json" and by
+# jlpt-test-generation §"Stage 3", so each of these rows is a hole in the
+# record, not a paper that predates a rule.
+#
+# An id leaves this set the moment its row is filled in — by reading that
+# paper's own 聴解.md/聴解スクリプト.txt and writing one entry per 聴解 item.
+# NEVER by widening the rule, and never by adding a fourth id: a new paper that
+# omits `shapes` is the drift this check exists to stop.
+TOPICS_SHAPES_DRIFT_GRANDFATHERED = frozenset({
+    "20260827_2", "20260828_1", "20260828_2",
+})
+
+
+def check_topics_shapes_field():
+    """Every generated paper's `logs/topics.json` row carries `shapes`, one entry per 聴解 item.
+
+    THE RULE, and it has two owners that both state it: `exam-blueprint`
+    §"logs/topics.json" ("Each row carries `surfaces` …, `themes` …, `shapes`
+    (each 聴解 item's errand shape)") and `jlpt-test-generation` §"Stage 3 —
+    build + gate" ("append this test's row to `logs/topics.json`: `surfaces`
+    … and `shapes` (each 聴解 item's errand shape)"). One entry per 聴解
+    surface — 問題1 例+5, 問題2 例+6, 問題3 例+5, 問題4 例+11, 問題5 ×2 = 33 in a
+    current paper — keyed exactly as `surfaces` keys them.
+
+    THE INCIDENT (2026-09-03): the field drifted out silently. 16 of the 20
+    rows on disk carry it, on every paper through `20260827_1`; `20260827_2`,
+    `20260828_1`, `20260828_2` and `20260903_1` shipped without it, and NO
+    check read the field, which is exactly how four papers lost it without a
+    single line of gate output changing. A fresh-eyes QA pass then asserted
+    that "no row on disk has ever had a `shapes` key" and struck the field from
+    `exam-qa-review`'s own list of the fields a fix must update — a measurement
+    that was wrong by 16 rows, and one that would have ratified the drift
+    instead of catching it. It cost the errand-archetype rule its only data:
+    "two 聴解 items may not run the same errand, and archetypes must not repeat
+    within the last two tests" (`jlpt-test-generation` §"One topic, one
+    surface") is read off this column and off nothing else, so three
+    consecutive papers were authored with nothing to diff against.
+
+    THE REPAIR when this fails: read that paper's `聴解.md` (its 構成表 columns
+    carry the eliminations and the deciders) and `聴解スクリプト.txt`, and write
+    one errand-shape entry per 聴解 item into its row, between `themes` and
+    `closing_moves` as the 13 most recent rows that carry it do. Derive each
+    shape from the SHIPPED item, never from the drawn `listening_scenarios`
+    string — a scenario names a setting and an errand, and the errand shape is
+    what the authored dialogue did with it. Verify a field's presence by
+    grepping the rows, never from a claim about them.
+    """
+    print("\ntopics.json shapes column (each 聴解 item's errand shape)")
+    tp = ROOT / "logs" / "topics.json"
+    if not tp.is_file():
+        return skip("topics.json records a shape per 聴解 item", "no logs/topics.json")
+    hist = json.loads(tp.read_text(encoding="utf-8")).get("history", [])
+    on_disk = {d.name for d, _ in generated_specs()}
+    for e in hist:
+        tid = str(e.get("test_id"))
+        if tid not in on_disk:
+            continue
+        surfaces = e.get("surfaces") or {}
+        choukai = [k for k in surfaces if str(k).startswith("聴解")]
+        name = (f"test {tid}: logs/topics.json records a `shapes` entry for "
+                f"each of its {len(choukai)} 聴解 surfaces")
+        if not choukai:
+            skip(name, "the row records no 聴解 surface, so there is nothing to "
+                       "key a shape to — fix `surfaces` first")
+            continue
+        shapes = e.get("shapes")
+        bad = []
+        if not isinstance(shapes, dict) or not shapes:
+            bad.append("the row has NO `shapes` map at all")
+        else:
+            missing = [k for k in choukai if not str(shapes.get(k, "")).strip()]
+            extra = [k for k in shapes if k not in surfaces]
+            if missing:
+                bad.append(f"{len(missing)} 聴解 surface(s) with no shape: "
+                           f"{sorted(missing)[:8]}")
+            if extra:
+                bad.append(f"{len(extra)} shape key(s) matching no surface: "
+                           f"{sorted(extra)[:8]}")
+        detail = ("; ".join(bad) + " — `shapes` is the ONLY record of what "
+                  "errand each 聴解 item actually ran, and the errand-archetype "
+                  "rule (no two items in a paper run the same errand; no "
+                  "archetype repeats within the last two tests) is read off "
+                  "this column and nothing else. Write one entry per 聴解 "
+                  "surface from the SHIPPED 聴解.md/聴解スクリプト.txt in the "
+                  "Stage-3 topic pass (exam-blueprint §'logs/topics.json'; "
+                  "jlpt-test-generation §'Stage 3'; this function's docstring "
+                  "has the drift incident)")
+        if tid in TOPICS_SHAPES_DRIFT_GRANDFATHERED:
+            warn(name, not bad,
+                 detail + " [named in TOPICS_SHAPES_DRIFT_GRANDFATHERED — a "
+                 "hole in the record, not a policy; it closes when the row is "
+                 "filled in, and a FAIL for any id not in that set]")
+        else:
+            check(name, not bad, detail)
+
+
 def check_harvest_provenance():
     """R12: a harvest_sha must identify a real harvest, not a date-shaped string.
 
@@ -7095,8 +7461,12 @@ def check_legacy_item_repeats(sample):
     """WARN, by name: every drawn item repeated inside its own cooldown window.
 
     THE RULE (exam-blueprint "Rotation model"): `cooldown_for()` scales each
-    pool's window to its own depth — `orthography` 47 draws, `usage` 41,
-    `paraphrase` 26, `context_words` 195, `kanji_reading` 303.
+    pool's window to its own depth — `usage` 41, `paraphrase` 26,
+    `context_words` 195, `kanji_reading` 303, and `orthography` **10**: that
+    one is sized off its narrowest floor'd SUB-pool (38 和語 entries ÷ the 3 a
+    paper may take), not its 249 total, since 2026-09-03. It read 47 until then,
+    which is a window 38 entries cannot keep — see `cooldown_for()`'s own
+    comment and the `20260903_1` incident.
 
     WHY THIS IS A LIST AND NOT A FAIL: the nine papers drawn before the gate
     checked each category against its OWN window carry `{"legacy": true}` in
@@ -7105,8 +7475,11 @@ def check_legacy_item_repeats(sample):
     was where the list stopped existing, so nobody could see the queue while a
     learner taking `20260811_1` then `20260813_1` met 「宣伝する」 as a 問題6
     headword twice (REPORT-GOI §F8). A grandfather set is a queue, not an
-    amnesty, so the queue is printed: eleven items over nine paper pairs, 3–5
-    draws apart against windows of 26–47.
+    amnesty, so the queue is printed. It held eleven items over nine paper
+    pairs (3–5 draws apart) when this check was written on 2026-08-21; it
+    prints **0 live repeats** as of 2026-09-03, because those papers were
+    actually re-drawn — the only way an item leaves. The count is not a
+    number to trust from this docstring: run the check, which recomputes it.
 
     An item leaves this list when its paper is re-drawn (tier C:
     `--reroll-one <cat>:<index>`, fresh seed, spec + ledger updated).
@@ -9920,6 +10293,153 @@ def check_choukai_non_dialogue_item(test_id: str, st: str, m):
          "Question Forms)", slug="choukai_q1_question_forms", test_id=test_id)
 
 
+# RC-C (qa-report-20260903_1, handed item #5), `RULE-MISSING`, added 2026-09-03.
+# The quota above is a FLOOR — "write one non-dialogue item per paper" — with no
+# rotation clause of any kind, and the corpus answered the uncounted question the
+# way it always does: three consecutive papers answered the floor with a recorded
+# one-way voice message, two of the three in the same 問題1 slot (20260828_1
+# 問題1-2番 留守電, 20260828_2 問題1-3番 留守電, 20260903_1 問題1-3番 音声メッセージ).
+#
+# The three media are named in `choukai-items.md` §"Section item mix". Ordering
+# here is load-bearing: 「水道局の自動音声案内が流れています」 carries BOTH an
+# automated-menu marker and 「案内が流れて」, so the menu class must be tested
+# first, and 留守番電話／音声メッセージ is ONE class because a recorded one-way
+# message is one medium however it was delivered — 20260903_1's item is a phone
+# message file called 「音声メッセージ」, which is a relabelling of its 1-back's
+# 留守番電話, not a rotation of it.
+CHOUKAI_NONDIALOGUE_MEDIA = (
+    ("自動音声メニュー", ("自動音声", "音声ガイダンス", "自動応答", "案内テープ",
+                          "電話の案内", "電話の自動")),
+    ("留守番電話／音声メッセージ", ("留守番電話", "留守電", "音声メッセージ",
+                                    "ボイスメール", "メッセージが入って",
+                                    "メッセージを聞い", "からのメッセージ",
+                                    "メッセージが届いて")),
+    ("館内・車内アナウンス", ("アナウンス", "案内が流れて", "放送", "車内放送")),
+)
+# Pre-rule papers breaching the rotation clause the day it landed (2026-09-03),
+# measured over all 20 generated papers on disk. Each is a real breach against
+# its own 1-back; none is edited, because a shipped 聴解 repair means re-authoring
+# an item and rebuilding the MP3. An id leaves this set when that lands — never
+# by widening the rule.
+#
+#   20260810_1  自動音声メニュー(4番) after 20260807_1 自動音声メニュー(5番)
+#   20260818_1  留守番電話(4番) after 20260817_3 自動音声メニュー(4番) — SLOT
+#   20260819_1  留守番電話(5番) after 20260818_1 留守番電話(4番)
+#   20260827_1  アナウンス(2番) after 20260821_1 アナウンス(2番) — medium AND slot
+#   20260828_2  留守番電話(3番) after 20260828_1 留守番電話(2番)
+#
+# 20260903_1 — the founding case (留守番電話／音声メッセージ at 3番, i.e. both the
+# medium AND the slot of its 1-back 20260828_2) — LEFT this set on 2026-09-03:
+# the paper was not yet shipped, so it was repaired instead of exempted. Its
+# 問題1 non-dialogue item is now 4番, a 市役所の電話の自動音声案内 (自動音声メニュー,
+# a medium neither of the last two papers used), and the 「アルバイトの引き継ぎ」
+# scenario that used to carry the message is voiced as a two-person phone call
+# in 3番; MP3 re-synthesised. It now passes on merit, as a `check`, not a `warn`.
+CHOUKAI_NONDIALOGUE_ROTATION_GRANDFATHERED = {
+    "20260810_1", "20260818_1", "20260819_1", "20260827_1", "20260828_2",
+}
+
+
+def choukai_nondialogue_q1(st: str, m) -> list[tuple[str, str, str]]:
+    """(slot, medium, lead-in) for every single-speaker 問題1 item in `st`.
+
+    問題1 only: the rotation clause is about the 課題理解 sub-skill official runs
+    single-speaker in 16% of its 問題1 items. 問題2's occasional monologue
+    (a lecture, a radio talk) is a ポイント理解 item and is not one of the three
+    media.  `medium` is `None` when the lead-in names none of them — the check
+    reports that rather than guessing, because an unclassifiable lead-in means
+    the item does not announce its medium to the candidate either.
+    """
+    out = []
+    for it in choukai_item_blocks(choukai_span(st, 1), m, True):
+        labels = {hit.group(1) for line in it[1:]
+                  if (hit := m.SPEAKER_RE.match(line)) and hit.group(1) in m.SPEAKER_MAP}
+        if len(labels) != 1:
+            continue
+        leadin = it[0]
+        medium = next((name for name, marks in CHOUKAI_NONDIALOGUE_MEDIA
+                       if any(k in leadin for k in marks)), None)
+        out.append((choukai_item_label(leadin), medium, leadin))
+    return out
+
+
+def check_choukai_nondialogue_medium_rotation():
+    """The 問題1 non-dialogue item's MEDIUM and SLOT rotate paper to paper.
+
+    THE RULE (`choukai-items.md` §"Section item mix"): the three media are
+    館内・車内アナウンス, 留守番電話／音声メッセージ (ONE class) and 自動音声メニュー;
+    **no medium may serve two consecutive papers**, and the item may not sit in
+    the same 問題1 slot number as the previous paper's.
+
+    THE INCIDENT: see CHOUKAI_NONDIALOGUE_MEDIA above. Nothing rotated this —
+    `sample_items.py` cools down the drawn `listening_scenarios` string, and the
+    medium is an authoring choice made after the draw, so no cooldown reached it.
+
+    THE REPAIR: re-author the item onto whichever medium neither of the last two
+    papers used, and move it to a different 問題1 slot. It is a Tier-B repair
+    (script + `make mp3`), so a breach found before the MP3 is built is nearly
+    free and one found after is not — check it at authoring time.
+
+    SCOPE: a paper with NO 問題1 non-dialogue item breaks the chain rather than
+    inheriting its 1-back's medium. That gap is deliberate and it is not a
+    loophole: shipping no non-dialogue item at all is already reported by
+    `check_choukai_non_dialogue_item()`, so a paper cannot use it to launder a
+    medium without taking that WARN.
+    """
+    print("\n問題1 non-dialogue item — medium/slot rotation (choukai-items.md)")
+    tests = ROOT / "tests"
+    if not tests.is_dir():
+        return skip("問題1 non-dialogue medium rotation", "no tests/ on disk")
+    m = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
+    seq = []
+    for d in sorted(p for p in tests.iterdir() if p.is_dir()):
+        if ORIGIN.is_imported(d.name):
+            continue
+        st_path = d / "聴解スクリプト.txt"
+        if not st_path.is_file():
+            continue
+        seq.append((d.name, choukai_nondialogue_q1(
+            st_path.read_text(encoding="utf-8"), m)))
+    if not seq:
+        return skip("問題1 non-dialogue medium rotation",
+                    "no generated 聴解スクリプト.txt on disk")
+    unnamed = [f"{tid} 問題1-{slot}: 「{leadin[:44]}」" for tid, items in seq
+               for slot, medium, leadin in items if medium is None]
+    warn("every 問題1 non-dialogue lead-in names one of the three media",
+         not unnamed,
+         "; ".join(unnamed) + " — the lead-in is what tells the candidate what "
+         "they are listening to, and it is also what this rotation check reads. "
+         "Name the medium in it (「…案内が流れています」／「留守番電話に…メッセージが "
+         "入っています」／「…自動音声案内を聞いています」), or add the wording to "
+         "CHOUKAI_NONDIALOGUE_MEDIA if it is a fourth real medium "
+         "(choukai-items.md §'Section item mix')")
+    for (pid, prev), (cid, cur) in zip(seq, seq[1:]):
+        if not prev or not cur:
+            continue          # a paper with no non-dialogue item breaks the chain
+        pmed = {med for _, med, _ in prev if med}
+        pslot = {slot for slot, _, _ in prev}
+        hits = []
+        for slot, med, _ in cur:
+            if med and med in pmed:
+                hits.append(f"問題1-{slot} is {med} and so was {pid}'s")
+            if slot in pslot:
+                hits.append(f"問題1-{slot} sits in the same slot as {pid}'s")
+        name = (f"{cid}: 問題1 non-dialogue medium and slot both rotate off "
+                f"{pid}'s (immediately previous)")
+        detail = ("; ".join(hits) + " — 留守番電話 and 音声メッセージ are ONE "
+                  "medium (a recorded one-way message, however delivered), so "
+                  "relabelling the delivery does not rotate it. Re-author onto "
+                  "the medium neither of the last two papers used and move the "
+                  "item to another 問題1 slot (choukai-items.md §'Section item "
+                  "mix'; qa-report-20260903_1 RC-C)")
+        if cid in CHOUKAI_NONDIALOGUE_ROTATION_GRANDFATHERED:
+            warn(name, not hits, detail + GRANDFATHER_NOTE,
+                 slug="choukai_nondialogue_rotation", test_id=cid)
+        else:
+            check(name, not hits, detail,
+                  slug="choukai_nondialogue_rotation", test_id=cid)
+
+
 CLASS_ADDRESSED_RE = re.compile(r"(方|かた|様|皆様|みなさま)は[、,]?\s*[^。]{0,20}"
                                 r"(窓口|受付|カウンター|会場|入口|入り口)へ")
 
@@ -10749,7 +11269,28 @@ def first_diff(a, b, path: str = "") -> str:
 
 
 def check_grader_parity():
-    print("\nin-page grader ↔ grade_answers.py (same answers, same 採点結果.json)")
+    """The two graders must produce the same 採点結果.json from the same answers.
+
+    WHAT IS MEASURED: for each built `解答.html`, JS_HARNESS above evaluates the
+    sheet's own `computeResult()` under node on a SYNTHETIC answer set it
+    generates itself (correct unless the key index is divisible by 3), feeds the
+    identical answers through `grade_answers.py`, and diffs the two payloads
+    field for field. Nothing about the paper's own grading is read, and nothing
+    is written.
+
+    GATE-WRONG (messaging only), qa-report-20260903_1: the per-test line used to
+    read `<id>: 採点結果.json agrees field for field (33/51 + 14/20 + 20/30)` —
+    the same three fractions for every id, because they are the harness's fixed
+    answer set, not any paper's result. **All 28 test folders on disk lack a
+    `採点結果.json` entirely** (that file is written only when someone submits
+    the sheet or runs `make grade`), so the line asserted agreement about a
+    per-test artifact that exists nowhere in the repo, and a reviewer who
+    trusted it believed a deliverable had been verified. The check itself was
+    always sound; only its label lied. THE REPAIR: name the two graders, not the
+    file, and say whose answers the tuple belongs to.
+    """
+    print("\nin-page grader ↔ grade_answers.py (same synthetic answers, same "
+          "採点結果.json payload — no per-test 採点結果.json is read or written)")
     if not (ROOT / "tests").is_dir():
         return skip("grader parity", "no tests/ on disk")
     sheets = sorted((ROOT / "tests").glob("*/解答.html"))
@@ -10786,7 +11327,11 @@ def check_grader_parity():
             js_doc.pop("graded_at", None)
             sec = py_doc["summary"]["sections"]
             raw = " + ".join(f"{s['raw_correct']}/{s['raw_total']}" for s in sec.values())
-            check(f"{d.name}: 採点結果.json agrees field for field ({raw})",
+            # The tuple is the HARNESS's fixed synthetic answer set scored
+            # against this sheet's key — identical for every id by construction,
+            # and not this paper's result (no 採点結果.json exists for any test).
+            check(f"{d.name}: in-page grader ↔ grade_answers.py agree field for "
+                  f"field ({raw} on the harness's synthetic answer set)",
                   py_doc == js_doc, first_diff(py_doc, js_doc))
 
 
@@ -10828,6 +11373,7 @@ def main():
         check_ledger_spec_agreement()
         check_theme_record_agreement()
         check_topics_claim_field()
+        check_topics_shapes_field()
         check_harvest_hygiene()
         check_harvest_provenance()
         check_legacy_item_repeats(SAMPLE_ITEMS)
@@ -10836,6 +11382,7 @@ def main():
         check_theme_repeat_cross_test()
         check_slot_theme_repeat()
         check_cross_test_listening_subjects()
+        check_choukai_nondialogue_medium_rotation()
         check_draw_provenance()
         check_pools_sha_replayability()
         check_invented_proper_nouns()

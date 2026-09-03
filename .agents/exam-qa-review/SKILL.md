@@ -187,10 +187,39 @@ defect through.
   original draws through a whole QA pass — a mismatch a same-file re-review
   cannot see, because it's BETWEEN files.
 - **The same fix must also update every relevant field in that surface's OWN
-  `logs/topics.json` entry** — **all FIVE: `surfaces`, `themes`, `shapes`,
-  `closing_moves`, `notes`** — `20260817_1` updated `surfaces`/`themes` but
-  left `shapes` describing the discarded pre-fix draw; no check compares
-  `shapes` against `surfaces`. Update all five together.
+  `logs/topics.json` entry** — the row's keys, which are
+  **`surfaces`, `themes`, `closing_moves`, `voices`, `claim`, `persona`,
+  `shapes`, `notes`** (read them off the row).
+  **Correction, 2026-09-03:** this bullet briefly claimed "no row on disk has
+  ever had a `shapes` key". That measurement was wrong — `shapes` (each 聴解
+  item's errand shape, 33 entries) was present on **16 of the 20 rows**, on
+  every paper through `20260827_1`; four papers had dropped it, silently,
+  because no gate check read it. Deleting it from this
+  list would have ratified that drift instead of catching it, so it is restored:
+  `exam-blueprint` §"`logs/topics.json`" and `jlpt-test-generation` §stage 3
+  both still require the field, and the errand-archetype rule ("two 聴解 items
+  may not run the same errand, and archetypes must not repeat within the last
+  two tests") has no other data to read. `20260903_1`'s row was then filled in
+  from its shipped 聴解 (17 of 20), and `check_topics_shapes_field()` now reads
+  the field, so the drift cannot recur silently: the three rows still empty are
+  named in `TOPICS_SHAPES_DRIFT_GRANDFATHERED` and WARN, any other id FAILs.
+  Verify a field's presence by grepping
+  the rows, never from a claim about them — including this one.
+  `20260817_1` updated
+  `surfaces`/`themes` and left the closing-shape field describing the discarded
+  pre-fix draw; no check compares it against `surfaces`. Update all of them
+  together.
+  **`surfaces` and `claim` are verifiable against the item, and must be
+  verified — not only `notes`.** Both are one-line prose retellings of what
+  shipped, and a retelling can invert the item while every gate stays green:
+  `20260903_1` recorded 聴解問題5-2番 as 「男は太陽の観察会・女は星座の解説会」 and
+  「太陽の観察会は男が、席を譲った女は…星座の解説会を選ぶ」 when the script has the
+  woman take 太陽 (「私が太陽の観察会に申し込むね」) and the man take 星座 (「じゃあ、
+  星座の解説会にするよ」) — the two people swapped, in the file the next paper's
+  blueprint reads, with the KEYS correct and `notes` correct. Re-read each
+  `surfaces`/`claim` line against the item's own deciding lines, naming who did
+  what; a row whose actors are reversed is a false record even when no count
+  moves.
   **`notes` is verifiable, and must be verified: every claim in `notes` that
   quotes a paper string must quote a string that is still in the paper.** The
   four-field list above stood until 2026-08-19, so `notes` was the one field
@@ -395,8 +424,16 @@ as "N1"/"N3", so a single source's label was never sufficient.
   contradicting the owner; a paper cannot satisfy both.
 - **問題4 文脈規定:** every stem must carry a （　）blank. A key word printed
   in the stem itself is trivially answerable — fail it.
-- **読解 length/predictability:** all 20 items (52–71) satisfy `max/min ≤
-  1.30` JP chars. **Two longest-key rates, both gated** — (tied-)longest
+- **読解 length/predictability:** the per-item option-length ratio is
+  `dokkai.md` §"Option length balance"'s, and **this file must not restate the
+  number** — it is WARN above 1.65 / FAIL above 2.50, measured on **printed**
+  length over **問題10–13 only, 問題14 exempt**. This bullet read "all 20 items
+  (52–71) satisfy `max/min ≤ 1.30` JP chars" until 2026-09-03, i.e. it kept the
+  clamp the owner had **withdrawn on 2026-08-21 for failing 34.3 % of official
+  current-era items** — wrong threshold, wrong metric, wrong scope, in the file
+  the reviewer reads. `20260903_1` (ratios 1.06–1.36, worst 1.36) would have
+  been failed on items 64/66/69 by a rule official itself fails. Read the number
+  from the owner every time. **Two longest-key rates, both gated** — (tied-)longest
   ≤35 % (official 30 %) AND **uniquely** longest ≤30 % (official 20 %); rank
   varied across items. Check the uniquely-longest one by hand: a paper can sit
   inside the tied target while every key is the sole longest option, which is
@@ -465,6 +502,22 @@ as "N1"/"N3", so a single source's label was never sufficient.
   "check the keys against the running text", with no statement of what a hit
   was — so it was unactionable and got skipped. A 連体 use of a form keyed in a
   文末 frame (「姿を消したはずの種が」 against a keyed 「〜はずだ」) is not a hit.
+  **Count （注N） gloss DEFINITION lines as 読解 prose, and re-run this grep after
+  every prose repair, however mechanical.** `20260903_1` cleared a
+  byte-identical-gloss FAIL by rewording 問題11(1)'s （注3）変遷 to 「時代が進む
+  につれて、少しずつ変わっていくこと」 — which planted 問題8-44's keyed
+  「〜につれて…ていく」 in its own frame (Nが V-るにつれて → gradual change → ていく),
+  in a line printed in the booklet, at a stage that re-ran `make check` (blind to
+  frames, it prints 1 ≤ 1 and passes) but not this read. A repair whose whole
+  point was one gate check is exactly the repair nobody re-reads against the
+  other rules: after ANY edit to 問題10–14 prose, glosses included, re-grep all
+  問題7/8/9 keyed forms.
+- **Grep each 問題9 keyed 文末 modal across 問題10–13 prose too, not just the
+  connectives.** `20260903_1` keyed 「のも当然だろう」 at 問題9-51 while 問題12(A)
+  printed 「見直しが進んでいるのも当然だろう」 — same 文末 frame, same 問題9 slot as
+  the `20260817_3` 「〜とは限らない」 incident, and the paper even carries
+  「とは限らない」 as 問題9-51's own distractor. Two papers on one class: the shape
+  is a 文末 modal, and 問題9's 文末モーダル blank is where it recurs.
 - **Every sentence is Japanese** — read the whole paper aloud once, watching
   for broken constructions (especially inside CORRECT options).
 

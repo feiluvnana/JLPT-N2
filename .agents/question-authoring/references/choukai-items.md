@@ -176,6 +176,42 @@ binding; write it into the 構成表 and check it there.
 | 4 | ≤2 of 12 items may carry an already-done distractor (**target**; archive ceiling 3, gate FAILs at >3 — §即時応答); ≤2 may key a reply opening 「あ、」 | median 1, max 3 | FAIL at >3 done |
 | 5 | 1番 ≥3 speakers cast on distinguishable voices (≥1.9 st margin); 2番 the OTHER official type; no shared template | 31/31 sittings ≥3 spk | FAIL at 0 items with ≥3 spk |
 
+**The non-dialogue item's MEDIUM rotates** (added 2026-09-03, `RC-C`). The
+row-2 quota above is a floor with no rotation clause, and three consecutive
+papers answered it with a recorded one-way voice message, twice in the same
+slot (`20260828_1` 問題1-2番 留守電, `20260828_2` 問題1-3番 留守電, and
+`20260903_1` **as first drafted** 問題1-3番 音声メッセージ —
+`qa-report-20260903_1.md` handed item #5; the run of three is the evidence, and
+the two adjacent-pair breaches inside it were `20260828_2` and `20260903_1`).
+`20260903_1` has since been repaired and no longer reads that way on disk (see
+the grandfather note below); the draft is quoted here because it is what the
+rule was written against. So:
+
+- **The three media are** 館内・車内アナウンス, 留守番電話／音声メッセージ, and
+  自動音声メニュー. 留守番電話 and 音声メッセージ are **ONE class** — a recorded
+  one-way message is one medium however it was delivered (answering machine,
+  phone voicemail, a message file on a smartphone); relabelling the delivery
+  does not rotate the medium, which is exactly what `20260903_1`'s draft did.
+- **No medium may serve two consecutive papers**, and **the item may not sit in
+  the same 問題1 slot number as the previous paper's**.
+
+Both halves are decidable from the item's own lead-in line, so
+`check_choukai_nondialogue_medium_rotation()` in `tools/check_consistency.py`
+enforces them; that constant's comment carries the per-paper measurement and
+the `CHOUKAI_NONDIALOGUE_ROTATION_GRANDFATHERED` set of the pre-rule papers
+that breach it — **five today**, `20260810_1`, `20260818_1`, `20260819_1`,
+`20260827_1`, `20260828_2`. An id leaves that set when its 問題1 non-dialogue
+item is re-authored onto a different medium — never by widening the rule.
+
+**`20260903_1` is the one id that has left, and it left the only way an id
+may.** It was the founding case and it was still unshipped when the rule
+landed, so it was repaired rather than exempted: its non-dialogue item is now
+問題1-**4番**, a 市役所の電話の自動音声案内 (自動音声メニュー — a medium neither
+`20260828_2` nor `20260828_1` used), and the 「アルバイトの引き継ぎ」 errand that
+had carried the 音声メッセージ is voiced as a two-person phone call in 3番, with
+the MP3 re-synthesised. It passes on merit, as a `check` and not a `warn`.
+Read the set in the code, not this paragraph, for who is exempt today.
+
 **Target vs gate.** These quotas are what you author to; `make check` (§G16)
 FAILs only *beyond the archive's whole range* — a green gate means "no
 official sitting looks this bad," not "this section is official-shaped." The
@@ -204,6 +240,7 @@ moment that paper's 聴解 is repaired** — never by widening a threshold:
 | 問題4 stimulus register | `CHOUKAI_Q4_REGISTER_GRANDFATHERED` | all 14 — 0 casual stimuli anywhere |
 | 聴解 voice balance | `CHOUKAI_VOICE_BALANCE_GRANDFATHERED` | all 14 |
 | 聴解.mp3 pacing freshness | `PACING_SHA_GRANDFATHERED` | 13 — the Phase 4.2 jitter rebuild is still pending; **this set is not a policy, it is a to-do** |
+| 問題1 non-dialogue medium/slot rotation (added 2026-09-03) | `CHOUKAI_NONDIALOGUE_ROTATION_GRANDFATHERED` | `20260810_1`, `20260818_1`, `20260819_1`, `20260827_1`, `20260828_2` — five; `20260903_1` **left the set by being repaired** (2026-09-03), which is the only way out |
 
 **問題4's register is fixed by the DRAW, not by the writing.** `quick_response`
 holds two kinds of entry: bare idioms and patterns (目を通す, 〜に決まってる),

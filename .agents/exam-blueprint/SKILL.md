@@ -374,6 +374,25 @@ binds only the **headline set** = 問題9 cloze, 問題12 A/B (one surface),
 1. **Five headline surfaces, five DIFFERENT themes.**
 2. **A headline theme appears nowhere else in the 読解 half.** Listening is
    governed by rule 3 only.
+   **For this rule "headline theme" means the FOUR 読解 headline themes only**
+   — 問題9, 問題12, 問題13, 問題14. A 聴解問題5 theme MAY tag a non-headline 読解
+   surface. This is the LENIENT reading, decided explicitly 2026-09-03, and it
+   is the reading `check_topics_themes()` has encoded since it was written
+   (`_headline_parts` intersects 読解-headline ∩ 聴解問題5 and nothing else).
+   Three reasons it is the decision and not a concession: a 聴解問題5 theme
+   tagging a *non-headline* 読解 surface is not a learner-visible repeat when
+   the subjects differ (and rule 4b/R2 already binds every headline SUBJECT
+   against all 13 読解 and 21 聴解 subjects of the previous paper, which is where
+   a real repeat gets caught); the strict reading would invalidate **4 of the
+   last 5 shipped papers** for no pedagogical gain — `20260903_1` 環境
+   (聴解問題5-1番 ↔ 問題11(4)), `20260828_1` 旅行・観光 (↔ 問題10(2)),
+   `20260827_2` 食 (↔ 問題10(1)), `20260827_1` 行政・手続き (↔ 問題11(3)), all
+   green, all through a fresh-eyes QA round; and the gate has never measured
+   anything else, so "strict" was never in force. **No check is added for the
+   strict reading.** The ambiguity is what shipped the class four times over —
+   read literally, a 聴解問題5 theme *is* a headline theme and rule 2 forbade
+   it; nothing said which reading was meant, and silence resolved it every time
+   (`qa-report-20260903_1.md` handed item #3, `RC-B`).
 3. **Reading: ONE surface per theme — all thirteen 読解 surfaces differ.**
    Listening caps at ≤5 scenarios per theme. 13 surfaces against 19 themes
    that carry reading entries leaves 6 spare — "no repeat" is arithmetically
@@ -519,9 +538,20 @@ flat ledger migrates automatically.
   ineligible. A flat `COOLDOWN=2` once applied the same window regardless of
   pool depth, and two items proved it by repeating within 4-5 tests.
   `cooldown_for()` scales the window to each pool's OWN depth
-  (`pool_size // draws_per_test`, minus a margin); a pool that can't fill a
-  draw at its own ceiling relaxes one step at a time, says so, and **the
-  level it settled on is written into the spec**.
+  (`pool_size // draws_per_test`, minus a margin), and for a category with a
+  floor'd or capped SUB-pool it takes the tighter of the whole pool's depth and
+  that sub-pool's — `quick_response`'s keigo side (`KEIGO_CAP`) and
+  `orthography`'s 和語 side (`WAGO_FLOOR`/`WAGO_DIST`), each divided by the most
+  one paper can take of it. A window sized off the whole pool is a promise the
+  sub-pool cannot keep: `orthography`'s 38 和語 entries against a 47-draw window
+  hard-FAILed `20260903_1` at `check_moji2_composition` with zero eligible 和語
+  and no seed able to help (2026-09-03; the same class as the 2026-08-27 keigo
+  incident). A pool that still can't fill a draw at its own ceiling relaxes one
+  step at a time, says so, and **the level it settled on is written into the
+  spec** — but relaxation is a last resort, not a routine: `assert_rotation()`
+  re-derives `cooldown_for()` and aborts the draw on any PICKED item older than
+  that window, so a category whose window is dishonest dies there rather than
+  quietly shipping.
 - **Weighted by recency too, not just filtered** — `weighted_sample_no_replacement()`
   favors items that have gone longest since use (weight `ago(x)+1`), so a
   just-cooled item doesn't cluster right at the cooldown boundary.
@@ -550,11 +580,15 @@ flat ledger migrates automatically.
   banned — so they keep their skip. What is not allowed is the skip being where
   the list stops existing: `check_legacy_item_repeats()` WARNs one line per live
   repeat, by item and by paper pair, and the list only shrinks when a paper is
-  actually re-drawn. As of 2026-08-21 it holds **eleven items over nine paper
-  pairs, 3–5 draws apart against windows of 26–47** (`orthography` 歌謡/果実/
-  努める/系統/育児, `usage` 持参/大まか/宣伝する, `paraphrase` あらかじめ/どなる,
-  `context_words` ええと) — 「宣伝する」 keys 問題6 in two papers a learner may take
-  back to back, which is what a hidden queue costs (REPORT-GOI §F8).
+  actually re-drawn. It held **eleven items over nine paper pairs, 3–5 draws
+  apart** when the queue was first printed on 2026-08-21 (`orthography` 歌謡/
+  果実/努める/系統/育児, `usage` 持参/大まか/宣伝する, `paraphrase` あらかじめ/
+  どなる, `context_words` ええと) — 「宣伝する」 keyed 問題6 in two papers a learner
+  may take back to back, which is what a hidden queue costs (REPORT-GOI §F8).
+  Those papers were re-drawn, so it prints **0 live repeats** as of 2026-09-03.
+  Do not read either count off this page: the check recomputes it, and a
+  window it measures against may since have changed (`orthography`'s went
+  47 → 10 on 2026-09-03).
 
 ### A `grammar_p8` draw whose form is a general-purpose sentence pattern obliges a prose grep
 
@@ -916,6 +950,18 @@ written by the build pass. Each row carries `surfaces` (every 読解 passage,
 問題9, 問題14, every 聴解 item incl. 例, one noun phrase each), `themes` (same
 keys → a `THEMES` value), `shapes` (each 聴解 item's errand shape). No
 subject or shape may repeat within the paper or against the previous two rows.
+
+**`shapes` is now gate-read, because it drifted out silently while nothing read
+it** (2026-09-03). Four consecutive papers shipped rows with no `shapes` map at
+all — the field is the errand-archetype rule's only data, so those papers had
+nothing to diff against — and a QA pass then mis-measured the field as never
+having existed and struck it from `exam-qa-review`'s update list.
+`check_topics_shapes_field()` FAILs a generated paper whose row is missing the
+field or an entry for any 聴解 surface; the three rows still empty are named in
+`TOPICS_SHAPES_DRIFT_GRANDFATHERED` and print the same measurement as a WARN,
+and **an id leaves that set only by having its row filled in from the shipped
+聴解.md/聴解スクリプト.txt** — never by widening the rule. Read the set in
+`tools/check_consistency.py`, not this sentence, for who is exempt today.
 
 **Two more required maps, adopted 2026-08-24 (`claim` and `persona`).** A
 theme tag records what a surface is ABOUT; it cannot record what the surface

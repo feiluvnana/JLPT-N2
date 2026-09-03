@@ -172,6 +172,20 @@ make autofix <id> && make lint-draft <id> && make verify-scramble <id> && make b
 - `make check` validates every test on disk; **read every line, including
   WARN** — resolve each or justify it in the report. Fix failures before
   stage 4: a mis-keyed item is invisible once the MP3 is built.
+- **A repair made to clear one gate check is not verified by that check
+  passing.** After ANY edit to 問題10–14 prose — （注N） glosses included —
+  re-grep every 問題7/8/9 keyed form across the whole 読解 half, **record the
+  counts AND the frames (文末／連用／連体) in the hand-off**, and re-read the
+  edited passage's closing move. A one-line fix has the same defect rate as a
+  one-line authoring pass; it just skips the reading that a fresh passage gets.
+  **The incident (2026-09-03, `20260903_1` F2):** this stage rewrote
+  問題11(1)'s 「（注3）変遷」 gloss to clear a byte-identical-gloss FAIL, re-ran
+  `make check` — which went green — and stopped. The new wording,
+  「時代が進むにつれて、少しずつ変わっていくこと」, planted 問題8-44's own drawn
+  target 「〜につれて…ていく」 in its own frame, in a line printed in the booklet.
+  The gate was blind to frames at the time (it counted occurrences and read
+  1 ≤ 1); it is not any more (`check_key_grammar_exposure`), but the reading is
+  still yours, because the next repair will be to a rule no check has yet.
 - Then the **whole-paper topic pass** (below) — no script sees it — and
   **append this test's row to `logs/topics.json`**: `surfaces` (each 読解
   passage, 問題9, 問題14, every 聴解 item incl. 例, one noun phrase each) and
