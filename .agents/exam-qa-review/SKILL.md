@@ -256,8 +256,13 @@ key.
 Highest-risk shapes (all shipped): near-synonym connectives (すなわち/つまり),
 competing particles on one noun (に沿って/に即して on ニーズ), negative
 prefixes that both attach (無記入/未記入), adverbs sharing a frame
-(いいかげん/おろそか on 〜にする), and 問題6 "wrong" sentences that are actually
-real collocations (品質に妥協する, 考慮に値する — search before trusting).
+(いいかげん/おろそか on 〜にする), formal-vs-plain movement/weather-verb pairs
+(接近する/近づく on a mere degree adverb like 大きく — both take "Nに〜, 上陸する
+おそれ" equally well in weather-bulletin register; disambiguate with a mundane/
+non-technical subject where the Sino-Japanese verb reads as overreaching, not
+with a degree adverb alone — `qa-report-20260828_2.md` F2), and 問題6 "wrong"
+sentences that are actually real collocations (品質に妥協する, 考慮に値する —
+search before trusting).
 
 ### 2b. Distractor plausibility (the opposite failure — too WEAK, not too strong)
 
