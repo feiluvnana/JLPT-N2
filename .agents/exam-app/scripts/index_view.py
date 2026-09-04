@@ -203,7 +203,7 @@ function localTests(){
   return (window.PAGES_TESTS || []).map(function(t){
     var res = window.JLPTStore.result(t.id), summary = res && res.summary;
     return {
-      id: t.id, origin: t.origin, total: TOTAL,
+      id: t.id, origin: t.origin, total: t.total || TOTAL,
       has_sheet: t.has_sheet, has_audio: t.has_audio,
       has_explanation: t.has_explanation,
       answered: countAnswered(window.JLPTStore.answers(t.id)),

@@ -31,35 +31,72 @@ from pathlib import Path
 # the single owner of format facts. They previously did not (問1 was 1-8, 問11 was
 # 60-64, 問14 was 71-75), so every 大問別 diagnostic attributed questions to the
 # wrong 大問. Do not edit these without editing jlpt-exam-structure first.
-GENGO_QUESTION_TAXONOMY = {
-    # 言語知識（文字・語彙）
-    "問1": {"name": "漢字読み (Kanji Reading)", "range": (1, 5), "section": "言語知識", "total": 5},
-    "問2": {"name": "表記 (Orthography)", "range": (6, 10), "section": "言語知識", "total": 5},
-    "問3": {"name": "語形成 (Word Formation)", "range": (11, 13), "section": "言語知識", "total": 3},
-    "問4": {"name": "文脈規定 (Word in Context)", "range": (14, 20), "section": "言語知識", "total": 7},
-    "問5": {"name": "言い換え類義 (Paraphrases)", "range": (21, 25), "section": "言語知識", "total": 5},
-    "問6": {"name": "用法 (Correct Usage)", "range": (26, 30), "section": "言語知識", "total": 5},
-    # 言語知識（文法）
-    "問7": {"name": "文法形式の判断 (Grammar Form)", "range": (31, 42), "section": "言語知識", "total": 12},
-    "問8": {"name": "文の組み立て (Sentence Composition ★)", "range": (43, 47), "section": "言語知識", "total": 5},
-    "問9": {"name": "文章の文法 (Text Grammar / Cloze)", "range": (48, 51), "section": "言語知識", "total": 4},
-    # 読解
-    "問10": {"name": "内容理解・短文 (Short Passages)", "range": (52, 56), "section": "読解", "total": 5},
-    "問11": {"name": "内容理解・中文 (Medium Passages)", "range": (57, 64), "section": "読解", "total": 8},
-    "問12": {"name": "統合理解 (A/B Comparative Texts)", "range": (65, 66), "section": "読解", "total": 2},
-    "問13": {"name": "主張理解・長文 (Long Essay)", "range": (67, 69), "section": "読解", "total": 3},
-    "問14": {"name": "情報検索 (Information Retrieval)", "range": (70, 71), "section": "読解", "total": 2},
+#
+# THE EXAM HAS THREE ERAS and an imported past paper may belong to any of them
+# (jlpt-exam-structure §"The counts below are the CURRENT era's"). A generated
+# mock is always 71; an import is whatever its sitting printed. 7/2021 is a
+# 72-question paper — 問題11 ran 3 passages x 3Q — and before this table was
+# era-aware its Q72 fell outside every 大問 and Q70 was filed under 問14.
+# One row per shape, counts for 問1..問14 in order; ranges are derived, so a
+# count and a range cannot drift apart.
+GENGO_SHAPES = {
+    75: (5, 5, 5, 7, 5, 5, 12, 5, 5, 5, 9, 2, 3, 2),   # 7/2010 – 7/2018
+    72: (5, 5, 3, 7, 5, 5, 12, 5, 4, 5, 9, 2, 3, 2),   # 12/2018 – 7/2021
+    71: (5, 5, 3, 7, 5, 5, 12, 5, 4, 5, 8, 2, 3, 2),   # 12/2021 – 12/2025 (current)
 }
 
-# Guard: the taxonomy must tile 1..71 exactly, with no gap and no overlap.
-_covered = [q for s in GENGO_QUESTION_TAXONOMY.values()
-            for q in range(s["range"][0], s["range"][1] + 1)]
-assert sorted(_covered) == list(range(1, 72)), (
-    "GENGO_QUESTION_TAXONOMY must tile questions 1-71 exactly "
-    f"(got {len(_covered)} entries, duplicates/gaps present)")
-assert all(s["total"] == s["range"][1] - s["range"][0] + 1
-           for s in GENGO_QUESTION_TAXONOMY.values()), \
-    "GENGO_QUESTION_TAXONOMY 'total' disagrees with its 'range'"
+_GENGO_LABELS = [
+    ("問1", "漢字読み (Kanji Reading)", "言語知識"),
+    ("問2", "表記 (Orthography)", "言語知識"),
+    ("問3", "語形成 (Word Formation)", "言語知識"),
+    ("問4", "文脈規定 (Word in Context)", "言語知識"),
+    ("問5", "言い換え類義 (Paraphrases)", "言語知識"),
+    ("問6", "用法 (Correct Usage)", "言語知識"),
+    ("問7", "文法形式の判断 (Grammar Form)", "言語知識"),
+    ("問8", "文の組み立て (Sentence Composition ★)", "言語知識"),
+    ("問9", "文章の文法 (Text Grammar / Cloze)", "言語知識"),
+    ("問10", "内容理解・短文 (Short Passages)", "読解"),
+    ("問11", "内容理解・中文 (Medium Passages)", "読解"),
+    ("問12", "統合理解 (A/B Comparative Texts)", "読解"),
+    ("問13", "主張理解・長文 (Long Essay)", "読解"),
+    ("問14", "情報検索 (Information Retrieval)", "読解"),
+]
+
+
+def gengo_taxonomy(max_q: int = 71) -> dict:
+    """The 大問 map for a paper whose last question is `max_q`.
+
+    Unknown counts fall back to the current era's 71 — a mangled key table must
+    not crash the grader — but every shape this repo has actually seen is listed
+    in GENGO_SHAPES above.
+    """
+    counts = GENGO_SHAPES.get(max_q, GENGO_SHAPES[71])
+    tax, q = {}, 1
+    for (code, name, section), n in zip(_GENGO_LABELS, counts):
+        tax[code] = {"name": name, "range": (q, q + n - 1),
+                     "section": section, "total": n}
+        q += n
+    return tax
+
+
+def gengo_goi_cutoff(max_q: int = 71) -> int:
+    """Last question of 文字・語彙＋文法; 読解 starts at the next one."""
+    return sum(GENGO_SHAPES.get(max_q, GENGO_SHAPES[71])[:9])
+
+
+# The current era's map, kept under its historical name for callers that grade a
+# generated mock (always 71).
+GENGO_QUESTION_TAXONOMY = gengo_taxonomy(71)
+
+# Guard: every shape must tile 1..max_q exactly, with no gap and no overlap.
+for _max_q, _counts in GENGO_SHAPES.items():
+    assert sum(_counts) == _max_q, (
+        f"GENGO_SHAPES[{_max_q}] sums to {sum(_counts)}, not {_max_q}")
+    _covered = [q for s in gengo_taxonomy(_max_q).values()
+                for q in range(s["range"][0], s["range"][1] + 1)]
+    assert sorted(_covered) == list(range(1, _max_q + 1)), (
+        f"gengo_taxonomy({_max_q}) must tile questions 1-{_max_q} exactly "
+        f"(got {len(_covered)} entries, duplicates/gaps present)")
 
 CHOUKAI_QUESTION_TAXONOMY = {
     "問題1": {"name": "課題理解 (Task Comprehension)", "section": "聴解"},
@@ -176,7 +213,8 @@ def grade(gengo_keys: dict, choukai_keys: dict, user_answers: dict) -> dict:
     user_choukai = user_answers.get("聴解", {})
 
     max_q = max(gengo_keys.keys()) if gengo_keys else 71
-    goi_cutoff = 54 if max_q > 71 else 51
+    goi_cutoff = gengo_goi_cutoff(max_q)
+    taxonomy = gengo_taxonomy(max_q)
 
     # 1. Language Knowledge (Goi & Bunpou: Q1 - Q51/54)
     goi_bunpou_total = goi_cutoff
@@ -247,7 +285,7 @@ def grade(gengo_keys: dict, choukai_keys: dict, user_answers: dict) -> dict:
 
     # Sub-category breakdown
     taxonomy_stats = {}
-    for code, spec in GENGO_QUESTION_TAXONOMY.items():
+    for code, spec in taxonomy.items():
         start, end = spec["range"]
         cat_correct = sum(1 for q in range(start, end + 1) if gengo_detail.get(q, {}).get("is_correct"))
         cat_total = (end - start + 1)

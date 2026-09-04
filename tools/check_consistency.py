@@ -3067,7 +3067,7 @@ def note_content_predicate(remainder: str) -> str:
     return ""
 
 
-def check_note_band(name: str, gt: str):
+def check_note_band(name: str, gt: str, origin: str = "generated"):
     """A （注N） definition may not be the headword's own characters restated (G2a).
 
     THE RULE (dokkai.md §（注N）, the subtraction test): strip from the definition
@@ -3090,6 +3090,18 @@ def check_note_band(name: str, gt: str):
     Verified 2026-08-19 over all 274 （注N） definitions on disk: 10 candidates,
     all 10 cleared, and the pre-repair 菜っ葉 gloss flagged. That is the
     reproduction of the numbers in the R3-10 root-cause row.
+
+    IMPORTED papers WARN instead of FAIL (2026-09-04). An import's glosses are
+    the sitting's own ink and `external-test-import` forbids rewording them, so
+    a FAIL here has no legal repair — the only way to clear it would be to
+    invent wording for an official paper. And the predicate does misfire on
+    official prose: N2 12/2021 問題11(2) prints 「接客業：飲食店やホテルなどで客に
+    接する職業」 (image-verified, booklet page 17), which satisfies this rule's own
+    prescription — two concrete exemplars, 飲食店 and ホテル — yet subtracting
+    接/客/業 leaves 「飲食店やホテルなどでにする職」, whose 用言 (接する) was the
+    headword's third kanji. That is the shape of the false positive, and it is
+    why the line reports rather than blocks on a transcription. It still FAILs
+    every generated paper, where rewording IS the repair.
     """
     circular = []
     for ln in gt.splitlines():
@@ -3107,13 +3119,19 @@ def check_note_band(name: str, gt: str):
         remainder = "".join(c for c in defn if c not in set(term))
         if not note_content_predicate(remainder):
             circular.append(f"{term}：{defn} → 残り「{remainder}」")
-    check(f"{name}: （注N） definitions survive the subtraction test",
-          not circular,
-          "; ".join(circular) + " — delete from the definition every character "
-          "the headword contains; what is left carries no 用言, so the gloss "
-          "restates the headword instead of explaining it. Reword with a "
-          "mechanism, a purpose, or two concrete exemplars "
-          "(question-authoring/references/dokkai.md §（注N）)")
+    label = f"{name}: （注N） definitions survive the subtraction test"
+    detail = ("; ".join(circular) + " — delete from the definition every character "
+              "the headword contains; what is left carries no 用言, so the gloss "
+              "restates the headword instead of explaining it. Reword with a "
+              "mechanism, a purpose, or two concrete exemplars "
+              "(question-authoring/references/dokkai.md §（注N）)")
+    if origin == "imported":
+        return warn(label, not circular,
+                    detail + " — IMPORTED: this is the sitting's own gloss and "
+                    "rewording it is forbidden (external-test-import "
+                    "§'Transcription rules'). Verify it against the page and say "
+                    "so in the final report; do not edit the source's wording")
+    check(label, not circular, detail)
 
 
 def check_note_band_reuse(name: str, gt: str, st: str = "", origin: str = "generated"):
@@ -11988,9 +12006,21 @@ def check_tests():
                   "use `# 【問題】` + `## 問題N` (jlpt-exam-structure)")
 
         keys = g.parse_gengo_keys(gengo)
-        exp_g_count = 75 if len(keys) == 75 else 71
+        # A GENERATED mock is always the current era's 71. An IMPORT is whatever
+        # its sitting printed: the exam has three eras (jlpt-exam-structure), and
+        # 7/2021 is a 72-question paper because 問題11 ran 3 passages x 3Q. The
+        # count still has to be one of the shapes grade_answers.GENGO_SHAPES
+        # knows how to split into 大問 — an arbitrary total would silently grade
+        # 読解 from the wrong question onward — and 1..N must be contiguous, which
+        # is what actually catches a dropped row.
+        exp_g_count = (max(keys) if origin == "imported" and keys
+                       and max(keys) in g.GENGO_SHAPES else 71)
         check(f"{exp_g_count} gengo answer keys parse", len(keys) == exp_g_count,
-              f"got {len(keys)}, missing {[q for q in range(1, exp_g_count + 1) if q not in keys]}")
+              f"got {len(keys)}, missing {[q for q in range(1, exp_g_count + 1) if q not in keys]}"
+              + ("" if not keys or max(keys) in g.GENGO_SHAPES else
+                 f" — highest question number is {max(keys)}, which is no known "
+                 f"era shape {sorted(g.GENGO_SHAPES)}; an import of a paper with "
+                 f"a new shape needs a row in grade_answers.GENGO_SHAPES first"))
         ck = g.parse_choukai_keys(choukai)
         exp_c = ([f"問{s}-{i}" for s, n in ((1, 5), (2, 6), (3, 5), (4, 12)) for i in range(1, n + 1)] + ["問5-1", "問5-2", "問5-3-1", "問5-3-2"]) if len(ck) == 32 or "問5-3-1" in ck else expected_choukai
         check(f"{len(exp_c)} choukai answer keys parse with the expected labels",
@@ -12059,7 +12089,7 @@ def check_tests():
         check_dokkai_span_anchor_identity(gengo.name, gengo_prose)
         check_note_pairing(d.name, gengo_prose)
         check_note_answer_leak(d.name, gengo_prose, keys, opts)
-        check_note_band(d.name, gt)
+        check_note_band(d.name, gt, origin)
         check_note_band_reuse(d.name, gt, st_text, origin)
         if origin == "generated":
             check_dokkai_key_table_parses(d.name, gt)

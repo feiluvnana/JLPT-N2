@@ -282,6 +282,11 @@ SCRIPT = """
 const KEYS = %(keys)s, TESTID = "%(testid)s";
 const GENGO_KEYS = %(gengo_keys)s, CHOUKAI_KEYS = %(choukai_keys)s;
 const ANSWER_KEY = %(answer_key)s, TAXONOMY = %(taxonomy)s, ADVICE = %(advice)s;
+// Last 文字・語彙＋文法 question; 読解 starts at the next one. Baked in by
+// grade_answers.gengo_goi_cutoff() because it is era-dependent (51 on a 71- or
+// 72-question paper, 54 on a 75-question one), and the in-page grader must
+// split the sections exactly where the Python grader does.
+const GOI_CUTOFF = %(goi_cutoff)s;
 const CHOUKAI_SCRIPTS = %(choukai_scripts)s;
 
 // Where 「← テスト一覧」 and 「テスト一覧へ戻る」 go: the unified server's root, or
@@ -442,7 +447,7 @@ function computeResult(ans){
   const detailGengo = {}, detailChoukai = {};
   let goi = 0, dokkai = 0, choukai = 0;
   const maxQ = GENGO_KEYS.length;
-  const goiCutoff = maxQ > 71 ? 54 : 51;
+  const goiCutoff = GOI_CUTOFF;
 
   for (let q = 1; q <= maxQ; q++){
     const k = String(q);
@@ -870,7 +875,7 @@ function resultHtml(res, msg, saved){
   L.push('<div class="rs-check-tools">'
     + '<button type="button" class="ui-btn" id="rs-expand-btn" aria-expanded="false">'
     + 'すべての設問詳細を展開</button>'
-    + '<p class="rs-hint">展開すると全101問の問題文・選択肢・正誤が一覧で表示されます。</p>'
+    + '<p class="rs-hint">展開すると全' + KEYS.length + '問の問題文・選択肢・正誤が一覧で表示されます。</p>'
     + '</div>');
   const maxQ = GENGO_KEYS.length;
   L.push('<h3>言語知識・読解 (1 〜 ' + maxQ + ')</h3><div class="rs-grid">');
@@ -1292,10 +1297,18 @@ def player_html(d: Path) -> str:
 
 def grading_data(gam, gids: list, ckeys: dict, combined_keys: dict,
                   choukai_scripts: dict | None = None):
-    """Serialize grade_answers.py taxonomy/advice for in-page grading."""
+    """Serialize grade_answers.py taxonomy/advice for in-page grading.
+
+    The 大問 map is chosen from THIS paper's own last question number, because an
+    imported past paper may be a 72- or 75-question sitting (grade_answers
+    §GENGO_SHAPES). Hard-coding the 71 map here silently disagreed with the
+    Python grader on any other shape, which make check's in-page↔CLI parity
+    check would then report as a grader bug.
+    """
+    max_q = max((int(q) for q in gids if str(q).isdigit()), default=71)
     tax_gengo = [{"code": c, "name": s["name"], "section": s["section"],
                   "keys": [str(q) for q in range(s["range"][0], s["range"][1] + 1)]}
-                 for c, s in gam.GENGO_QUESTION_TAXONOMY.items()]
+                 for c, s in gam.gengo_taxonomy(max_q).items()]
     tax_choukai = [{"code": c, "name": s["name"], "section": s["section"],
                     "keys": [k for k in ckeys
                              if k.startswith("問" + c.replace("問題", "") + "-")]}
@@ -1308,6 +1321,7 @@ def grading_data(gam, gids: list, ckeys: dict, combined_keys: dict,
         "choukai_keys": json.dumps(list(ckeys.keys()), ensure_ascii=False),
         "answer_key": json.dumps({str(k): v for k, v in combined_keys.items()}, ensure_ascii=False),
         "taxonomy": json.dumps(combined_tax, ensure_ascii=False),
+        "goi_cutoff": json.dumps(gam.gengo_goi_cutoff(max_q)),
         "advice": json.dumps(gam.ADVICE_FOR, ensure_ascii=False),
         "choukai_scripts": json.dumps(choukai_scripts or {}, ensure_ascii=False),
     }
@@ -1519,8 +1533,8 @@ def build(d: Path, storage: str = "server", out_dir: Path | None = None) -> Path
     chap = d / "聴解_チャプター.json"
     note = "player" + ("" if has_mp3 else ", MP3 MISSING") + \
            (", chapters" if chap.is_file() else ", no chapters")
-    print(f"  {out}  ({len(all_keys)} items: 71 Gengo/Dokkai, 30 Choukai; "
-          f"{note}; storage={storage})")
+    print(f"  {out}  ({len(all_keys)} items: {len(gids)} Gengo/Dokkai, "
+          f"{len(ckeys)} Choukai; {note}; storage={storage})")
     return out
 
 

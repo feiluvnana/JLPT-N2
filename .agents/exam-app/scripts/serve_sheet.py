@@ -35,8 +35,9 @@ TESTS = ROOT / "tests"
 # uses — imported, never copied. See index_view.py (and app_style.py, which it
 # imports for the chrome shared with screens 2 and 3).
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import app_style   # noqa: E402
-import index_view  # noqa: E402
+import app_style      # noqa: E402
+import grade_answers as ga  # noqa: E402  (per-test item counts)
+import index_view     # noqa: E402
 
 # 71 言語知識・読解 + 30 聴解. `make check` asserts 解答.html carries exactly this
 # many radio groups, so it is safe to use as the progress denominator.
@@ -75,6 +76,22 @@ def test_dir(test_id: str) -> Path | None:
     return None
 
 
+def question_count_of(d: Path) -> int:
+    """This test's own item count, off its answer-key tables.
+
+    QUESTION_COUNT is the current era's 101 and is right for every generated
+    mock, but an imported past paper can be a different shape — 7/2021 keys 72
+    言語知識・読解 items, so the list read "0 / 101" for a 102-item paper. Falls
+    back to the constant if the Markdown is unreadable.
+    """
+    try:
+        gengo = len(ga.parse_gengo_keys(d / "言語知識・読解.md"))
+        choukai = len(ga.parse_choukai_keys(d / "聴解.md"))
+    except Exception:
+        return QUESTION_COUNT
+    return (gengo + choukai) or QUESTION_COUNT
+
+
 def progress_of(d: Path) -> dict:
     """How far this test has got, read straight off the two saved JSON files."""
     answered = 0
@@ -106,7 +123,7 @@ def progress_of(d: Path) -> dict:
         "id": d.name,
         "origin": test_origin(d.name),
         "answered": answered,
-        "total": QUESTION_COUNT,
+        "total": question_count_of(d),
         "has_sheet": (d / SHEET).is_file(),
         "has_audio": (d / "聴解.mp3").is_file() or (d / "聴解_チャプター.json").is_file(),
         "has_explanation": (d / "模範解答.html").is_file(),

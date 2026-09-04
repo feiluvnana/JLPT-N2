@@ -39,6 +39,31 @@ GENGO_TAXONOMY = {
     "問14": {"mondai": "問題14", "name": "情報検索", "en": "Information Retrieval", "range": (70, 71), "section": "読解"},
 }
 
+
+def gengo_taxonomy_for(max_q: int) -> dict:
+    """GENGO_TAXONOMY with its 大問 ranges re-derived for THIS paper's era.
+
+    The names above are era-independent; the ranges are not. An imported past
+    paper may be a 72- or 75-question sitting (7/2021 ran 問題11 as 3 passages
+    x 3Q), and with the fixed 71-question ranges its item 72 belonged to no 大問
+    and simply was not rendered. The counts have one owner —
+    grade_answers.GENGO_SHAPES — so this reads them rather than restating them.
+    """
+    counts = None
+    try:  # sys.path already carries .agents/exam-app/scripts by call time
+        import grade_answers as ga
+        counts = ga.GENGO_SHAPES.get(max_q)
+    except Exception:
+        counts = None
+    if not counts:
+        return GENGO_TAXONOMY
+    tax, q = {}, 1
+    for (code, info), n in zip(GENGO_TAXONOMY.items(), counts):
+        tax[code] = {**info, "range": (q, q + n - 1)}
+        q += n
+    return tax
+
+
 CHOUKAI_TAXONOMY = {
     "問題1": {"name": "課題理解", "en": "Task Comprehension", "section": "聴解"},
     "問題2": {"name": "ポイント理解", "en": "Point Comprehension", "section": "聴解"},
@@ -70,7 +95,7 @@ UI = {
         "doc_title": "テスト {test_id}（模範解答・詳細解説）",
         "back": "← 採点結果へ戻る",
         "title": "日本語能力試験 N2 模範解答・詳細解説",
-        "subtitle": "テスト <strong>{test_id}</strong> ｜ <span>全101問（言語知識・読解 71問 ＋ 聴解 30問）完全網羅解説集</span>",
+        "subtitle": "テスト <strong>{test_id}</strong> ｜ <span>全{n_all}問（言語知識・読解 {n_gengo}問 ＋ 聴解 {n_choukai}問）完全網羅解説集</span>",
         "tab_all": "すべて",
         "tab_goi": "文字・語彙",
         "tab_bunpou": "文法",
@@ -101,7 +126,7 @@ UI = {
         "doc_title": "Đề {test_id}（Đáp án mẫu・Giải thích chi tiết）",
         "back": "← Về kết quả chấm",
         "title": "JLPT N2 — Đáp án mẫu và giải thích chi tiết",
-        "subtitle": "Đề <strong>{test_id}</strong> ｜ <span>Giải thích đầy đủ 101 câu (Kiến thức ngôn ngữ・Đọc hiểu 71 câu ＋ Nghe 30 câu)</span>",
+        "subtitle": "Đề <strong>{test_id}</strong> ｜ <span>Giải thích đầy đủ {n_all} câu (Kiến thức ngôn ngữ・Đọc hiểu {n_gengo} câu ＋ Nghe {n_choukai} câu)</span>",
         "tab_all": "Tất cả",
         "tab_goi": "Chữ Hán・Từ vựng",
         "tab_bunpou": "Ngữ pháp",
@@ -941,11 +966,11 @@ footer {{
 <div class="sticky-nav">
   <div class="nav-container">
     <div class="tab-group">
-      <button class="tab-btn active" onclick="filterSection('all', this)"><span>{tab_all}</span> (101)</button>
-      <button class="tab-btn" onclick="filterSection('goi', this)"><span>{tab_goi}</span> (30)</button>
-      <button class="tab-btn" onclick="filterSection('bunpou', this)"><span>{tab_bunpou}</span> (21)</button>
-      <button class="tab-btn" onclick="filterSection('dokkai', this)"><span>{tab_dokkai}</span> (20)</button>
-      <button class="tab-btn" onclick="filterSection('choukai', this)"><span>{tab_choukai}</span> (30)</button>
+      <button class="tab-btn active" onclick="filterSection('all', this)"><span>{tab_all}</span> ({n_all})</button>
+      <button class="tab-btn" onclick="filterSection('goi', this)"><span>{tab_goi}</span> ({n_goi})</button>
+      <button class="tab-btn" onclick="filterSection('bunpou', this)"><span>{tab_bunpou}</span> ({n_bunpou})</button>
+      <button class="tab-btn" onclick="filterSection('dokkai', this)"><span>{tab_dokkai}</span> ({n_dokkai})</button>
+      <button class="tab-btn" onclick="filterSection('choukai', this)"><span>{tab_choukai}</span> ({n_choukai})</button>
     </div>
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="{search_placeholder}" oninput="handleSearch()">
@@ -1224,7 +1249,17 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
 
     # 1. Gengo & Dokkai
     current_sec = None
-    for tax_key, tax_info in GENGO_TAXONOMY.items():
+    gengo_tax = gengo_taxonomy_for(max(canonical_gengo_keys) if canonical_gengo_keys
+                                   else max(gengo_exps, default=71))
+    # Item counts the chrome prints. Derived, never typed: a 7/2021 import is
+    # 72 + 30 = 102, not the 101 the header used to assert for every paper.
+    _span = lambda sec: sum(t["range"][1] - t["range"][0] + 1
+                            for t in gengo_tax.values() if t["section"] == sec)
+    n_goi, n_bunpou, n_dokkai = _span("文字・語彙"), _span("文法"), _span("読解")
+    n_gengo = n_goi + n_bunpou + n_dokkai
+    n_choukai = len(canonical_choukai_keys) or len(choukai_exps) or 30
+    n_all = n_gengo + n_choukai
+    for tax_key, tax_info in gengo_tax.items():
         sec_name = tax_info["section"]
         sec_code = "goi" if sec_name == "文字・語彙" else ("bunpou" if sec_name == "文法" else "dokkai")
         
@@ -1395,7 +1430,10 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
         langs_json=json.dumps(langs),
         lbl_back=pane(langs, lambda lg: UI[lg]["back"]),
         lbl_title=pane(langs, lambda lg: UI[lg]["title"]),
-        lbl_subtitle=pane(langs, lambda lg: UI[lg]["subtitle"].format(test_id=test_id)),
+        lbl_subtitle=pane(langs, lambda lg: UI[lg]["subtitle"].format(
+            test_id=test_id, n_all=n_all, n_gengo=n_gengo, n_choukai=n_choukai)),
+        n_all=n_all, n_goi=n_goi, n_bunpou=n_bunpou, n_dokkai=n_dokkai,
+        n_choukai=n_choukai,
         lbl_footer=pane(langs, lambda lg: UI[lg]["footer"]),
         tab_all=pane(langs, lambda lg: UI[lg]["tab_all"]),
         tab_goi=pane(langs, lambda lg: UI[lg]["tab_goi"]),

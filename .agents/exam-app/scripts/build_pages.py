@@ -155,6 +155,10 @@ def build_site(out: Path, test_id: str | None = None, with_audio: bool = True,
             "has_sheet": True,
             "has_audio": has_audio and with_audio,
             "has_explanation": has_explanation,
+            # Per-test, not the era constant: an imported past paper can key a
+            # different number of items (7/2021 is 72 + 30), and the static list
+            # has no server to ask.
+            "total": serve_sheet.question_count_of(d),
         })
 
     (out / "index.html").write_text(index_view.index_html("local", manifest),
