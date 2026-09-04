@@ -150,8 +150,14 @@ def scaffold_test(test_dir: Path, lean: bool = False, merge_existing: bool = Tru
 
     out = {}
 
-    # 1. Gengo & Dokkai (1..71)
-    for q_num in range(1, 72):
+    # 1. Gengo & Dokkai (1..N). N is the paper's own last question, not a
+    # constant: a generated mock is 71, but an imported past paper may be a
+    # 72- or 75-question sitting (jlpt-exam-structure's era table). Hard-coded
+    # at 72 this loop silently dropped 7/2021's item 72, and every other
+    # 詳細解説 gate line measures the entries that ARE present, so a missing one
+    # is invisible everywhere except check_kaisetsu_item_coverage.
+    last_q = max([*gengo_raw, *gengo_exps, 71])
+    for q_num in range(1, last_q + 1):
         q_str = str(q_num)
         raw_info = gengo_raw.get(q_num, {})
         exp_info = gengo_exps.get(q_num, {})

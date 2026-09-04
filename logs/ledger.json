@@ -5000,6 +5000,243 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    }
+  },
+  {
+   "test_id": "20260904_2",
+   "seed": "77502562+reroll-one(listening_scenarios:9,18111152)+reroll-one(listening_scenarios:11,50251698)+reroll-one(reading_topics:11,55556908)+reroll-one(reading_topics:3,33906354)+reroll-one(reading_topics:11,66372871)+reroll-one(reading_topics:4,52567527)+reroll-one(listening_scenarios:11,81410653)+reroll-one(listening_scenarios:12,84538030)+reroll-one(listening_scenarios:15,60407403)+reroll-one(listening_scenarios:20,97765218)+reroll-one(listening_scenarios:12,15275211)+reroll-one(listening_scenarios:12,44226460)+reroll-one(listening_scenarios:15,93822061)+reroll-one(listening_scenarios:20,92511124)+reroll-one(listening_scenarios:12,47117022)+reroll-one(listening_scenarios:20,56982507)+reroll-one(listening_scenarios:12,67403147)+reroll-one(grammar_p8:4,1584516)+reroll-one(grammar_p7:4,68295747)+reroll-one(listening_scenarios:6,27741382)+reroll-one(listening_scenarios:6,44709417)+reroll-one(listening_scenarios:6,76306785)+reroll-one(listening_scenarios:6,49327412)+reroll-one(listening_scenarios:6,57676487)+reroll-one(listening_scenarios:6,44623488)+reroll-one(listening_scenarios:6,53418667)",
+   "generated_at": "2026-09-04 17:51:02",
+   "pools_sha": "3a0b702a1277",
+   "items": {
+    "kanji_reading": [
+     "職人(しょくにん)",
+     "講演(こうえん)",
+     "閉会(へいかい)",
+     "谷(たに)",
+     "投書(とうしょ)"
+    ],
+    "orthography": [
+     "回答",
+     "課程",
+     "採用",
+     "収める(成功を)",
+     "険しい"
+    ],
+    "word_formation": [
+     "同〜(同世代)",
+     "〜率(出席率)",
+     "〜界(芸能界)"
+    ],
+    "context_words": [
+     "上旬",
+     "係わる",
+     "親類",
+     "退屈する",
+     "枯れる",
+     "手ごろな",
+     "返品"
+    ],
+    "paraphrase": [
+     "引退する",
+     "たまたま(偶然)",
+     "大した(すごい)",
+     "見事だ(すばらしい)",
+     "わがままだ(自分勝手だ)"
+    ],
+    "usage": [
+     "甚だしい",
+     "説得する",
+     "リスク",
+     "こだわる",
+     "払い戻す"
+    ],
+    "quick_response": [
+     "明日の会議の件ですが、あいにく先方のご都合が悪くなりまして…",
+     "部長、本日の会議、資料は何部ご用意いたしましょうか。",
+     "レシートの発行は必要ですか。",
+     "ペットの飼育は規約で禁止されています。",
+     "皆さんのおかげで無事に終えることができました。",
+     "食事の時間、変更は可能ですか。",
+     "何かお困りのことがございましたら、遠慮なくお申し付けください。",
+     "社長、本日の懇親会ですが、少し遅れて参加してもよろしいでしょうか。",
+     "目を通す",
+     "〜がいがない",
+     "社長、本日の業界誌に弊社の記事が掲載されております。"
+    ],
+    "reading_topics": [
+     {
+      "topic": "匂いと記憶",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "週4日勤務",
+      "theme": "働き方"
+     },
+     {
+      "topic": "地方の隠れた観光地発掘",
+      "theme": "旅行・観光"
+     },
+     {
+      "topic": "集中力を高める環境づくり",
+      "theme": "教育"
+     },
+     {
+      "topic": "自動運転と責任",
+      "theme": "交通"
+     },
+     {
+      "topic": "介護と家族の負担",
+      "theme": "医療・福祉"
+     },
+     {
+      "topic": "産後ケアの充実",
+      "theme": "子育て・家族"
+     },
+     {
+      "topic": "電力の地域自給",
+      "theme": "環境"
+     },
+     {
+      "topic": "便利さの代償",
+      "theme": "消費・経済"
+     },
+     {
+      "topic": "新聞離れと地域情報の空白",
+      "theme": "メディア・情報"
+     },
+     {
+      "topic": "雑談の効用",
+      "theme": "人間関係"
+     },
+     {
+      "topic": "関係人口という新しい地域参加",
+      "theme": "地域活性化"
+     }
+    ],
+    "grammar_p8": [
+     "〜ほど〜はない",
+     "感情強調(〜てたまらない)",
+     "心理変化(〜意欲が湧いてくる)",
+     "〜に基づいて",
+     "否定強調(〜などあろうはずがない)"
+    ],
+    "grammar_p7": [
+     "〜とは",
+     "〜おかげで/せいで",
+     "〜としたら",
+     "〜に即して",
+     "〜だけに",
+     "敬語:お越しになる",
+     "〜に先立って",
+     "〜つつも",
+     "〜に相違ない",
+     "〜と同時に",
+     "〜からして",
+     "〜やら〜やら"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "駅のアナウンス:運行情報",
+      "theme": "交通"
+     },
+     {
+      "scenario": "電気工事:立ち会い日程の調整",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "税務署:確定申告",
+      "theme": "行政・手続き",
+      "key": "税務署:確定申告"
+     },
+     {
+      "scenario": "ラジオ:食生活の話",
+      "theme": "食"
+     },
+     {
+      "scenario": "出版社:原稿の締切確認",
+      "theme": "メディア・情報"
+     },
+     {
+      "scenario": "学術学会の発表順序と時間制限",
+      "theme": "教育"
+     },
+     {
+      "scenario": "保健センター:生活習慣病予防講座",
+      "theme": "睡眠・健康"
+     },
+     {
+      "scenario": "工場:安全講習の案内",
+      "theme": "防災",
+      "key": "工場:安全講習"
+     },
+     {
+      "scenario": "料理教室:材料の持ち物案内",
+      "theme": "食"
+     },
+     {
+      "scenario": "法務:契約確認",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "保険窓口:内容変更",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "総務:備品申請",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "電気店:スマート家電の設定相談",
+      "theme": "デジタル化"
+     },
+     {
+      "scenario": "書店:取り寄せ",
+      "theme": "消費・経済",
+      "key": "書店:取り寄せ"
+     },
+     {
+      "scenario": "自転車店:防犯登録の手続き",
+      "theme": "交通"
+     },
+     {
+      "scenario": "百貨店:ギフト包装の相談",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "研修会でのグループワークの進め方",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "薬局:ジェネリック",
+      "theme": "医療・福祉"
+     },
+     {
+      "scenario": "大学の授業:情報リテラシー",
+      "theme": "メディア・情報"
+     },
+     {
+      "scenario": "消防署:防災訓練の申し込み",
+      "theme": "防災"
+     },
+     {
+      "scenario": "靴修理:引取日",
+      "theme": "消費・経済"
+     }
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   },
+   "notes": "QA round-1 fix pass, 2026-09-04. listening_scenarios[6] was moved off 「旅館:食事場所の希望確認」(食) by --reroll-one listening_scenarios:6 (final accepted seed 53418667) because its 食 theme headlined 聴解問題5-2番 one paper after 20260904_1 headlined 食 at 問題14 — exam-blueprint rule 4 allows ZERO repeat against the 1-back paper (qa-report-20260904_2 F1, automatic fail). It now reads 「保健センター:生活習慣病予防講座」(睡眠・健康) and the item was RE-AUTHORED from that string: origin reauthored. New deciding lines, quoted from 聴解スクリプト.txt as shipped — 質問1 (男の人): 「そっか。じゃあ、僕はストレッチにしとくよ。土曜の朝なら空いてるし、着替えも道具もいらないっていうのが、いちばん楽でいい。」; 質問2 (女の人): 「うん。先生にも、まず体を動かしなさいって言われてるから、私はプールにする。」 The two questions now track two different people's choices and key DIFFERENT options (1 and 2), and neither speaker's opening preference (男=筋力体操, 女=眠りの講座) survives — F2's requirement that a candidate who hears only the opening line can answer neither. answer_positions.聴解_問題5 was edited by hand from [3,1,1] to [3,1,2] for the same finding; the legality re-measurement is in tests/20260904_2/test_spec.json's spec_notes. quick_response 「…日経新聞…」 was corrected to 「…業界誌…」 in pools.json (F5, a real publication name inside exam fiction) and the corrected string carried here and into the spec so check_draw_provenance() still resolves."
   }
  ]
 }
