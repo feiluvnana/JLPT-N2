@@ -23,6 +23,7 @@ import argparse
 import hashlib
 import itertools
 import json
+import math
 import random
 import re
 import sys
@@ -824,6 +825,59 @@ COOLDOWN_MARGIN = 2  # draws of headroom left below full pool exhaustion, so
                      # still has room to degrade smoothly instead of jumping
                      # straight from a long cooldown to 0
 
+# Categories that share ONE rotation space, so a draw in one burns entries in
+# the other (exam-blueprint "One grammar point, one pool entry", F1
+# 2026-08-20): 15 forms are listed in BOTH grammar pools, and
+# `grammar_form_tokens()` folds the FORM into `identity_tokens()` precisely so
+# they cool down together. `cooldown_for()` therefore cannot size either
+# window as if that category's own DRAW were the pool's only consumer — see
+# the SHARED_ROTATION_SPACE branch there.
+SHARED_ROTATION_SPACE = {
+    "grammar_p7": ("grammar_p8",),
+    "grammar_p8": ("grammar_p7",),
+}
+
+_POOLS_CACHE: dict = {}
+
+
+def all_pools() -> dict:
+    """`pools.json`, memoized on (mtime, size) so a pool edit is picked up.
+
+    `cooldown_for()` takes one category's pool, but a category in
+    SHARED_ROTATION_SPACE needs its PARTNER's pool to size its window
+    honestly. Keeping the two-argument signature matters: `check_consistency`
+    calls `cooldown_for(cat, pools[cat])` in four places.
+    """
+    st = POOLS.stat()
+    key = (st.st_mtime_ns, st.st_size)
+    if _POOLS_CACHE.get("key") != key:
+        _POOLS_CACHE["key"] = key
+        _POOLS_CACHE["val"] = json.loads(POOLS.read_text(encoding="utf-8"))
+    return _POOLS_CACHE["val"]
+
+
+def shared_space_draw(cat: str, pool) -> float:
+    """Entries of `pool` one paper consumes, counting partner categories.
+
+    `DRAW[cat]` alone under-counts twice over: a partner category's draw burns
+    this pool's entries whenever it lands on a shared form, and folding
+    (`head()`/`affix_marker_free()`) lets one drawn entry knock out more than
+    one pool entry. Estimated from pool structure only — no ledger — as
+    `DRAW[cat] + sum(DRAW[partner] * <fraction of the partner pool that hits
+    this pool's identity space>)`.
+    """
+    total = float(DRAW.get(cat, 0))
+    toks: set[str] = set()
+    for x in pool:
+        toks |= identity_tokens(x)
+    for partner in SHARED_ROTATION_SPACE.get(cat, ()):
+        ppool = all_pools().get(partner) or []
+        if not ppool:
+            continue
+        hits = sum(1 for x in ppool if identity_tokens(x) & toks)
+        total += DRAW.get(partner, 0) * (hits / len(ppool))
+    return total
+
 
 def cooldown_for(cat: str, pool) -> int:
     """How many previous draws make an item in `cat` ineligible.
@@ -886,6 +940,25 @@ def cooldown_for(cat: str, pool) -> int:
         want = max(list(WAGO_DIST.get(cat) or [WAGO_FLOOR.get(cat, 1)]))
         wago_n = sum(1 for x in pool if is_wago_orthography(x))
         depth = min(depth, wago_n // max(1, want))
+    # The same "never a promise bigger than the pool" rule for a SHARED
+    # rotation space. Found 2026-09-04 drawing `20260904_1`: `grammar_p7` is
+    # 172 entries and draws 12, so this function returned 172 // 12 - 2 = 12 —
+    # but `grammar_p8` draws 5 more from the SAME identity space (15 forms are
+    # in both pools, F1 2026-08-20) and folding knocks out extra entries, so a
+    # paper really consumes 13-16 `grammar_p7` entries, measured over the last
+    # 13 papers in `logs/ledger.json` (mean 14.3). Thirteen papers in, only
+    # ELEVEN entries sat outside the promised 12-draw window against a draw of
+    # 12: `draw()` relaxed to 11 and `assert_rotation()` — which recomputes
+    # THIS function — killed the draw ("a bug in draw(), not a reason to lower
+    # cooldown_for()"), with no seed able to help. Exactly the 2026-08-27
+    # keigo and 2026-09-03 和語 incidents, one level up: not a capped SUB-pool
+    # this time but a second CATEGORY eating the same pool. Divide by what a
+    # paper actually takes (`shared_space_draw()`, 13.8 for p7 / 6.1 for p8),
+    # so the number this returns is one `draw()` can keep and
+    # `assert_rotation()` can prove: p7 12 -> 9, p8 6 -> 4.
+    if cat in SHARED_ROTATION_SPACE:
+        eff = shared_space_draw(cat, pool)
+        depth = min(depth, pool_size // max(1, math.ceil(eff)))
     return max(COOLDOWN_FLOOR, depth - COOLDOWN_MARGIN)
 
 
@@ -1190,7 +1263,58 @@ def taken_tokens(entry) -> set[str]:
     t = item_text(entry)
     k = errand_key(entry)
     return (({t} if t else set()) | ({KEY_NS + k} if k else set())
-            | grammar_form_tokens(entry))
+            | grammar_form_tokens(entry) | form_family_tokens(entry))
+
+
+# --- MUTUALLY EXCLUSIVE FORM FAMILIES (F5, qa-report-20260904_1) -----------
+# `grammar_form_tokens()` folds two entries together only when they share a
+# chunk of GRAMMAR_FORM_MIN (3) characters or more, and the whole point of that
+# floor is that shorter kana tails collide across unrelated points. It leaves a
+# hole exactly where the core form IS short: `〜つつある` yields `form»つつある`
+# and `経過状況(〜つつ…する)` yields nothing at all (both its chunks, 「つつ」 and
+# 「する」, are 2 characters), so the two are strangers to every identity map —
+# and `20260904_1` drew BOTH into one 問題8, a first in 21 papers
+# (問題8-45 and 問題8-46). One 大問 cannot test 〜つつ twice: whichever way the
+# scramble is built, the two items ask the candidate for the same form.
+#
+# The family map is a TOP-LEVEL `pools.json` object, not a `family` field on
+# the entry, for the reason `quick_response_keys` is one: `grammar_p8` entries
+# are bare strings, `check_draw_provenance()` resolves every RECORDED draw to a
+# pool entry BY STRING, and turning the entries into objects would orphan the
+# 21 shipped ledger rows that name them.
+#
+# IN-TEST ONLY, deliberately: this token goes into `taken_tokens()` and NOT
+# into `identity_tokens()`, so a family blocks a second draw inside one paper
+# without also putting the whole family into every member's cross-paper
+# cooldown. The defect is two of a family in ONE 問題8, not a family drawn two
+# papers running.
+#
+# TODAY'S MEMBERSHIP is two families, both cases where the two entries are one
+# form spelled twice: {〜つつある, 経過状況(〜つつ…する)} and {目的表現(〜ように…する),
+# 目的達成(〜ように努力する)}. Points that merely share a stem while being
+# separate N2 items (〜ばかりに vs 〜ばかりか, 〜として vs 〜としても, 〜ない限り vs
+# 〜に限らず) are NOT families — Shin Kanzen headlines them separately, and
+# folding them would refuse honest draws.
+FAMILY_NS = "fam»"
+_FAMILY_BY_TEXT: dict[str, str] = {}
+
+
+def build_family_index(pools: dict) -> dict[str, str]:
+    """display string -> mutually-exclusive form family, from `pools.json`."""
+    fam = pools.get("grammar_form_families") or {}
+    return {str(t): str(f) for t, f in fam.items()
+            if isinstance(f, str) and f.strip()}
+
+
+def form_family(entry) -> str | None:
+    """The entry's mutually-exclusive form family, or None."""
+    return _FAMILY_BY_TEXT.get(item_text(entry))
+
+
+def form_family_tokens(entry) -> set[str]:
+    """`{FAMILY_NS + family}` for an entry in one, else empty."""
+    f = form_family(entry)
+    return {FAMILY_NS + f} if f else set()
 
 
 def recency_map(history: list) -> dict:
@@ -1554,8 +1678,11 @@ def main():
     check_pool_themes(pools)
     # Built once, read by errand_key() everywhere below (R14). It has to exist
     # before the first recency_map() call, or history resolves without keys.
-    global _KEY_BY_TEXT
+    global _KEY_BY_TEXT, _FAMILY_BY_TEXT
     _KEY_BY_TEXT = build_key_index(pools)
+    # Same timing rule for the mutually-exclusive form families (F5): it feeds
+    # `taken_tokens()`, which `draw()` reads on its first pass.
+    _FAMILY_BY_TEXT = build_family_index(pools)
     report_key_clusters(pools)
 
     if args.check_depth:

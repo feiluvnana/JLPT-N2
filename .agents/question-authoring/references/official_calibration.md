@@ -463,11 +463,44 @@ one (max 50 %).
 |---|---|---|---|
 | median sentence length (JP chars) | 31.5–39.0 | 36.0 | 33–43 (FAIL outside 28–50) |
 | share of sentences < 25 chars | 16.7%–32.5% | 21.1% | 12–30% |
-| kanji density (% of JP chars) | 25.5%–30.1% | 28.4% | 24–32% (FAIL outside 22–34%) |
+| kanji density (% of JP chars) | 25.5%–30.1% | 28.4% | author 25–30% (gate WARNs outside 24–32%, FAILs outside 22–34%) |
 | です・ます share in essay passages | 30.5%–45.2% | 34.8% | ≥3 passages throughout |
 | first-person essay passages share | 60.0%–100.0% | 77.8% | ≥4 of 12 surfaces |
 | median overlap margin (key − best dist) | -0.089…+0.000 | -0.051 | **≤ 0.0** |
 | strict top-overlap key share | 10.0%–45.0% | 35.0% | ≤ 50% (WARN > 44%) |
+
+**Kanji density — the author target was re-derived 2026-09-04
+(`qa-report-20260904_1` S2), and the gate bands were deliberately NOT moved
+with it.** The old target read 24–32 %: wider than the archive on both sides,
+so a paper could sit two points above every official sitting and read
+compliant. Measured on the two corpora by `tools/dokkai_profile.py`: official
+current-era **25.5–30.1 %** (median 28.4), the 21 generated papers **30.2–33.9
+%** — *every generated paper on disk is above official's maximum*, and
+`20260904_1`'s 31.6 % is below the generated median, i.e. this is a
+pipeline-wide drift, not one paper's defect. **Author to 25–30.**
+
+Lowering the GATE with it is a separate proposal, stated here rather than
+applied, per `exam-qa-review` §6.5's re-run-and-state rule. Re-measured
+2026-09-04, every generated paper, sorted:
+
+```
+30.2 20260813_1  30.4 20260811_1  30.5 20260812_2  30.6 20260903_1
+31.2 20260821_1  31.4 20260813_2  31.6 20260904_1  31.8 20260810_2
+31.8 20260817_3  31.8 20260819_1  31.9 20260807_1  31.9 20260817_2
+32.0 20260810_1  32.0 20260812_1  32.0 20260814_1  32.0 20260817_1
+32.0 20260818_1  32.6 20260827_1  32.6 20260827_2  33.2 20260828_2
+33.9 20260828_1
+```
+
+- Moving the gate's WARN band to 25–30 would flip **all 21** from `ok` to
+  WARN — the lowest paper on disk is 30.2.
+- Dropping `DOKKAI_KANJI_CEILING` from 34 to 31 would newly FAIL **17**: every
+  id from 20260821_1 (31.2) down the list above, i.e. all but 20260813_1,
+  20260811_1, 20260812_2 and 20260903_1.
+
+Do either as a decision about those papers, with that id list in hand — not as
+a side effect of correcting a doc table. The same drift shows in the です・ます
+row (official 30.5–45.2 %, generated 4.2–40.9 %).
 
 ### 3. Option Length Balance & Key Ranks
 

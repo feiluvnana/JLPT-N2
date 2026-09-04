@@ -518,7 +518,7 @@ NO_PRACTICE = "この問題には練習はありません。"
 TYPO_RE = re.compile(r"問題用紙になに印刷")   # 「何も印刷」 mistyped; TTS reads it wrong
 
 
-def validate_script(blocks):
+def validate_script(blocks, *, require_p5_question_markers: bool = True):
     """Fail fast on anything that would corrupt the exam. Two classes of check:
 
     (1) lines that must never be SPOKEN (answer reveals, authoring notes), and
@@ -581,6 +581,36 @@ def validate_script(blocks):
         if "質問1。" in block and "質問2。" not in block:
             errors.append(f"block {bi} — 質問1 without 質問2 in the same block; "
                           f"the 問題5 two-question item must not be split")
+
+        # …and both markers must actually BE there. `GAP_AFTER_SHITSUMON1` is
+        # keyed off `SHITSUMON2_RE` (`^質問2。`), so a 2番 that speaks its two
+        # questions BARE — no 「質問1。」/「質問2。」 prefix — never reaches the
+        # branch: the 10 s of answer time for 質問1 is simply not synthesized,
+        # and the examinee hears choice 4 of the first list run straight into
+        # the second question at an ordinary ~1 s turn gap. The rule above only
+        # tested CO-LOCATION, so a block with NEITHER marker passed silently,
+        # and the "Required structure — every element is mandatory" table in
+        # choukai-audio/SKILL.md listed 質問1/質問2 as an enforced row while the
+        # code enforced nothing. THE INCIDENT (2026-09-04): `20260904_1` shipped
+        # a 問題5-2番 measuring 3.01/3.04/3.01 s between the spoken choices and
+        # then 1.17 s where 10 s belongs — the only 10.0 s gap in the item was
+        # the end-of-item pause after 質問2. `20260828_2` and `20260903_1` drifted
+        # the same way and are in the gate's grandfather list; every other paper
+        # on disk — 18 generated, 8 imported — carries both markers, so this is
+        # the convention being restored, not a new one. Both markers are also
+        # what `verify_fidelity._split_spoken_block` reads to split 問5-2-1 from
+        # 問5-2-2; the bare shape made it fall back to a positional guess.
+        if ITEM_RE.match(first) and section == "問題5":
+            spoken = sum(1 for l in lines if CHOICE_RE.match(l))
+            missing = [t for t in ("質問1。", "質問2。") if t not in block]
+            if require_p5_question_markers and spoken >= 8 and missing:
+                errors.append(
+                    f"block {bi} — 問題5 two-question item ({spoken} spoken "
+                    f"choice lines) is missing {'/'.join(missing)}; the "
+                    f"{GAP_AFTER_SHITSUMON1:g} s answer pause for 質問1 is keyed "
+                    f"off 「質問2。」 and is NOT synthesized without it. Prefix "
+                    f"each question line (「質問1。<question>」/「質問2。"
+                    f"<question>」) and re-run `make mp3`")
 
         # Every item (例/N番) must carry its own dialogue/speech/options in the
         # SAME block, not just the opening narration+question. A stray blank

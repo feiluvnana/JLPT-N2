@@ -20,8 +20,8 @@ written. Append to `聴解.md`, **after the answer-key heading** (so
 ### 問題1
 | 項目 | 場面 | 主導 | 正解 | 消去方法 | 質問型 | 決め手の位置 | 提案消去回数 | 決め手の種類 |
 |---|---|---|---|---|---|---|---|---|
-| 1番 | スーパーのレジ | 店員→客 | 本人確認書類を提示 | 順番待ち（先に会員登録）／不要／実行不可 | どう直す・方法 | 冒頭 | 1 | 規則・制度 |
-| 2番 | 会社の朝会 | 部長→部下 | 見積書を送る | 別の人に割り当て／既に完了／条件不足 | この後まず | 中盤 | 0 | 人手・担当 |
+| 1番 | スーパーのレジ | 店員→客 | 本人確認書類を提示 | 順番待ち（先に会員登録）／不要／実行不可 | どう直す・方法 | 冒頭（3行目／全11行） | 1 | 規則・制度 |
+| 2番 | 会社の朝会 | 部長→部下 | 見積書を送る | 別の人に割り当て／既に完了／条件不足 | この後まず | 中盤（6行目／全12行） | 0 | 人手・担当 |
 ```
 
 Then read it **as columns, not as rows**:
@@ -30,6 +30,11 @@ Then read it **as columns, not as rows**:
 - **消去方法** — no device more than twice (§"Eliminated ≠ contradicted").
 - **場面 / 主導 / 質問型** — against the quotas below (≤3/6 まず, ≥1 modify, ≥1 condition).
 - **決め手の位置** — 冒頭 / 中盤 / 終盤 (no more than 3 of 6 rows in any one third).
+  位置は *決め手の発話の行番号 ÷ その項目の総発話行数* を三等分して決める
+  （≤1/3=冒頭、≤2/3=中盤、それ以外=終盤）。非対話項目は発話行の代わりに文を数える。
+  構成表には *n行目／全m行* を必ず併記し、m は台本の発話行だけを数える
+  （質問行・場面説明行は含めない）。See §"決め手の位置 — the formula, and the
+  denominator it is measured over" below.
 - **提案消去回数** — turns with proposals (≤2 items with ≥3 proposals).
 - **決め手の種類** — no token more than twice per section (§"決め手の種類").
 
@@ -73,6 +78,30 @@ exempted by name, so the section read as enforced and measured as advisory
 (round 3, R3-4). **A doc that says "fails" beside a gate that warns is worse
 than either — it is the shape where green stops being evidence.** Any exemption
 the gate carries is named here, the way §消去方法 names its four.
+
+**主導 — 同じ主導の組は1大問に2行まで。** 同じ主導の組（部長→部下・店長→アルバイト・
+先生→学生・係員→客…）は1大問に2行まで。仕事を割り当てる型の下限（≥3）を満たすために
+同じ組を繰り返してはならない——場面・用件・決め手の軸が違っても、受験者は同じ力関係の
+指示を二度聞かされる。
+
+The 場面 rule above caps the establishment and the 「≥3 must be someone
+assigning work」 quota (§"Section item mix") is a **floor only**, so until this
+paragraph existed nothing capped the pair itself, and two papers answered the
+floor by repeating one pair: `20260903_1` 問題1 runs 店長→アルバイト in both 1番
+and 3番 (1番 衣料品店の売り場, 3番 an unnamed shop by phone — different errand,
+medium and 決め手 axis, which is exactly why no other column saw it), and
+`20260828_1` runs 客→職員 / 職員→患者 / 職員→住民（理事） as three staff-to-customer
+問題1 rows that only synonymy separates, with 客→店員 printed twice outright in
+its 問題2. Two papers is systemic by definition
+(`qa-report-20260903_1-round2.md` N2/S3).
+
+Fix a third row by re-casting who drives it (a peer, a subordinate asking up, a
+non-dialogue medium), never by re-labelling the same pair with a synonym —
+店長→店員 and 店長→アルバイト are one pair to a listener.
+`check_choukai_leader_pairs()` mirrors this as a ≤2-rows-per-pair tally over the
+問題1 表, beside the §消去方法 tally, and counts **normalised cell strings**: a
+synonym pair reads as two different pairs to the gate and stays QA's to read as
+a column (`exam-qa-review` §4).
 
 ### 消去方法 uses a CLOSED vocabulary — mandatory
 
@@ -151,6 +180,43 @@ from the script. The column is the artifact; QA reads it as a column
 existed: 問題1 = six distinct tokens; 問題2 = 在庫・数量2 / 身体・飲食の制約2 /
 時刻・日程2 / 場所・経路1 — three tokens sitting exactly ON the cap, which is what
 the finding above looks like once it is visible.
+
+### 決め手の位置 — the formula, and the denominator it is measured over
+
+The column above capped 「3 of 6 rows in any one third」 from the day it was
+added and **never said a third OF WHAT**, which made every label in it an
+opinion. `20260903_1` is the first paper whose labels were actually re-derived
+from the script, and two of six were wrong: the 例 was declared
+「中盤（7行目／全10行）」 against a script with **9** spoken lines (7/9 = 0.78 →
+終盤) and 5番 「終盤（10行目／全18行）」 against **17** (10/17 = 0.59 → 中盤). The
+author had counted the closing question line into `m` in two rows and not in
+the other four — an inconsistency no reader could catch, because the
+denominator was nowhere written down (`qa-report-20260903_1-round2.md` F1/S1).
+
+**The formula, binding:**
+
+```
+位置 = 決め手の発話の行番号 n ÷ その項目の総発話行数 m
+  n/m ≤ 1/3        → 冒頭
+  1/3 < n/m ≤ 2/3  → 中盤
+  2/3 < n/m        → 終盤
+```
+
+- `m` counts **spoken script lines only** — the item's 場面説明 line and the
+  closing question line are NOT lines of the dialogue and are never counted.
+- **Non-dialogue items count SENTENCES instead of lines** (an announcement or
+  automated menu has one speaker and no turns): write 「n文目／全m文」.
+- **The 構成表 cell must print the count beside the label**, as
+  `冒頭（3行目／全11行）` / `中盤（案内3文目／全9文）`. A bare 「中盤」 is a claim with
+  no evidence, and it is what the two wrong labels above hid behind.
+
+`check_choukai_decider_position()` reads both halves: it tallies the buckets
+from the label prefix, and where the cell prints `n行目／全m行` it recomputes the
+bucket from `n/m` and **FAILs on a label that disagrees with its own numbers**.
+Papers whose 構成表 predates this format print the missing-denominator half as a
+WARN and are named in `CHOUKAI_DECIDER_FORMULA_GRANDFATHERED` in
+`tools/check_consistency.py` — **read the set in the code, not this sentence**;
+an id leaves it by re-deriving its own column, never by widening the rule.
 
 ## Section item mix — quotas measured against the 31-sitting archive
 
@@ -233,7 +299,9 @@ moment that paper's 聴解 is repaired** — never by widening a threshold:
 | Gate | Set | Ids exempted today |
 |---|---|---|
 | 問題1 質問型 mix | `CHOUKAI_Q1_FORMS_GRANDFATHERED` | all 14 — every paper runs one frame |
-| 問題1 決め手の位置 | `CHOUKAI_DECIDER_GRANDFATHERED` | all 14 (7 of them have no 構成表 column yet, so they skip) |
+| 問題1 決め手の位置 (bucket spread) | `CHOUKAI_DECIDER_GRANDFATHERED` | all 14 (7 of them have no 構成表 column yet, so they skip) |
+| 問題1 決め手の位置 label vs its own n/m (added 2026-09-04) | `CHOUKAI_DECIDER_FORMULA_GRANDFATHERED` | the 11 papers whose cells print no 「n行目／全m行」 — `20260807_1`, `20260810_1`, `20260810_2`, `20260817_3`, `20260818_1`, `20260819_1`, `20260821_1`, `20260827_1`, `20260827_2`, `20260828_1`, `20260828_2`. `20260903_1` prints all six and passes on merit |
+| 問題1 主導 row cap (added 2026-09-04) | `LEADER_PAIR_GRANDFATHERED` | **none** — measured over every paper on disk, no 問題1 表 puts one 主導 string on more than 2 rows |
 | 問題1 probe carousel | `CHOUKAI_PROBE_GRANDFATHERED` | `20260807_1`, `20260810_2`, `20260817_3`, `20260818_1`, `20260819_1` |
 | 問題2 質問型 mix | `CHOUKAI_Q2_MIX_GRANDFATHERED` | all but `20260813_2` |
 | 問題3 talk band | `CHOUKAI_TALK_BAND_GRANDFATHERED` | `20260807_1`, `20260810_1`, `20260810_2`, `20260811_1` |
@@ -517,6 +585,34 @@ outright and also fails a talk mentioning two or more of its own options.
 not 一人旅について) — 8 of 685 archive options end that way (1 %), against all
 24 of a five-paper generated sample.
 
+**No content word may appear in two or more of 問題3's read-aloud options and
+be the KEY every time.** 問題3's options are spoken, so the only thing a
+candidate can carry across the section is their vocabulary: a word that turns
+up in two of the ~24 options, both of them keys, and in none of the ~18
+distractors is a lexical signature the answer wears. Whoever notices it
+answers two items without understanding either talk. This is the 聴解 form of
+the 読解 rule against a key identifiable without reading the passage.
+
+`20260904_1` shipped exactly that: 「そのまま」 in 3-1番's option 3 and 3-5番's
+option 1, both keys, zero distractors — and both talks even ran one arc
+(以前は加工していた → そのまま通した → そのほうが効いた), which is what made the token
+a real handle rather than a coincidence (`qa-report-20260904_1` F4).
+
+- **The repair is to RE-ANGLE one of the two items** so its key states the
+  claim in its own vocabulary, then take the word out of the option. Re-keying
+  a 問題3 item changes WHAT the surface tests, so update `logs/topics.json`'s
+  `surfaces`/`claim`/`shapes` and stamp the spec/ledger row `"origin":
+  "reauthored"` with a note QUOTING the new deciding line.
+- **Handing the word to a distractor is NOT the repair.** It removes the
+  measurement while leaving two keys on one narrative arc.
+- `check_choukai_key_exclusive_token()` reports this, over 問題3 only. That
+  scope is measured, not cautious: the same predicate run over 問題4 flags the
+  reply formulas 即時応答 is made of (「わかりました」「じゃあ」「お願いします」) in
+  eight generated papers **and in official 7/2022** (「だよね」 ×2, both keys),
+  so it is refuted for that 大問; 問題1/2 print their options, where a shared
+  word is on the page for everyone. Over 問題3 alone, none of the eight
+  official sittings on disk flags.
+
 **The talk must be long enough to have a gist.** Official 問題3 talks run a
 median of **305 spoken chars** (p10 251, minimum 177 over 149 items,
 `official_register.md` §7.4); a four-sentence talk has no structure to
@@ -594,6 +690,10 @@ sit in the script block). Authoring musts:
 - **Short and phonetically distinct** — spoken-once labels can't be re-read;
   four names differing by one mora is an accidental discrimination item, not
   統合理解.
+- **Announce each question as 「質問1。…」/「質問2。…」** — the marker is what the
+  synthesizer keys 質問1's 10 s answer pause off, so a bare question line ships
+  an item nobody has time to answer. Rule and incident:
+  `choukai-audio` §"質問1。/質問2。 are not labels, they are the answer pause".
 - **ONE set of four labels, read identically after both questions** —
   `20260812_2` read short labels after 質問1 and ~20-char compound sentences
   after 質問2, so the two questions stopped sharing a candidate list. Write

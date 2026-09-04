@@ -152,6 +152,26 @@ class QA cannot report and a fix cannot be asked for:
 | `A というより B` | 「というより」 |
 | `A わけではない` | 「わけでは（ない｜ありません）」 |
 | `A では/ほど B が多い（相関）` | evidential frame + [V-た + 集団/期間] では／ほど + 数量の増減 |
+| `〜のは B だ（分裂文）` | 「（の｜ん）は、…（だ｜である｜です｜だった｜のだ｜のである）」で閉じる |
+
+**分裂文 CROSSES the shape labels, so count the skeleton column separately
+from the shape column.** The row above was added 2026-09-04
+(`qa-report-20260904_1` F2) and it is the one template that carries no closing
+MOVE of its own: a 反論応答, a 主張, a 説明 and a 随筆 can all be written as
+「〜のは、…だ」. That is exactly why a paper can show ≤2 per shape label, a
+compliant 決め方 column and a compliant marker total while **five of thirteen
+finals end on one sentence pattern** — `20260904_1` did, on 問題10(4),
+問題11(1), 問題11(4), 問題12(B) and 問題13, two of them (問題12(B)
+「〜させていたのは、…のほうだったのです」 / 問題13 「変わっていたのは、…のほうで
+ある」) on the same 「のほう」 sub-skeleton. When you read the thirteen-final
+column, read it TWICE: once down the shape labels and once down the
+skeletons. A label spread does not license a skeleton pile-up.
+
+MEASURED over the 29 papers on disk when the row landed: 20260807_1 3,
+20260819_1 2, 20260828_1 2, 0–1 on every other generated paper, and **0–1 on
+all eight official sittings** — so the cap of 2 is inside the archive's own
+behaviour, and `20260807_1` is the single grandfathered id in
+`FINAL_TEMPLATE_GRANDFATHERED`.
 
 The last row was added 2026-08-24 (qa-report-20260821_1-round2 NF-2): it is
 where 条件提示 closings pile up by construction, it had no name, and so a paper
@@ -192,6 +212,23 @@ grammar. Check whether the passage's other paragraphs argue FOR a course of
 action addressed to the reader (主張) or simply narrate a realisation with
 no prescription (随筆) — the override fires only on the former.
 
+**説明 vs 意外な観察 — the second mechanical override.** 前件が予想と食い違う
+事実（意外・ずれ・合わない・にもかかわらず）を提示し、後件がその**原因**を述べる形は、
+字面に「意外にも」が無くても **意外な観察**。**説明** は予想との食い違いを提示しない
+機構・区別の記述に限る。The 「意外にも〜。理由は〜」 marker in the shape list is one
+SURFACE of this move, not its definition — a closing that states the mismatch in
+its own words (「使う額が熱心さと合わない」) and then gives the cause is the same
+move, and reading the marker instead of the move is what makes the call a coin
+flip. `20260903_1` 問題10(3) 「使う額が熱心さと合わないのは、…手立てになっている
+からだ」 sat exactly there: under 説明 the paper has **three** 説明 closings and
+breaches the ≤2 cap; under 意外な観察 it is 7 shapes × ≤2 and complies, and the
+verdict rested on which label a reviewer happened to reach for
+(`qa-report-20260903_1-round2.md` N5/S4). Under this rule 問題10(1) and 問題10(3)
+are both 意外な観察 and 問題9 and 問題11(2) are both 説明 — the reading that pass
+adopted. This is the same repair as the 主張-vs-条件提示 override above: a shape
+label two competent readers can split on is not a cap, it is a coin flip, and a
+paper's compliance must not turn on it.
+
 **Thirteen closings do not force thirteen instances of the six shapes.** 6
 shapes × cap 2 = 12 < 13, so at least one closing must sit OUTSIDE this
 taxonomy rather than forcing a 3rd instance into any shape. See §"The
@@ -214,7 +251,15 @@ well each item reads alone.
 Official 読解 passages are excerpts from published essays and books (first-person, half addressed to the reader in です・ます, with quoted speech and rhetorical devices). A compliant paper must avoid uniform impersonal policy prose:
 - **First-person quota**: ≥4 of the 12 essay-type surfaces (問9, 問10×5, 問11×4, 問12, 問13) are written in the first person (containing 私/僕/自分).
 - **Polite voice quota**: ≥3 passages carry です・ます sentence endings throughout.
-- **Kanji density**: 24–32% JP chars across the paper's reading prose (FAIL outside 22–34%).
+- **Kanji density**: **author 25–30%** JP chars across the paper's reading
+  prose — the archive's own current-era range (25.5–30.1%, median 28.4,
+  `official_calibration.md` §15.2, refreshed from `make dokkai-profile
+  BASELINE=1`). The gate is deliberately looser and unchanged: it WARNs
+  outside 24–32% and FAILs outside 22–34%, because tightening it would move 17
+  of 21 shipped papers (see that section for the id list and the standing
+  proposal). **Every generated paper on disk sits above official's maximum**
+  (30.2–33.9%), so this number is a pipeline-wide drift to author down, not a
+  per-paper defect (`qa-report-20260904_1` S2). Green here is not "in band".
 - **Rhetorical & discourse devices**:
   - ≥1 passage carrying quoted dialogue/speech 「…」
   - ≥1 passage carrying a 疑問提示文 (Shin Kanzen discourse device 4: 「〜のだろうか」「〜だろう」)
@@ -370,12 +415,66 @@ All figures from `official_calibration.md` §4 — current era, n=7 sittings,
 
 - **Pairing is 1-to-1 per passage, both directions** — every definition line annotates a word actually in that passage's body, and every in-body marker has a definition line.
 - **Count in-body markers**: gate WARNs below 25 in-body glosses (`GLOSS_MARKER_MIN`). **Author to the band**: current-era band 27–61/paper, median 39, target ~30–40.
+- **25 is a floor on OVER-LEVEL glosses, not on 「（注N）」 strings.** A word the
+  official papers print bare is not a gloss for this count, and padding the
+  count with such words satisfies the number while doing the opposite of what
+  the number is for. **If you are short, LENGTHEN the passage until it needs
+  more real glosses — never gloss down to reach 25.** `20260904_1` shipped
+  問題13 and 問題11(3) carrying seven notes on 抽選 / 一括 / 当選 / 排除 /
+  ふるまい / 視察 / 当番; strike those seven and the paper's 30 markers become
+  23, i.e. the floor was met by padding (`qa-report-20260904_1` F3). The repair
+  it took is the one to copy: the seven were replaced with genuinely over-level
+  terms **and** 問題13's prose grew 982 → 1042 JP chars so the count stayed at 30
+  honestly. No gate can decide this — a measured 「official uses it unglossed」
+  test was written, run against the archive, and **refuted**: see §"（注N） — a
+  refuted candidate check" below.
 - **Where the count is earned**: 問題11 (~5 per passage) and 問題13 (~7). **問題12 and 問題14 get 0** in every current-era paper.
 - **STRICT vocabulary band**:
   - 🚫 **BANNED**: glossing standard N2 or easier vocabulary (選択, 信号, 技術, 準備, 手順, 維持, 継続, 前提, バランス…) with circular definitions.
   - 🚫 **Operational subtraction test**: delete from the definition every character that appears in the headword; what remains must still explain the concept.
   - ✅ **TARGETS**: N1-level/rare words, specialized domain jargon, contextual metaphors.
-  - **No answer leaks**: a gloss must not give away the answer to a question anchored on it.
+  - **No answer leaks**: a gloss must not give away the answer to a question
+    anchored on it. **Operational form, and now gated** (`check_note_answer_leak`,
+    2026-09-04): when the glossed headword appears in a 問題10–14 **stem**, the
+    definition line and that item's **key** may not share a run of 4+ characters
+    carrying a kanji or katakana. `20260904_1` 問題11(3) glossed 「便：決まった道
+    すじを、**決まった時刻に**行き来する乗り物」 against key 61 「予約がなくても
+    **定まった時刻に**出し、…」 — six characters of the key printed in the
+    apparatus, on a stem anchored on 便. **Reword the GLOSS, never the key**:
+    the note is apparatus and may be said differently; the key is the item.
+    The shipped repair drops the schedule wording entirely
+    (「便：人や荷物を運ぶために、一定の道すじを行き来する乗り物の運行」).
+    **A gloss you REWRITE is a gloss you must re-read against its item** — this
+    leak did not exist before round 1's own （注N） repair created it, which is
+    the repair-collateral class `exam-qa-review` §5 now names.
+
+### （注N） — a refuted candidate check, recorded so it is not re-derived
+
+`qa-report-20260904_1` F3 proposed replacing the hand-written BANNED list above
+with a MEASURED one: WARN whenever a paper glosses a word that appears
+**unglossed in ≥2 of the 31 official booklets**. It was implemented and run
+before shipping, and it is **refuted — do not build it.**
+
+Measured 2026-09-04 over `refs/JLPT_N2_NEW/*/booklet.md`, counting only bare
+uses (（注N） definition lines dropped, and a kanji term not matched inside a
+longer kanji run):
+
+| corpus | glosses that would WARN, per paper |
+|---|---|
+| the 8 official sittings under `tests/imported-*` | **5–9 each** (2022-12 nine: フィードバック 3冊, 類 11, いわゆる 2, ゆえに 2, そもそも 7, 時には 13 …; 2025-07 nine incl. 一切 5, 進化 4, 概念 2) |
+| the 21 generated papers | 0–7 each |
+
+Official sittings gloss words other official sittings print bare, five to nine
+times per paper — the exam has run since 2010 across three format eras and its
+own gloss decisions are not consistent across sittings. **A rule that fails a
+real sitting is refuted, not a defect in the sitting** (the same verdict §2b's
+問題6-domain rule and `exam-qa-review` §5's contrast-marker strategy got). Raising
+the threshold does not rescue it either: the founding words sit at 抽選 6冊,
+視察 3, 一括 3, ふるまい 2 — *below* official's own worst offenders — so any
+threshold that clears the archive is a threshold that misses the founding case.
+The gloss band therefore stays what it is: the hand-written BANNED list, the
+subtraction test (`check_note_band`), the same-paper reuse test
+(`check_note_band_reuse`), and a human read against the archive.
 
 ## 問題14 (情報検索)
 
@@ -402,6 +501,19 @@ All figures from `official_calibration.md` §4 — current era, n=7 sittings,
   ticket that already covers it) — and 「日曜日にどの施設を回っておかなければならな
   いか」, keyed on the two 休館日 cells that read 月曜日. Neither asks whether a
   sentence is true; both make the candidate compute something.
+- **An amount / time / count item's four options must be UNIFORM IN SHAPE.**
+  When the stem asks 「いくらになるか」/「何時までか」/「何人まで参加できるか」, all four
+  options are bare values — 四百円 / 五百円 / 九百円 / 千円 — and none of them
+  names the condition that produces it. A mixed set is wrong twice over:
+  the odd-shaped option is eliminable on sight without reading the flyer, and
+  its explanatory clause LEAKS the very constraint the item is testing.
+  `20260904_1` 問題14-71 asked for a total and printed 四百円 / 五百円 / 九百円
+  beside 「割引を受けられなかった場合の千円」 — three bare amounts and one
+  option announcing its own error condition, which told the candidate that a
+  discount exists, i.e. the item's second constraint
+  (`qa-report-20260904_1` F6; repaired to a bare 「千円」). The worked 問題14 pair
+  above is the model: every wrong option is a real combination of flyer cells
+  with one fact changed, stated in the same form as the key.
 - **The 解説 cells for 70/71 must each quote the TWO flyer cells the key combines**.
 - **Every WRONG option must contain at least one clause factually FALSE against the flyer** — not merely incomplete. Build wrong options from true combinations with ONE fact changed to something the flyer contradicts.
 

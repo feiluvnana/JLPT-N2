@@ -131,9 +131,23 @@ defect through.
     deciding line quoted, why the pool tag does not describe the authored
     surface. One paper's surface drifting off a tag is a record-keeping fact
     about that paper, not a pool defect. **`check_theme_record_agreement()`
-    reads exactly this** — it joins each spec/ledger row to its
-    `topics.json` surface, FAILs on a disagreement with no `note`, and goes
-    silent once the note is there. That check exists because this bullet
+    reads ONE of the three** — it joins each spec/ledger row to its
+    `topics.json` surface, FAILs on a disagreement with no `"note"`, and goes
+    silent once the note is there. `shipped_theme`, `shipped_surface`, and the
+    requirement that the note QUOTE the deciding line rather than describe it,
+    are read by this pass and by nothing else: check them off the row by hand.
+    This paragraph said "reads exactly this" until 2026-09-04, i.e. it asserted
+    a three-field contract the predicate never had, and the drift was found the
+    only way it could be — by a reviewer reading the check
+    (`qa-report-20260903_1-round2.md` §5, the trailing note). `20260821_1` is
+    the sole paper on disk carrying `shipped_surface`; `20260903_1`'s 市役所 row
+    carries `shipped_theme` + a note that describes rather than quotes, and
+    passes. **Do not "resolve" this by dropping a field** — the three-field
+    record is the authoring requirement, and the gap is in what the gate can
+    see. Gating the other two is a live proposal, not a done deal: it would
+    newly WARN every paper on disk that recorded a divergence under the
+    one-field predicate, so it is taken as a deliberate widening (§6.5's
+    re-run-and-state rule), not as a silent tightening. That check exists because this bullet
     previously ended in a prose sync instruction that nothing read: round 1 of
     `20260821_1` filed the desync, the rule was rewritten, and round 2 measured
     that not one byte had moved in either file (NF-4). Prose no check reads is
@@ -304,7 +318,21 @@ or does it die for an unrelated reason first?*
 - **Vocab-in-context/paraphrase/usage (問4-6):** write each option's
   functional category (degree adverb, regret adverb…); if the four don't
   share one, FAIL (わりに with 案の定/とっくに/一段と — none a comparison
-  competitor; 切実 with 痛快 in the set — tonally opposite). **問題6's wrong
+  competitor; 切実 with 痛快 in the set — tonally opposite).
+  **The worked case, and the tell to look for (`20260904_1` F1, 2026-09-04):
+  if the four options split 3:1 on TONE and the 解説 kills the three wrong ones
+  in a single clause, the item is not a 4-choice — it is a 2-choice on
+  valence.** 問題4-18 keyed 殺し合う against 助け合う / 話し合う / 支え合う and
+  wrote 「1 ✗ 助け合う 3 ✗ 話し合う 4 ✗ 支え合う＝いずれも肯定的な相互行為で、
+  子どもに向かない理由にならない」 — one sentence, one axis, three options gone,
+  and all four stems N4/N5 under one 〜合う so no N2 vocabulary was tested
+  either. Read the 解説 as the author's own confession here: three ✗ in one
+  sentence is a claim that three options die for one reason.
+  `check_goi_option_set_valence()` now reports that shape, and the register
+  half is measured in `moji-goi.md` §"The REGISTER floor" — but the gate only
+  sees the sentence, so the option set is still yours to judge. The repair is
+  a re-draw (`--reroll-one <cat>:<index>`); accepting a re-written 解説 over
+  the same four options is the move to refuse. **問題6's wrong
   sentences are `question-authoring/references/moji-goi.md` §問題6's rule — read
   it there, do not judge them from this file.** This bullet used to restate the
   rule as "each wrong sentence must stay inside the word's own domain", which is
@@ -512,6 +540,31 @@ as "N1"/"N3", so a single source's label was never sufficient.
   point was one gate check is exactly the repair nobody re-reads against the
   other rules: after ANY edit to 問題10–14 prose, glosses included, re-grep all
   問題7/8/9 keyed forms.
+  **Three exclusions, written down 2026-09-04 (`qa-report-20260904_1` S4)
+  because the rule's scope phrase — "keyed connective or modal" — did not
+  decide them, and an undecided clause is one a reviewer settles differently
+  every time:**
+  1. **Scope is connectives and 文末 modals. 授受・使役・受身 auxiliaries are
+     out of scope.** 〜てくれる/〜てもらう, 〜させる, 〜れる/られる are the grammar
+     every Japanese paragraph is built from; counting their occurrences
+     measures prose volume, not a leak.
+  2. **A form carried by TWO OR MORE of the item's own options carries no
+     discriminating information, so its exposure is not counted.** 問題9-51
+     keyed 「もう一つ用意してくれる」 while its own distractors 1 and 3 read
+     「決めてくれるだろう」 and 「一つに絞ってくれる」 — three of four options on one
+     form, so nothing in the prose can push a reader toward the key.
+  3. **The scan covers passage PROSE and （注N） definition lines only — never
+     another 大問's option strings.** 問題9-49's 「はずだ」 turning up inside a
+     問題10/問題11 OPTION is a distractor sentence written for a different item;
+     it does not help anyone read the passage this item hangs on.
+
+  All three were re-verified against `20260904_1` on 2026-09-04 and **none of
+  them flips its verdict**: over `dokkai_closing_scopes()`'s passage prose plus
+  the （注N） lines, 〜てくれる occurs **once** outside 問題9's own passage
+  (問題10(1) 「…知らせてくれる。」) and 「はず」 **zero** times, so 問題9-51 and
+  問題9-49 sit at ≤1 with the exclusions and without them. An exclusion that
+  DID flip a verdict would have to be argued on the merits before adoption —
+  these are written down because they were already true, not to buy a pass.
 - **Grep each 問題9 keyed 文末 modal across 問題10–13 prose too, not just the
   connectives.** `20260903_1` keyed 「のも当然だろう」 at 問題9-51 while 問題12(A)
   printed 「見直しが進んでいるのも当然だろう」 — same 文末 frame, same 問題9 slot as
@@ -525,14 +578,19 @@ as "N1"/"N3", so a single source's label was never sufficient.
 
 - **Read the セクション構成表 in `聴解.md` as COLUMNS, before any item** — the
   table and its per-section quotas are `question-authoring/references/choukai-items.md`'s.
-  Fail on: the same 正解 twice in a section; one 消去方法 more than twice; any
-  quota breached. **A missing table is itself a fail.** Verify the table
+  Fail on: the same 正解 twice in a section; one 消去方法 more than twice; one
+  主導 pair on more than two rows (§場面 — and read synonymous pairs together,
+  which the gate's string tally cannot); any quota breached. **A missing table is itself a fail.** Verify the table
   against the script, not on trust — an author who filled it in wrongly is
   exactly the author whose section repeats.
 - **Three columns the gate reads as counts, so read them the same way**
   (added 2026-08-21, REPORT-CHOUKAI.md §F1/§F2): `質問型` — no more than 3 of 6
   on one frame, and at least one modify/method and one condition-match item;
-  `決め手の位置` — no more than 3 of 6 rows in any one third (冒頭/中盤/終盤);
+  `決め手の位置` — no more than 3 of 6 rows in any one third (冒頭/中盤/終盤),
+  and each cell must print the 「n行目／全m行」 the label is derived from, which
+  the gate now recomputes and re-counts against the script
+  (`choukai-items.md` §決め手の位置 owns the formula — `20260903_1` shipped two
+  labels wrong under every denominator, behind a compliant tally);
   `提案消去回数` — at most 2 items carrying ≥3 proposal-and-deny turns. All
   three shipped as monocultures behind a green gate: 70 of 70 問題1 items asked
   「この後まず何を…」, and the newest three papers put 14 of 15 deciders in the
@@ -549,6 +607,28 @@ as "N1"/"N3", so a single source's label was never sufficient.
   without the table. `20260819_1` 問題2-1番 and 問題2-3番 both decided on *a
   diner who cannot eat something* while differing in 場面, 正解, 質問型 and
   theme tag (食 vs 働き方), which is why no other column and no check saw it.
+- **問題3: read the twenty-odd SPOKEN options as one column and look for a word
+  only the keys carry.** A content token that occurs in two or more of a 大問's
+  read-aloud options and is the key EVERY time is a lexical signature — the
+  candidate who spots it answers both items without understanding either talk.
+  `20260904_1` spoke 「そのまま」 in exactly two of 問題3's 24 options, 3-1番's
+  option 3 and 3-5番's option 1, both keys, zero distractors, and both talks ran
+  the same arc (「以前は加工していた → そのまま通した → そのほうが効いた」). Repair by
+  RE-ANGLING one item's key, never by giving the word to a distractor, and move
+  the `logs/topics.json` surface record with it (§"A fix that changes WHAT a
+  surface tests"). `check_choukai_key_exclusive_token()` reports this for 問題3;
+  it is deliberately not run over 問題4, where the same predicate flags official
+  7/2022's reply formulas. Rule and measurements:
+  `question-authoring/references/choukai-items.md` §問題3.
+- **The セクション構成表's own 引用規約 binds its CELLS, and now something reads
+  them.** `check_section_table_quotes()` matches every 「…」 in a 構成表 table row
+  against the current script — the key-table quote scan stops at the 構成表
+  heading by design, so until 2026-09-04 the audit table was the one artifact
+  quoting the script that nothing verified, and `20260904_1` shipped
+  問題2-4番's 決め手 cell missing the script's 「なんですよね」
+  (`qa-report-20260904_1` F7/S3). The free-text paragraphs UNDER the tables are
+  out of scope on purpose (they quote rule names and quotas); reading those is
+  still yours.
 - **Read the first and last spoken line of each item in a column too** — if
   openings/closings rhyme, the section is a template (`choukai-audio`
   §"Banned formulas"); the gate only catches *identical* closers >4 chars.
@@ -592,7 +672,53 @@ Two columns only a human can judge, both shipped green in `20260810_1`:
   different essays". Read each passage's last two sentences, label the move;
   more than two sharing one closing is a finding. Then check whether the
   **keys inherit it** — 6+ keyed options being the same "human/attitude"
-  choice beside strawmen is a major finding.
+  choice beside strawmen is a major finding. **Read the column twice: once
+  down the shape labels and once down the SENTENCE SKELETONS.** The cleft
+  「〜のは、…だ」 crosses every label, so a paper can show ≤2 per shape and still
+  end five of thirteen surfaces on one pattern (`20260904_1` F2; the skeleton
+  is now `FINAL_SENTENCE_TEMPLATES`'s 分裂文 row).
+- **When a round-1 finding names a PAIR of surfaces sharing a skeleton, round 2
+  re-derives the pair on the NEW skeleton AND the NEW shape label — clearing
+  the named template is not clearing the pair.** A repair aimed at one template
+  moves the writing off that template and lands it somewhere; if both halves of
+  the pair land in the same place, the pair survives the repair wearing
+  different clothes, and every automated line still reads compliant.
+  `20260904_1` round 1 F2 ordered 問題12(B)/問題13 split off 「〜のは…のほうだ」;
+  the repair moved BOTH onto 「〜ていた＋のだ／のです」 and left BOTH labelled
+  意外な観察 — one pair, re-clothed, two surfaces apart. Neither reading was
+  visible to any check: the shared cap is 2 and both sat at exactly 2, which is
+  why the 後知れ skeleton now carries a cap of 1 of its own
+  (`FINAL_TEMPLATE_CAPS`). **Verification here is by re-reading, not by `make
+  check`** — name the two surfaces, quote both new closings, and say which
+  skeleton and which label each now carries. This is the third paper on record
+  to show the repair-collateral class (`20260812_1` F2→F3, `20260903_1` F2,
+  `20260904_1` round-2 F2/F3), so treat every round-1 repair's landing site as
+  in scope for round 2, not just the defect it named.
+
+**A refuted candidate metric, recorded so it is not re-derived
+(`qa-report-20260904_1` S5, 2026-09-04).** The obvious way to mechanise "the
+keys inherit the closing" is to score the strategy *pick the 読解 option
+carrying a contrast marker* (〜ではなく / 〜より / だけでなく / こそ / というより /
+わけではない). **It is not gateable, for two independent reasons, both measured
+over all 29 papers on disk:**
+
+1. **It fails official sittings.** The reviewer's run had `20260904_1` worst
+   among generated at 4 of 5 marked options keyed (80 %), against official
+   7/2025 at **1/1 = 100 %** and 12/2024 at 2/5 = 40 %. A rule that fails a
+   real sitting is refuted, not evidence about ours — the same verdict §2b's
+   問題6-leaves-its-domain rule got.
+2. **It is not reproducible across two honest definitions of "marker", which
+   is worse.** Re-run 2026-09-04 during the root-cause pass with a marker
+   family taken from `FINAL_SENTENCE_TEMPLATES` and a scope of items 52–69,
+   the SAME papers come out differently: `20260904_1` 2/8 = 25 %, official
+   7/2025 1/3 = 33 %, 12/2024 0/4 = 0 %, while generated 20260828_2 reads
+   5/6 = 83 % and 20260807_1 2/2 = 100 %. Per-paper n is 1–12 options, so the
+   percentage moves by tens of points on one reclassified option and the
+   ranking of papers inverts between the two runs.
+
+Do not file `20260904_1`'s nine "obvious X, not Y" keys as a defect on this
+basis. The finding that survived measurement was the repeated SKELETON (F2),
+which is decidable on a fixed 13-final denominator; the marker rate is not.
 
 ### 6. Provenance & Spec Blueprint Audit
 

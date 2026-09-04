@@ -358,6 +358,51 @@ prints the answer word elsewhere (a printed answer is an automatic-fail class).
 (コンクール vs コンテスト in the same sentence) makes the item double-answerable. If
 the stem accepts two options, change the target or stem — never defend the item.
 
+## The REGISTER floor, measured — and the two conditions that make it decidable
+
+**A key whose subject is violence, crime or a death AND whose constituent kanji
+appear ZERO times across the 31 booklets is off-register: do not key it in
+問題4–6.** Both halves are required, and each without the other is wrong:
+
+- The archive is not squeamish. Measured over `refs/JLPT_N2_NEW/*/booklet.md`
+  (31 sittings, 2026-09-04): **死 in 14 booklets, 傷 9, 暴 10, 犯 5, 盗 4,
+  罪 1** — so "no dark subjects" is refuted by the papers themselves, and a
+  blanket topical ban is not the rule.
+- The kanji count alone is not the rule either. **55 of the 1741
+  `context_words`/`paraphrase`/`usage` entries carry a kanji the 31 booklets
+  never print** (該当, 経緯, 頻繁, 迅速, 兆候, 娯楽, 怠ける…), all of them ordinary
+  N2 vocabulary — the archive is 31 sittings, not the language, so absence is
+  weak evidence on its own (`AGENTS.md` §3).
+
+Together they are decidable and narrow. **殺 is 0 of 31 booklets, 0
+occurrences**, and 「殺し合う」 is about people killing each other: both
+conditions, so it is off-register. `20260904_1` keyed it at 問題4-18 and QA
+called an automatic fail (`qa-report-20260904_1` F1). **If the draw lands on
+one, the repair is `--reroll-one <cat>:<index>`, never a hand substitution** —
+and the entry itself is then a pool defect under `exam-blueprint` §"Pool
+entries stay inside the N2 band": 殺し合う, 殺害 and 自殺 were deleted from
+`pools.json` on 2026-09-04 (none had ever been drawn, so no ledger row broke).
+殺虫剤 stays — an insecticide is not the first condition.
+
+## Three distractors, three different deaths
+
+**A 問題4–6 item is a four-way discrimination only if its three wrong options
+fail for three different reasons.** When they fail for ONE, the item is a
+two-way choice with four options printed, and the paper says so in its own
+解説: the author writes a single sweeping sentence instead of three.
+
+`20260904_1` 問題4-18 keyed 殺し合う against 助け合う / 話し合う / 支え合う and
+explained 「1 ✗ 助け合う 3 ✗ 話し合う 4 ✗ 支え合う＝いずれも肯定的な相互行為で、
+子どもに向かない理由にならない」 — three distractors, one clause, one axis
+(valence), on top of four N4/N5 stems under one 〜合う. The paper's other six
+問題4 items each kill their distractors one sentence at a time, which is what
+the shape looks like when it is right.
+
+`check_goi_option_set_valence()` reports any 問題4–6 解説 cell that puts three
+✗ marks in one sentence. **The repair is the OPTION SET, not the sentence**:
+splitting the sentence while keeping the four options changes nothing the
+candidate sees.
+
 ## A time/date/quantity key: the stem must FIX every axis the distractors can vary
 
 **Construction step, before the options are written.** When the key is a time,
@@ -389,6 +434,40 @@ unprompted. **When the target IS the natural collocate of the frame, change the
 frame instead of substituting into it** — `20260817_3` 問題5-21 keyed 器用だ and
 shipped 「手先が上手だ」, because 手先が**器用** is unusable (it is the target), so
 「手先が〜」 could only yield marked wordings. The fix was 「細かい作業が得意だ」.
+
+**No two of the four options may be mutual synonyms — and three on one axis is
+an automatic fail.** Part 4's "Three distractors, three different deaths" is
+written for 問題4's *context* items; 問題5 is where the same collapse takes its
+own shape, the **synonym cluster**, because every option here is by construction
+a candidate paraphrase of one word. When three of the four sit on the same side
+of one axis, a candidate who knows only which side the target is on eliminates
+three options with ONE piece of knowledge: a valence 2-choice with four options
+printed, however many options are on the page.
+
+`20260904_1` 問題5-24 keyed 「いつも」 on target 常に against たまに／まれに／
+ときどき — three ways of saying "not often", killed in the 解説 by one clause
+(「いずれも頻度が低いことを表す副詞で」). It is also the off-level half of the
+same defect: 「いつも」 is N5-core, and §2.5's named TOO_EASY example is exactly
+「four basic N4–N5 adverbs」. Both halves came from ONE pool row, so the durable
+repair is `exam-blueprint` §"A `paraphrase` parenthetical" — but the option set
+is yours either way, because the pool never writes the other three.
+
+**Measured against official practice (re-run 2026-09-04 over the 8 imported
+sittings, 40 問題5 option sets; the founding measurement read 25 over 5):
+NOT ONE official set has three mutually-synonymous distractors.** What official
+does instead, on the sets that look closest:
+
+| official set | why it is not the defect |
+|---|---|
+| 再三 → たまに／何度か／**何度も**／いつも (2022-07) | four different *values* on the frequency scale, not three on one side — and note official keys 何度も and prints いつも as the distractor, the reverse of 24 |
+| うつむいて → 上を向いて／横を向いて／**下を向いて**／後ろを向いて (2023-12) | a paradigm of four distinct directions |
+| 相当 → いろいろ／まだ／やっぱり／**かなり** (2025-07) | four semantically unrelated adverbs; each dies for its own reason |
+| くだらない → 効果がない／目的がない／変化がない／**価値がない** (2022-12) | one frame, four different nouns — a shared *shape* is fine, a shared *meaning* is not |
+
+`check_goi_option_set_valence()` catches the symptom (three ✗ in one 解説
+sentence) across 問題4–6; it cannot see a cluster whose 解説 was written as
+three sentences. Read the four options as a SET, with the stem covered, before
+you write the 解説 — that is the only pass that catches this one.
 
 **Key length.** The uniquely-longest option is the key in 19 % of official
 length-varying items (問題5 22/116, 問題6 29/151; per paper 0–50 % all-era, 11–22 %

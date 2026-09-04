@@ -252,20 +252,40 @@ SPOKEN_QUESTION_RE = re.compile(r"^質問([12])[。.][ \t]*(.*)$")
 SPOKEN_OPTION_RE = re.compile(r"^([1-4])[、.][ \t]*(.*)$")
 
 
-def _split_spoken_block(rest: str):
+def _split_spoken_block(rest: str, allow_implicit_questions: bool = False):
     """(narration_lines, option_groups, questions) for a 問題3/4/5 script block.
 
     The booklet prints no options for these sections, so they come out of the
-    script itself. Three shapes have to survive the same splitter:
+    script itself. Four shapes have to survive the same splitter:
       問題3/問5 one-question — narration, then ONE numbered option group;
       問題4                 — one prompt line, then ONE 3-option group;
-      問5 two-question      — narration, 質問1 + group, 質問2 + group.
+      問5 two-question, marked   — narration, 質問1 + group, 質問2 + group;
+      問5 two-question, unmarked — narration, question sentence + group,
+                                   question sentence + group.
     Anything after an option group that is neither a further 質問 nor a further
     numbered option is the announcer's instruction for the NEXT item (or the
     closing 「これで、聴解試験を終わります。」) and is dropped: it used to be
     concatenated onto the last option's text.
+
+    `allow_implicit_questions` (passed only for a 問5 block) covers the fourth
+    shape. Official sittings — and therefore every IMPORT — announce the two
+    questions as 「質問1。…」/「質問2。…」, which `SPOKEN_QUESTION_RE` matches.
+    This repo's GENERATED scripts speak both questions bare ("男の学生は、はじめ
+    どの対策を受けようと思っていましたか。"), so `questions` came back EMPTY,
+    `derive_choukai_raw` never took its two-question branch, and a generated
+    問題5 2番 collapsed into ONE 問5-2 entry carrying 質問1's four options and
+    nothing of 質問2 — `make scaffold-explanations` emitted 100 items instead of
+    101, tagged `[正解]` on option 1 (no key is stored under `問5-2`, so the
+    scaffold fell back to its ans=1 default), and `build_model_answer.py`
+    rendered a spurious empty `問5-2` card beside the real 問5-2-1/問5-2-2 ones
+    because `all_choukai_keys` unions `choukai_raw` with the markdown keys.
+    Found independently by both Stage-5 authors of 20260904_1 (2026-09-04);
+    20260903_1 shipped with it. Repair: the unmarked question is the narration
+    line that DIRECTLY precedes each option group, so it is recovered
+    positionally — one per group, and only when every group has one.
     """
     narration, groups, questions = [], [], []
+    implicit, pending = [], []
     cur, seen_opts = None, False
     for line in rest.splitlines():
         line = line.strip()
@@ -274,19 +294,33 @@ def _split_spoken_block(rest: str):
         m_q = SPOKEN_QUESTION_RE.match(line)
         if m_q:
             questions.append((int(m_q.group(1)), m_q.group(2).strip()))
-            cur = None
+            cur, pending = None, []
             continue
         m_o = SPOKEN_OPTION_RE.match(line)
         if m_o:
             if m_o.group(1) == "1" or cur is None:
                 cur = []
                 groups.append(cur)
+                implicit.append(pending[-1] if pending else "")
             cur.append(m_o.group(2).strip())
             seen_opts = True
+            pending = []
             continue
         cur = None
+        pending.append(line)
         if not seen_opts and not questions:
             narration.append(line)
+
+    if (allow_implicit_questions and not questions and len(groups) >= 2
+            and all(implicit[:len(groups)])):
+        questions = [(i, q) for i, q in enumerate(implicit[:len(groups)], 1)]
+        # The first group's question sentence came before any option line, so
+        # it was also collected as narration. Drop it: a two-question 問5 keeps
+        # its 質問 text in `stem` alone (module docstring), and leaving 質問1's
+        # sentence at the end of `script` would print it inside 質問2's
+        # transcript as well.
+        if narration and narration[-1] == questions[0][1]:
+            narration.pop()
     return narration, groups, questions
 
 
@@ -343,7 +377,8 @@ def derive_choukai_raw(choukai_body: str, script_text: str) -> dict:
             continue
 
         # 問題3/4/5: the options are spoken, not printed.
-        narration, groups, questions = _split_spoken_block(rest)
+        narration, groups, questions = _split_spoken_block(
+            rest, allow_implicit_questions=key_id.startswith("問5"))
         lead_in, tail = _narration_parts(narration)
 
         if key_id.startswith("問4"):

@@ -356,10 +356,45 @@ merely *prints* the total. Missing pieces are otherwise SILENT.
 | Answer reveals | 例 confirmations only |
 | Annotations | none (`（※…）`) |
 | Typo guard | 「問題用紙になに印刷」 → must be 「何も印刷」 |
-| 質問1/質問2 | must sit in the SAME block |
+| 質問1/質問2 | 問題5-2番 must ANNOUNCE both — 「質問1。<question>」/「質問2。<question>」 — and both must sit in the SAME block |
 | Speaker labels | every label must exist in `SPEAKER_MAP` |
 
 問題5 has 2 item blocks but 3 answers — its 2番 carries 質問1 and 質問2.
+
+### 質問1。/質問2。 are not labels, they are the answer pause
+
+`GAP_AFTER_SHITSUMON1` (10 s) is inserted BEFORE a line matching
+`SHITSUMON2_RE` = `^質問2。`. **A 2番 that speaks its two questions bare gets no
+answer time for 質問1 at all** — the branch is never reached, choice 4 of the
+first read-back runs into the second question at an ordinary ~1 s turn gap, and
+nothing about the MP3 looks wrong: every constant is still inside its band,
+because the one that matters is never applied ("…and a constant that is never
+REACHED reads as correct too", Part 3).
+
+**Measured, 2026-09-04, on `tests/20260904_1/聴解.mp3` as shipped:**
+3.01 / 3.04 / 3.01 s between the four spoken choices, then **1.17 s** where 10 s
+belongs; the item's only 10.0 s gap was the end-of-item pause after 質問2. The
+repair was the two prefixes plus `make mp3` — after it, 10.03 s sits between the
+two read-backs and the whole file's pause distribution is otherwise unchanged
+(998 vs 995 gaps; the ~10 s bucket goes 2 → 3, every other bucket identical).
+
+The rule shipped broken three times because the code only tested CO-LOCATION —
+「質問1。 without 質問2。」 — so a block with NEITHER marker passed silently while
+this table claimed the row was enforced. `validate_script()` now enforces
+PRESENCE on any 問題5 item block carrying 8 spoken choice lines
+(`require_p5_question_markers`, default on; `make check` passes it `False` only
+for the two grandfathered ids in `P5_QUESTION_MARKER_GRANDFATHERED`), and
+`check_mondai5_question_markers` in `make check` is the per-paper line. 26 of
+the 29 papers on disk — 18 generated, all 8 imports — already carry the markers;
+`20260828_2` and `20260903_1` do not, and their audio has the same missing
+pause (**not repaired: re-cutting a released paper is a separate decision**).
+
+Two other consumers read the same marker, which is why the drift was expensive:
+`check_consistency.choukai_p5_2ban_options()` returns `[]` without `^質問1。`,
+silently disabling the enumeration-ORDER half of `check_mondai5_enumeration`;
+and `verify_fidelity._split_spoken_block()` needs it to tell 問5-2-1 from
+問5-2-2 (its `allow_implicit_questions` fallback exists only to recover already-
+shipped bare scripts — do not write new ones to it).
 
 ## Speaker labels
 

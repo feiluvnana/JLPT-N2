@@ -172,6 +172,19 @@ make autofix <id> && make lint-draft <id> && make verify-scramble <id> && make b
 - `make check` validates every test on disk; **read every line, including
   WARN** — resolve each or justify it in the report. Fix failures before
   stage 4: a mis-keyed item is invisible once the MP3 is built.
+- **A WARN naming the test under review is resolved, or the stage-3 report
+  records it as deferred-to-QA WITH THE REASON, before stage 4 is started.**
+  `AGENTS.md` §0.5 and §4 and `exam-qa-review` §"Entry condition" all say WARN
+  is part of the output; deferring one to the reviewer is defensible, but only
+  when the hand-off says so **in writing, in `qa/` or the stage-3 report** —
+  **a WARN carried silently is indistinguishable from one nobody read.**
+  The incident (`qa-report-20260904_1-round2` §5, process row): stage 3 handed
+  round 2 an exit-0 gate as its entry condition while a live
+  `check_goi_option_set_valence` WARN named 問題5-24 of that very paper. The
+  disposition existed — in the orchestrator's prompt, which no reviewer reads —
+  so the reviewer had to re-adjudicate it from scratch, and it turned out to be
+  a true positive and an automatic fail. List, per WARN naming this test:
+  the line, and either the fix or the one-sentence reason it is deferred.
 - **A repair made to clear one gate check is not verified by that check
   passing.** After ANY edit to 問題10–14 prose — （注N） glosses included —
   re-grep every 問題7/8/9 keyed form across the whole 読解 half, **record the

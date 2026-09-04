@@ -55,6 +55,24 @@ one. `飢饉` shipped from this pool and survived three QA rounds: 饉 is not a
 `refs/JLPT_N2_NEW/`. Same shape as 問題1's 表外音訓 rule below — the defect is
 the entry, and re-spelling the stem leaves the pool to re-draw it next test.
 
+**A themed entry that Part II's NEUTRALITY gate forbids is undrawable, and it
+is a pool defect — delete it, never "author it carefully" (2026-09-04).** Part
+II bans politics/elections, religion, war/crime/accidents with victims,
+discrimination debates and "anything distressing" from a self-authored passage.
+A `reading_topics`/`listening_scenarios` entry whose SUBJECT is one of those can
+never yield a compliant surface, so it is the 飢饉 case exactly: there is
+nothing to fix on the paper, and leaving the entry hands the same defect to the
+next paper that draws it. `20260904_1` drew 「安楽死と尊厳死」 (医療・福祉) —
+a bioethics-of-dying debate — and a scan of the two themed pools for the ban
+list turned up one more never-drawn entry, 「選挙の投票率低下と対策」
+(行政・手続き), which Part II bans by name. Both were deleted. **Check the
+ledger before deleting**: `check_draw_provenance()` requires every RECORDED
+draw to resolve to a pool entry, so an entry a shipped paper drew is corrected
+or kept, never removed (「がん検診の受診率向上」 stays — 20260818_1 drew it, and
+preventive-screening uptake is ordinary public-health prose, not the ban list).
+Deleting the entry also disarms the `--reroll-one` no-op below, since the
+rejected string is no longer a candidate at all.
+
 **A `quick_response` entry is a SENTENCE, so a defective one is corrected in
 place — it is not the same repair as an undrawable entry.** The 飢饉 rule above
 says *delete and `--reroll`*, and the reason is specific: an `orthography` entry
@@ -172,6 +190,60 @@ paper cooldown) and `taken_tokens()` (one point, one 問題 per paper), and
 `--reroll-one grammar_p8:<index>` and a fresh RNG seed, then re-author that
 item — never a hand substitution.
 
+### Mutually exclusive form families — `grammar_form_families` (F5, 2026-09-04)
+
+`grammar_form_tokens()` folds two entries together only when they share a chunk
+of **3+ characters**, and that floor exists for a reason (2-character kana tails
+collide across unrelated points). The hole it leaves is exactly where the shared
+core is SHORT: `〜つつある` yields `form»つつある` and `経過状況(〜つつ…する)` yields
+**no token at all** — both its chunks, 「つつ」 and 「する」, are two characters — so
+the two entries were strangers to every identity map, and `20260904_1` drew BOTH
+into one 問題8 (問題8-45 and 問題8-46), a first in 21 papers
+(`qa-report-20260904_1` F5). One 大問 cannot test 〜つつ twice however the two
+entries are labelled.
+
+`pools.json` therefore carries a top-level
+
+```json
+"grammar_form_families": { "〜つつある": "つつ", "経過状況(〜つつ…する)": "つつ", … }
+```
+
+map — a **map, not a `family` field on the entry**, for the same reason
+`quick_response_keys` is one: `grammar_p8` entries are bare strings and
+`check_draw_provenance()` resolves every recorded draw BY STRING, so making them
+objects would orphan the shipped ledger rows that name them.
+
+- `form_family_tokens()` puts the family into **`taken_tokens()` only, not
+  `identity_tokens()`** — one paper may not draw two of a family; two
+  consecutive papers may each draw one. The defect is two in one 問題8.
+- **Membership is "one form spelled twice", not "shares a stem".** Today:
+  `{〜つつある, 経過状況(〜つつ…する)}` and `{目的表現(〜ように…する),
+  目的達成(〜ように努力する)}`. 〜ばかりに vs 〜ばかりか, 〜として vs 〜としても and
+  〜ない限り vs 〜に限らず are **not** families — Shin Kanzen headlines them
+  separately and folding them would refuse honest draws.
+- `check_p8_form_family()` FAILs a spec drawing two of one family (measured over
+  all 21 generated specs: none does, so no id is grandfathered), and
+  `check_pool_grammar_band()` asserts every family key names a live pool entry
+  and every family has 2+ members — a display-string map rots silently when an
+  entry is renamed.
+- Repair a hit with `--reroll-one grammar_p8:<index>`, never a hand
+  substitution.
+- **The map is hand-maintained, so its own completeness is now measured**
+  (S6, `qa-report-20260904_1-round2`, 2026-09-04). `check_p8_form_family()` was
+  printing a confident `ok` over **1 of a paper's 5** `grammar_p8` draws —
+  10 of 105 draws are tagged across all 21 specs — which is a verdict about the
+  MAP, not about the draw. Two changes, both the remedy S1 got:
+  the per-test line now prints its coverage and WARNs below
+  `P8_FAMILY_COVERAGE_MIN`, skipping outright at zero; and
+  `check_pool_grammar_form_families()` lists every `grammar_p7`/`grammar_p8`
+  pair whose forms overlap on a core too short for `grammar_form_tokens()` and
+  that no family declares. It reports **23** candidate pairs today — most are
+  honest non-families of the 〜として/〜としても kind above, but one is not:
+  **`〜つつも` is a third member of the つつ family and is still untagged.**
+  Judge the list by hand and tag what belongs; never widen the check's generic
+  tail list to shorten it, and never lower the coverage floor to green the WARN
+  — coverage rises only when the map grows.
+
 **2026-08-11: `grammar_p7`/`grammar_p8` audited against Shin Kanzen's full
 TOC (~211 forms)** — roughly half the book's forms were missing, including
 two whole lessons with zero coverage. Added 60 N2-band forms to `grammar_p7`
@@ -200,6 +272,27 @@ valid standalone `paraphrase` entry. Follow the `調剤師` precedent when you
 touch one: correct the entry, and carry the corrected string into every
 `test_spec.json`/`logs/ledger.json` row that recorded it, so
 `check_draw_provenance()` still resolves.
+
+**Both halves must sit in the N2 band — the target AND the parenthesised
+word.** A `paraphrase` entry states what is tested and what the author is
+expected to key, so an entry whose parenthesised word is an N5-core adverb or
+verb (いつも・とても・たくさん・すぐ・みんな) makes the item **unfixable by
+authoring**: the author writes the sentence the pool prescribes, keys the word
+the pool prescribes, and ships an item whose key is the first word of its class
+any learner meets. There is nowhere else to fix it — the defect is the pool row,
+so repair the row.
+
+**Founding case, measured (qa-report-20260904_1 F2/§5):** `20260904_1`'s 問題5-24
+shipped 「いつも」 as the key on target 常に, beside たまに／まれに／ときどき — an
+off-level key on three mutually-synonymous distractors, an automatic QA fail.
+Scanning all 143 `paraphrase` entries the day the finding was written,
+`つねに(いつも)` was **the only** row whose parenthesised word is N5-core, so the
+repair is one row and re-classifies nothing else; the entry now reads
+`つねに(絶えず)` (絶えず: 6 hits in `refs/Shinkanzen/goi_reference.md`, printed in
+official 12/2023). No spec or ledger row had ever drawn the old string, so
+nothing downstream had to be carried across. The authoring-side counterpart —
+the four options as a SET — is `question-authoring/references/moji-goi.md`
+§問題5.
 
 ## Composition is drawn, not authored — three shapes `draw()` enforces
 
@@ -309,6 +402,29 @@ comparison.
 carry **that entry's `key`, verbatim**, not a new string and not a new
 paraphrase of the errand. Adding the near-duplicate unkeyed re-opens the hole
 by construction: the pool grows, the cooldown does not.
+
+**EVERY NEW ENTRY CARRIES A `key`, not only a near-duplicate (S1,
+2026-09-04).** "An entry with no `key` is its own key" is true of the cooldown
+arithmetic and false of what the gate can then SEE, and the gap is not
+marginal: measured over all 21 generated specs, the share of a paper's
+errand-category draws carrying a `key` runs **0–9 %** (best: 4 of 44), so
+`check_spec_errand_rotation()`'s green line was a statement about two surfaces
+printed as if it covered forty-four. It now prints the ratio and **WARNs below
+50 %** (`ERRAND_COVERAGE_MIN`), which every paper on disk trips — that WARN is
+the finding, and the only thing that clears it is keys in `pools.json`. Write
+`institution:errand` for the new entry even when nothing shares it; a
+one-member cluster costs no pool depth (`check_pool_errand_keys()` counts
+depth against clusters of **2+**) and it is what makes the next near-duplicate
+collide instead of slipping past. Do NOT lower the threshold to make the line
+green.
+
+Same reasoning, one level up in the sampler: two entries can be *adjacent*
+without being one errand — `20260904_1`'s QA read 「空き家のリノベーション活用」
+against 「空き店舗:改装計画の打ち合わせ」 as a near-miss (both are "an empty
+property someone is deciding what to do with") and cleared it only because the
+two surfaces shared no deciding detail. The sampler cannot see adjacency at
+all; give such a pair a shared key (e.g. `空き物件:活用の相談`) when you next
+touch either entry.
 
 **`quick_response` has keys too, in a separate map (F4, 2026-08-19.)** Its
 entries are bare strings, so a `key` cannot sit on the entry: making them
@@ -552,6 +668,26 @@ flat ledger migrates automatically.
   re-derives `cooldown_for()` and aborts the draw on any PICKED item older than
   that window, so a category whose window is dishonest dies there rather than
   quietly shipping.
+- **A SHARED rotation space is the same promise one level up, and it also has
+  to be divided out (2026-09-04).** The sub-pool rule above covers a category
+  eating its own pool unevenly; it cannot see a SECOND CATEGORY eating the same
+  pool. `grammar_p7` is 172 entries drawing 12, so `cooldown_for()` returned
+  `172 // 12 - 2 = 12` — but `grammar_p8` draws 5 more from the same identity
+  space (15 forms sit in both pools and `grammar_form_tokens()` folds the FORM
+  into `identity_tokens()` on purpose), and `head()`/`affix_marker_free()`
+  folding knocks out further entries, so a paper really consumes **13–16**
+  `grammar_p7` entries — mean 14.3 over the last 13 papers in `logs/ledger.json`.
+  Thirteen papers in, exactly ELEVEN entries sat outside the promised 12-draw
+  window against a draw of 12: `draw()` relaxed to 11, `assert_rotation()`
+  recomputed `cooldown_for()` and killed `20260904_1`'s draw outright, and **no
+  seed could have helped**. `SHARED_ROTATION_SPACE` + `shared_space_draw()` now
+  divide by what a paper actually takes (`DRAW[cat]` plus each partner's draw
+  times the partner pool's overlap rate), so the number is one `draw()` can keep
+  and `assert_rotation()` can prove: **`grammar_p7` 12 → 9, `grammar_p8` 6 → 4**.
+  Do not read those two numbers off this page — `cooldown_for()` recomputes them
+  and a pool edit moves them. As with every window here, the repair for a
+  too-optimistic promise is to make the arithmetic honest, never to lower a
+  number until the gate goes green.
 - **Weighted by recency too, not just filtered** — `weighted_sample_no_replacement()`
   favors items that have gone longest since use (weight `ago(x)+1`), so a
   just-cooled item doesn't cluster right at the cooldown boundary.

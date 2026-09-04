@@ -4763,6 +4763,243 @@
     "listening_scenarios": 21,
     "reading_topics": 12
    }
+  },
+  {
+   "test_id": "20260904_1",
+   "seed": "51231849+reroll-one(context_words:4,1788492579)+reroll-one(grammar_p8:3,1788492587)+reroll-one(paraphrase:3,1788499043)",
+   "generated_at": "2026-09-04 10:28:53",
+   "pools_sha": "9f981bfd7a49",
+   "items": {
+    "kanji_reading": [
+     "適度(てきど)",
+     "用紙(ようし)",
+     "昨晩(さくばん)",
+     "訪ねる(たずねる)",
+     "学費(がくひ)"
+    ],
+    "orthography": [
+     "一段と",
+     "看板",
+     "審査",
+     "過半数",
+     "維持"
+    ],
+    "word_formation": [
+     "無〜(無計画)",
+     "〜難(就職難)",
+     "諸〜(諸問題)"
+    ],
+    "usage": [
+     "見送る",
+     "高度な",
+     "込める",
+     "見習う",
+     "使いこなす"
+    ],
+    "grammar_p7": [
+     "〜ものだ・ものではない",
+     "〜ざるを得ない",
+     "〜と言っても過言ではない",
+     "〜につき",
+     "〜のもとで",
+     "〜とはいうものの",
+     "〜にわたって",
+     "〜ことになっている",
+     "〜といったら",
+     "〜ものがある",
+     "〜ものなら",
+     "〜にかかわらず"
+    ],
+    "quick_response": [
+     "引けを取らない",
+     "修繕のため、明日の午前中に立ち入ります。",
+     "乗り換え案内をいたしますので、少々お待ちください。",
+     "顔が広い",
+     "出口はこちらではなく、反対側です。",
+     "お手数をおかけします",
+     "保証書をお持ちでしたら、無料で修理できます。",
+     "ポイントカード、お持ちですか。",
+     "熱があるようですので、検温をお願いします。",
+     "山本さん、その件でしたら私のほうで引き継ぎます。",
+     "お忙しいところ恐縮ですが、アンケートにご協力いただけますでしょうか。"
+    ],
+    "listening_scenarios": [
+     {
+      "scenario": "小学校:PTA役員選出の連絡",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "伝統工芸館:体験教室の予約",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "大学:レポート指導",
+      "theme": "教育"
+     },
+     {
+      "scenario": "防災用品店:備蓄リストの相談",
+      "theme": "防災"
+     },
+     {
+      "scenario": "展示会:ブースの設営分担",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "就職課:面接対策の助言",
+      "theme": "働き方"
+     },
+     {
+      "scenario": "家具店:組立サービス",
+      "theme": "住まい"
+     },
+     {
+      "scenario": "友人宅:引っ越し祝いの相談",
+      "theme": "人間関係"
+     },
+     {
+      "scenario": "喫茶店:モーニングの案内",
+      "theme": "食"
+     },
+     {
+      "scenario": "証券会社:口座移管",
+      "theme": "消費・経済"
+     },
+     {
+      "scenario": "保育園:送迎時間の相談",
+      "theme": "子育て・家族"
+     },
+     {
+      "scenario": "クラブ活動の予算配分と購入品目",
+      "theme": "スポーツ・余暇"
+     },
+     {
+      "scenario": "ラジオ局:リスナーからの質問対応",
+      "theme": "メディア・情報",
+      "origin": "reauthored",
+      "note": "聴解問題3-5番 re-angled onto another gist the same drawn scenario supports, to repair QA F4 (「そのまま」 appeared in exactly 2 of 問題3's 24 spoken options and both were keys, and 3-1番/3-5番 ran the same 'I stopped processing it and that worked better' arc). The scenario and theme are unchanged; only the talk's gist moved. New deciding line, verbatim: 「番組あてに書いてくださる方は、正しい答えがほしくて書いているとはかぎらないんですね。自分と同じことを考えている人がどこかにいると知りたくて、ペンを取ってくださるんです。」 New key (option 1, the prescribed position): 「質問を送る人が求めているもの」."
+     },
+     {
+      "scenario": "地域のお祭り:実行委員会の打ち合わせ",
+      "theme": "文化・伝統"
+     },
+     {
+      "scenario": "コールセンター:アプリの不具合報告",
+      "theme": "デジタル化"
+     },
+     {
+      "scenario": "商業施設での遺失物のお問い合わせ",
+      "theme": "行政・手続き"
+     },
+     {
+      "scenario": "区役所:転出届の提出方法",
+      "theme": "行政・手続き"
+     },
+     {
+      "scenario": "ケーキ店:デコレーション",
+      "theme": "食"
+     },
+     {
+      "scenario": "ハローワーク:失業給付",
+      "theme": "行政・手続き"
+     },
+     {
+      "scenario": "空き店舗:改装計画の打ち合わせ",
+      "theme": "地域活性化"
+     },
+     {
+      "scenario": "図書館:電子書籍の利用登録",
+      "theme": "デジタル化",
+      "key": "図書館:電子書籍の利用"
+     }
+    ],
+    "reading_topics": [
+     {
+      "topic": "宇宙ビジネス",
+      "theme": "科学・技術"
+     },
+     {
+      "topic": "物価高と家計",
+      "theme": "消費・経済"
+     },
+     {
+      "topic": "交通弱者を支える移動支援",
+      "theme": "交通"
+     },
+     {
+      "topic": "公共施設の予約システム統一",
+      "theme": "行政・手続き"
+     },
+     {
+      "topic": "食品ロス",
+      "theme": "食"
+     },
+     {
+      "topic": "図書館という場所",
+      "theme": "教育"
+     },
+     {
+      "topic": "自治体からのゴミ分別・有料化のお知らせ",
+      "theme": "環境"
+     },
+     {
+      "topic": "疎遠になった友人との再会",
+      "theme": "人間関係"
+     },
+     {
+      "topic": "キャッシュレス決済の格差",
+      "theme": "デジタル化",
+      "key": "キャッシュレス決済"
+     },
+     {
+      "topic": "献血不足",
+      "theme": "医療・福祉"
+     },
+     {
+      "topic": "空き家のリノベーション活用",
+      "theme": "住まい"
+     },
+     {
+      "topic": "職人の道具作り",
+      "theme": "文化・伝統"
+     }
+    ],
+    "context_words": [
+     "むだ",
+     "華やか",
+     "半透明",
+     "含める",
+     "乏しい",
+     "帰す",
+     "気にかかる"
+    ],
+    "grammar_p8": [
+     "基準準拠(〜に沿って…進める)",
+     "換言要約(〜つまり…ということだ)",
+     "〜つつある",
+     "理由説明(〜のは…からだ)",
+     "目的結果(〜ために…なった)"
+    ],
+    "paraphrase": [
+     "やかましい",
+     "用心する",
+     "だらしない(いい加減だ)",
+     "案の定(やっぱり)",
+     "妥当だ"
+    ]
+   },
+   "draw": {
+    "kanji_reading": 5,
+    "orthography": 5,
+    "word_formation": 3,
+    "context_words": 7,
+    "paraphrase": 5,
+    "usage": 5,
+    "grammar_p7": 12,
+    "grammar_p8": 5,
+    "quick_response": 11,
+    "listening_scenarios": 21,
+    "reading_topics": 12
+   }
   }
  ]
 }

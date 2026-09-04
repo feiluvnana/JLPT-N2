@@ -225,6 +225,21 @@ make scaffold-explanations <id>            # -> 詳細解説.json, stems/options
 make scaffold-explanations <id> LANG=vi    # -> 詳細解説.vi.json, an EMPTY skeleton
 ```
 
+**Count the items the scaffold gives you before you write into it.** A
+generated N2 paper is 101 entries and an import is 101 (or 75 + 聴解 for a
+四-question sitting); `check_kaisetsu_item_coverage` now FAILs a short file,
+because every OTHER 詳細解説 line in the gate measures the entries that are
+present and is therefore blind to a missing one. The scaffold shipped a
+100-item file for two papers: `derive_choukai_raw` split a two-question 問題5
+only on literal 「質問1。」/「質問2。」 markers, which official sittings and imports
+carry and this repo's generated scripts (20260828_2 onward) do not, so 問5-2
+came back as ONE entry holding 質問1's four options with `[正解]` on option 1.
+`20260903_1` shipped that way — 100 items, plus a spurious empty `問5-2` card in
+`模範解答.html`, because `build_model_answer`'s `all_choukai_keys` unions the
+derived keys with the markdown ones. Fixed 2026-09-04 in
+`verify_fidelity._split_spoken_block`, which now recovers an unmarked 質問
+positionally (the narration line directly before each option group).
+
 Then complete `why_correct`, `options_analysis` and `points` per item, inside
 the terseness bands. Validate each parses
 (`python3 -c "import json,sys; json.load(open(sys.argv[1]))" tests/<id>/詳細解説.json`),

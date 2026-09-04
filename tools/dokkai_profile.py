@@ -856,7 +856,17 @@ def format_baseline_tables(profiles: list[PaperProfile]) -> str:
 
     lines.append(f"| median sentence length (JP chars) | {min(med_sents):.1f}–{max(med_sents):.1f} | {statistics.median(med_sents):.1f} | 33–43 (FAIL outside 28–50) |")
     lines.append(f"| share of sentences < 25 chars | {min(under_25s):.1%}–{max(under_25s):.1%} | {statistics.median(under_25s):.1%} | 12–30% |")
-    lines.append(f"| kanji density (% of JP chars) | {min(kanjis):.1%}–{max(kanjis):.1%} | {statistics.median(kanjis):.1%} | 24–32% (FAIL outside 22–34%) |")
+    # S2 (qa-report-20260904_1). The AUTHOR TARGET is re-derived from the two
+    # numbers to its left and now reads 25–30, the archive's own current-era
+    # range rounded inward — it read 24–32, i.e. wider than the papers it was
+    # supposed to describe on BOTH sides, and all 21 generated papers landed
+    # 30.2–33.9 %, every one of them above official's maximum. The GATE bands
+    # are printed beside it unchanged and on purpose: lowering the WARN band to
+    # 25–30 would move 17 of 21 shipped papers from ok to WARN and lowering the
+    # FAIL ceiling from 34 to 31 would fail them, so that is a separate,
+    # stated proposal (§6.5's re-run-and-state rule), not a side effect of
+    # fixing the doc. Author to 25–30; the gate still passes 24–32 / 22–34.
+    lines.append(f"| kanji density (% of JP chars) | {min(kanjis):.1%}–{max(kanjis):.1%} | {statistics.median(kanjis):.1%} | author 25–30% (gate WARNs outside 24–32%, FAILs outside 22–34%) |")
     lines.append(f"| です・ます share in essay passages | {min(polites):.1%}–{max(polites):.1%} | {statistics.median(polites):.1%} | ≥3 passages throughout |")
     lines.append(f"| first-person essay passages share | {min(fps):.1%}–{max(fps):.1%} | {statistics.median(fps):.1%} | ≥4 of 12 surfaces |")
     if mgn:
