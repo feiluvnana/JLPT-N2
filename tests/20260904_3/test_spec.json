@@ -1,0 +1,377 @@
+{
+ "seed": "26005358+reroll-one(grammar_p8:3,11378684)",
+ "generated_at": "2026-09-05 02:01:19",
+ "test_id": "20260904_3",
+ "rotation": {
+  "recency_source": "ledger",
+  "history_len": 22,
+  "cooldown": 4,
+  "verified_items": [
+   "〜をきっかけに"
+  ]
+ },
+ "pools_sha": "f6c4fc3f375d",
+ "items": {
+  "kanji_reading": [
+   "専門家(せんもんか)",
+   "投資(とうし)",
+   "父親(ちちおや)",
+   "祖先(そせん)",
+   "名物(めいぶつ)"
+  ],
+  "orthography": [
+   "塩辛い",
+   "安易",
+   "適切",
+   "下駄",
+   "診る(医師が)"
+  ],
+  "word_formation": [
+   "各〜(各分野)",
+   "他〜(他人)",
+   "共〜(共同)"
+  ],
+  "context_words": [
+   "進化",
+   "本来",
+   "つぶす",
+   "にくらしい",
+   "手をつける",
+   "現に",
+   "かつて"
+  ],
+  "paraphrase": [
+   "粗末だ(貧しい/不十分だ)",
+   "悩む(困る)",
+   "荒っぽい(乱暴だ)",
+   "じたばたする",
+   "慌ただしい(忙しい)"
+  ],
+  "usage": [
+   "手際",
+   "消耗",
+   "脱線",
+   "取り組む",
+   "強化する"
+  ],
+  "grammar_p7": [
+   "〜抜きで(は)",
+   "〜をめぐって",
+   "〜かねる",
+   "〜たとたん",
+   "〜かねない",
+   "〜までして・てまで",
+   "〜だらけ",
+   "〜と仮定すると",
+   "〜まい",
+   "〜限りは",
+   "〜きり",
+   "〜というものだ"
+  ],
+  "grammar_p8": [
+   "限定表現(〜のみならず…も)",
+   "〜ないことには",
+   "対比表現(〜一方…だ)",
+   "〜をきっかけに",
+   "経過状況(〜つつ…する)"
+  ],
+  "quick_response": [
+   "耳が痛い",
+   "課長、出張の経費の清算ですが、領収書はこちらでよろしいでしょうか。",
+   "ゴミの分別方法、ご存知ですか。",
+   "落とし物を拾いました。心当たりはありますか。",
+   "お言葉に甘えて",
+   "恐れ入りますが",
+   "お客様、ただいま満席となっておりますので、少々お待ちいただけますでしょうか。",
+   "来週の出張の件ですが、新幹線のチケットを手配しておきましょうか。",
+   "急なご依頼で大変恐縮ですが、明日までにこちらのデータをご確認いただけますでしょうか。",
+   "あの企画、思ったより反応がよくてびっくりしたよ。",
+   "先方のご要望に沿えるよう、もう一度検討してみます。"
+  ],
+  "listening_scenarios": [
+   {
+    "scenario": "社労士:手続相談",
+    "theme": "行政・手続き"
+   },
+   {
+    "scenario": "会社:来客対応の引き継ぎ",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "人事部からの健康診断のお知らせ",
+    "theme": "睡眠・健康",
+    "origin": "reauthored",
+    "note": "聴解問題3-2番 re-angled onto another gist the same drawn scenario supports, to repair QA round-1 F4 and the 聴解 half of F5. F4: 「変え」 sat in exactly 2 of 問題3's 24 spoken options and both were keys (2番 「今年から変える、健康診断の日の決め方」 / 3番 「会場を作る人の分け方を変えたこと」), zero distractors — the same key-exclusive-handle class as 20260904_1 F4. F5: the old talk was 「an organisation changes the administrative procedure of a staff health screening」, which is the same MOVE as 問題10(4) (健康保険組合が人間ドックの費用の受け方を改める) in the same paper. The scenario and theme are unchanged; only the talk's gist moved, off 手続きの変更 and onto 結果の取り扱い. New deciding line, verbatim: 「血圧や血液の細かい数字に目を通すのは、産業医と保健師の二人だけです」＋「人事部に届くのは、だれが受けて、だれが受けていないか、その名前の一覧だけです」. New key (option 3, the prescribed position): 「健康診断の結果をあつかう社内の範囲」. 「変え」 now occurs in exactly one 問題3 option."
+   },
+   {
+    "scenario": "家庭支援センター:相談予約",
+    "theme": "子育て・家族"
+   },
+   {
+    "scenario": "居酒屋:宴会コースの相談",
+    "theme": "食"
+   },
+   {
+    "scenario": "カフェ:テイクアウト",
+    "theme": "食"
+   },
+   {
+    "scenario": "資格試験の受験会場と持ち物案内",
+    "theme": "教育"
+   },
+   {
+    "scenario": "営業:クレーム対応",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "自動車教習所:高齢者講習の案内",
+    "theme": "交通"
+   },
+   {
+    "scenario": "公民館:サークル発表会の準備",
+    "theme": "地域活性化"
+   },
+   {
+    "scenario": "携帯ショップ:料金プランの見直し",
+    "theme": "消費・経済"
+   },
+   {
+    "scenario": "講演会:学習法",
+    "theme": "教育"
+   },
+   {
+    "scenario": "イベント会場:準備の分担",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "サークル:新入部員の歓迎会準備",
+    "theme": "人間関係"
+   },
+   {
+    "scenario": "コンビニ:新サービスの案内",
+    "theme": "食",
+    "origin": "reauthored",
+    "note": "聴解問題3-5番 re-angled onto another gist the same drawn scenario supports, to repair QA round-2 F2 — the other half of the pair described in the 弁当店:法人注文 note. The scenario, the theme and the key POSITION are unchanged; only the talk's arc and its deciding lines moved, off <想定外の制約の発見（心配していたのは人手、本当の難点は受け渡しの時刻）> and onto <これから始める人への助言>. New deciding lines, verbatim: 「新しいことを始めるときは、始め方より、やめる目安を先に決めることです」＋「決めた数が紙にあると、続けるか、やめるかで言い争わずにすみます」. New key (option 3, the prescribed position): 「始める前にやめる目安を決めておくこと」. 問題3の例 was also moved off the same arc, onto <自分の方針とその理由の説明>, with its key unchanged, so it carries no stamp."
+   },
+   {
+    "scenario": "水族館:団体割引の相談",
+    "theme": "スポーツ・余暇"
+   },
+   {
+    "scenario": "会社:在宅勤務制度の説明",
+    "theme": "働き方"
+   },
+   {
+    "scenario": "コンサート会場:入場方法の案内",
+    "theme": "文化・伝統"
+   },
+   {
+    "scenario": "カーシェア:返却場所",
+    "theme": "交通"
+   },
+   {
+    "scenario": "弁当店:法人注文",
+    "theme": "食",
+    "origin": "reauthored",
+    "note": "聴解問題3-1番 re-angled onto another gist the same drawn scenario supports, to repair QA round-2 F2. At the finding, 問題3 ran one narrative arc in FOUR of its six talks (例・1番・3番・5番: 以前／想定と違った→変えた→効いた), and 1番 and 5番 additionally shared speaker type, venue and crux — a small food-retail owner at a 講演／講座 whose deciding line is the timing of getting food to the customer — against official 7/2025's 1 of 5. The scenario, the theme and the key POSITION are unchanged; only the talk's arc and its deciding lines moved, off <想定外の制約の発見> and onto <条件の提示>. New deciding lines, verbatim: 「一つは、お渡しできる時刻に幅があること」＋「もう一つは、数が急に増えても断らないこと」. New key (option 2, the prescribed position): 「会社からの注文を受ける店に要ること」. After the repair the six 問題3 arcs are 方針の説明 / 条件の提示 / 範囲の説明 / 以前→変更→効果 / 注意の案内 / 助言 — one row each, counted by hand."
+   },
+   {
+    "scenario": "旅館:食事場所の希望確認",
+    "theme": "食",
+    "origin": "reauthored",
+    "note": "聴解問題2-6番 was moved to slot 4番 and its keyed emotion re-angled, to repair QA round-1 F3. The old item was 気持ち keyed 安心 in key position 1 at slot 2-6番 — the same slot, 質問型, valence, key position and trigger shape (a provider volunteers an accommodating fact that dissolves a stated worry; the customer opens 「よかった。」＋「〜と思ってた」) as 20260904_2's own 2-6番. The scenario and theme are unchanged. 問題2-4番 and 2-6番 both key to 1, so the two script blocks, printed option blocks, 解説 rows and 構成表 rows were swapped with no option re-ordering and no change to answer_positions; the 気持ち item then had its valence moved off 安心 onto 納得・割り切り. New deciding lines, verbatim: 「お部屋でのお夕食は、この時季はお受けしておりませんで」＋「ただ、そのお席は、五時半にお入りいただく回だけになっておりまして」＋「部屋でゆっくり、というわけにはいきませんけど、子どもは八時には寝ちゃいますから、かえってそのくらいがちょうどいいのかもしれませんね」. New key (option 1, the prescribed position): 「希望した場所ではないが、この席でよいと思っている」."
+   }
+  ],
+  "reading_topics": [
+   {
+    "topic": "医療的ケア児の支援体制",
+    "theme": "医療・福祉"
+   },
+   {
+    "topic": "SNSでの誤情報の拡散防止",
+    "theme": "メディア・情報"
+   },
+   {
+    "topic": "オンライン教育の効果",
+    "theme": "教育"
+   },
+   {
+    "topic": "観光ガイドの多言語対応",
+    "theme": "旅行・観光"
+   },
+   {
+    "topic": "言語の獲得と脳科学のメカニズム",
+    "theme": "科学・技術"
+   },
+   {
+    "topic": "道具と愛着",
+    "theme": "文化・伝統"
+   },
+   {
+    "topic": "昆虫食の可能性",
+    "theme": "食"
+   },
+   {
+    "topic": "地理的要因と地方創生・都市集中",
+    "theme": "地域活性化"
+   },
+   {
+    "topic": "避難所運営における多様性への配慮",
+    "theme": "防災"
+   },
+   {
+    "topic": "自動運転バスの実証実験",
+    "theme": "交通"
+   },
+   {
+    "topic": "健康保険組合からの人間ドック補助案内",
+    "theme": "睡眠・健康"
+   },
+   {
+    "topic": "高齢者向け軽スポーツの普及",
+    "theme": "スポーツ・余暇"
+   }
+  ]
+ },
+ "answer_positions": {
+  "問題1_語彙": [
+   4,
+   3,
+   1,
+   2,
+   2
+  ],
+  "問題2_語彙": [
+   4,
+   3,
+   1,
+   4,
+   1
+  ],
+  "問題3_語彙": [
+   4,
+   1,
+   3
+  ],
+  "問題4_語彙": [
+   1,
+   3,
+   2,
+   3,
+   1,
+   4,
+   3
+  ],
+  "問題5_語彙": [
+   2,
+   1,
+   4,
+   3,
+   4
+  ],
+  "問題6_語彙": [
+   4,
+   2,
+   2,
+   1,
+   4
+  ],
+  "問題7": [
+   1,
+   3,
+   4,
+   3,
+   4,
+   2,
+   3,
+   1,
+   1,
+   4,
+   2,
+   2
+  ],
+  "問題8": [
+   1,
+   1,
+   2,
+   4,
+   2
+  ],
+  "問題9": [
+   4,
+   2,
+   2,
+   3
+  ],
+  "問題10": [
+   2,
+   3,
+   3,
+   1,
+   2
+  ],
+  "問題11": [
+   1,
+   4,
+   3,
+   2,
+   3,
+   3,
+   1,
+   3
+  ],
+  "問題12": [
+   3,
+   2
+  ],
+  "問題13": [
+   3,
+   4,
+   2
+  ],
+  "問題14": [
+   1,
+   3
+  ],
+  "聴解_問題1": [
+   4,
+   4,
+   1,
+   3,
+   4
+  ],
+  "聴解_問題2": [
+   1,
+   2,
+   2,
+   1,
+   3,
+   1
+  ],
+  "聴解_問題3": [
+   2,
+   3,
+   4,
+   1,
+   3
+  ],
+  "聴解_問題4": [
+   2,
+   2,
+   3,
+   1,
+   2,
+   3,
+   1,
+   1,
+   3,
+   1,
+   1
+  ],
+  "聴解_問題5": [
+   2,
+   4,
+   1
+  ]
+ }
+}

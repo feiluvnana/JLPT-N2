@@ -107,7 +107,24 @@ defect through.
   - **any passage, dialogue, 例, stem, or option copied verbatim from `refs/`
     or from an `imported-*` paper** (`jlpt-test-generation` §Invariants:
     reference material is calibration only) — check against imported papers
-    directly, not just test-against-test;
+    directly, not just test-against-test. **A RE-AUTHORED surface's provenance
+    scan must be re-run against `refs/` and `tests/imported-*`, because the scan
+    that cleared the pre-fix text is evidence about text that no longer
+    exists.** A round-1 finding of this class names a threshold against the
+    previous GENERATED papers, and a fix pass will meet exactly the threshold it
+    was given: `20260904_3`'s 問題14 was re-authored to clear a
+    near-verbatim-vs-`20260904_1`/`_2` automatic fail, measured 10 chars against
+    both — and landed on official 7/2025's 問題14 (`tests/imported-n2-2025-07`),
+    reproducing its five-course ①〜⑤ 公開講座 notice, its one-course-without-実習
+    device, its 定員+抽選, its 受付期間 split at ①② / ③④⑤, its
+    past-the-deadline-until-N-days-before-開講-phone-to-check late route, both
+    stems (「〜さんはどのように申し込まなければならないか」, 21 chars verbatim,
+    against 10–13 for every other paper on disk) and its Q71 date × method
+    option grid. **The string run is the trigger, never the verdict** — a stem
+    SHAPE shared with official is legitimate; what fails is the apparatus,
+    and none of those seven coincidences is string-decidable. Round 2 of a
+    fixed paper owns this scan for every surface the fix pass rewrote
+    (`qa-report-20260904_3-round2.md` F1);
   - **a surface's `theme` in `test_spec.json` disagreeing with the same
     surface's `theme` in `logs/topics.json` WHERE `topics.json` relieves a
     quota or headline collision that the spec value creates** — a relabel in

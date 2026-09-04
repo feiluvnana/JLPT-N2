@@ -222,31 +222,39 @@ objects would orphan the shipped ledger rows that name them.
   〜ばかりに vs 〜ばかりか, 〜として vs 〜としても and
   〜ない限り vs 〜に限らず are **not** families — Shin Kanzen headlines them
   separately and folding them would refuse honest draws.
-- **A `/` in a pool entry means "or", and a slashed entry is a family, not a
-  tokenizer case (F2, `qa-report-20260904_2`, 2026-09-05).** `〜おかげで/せいで`
-  names two spellings of one slot, so `grammar_form_tokens()` gave it the single
-  token `form»おかげで/せいで` while `grammar_p8`'s `〜おかげで` gave
+- **A `/` in a pool entry means "or", and it is BOTH a family and a tokenizer
+  case — in-paper and cross-paper are two separate holes.** `〜おかげで/せいで`
+  names two spellings of one slot, so `grammar_form_tokens()` originally gave it
+  the single token `form»おかげで/せいで` while `grammar_p8`'s `〜おかげで` gave
   `form»おかげで` — disjoint, so `taken_tokens()` treated them as strangers and
-  `20260904_2` drew both, keying the point in 問題7 and framing it in 問題8.
-  **Splitting the tokenizer on `/` was written, run against the whole corpus, and
-  reverted**: that token feeds `identity_tokens()`, i.e. the CROSS-paper
-  cooldown, and the widened predicate put three shipped papers in breach of
-  `check_grammar_cross_category_rotation()` — `20260817_2` and `20260818_1` (both
-  already grandfathered, so a new WARN line each) and **`20260904_2`, which is
-  not exempt and turned the gate RED**: its 問題7 「〜おかげで/せいで」 sits 9 draws
-  after `20260818_1`'s 問題8 「〜おかげで」 against a 10-draw window. Nothing about
-  those draws was wrong when they were made; only the predicate moved, and the
-  standing rule is that a widened predicate must not re-classify shipped work.
-  The family map is the correct instrument because it is **in-paper only**, which
-  is exactly the defect QA filed, and because
-  `check_pool_grammar_form_families()` lists a slashed pair by construction (its
-  prefix test folds 「おかげで/せいで」 onto 「おかげで」) — so the next slashed entry
-  is surfaced mechanically, not left to memory. `〜得る/得ない`, the only other
-  slashed entry in 214 grammar rows, needs no family: nothing else spells 得る or
-  得ない as its own form, and 「〜ざるを得ない」 is a separate point whose token is the
-  whole 「ざるを得ない」. `grammar_form_parts()` must keep `/` UNSPLIT for a second
-  reason — it is the ordered skeleton `check_key_grammar_exposure()` greps the
-  読解 prose with, and 「得る…得ない」 is not a pattern that exists.
+  `20260904_2` drew both, keying the point in 問題7 and framing it in 問題8
+  (F2, `qa-report-20260904_2`, 2026-09-05). Tagging the pair in
+  `grammar_form_families` closed the IN-PAPER half that day. It could not close
+  the CROSS-PAPER half, because `form_family_tokens()` never enters
+  `identity_tokens()` — and **the hole recurred within one paper**: `20260904_3`'s
+  blueprint drew `〜おかげで` into 問題8 one paper after `20260904_2` keyed
+  `〜おかげで/せいで`, with every gate green, caught only by a hand check and
+  repaired with `--reroll-one grammar_p8:3`.
+  **`grammar_form_tokens()` therefore splits `/` (2026-09-05).** Its output is a
+  SET, where "or" is what a set already means, so the split belongs there and
+  nowhere else. Measured over `pools.json` and all 24 generated specs the day it
+  landed, it moves exactly three papers in
+  `check_grammar_cross_category_rotation()`, all on 「おかげで」: `20260817_2` and
+  `20260818_1` (both already grandfathered, so one new WARN line each) and
+  `20260904_2`, **added to `GRAMMAR_CROSS_ROTATION_GRANDFATHERED` with the
+  change** — its 問題7 「〜おかげで/せいで」 sits 9 draws after `20260818_1`'s 問題8
+  「〜おかげで」 against a 10-draw window. Nothing about those draws was wrong when
+  they were made; only the predicate moved, and a widened predicate
+  grandfathers shipped work rather than re-classifying it.
+  Keep the family tag anyway: it is what
+  `check_pool_grammar_form_families()` and `check_p8_form_family()` read, and it
+  states the relation for a human. `〜得る/得ない`, the only other slashed entry in
+  214 grammar rows, needs no family and gains only `form»得ない` (「得る」 is 2
+  characters, under `GRAMMAR_FORM_MIN`); that token is unique in the pool, since
+  「〜ざるを得ない」 is a separate point whose token is the whole 「ざるを得ない」.
+  `grammar_form_parts()` must still keep `/` UNSPLIT — it is the ORDERED skeleton
+  `check_key_grammar_exposure()` greps the 読解 prose with, and 「得る…得ない」 is not
+  a pattern that exists.
 - `check_p8_form_family()` FAILs a spec drawing two of one family (measured over
   all 21 generated specs: none does, so no id is grandfathered), and
   `check_pool_grammar_band()` asserts every family key names a live pool entry

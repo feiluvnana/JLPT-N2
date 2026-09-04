@@ -306,6 +306,36 @@ four products back against the stem kana. Doing this on paper is the check — "
 grid is complete" is not, and neither is "the kanji look alike". (`make matrix`
 validates only: both generators are hard-disabled until a real 音訓 table exists.)
 
+### What `matrix_helper.py validate` can and cannot decide
+
+`python3 tools/matrix_helper.py validate --reading <かな> <4 options>` is a
+narrow instrument, and two consecutive authors have independently taken its FAIL
+for a verdict on the item. **A FAIL is a question, not a defect** — and the one
+answer it must never get is a substituted item (§"Build the set BEFORE you accept
+the target": the target is drawn, the repair is `--reroll-one`).
+
+**It CAN decide** exactly two things about a 音読み compound grid: the Cartesian
+shape `{A,B}×{C,D}`, and — with `--reading` — whether every option parses as the
+stem kana. On 「かいこう 開港 開向 回港 回向」 it prints both certifications with the
+per-component readings, which is the check §"Procedure" asks for, done for you.
+
+**It CANNOT decide** anything else, for two measured reasons (runs of 2026-09-05):
+
+- It splits each option at ONE character index, so a **長短 axis** — そ/そう,
+  めい/みょう — cannot be expressed: 「そし そうし そじ そうじ」 is a perfect 2×2 and
+  prints `FAIL (Asymmetric Options)`. So does 「険しい 験しい 検しい 剣しい」, which
+  is 4×1 by design (§"Single-kanji stems with okurigana").
+- Its kana skeleton reads pykakasi's Kanwa table, which is missing 常用音訓 it
+  needs: no `辛(から-い)`, no `診(み-る)`, no okurigana segmentation for
+  `おさ-める`/`けわ-しい`, and no way to reach 下駄's exceptional unvoiced 「た」.
+  Every one of 「辛い 甘い 苦い 渋い」 (official 7/2025's own set), 「収める 治める
+  修める 納める」, 「険しい …」 and 「下駄 …」 reports `has no reading segmentation`.
+
+So it certifies **no 訓読み, 同訓異字 or 送り仮名 set at all** — and those are
+official item shapes, not defects. On such a set, hand-verify each option's
+reading against the 常用漢字表, record that in the 解説 cell (「辛=から-い、甘=あま-い
+…いずれも常用音訓」), and move on with the tool red.
+
 ## Every printed glyph must be 常用 — `references/joyo_kanji.txt` decides it
 
 **Every constituent kanji glyph must be a legitimate, standard 常用/N2 kanji** —

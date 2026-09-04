@@ -6103,8 +6103,10 @@ P8_FAMILY_COVERAGE_MIN = 0.50
 # drawing category's own cooldown window, measured over the whole ledger the day
 # `grammar_form_tokens()` landed (2026-08-20). All nine were drawn while the two
 # categories rotated independently, so `draw()` could not have refused the pick;
-# with the token in place the exclusion is by construction and any NEW id here
-# means a hand-edited spec, not a sampler gap. Clearing one means
+# with the token in place the exclusion is by construction and a NEW id here
+# means either a hand-edited spec or — as with the 2026-09-05 alternation split
+# below — a paper whose draw predates a widening of the token itself. Neither is
+# a sampler gap; a paper that the CURRENT sampler could still draw is. Clearing one means
 # `--reroll-one grammar_p8:<index>` and re-authoring that 問題8 item, which is a
 # decision about those papers, not about this gate. `20260819_1` is deliberately
 # ABSENT: it is the founding case and it was repaired
@@ -6118,6 +6120,19 @@ GRAMMAR_CROSS_ROTATION_GRANDFATHERED = {
     "20260817_1",   # p8 感情強調(〜てたまらない) vs 20260813_1 p7 〜てたまらない
     "20260817_2",   # p8 原因理由構文(〜ばかりに…てしまった) vs 20260813_2 p7 〜ばかりに
     "20260818_1",   # p7 〜につれて / 〜のみならず vs 20260810_1 / 20260811_1 p8
+    # ALTERNATION SPLIT, 2026-09-05. `sample.grammar_form_tokens()` now splits a
+    # slashed pool entry (「〜おかげで/せいで」 -> form»おかげで + form»せいで), which
+    # is what lets the CROSS-PAPER cooldown see a point the pool spells two ways.
+    # Measured over all 24 generated specs the day it landed, the split moves
+    # exactly three papers, all on 「おかげで」: 20260817_2 and 20260818_1 each gain
+    # one line and were already on this list (they now WARN), and 20260904_2 is
+    # the one id that would newly turn the gate RED — its 問題7 「〜おかげで/せいで」
+    # sits 9 draws after 20260818_1's 問題8 「〜おかげで」 against a 10-draw window.
+    # It is committed and its draw predates the predicate, so it is grandfathered,
+    # not repaired. The hole this closes had already recurred: 20260904_3's
+    # blueprint drew 〜おかげで into 問題8 ONE paper after 20260904_2 keyed
+    # 〜おかげで/せいで, green on every gate, and only a hand check caught it.
+    "20260904_2",   # p7 〜おかげで/せいで vs 20260818_1 p8 〜おかげで (alternation)
 }
 
 
@@ -6210,7 +6225,8 @@ def check_grammar_cross_category_rotation(d, spec: dict, sample, pools: dict):
     drawn into `grammar_p8` by a paper inside that category's own
     `cooldown_for()` window, or vice versa. The form is
     `sample.grammar_form_tokens()`: the 類型 wrapper stripped, then cut on
-    「…」/「・」/「〜」, chunks of 3+ characters kept.
+    「…」/「・」/「〜」 and on `/` (alternation — a slashed entry is one point spelled
+    two ways), chunks of 3+ characters kept.
 
     THE INCIDENT (qa-report-20260819_1 F1, AUTOMATIC fail): `20260819_1` drew
     `限定表現(〜のみならず…も)` and `変化推移(〜につれて…ていく)` into 問題8 after
@@ -7516,7 +7532,17 @@ PLACE_STOP = {"都市", "大都市", "地方都市", "市町村", "朝市", "労
               "ある市", "ある町", "別の市", "同じ市", "他の市", "海外の市",
               "海外市", "見知らぬ町", "この町", "近くの町", "港町", "城下町",
               "商店街の朝市", "温泉町", "全市", "各市", "同市", "本市", "本籍地が市",
-              "十五分都市"}
+              "十五分都市",
+              # 2026-09-05 (20260904_3 stage 3): PLACE_NAME's 2-4 char window
+              # runs straight through hiragana particles, so a 申込 deadline
+              # line 「…十月三十一日までに市防災課の窓口か…」 measures as the
+              # "place name" 「日までに市」 — and `20260904_2` writes the same
+              # 「…九月三十日までに市のホームページから…」, so two papers that
+              # share nothing but a date-plus-市 collocation FAILed as sharing
+              # a letterhead. Stop-listed rather than reworded, because the
+              # content is not defective: dodging a regex by re-tagging prose
+              # is the thing `exam-qa-review` §Ground rules forbids.
+              "日までに市"}
 PLACE_LOOKBACK = 2      # the previous two papers, same window as the theme rules
 
 

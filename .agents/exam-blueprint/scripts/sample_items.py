@@ -1313,6 +1313,10 @@ GRAMMAR_FORM_NS = "form»"
 GRAMMAR_FORM_MIN = 3        # 「わりに」 is the shortest dual-listed form; 2 would
                             # collide kana tails across unrelated points
 _GRAMMAR_FORM_ENTRY = re.compile(r"^(?P<label>[^(（]*)[(（](?P<inner>.+)[)）]\s*$")
+# Alternation inside ONE chunk: 「〜おかげで/せいで」 is one point spelled two ways,
+# not an ordered skeleton. Split in `grammar_form_tokens()` ONLY — see both
+# docstrings below for why `grammar_form_parts()` must leave it alone.
+_GRAMMAR_FORM_ALT = re.compile(r"[/／]")
 
 
 def grammar_form_parts(entry) -> list[str]:
@@ -1325,19 +1329,19 @@ def grammar_form_parts(entry) -> list[str]:
     Order is kept because a discontinuous pattern is only that pattern when its
     chunks occur in order — `check_key_grammar_exposure()` matches the whole
     skeleton (「のは…からだ」), not one chunk of it, and a set could not express
-    that. `grammar_form_tokens()` below is this list filtered and namespaced, so
-    the two can never disagree about what the FORM of an entry is.
+    that. `grammar_form_tokens()` below is this list alternation-split, filtered
+    and namespaced, so the two can never disagree about what the FORM of an entry
+    is (see the `/` paragraph below for the one thing they do differ on).
 
-    `/` is NOT a chunk separator, and must not become one: it means "or", not
-    "then". `〜得る/得ない` is two alternative forms, not the ordered skeleton
-    「得る…得ない」, and joining its halves with a gap would make
-    `check_key_grammar_exposure()` hunt the 読解 prose for a pattern that does not
-    exist. No `grammar_p8` entry carries a `/` today (the only two slashed
-    entries are `grammar_p7`'s `〜得る/得ない` and `〜おかげで/せいで`) and that
-    check reads `grammar_p8` only, so nothing reaches the hazard — putting a
-    slashed entry into `grammar_p8` means teaching the exposure check about
-    alternation first. Two slashed entries that are one point are folded by
-    `grammar_form_families` instead (`grammar_form_tokens()` records why).
+    `/` is NOT a chunk separator HERE, and must not become one: in an ORDERED
+    skeleton it would mean "then", and it means "or". `〜得る/得ない` is two
+    alternative forms, not the skeleton 「得る…得ない」, and joining its halves with
+    a gap would make `check_key_grammar_exposure()` hunt the 読解 prose for a
+    pattern that does not exist. That check reads this function, so the split
+    must not happen here — `grammar_form_tokens()` below splits `/` on its own,
+    into an UNORDERED token set where "or" is exactly what a set means. The two
+    therefore agree about what an entry's FORM is and disagree only about
+    alternation, which is the one thing an ordered list cannot express.
     """
     t = item_text(entry)
     if not re.search(r"[〜～]", t):
@@ -1358,39 +1362,43 @@ def grammar_form_tokens(entry) -> set[str]:
     token, which is the whole point. `〜しかない・よりほかない` -> both halves.
     `〜上(で)` -> {} (the gloss carries no 〜, and 「上」 is one character).
 
-    ALTERNATION (`/`) IS DELIBERATELY NOT SPLIT HERE — a slashed entry is folded
-    by `grammar_form_families` instead (F2, qa-report-20260904_2). The defect:
-    `〜おかげで/せいで` yields the single token `form»おかげで/せいで` while
-    `grammar_p8`'s `〜おかげで` yields `form»おかげで`, so the two are strangers to
-    `taken_tokens()` and `20260904_2` drew both — one grammar point keyed in 問題7
-    and framed in 問題8, exactly what this function exists to prevent.
+    ALTERNATION (`/`) IS SPLIT HERE, and only here (2026-09-05). A slashed pool
+    entry spells two alternatives of ONE point: `〜おかげで/せいで` ->
+    {`form»おかげで`, `form»せいで`}, so it now shares `form»おかげで` with
+    `grammar_p8`'s `〜おかげで`. `grammar_form_parts()` must keep `/` unsplit —
+    there the chunks are an ORDERED skeleton and `check_key_grammar_exposure()`
+    would go hunting the 読解 prose for 「得る…得ない」 — so the split lives in this
+    function, whose output is a SET, where "or" is what a set already means.
 
-    Splitting `/` here was written, run against the whole corpus, and REVERTED,
-    because this token feeds `identity_tokens()` — the CROSS-PAPER cooldown — and
-    widening it re-classifies draws that are already out. Measured 2026-09-05:
-    `〜おかげで/せいで` gaining `form»おかげで` puts three shipped papers in breach
-    of `check_grammar_cross_category_rotation()` — `20260817_2` and `20260818_1`
-    (both already in `GRAMMAR_CROSS_ROTATION_GRANDFATHERED`, so they gain a WARN
-    line each) and `20260904_2`, which is NOT exempt and turns the gate RED:
-    its `grammar_p7` 「〜おかげで/せいで」 lands 9 draws after `20260818_1`'s
-    `grammar_p8` 「〜おかげで」 against a 10-draw window. Nothing about those draws
-    was wrong when they were made; only the predicate moved.
+    THE INCIDENT, in two halves. IN-PAPER first (F2, qa-report-20260904_2):
+    `20260904_2` keyed `〜おかげで/せいで` in 問題7 and framed `〜おかげで` in 問題8,
+    because the single token `form»おかげで/せいで` made the two strangers to
+    `taken_tokens()`. That half was closed on 2026-09-05 by tagging the pair in
+    `grammar_form_families`, and the split here now closes it a second time, by
+    construction. CROSS-PAPER second, and it is why the split landed: the family
+    map is IN-PAPER only (`form_family_tokens()` goes into `taken_tokens()` and
+    never into `identity_tokens()`), so the cooldown stayed blind — and the very
+    next paper's blueprint stage, `20260904_3`, drew `〜おかげで` into `grammar_p8`
+    ONE paper after `20260904_2` keyed `〜おかげで/せいで`, with every gate green.
+    It was caught by a hand check and rerolled. The next one would not be.
 
-    The family map is the right instrument for the same reason it exists at all:
-    it is IN-PAPER only (`taken_tokens()`, never `identity_tokens()` — see
-    `form_family_tokens()`), and 「one form in two 大問 of ONE paper」 is precisely
-    the defect QA filed. `check_pool_grammar_form_families()` had already listed
-    this pair as its first untagged candidate, and it lists a slashed pair by
-    construction (its prefix test folds 「おかげで/せいで」 onto 「おかげで」), so a
-    future slashed entry is surfaced mechanically rather than trusted to memory.
-
-    Measured over `pools.json` the same day: 2 of 214 grammar entries carry a
-    slash, both `grammar_p7`. `〜得る/得ない` needs no family — no other entry
-    spells 得る or 得ない as its own form, and 「〜ざるを得ない」 is a separate point
-    Shin Kanzen headlines separately, whose token is the whole 「ざるを得ない」.
+    FOUNDING MEASUREMENT, run over `pools.json` and all 24 generated specs on
+    disk 2026-09-05. **2 of 214 grammar entries carry a slash, both
+    `grammar_p7`.** Splitting them moves exactly three papers in
+    `check_grammar_cross_category_rotation()`, all on 「おかげで」: `20260817_2` and
+    `20260818_1` (both ALREADY in `GRAMMAR_CROSS_ROTATION_GRANDFATHERED`, so each
+    gains one WARN line) and `20260904_2` (grandfathered 2026-09-05 with this
+    change — its draw predates the predicate). No paper's draw was wrong when it
+    was made; only the predicate moved. Splitting `〜得る/得ない` yields
+    {`form»得ない`} alone — 「得る」 is 2 characters, below GRAMMAR_FORM_MIN — and
+    that token is unique in the pool: 「〜ざるを得ない」 is a separate point Shin
+    Kanzen headlines separately, whose token is the whole 「ざるを得ない」, so the
+    split creates no spurious collision.
     """
-    return {GRAMMAR_FORM_NS + p for p in grammar_form_parts(entry)
-            if len(p) >= GRAMMAR_FORM_MIN}
+    return {GRAMMAR_FORM_NS + q
+            for p in grammar_form_parts(entry)
+            for q in _GRAMMAR_FORM_ALT.split(p)
+            if len(q) >= GRAMMAR_FORM_MIN}
 
 
 def identity_tokens(entry) -> set[str]:
