@@ -210,6 +210,37 @@ time, which is exactly the repair `20260904_2` took (4番 went 規則・制度 +
 than being blocked). Relabelling the cell is NOT the repair: that is the
 `choukai_decider_formula` defect, a false record in an audit artifact.
 
+**AND THE 気持ち ROW HAS A CROSS-PAPER RULE OF ITS OWN** (added 2026-09-05,
+qa-report-20260904_3 F3/R4). Every column above is read WITHIN one paper.
+`20260904_2` and `20260904_3`, one paper apart, both put a 質問型=**気持ち** item
+in 問題2-**6番**, both keyed the valence **安心**, both in key position 1, and
+both on the same trigger shape: a service provider volunteers an accommodating
+fact that dissolves a stated worry, and the customer opens 「よかった。」＋
+「〜と思ってた(んです)」. `check_slot_theme_repeat` compares THEMES (食 vs
+行政・手続き) and saw nothing.
+
+- **The 気持ち item may not sit in the same numbered slot as either of the
+  previous two papers'**, and **its keyed valence may not repeat inside that
+  window** (安心 / 納得 / 心配 / 残念 / 不満 / 意外 / 感謝 / 期待 / あきらめ /
+  迷い / 満足 / 困惑 / 驚き). `check_choukai_kimochi_repeat()` WARNs on both,
+  which is where R4 put the call — a human's.
+- Measured 2026-09-05 over all 23 papers, ten of which carry a 気持ち row: the
+  SLOT line names four (`20260828_1` 1番, `20260828_2` 5番, `20260903_1` 5番,
+  `20260904_3` 4番) and the VALENCE line one (`20260904_1` 心配 against
+  `20260903_1` 心配). `20260904_3`'s hit is **repair collateral** — round 1's
+  F3 fix swapped 問題2-4番↔6番 to get the 気持ち item off `20260904_2`'s slot 6
+  and landed it on `20260904_1`'s slot 4, which is the shape
+  `exam-qa-review` §repair collateral names.
+- **The valence line reads the 正解 cell, so write the emotion IN it.** The
+  same measurement found four of the ten rows unclassifiable — 「ほっとしている」,
+  「ありがたく感じている」, and `20260904_3`'s own 「希望した場所ではないが、この席で
+  よいと思っている」 — and an unclassifiable row is not compared at all (the
+  gate's line says which). Name the valence with one of the words above and the
+  row joins the measurement; the rest of the cell can say whatever it needs to.
+- **Re-slotting is the weaker repair and re-angling the emotion is the stronger
+  one**, in that order — moving the item leaves the same feeling keyed one
+  paper later, which is what the valence line exists to catch.
+
 ### 決め手の位置 — the formula, and the denominator it is measured over
 
 The column above capped 「3 of 6 rows in any one third」 from the day it was
@@ -641,6 +672,59 @@ a real handle rather than a coincidence (`qa-report-20260904_1` F4).
   so it is refuted for that 大問; 問題1/2 print their options, where a shared
   word is on the page for everyone. Over 問題3 alone, none of the eight
   official sittings on disk flags.
+- **The column is read over VERB AND ADJECTIVE LEMMAS, not only 2+-kanji
+  tokens.** `20260904_3`'s own 構成表 asserted 「0件」 from a re-run that used
+  three kanji/katakana/kana patterns, and 「変え」 was sitting in 2 of its 24
+  options — 2番's key 「今年から**変える**、健康診断の日の決め方」 and 3番's key
+  「会場を作る人の分け方を**変えた**こと」, both keys, zero distractors
+  (`qa-report-20260904_3` F4/F8a). One kanji plus okurigana is not a
+  2-kanji token, and two inflections of one verb are not the same string, so
+  the predicate could not represent the case at all. `check_choukai_key_exclusive_token()`
+  now folds 漢字1字＋送りがな to `lemma:<漢字>`, **excluding a trailing kana that
+  is a case particle** (はがをにでともへやかのねよ — without the guard
+  「契約書**で**」 reads as the verb 書く). When you re-run the audit by hand,
+  run the fold too, and say so: an audit table that certifies a measurement is
+  worth exactly the measurement.
+
+**The six talks of one 問題3 must run six DIFFERENT ARCS.** The lexical rule
+above is about WORDS; this one is about how the monologue MOVES, and it is the
+defect a word-level scan cannot see. `20260904_3` ran 「以前／想定と違った →
+変えた → 効いた」 in FOUR of its six talks (例・1番・3番・5番), and 1番 and 5番
+were additionally the same food-retail owner speaking at a 講演会/講座 whose
+crux was the same 受け渡しの時刻 — two of five scored items were one listening
+(`qa-report-20260904_3-round2` F2; `20260904_1` had shipped the same class one
+paper earlier).
+
+Measured against the archive: official **7/2025** runs 一人旅のよさ
+〈自分の好みとその理由の説明〉/ 木の家具 〈物の魅力の説明〉/ 菓子屋
+〈仕事の喜びの語り〉/ 良い睡眠 〈通説の訂正と条件の提示〉/ 米作りロボット
+〈問題→技術の導入→効果〉 — five arcs, **one row each**, and exactly one of the
+five on a problem→solution arc. Official **12/2025**: 片付けの効果
+〈効用の列挙〉/ 研修の評価 〈体験の評価〉/ 子への注意 〈助言〉/ 固形石けん
+〈自分の選択とその良さの説明〉/ 農業体験会 〈取り組みの目的の説明〉 — five arcs,
+one row each. Neither sitting repeats an arc.
+
+- **The 問題3 構成表 carries a 「話の型（アーク）×決め手の領域」 column**, one cell
+  per row, both halves from the vocabulary below. It is a declared column and
+  not a derived one on purpose: an arc is a claim about a 300-character
+  monologue, no regex decides it, and a guessing predicate would either miss
+  this defect or fail a real sitting.
+- **No two rows may share BOTH tokens** (`check_topics_p3_archetype_repeat()`
+  FAILs), and **no arc may fill more than 2 of the rows** (WARN — official runs
+  1). A paper whose 構成表 has no such column is *unmeasured*, and the gate says
+  `skip`; a skip is not a pass.
+- **The arc vocabulary**, as it stands from the papers and sittings measured
+  above: 自分の方針とその理由の説明 / 自分の好みとその理由の説明 /
+  自分の選択とその良さの説明 / 条件の提示 / 範囲の説明 / 以前のやり方→変更→効果 /
+  問題→技術の導入→効果 / 注意事項の案内 / これから始める人への助言 / 助言 /
+  物の魅力の説明 / 仕事の喜びの語り / 通説の訂正と条件の提示 / 効用の列挙 /
+  体験の評価 / 取り組みの目的の説明. A new arc is authoring, not a defect — add
+  it here **and** to `P3_TALK_ARCS` in `tools/check_consistency.py` in the same
+  edit, because an arc spelled two ways cannot collide with itself.
+- **The repair is to re-angle the ARC, not to move the draw**: keep the drawn
+  `listening_scenarios` entry and its theme tag, change what the talk does with
+  it. Re-keying it changes WHAT the surface tests, so the `origin: reauthored`
+  stamp and the `surfaces`/`claim`/`shapes` update apply as above.
 
 **The talk must be long enough to have a gist.** Official 問題3 talks run a
 median of **305 spoken chars** (p10 251, minimum 177 over 149 items,
@@ -803,13 +887,33 @@ Japanese (archive averages 1.0 such item in 11.4; shipped papers have run
   because 先ほど was outside it. `make check`'s regex now carries all six words
   as a **lower bound** on the count — it is the reading aid, not the rule; a
   finished-task reply worded around all six still counts.
-- **Concentration bound on the other shapes** (misread tense, inverted
-  polarity, wrong addressee, answering a different question): no single shape
-  may account for more than **40 %** of the paper's 22 scored distractors, and
-  **no two items may share BOTH of their distractor shapes**. This replaces
-  the ">2 items per shape" form, which was arithmetically unsatisfiable and so
-  was ignored rather than obeyed: 22 distractors over 5 named shapes at ≤2
-  items × 2 distractors = 20 slots < 22 (`20260817_3` QA, round 1).
+- **Concentration bound on the other shapes**: no single shape may account for
+  more than **40 %** of the distractor SLOTS, and **no two items may share BOTH
+  of their distractor shapes**. This replaces the ">2 items per shape" form,
+  which was arithmetically unsatisfiable and so was ignored rather than obeyed:
+  22 distractors over 5 named shapes at ≤2 items × 2 distractors = 20 slots < 22
+  (`20260817_3` QA, round 1).
+  - **The shape is one token from a CLOSED vocabulary**, written in the 構成表's
+    「誤答の型」 column, two per row: **時制の誤り / 論点のずれ / 語義の取り違え /
+    誤った前提 / 立場の逆転 / 対象の取り違え / 既に完了**. Free text is what makes
+    both caps uncountable — four papers (`20260813_2`, `20260814_1`,
+    `20260817_1`, `20260817_2`) wrote 「すり替え」「的外れ」「事実に反する」 and their
+    columns cannot be compared with anything, which is the same failure 消去方法
+    had before its vocabulary landed. `check_choukai_p4_distractor_shapes()`
+    reads the column; those four are exempt by name and any other paper FAILs.
+  - **The 40 % denominator is the DISTRACTOR SLOTS (2 per row, 24 in a 12-row
+    大問), not the rows.** Measured 2026-09-05 over all 16 papers carrying the
+    column, the corpus maximum is **7/24 = 29 %** (`20260817_3`, 論点のずれ and
+    語義の取り違え) and no paper trips 40 %; read against ROWS instead, 15 of 16
+    would trip it, which is how a cap gets quietly abandoned.
+  - **例 counts**, like every other 構成表 cap (消去方法, 主導, 決め手×質問型): its
+    distractors are heard and its key is announced. Measured that way, seven
+    papers ship one duplicated pair each — `20260817_2` 既に完了+的外れ (例+1番),
+    `20260817_3` 誤った前提+論点のずれ (例+7番) **and** 語義の取り違え (3番+9番, the
+    only scored-row pair on disk), `20260819_1` 時制の誤り+論点のずれ (例+9番),
+    `20260827_1` and `20260827_2` 対象の取り違え+論点のずれ, `20260828_2`
+    誤った前提+論点のずれ (例+9番), `20260903_1` 時制の誤り+論点のずれ (例+7番) —
+    all exempt by name; `20260904_1`/`_2`/`_3` are clean on merit.
 - the KEYED reply may open with 「あ、」 in ≤2 items.
 
 List the 12 keys in one column and the 24 distractors in another, **writing

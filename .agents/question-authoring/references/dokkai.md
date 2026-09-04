@@ -567,6 +567,42 @@ subtraction test (`check_note_band`), the same-paper reuse test
 - **The 解説 cells for 70/71 must each quote the TWO flyer cells the key combines**.
 - **Every WRONG option must contain at least one clause factually FALSE against the flyer** — not merely incomplete. Build wrong options from true combinations with ONE fact changed to something the flyer contradicts.
 
+### 問題14's flyer and its two stems are APPARATUS — write them, do not re-skin them
+
+The stem SHAPES above are official and are meant to be shared. A stem
+SENTENCE, a flyer sentence, or the flyer's structure is not.
+
+**THE TWO INCIDENTS, one QA round apart, both on `20260904_3`:**
+
+1. Three consecutive papers (`20260904_1`/`_2`/`_3`) shipped one
+   4-row/2-day/deadline-vs-walk-up/second-item-discount skeleton with the same
+   two stem templates, and 「駐車場はありませんので、公共の交通機関でお越しくだ
+   さい。」 byte-identical between two of them; the invented city moved 「みなみ市」
+   → 「みなと市」, a one-character edit (`qa-report-20260904_3` F2/R3).
+2. The re-authored replacement cleared that against the previous two
+   **generated** papers — and landed as a near-verbatim clone of official
+   **July 2025**: the same 5-course ①〜⑤ 公開講座 notice in a 4-column table, one
+   course without 実習, 定員+抽選, a 受付期間 split 2/3 at the same place, the same
+   phone-first late route, and a stem sharing a 21-character run with the
+   sitting's own (`qa-report-20260904_3-round2` F1).
+
+**So the scan runs against THREE corpora and `check_q14_apparatus_reuse()`
+FAILs a shared run of 20+ characters against any of them**: the previous two
+generated papers, every `tests/imported-*`, and every
+`refs/JLPT_N2_NEW/*/booklet.md`. Threshold from measurement — over all 23
+generated papers the corpus baseline is a median of 13 and a legitimate maximum
+of **19** (`20260818_1`'s 「どのように申し込まなければならないか。」 against official
+7/2025, pure stem shape), while the two founding cases measure **24**
+(`20260904_2` vs `_1`) and **21** (pre-fix `20260904_3` vs official 7/2025).
+`20260904_2` is grandfathered; every other id passes on merit.
+
+**Green here is not a provenance clearance.** None of round 2's seven
+structural coincidences is string-decidable — the number is a trigger to read
+the whole 大問 against the paper it names. And **a repair re-opens the scan**: a
+re-authored 問題14 must be measured against all three corpora again, because the
+scan that cleared the text you replaced is evidence about text that no longer
+exists.
+
 ## 読解 keys — unpredictable option lengths, rank spread, and strict paraphrasing
 
 ### 1. Option length balance & rank distribution

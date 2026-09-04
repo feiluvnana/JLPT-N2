@@ -524,6 +524,40 @@ in the same edit as the key** — the two halves are not separable, and adding t
 key alone turns the gate red on shipped work. Do it that way or leave it; do not
 add the key and then reroll a committed paper to quiet the gate.
 
+**A worked example of doing it, 2026-09-05:** `reading_topics`' 「自動運転と責任」
+and 「自動運転バスの実証実験」 are two pool entries on one subject with no shared
+cooldown key, and `20260904_2` drew the first while `20260904_3` drew the second
+**one draw later**, inside a 22-draw window, with every line green
+(`qa-report-20260904_3` F6, filed WON'T FIX at the paper level precisely because
+「no prose edit removes the technology without abandoning the draw」 — the repair
+belongs here). Measured before the edit, per the paragraph above: the shared key
+`自動運転:社会実装` produces **exactly one** new breach, `20260904_3`, whose draw
+(`generated_at` 2026-09-05 02:01:19) predates the key. Cost: one entry in
+`ERRAND_ROTATION_GRANDFATHERED`, landed in the same edit as the key, which
+`prove_grandfather()` re-asserts every run. That is the whole procedure — measure,
+add the key, add the exemptions the measurement names, never reroll a committed
+paper.
+
+**And a key you must NOT add, also measured, also 2026-09-05.**
+`qa-report-20260904_3` F5 filed `reading_topics`' 「健康保険組合からの人間ドック
+補助案内」 against `listening_scenarios`' 「人事部からの健康診断のお知らせ」 — one
+paper, two surfaces, one subject (a staff health screening), both tagged
+睡眠・健康 — and proposed a shared key. **Rejected on two measurements.** (a) A
+`key` is `institution:errand`, and these are two institutions running two
+errands: an insurer changing how a cost is SETTLED, and an HR department saying
+who may READ a result. A shared key there is false data, and false data in the
+index is worse than a missing entry, because `errand_key()` re-reads the whole
+ledger through it. (b) It would not fire anyway:
+`check_spec_errand_rotation()`'s in-paper `seen` map is rebuilt per CATEGORY, so
+a `reading_topics` entry and a `listening_scenarios` entry are never compared,
+whatever keys they carry. What these two share is a SUBJECT, and the subject
+axis does exist — `check_surface_subjects()` compares every `reading_topics` ×
+`listening_scenarios` pair of one spec — but its tokenizer matches maximal kanji
+runs for equality, and 「健康保険組合」 and 「健康診断」 share no maximal run. So
+this is a **whole-paper-pass rule, not a gate rule** (see below); it is written
+into `jlpt-test-generation` §"One topic, one surface" and stays open there
+rather than being closed with a key that is not true.
+
 **What the gate does with it.** `check_pool_errand_keys()` FAILs a blank or
 non-string `key` (drop the field rather than leave it empty — a blank key is an
 identity shared with every other blank one) and WARNs the **effective depth**
@@ -1246,6 +1280,31 @@ shape labels). So each row also carries:
   like every other closing axis. `dokkai.md`'s three axes count theme, closing
   move and voice/register; none of them can see that five surfaces are the same
   person.
+
+**「」 IN A ROW MEANS 「THIS STRING IS IN THE PAPER」** (adopted 2026-09-05,
+`qa-report-20260904_3-round2` F3). `notes`, `surfaces`, `claim` and `shapes` all
+quote the paper, and this file is what the NEXT paper's blueprint stage reads —
+so a quote that no longer occurs is evidence about a paper that no longer
+exists. `20260904_3`'s row was written by stage 3 and never updated by the fix
+pass, and quoted FIVE strings the repairs had removed, including a 問題11(3)
+closing sentence and an invented place name 「みなと市」 that was not on the paper
+at all; the same class had already shipped on `20260817_3` and gone unseen for
+eight days, because nothing read the column.
+
+- `check_topics_notes_quotes()` FAILs any 「…」 span of **8+ Japanese
+  characters** in those four fields that does not occur in that test's
+  `言語知識・読解.md` or `聴解スクリプト.txt` — the same predicate
+  `check_explanation_quotes` applies to the 解説 column and
+  `check_section_table_quotes` to the 構成表 cells.
+- **A string the paper does NOT contain goes in backticks, never in 「」.** Rows
+  legitimately NAME things — a pool entry, a rule name, a stem template, and
+  above all a string a fix pass REMOVED. That is what the round-2 fix pass did
+  when it rewrote the row, and it is the whole convention.
+- Measured over all 23 rows on adoption: 52 unmatched spans on 11 papers (50 in
+  `notes`, 1 in `surfaces`, 1 in `shapes`, 0 in `claim`), all named with their
+  counts in `TOPICS_QUOTE_GRANDFATHERED`; `20260904_3` is the only row at zero.
+  An id leaves that set by having its row rewritten against the shipped bytes —
+  never by lowering the character floor.
 
 Both are author-time columns — no script can derive them from prose, which is
 why they are recorded rather than measured. `check_topics_claim_field()`

@@ -124,7 +124,15 @@ defect through.
     SHAPE shared with official is legitimate; what fails is the apparatus,
     and none of those seven coincidences is string-decidable. Round 2 of a
     fixed paper owns this scan for every surface the fix pass rewrote
-    (`qa-report-20260904_3-round2.md` F1);
+    (`qa-report-20260904_3-round2.md` F1). For **問題14 specifically** the gate
+    now runs the three-corpus scan for you —
+    `check_q14_apparatus_reuse()` FAILs a shared run of 20+ characters against
+    the previous two generated papers, every `tests/imported-*` and every
+    `refs/JLPT_N2_NEW/*/booklet.md` (`dokkai.md` §問題14 carries the corpus
+    measurement: baseline median 13, legitimate max 19, the two founding cases
+    24 and 21). Green there still is not a clearance, for the reason in the
+    previous sentence, and no other 大問 has such a scan — those you run;
+
   - **a surface's `theme` in `test_spec.json` disagreeing with the same
     surface's `theme` in `logs/topics.json` WHERE `topics.json` relieves a
     quota or headline collision that the spec value creates** — a relabel in

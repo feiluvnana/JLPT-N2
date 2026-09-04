@@ -2889,6 +2889,102 @@ def check_slot_theme_repeat():
                "(jlpt-test-generation §'One topic, one surface')")
 
 
+# --------------------------------- 問題2: the 気持ち item, slot and valence
+#
+# THE INCIDENT (qa-report-20260904_3 F3/R4): `20260904_2` and `20260904_3`, one
+# paper apart, both keyed 問題2-**6番** to a 気持ち item whose valence was 安心,
+# in key position 1, on the same trigger shape — a service provider volunteers
+# an accommodating fact that dissolves a stated worry and the customer opens
+# 「よかった。」＋「〜と思ってた(んです)」. `check_slot_theme_repeat` compares THEMES
+# (食 vs 行政・手続き — blind) and `check_choukai_decider_question_type_pair`
+# compares 決め手の種類 × 質問型 WITHIN one paper. Nothing compared a 問題2 slot's
+# 質問型 across papers.
+#
+# WHY THE SLOT IS THE HALF THAT IS CHECKED, and the valence only where it can be
+# read. R4 asked for both. MEASURED 2026-09-05 over all 23 papers: ten carry a
+# 気持ち row at all, and classifying its valence from the 正解 cell against a
+# closed emotion vocabulary succeeds on six and returns NOTHING on four —
+# 20260807_1 「ほっとしている」, 20260821_1 「…とどかないこと」, 20260827_1
+# 「ありがたく感じている」 and, decisively, `20260904_3` itself
+# 「希望した場所ではないが、この席でよいと思っている」. A predicate that cannot
+# classify the paper it was written for is not a predicate, so the valence line
+# runs only on rows it CAN read and says so in its name; the 構成表 carries no
+# valence column and inventing one is authoring work, not a gate change.
+#
+# WHAT THE TWO LINES MEASURE, over the same 23 papers, lookback 2:
+#   SLOT — four repeats: 20260828_1 1番 (also 20260827_1), 20260828_2 5番 (also
+#   20260827_2), 20260903_1 5番 (also 20260828_2), and **20260904_3 4番 (also
+#   20260904_1)**. That last one is live and is REPAIR COLLATERAL: round 1's F3
+#   fix swapped 問題2-4番↔6番 to move the 気持ち item off `20260904_2`'s slot 6
+#   and landed it on `20260904_1`'s slot 4. The founding pair (`_2` 6番 / pre-fix
+#   `_3` 6番) fires on the pre-fix bytes.
+#   VALENCE — one repeat among the six classifiable rows: `20260904_1` 心配
+#   against `20260903_1` 心配, one paper apart.
+# Both lines are `warn()`, as R4 specifies — the call is a human's, and four
+# committed papers are inside them.
+KIMOCHI_LOOKBACK = 2
+KIMOCHI_VALENCE = ("安心", "納得", "心配", "残念", "不満", "意外", "感謝",
+                   "期待", "あきらめ", "迷い", "満足", "困惑", "驚き")
+
+
+def check_choukai_kimochi_repeat():
+    """A 問題2 気持ち item may not repeat its slot or its valence (R4)."""
+    print("\n聴解問題2 気持ち: slot and keyed valence across papers")
+    bi = load(".agents/exam-app/scripts/build_interactive.py")
+    papers: list[tuple[str, dict[str, str]]] = []
+    for d in sorted(p for p in (ROOT / "tests").glob("*") if p.is_dir()):
+        if ORIGIN.test_origin(d.name) != "generated":
+            continue
+        f = d / "聴解.md"
+        if not f.is_file():
+            continue
+        ct = f.read_text(encoding="utf-8")
+        qtypes = section_table_rows(ct, 2, "質問型", bi)
+        keys = dict(section_table_rows(ct, 2, "正解", bi))
+        papers.append((d.name, {lab: keys.get(lab, "")
+                                for lab, cell in qtypes if "気持ち" in cell}))
+    if not papers:
+        return skip("no 問題2 気持ち item repeats its slot or valence",
+                    "no generated 聴解.md carries a 問題2 質問型 column")
+    for i, (tid, mine) in enumerate(papers):
+        prev = papers[max(0, i - KIMOCHI_LOOKBACK):i]
+        slot_hits = sorted({f"{slot} (also {pid})" for pid, theirs in prev
+                            for slot in set(mine) & set(theirs)})
+        warn(f"{tid}: no 問題2 気持ち item sits in the same slot as the previous "
+             f"{KIMOCHI_LOOKBACK} papers' ({len(mine)} 気持ち row(s))",
+             not slot_hits,
+             "; ".join(slot_hits) + " — 質問型 is the column a candidate hears "
+             "as the item's TYPE, and the same type in the same numbered slot "
+             "one paper apart is the paper re-skinned even when the themes and "
+             "the errand keys differ. Move the 気持ち item to another slot, or "
+             "better, re-angle its keyed emotion "
+             "(question-authoring/references/choukai-items.md §質問型)")
+
+        def valences(rows: dict[str, str]) -> dict[str, str]:
+            out = {}
+            for slot, key in rows.items():
+                for v in KIMOCHI_VALENCE:
+                    if v in key:
+                        out.setdefault(v, slot)
+            return out
+        mine_v = valences(mine)
+        unread = [s for s in mine if not any(v in mine[s] for v in KIMOCHI_VALENCE)]
+        val_hits = sorted({f"「{v}」 {mine_v[v]} (also {pid} {theirs[v]})"
+                           for pid, rows in prev
+                           for theirs in [valences(rows)]
+                           for v in set(mine_v) & set(theirs)})
+        warn(f"{tid}: no 問題2 気持ち key repeats the previous "
+             f"{KIMOCHI_LOOKBACK} papers' valence "
+             f"({len(mine_v)} valence(s) read from {len(mine)} row(s)"
+             + (f"; unclassifiable: {', '.join(unread)}" if unread else "") + ")",
+             not val_hits,
+             "; ".join(val_hits) + " — the same emotion keyed twice inside the "
+             "cooldown window is one item's answer taught in advance. Re-angle "
+             "the key's emotion (安心→納得・意外・割り切り…), not just its scene; "
+             "a row this line could not classify was not compared at all "
+             "(qa-report-20260904_3 R4)")
+
+
 def check_dokkai_key_table_parses(name: str, body: str):
     r"""The 読解 answer table must be where the profiler looks for it.
 
@@ -6038,6 +6134,17 @@ ERRAND_KEY_FIELD_LANDED = "2026-08-19 15:18:21"
 # entered some time after 15:18:21 — and both ids below were drawn hours before
 # that lower bound, which is what `prove_grandfather()` re-asserts per run.
 QUICK_RESPONSE_KEYS_LANDED = "2026-08-19 17:35:31"
+# `reading_topics`' 「自動運転と責任」 and 「自動運転バスの実証実験」 were given the
+# shared key 「自動運転:社会実装」 on 2026-09-05, closing qa-report-20260904_3 F6:
+# `20260904_2` drew the first and `20260904_3` the second ONE DRAW LATER, two
+# pool entries on one subject with no shared cooldown key, so the 22-draw
+# `reading_topics` window saw nothing. MEASURED before the key was added, per
+# the skill's own procedure (`exam-blueprint` §"The ONE thing that stops you
+# adding a key"): the key produces exactly ONE new breach, `20260904_3`, whose
+# draw predates it — the cost is this single entry, landed in the same edit as
+# the key, and the alternative was to leave two papers one apart on 自動運転
+# with every line green. Delete the id when its 問題10(1) is re-drawn.
+AUTONOMOUS_DRIVING_KEY_LANDED = "2026-09-05 07:14:41"
 ERRAND_ROTATION_GRANDFATHERED = {
     "20260810_2": ERRAND_KEY_FIELD_LANDED,   # 銀行:口座開設        (vs 20260810_1)
     "20260811_1": ERRAND_KEY_FIELD_LANDED,   # 年金事務所:手続き案内 (vs 20260807_1)
@@ -6073,6 +6180,13 @@ ERRAND_ROTATION_GRANDFATHERED = {
     # unnecessary: the id FAILED here for one run with "it no longer breaches the
     # rule", exactly as designed — and it would fail the same way again the moment
     # the three quick_response stimuli above are redrawn.
+    #
+    # `20260904_3` is here for `reading_topics` ONLY and for the newest key:
+    # 「自動運転バスの実証実験」 = errand 「自動運転:社会実装」, one draw after
+    # `20260904_2`'s 「自動運転と責任」 (F6). Its draw (recorded `generated_at`)
+    # precedes AUTONOMOUS_DRIVING_KEY_LANDED, so `draw()` could not have refused
+    # the pick — `prove_grandfather()` re-asserts that every run.
+    "20260904_3": AUTONOMOUS_DRIVING_KEY_LANDED,
 }
 
 # The keyed categories `check_spec_errand_rotation` compares. `quick_response`
@@ -7026,6 +7140,118 @@ def check_topics_shapes_field():
             check(name, not bad, detail)
 
 
+# `logs/topics.json` is the file the NEXT paper's blueprint stage reads, and its
+# `notes` column is the last quoting artifact in the repo that nothing verifies.
+# `check_explanation_quotes` has read the 解説 column since the start and
+# `check_section_table_quotes` has read the 構成表 cells since 2026-09-04; this
+# is the same predicate, one file over.
+#
+# THE INCIDENT (qa-report-20260904_3-round2 F3, and `20260817_3` before it):
+# `20260904_3`'s row was written by stage 3 and never updated by the fix pass,
+# so it quoted FIVE strings the repairs had removed — 「決めた会ほど、一年後まで
+# 残っている人が多いのです」 asserted as 問題11(3)'s closing, 「うまくなった人」,
+# 「市内にご在住の方も」, 「市防災課」, 「みなと市」 asserted as this paper's
+# invented place name — and its headline audit described a 問題14 that no longer
+# existed. The note's CONCLUSIONS still held; its EVIDENCE described a different
+# paper. Nothing read it, so it took a reviewer who happened to grep.
+#
+# THE CONVENTION THIS ENFORCES, and the one false-positive class it has: a
+# `notes` field legitimately NAMES strings that are not in the paper — a pool
+# entry, a rule name, a stem template, and above all a string a fix pass
+# REMOVED. Those must be written in backticks or plain, never in 「」. 「」 in
+# these four fields means "this is in the paper", which is exactly what the
+# round-2 fix pass did when it rewrote the row.
+#
+# MEASURED 2026-09-05 over every row in `logs/topics.json` (23 papers, the four
+# fields, the 解説 check's own 8-flat-character floor and the 構成表 check's
+# Japanese-run restriction). 52 unmatched spans on 11 papers — 50 in `notes`,
+# 1 in `surfaces`, 1 in `shapes`, 0 in `claim`:
+#     20260904_2 16   20260819_1 9   20260827_2 6   20260818_1 5
+#     20260828_1  5   20260904_1 3   20260828_2 3   20260903_1 2
+#     20260810_2  1   20260813_2 1   20260821_1 1
+# `20260904_3` is the only paper at ZERO, because it is the only row rewritten
+# under this convention. The 11 are grandfathered BY NAME with their counts —
+# round 2's own instruction, and the alternative (lowering the floor until they
+# pass) would delete the check. An id leaves the set when its row is rewritten.
+TOPICS_QUOTE_GRANDFATHERED = {
+    "20260810_2": 1, "20260813_2": 1, "20260818_1": 5, "20260819_1": 9,
+    "20260821_1": 1, "20260827_2": 6, "20260828_1": 5, "20260828_2": 3,
+    "20260903_1": 2, "20260904_1": 3, "20260904_2": 16,
+}
+TOPICS_QUOTE_FIELDS = ("notes", "surfaces", "claim", "shapes")
+TOPICS_QUOTE_FLOOR = 8
+
+
+def _topics_row_strings(row: dict) -> list[tuple[str, str]]:
+    """[(field, text)] for every quotable string in one history row."""
+    out = []
+    for field in TOPICS_QUOTE_FIELDS:
+        value = row.get(field)
+        if isinstance(value, str):
+            out.append((field, value))
+        elif isinstance(value, dict):
+            out += [(f"{field}/{k}", v) for k, v in value.items()
+                    if isinstance(v, str)]
+        elif isinstance(value, list):
+            out += [(field, v) for v in value if isinstance(v, str)]
+    return out
+
+
+def check_topics_notes_quotes():
+    """Every 「…」 span in a topics.json row must be in that paper (R-F3)."""
+    print("\nlogs/topics.json quotes trace to the paper they describe")
+    tp = ROOT / "logs" / "topics.json"
+    if not tp.is_file():
+        return skip("every logs/topics.json 「…」 span occurs in its own paper",
+                    "no logs/topics.json")
+    history = json.loads(tp.read_text(encoding="utf-8")).get("history", [])
+    if not history:
+        return skip("every logs/topics.json 「…」 span occurs in its own paper",
+                    "no history rows")
+    for row in history:
+        tid = str(row.get("test_id"))
+        d = ROOT / "tests" / tid
+        sources = [(d / fn).read_text(encoding="utf-8")
+                   for fn in ("言語知識・読解.md", "聴解スクリプト.txt")
+                   if (d / fn).is_file()]
+        name = f"{tid}: every logs/topics.json 「…」 span occurs in its own paper"
+        if not sources:
+            skip(name, f"no authored source on disk for {tid}")
+            continue
+        blob = "\n".join(sources)
+        src, src_raw = _flat(strip_annotations(blob)), _flat(blob)
+        spans, missing = 0, []
+        for field, text in _topics_row_strings(row):
+            for quoted in QUOTE.findall(text):
+                for part in QUOTE_ELLIPSIS.split(quoted):
+                    flat = _flat(strip_annotations(part))
+                    if (len(flat) < TOPICS_QUOTE_FLOOR
+                            or not JP_RUN_ONLY.fullmatch(flat)):
+                        continue
+                    spans += 1
+                    if flat not in src and flat not in src_raw:
+                        missing.append(f"{field}「{part[:26]}"
+                                       f"{'…' if len(part) > 26 else ''}」")
+        name = f"{name} ({spans} spans read)"
+        detail = ("; ".join(missing[:8])
+                  + (f" … +{len(missing) - 8} more" if len(missing) > 8 else "")
+                  + " — 「」 in a topics.json row asserts 'this string is in the "
+                  "paper', and the next paper's blueprint stage reads this row "
+                  "as evidence. A fix pass that changes a surface must rewrite "
+                  "the row against the SHIPPED bytes; a string the paper does "
+                  "NOT contain (a pool entry, a rule name, a stem template, a "
+                  "string a repair removed) belongs in backticks, not in 「」 "
+                  "(exam-qa-review §'A fix that changes WHAT a surface tests'; "
+                  "qa-report-20260904_3-round2 F3)")
+        if tid in TOPICS_QUOTE_GRANDFATHERED:
+            warn(name, not missing,
+                 detail + f" [grandfathered at ×"
+                 f"{TOPICS_QUOTE_GRANDFATHERED[tid]} as measured 2026-09-05]"
+                 + GRANDFATHER_NOTE)
+        else:
+            check(name, not missing, detail)
+
+
 def check_harvest_provenance():
     """R12: a harvest_sha must identify a real harvest, not a date-shaped string.
 
@@ -7526,24 +7752,94 @@ P14_DECIDER_GRANDFATHERED = {
 # 問題14 flyer of `20260812_2`, `20260817_3` AND `20260818_1` — three of thirteen
 # papers, two of them consecutive. Invented place names are the one apparatus
 # class a regex can enumerate: a 2–4 character name plus 市/町/村/区.
-PLACE_NAME = re.compile(r"([ぁ-んァ-ヶ一-鿿]{2,4}(?:市|町|村))")
+# A place name is a WORD, and this file has no tokenizer — so the candidate is
+# LEFT-ANCHORED instead: the 2-4 characters before 市/町/村 must be preceded by
+# something that is not Japanese script (punctuation, a markup character, a
+# digit, whitespace, a newline, or the start of the file).
+#
+# THE INCIDENT the anchor repairs: the old pattern was a bare
+# `([ぁ-んァ-ヶ一-鿿]{2,4}(?:市|町|村))`, a fixed-width window with no left
+# boundary, so it ran straight through hiragana particles — a 申込 deadline line
+# 「…十月三十一日までに市防災課の窓口か…」 measured as the "place name"
+# 「日までに市」, `20260904_2` wrote 「…九月三十日までに市のホームページから…」,
+# and two papers sharing nothing but a date-plus-市 collocation FAILed as
+# sharing a letterhead (qa-report-20260904_3 R6). The repair shipped at the time
+# was a `PLACE_STOP` entry, i.e. a stop-list that grows one artefact at a time.
+#
+# WHY NOT R6'S PROPOSED REGEX. R6 proposed keeping the window and forbidding a
+# case particle inside it:
+#   `((?![ぁ-ん]*[はがをにでともへ])[ぁ-んァ-ヶ一-鿿]{2,4}(?:市|町|村))`
+# MEASURED over all 23 generated papers, that change is REFUTED twice over. It
+# does not remove the artefacts, it SLIDES them one character right
+# (「がある港町」→「ある港町」, 「を聞いた市」→「聞いた市」, 「のあとも町」→…) because
+# the window still has no left edge; and it silently DELETES a real invented
+# name — `20260819_1`'s 「みなと市」 disappears from the extraction entirely,
+# which is the one name round-1 F2 cites as the 「みなみ市」→「みなと市」
+# one-character re-skin. A guard that blinds the check to its own founding
+# defect class is worse than the stop-list it replaces.
+#
+# WHAT THE ANCHOR MEASURES, over the same 23 papers: 「日までに市」 is not
+# produced by ANY paper any more (so its stop-list entry is deleted here, not
+# kept), and every invented name the old pattern found survives — さくら町
+# (20260810_2), さくら市 (20260812_1), みどり市 (20260812_2/20260817_3/20260904_3),
+# ひばり市 (20260818_1), あおば市 + みなと市 (20260819_1), みなみ野市 (20260821_1),
+# さかえ市 (20260827_1), みなみ市 + 北原町 (20260904_2), 東野市 (20260904_3).
+# Every remaining false positive is a generic phrase (「ある市」「この町」「別の市」)
+# and every one of those is already stop-listed, so the exact-name line reports
+# the same zero hits it did before — no committed paper changes verdict.
+PLACE_SUFFIX = "市町村"
+PLACE_JP_CHAR = re.compile(r"[ぁ-んァ-ヶ一-鿿ー々]")
 # Words whose tail happens to be 市/町 but which are not names.
 PLACE_STOP = {"都市", "大都市", "地方都市", "市町村", "朝市", "労働市", "国内市",
               "ある市", "ある町", "別の市", "同じ市", "他の市", "海外の市",
-              "海外市", "見知らぬ町", "この町", "近くの町", "港町", "城下町",
-              "商店街の朝市", "温泉町", "全市", "各市", "同市", "本市", "本籍地が市",
-              "十五分都市",
-              # 2026-09-05 (20260904_3 stage 3): PLACE_NAME's 2-4 char window
-              # runs straight through hiragana particles, so a 申込 deadline
-              # line 「…十月三十一日までに市防災課の窓口か…」 measures as the
-              # "place name" 「日までに市」 — and `20260904_2` writes the same
-              # 「…九月三十日までに市のホームページから…」, so two papers that
-              # share nothing but a date-plus-市 collocation FAILed as sharing
-              # a letterhead. Stop-listed rather than reworded, because the
-              # content is not defective: dodging a regex by re-tagging prose
-              # is the thing `exam-qa-review` §Ground rules forbids.
-              "日までに市"}
+              "海外市", "見知らぬ町", "この町", "この市", "近くの町", "港町",
+              "城下町", "商店街の朝市", "温泉町", "全市", "各市", "同市", "本市",
+              "本籍地が市", "十五分都市", "市や町", "町と町", "見本市"}
 PLACE_LOOKBACK = 2      # the previous two papers, same window as the theme rules
+# R3's sibling widening (qa-report-20260904_3): a set-equality test passes
+# 「みなみ市」→「みなと市」, a one-character edit of the previous paper's
+# letterhead, which is the same re-skin the exact test exists to stop. Names of
+# FOUR characters or more are compared at Levenshtein distance 1 as well.
+# MEASURED over all 23 papers: at a 4-character floor the near-name line reports
+# exactly ONE pair on disk — `20260812_1`'s 「さくら市」 against `20260810_2`'s
+# 「さくら町」, two papers apart, one invented name with the suffix swapped, which
+# is a true positive the exact test cannot see. Dropping the floor to 3 adds
+# eight pairs and every one of them is a generic-phrase artefact
+# (「この市」/「秋の市」, 「その町」/「どの町」/「私の町」), so the floor is what makes
+# the line usable. WARN, not FAIL: distance 1 between two genuinely unrelated
+# short names is possible, and the call is a human's.
+PLACE_NEAR_MIN = 4
+
+
+def place_name_candidates(text: str) -> set[str]:
+    """Left-anchored `<name><市|町|村>` candidates, 2-4 characters of name."""
+    out: set[str] = set()
+    for i, ch in enumerate(text):
+        if ch not in PLACE_SUFFIX:
+            continue
+        for span in (4, 3, 2):
+            start = i - span
+            if start < 0:
+                continue
+            if not all(PLACE_JP_CHAR.match(c) for c in text[start:i]):
+                continue
+            if start == 0 or not PLACE_JP_CHAR.match(text[start - 1]):
+                out.add(text[start:i + 1])
+                break
+    return out
+
+
+def _edit_distance_le1(a: str, b: str) -> bool:
+    """True when `a` and `b` are one substitution/insertion/deletion apart."""
+    if abs(len(a) - len(b)) > 1:
+        return False
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i] + [0] * len(b)
+        for j, cb in enumerate(b, 1):
+            cur[j] = min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb))
+        prev = cur
+    return prev[-1] == 1
 
 
 def check_invented_proper_nouns():
@@ -7557,8 +7853,8 @@ def check_invented_proper_nouns():
         for fn in ("言語知識・読解.md", "聴解スクリプト.txt"):
             f = d / fn
             if f.is_file():
-                found |= {n for n in PLACE_NAME.findall(f.read_text(encoding="utf-8"))
-                          if n not in PLACE_STOP}
+                found |= {n for n in place_name_candidates(
+                    f.read_text(encoding="utf-8")) if n not in PLACE_STOP}
         names.append((d.name, found))
     if not names:
         return skip("no invented place name repeats the previous two papers",
@@ -7573,6 +7869,174 @@ def check_invented_proper_nouns():
               "apparatus, and reusing it reads as the same paper re-skinned. "
               "Invent a new one (exam-qa-review §Ground rules, 'apparatus "
               "carried over verbatim OR near-verbatim')")
+        near = sorted({f"「{n}」 ~ 「{o}」 ({ptid})" for ptid, theirs in prev
+                       for n in mine for o in theirs
+                       if n != o and len(n) >= PLACE_NEAR_MIN
+                       and len(o) >= PLACE_NEAR_MIN and _edit_distance_le1(n, o)})
+        warn(f"{tid}: no invented place name is one character off the previous "
+             f"{PLACE_LOOKBACK} papers'", not near,
+             "; ".join(near) + " — a one-character edit of the previous paper's "
+             "letterhead (「みなみ市」→「みなと市」) passes the set-equality line "
+             "above and is the same re-skin it exists to stop. Invent a name "
+             "that is not a respelling (qa-report-20260904_3 R3)")
+
+
+# ------------------------------------------------ 問題14: the apparatus itself
+#
+# THE RULE (question-authoring §問題14, exam-qa-review §Ground rules): a 問題14
+# flyer and its two stems are APPARATUS, and apparatus carried over verbatim or
+# near-verbatim from another paper is an automatic fail. Official stem SHAPES
+# are legitimate and shared on purpose — 「〜さんは当日どうすればいいか」,
+# 「料金はいくらになるか」 — so the line below is a length threshold on the
+# longest shared RUN, not a ban on a shape.
+#
+# THE INCIDENT, twice, one round apart:
+#   * Round 1 (qa-report-20260904_3 F2/R3): three consecutive papers shipped one
+#     4-row/2-day/deadline-vs-walk-up/second-item-discount skeleton with the same
+#     two stem templates. The gate had `check_invented_proper_nouns` for the
+#     flyer's letterhead and NOTHING for its sentences or its stems.
+#   * Round 2 (qa-report-20260904_3-round2 F1/R-F1): the re-authored replacement
+#     cleared round 1's 20-character line against the previous two GENERATED
+#     papers — and landed as a near-verbatim clone of official July 2025, whose
+#     問題14 the round-1 scan never looked at. A scan against one corpus is not
+#     evidence about the other two, which is why this check reads THREE:
+#     `refs/JLPT_N2_NEW/*/booklet.md`, `tests/imported-*` and the previous two
+#     generated papers.
+#
+# NORMALISATION, and why each step is there. The block runs from the 問題14
+# heading to the 解答 heading (or EOF); the mandated 大問 instruction — the
+# leading sentence up to the first 「選びなさい。」/「答えなさい。」 — is dropped,
+# because `jlpt-exam-structure` owns that sentence and every paper on both
+# corpora carries it verbatim by design; then everything that is not Japanese
+# script or 、。 is dropped. That last step is what makes the archive comparable
+# at all: the booklets number their options 「1 …」 and the generated papers
+# 「1. …」, so leaving the enumeration in measures the renderer (it inflated the
+# same runs by 1-2 characters and put `20260818_1` at 21 instead of 19).
+#
+# MEASURED 2026-09-05 over all 23 generated papers × (2 previous generated + 10
+# imported + 23 archive booklets carrying a 問題14). Longest shared run per
+# paper, worst of the three corpora:
+#     24  20260904_2 vs 20260904_1  「受付でお支払いください。駐車場はありませんので、」
+#     19  20260818_1 vs imported-n2-2025-07 + archive 「どのように申し込まなければならないか。」
+#     19  20260817_3 vs 20260817_2  「をお確かめのうえ、お申し込みください。」
+#     18, 17, 16, 15 …  and the median paper sits at 13.
+# Replaying round 2's own founding text through the same scanner — the pre-fix
+# stem 「川上さんは、この案内を見て⑤の講座を受けたいと思った。今日は一月十一日で
+# ある。川上さんはどのように申し込まなければならないか」 against official 7/2025 —
+# gives 21, 「さんはどのように申し込まなければならないか」, which reproduces round
+# 2's own hand measurement to the character, against both the archive booklet
+# and `tests/imported-n2-2025-07`.
+#
+# SO THE THRESHOLD IS 20: it catches both founding cases (24 and 21) and clears
+# the highest legitimate paper (19, which is pure official stem shape plus the
+# standard 「お申し込みください。」 formula). `20260904_2` is the one shipped paper
+# the line re-classifies, and it is grandfathered below rather than re-authored.
+#
+# The number is a TRIGGER FOR A HUMAN READ OF THE WHOLE 大問, not a verdict:
+# round 2's real evidence was seven structural coincidences (a 4-column course
+# table, one course without 実習, 定員+抽選, a 受付期間 split 2/3 at the same
+# place, a phone-first late route, and both stems' constraint pairs), none of
+# which is string-decidable. A green line here is not a provenance clearance.
+Q14_HEAD = re.compile(r"^#+\s*問題\s*14\b", re.M)
+Q14_KEY_HEAD = re.compile(r"^#\s*解答", re.M)
+Q14_INSTRUCTION = re.compile(r"^.{0,240}?(?:選びなさい|答えなさい)。", re.S)
+Q14_KEEP = re.compile(r"[^ぁ-ゖァ-ヺー一-鿿々〆、。]")
+Q14_RUN_MAX = 20        # FAIL at or above; see the measurement above
+# `20260904_2`'s 問題14 shares a 24-character run with `20260904_1`'s —
+# 「受付でお支払いください。駐車場はありませんので、」, the byte-identical parking
+# sentence qa-report-20260904_3 F2 names. Both papers are committed and their
+# 問題14 was reviewed and passed; clearing the entry means re-authoring a shipped
+# 大問 and re-rendering its booklet, which is a decision about that paper, not
+# about this gate. Delete the id when its 問題14 is re-authored.
+Q14_APPARATUS_GRANDFATHERED = {
+    "20260904_2": "24 chars vs 20260904_1: 「受付でお支払いください。駐車場はありませんので、」",
+}
+
+
+def q14_block(text: str) -> str:
+    """One paper's 問題14, normalised for cross-corpus run comparison."""
+    m = Q14_HEAD.search(text)
+    if not m:
+        return ""
+    tail = text[m.start():]
+    key = Q14_KEY_HEAD.search(tail)
+    if key:
+        tail = tail[:key.start()]
+    tail = Q14_HEAD.sub("", tail, count=1).replace("\n", "")
+    tail = Q14_INSTRUCTION.sub("", tail, count=1)
+    return Q14_KEEP.sub("", tail)
+
+
+def _longest_shared_run(a: str, b: str, floor: int) -> str:
+    """The longest common substring of `a` and `b`, or "" below `floor`.
+
+    Binary search on length over n-gram sets: the DP in `_shared_runs` is
+    O(len(a)·len(b)) and these operands are ~800 characters each, compared
+    23 × 35 times.
+    """
+    lo, hi, best = floor, min(len(a), len(b)), ""
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        shared = ({a[i:i + mid] for i in range(len(a) - mid + 1)}
+                  & {b[i:i + mid] for i in range(len(b) - mid + 1)})
+        if shared:
+            best, lo = sorted(shared)[0], mid + 1
+        else:
+            hi = mid - 1
+    return best
+
+
+def check_q14_apparatus_reuse():
+    """No 問題14 may share a long verbatim run with another paper's (R3/R-F1)."""
+    print("\n問題14 apparatus reuse (three corpora: archive, imported, previous 2)")
+    generated: list[tuple[str, str]] = []
+    imported: list[tuple[str, str]] = []
+    for d in sorted(p for p in (ROOT / "tests").glob("*") if p.is_dir()):
+        f = d / "言語知識・読解.md"
+        if not f.is_file():
+            continue
+        block = q14_block(f.read_text(encoding="utf-8"))
+        if not block:
+            continue
+        (imported if ORIGIN.is_imported(d.name) else generated).append((d.name, block))
+    archive = []
+    for f in sorted((ROOT / "refs" / "JLPT_N2_NEW").glob("*/booklet.md")):
+        block = q14_block(f.read_text(encoding="utf-8"))
+        if block:
+            archive.append((f.parent.name, block))
+    if not generated:
+        return skip("no generated 問題14 reuses another paper's apparatus",
+                    "no generated test carries a 問題14 block")
+    if not archive:
+        skip("問題14 apparatus is compared against refs/JLPT_N2_NEW",
+             "no refs/JLPT_N2_NEW/*/booklet.md on disk — the archive half of "
+             "the scan did not run (AGENTS.md §3: a skip is not a pass)")
+    for i, (tid, mine) in enumerate(generated):
+        corpora = ([("previous paper", t, b) for t, b in generated[max(0, i - 2):i]]
+                   + [("imported", t, b) for t, b in imported]
+                   + [("archive", t, b) for t, b in archive])
+        hits = []
+        for label, other, block in corpora:
+            run = _longest_shared_run(mine, block, Q14_RUN_MAX)
+            if run:
+                hits.append(f"{len(run)} chars vs {other} ({label}): 「{run}」")
+        hits.sort(key=lambda s: -int(s.split()[0]))
+        name = (f"{tid}: 問題14 shares no run of {Q14_RUN_MAX}+ characters with "
+                f"another paper ({len(corpora)} compared)")
+        detail = ("; ".join(hits) + " — 問題14's flyer and its two stems are "
+                  "apparatus, and a run this long is the previous paper (or a "
+                  "real sitting) re-skinned. Official stem SHAPES are legitimate "
+                  "and shared on purpose; a shared SENTENCE is not. This line is "
+                  "a trigger to read the whole 大問 against the named paper — "
+                  "the document type, the row structure, the split of the "
+                  "受付期間, the late route and each stem's constraint pair — "
+                  "none of which is string-decidable "
+                  "(question-authoring §問題14; qa-report-20260904_3 R3 and "
+                  "-round2 F1)")
+        if tid in Q14_APPARATUS_GRANDFATHERED:
+            warn(name, not hits, detail + GRANDFATHER_NOTE)
+        else:
+            check(name, not hits, detail)
 
 
 def check_spec_quick_response_errand_pair(d, spec: dict, pools: dict):
@@ -9782,6 +10246,219 @@ def check_choukai_setting_adjacency(test_id: str, ct: str, bi):
     check(name, not hits, detail)
 
 
+# ------------------------------------------- 問題3: the ARC, not the vocabulary
+#
+# THE INCIDENT (qa-report-20260904_3-round2 F2): `20260904_3` ran ONE narrative
+# arc — 「以前／想定と違った → 変えた → 効いた」 — in FOUR of its six 問題3 talks
+# (例, 1番, 3番, 5番), and 1番 and 5番 were additionally the same food-retail
+# owner at a 講演会/講座 whose crux was the same 受け渡しの時刻. Two of five scored
+# items were the same listening. Every lexical gate was green: this section's
+# 場面 rows differ, `check_choukai_key_exclusive_token` is about WORDS, and
+# `check_choukai_errand_repeat` compares ACROSS papers only —
+# `check_spec_quick_response_errand_pair`'s themed sibling
+# (`check_spec_errand_rotation`'s in-paper half) skips this paper entirely
+# because no drawn `listening_scenarios` entry carries an errand key. The
+# within-paper 問題3 comparison had therefore never run on any paper.
+#
+# WHY THIS READS A DECLARED COLUMN INSTEAD OF DERIVING THE ARC. An arc is a
+# claim about how a 300-character monologue MOVES, and nothing in this file can
+# decide it: round 2 established its own 4-of-6 by reading the six talks, and
+# established official July 2025's 1-of-5 the same way. A derived predicate
+# would have to guess, and the two failure modes are both fatal — miss the case
+# it exists for, or flag a real sitting. So `20260904_3`'s 聴解.md now prints an
+# ARC column in its 問題3 構成表 (「話の型（アーク）×決め手の領域」) and this check
+# reads it, exactly as `check_choukai_elimination_tokens` reads 消去方法 and
+# `check_choukai_decider_question_type_pair` reads 決め手の種類 × 質問型. The
+# authoring cost is one cell per talk; the alternative is a rule nothing runs.
+#
+# THE ARCHIVE TEST, run by hand because it cannot be run any other way (no
+# imported paper carries a 構成表). Official 7/2025's five talks: 一人旅のよさ
+# 〈自分の好みとその理由の説明〉/ 木の家具 〈物の魅力の説明〉/ 菓子屋
+# 〈仕事の喜びの語り〉/ 良い睡眠 〈通説の訂正と条件の提示〉/ 米作りロボット
+# 〈問題→技術の導入→効果〉 — five arcs, one row each, and exactly ONE of the five
+# on the problem→solution arc. Official 12/2025: 片付けの効果 〈効用の列挙〉/
+# 研修の評価 〈体験の評価〉/ 子への注意 〈助言〉/ 固形石けん
+# 〈自分の選択とその良さの説明〉/ 農業体験会 〈取り組みの目的の説明〉 — five arcs,
+# one row each. Neither sitting fires, which is the test that refuted the
+# contrast-marker metric and would refute this one.
+#
+# MEASURED over every paper on disk 2026-09-05: `20260904_3` is the only one
+# whose 問題3 構成表 carries the column, and its six arcs are one row each, so
+# it passes on merit; the other 22 `skip`, and a skip is not a pass (AGENTS.md
+# §4). Pre-fix, its 例/1番/3番/5番 all read the 以前→変更→効果 arc and 1番+5番
+# shared the crux domain as well, so both halves of this check fire on the
+# founding text.
+P3_ARC_SPLIT = re.compile(r"[×✕✖x]")
+P3_ARC_ONE_ARC_MAX = 2      # rows one arc may fill, 例 counted; official runs 1
+# The arc vocabulary as it stands, from the one paper that prints the column
+# plus the two official sittings read above. Membership is a WARN, not a FAIL:
+# the list is one paper old and a genuinely new arc is authoring, not a defect —
+# but an arc SPELLED two ways is invisible to the repeat line below, which is
+# what the closed vocabulary is for. Add the new value here when you use one.
+P3_TALK_ARCS = {
+    "自分の方針とその理由の説明", "条件の提示", "範囲の説明",
+    "以前のやり方→変更→効果", "注意事項の案内", "これから始める人への助言",
+    "自分の好みとその理由の説明", "物の魅力の説明", "仕事の喜びの語り",
+    "通説の訂正と条件の提示", "問題→技術の導入→効果", "効用の列挙",
+    "体験の評価", "助言", "自分の選択とその良さの説明", "取り組みの目的の説明",
+}
+
+
+def check_topics_p3_archetype_repeat(test_id: str, ct: str, bi):
+    """No two 問題3 talks may run one narrative arc (round-2 F2)."""
+    rows = section_table_rows(ct, 3, "話の型", bi)
+    stem = f"{test_id}: no two 問題3 talks run the same arc"
+    if not rows:
+        return skip(stem, "問題3's 構成表 carries no 「話の型（アーク）」 column — "
+                          "the arc is not derivable from the script, so this "
+                          "paper is unmeasured, not clean "
+                          "(question-authoring/references/choukai-items.md §問題3)")
+    arcs: dict[str, list[str]] = {}
+    pairs: dict[tuple[str, str], list[str]] = {}
+    unknown = []
+    for label, cell in rows:
+        parts = [strip_parentheticals(p).strip()
+                 for p in P3_ARC_SPLIT.split(cell)]
+        arc = parts[0] if parts else ""
+        crux = parts[1] if len(parts) > 1 else ""
+        if not arc:
+            continue
+        arcs.setdefault(arc, []).append(label)
+        pairs.setdefault((arc, crux), []).append(label)
+        if arc not in P3_TALK_ARCS:
+            unknown.append(f"{label}「{arc}」")
+    twin = [f"「{a}」×「{c}」: " + " + ".join(labs)
+            for (a, c), labs in sorted(pairs.items()) if len(labs) > 1]
+    check(f"{stem} ({len(rows)} rows read)", not twin,
+          "; ".join(twin) + " — two talks on one arc AND one crux domain is one "
+          "listening printed twice, whichever 場面 and テーマ札 they were drawn "
+          "under. Re-angle ONE of them onto a different arc without moving the "
+          "drawn scenario, then stamp `origin: reauthored` in spec and ledger "
+          "if the key moved (qa-report-20260904_3-round2 F2)")
+    crowded = [f"「{a}」 ×{len(labs)} ({', '.join(labs)})"
+               for a, labs in sorted(arcs.items())
+               if len(labs) > P3_ARC_ONE_ARC_MAX]
+    warn(f"{test_id}: no 問題3 arc fills more than {P3_ARC_ONE_ARC_MAX} of "
+         f"{len(rows)} rows", not crowded,
+         "; ".join(crowded) + " — official July 2025 and December 2025 each run "
+         "five talks on five arcs, one row apiece; a paper with half its 問題3 "
+         "on one arc is the 20260904_3 defect one notch below the FAIL above "
+         "(question-authoring/references/choukai-items.md §問題3)")
+    warn(f"{test_id}: 問題3's 話の型 column uses the documented arc vocabulary",
+         not unknown,
+         "; ".join(unknown) + " — an arc spelled a new way cannot collide with "
+         "the same arc spelled the old way, which is what the closed vocabulary "
+         "is for. Either reuse the documented value or add the new one to "
+         "P3_TALK_ARCS and to choukai-items.md §問題3 in the same edit")
+
+
+# --------------------------------------- 問題4: the DISTRACTOR shapes, as a pair
+#
+# THE RULE (choukai-items.md §即時応答): every 問題4 row declares its two wrong
+# options by SHAPE from a closed vocabulary — 時制の誤り / 論点のずれ /
+# 語義の取り違え / 誤った前提 / 立場の逆転 / 対象の取り違え / 既に完了 — and no two
+# rows of the 大問 may be built from the same pair. Two items whose distractors
+# are shaped identically are one item written twice: the candidate who learns to
+# reject 「立場の逆転」+「既に完了」 answers both without hearing them.
+#
+# THE INCIDENT: qa-report-20260904_3 §3 states the measurement 「no shape over
+# 40%, no two items sharing both shapes」 as evidence for that paper, and nothing
+# computed it — the number was a reviewer's hand count, and the two papers
+# before it were never measured at all. R7 asked for the closed vocabulary to
+# become data rather than prose.
+#
+# MEASURED 2026-09-05 over all 23 papers. Seven carry no 誤答の型 column and
+# skip. Four (20260813_2, 20260814_1, 20260817_1, 20260817_2) predate the closed
+# vocabulary and write free text (「すり替え」「的外れ」「事実に反する」), which is
+# the shape the rule forbids; rewriting them means re-auditing four shipped 聴解
+# sections, so they are exempt BY NAME on the vocabulary line only. Twelve use
+# the vocabulary with zero unknown tokens.
+#
+# SHARED PAIRS, 例 counted (the 例's own distractors are heard, and every sibling
+# 構成表 check — ELIMINATION_ROW_CAP, LEADER_PAIR_ROW_CAP, the 決め手×質問型 pair —
+# counts it): six papers ship one duplicated pair each and are grandfathered —
+#   20260817_2 既に完了+的外れ (例+1番)      20260817_3 誤った前提+論点のずれ (例+7番)
+#   20260819_1 時制の誤り+論点のずれ (例+9番) 20260827_1 対象の取り違え+論点のずれ (例+7番)
+#   20260827_2 対象の取り違え+論点のずれ (例+4番) 20260828_2 誤った前提+論点のずれ (例+9番)
+#   20260903_1 時制の誤り+論点のずれ (例+7番)
+# plus `20260817_3`'s 3番+9番, the only SCORED-row pair on disk. The three papers
+# of this session (`20260904_1`/`_2`/`_3`) are clean on merit.
+#
+# THE 40% LINE, and what its denominator is: the share is per SHAPE over the
+# DISTRACTOR SLOTS (2 per row, 24 in a 12-row 大問), not over rows. Measured that
+# way the corpus maximum is 7/24 = 29% (20260817_3, 論点のずれ and
+# 語義の取り違え) and NO paper trips 40% — read against rows instead, 15 of 16
+# papers would trip it, which is how a cap gets quietly abandoned. WARN.
+P4_DISTRACTOR_SHAPES = {
+    "時制の誤り", "論点のずれ", "語義の取り違え", "誤った前提",
+    "立場の逆転", "対象の取り違え", "既に完了",
+}
+P4_SHAPE_SHARE_MAX = 0.40
+P4_SHAPE_VOCAB_GRANDFATHERED = {
+    "20260813_2", "20260814_1", "20260817_1", "20260817_2",
+}
+P4_SHAPE_PAIR_GRANDFATHERED = {
+    "20260817_2", "20260817_3", "20260819_1", "20260827_1",
+    "20260827_2", "20260828_2", "20260903_1",
+}
+P4_SHAPE_REPEAT = re.compile(r"[×x]\s*\d+$")
+
+
+def check_choukai_p4_distractor_shapes(test_id: str, ct: str, bi):
+    """問題4's 誤答の型 is a closed vocabulary and no pair repeats (R7)."""
+    rows = section_table_rows(ct, 4, "誤答の型", bi)
+    stem = f"{test_id}: 問題4's two 誤答の型 never repeat as a pair"
+    if not rows:
+        return skip(stem, "問題4's 構成表 carries no 誤答の型 column — this paper "
+                          "is unmeasured, not clean")
+    counts: collections.Counter = collections.Counter()
+    pairs: dict[frozenset, list[str]] = {}
+    unknown = []
+    for label, cell in rows:
+        toks = [P4_SHAPE_REPEAT.sub("", t.strip())
+                for t in ELIMINATION_SPLIT.split(strip_parentheticals(cell))
+                if t.strip()]
+        for t in toks:
+            counts[t] += 1
+            if t not in P4_DISTRACTOR_SHAPES:
+                unknown.append(f"{label}「{t}」")
+        pairs.setdefault(frozenset(toks), []).append(label)
+    vocab_name = (f"{test_id}: 問題4's 誤答の型 cells are the closed vocabulary "
+                  f"({len(rows)} rows read)")
+    vocab_detail = ("; ".join(unknown) + " — 誤答の型 is one token per wrong "
+                    "option from {" + " / ".join(sorted(P4_DISTRACTOR_SHAPES))
+                    + "}. Free text makes the pair line below uncountable, "
+                    "which is the same failure 消去方法 had "
+                    "(question-authoring/references/choukai-items.md §即時応答)")
+    if test_id in P4_SHAPE_VOCAB_GRANDFATHERED:
+        warn(vocab_name, not unknown, vocab_detail + GRANDFATHER_NOTE)
+    else:
+        check(vocab_name, not unknown, vocab_detail)
+
+    twin = ["+".join(sorted(k)) + ": " + " + ".join(v)
+            for k, v in sorted(pairs.items(), key=lambda kv: sorted(kv[0]))
+            if len(v) > 1]
+    pair_name = f"{stem} ({len(rows)} rows read)"
+    pair_detail = ("; ".join(twin) + " — two rows whose wrong options are shaped "
+                   "the same way are one item written twice: rejecting the same "
+                   "two shapes answers both without hearing either. Re-shape ONE "
+                   "distractor of one of them; the reply itself need not move "
+                   "(qa-report-20260904_3 R7)")
+    if test_id in P4_SHAPE_PAIR_GRANDFATHERED:
+        warn(pair_name, not twin, pair_detail + GRANDFATHER_NOTE)
+    else:
+        check(pair_name, not twin, pair_detail)
+
+    slots = sum(counts.values())
+    over = [f"「{t}」 {c}/{slots} = {c / slots:.0%}" for t, c in counts.most_common()
+            if slots and c / slots > P4_SHAPE_SHARE_MAX]
+    warn(f"{test_id}: no 問題4 誤答の型 fills more than "
+         f"{P4_SHAPE_SHARE_MAX:.0%} of the {slots} distractor slots", not over,
+         "; ".join(over) + " — one shape over the cap means the section trains "
+         "a single rejection habit; the corpus maximum measured 2026-09-05 is "
+         "29%. Re-shape one distractor, do not relabel the cell")
+
+
 # F4 (qa-report-20260904_2). 決め手の種類 is capped at 2 rows per token, and TWO
 # ITEMS CAN SIT ON THAT CAP WHILE ALSO SHARING 質問型 — at which point the
 # candidate does the same listening twice with every column of the 構成表 reading
@@ -10514,10 +11191,39 @@ def check_choukai_longest_key_rate(test_id: str, ct: str, st: str, m, bi):
 # key and a scored key is the worst form of this defect — the paper tells the
 # candidate which option was right and then keys the same word in the next item,
 # which is precisely what 「書く」 did. Scoring excludes the 例; hearing does not.
+# THE SIXTH PATTERN — the LEMMA fold (2026-09-05, qa-report-20260904_3 R5).
+# Patterns 4 and 5 read a verb SURFACE, and two inflections of one verb are two
+# different surfaces: `20260904_3` shipped 問題3-2番's key 「今年から**変える**、
+# 健康診断の日の決め方」 and 3番's key 「会場を作る人の**分け方を変えた**こと」 —
+# 「変え」 in 2 of 24 spoken options, both keys, zero distractors — and this
+# check printed `ok`, because P3_OKURIGANA yields 「変える」 for one and
+# 「変えた」 for the other. Replayed on those two strings: the five patterns give
+# {変える, …} and {変えた, …} with no shared member; the fold gives `lemma:変`
+# for both. Same class as 「そのまま」 (20260904_1) and 「やり方」/「書く」
+# (20260904_2), one inflection layer deeper.
+#
+# THE CASE-PARTICLE GUARD is not decoration. Without it the fold reads the
+# 「〜書で」 of 「契約書で」 as the verb 書く and the 「〜出を」 of 「申し出を」 as
+# 出る. MEASURED over all 33 papers with and without it: the guard removes three
+# false ids — `20260812_1` (`lemma:物`), `20260904_2` (`lemma:書`) and one of
+# `20260827_1`'s two (`lemma:出`) — while removing none of the true ones.
+#
+# RE-MEASURED 2026-09-05 over every paper on disk (24 spoken options each), the
+# fold WITH the guard moves exactly five generated ids, each gaining a token the
+# five surface patterns structurally cannot represent:
+#   20260813_1 `lemma:流`   20260813_2 `lemma:申` + `lemma:込`
+#   20260814_1 `lemma:組`   20260827_1 `lemma:続`   20260828_2 `lemma:合`
+# `20260904_3`, the founding paper, does NOT move — its 2番 key was re-angled
+# off 変える before this landed, and the fold confirms the repair rather than
+# re-flagging it. ZERO of the ten official sittings under `tests/imported-*`
+# flag under the fold (they flag zero without it too); a predicate that flagged
+# a real sitting would be refuted for this 大問, as 問題4's was. The line stays
+# a `warn()`, so no committed paper changes verdict.
 P3_TOKEN_SUFFIX = re.compile(r"(について|のこと|こと|の話)$")
 P3_GRAM_PARTICLE_HEAD = set("をにはがのとでもへやかねよ")
 P3_OKURIGANA = re.compile(r"[一-鿿][ぁ-ゖ]{1,3}")
 P3_KANA_HEADED = re.compile(r"[ぁ-ゖ]{1,3}[一-鿿]")
+P3_LEMMA = re.compile(r"([一-鿿])([ぁ-ゖ]{1,3})")
 
 
 def choukai_p3_content_tokens(option: str) -> set[str]:
@@ -10532,6 +11238,8 @@ def choukai_p3_content_tokens(option: str) -> set[str]:
     toks |= set(P3_OKURIGANA.findall(s))
     toks |= {t for t in P3_KANA_HEADED.findall(s)
              if t[0] not in P3_GRAM_PARTICLE_HEAD}
+    toks |= {f"lemma:{stem}" for stem, okuri in P3_LEMMA.findall(s)
+             if okuri[0] not in P3_GRAM_PARTICLE_HEAD}
     return toks
 
 
@@ -12883,6 +13591,8 @@ def check_tests():
                 check_choukai_leader_pairs(d.name, ct, bi)
                 check_choukai_setting_adjacency(d.name, ct, bi)
                 check_choukai_decider_question_type_pair(d.name, ct, bi)
+                check_topics_p3_archetype_repeat(d.name, ct, bi)
+                check_choukai_p4_distractor_shapes(d.name, ct, bi)
                 check_choukai_closing_turn_shape(d.name, ct, st, m, bi)
                 check_choukai_opening_frame(d.name, st, m)
                 check_choukai_judgment_mix(d.name, st, ct, m, bi)
@@ -13121,11 +13831,14 @@ def main():
         check_topics_closing_moves_vocabulary()
         check_theme_repeat_cross_test()
         check_slot_theme_repeat()
+        check_choukai_kimochi_repeat()
         check_cross_test_listening_subjects()
         check_choukai_nondialogue_medium_rotation()
         check_draw_provenance()
         check_pools_sha_replayability()
         check_invented_proper_nouns()
+        check_q14_apparatus_reuse()
+        check_topics_notes_quotes()
     check_tests()
     check_grader_parity()
 

@@ -223,6 +223,37 @@ closing-move column, and check:
   surfaces, thirteen different essays". Two passages on unrelated subjects
   both ending 「〜だけでは足りない、〜こそが要る」 is one essay written twice;
   official ships that move 5–9 times per 読解 half.
+- **Add a column for the DRAWN topic string, and read each surface against its
+  OWN draw before you read it against the others.** Every check in the pipeline
+  compares surfaces to each other or themes to themes; nothing compares a
+  shipped surface's SUBJECT against the `test_spec.json` string it was drawn
+  from, so a passage can wander off its own draw with every line green — and it
+  then silently spends a cooldown the sampler thought it was honouring.
+  `20260904_3` drew 「高齢者向け軽スポーツの**普及**」 and shipped a passage arguing
+  **定着**, which is `20260904_2` 問題9's subject one paper earlier; that drift is
+  the mechanism behind `qa-report-20260904_3` F1, and its own root-cause table
+  filed it as a process failure with no owner.
+  **This is a READ, not a gate, and that is measured, not assumed.** The obvious
+  predicate — count the drawn topic's distinctive subject tokens that survive
+  into `logs/topics.json`'s `surfaces`/`claim` text — was run over all 23 papers
+  on 2026-09-05: it reports **1–6 zero-overlap draws on every paper on disk**,
+  median 3–4, because a surface legitimately writes 「自動で走るバス」 for
+  「自動運転バス」; and it does **not** fire on the founding case, since 高齢者
+  survives a re-angle from 普及 to 定着. A predicate that flags every paper and
+  misses the defect it was written for is refuted. So: put the drawn string in
+  the table, and say in the report, per surface, whether the shipped subject is
+  the one drawn. A surface that moved off its draw is either re-angled back onto
+  it (no stamp — it moved TOWARD the record) or stamped `"origin": "reauthored"`
+  in spec AND ledger with a note, per `exam-qa-review` §"A fix that changes WHAT
+  a surface tests".
+- **A 読解 topic and a 聴解 scenario may name one subject, and no check sees it.**
+  `check_surface_subjects()` does compare every `reading_topics` ×
+  `listening_scenarios` pair of a spec, but it matches maximal kanji runs for
+  equality, so 「健康保険組合からの人間ドック補助案内」 and 「人事部からの健康診断の
+  お知らせ」 — one paper, one subject, both tagged 睡眠・健康 — share nothing it
+  can see (`qa-report-20260904_3` F5). The errand-key route is closed for this
+  pair and `exam-blueprint` §"`key` — the errand identity" records why. Read the
+  読解 rows and the 聴解 rows of the table as ONE list, not two.
 - **No topic appears twice in this paper**, even in a different register.
   Avoid e.g. a 問題14 flyer spelling out a 聴解 item's keyed answer, or one
   subject serving both 問題9 and 問題10(1).
