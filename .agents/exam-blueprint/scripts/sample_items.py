@@ -275,7 +275,9 @@ def is_bare_compound(entry) -> bool:
 
 
 def weighted_sample_no_replacement(rng: random.Random, items: list,
-                                   weights: list[float], n: int) -> list:
+                                   weights: list[float], n: int,
+                                   conflict_fn=None, seen: set | None = None
+                                   ) -> list:
     """Weighted sample of `n` items from `items`, no replacement.
 
     Efraimidis-Spirakis A-Res: give each item a key `u ** (1/w)` for
@@ -286,17 +288,94 @@ def weighted_sample_no_replacement(rng: random.Random, items: list,
     cluster right at the cooldown boundary the instant an item clears it.
     `n` may equal `len(items)` — this then returns every item, weighted-shuffled
     (`sample_distinct_theme` relies on exactly that to order its greedy pass).
+
+    `conflict_fn` makes the pick loop see ITS OWN accepted items (A,
+    qa-report-20260904_2 F1/F2 root-cause). Without it the top-`n` slice is
+    blind to the fact that two of its own winners are the same errand or the
+    same grammar form: `draw()` updated the cross-category `taken` set only
+    BETWEEN categories, so a 21-entry `listening_scenarios` draw could take
+    both 「工場:安全講習の案内」 and 「工場見学:安全講習の説明」 (one errand key) and
+    `check_spec_errand_key_pair()` would FAIL the paper after the fact —
+    `20260904_2`'s initial draw did exactly that, twice. With `conflict_fn` the
+    top-`n` slice becomes a greedy walk down the same sorted keys, skipping any
+    item whose exclusion tokens are already spoken for. The two are identical
+    when nothing conflicts, and the RNG stream is untouched either way: one
+    `rng.random()` per item, before any filtering.
+
+    `seen` is the caller's accumulator and is UPDATED in place, so several
+    picks over disjoint subsets (the composition samplers below) still exclude
+    across each other. A short return means the candidate set held fewer than
+    `n` mutually compatible entries; `draw()` is what decides what to do about
+    that.
     """
     keyed = sorted(
         ((rng.random() ** (1.0 / w), it) for it, w in zip(items, weights)),
         key=lambda kv: kv[0], reverse=True,
     )
-    return [it for _, it in keyed[:n]]
+    if conflict_fn is None:
+        return [it for _, it in keyed[:n]]
+    if seen is None:
+        seen = set()
+    out = []
+    for _, it in keyed:
+        if len(out) >= n:
+            break
+        toks = conflict_fn(it)
+        if toks & seen:
+            continue
+        seen |= toks
+        out.append(it)
+    return out
+
+
+def independent_count(items: list, conflict_fn, seen: set | None = None) -> int:
+    """How many of `items` a conflict-aware pick could take (greedy, so a FLOOR).
+
+    `draw()`'s cooldown-relaxation loop asks "does this snapshot hold `n`
+    items?", and once picks exclude each other the honest question is "does it
+    hold `n` items that can be taken TOGETHER?". Maximum independent set is the
+    exact answer and is not worth computing here: the greedy count is a lower
+    bound, so it can only make the loop relax one step too eagerly, never leave
+    it short — the same direction of error the KEIGO_CAP/WAGO_FLOOR sufficiency
+    branches already take.
+    """
+    acc = set(seen or ())
+    got = 0
+    for x in items:
+        toks = conflict_fn(x)
+        if toks & acc:
+            continue
+        acc |= toks
+        got += 1
+    return got
+
+
+def _subset_picker(rng: random.Random, weight_fn, conflict_fn, seen):
+    """The `pick(pool, count)` the four composition samplers share.
+
+    They all draw from two or three DISJOINT subsets of `eligible` (katakana vs
+    plain, 訓 vs 音, keigo vs plain, 和語 vs compound vs other) and used to hold
+    a private copy of this closure each. One copy, because `seen` has to be the
+    SAME accumulator across a sampler's two calls: the subsets are disjoint as
+    ENTRIES and not as exclusion tokens, so 「two picks, one errand key」 is
+    reachable across them exactly as it is inside one (A, qa-report-20260904_2).
+    """
+    def pick(pool: list, count: int) -> list:
+        if count <= 0 or not pool:
+            return []
+        count = min(count, len(pool))
+        if weight_fn:
+            return weighted_sample_no_replacement(
+                rng, pool, [weight_fn(e) for e in pool], count,
+                conflict_fn=conflict_fn, seen=seen)
+        return rng.sample(pool, count)
+    return pick
 
 
 def sample_katakana_capped(rng: random.Random, eligible: list, n: int,
                            target_rate: float, cap: int, name: str,
-                           weight_fn=None) -> list:
+                           weight_fn=None, conflict_fn=None,
+                           seen: set | None = None) -> list:
     """`n` entries whose katakana-headword count matches the archive's rate.
 
     §12's archive rate is near-zero per paper (0 in most sittings, 1 in a
@@ -314,14 +393,7 @@ def sample_katakana_capped(rng: random.Random, eligible: list, n: int,
     kata = [e for e in eligible if is_katakana_headword(e)]
     plain = [e for e in eligible if not is_katakana_headword(e)]
     k = min(cap, len(kata), sum(rng.random() < target_rate for _ in range(n)))
-
-    def pick(pool: list, count: int) -> list:
-        if count <= 0:
-            return []
-        if weight_fn:
-            return weighted_sample_no_replacement(
-                rng, pool, [weight_fn(e) for e in pool], count)
-        return rng.sample(pool, count)
+    pick = _subset_picker(rng, weight_fn, conflict_fn, seen)
 
     if len(plain) < n - k:
         print(f"  warning: pool '{name}' has too few non-katakana entries "
@@ -336,7 +408,8 @@ def sample_katakana_capped(rng: random.Random, eligible: list, n: int,
 def sample_kun_capped(rng: random.Random, eligible: list, n: int,
                       target_rate: float, cap: int, name: str,
                       already: int = 0, weight_fn=None,
-                      floor: int = 0) -> list:
+                      floor: int = 0, conflict_fn=None,
+                      seen: set | None = None) -> list:
     """`n` entries whose 訓読み count sits inside the archive's BAND.
 
     Same shape as `sample_katakana_capped()`, and for the same reason: the
@@ -354,14 +427,7 @@ def sample_kun_capped(rng: random.Random, eligible: list, n: int,
     plain = [e for e in eligible if not is_kun_target(e)]
     k = min(budget, len(kun), sum(rng.random() < target_rate for _ in range(n)))
     k = max(k, min(budget, len(kun), max(0, floor - already)))
-
-    def pick(pool: list, count: int) -> list:
-        if count <= 0:
-            return []
-        if weight_fn:
-            return weighted_sample_no_replacement(
-                rng, pool, [weight_fn(e) for e in pool], count)
-        return rng.sample(pool, count)
+    pick = _subset_picker(rng, weight_fn, conflict_fn, seen)
 
     if len(plain) < n - k:
         print(f"  warning: pool '{name}' has too few 音読み entries "
@@ -374,7 +440,8 @@ def sample_kun_capped(rng: random.Random, eligible: list, n: int,
 
 
 def sample_keigo_capped(rng: random.Random, eligible: list, n: int, cap: int,
-                        name: str, kept: list | tuple = (), weight_fn=None) -> list:
+                        name: str, kept: list | tuple = (), weight_fn=None,
+                        conflict_fn=None, seen: set | None = None) -> list:
     """`n` `quick_response` entries with at most `cap` fixed-keigo stimuli.
 
     Same shape and the same reason as `sample_kun_capped()`: the pool's own
@@ -387,15 +454,7 @@ def sample_keigo_capped(rng: random.Random, eligible: list, n: int, cap: int,
     plain = [e for e in eligible if not is_keigo_stimulus(e)]
     have = sum(1 for x in kept if is_keigo_stimulus(x))
     room = max(0, cap - have)
-
-    def pick(pool: list, count: int) -> list:
-        if count <= 0 or not pool:
-            return []
-        count = min(count, len(pool))
-        if weight_fn:
-            return weighted_sample_no_replacement(
-                rng, pool, [weight_fn(e) for e in pool], count)
-        return rng.sample(pool, count)
+    pick = _subset_picker(rng, weight_fn, conflict_fn, seen)
 
     take_k = min(room, len(keigo), n)
     if len(plain) < n - take_k:
@@ -426,7 +485,8 @@ def is_keigo_stimulus(entry) -> bool:
 
 def sample_wago_floor(rng: random.Random, eligible: list, n: int, floor: int,
                       compound_cap: int, name: str, kept: list | tuple = (),
-                      weight_fn=None, dist: dict | None = None) -> list:
+                      weight_fn=None, dist: dict | None = None,
+                      conflict_fn=None, seen: set | None = None) -> list:
     """`n` `orthography` entries with at least `floor` 和語 targets and at most
     `compound_cap` bare 2-kanji compounds (F3).
 
@@ -441,15 +501,7 @@ def sample_wago_floor(rng: random.Random, eligible: list, n: int, floor: int,
     other = [e for e in eligible if e not in wago and e not in comp]
     have_w = sum(1 for x in kept if is_wago_orthography(x))
     have_c = sum(1 for x in kept if is_bare_compound(x))
-
-    def pick(pool: list, count: int) -> list:
-        if count <= 0 or not pool:
-            return []
-        count = min(count, len(pool))
-        if weight_fn:
-            return weighted_sample_no_replacement(
-                rng, pool, [weight_fn(e) for e in pool], count)
-        return rng.sample(pool, count)
+    pick = _subset_picker(rng, weight_fn, conflict_fn, seen)
 
     hist = dist or {2: 1}
     target = rng.choices(list(hist), weights=list(hist.values()))[0]
@@ -706,6 +758,47 @@ def sample_mode_target(rng: random.Random, name: str) -> int:
     return rng.choices(counts, weights=[dist[c] for c in counts], k=1)[0]
 
 
+# --- Paired items inside one section (E / F2, qa-report-20260904_2) ---------
+# `ANSWER_SECTIONS` is a flat list of (section, count, width), and for every
+# 大問 but one an item is an item. 聴解問題5 is not flat: its three rows are
+# 1番, then 2番's 質問1 and 質問2 — TWO SCORED ITEMS OF THE SAME RECORDING,
+# answered from one hearing, printed side by side on the sheet. Nothing in the
+# position machinery knew that. `MAX_SECTION_MODE["聴解_問題5"] = 2` is a
+# faithful reading of the archive and it happily lets the section's mode be the
+# LAST TWO rows, which is the one arrangement that means "2番's two questions
+# have the same answer": `20260904_2` was drawn [3, 1, 1], so the sampler
+# RESERVED the defect and `check_answer_position_section_clustering()` then
+# passed it by construction. A candidate who hears the man's opening line keys
+# both questions without doing either elimination — two scored items collapsed
+# into one.
+#
+# FOUNDING MEASUREMENT, run 2026-09-05 over refs/JLPT_N2_NEW/answer_keys.json:
+# the last two 聴解問題5 keys are equal in **0 of 31** sittings — 0 of the 11
+# current-shape (3-item) sittings and 0 of the 20 pre-12/2022 (4-item) ones,
+# where the last two rows are 3番's 質問1/質問2 and the same pairing holds. Over
+# `tests/*/test_spec.json`: 0 of the 22 specs on disk (`20260904_2` shipped
+# [3,1,2] after its QA fix pass), so this constraint re-classifies NO committed
+# paper and needs no grandfather set.
+#
+# The constraint lives on the ROW, not on the assembled plan, so a rejection
+# costs one 3-item redraw instead of all nineteen sections. `section_row()`
+# applies it; `section_pair_breaches()` re-checks the finished plan as a belt,
+# exactly as `section_mode_breaches()` does for the ceiling.
+def _mondai5_2_distinct(row: list[int]) -> bool:
+    """False when 聴解問題5-2番's 質問1 and 質問2 would key the same option."""
+    return len(row) < 2 or row[-1] != row[-2]
+
+
+SECTION_ROW_CONSTRAINTS = {"聴解_問題5": _mondai5_2_distinct}
+
+
+def section_pair_breaches(plan: dict[str, list[int]]) -> list[str]:
+    """Sections whose paired items key the same option (E). Belt for the above."""
+    return [f"{name} {row} (last two entries are one item's 質問1/質問2)"
+            for name, row in plan.items()
+            if not SECTION_ROW_CONSTRAINTS.get(name, lambda _r: True)(row)]
+
+
 def section_row(rng: random.Random, name: str, count: int,
                 width: int) -> list[int]:
     """One section's answer positions, mode-matched to the archive (R2-F8).
@@ -720,9 +813,23 @@ def section_row(rng: random.Random, name: str, count: int,
     The rejection loop is cheap except where the target is the least likely
     row shape (問題7's mode 3 = a perfectly even 3/3/3/3 split, ~2 % of rows), so
     the bound is generous rather than tight.
+
+    `SECTION_ROW_CONSTRAINTS` adds any per-section constraint on the ORDER of the
+    finished row — today only 聴解問題5's paired 質問1/質問2 (see that table). It is
+    applied after `shuffle_no_triple()`, which is what decides the order, and a
+    failure RE-SHUFFLES the same counts instead of re-drawing them. That is not a
+    detail: rejecting the whole row would reject only mode-2 rows (a 3-item row
+    with three distinct positions can never fail the pair constraint), which
+    quietly re-weights `SECTION_MODE_DIST` — measured over 300 plans, re-drawing
+    pulled 聴解問題5's mode-2 share from the archive's 6/11 = 55 % down to 47 %,
+    reproducing in miniature the exact defect `SECTION_MODE_DIST` exists to fix.
+    Official achieves both at once (0 of 31 sittings key the pair the same, 6 of
+    the 11 current-shape ones still have mode 2), and so does a re-shuffle:
+    [a,a,b] has three arrangements and two of them are legal.
     """
     target = sample_mode_target(rng, name)
     lo3, hi3 = POSITION_BAND_3
+    ok = SECTION_ROW_CONSTRAINTS.get(name)
     for _ in range(50_000):
         row = [rng.randrange(1, width + 1) for _ in range(count)]
         if section_mode(row)[1] != target:
@@ -730,8 +837,15 @@ def section_row(rng: random.Random, name: str, count: int,
         if width == 3 and not all(lo3 <= row.count(p) <= hi3
                                   for p in range(1, width + 1)):
             continue
-        return shuffle_no_triple(rng, row, f"{name} ({count}x{width})",
-                                 max_run=section_max_run(width))
+        for _ in range(1_000):
+            shuffled = shuffle_no_triple(rng, list(row),
+                                         f"{name} ({count}x{width})",
+                                         max_run=section_max_run(width))
+            if not ok or ok(shuffled):
+                return shuffled
+        # No arrangement of THESE counts satisfies the constraint (e.g. a row
+        # that is one repeated value). Draw fresh counts rather than spin.
+        continue
     sys.exit(f"section_row: no {count}x{width} row for {name} with mode count "
              f"{target} after 50000 draws — SECTION_MODE_DIST[{name}] offers a "
              f"count this section size cannot realise; re-measure the archive")
@@ -783,7 +897,10 @@ def balanced_position_plan(rng: random.Random,
     redrawn if the global band or the cross-seam run cap fails. `MAX_SECTION_MODE`
     is re-verified at the end as a belt: it holds by construction now (every
     drawable target is a count the archive actually shows), and a breach here
-    would mean the two tables have drifted apart.
+    would mean the two tables have drifted apart. `section_pair_breaches()` is
+    the same shape of belt for `SECTION_ROW_CONSTRAINTS` — 聴解問題5's last two
+    rows are one recording's 質問1 and 質問2 and may not key the same option (E,
+    qa-report-20260904_2 F2; the measurement is above that table).
     """
     lo, hi = POSITION_BAND
 
@@ -803,6 +920,8 @@ def balanced_position_plan(rng: random.Random,
                for i in range(len(deck) - window + 1)):
             continue
         if section_mode_breaches(plan):
+            continue
+        if section_pair_breaches(plan):
             continue
         return plan, running
 
@@ -1208,6 +1327,17 @@ def grammar_form_parts(entry) -> list[str]:
     skeleton (「のは…からだ」), not one chunk of it, and a set could not express
     that. `grammar_form_tokens()` below is this list filtered and namespaced, so
     the two can never disagree about what the FORM of an entry is.
+
+    `/` is NOT a chunk separator, and must not become one: it means "or", not
+    "then". `〜得る/得ない` is two alternative forms, not the ordered skeleton
+    「得る…得ない」, and joining its halves with a gap would make
+    `check_key_grammar_exposure()` hunt the 読解 prose for a pattern that does not
+    exist. No `grammar_p8` entry carries a `/` today (the only two slashed
+    entries are `grammar_p7`'s `〜得る/得ない` and `〜おかげで/せいで`) and that
+    check reads `grammar_p8` only, so nothing reaches the hazard — putting a
+    slashed entry into `grammar_p8` means teaching the exposure check about
+    alternation first. Two slashed entries that are one point are folded by
+    `grammar_form_families` instead (`grammar_form_tokens()` records why).
     """
     t = item_text(entry)
     if not re.search(r"[〜～]", t):
@@ -1227,6 +1357,37 @@ def grammar_form_tokens(entry) -> set[str]:
     `限定表現(〜のみならず…も)` -> {`form»のみならず`}; `〜のみならず` -> the same
     token, which is the whole point. `〜しかない・よりほかない` -> both halves.
     `〜上(で)` -> {} (the gloss carries no 〜, and 「上」 is one character).
+
+    ALTERNATION (`/`) IS DELIBERATELY NOT SPLIT HERE — a slashed entry is folded
+    by `grammar_form_families` instead (F2, qa-report-20260904_2). The defect:
+    `〜おかげで/せいで` yields the single token `form»おかげで/せいで` while
+    `grammar_p8`'s `〜おかげで` yields `form»おかげで`, so the two are strangers to
+    `taken_tokens()` and `20260904_2` drew both — one grammar point keyed in 問題7
+    and framed in 問題8, exactly what this function exists to prevent.
+
+    Splitting `/` here was written, run against the whole corpus, and REVERTED,
+    because this token feeds `identity_tokens()` — the CROSS-PAPER cooldown — and
+    widening it re-classifies draws that are already out. Measured 2026-09-05:
+    `〜おかげで/せいで` gaining `form»おかげで` puts three shipped papers in breach
+    of `check_grammar_cross_category_rotation()` — `20260817_2` and `20260818_1`
+    (both already in `GRAMMAR_CROSS_ROTATION_GRANDFATHERED`, so they gain a WARN
+    line each) and `20260904_2`, which is NOT exempt and turns the gate RED:
+    its `grammar_p7` 「〜おかげで/せいで」 lands 9 draws after `20260818_1`'s
+    `grammar_p8` 「〜おかげで」 against a 10-draw window. Nothing about those draws
+    was wrong when they were made; only the predicate moved.
+
+    The family map is the right instrument for the same reason it exists at all:
+    it is IN-PAPER only (`taken_tokens()`, never `identity_tokens()` — see
+    `form_family_tokens()`), and 「one form in two 大問 of ONE paper」 is precisely
+    the defect QA filed. `check_pool_grammar_form_families()` had already listed
+    this pair as its first untagged candidate, and it lists a slashed pair by
+    construction (its prefix test folds 「おかげで/せいで」 onto 「おかげで」), so a
+    future slashed entry is surfaced mechanically rather than trusted to memory.
+
+    Measured over `pools.json` the same day: 2 of 214 grammar entries carry a
+    slash, both `grammar_p7`. `〜得る/得ない` needs no family — no other entry
+    spells 得る or 得ない as its own form, and 「〜ざるを得ない」 is a separate point
+    Shin Kanzen headlines separately, whose token is the whole 「ざるを得ない」.
     """
     return {GRAMMAR_FORM_NS + p for p in grammar_form_parts(entry)
             if len(p) >= GRAMMAR_FORM_MIN}
@@ -1340,7 +1501,9 @@ def recency_map(history: list) -> dict:
 
 
 def sample_distinct_theme(rng: random.Random, eligible: list, n: int,
-                          name: str, weight_fn=None) -> list | None:
+                          name: str, weight_fn=None, used_themes=(),
+                          conflict_fn=None, seen: set | None = None
+                          ) -> list | None:
     """`n` entries, no two sharing a theme. None when the pool cannot.
 
     Greedy over a shuffle, which is uniform enough for this purpose and, unlike
@@ -1352,6 +1515,18 @@ def sample_distinct_theme(rng: random.Random, eligible: list, n: int,
     `weight_fn`, when given, orders the shuffle by recency weight (see
     `weighted_sample_no_replacement`) so the greedy pass still favors
     longer-unused entries, not just a plain shuffle.
+
+    `used_themes` are themes ALREADY SPOKEN FOR by entries this draw is keeping
+    (C, qa-report-20260904_2). `--reroll-one` calls this with `n == 1`, and a
+    one-entry distinctness constraint is vacuous — the kept entries' themes were
+    invisible, so a `reading_topics` reroll could hand back a theme the paper
+    already holds. It did, twice on `20260904_2` (食×2, then 教育×2), costing two
+    further rerolls and detectable only through the `check_theme_spread` WARN.
+    The full-draw path passes nothing and is unchanged.
+
+    `conflict_fn`/`seen` are the same in-pick exclusion `draw()` applies
+    everywhere else (A): theme-distinct and errand-distinct are different
+    predicates, and one paper wants both.
     """
     if weight_fn:
         shuffled = weighted_sample_no_replacement(
@@ -1359,13 +1534,19 @@ def sample_distinct_theme(rng: random.Random, eligible: list, n: int,
     else:
         shuffled = list(eligible)
         rng.shuffle(shuffled)
-    picked, used = [], set()
+    picked, used = [], set(used_themes)
+    if seen is None:
+        seen = set()
     for e in shuffled:
         th = entry_theme(e) or ""
         if th in used:
             continue
+        toks = conflict_fn(e) if conflict_fn else set()
+        if toks & seen:
+            continue
         picked.append(e)
         used.add(th)
+        seen |= toks
         if len(picked) == n:
             return picked
     print(f"  warning: pool '{name}' cannot fill {n} distinct themes "
@@ -1393,9 +1574,24 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
     in a console line nobody kept.
 
     `kept` is the entries of this same category the caller is KEEPING (nonzero
-    only on the `--reroll-one` path). Nothing but the mix caps read it: a
-    one-entry redraw must not be able to push the paper past a per-paper ceiling
-    the full draw respects.
+    only on the `--reroll-one` path). The mix caps read it so a one-entry redraw
+    cannot push the paper past a per-paper ceiling the full draw respects, and
+    since 2026-09-05 the THEME distinctness of `DISTINCT_THEME_CATS` reads it too
+    (C, qa-report-20260904_2) — `sample_distinct_theme()`'s own docstring has
+    that incident.
+
+    THE PICK LOOP EXCLUDES ITS OWN PICKS (A, qa-report-20260904_2). `taken` is
+    the caller's cross-category set and `main()` only updates it BETWEEN
+    categories, so until this landed a single 21-entry `listening_scenarios`
+    draw was blind to duplicates among its own winners: `20260904_2`'s initial
+    draw took two same-errand pairs (「工場:安全講習の案内」+「工場見学:安全講習の説明」,
+    「書店:取り寄せの依頼」+「書店:取り寄せ」) and `check_spec_errand_key_pair()`
+    FAILed the paper after the fact. Every path out of this function now shares
+    one `seen` accumulator seeded from `taken` and `kept`, so the exclusion the
+    gate checks is the exclusion the draw enforces. FOUNDING MEASUREMENT, run
+    2026-09-05 over 300 simulated full draws against the live pools and ledger:
+    **110 of 300 (36.7 %)** contained at least one intra-category collision, all
+    of them in `listening_scenarios`; with `seen` in place, 0 of 300.
     """
     if len(pool) < 2.5 * n:
         print(f"  warning: pool '{name}' is thin ({len(pool)} for draws of {n}) "
@@ -1416,6 +1612,34 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
         # draw does not cluster right at the boundary the moment it clears.
         return float(ago(x)) + 1.0
 
+    # Seeded from the caller's cross-category set AND from the kept entries of
+    # this same category, so a `--reroll-one` replacement cannot re-run an
+    # errand the paper is keeping. `eligible` below already filters both; this
+    # is what keeps the PICKS mutually exclusive as well.
+    base_seen = set(taken) | {tok for x in kept for tok in taken_tokens(x)}
+
+    def top_up(picked: list) -> list:
+        """Never return a SHORT draw, and never return one silently.
+
+        `independent_count()` is a floor, and the composition samplers can still
+        come up short when their subsets are conflict-dense, so the exclusion
+        added in A could otherwise hand `main()` 20 scenarios where the spec
+        contract says 21 — a shortfall the ledger records as history and cannot
+        distinguish from a `DRAW` change (SKILL 'A draw count that disagrees
+        with DRAW is a ledger defect, not history'). Fill from whatever is left,
+        conflicts and all, and say so loudly: a printed collision the author can
+        reroll beats a quietly missing item.
+        """
+        if len(picked) >= n:
+            return picked
+        rest = [x for x in eligible if x not in picked]
+        print(f"  WARNING: pool '{name}' could only supply {len(picked)} of {n} "
+              f"mutually-distinct entries (errand key / grammar form) — topping "
+              f"up from the rest of the eligible set, so this draw may repeat an "
+              f"errand inside the paper. Grow this pool, or `--reroll {name}`")
+        return picked + weighted_sample_no_replacement(
+            rng, rest, [weight(x) for x in rest], n - len(picked))
+
     for cool in range(cool_max, -1, -1):
         eligible = [x for x in pool
                     if not (taken_tokens(x) & taken) and ago(x) >= cool]
@@ -1433,7 +1657,9 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
         # the PLAIN sub-pool alone can fill what the cap can't, so
         # `sample_keigo_capped()`'s own fallback stays the true last resort
         # (cool == 0) instead of firing years before the pool is really out.
-        sufficient = len(eligible) >= n
+        # Not `len(eligible) >= n`: once picks exclude each other, a snapshot
+        # of n entries that are all one errand holds ONE pick, not n (A).
+        sufficient = independent_count(eligible, taken_tokens, base_seen) >= n
         if sufficient and name in KEIGO_CAP:
             have_keigo_kept = sum(1 for x in kept if is_keigo_stimulus(x))
             room = max(0, KEIGO_CAP[name] - have_keigo_kept)
@@ -1472,31 +1698,42 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
             elif cool < cool_max:
                 print(f"  note: pool '{name}' is tight — cooldown relaxed to "
                       f"{cool} draw(s) (of {cool_max}); consider growing the pool")
+            # ONE accumulator per attempt, handed to whichever sampler runs, so
+            # every branch out of here is conflict-free by construction (A).
+            seen = set(base_seen)
             if name in DISTINCT_THEME_CATS:
-                picked = sample_distinct_theme(rng, eligible, n, name,
-                                               weight_fn=weight)
+                picked = sample_distinct_theme(
+                    rng, eligible, n, name, weight_fn=weight,
+                    used_themes={entry_theme(x) or "" for x in kept},
+                    conflict_fn=taken_tokens, seen=seen)
                 if picked is not None:
-                    return picked, cool
+                    return top_up(picked), cool
+                seen = set(base_seen)   # the fallback path below starts clean
             if name in KATAKANA_CAP:
-                return sample_katakana_capped(
+                return top_up(sample_katakana_capped(
                     rng, eligible, n, KATAKANA_TARGET_RATE[name],
-                    KATAKANA_CAP[name], name, weight_fn=weight), cool
+                    KATAKANA_CAP[name], name, weight_fn=weight,
+                    conflict_fn=taken_tokens, seen=seen)), cool
             if name in KUN_CAP:
-                return sample_kun_capped(
+                return top_up(sample_kun_capped(
                     rng, eligible, n, KUN_TARGET_RATE[name], KUN_CAP[name],
                     name, already=sum(1 for x in kept if is_kun_target(x)),
-                    weight_fn=weight, floor=KUN_FLOOR.get(name, 0)), cool
+                    weight_fn=weight, floor=KUN_FLOOR.get(name, 0),
+                    conflict_fn=taken_tokens, seen=seen)), cool
             if name in KEIGO_CAP:
-                return sample_keigo_capped(
+                return top_up(sample_keigo_capped(
                     rng, eligible, n, KEIGO_CAP[name], name, kept=kept,
-                    weight_fn=weight), cool
+                    weight_fn=weight,
+                    conflict_fn=taken_tokens, seen=seen)), cool
             if name in WAGO_FLOOR:
-                return sample_wago_floor(
+                return top_up(sample_wago_floor(
                     rng, eligible, n, WAGO_FLOOR[name], COMPOUND_CAP[name],
                     name, kept=kept, weight_fn=weight,
-                    dist=WAGO_DIST.get(name)), cool
-            return weighted_sample_no_replacement(
-                rng, eligible, [weight(x) for x in eligible], n), cool
+                    dist=WAGO_DIST.get(name),
+                    conflict_fn=taken_tokens, seen=seen)), cool
+            return top_up(weighted_sample_no_replacement(
+                rng, eligible, [weight(x) for x in eligible], n,
+                conflict_fn=taken_tokens, seen=seen)), cool
     remaining = len([x for x in pool if item_text(x) not in taken])
     sys.exit(f"pool '{name}' cannot supply {n} distinct items "
              f"({remaining} available after cross-category exclusion)")

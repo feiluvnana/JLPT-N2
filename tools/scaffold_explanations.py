@@ -27,6 +27,22 @@ wording out of 詳細解説.json (or the booklet) and writes the prose here.
 It is also NOT a translation template: the empty fields are there to be written
 from the item, not from the Japanese pane beside them (exam-model-answer
 "Two languages, two rewrites").
+
+EVERY PRE-FILLED `options_analysis` LINE MUST BE REPLACED BEFORE
+`make model-answer`. The `ja` scaffold does not leave those slots empty — it
+writes one of four formulaic templates into each ("…は、文脈に合いません。",
+"…は、音声の内容と異なります。", "…は、文脈および語用・文法制約に合致します。",
+"…は、会話内容の結論に合致しています。"), which saves the author from re-typing
+the option text but says nothing a reader could not get from the [不正解] tag.
+Those lines are well-formed, correctly tagged and inside every terseness band,
+so until 2026-09-05 the whole gate was blind to them and BOTH 2021 imports
+shipped Japanese panes that were 100% of them (397/397 and 393/393 lines,
+re-measured by re-running this script). `check_kaisetsu_no_scaffold_placeholders`
+in tools/check_consistency.py now FAILs any paper that has reached the
+model-answer stage and still carries one; its `KAISETSU_SCAFFOLD_TEMPLATES`
+tuple is the same list as the four strings below, and **adding a template here
+means adding it there** — a template that check does not know is a template
+that ships.
 """
 
 import argparse

@@ -203,7 +203,16 @@ defect through.
 - **The same fix must also update every relevant field in that surface's OWN
   `logs/topics.json` entry** — the row's keys, which are
   **`surfaces`, `themes`, `closing_moves`, `voices`, `claim`, `persona`,
-  `shapes`, `notes`** (read them off the row).
+  `shapes`, `notes`** (read them off the row). **Two of those columns are
+  CLOSED vocabularies and the gate says so**: `themes` (`level_data.THEMES`)
+  and, since 2026-09-05, `closing_moves` — the six shapes plus 実用文・分類外,
+  owned by `dokkai.md` and enforced by
+  `check_topics_closing_moves_vocabulary()`. `20260904_2` invented three
+  closing labels (対比整理 ×2, 留保つき提示, 両面提示); its closings were
+  defensible and its RECORD was false, which is the more expensive half,
+  because this row is what the next paper's blueprint stage diffs against. If a
+  re-derived tally puts a shape at 3, re-read those three final sentences —
+  never invent a label to make it fit.
   **Correction, 2026-09-03:** this bullet briefly claimed "no row on disk has
   ever had a `shapes` key". That measurement was wrong — `shapes` (each 聴解
   item's errand shape, 33 entries) was present on **16 of the 20 rows**, on
@@ -479,6 +488,25 @@ as "N1"/"N3", so a single source's label was never sufficient.
   leaves the model answer explaining wording the paper does not contain — 722
   options were stale at once (`check_model_answer_option_sync`). Whenever an
   option changes, re-sync the `options` array AND any 解説 prose quoting it.
+- **模範解答 — a SCAFFOLDED explanation is not an authored one, and until
+  2026-09-05 nothing could tell them apart.**
+  `tools/scaffold_explanations.py` does not leave `options_analysis` empty: it
+  pre-fills every line with formulaic prose that quotes the option and states
+  a verdict (「…は、文脈に合いません。」「…は、音声の内容と異なります。」). Those lines
+  are well-formed, correctly tagged, and inside every terseness band, so
+  `check_kaisetsu_length` — which counts characters — could not see them, and
+  neither could parity, key-tagging or option-sync. **Both 2021 imports shipped
+  Japanese panes that were 100 % placeholder behind a fully green gate**, and
+  were caught only by a human-equivalent read. Re-running the scaffold on those
+  papers reproduces 397/397 and 393/393 such lines.
+  `check_kaisetsu_no_scaffold_placeholders` now FAILs any paper that has reached
+  the model-answer stage (`模範解答.html` on disk) and still carries one; a
+  scaffolded file before that stage is legal, which is the whole point of the
+  scaffold. **The QA read this does not replace:** the check knows the
+  scaffold's own strings and nothing else, so an explanation reworded into a
+  different generic sentence (「選択肢2は本文の内容に合わない。」) passes it and is
+  the same defect. Read a sample of `options_analysis` lines and ask whether
+  each names the fact that kills THAT option.
 - **問題14:** the answer must combine **≥2** constraints (never single-field);
   every scenario detail the question references must be describable from the
   source as printed — fail an invented detail (a role the flyer never names).

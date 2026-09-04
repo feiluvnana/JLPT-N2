@@ -217,10 +217,36 @@ objects would orphan the shipped ledger rows that name them.
   `identity_tokens()`** — one paper may not draw two of a family; two
   consecutive papers may each draw one. The defect is two in one 問題8.
 - **Membership is "one form spelled twice", not "shares a stem".** Today:
-  `{〜つつある, 経過状況(〜つつ…する)}` and `{目的表現(〜ように…する),
-  目的達成(〜ように努力する)}`. 〜ばかりに vs 〜ばかりか, 〜として vs 〜としても and
+  `{〜つつある, 経過状況(〜つつ…する)}`, `{目的表現(〜ように…する),
+  目的達成(〜ように努力する)}` and `{〜おかげで/せいで, 〜おかげで}`.
+  〜ばかりに vs 〜ばかりか, 〜として vs 〜としても and
   〜ない限り vs 〜に限らず are **not** families — Shin Kanzen headlines them
   separately and folding them would refuse honest draws.
+- **A `/` in a pool entry means "or", and a slashed entry is a family, not a
+  tokenizer case (F2, `qa-report-20260904_2`, 2026-09-05).** `〜おかげで/せいで`
+  names two spellings of one slot, so `grammar_form_tokens()` gave it the single
+  token `form»おかげで/せいで` while `grammar_p8`'s `〜おかげで` gave
+  `form»おかげで` — disjoint, so `taken_tokens()` treated them as strangers and
+  `20260904_2` drew both, keying the point in 問題7 and framing it in 問題8.
+  **Splitting the tokenizer on `/` was written, run against the whole corpus, and
+  reverted**: that token feeds `identity_tokens()`, i.e. the CROSS-paper
+  cooldown, and the widened predicate put three shipped papers in breach of
+  `check_grammar_cross_category_rotation()` — `20260817_2` and `20260818_1` (both
+  already grandfathered, so a new WARN line each) and **`20260904_2`, which is
+  not exempt and turned the gate RED**: its 問題7 「〜おかげで/せいで」 sits 9 draws
+  after `20260818_1`'s 問題8 「〜おかげで」 against a 10-draw window. Nothing about
+  those draws was wrong when they were made; only the predicate moved, and the
+  standing rule is that a widened predicate must not re-classify shipped work.
+  The family map is the correct instrument because it is **in-paper only**, which
+  is exactly the defect QA filed, and because
+  `check_pool_grammar_form_families()` lists a slashed pair by construction (its
+  prefix test folds 「おかげで/せいで」 onto 「おかげで」) — so the next slashed entry
+  is surfaced mechanically, not left to memory. `〜得る/得ない`, the only other
+  slashed entry in 214 grammar rows, needs no family: nothing else spells 得る or
+  得ない as its own form, and 「〜ざるを得ない」 is a separate point whose token is the
+  whole 「ざるを得ない」. `grammar_form_parts()` must keep `/` UNSPLIT for a second
+  reason — it is the ordered skeleton `check_key_grammar_exposure()` greps the
+  読解 prose with, and 「得る…得ない」 is not a pattern that exists.
 - `check_p8_form_family()` FAILs a spec drawing two of one family (measured over
   all 21 generated specs: none does, so no id is grandfathered), and
   `check_pool_grammar_band()` asserts every family key names a live pool entry
@@ -237,7 +263,8 @@ objects would orphan the shipped ledger rows that name them.
   `P8_FAMILY_COVERAGE_MIN`, skipping outright at zero; and
   `check_pool_grammar_form_families()` lists every `grammar_p7`/`grammar_p8`
   pair whose forms overlap on a core too short for `grammar_form_tokens()` and
-  that no family declares. It reports **23** candidate pairs today — most are
+  that no family declares. It reports **22** candidate pairs today (23 before
+  the おかげで family landed) — most are
   honest non-families of the 〜として/〜としても kind above, but one is not:
   **`〜つつも` is a third member of the つつ family and is still untagged.**
   Judge the list by hand and tag what belongs; never widen the check's generic
@@ -463,6 +490,31 @@ strings in `logs/ledger.json`, and `check_draw_provenance()` requires every
 recorded draw to resolve to a pool entry — deleting a duplicate FAILs the gate
 on papers that are already out. Add the `key`; a shared `key` is correct data,
 never a defect.
+
+**The ONE thing that stops you adding a key: it would retro-FAIL a shipped
+paper. Measure before you add, and write the measurement down (2026-09-05).**
+Adding a `key` is retroactive by construction — `errand_key()` resolves recorded
+history through the index built off the CURRENT pool, so a key added today
+re-reads every draw ever made. Usually that is the point. Occasionally the
+re-read puts a committed paper inside its own cooldown window, and then the key
+is a change to papers that are already out, not to the sampler.
+
+Standing case, measured and **left undone on purpose**: `listening_scenarios`'
+「保険窓口:内容変更」 carries no `key` while naming the errand of an existing
+cluster (「保険の契約内容の確認と見直し」 / 「保険会社:契約内容の見直し」, key
+`保険会社:契約内容の見直し`). By 「key it, never re-spell it」 it should carry that
+key verbatim. It does not, because the string HAS been drawn — 20260814_1 (ledger
+index 8) and 20260904_2 (index 21) — and the cluster's other spellings were drawn
+at indices 2, 4 and **16** (`20260827_2`). Against `listening_scenarios`'
+11-draw window, adding the key was run and produces **two new FAILs**:
+`20260827_2` (5 draws after 20260814_1) and `20260904_2` (5 draws after
+20260827_2), neither of them in `ERRAND_ROTATION_GRANDFATHERED`, plus a second
+WARN breach on the already-exempt `20260814_1`. Both would qualify for an
+exemption under that set's own criterion (their draws predate the key), so the
+repair is **one grandfather entry per id in `tools/check_consistency.py` landed
+in the same edit as the key** — the two halves are not separable, and adding the
+key alone turns the gate red on shipped work. Do it that way or leave it; do not
+add the key and then reroll a committed paper to quiet the gate.
 
 **What the gate does with it.** `check_pool_errand_keys()` FAILs a blank or
 non-string `key` (drop the field rather than leave it empty — a blank key is an
@@ -692,7 +744,25 @@ flat ledger migrates automatically.
   favors items that have gone longest since use (weight `ago(x)+1`), so a
   just-cooled item doesn't cluster right at the cooldown boundary.
 - **One item, one 問題 per test** — categories draw against a shared `taken`
-  set; a post-draw assertion aborts on collision.
+  set; a post-draw assertion aborts on collision. **The pick loop sees its own
+  picks too, and did not until 2026-09-05** (A, `qa-report-20260904_2` F1/F2
+  root-cause). `taken` was updated only BETWEEN categories, so one
+  `listening_scenarios` call drawing 21 scenarios was blind to duplicates among
+  its own winners: `20260904_2`'s initial draw took two same-key pairs
+  (「工場:安全講習の案内」+「工場見学:安全講習の説明」, 「書店:取り寄せの依頼」+
+  「書店:取り寄せ」) and `check_spec_errand_key_pair()` FAILed the paper after the
+  fact. `weighted_sample_no_replacement()` now takes a `conflict_fn`/`seen` pair
+  and walks its sorted keys greedily instead of slicing the top `n`; every path
+  out of `draw()` — the four composition samplers included, which share ONE
+  accumulator across their disjoint subsets — is conflict-free by construction.
+  **Measured over 300 simulated full draws against the live pools and ledger:
+  110 (36.7 %) contained at least one intra-category collision before, 0 after,
+  with no short draws.** Two consequences worth knowing: `draw()`'s
+  cooldown-relaxation test is now `independent_count() >= n` (a greedy floor —
+  a snapshot of `n` entries that are all one errand holds ONE pick, not `n`), and
+  a draw that genuinely cannot fill `n` distinct errands **tops up loudly** rather
+  than returning short, because a short draw becomes ledger history that nothing
+  can tell from a `DRAW` change.
 - **Cooldown is by WORD, across categories** — recency tracks both raw
   string and `head()` identity, **plus a themed entry's `key`** when it has
   one, so near-duplicate errands cool down as one item (§"`key` — the errand
@@ -704,6 +774,17 @@ flat ledger migrates automatically.
   scoping the post-draw check to `{cat: picked}` on the reroll path.
   `--reroll-one` scopes it one level further, to the single new entry, for the
   same reason: the kept entries of that category are older draws.
+- **A reroll still owes the paper every PER-PAPER rule the full draw obeys, and
+  `DISTINCT_THEME_CATS` was missing from that list until 2026-09-05** (C,
+  `qa-report-20260904_2`). The mix caps (`KUN_*`, `KEIGO_CAP`, `WAGO_*`) already
+  read `kept`; theme distinctness did not, and `sample_distinct_theme()` called
+  with `n == 1` enforces nothing at all — so a `reading_topics` `--reroll-one`
+  could hand back a theme the paper is keeping, which rule 3 forbids outright
+  (all thirteen 読解 surfaces differ). It did, twice on `20260904_2` (食×2, then
+  教育×2), costing two further rerolls and visible only as a
+  `check_theme_spread` WARN. `draw()` now passes the kept entries' themes as
+  `used_themes`. **Measured over 480 (index, seed) trials on that paper's own
+  spec: 303 (63.1 %) landed on a kept theme before, 0 after.**
 - **Attribution** — pass `--test-id <id>` so each draw records its consumer.
 - **What gets RECORDED is the pool entry-string, never the paper's surface
   form or a substitute.** `recency_map()` keys on the raw string and
@@ -822,7 +903,44 @@ MAX_POSITION_RUN = 3   # longest same-position run allowed anywhere in the deck
 POSITION_BAND_3 = (2, 6)   # per-position count band, 聴解 問題4 (11 items)
 MAX_SECTION_MODE = {...}   # per-大問 CEILING on the most-frequent position
 SECTION_MODE_DIST = {...}  # per-大問 TARGET distribution of that mode count
+SECTION_ROW_CONSTRAINTS = {...}  # per-大問 constraint on the ROW's ORDER
 ```
+
+### `SECTION_ROW_CONSTRAINTS` — 聴解問題5's last two rows are ONE item (F2, 2026-09-05)
+
+`ANSWER_SECTIONS` is a flat `(section, count, width)` list, and for every 大問 but
+one an item is an item. 聴解問題5 is not flat: its three rows are 1番, then **2番's
+質問1 and 質問2** — two scored items of the same recording, answered from one
+hearing. Nothing in the position machinery knew that, so
+`MAX_SECTION_MODE["聴解_問題5"] = 2` — a faithful reading of the archive — happily
+let the section's mode BE those two rows, which is the one arrangement meaning
+「2番's two questions have the same answer」. `20260904_2` was drawn `[3, 1, 1]`:
+the sampler **reserved** the defect and `check_answer_position_section_clustering()`
+passed it by construction. A candidate who hears the opening line keys both
+questions without doing either elimination — two scored items collapsed into one
+(`qa-report-20260904_2` F2, an automatic fail).
+
+**Founding measurement, run 2026-09-05** over `refs/JLPT_N2_NEW/answer_keys.json`:
+the last two 聴解問題5 keys are equal in **0 of 31** sittings — 0 of the 11
+current-shape (3-item) ones and 0 of the 20 pre-12/2022 (4-item) ones, where the
+last two rows are 3番's 質問1/質問2 and the same pairing holds. Over
+`tests/*/test_spec.json`: **0 of the 22 specs on disk**, so the constraint
+re-classifies no committed paper and needs no grandfather set. The pre-fix
+sampler produced it in **109 of 600** plans (18 %).
+
+Two mechanics that are not incidental:
+
+- The constraint lives on the ROW (`section_row()`), not on the assembled plan,
+  so a rejection costs one 3-item redraw instead of all nineteen sections.
+  `section_pair_breaches()` re-checks the finished plan as a belt, exactly as
+  `section_mode_breaches()` does for the ceiling.
+- A failure **re-shuffles the same counts**, it does not re-draw them. Only
+  mode-2 rows can fail (three distinct positions never can), so re-drawing would
+  silently re-weight `SECTION_MODE_DIST` — measured, it pulled 聴解問題5's mode-2
+  share from the archive's 6/11 = 55 % down to 47 %, reproducing in miniature the
+  exact defect that table exists to fix. Official achieves both at once, and so
+  does a re-shuffle: `[a,a,b]` has three arrangements and two are legal
+  (`section_row` alone measures 53.7 % mode-2 before AND after).
 
 The two mode tables are one measurement read two ways — the ceiling is
 `max(SECTION_MODE_DIST[section])` — and `sample_items.py` asserts that at import
@@ -979,7 +1097,9 @@ python .agents/exam-blueprint/scripts/sample_items.py --reroll-one quick_respons
 **`--reroll-one <category>:<index>` redraws ONE drawn entry** (R2-F2,
 2026-08-19), under exactly the same exclusions as a full reroll: this paper's
 other picks in every category — including the same category's KEPT entries — plus
-that category's own cooldown window. It records itself in the seed expression as
+that category's own cooldown window, plus (since 2026-09-05) the kept entries'
+THEMES for a `DISTINCT_THEME_CATS` category and the kept entries' errand keys and
+grammar forms in the pick loop itself (§"Rotation model", C and A). It records itself in the seed expression as
 `+reroll-one(cat:idx,seed)`, re-stamps `pools_sha`, and writes the updated list
 to both the spec and this test's ledger entry, so `check_draw_provenance()` still
 resolves. Use it when ONE drawn entry is the defect: `--reroll quick_response`

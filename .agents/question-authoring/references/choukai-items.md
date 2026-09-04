@@ -181,6 +181,35 @@ existed: 問題1 = six distinct tokens; 問題2 = 在庫・数量2 / 身体・�
 時刻・日程2 / 場所・経路1 — three tokens sitting exactly ON the cap, which is what
 the finding above looks like once it is visible.
 
+**THE CAP IS CONDITIONAL: two rows sharing a 決め手の種類 token must differ in
+質問型** (added 2026-09-05, qa-report-20260904_2 F4). The cap of 2 bounds the
+DECIDER and says nothing about what the candidate is asked to do with it — so
+two items can sit exactly ON the cap, share a question frame, run the same
+errand shape, and read compliant in every column. `20260904_2` 問題2 shipped
+2番 and 4番 both **規則・制度 + どうして**, both a counter transaction stopped by
+a prerequisite the customer must go fetch, with mirrored distractors
+(2-2-1「保険の証券を持ってきていない」 ↔ 2-4-3「ゆずりますと書いた紙を、持ってきて
+いない」; 2-2-3「郵便でしか受け付けられない」 ↔ 2-4-2「ネットからでないと、申しこめ
+ない」). If they share both columns the candidate does the same listening twice
+however different the 場面 and the 正解 look — **re-angle one item's deciding
+line onto another axis and its question onto another frame.**
+
+Unlike the cap above, **this half IS gate-checked**: both columns are closed
+vocabularies, so the pair is decidable by string matching from the 構成表 alone.
+`check_choukai_decider_question_type_pair` FAILs a 問題1/2 whose 構成表 has two
+rows agreeing on both, counting 例 (the same denominator the cap uses); the
+papers breaching the day it was written are named in
+`DECIDER_QTYPE_PAIR_GRANDFATHERED` and WARN with the same measurement. Read the
+set in `tools/check_consistency.py`, not this sentence, for who is exempt today.
+
+**Re-angling a どうして row is usually the cheap side.** 問題2's 理由 quota is a
+CAP of 3 with no floor, and its 内容・発言 quota is a FLOOR of 2 — so moving one
+どうして row to 内容・発言 clears the pair and helps the other quota at the same
+time, which is exactly the repair `20260904_2` took (4番 went 規則・制度 +
+どうして → 連絡・情報の不足 + 内容・発言, and the transaction now completes rather
+than being blocked). Relabelling the cell is NOT the repair: that is the
+`choukai_decider_formula` defect, a false record in an audit artifact.
+
 ### 決め手の位置 — the formula, and the denominator it is measured over
 
 The column above capped 「3 of 6 rows in any one third」 from the day it was
@@ -647,6 +676,27 @@ twice at double length, spending both 統合理解 slots on 課題理解.
 **Rotate the 質問 pair across tests.** 「最初どう思っていたか／最終的にどうする
 ことにしたか」 ran four consecutive papers; official also rotates
 男の人は／女の人は, 1日目/2日目, 最初/結局.
+
+**BINDING: 質問1 and 質問2 must key DIFFERENT options.** They are two scored
+items sharing one dialogue, and the shape only earns its two marks if they
+track two different resolutions. Key both to the same option and they collapse
+into one: whatever answers the first answers the second. MEASURED 2026-09-05 —
+**0 of 31** official sittings key 質問1 = 質問2 (`refs/JLPT_N2_NEW/*/key.md`)
+and **0 of 32** papers under `tests/` do. `20260904_2` was the first and only
+one ever to ship it, both keyed 「1 お部屋」 off a dialogue whose man opens
+「僕は部屋で食べたいな」 and closes 「じゃあ、部屋にしよう」 — a candidate who
+heard only the opening turn banked 2/2 (qa-report-20260904_2 F2, an automatic
+QA fail). `check_mondai5_2_distinct_keys` FAILs it.
+
+Two things the gate cannot see and you must still do: **neither question may be
+answerable from the opening turn**, and the fix is a re-authored item, not a
+swapped digit. The repaired `20260904_2` is the model — the man opens on
+筋力体操 (option 3) and the woman on 眠りの講座 (option 4), both openers are
+killed by their own quoted lines, and the keys land on 1 and 2. Note that
+`MAX_SECTION_MODE["聴解_問題5"] = 2` lets two of the section's three answers
+share a position and cannot know that entries 2 and 3 ARE 質問1 and 質問2, so a
+drawn plan can RESERVE this collision: check the pair against the plan before
+authoring, and re-measure `answer_positions` by hand after any repair.
 
 ### The 構成表 must state BOTH items' decision structure, against the last three papers
 

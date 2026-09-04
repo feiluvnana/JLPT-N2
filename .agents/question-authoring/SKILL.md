@@ -130,6 +130,29 @@ assigned entry exactly like 問題10-13, and any invented flavor detail (a
 number, a deadline, a survey figure) is your own invention, N2-simplified
 (約4割, not 38.6%), never phrased as a citation.
 
+**No real company, product or publication name appears in exam prose or in
+the 聴解 script** (added 2026-09-05, qa-report-20260904_2 F5). A generated
+paper's world is invented end to end, so a real name in it does one of two
+bad things: it lends a real organisation's authority to a fabricated fact, or
+it attaches a fabricated fact to a real organisation. MEASURED across all 31
+sittings in `refs/JLPT_N2_NEW/`: every real outlet name in the archive —
+朝日新聞, 日本経済新聞, 読売新聞, NHK — sits inside a 出典 attribution
+parenthesis under a 読解 excerpt (「…2009年4月11日付朝日新聞による」), and
+**zero** occur in exam prose, a stem, an option or a spoken line. Official
+passages are excerpts and therefore carry attribution apparatus; generated
+passages are written and do not, so for us the permitted count is simply
+zero. Name the CATEGORY instead: 「朝刊」「業界誌」「地元紙」「大手の食品会社」.
+`20260904_2` 聴解問題4-11番 spoke 「本日の日経新聞に弊社の記事が掲載されて
+おります」 — a real newspaper carrying an article about a company that does
+not exist — and no skill forbade it, so the author was right to ship the
+binding draw rather than hand-substitute. **When the name came out of a pool
+draw, fix `pools.json` and carry the corrected string into `test_spec.json`
+and `logs/ledger.json`** so `check_draw_provenance()` still resolves; a
+hand-substitution in the item alone leaves the pool holding the brand for the
+next paper. `make check`'s `check_no_real_brand_names` FAILs a generated
+`聴解スクリプト.txt` or `言語知識・読解.md` containing one; imports are exempt,
+because they transcribe what was printed.
+
 ## Item integrity (every rule here shipped broken at least once)
 
 `make check` enforces the mechanical half per test; the rest is on you. Run

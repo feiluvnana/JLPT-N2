@@ -342,6 +342,18 @@ make model-answer <id>             # -> tests/<id>/模範解答.html
 - Scaffold `詳細解説.json`, then author the explanations (`why_correct`,
   `options_analysis`, `points`). Stems/options/passages/audio scripts are
   auto-populated from the finalized markdown.
+- **The scaffold PRE-FILLS every `options_analysis` line, and a pre-filled line
+  is not an authored one.** `scaffold_explanations.py` writes 「[不正解] 選択肢2
+  「…」は、文脈に合いません。」 and three sibling templates into every slot — a
+  fresh scaffold of a finished paper is 100 % of them (measured: 393/393 on
+  `20260904_2`, 397/397 on `imported-n2-2021-07`). They are well-formed,
+  correctly tagged and inside every terseness band, so they used to survive the
+  whole gate: **both 2021 imports shipped 100 % placeholder Japanese panes
+  green**, and only a human read caught it.
+  `check_kaisetsu_no_scaffold_placeholders` now FAILs any paper with
+  `模範解答.html` on disk that still carries one. Replace every line with a
+  reason drawn from THAT item; do not delete lines, which breaks per-option
+  parity.
 - Then scaffold and author `詳細解説.vi.json` **in a second subagent that has
   not seen the Japanese set**. Both panes of `模範解答.html` print the exam's
   own wording (stored once, in `詳細解説.json`) above the explanation; only the

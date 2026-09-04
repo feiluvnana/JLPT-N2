@@ -121,6 +121,33 @@ shape:
   down (`A では/ほど B が多い（相関）`). Two 条件提示 closings will land on it
   unless you deliberately vary one — see the template list below.
 
+**The shape list is a CLOSED vocabulary, exactly as `THEMES` is** (added
+2026-09-05, qa-report-20260904_2 F7). Six shapes plus the 実用文 carve-out
+below, and nothing else:
+
+**`CLOSING_MOVES = {主張, 説明, 意外な観察, 反論応答, 随筆, 条件提示, 実用文・分類外}`**
+
+That is the whole list. `logs/topics.json`'s `closing_moves` column takes its
+values from it and from nothing else; `check_topics_closing_moves_vocabulary()`
+FAILs an off-list value and also asserts that this line and
+`check_consistency.py`'s `CLOSING_MOVES` name the same seven, so the list has
+one owner. **An author who can invent a label can always spread the column past
+the ≤2 cap** — `20260904_2` recorded 対比整理 ×2, 留保つき提示 and 両面提示, two
+of which were catalogue shapes under the mechanical overrides below, and the
+paper's closings were defensible while its RECORD was false. That is the
+expensive half: `logs/topics.json` is what the next paper's blueprint stage
+diffs against, and an open vocabulary cannot be diffed.
+
+**If a tally does not fit, re-read the finals — never invent an eighth label.**
+The two mechanical overrides (主張-vs-条件提示 and 説明-vs-意外な観察, both below)
+exist precisely so a shape that looks like a seventh is resolved into one of the
+six. The 実用文 carve-out is the only escape hatch, and it is for 問題10's
+email/notice/案内 members only. Older rows spelled it 「案内」,
+「実用文（お知らせ・分類外）」, 「実用文（チラシ・分類外）」 and
+「実用文（メール・分類外）」; all 34 such entries were normalised to
+**実用文・分類外** on 2026-09-05, losing nothing — each row's `surfaces` entry
+already names the document type.
+
 **The ≤2-per-shape cap is not enough alone — the two sharing a shape must
 also differ at the SENTENCE-TEMPLATE level**, not swap content words into
 the same skeleton. `20260817_2` shipped three such pairs (same closing
@@ -357,6 +384,29 @@ passage body, never floating under an instruction line.
 - **Span rate**: **≤2 span-anchored stems per paper** across 問題10–13 (current-era official median is 0, range 0–3; 4 of 7 sittings have 0). Do not over-anchor.
 - **指示語 floor**: **≥1 指示語 item per paper** (Shin Kanzen 第1部-2 question type 1; official current era 1.57/paper, e.g. 「それ/これとは何を指すか」「どういうことか」).
 - **Default retrieval shape**: **「筆者によると、〜は何か」** is the primary anchored retrieval frame (~25–29% of official 問題11/13 stems).
+
+**A 指示語 stem must NOT contain 「とあるが」** (2026-09-05,
+qa-report-20260904_2 R-F6). `dokkai_profile.classify_stem_bucket` is
+priority-ordered and tests `span` BEFORE `shijigo`, so any stem carrying
+「とあるが」 buckets as `span` however it is written — an author who reaches for
+the obvious wording, 「①**それ**とあるが、どういうことか」, satisfies the 指示語
+floor in their own reading and still measures **0**, while spending one of the
+paper's ≤2 span-anchored slots. The two shapes are mutually exclusive in this
+gate; pick one per stem.
+
+Write the 指示語 stem with a bare demonstrative and an unbolded, unmarked
+antecedent. The classifier fires on a demonstrative from
+{それ, これ, あれ, どれ, このよう, そのよう, こうし, そうし, これら, それら} followed
+later in the stem by one of {指, どういう, 何, 意味} — so:
+
+- ✅ 「筆者は、**そのような**見守り方を**どういう**ものだと述べているか」 — the
+  shipped `20260904_2` 問題11(4) stem, machine-verified `shijigo`.
+- ✅ 「筆者は、**これら**の変化を**どういう**ものだと考えているか」.
+- 🚫 「①**それ**とあるが、どういうことか」 — buckets `span`, not `shijigo`.
+- 🚫 「筆者は、**そのこと**をどのようなことだと考えているか」 — buckets `kangae`.
+  **「そのこと」 is not in the alternation** and 「どのような」 is not one of the
+  four heads; this wording was proposed as the fix for `20260904_2` F6 and does
+  not work. Verify the bucket before shipping the stem, never after.
 
 **Rule (every span-anchored stem):** whenever a stem anchors on a specific span
 via `「…」とあるが` — a quoted clause, sentence, or defined term — that EXACT
