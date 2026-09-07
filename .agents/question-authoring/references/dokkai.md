@@ -289,12 +289,19 @@ the five textbook extracts; leave-one-out on the official side):
 
 | | official 12/2022–12/2025 | our 23 papers |
 |---|---|---|
-| novel words, % of tokens | **9.7–16.4** (med 11.3) | 12.1–28.6 (med 20.0) |
-| UNGLOSSED novel / 1000 chars | **6.5–9.5** (med 8.6) | 6.1–18.4 (med 9.5) |
-| （注N） gloss headwords | **4–20** (med 9) | 9–31 (med 20) |
+| novel words, % of tokens | **9.5–15.7** (med 11.3) | 10.8–27.8 (med 14.5) |
+| UNGLOSSED novel / 1000 chars | **6.3–9.3** (med 8.4) | 2.7–9.5 (med 7.0) |
+| （注N） gloss headwords | **4–20** (med 9) | 9–30 (med 16) |
 
-**Author to ≤16.5 % novel.** `check_dokkai_lexical_load` WARNs above 17.5 % and
-FAILs above 20 %; both lines are the current era's, not the whole archive's.
+**Author to ≤15.8 % novel.** `check_dokkai_lexical_load` WARNs above 16.8 % and
+FAILs above 19.3 %; both lines are the current era's, not the whole archive's.
+
+The word proxy peels a leading 「numeral + counter」 phrase off a kanji run before
+measuring (`strip_numeral_phrase`): the run 「二時間座」 out of 「二時間座って」 is a
+quantity welded to a verb stem, no reference text contains it, and it scored as a
+novel hard word — all 12 words the gate printed for `20260904_2` were that shape
+(2026-09-08). A counter is required before peeling, or 一般/一方/一部/一緒 would
+lose their first character and read as novel too.
 
 **The qualitative finding, which is the actual rule.** Official papers DO carry
 unfamiliar words — 10–16 % of their vocabulary — but of a specific kind:

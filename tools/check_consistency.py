@@ -1955,11 +1955,15 @@ def check_dokkai_rhetorical_monotony(name: str, body: str):
 # `tools/lexical_profile.py --baseline`; refresh from that, never by retyping.
 #
 #                          official cur (n=7)   official all (n=31)   generated (n=23)
-#   novel words, % tokens   9.7–16.4             8.0–19.0              12.1–28.6
-#   unglossed novel /1k     6.5–9.5              4.1–13.5               6.1–18.4
-#   gloss headwords            4–20                4–24                  9–31
+#   novel words, % tokens   9.5–15.7             8.0–19.1              10.8–27.8
+#   unglossed novel /1k     6.3–9.3              4.1–13.5               2.7–9.5
+#   gloss headwords            4–20                4–24                  9–30
 #
-# Refreshed 2026-09-07 after `refs/Hajimete/vocab_reference.md` (はじめての N2単語
+# Refreshed 2026-09-08 after `strip_numeral_phrase` (the proxy was welding a
+# 「numeral + counter」 phrase to the following verb stem — 「二時間座って」 scored
+# 二時間座 as a novel hard word, and all 12 words the gate printed for
+# `20260904_2` were that shape). Refreshed 2026-09-07 after
+# `refs/Hajimete/vocab_reference.md` (はじめての N2単語
 # 2500) joined the reference corpus — a curated N2 word list moves every figure
 # down slightly, because more words are now correctly counted as known.
 #
@@ -1978,11 +1982,11 @@ def check_dokkai_rhetorical_monotony(name: str, body: str):
 #     a ceiling of 13.0) and 9 WARN. That is the era rule working, not a wrong
 #     threshold — those papers are a different format, read for reference only.
 #   * of the 23 generated papers this rule was written against, 13 FAIL.
-NOVEL_SHARE_TARGET = 16.5   # the current-era observed max — author BELOW this
-NOVEL_SHARE_WARN = 17.5
-NOVEL_SHARE_FAIL = 20.0
-UNGLOSSED_PER_1K_WARN = 11.0
-UNGLOSSED_PER_1K_FAIL = 13.0
+NOVEL_SHARE_TARGET = 15.8   # the current-era observed max — author BELOW this
+NOVEL_SHARE_WARN = 16.8
+NOVEL_SHARE_FAIL = 19.3
+UNGLOSSED_PER_1K_WARN = 10.8
+UNGLOSSED_PER_1K_FAIL = 12.8
 # Glossing is credit against the novelty count, so without a cap the cheapest
 # way to pass the two lines above is to footnote a technical register rather
 # than write a plainer one — which is what the generated papers were already
@@ -2027,11 +2031,11 @@ def check_dokkai_lexical_load(test_id: str):
     print(f"        読解 lexical load: novel {p.novel_share:.1f}% of "
           f"{p.word_tokens} kanji-words, unglossed {p.unglossed_per_1k:.1f}/1k "
           f"chars, {p.gloss_headwords} gloss headwords  "
-          f"[author ≤{NOVEL_SHARE_TARGET}% / official cur 9.7–16.4%]")
+          f"[author ≤{NOVEL_SHARE_TARGET}% / official cur 9.5–15.7%]")
 
     worst = ", ".join(p.unglossed_words[:12])
-    detail = (f"novel {p.novel_share:.1f}% (official current era 9.7–16.4), "
-              f"unglossed {p.unglossed_per_1k:.1f}/1k chars (official 6.5–9.5), "
+    detail = (f"novel {p.novel_share:.1f}% (official current era 9.5–15.7), "
+              f"unglossed {p.unglossed_per_1k:.1f}/1k chars (official 6.3–9.3), "
               f"{p.gloss_headwords} gloss headwords (official 4–20). "
               f"Unglossed novel words include: {worst}. "
               f"The repair is PLAINER SUBJECT MATTER, not more （注N） — pick a "
@@ -9609,7 +9613,13 @@ def check_mondai5_prints_nothing(name: str, ct: str, origin: str, bi):
 # `聴解スクリプト.txt` + `make mp3` + `make sheet` + `make upload-files`.
 # 20260828_2 removed 2026-09-08: its 聴解 repair prefixed both question lines
 # with 質問1。/質問2。 and re-synthesised 聴解.mp3, so it now passes on merit.
-P5_QUESTION_MARKER_GRANDFATHERED = {"20260903_1"}
+# 20260903_1 removed 2026-09-08, the same way and in the same pass as its
+# 聴解 volume repair: both question lines now read 「質問1。二人は…」/「質問2。男の
+# 人は…」, 聴解.mp3 was re-synthesised (script_sha 99222a77c868), and the 10 s
+# GAP_AFTER_SHITSUMON1 is reached. The set is now EMPTY, which is the state it
+# was always meant to reach — do not re-populate it to get a paper past the
+# check; the repair is two prefixes and `make mp3`.
+P5_QUESTION_MARKER_GRANDFATHERED: set[str] = set()
 
 
 def check_mondai5_question_markers(name: str, script_text: str, origin: str):

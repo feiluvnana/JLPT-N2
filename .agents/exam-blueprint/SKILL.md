@@ -553,7 +553,7 @@ reach, over the 12 essay-type surfaces (問題14 excluded):
 | ≥4 surfaces in the **first person** (私/僕/自分) | 60–100%, median 78% | WARN |
 | ≥3 surfaces in **です・ます throughout** | 30.5–45.2% of endings, median 35% | WARN |
 | kanji density per paper **24.5–31%** | 25.5–30.1%, median 28.4% | WARN outside 24.5–31, FAIL outside 22–34 |
-| novel vocabulary ≤16.5% of kanji-words | 9.7–16.4%, median 11.3 | FAIL above 20 (`dokkai.md` §"Lexical load") |
+| novel vocabulary ≤15.8% of kanji-words | 9.5–15.7%, median 11.3 | FAIL above 19.3 (`dokkai.md` §"Lexical load") |
 | ≥1 surface carrying quoted speech 「…」; ≥1 carrying a 疑問提示文 | 21–51 / 10k, 1–7 / 10k | QA reads it |
 
 Record it in `logs/topics.json` beside the subjects, as a **`voices` map keyed

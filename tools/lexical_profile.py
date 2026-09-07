@@ -136,6 +136,32 @@ def _is_numeral_run(word: str) -> bool:
     return bool(body) and all(ch in _NUMERAL for ch in body)
 
 
+_NUM_PHRASE = re.compile(
+    "^([" + _NUMERAL + "]+)(?:"
+    + "|".join(re.escape(c) for c in sorted(_COUNTER, key=len, reverse=True))
+    + ")")
+
+
+def strip_numeral_phrase(word: str) -> str:
+    """Peel leading 「numeral + counter」 phrases off a kanji run.
+
+    The word proxy is a kanji run bounded by non-kanji, so 「二時間座って」 yields
+    `二時間座` — a quantity welded to the stem of the verb that follows it. No
+    reference text contains that exact run, so it scored as a novel hard word,
+    and 12 of the 12 words the gate printed for `20260904_2` were of this shape.
+    A counter is REQUIRED before peeling: bare-numeral stripping would reduce
+    一般→般, 一方→方, 一部→部, 一緒→緒 and delete four common words.
+
+    Returns the remainder; callers drop it when it is under 2 chars (the
+    quantity was the whole content) and otherwise measure the remainder, so
+    「八回説明」 is scored as 説明.
+    """
+    prev = None
+    while prev != word:
+        prev, word = word, _NUM_PHRASE.sub("", word)
+    return word
+
+
 def _read(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8", errors="ignore")
@@ -144,7 +170,14 @@ def _read(path: Path) -> str:
 
 
 def words(text: str) -> list[str]:
-    return [w for w in WORD.findall(text) if not _is_numeral_run(w)]
+    out = []
+    for w in WORD.findall(text):
+        if _is_numeral_run(w):
+            continue
+        w = strip_numeral_phrase(w)
+        if len(w) >= 2:
+            out.append(w)
+    return out
 
 
 def gloss_headwords(raw: str) -> set[str]:
