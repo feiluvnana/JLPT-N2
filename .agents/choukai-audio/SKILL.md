@@ -600,13 +600,30 @@ whose 聴解.mp3 predates the ladders is in `PACING_SHA_GRANDFATHERED` until
 exceed the 0.9 s gap — a within-turn pause at or above it makes one speaker
 sound like two — and our papers carry ~120 boundaries against ~480 within-turn
 pauses because our median turn is 27 chars against official's 37
-(`official_register.md` §1). The tail is therefore capped near 9% by SCRIPT
-SHAPE, and the way to lift it is fewer, longer turns, not a bigger constant
-(`official_pacing.md` §6.1). **The 27-vs-37 figure in that sentence is the stale
-pair corrected in Part 1's turn-shape rule** — the real current-era gap is
-32.0–49.7 chars/turn against 50.9–62.5 — so the conclusion holds and is in fact
-understated: bringing a paper inside `check_choukai_volume`'s band lifts this
-tail on its own.
+(`official_register.md` §1). The tail is therefore capped near 9% by SCRIPT SHAPE.
+
+**"…and the way to lift it is fewer, longer turns" is WRONG, and so was the
+sentence this file carried on 2026-09-07 claiming that clearing
+`check_choukai_volume` lifts the tail on its own. Measured, it does the
+opposite.** The tail is
+`turn boundaries above 1.05 s ÷ all sub-2 s pauses`, and only a turn BOUNDARY
+can exceed 1.05 s (`WITHIN_TURN_LADDER` caps the rest). Fewer, longer turns
+therefore shrink the numerator and grow the denominator at the same time:
+repairing `20260811_1` into the volume band cut turns 159 → 124 while its
+mid-turn 。 pauses rose 126 → 179, and the tail went **ok → WARN at 6.2%**
+against the 7% floor. The repair agent measured the ceiling too — deleting every
+mid-turn 。 it had added still only reaches 6.8%. **No script inside the volume
+band can clear a 7% floor.**
+
+So the two checks are in conflict and one of them owns a wrong number. The lever
+is `turn_gap_jitter()`'s ladder, not the script: two of its five rungs (1.15,
+1.40) exceed 1.05 s, so ~40% of turn boundaries land in the tail by
+construction, and the achievable tail follows directly from the turn:pause
+ratio the volume band fixes. **Do not "fix" a paper against the 7% floor by
+adding turns — that breaks the volume gate, which is calibrated against
+official and this one is not.** Treat the WARN as open until the floor is
+re-derived from papers that are inside the volume band; `20260811_1` is the
+first such data point at 6.2%.
 
 ### A gap is only real if the segments around it are trimmed
 

@@ -607,6 +607,8 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     # the paper is frozen by the time this runs, so it may never be "fixed" by
     # touching a passage, and it is authoring, not a cut-to-band edit.
     "kaisetsu_passage_translation":   ("詳細解説.<lang>.json", "authoring"),
+    # Stale stored script: mechanical, `make scaffold-explanations` re-derives it.
+    "kaisetsu_stale_script":          ("詳細解説.json",        "assisted"),
     "kaisetsu_language":              ("詳細解説.<lang>.json", "authoring"),
     # The placeholder defect (qa-report-20260904_2): a line still carrying the
     # scaffold's own pre-filled prose. Repaired by re-solving the item and
@@ -11962,6 +11964,52 @@ def check_grandfather_sets_are_live():
 _VI_POINT_TERM = re.compile(r"[一-龥々]{2,}")
 
 
+def check_kaisetsu_wording_matches_source(test_id: str, ja: dict):
+    """詳細解説.json's stored 聴解 script is the script the MP3 speaks.
+
+    THE INCIDENT (2026-09-07). `詳細解説.json` owns the ONE copy of the exam's
+    wording that both language panes print — including a `script` field per 聴解
+    item. `scaffold_explanations.py` preferred the STORED value over the source
+    on every merge, so when the 聴解 volume repair of `20260811_1` rewrote 13
+    item blocks, the stored scripts kept the pre-repair dialogue. 模範解答.html
+    would have printed lines that are not in the MP3, and nothing read them:
+    `check_kaisetsu_options_match_booklet` compares OPTIONS, and every
+    `why_correct` quote happened to survive the rewrite.
+
+    The scaffold now always re-derives `script` from the source (it carries no
+    furigana, unlike `stem`, so there is nothing to lose). This is the backstop —
+    and the thing that would catch a hand-edit of either file.
+    """
+    st_path = ROOT / "tests" / test_id / "聴解スクリプト.txt"
+    if not st_path.is_file() or not ja:
+        return
+    script = st_path.read_text(encoding="utf-8")
+    stale = []
+    for key, item in ja.items():
+        if not isinstance(item, dict):
+            continue
+        stored = item.get("script")
+        if not stored:
+            continue
+        # Compare on spoken BODIES, not whole lines: the stored copy may differ
+        # in speaker-label spacing without differing in what is said.
+        for line in [l for l in stored.split("\n") if len(l) > 18][:4]:
+            body = line.split(":", 1)[-1].strip()
+            if body and body[:16] not in script:
+                stale.append(f"{key}「{body[:20]}…」")
+                break
+    check(f"{test_id}: 詳細解説.json's 聴解 script is the one 聴解.mp3 speaks "
+          f"({sum(1 for v in ja.values() if isinstance(v, dict) and v.get('script'))} items carry one)",
+          not stale,
+          f"{len(stale)} item(s) store superseded dialogue: {', '.join(stale[:6])}"
+          f"{' …' if len(stale) > 6 else ''} — 模範解答.html prints these, so it "
+          f"would show lines the audio does not speak. Re-run "
+          f"`make scaffold-explanations {test_id}` (it re-derives `script` from "
+          f"the source and preserves every authored explanation), then "
+          f"`make model-answer {test_id}`",
+          slug="kaisetsu_stale_script", test_id=test_id)
+
+
 def check_kaisetsu_passage_translation(test_id: str, ja: dict):
     """Every 読解 passage group carries a Vietnamese translation.
 
@@ -12366,6 +12414,7 @@ def check_kaisetsu_prose(test_id: str):
     check_kaisetsu_languages(test_id, ja)
     check_kaisetsu_vi_points_furigana(test_id)
     check_kaisetsu_passage_translation(test_id, ja)
+    check_kaisetsu_wording_matches_source(test_id, ja)
 
 
 # 模範解答 explains the options the candidate actually saw (G18). 詳細解説.json stores its

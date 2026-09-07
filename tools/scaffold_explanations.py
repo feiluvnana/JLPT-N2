@@ -211,7 +211,15 @@ def scaffold_test(test_dir: Path, lean: bool = False, merge_existing: bool = Tru
 
         stem = ex_item.get("stem") or raw_info.get("stem") or f"{key_id} 聴解問題"
         options = ex_item.get("options") or raw_info.get("options") or [f"選択肢 {i}" for i in range(1, 5)]
-        script = ex_item.get("script") if "script" in ex_item else raw_info.get("script")
+        # The SCRIPT always comes from the source, never from the stored copy
+        # (2026-09-07). `stem`/`options` prefer the stored value because a few
+        # carry hand-applied furigana 《…》 that re-deriving would lose; script
+        # fields carry none (measured: 0 of 19 on 20260811_1), so preferring the
+        # stored one bought nothing and cost correctness. THE INCIDENT: the
+        # 聴解 volume repair of `20260811_1` rewrote 13 item blocks, and this
+        # line kept the pre-repair dialogue in 詳細解説.json — 模範解答.html would
+        # have printed lines that are not in the MP3, and no check read them.
+        script = raw_info.get("script") or ex_item.get("script")
         ans_val = exp_info.get("ans", 1)
         raw_kaisetsu = exp_info.get("raw_kaisetsu", "")
 
