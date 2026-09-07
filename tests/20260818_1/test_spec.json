@@ -1,366 +1,370 @@
 {
- "seed": "9670904+reroll(listening_scenarios,5719948)+reroll(listening_scenarios,10982156)+reroll-one(quick_response:8,1514814)+reroll-one(listening_scenarios:16,70517349)+reroll-one(listening_scenarios:16,92056458)+reroll-one(listening_scenarios:16,94620437)+reroll-one(listening_scenarios:16,69634010)+reroll-one(listening_scenarios:16,74989867)+reroll-one(orthography:4,54217552)",
- "generated_at": "2026-08-19 11:29:18",
- "test_id": "20260818_1",
- "rotation": {
-  "recency_source": "ledger",
-  "history_len": 13,
-  "cooldown": 6
- },
- "items": {
-  "kanji_reading": [
-   "代理(だいり)",
-   "都会(とかい)",
-   "彼岸(ひがん)",
-   "神経(しんけい)",
-   "見にくい(みにくい)"
-  ],
-  "orthography": [
-   "基礎",
-   "量る(重量)",
-   "支援",
-   "休業",
-   "仮名遣い"
-  ],
-  "word_formation": [
-   "再〜(再利用)",
-   "深〜(深海)",
-   "〜量(交通量)"
-  ],
-  "context_words": [
-   "初旬",
-   "超一流",
-   "腕を上げる",
-   "当分",
-   "食う",
-   "間も無く",
-   "付き合う"
-  ],
-  "paraphrase": [
-   "絶滅する",
-   "恐ろしい(怖い)",
-   "穏やかだ(静かだ/落ち着いている)",
-   "危うい(危険だ)",
-   "徐々に(少しずつ)"
-  ],
-  "usage": [
-   "素質",
-   "侵入する",
-   "転じる",
-   "生産する",
-   "占める"
-  ],
-  "grammar_p7": [
-   "〜というか〜というか",
-   "〜ないもの(だろう)か",
-   "〜に際して",
-   "〜ものか",
-   "〜につれて",
-   "〜っこない",
-   "〜おそれがある",
-   "〜にもかかわらず",
-   "〜上に",
-   "〜気味",
-   "〜のみならず",
-   "〜ところだった"
-  ],
-  "grammar_p8": [
-   "〜に限らず",
-   "〜をはじめ",
-   "〜おかげで",
-   "〜つつある",
-   "評価反論(〜とはいえ…)"
-  ],
-  "quick_response": [
-   "課長、来客の応対で少々席を外しておりました。",
-   "お客様、恐れ入りますが、こちらにお名前とご連絡先をご記入いただけますでしょうか。",
-   "お先に失礼します",
-   "佐藤さん、そのアイデア、次の企画会議で出してみたらどうかな。",
-   "明日の現場、朝早いけど集合時間は大丈夫そう？",
-   "鍵の返却は、管理人室までお願いします。",
-   "到着予定は3日後です。それでもよろしいですか。",
-   "来週のプレゼン、資料の準備は順調に進んでいますか。",
-   "雨天のため、屋外イベントは中止です。",
-   "在庫を切らしております",
-   "薬の説明は、薬剤師からお聞きください。"
-  ],
-  "reading_topics": [
-   {
-    "topic": "比較と幸福感",
-    "theme": "人間関係"
-   },
-   {
-    "topic": "郊外の団地再生",
-    "theme": "住まい"
-   },
-   {
-    "topic": "通勤時間の過ごし方",
-    "theme": "交通"
-   },
-   {
-    "topic": "宅配サービスの配達時間帯指定改定通知",
-    "theme": "消費・経済"
-   },
-   {
-    "topic": "公園のベンチの役割",
-    "theme": "地域活性化"
-   },
-   {
-    "topic": "ボードゲームカフェの広がり",
-    "theme": "スポーツ・余暇"
-   },
-   {
-    "topic": "外国人材と日本語教育",
-    "theme": "教育"
-   },
-   {
-    "topic": "子どもの意見表明権",
-    "theme": "子育て・家族"
-   },
-   {
-    "topic": "住民票のオンライン申請",
-    "theme": "行政・手続き"
-   },
-   {
-    "topic": "がん検診の受診率向上",
-    "theme": "医療・福祉"
-   },
-   {
-    "topic": "ハラスメント防止",
-    "theme": "働き方"
-   },
-   {
-    "topic": "模倣と独創",
-    "theme": "文化・伝統"
-   }
-  ],
-  "listening_scenarios": [
-   {
-    "scenario": "商店街のスタンプラリーイベント企画",
-    "theme": "地域活性化"
-   },
-   {
-    "scenario": "薬局:睡眠改善薬の相談",
-    "theme": "睡眠・健康"
-   },
-   {
-    "scenario": "美術館:館内アナウンス",
-    "theme": "文化・伝統"
-   },
-   {
-    "scenario": "観光協会:地元グルメマップ作成の会議",
-    "theme": "地域活性化"
-   },
-   {
-    "scenario": "リサイクルセンター:持ち込み方法の案内",
-    "theme": "環境"
-   },
-   {
-    "scenario": "介護施設:見学",
-    "theme": "医療・福祉"
-   },
-   {
-    "scenario": "ガス会社:開栓の予約",
-    "theme": "住まい"
-   },
-   {
-    "scenario": "倉庫:在庫確認の依頼",
-    "theme": "働き方"
-   },
-   {
-    "scenario": "バス会社:路線変更のお知らせ",
-    "theme": "交通"
-   },
-   {
-    "scenario": "ラジオ:読書習慣の話",
-    "theme": "教育"
-   },
-   {
-    "scenario": "講演会:記憶の仕組み",
-    "theme": "科学・技術"
-   },
-   {
-    "scenario": "電車遅延に伴う振替輸送の案内",
-    "theme": "交通"
-   },
-   {
-    "scenario": "大学の授業:環境と経済",
-    "theme": "環境"
-   },
-   {
-    "scenario": "見本市:名刺交換と案内",
-    "theme": "働き方"
-   },
-   {
-    "scenario": "保健所:予防接種の予約変更",
-    "theme": "医療・福祉"
-   },
-   {
-    "scenario": "講演会の受付係の手配",
-    "theme": "働き方"
-   },
-   {
-    "scenario": "テレビ:専門家の解説",
-    "theme": "メディア・情報"
-   },
-   {
-    "scenario": "新聞社:取材依頼の電話",
-    "theme": "メディア・情報"
-   },
-   {
-    "scenario": "劇場:チケット変更",
-    "theme": "文化・伝統"
-   },
-   {
-    "scenario": "自動車学校:学科",
-    "theme": "教育"
-   },
-   {
-    "scenario": "塾:進路面談",
-    "theme": "教育"
-   }
-  ]
- },
- "answer_positions": {
-  "問題1_語彙": [
-   1,
-   4,
-   1,
-   3,
-   4
-  ],
-  "問題2_語彙": [
-   4,
-   4,
-   1,
-   2,
-   2
-  ],
-  "問題3_語彙": [
-   1,
-   4,
-   4
-  ],
-  "問題4_語彙": [
-   1,
-   1,
-   4,
-   1,
-   3,
-   2,
-   4
-  ],
-  "問題5_語彙": [
-   2,
-   1,
-   1,
-   2,
-   2
-  ],
-  "問題6_語彙": [
-   2,
-   3,
-   3,
-   3,
-   2
-  ],
-  "問題7": [
-   1,
-   3,
-   2,
-   4,
-   4,
-   1,
-   3,
-   1,
-   2,
-   2,
-   1,
-   3
-  ],
-  "問題8": [
-   4,
-   4,
-   1,
-   1,
-   2
-  ],
-  "問題9": [
-   4,
-   2,
-   2,
-   3
-  ],
-  "問題10": [
-   3,
-   1,
-   4,
-   3,
-   3
-  ],
-  "問題11": [
-   3,
-   2,
-   4,
-   4,
-   2,
-   4,
-   3,
-   4
-  ],
-  "問題12": [
-   4,
-   4
-  ],
-  "問題13": [
-   1,
-   3,
-   2
-  ],
-  "問題14": [
-   4,
-   2
-  ],
-  "聴解_問題1": [
-   1,
-   3,
-   3,
-   3,
-   2
-  ],
-  "聴解_問題2": [
-   3,
-   1,
-   2,
-   2,
-   1,
-   2
-  ],
-  "聴解_問題3": [
-   4,
-   4,
-   3,
-   1,
-   3
-  ],
-  "聴解_問題4": [
-   2,
-   3,
-   1,
-   1,
-   2,
-   1,
-   3,
-   1,
-   2,
-   3,
-   3
-  ],
-  "聴解_問題5": [
-   3,
-   2,
-   1
-  ]
- },
- "pools_sha": "aadf23081392"
+  "seed": "9670904+reroll(listening_scenarios,5719948)+reroll(listening_scenarios,10982156)+reroll-one(quick_response:8,1514814)+reroll-one(listening_scenarios:16,70517349)+reroll-one(listening_scenarios:16,92056458)+reroll-one(listening_scenarios:16,94620437)+reroll-one(listening_scenarios:16,69634010)+reroll-one(listening_scenarios:16,74989867)+reroll-one(orthography:4,54217552)",
+  "generated_at": "2026-08-19 11:29:18",
+  "test_id": "20260818_1",
+  "rotation": {
+    "recency_source": "ledger",
+    "history_len": 13,
+    "cooldown": 6
+  },
+  "items": {
+    "kanji_reading": [
+      "代理(だいり)",
+      "都会(とかい)",
+      "彼岸(ひがん)",
+      "神経(しんけい)",
+      "見にくい(みにくい)"
+    ],
+    "orthography": [
+      "基礎",
+      "量る(重量)",
+      "支援",
+      "休業",
+      "仮名遣い"
+    ],
+    "word_formation": [
+      "再〜(再利用)",
+      "深〜(深海)",
+      "〜量(交通量)"
+    ],
+    "context_words": [
+      "初旬",
+      "超一流",
+      "腕を上げる",
+      "当分",
+      "食う",
+      "間も無く",
+      "付き合う"
+    ],
+    "paraphrase": [
+      "絶滅する",
+      "恐ろしい(怖い)",
+      "穏やかだ(静かだ/落ち着いている)",
+      "危うい(危険だ)",
+      "徐々に(少しずつ)"
+    ],
+    "usage": [
+      "素質",
+      "侵入する",
+      "転じる",
+      "生産する",
+      "占める"
+    ],
+    "grammar_p7": [
+      "〜というか〜というか",
+      "〜ないもの(だろう)か",
+      "〜に際して",
+      "〜ものか",
+      "〜につれて",
+      "〜っこない",
+      "〜おそれがある",
+      "〜にもかかわらず",
+      "〜上に",
+      "〜気味",
+      "〜のみならず",
+      "〜ところだった"
+    ],
+    "grammar_p8": [
+      "〜に限らず",
+      "〜をはじめ",
+      "〜おかげで",
+      "〜つつある",
+      "評価反論(〜とはいえ…)"
+    ],
+    "quick_response": [
+      "課長、来客の応対で少々席を外しておりました。",
+      "お客様、恐れ入りますが、こちらにお名前とご連絡先をご記入いただけますでしょうか。",
+      "お先に失礼します",
+      "佐藤さん、そのアイデア、次の企画会議で出してみたらどうかな。",
+      "明日の現場、朝早いけど集合時間は大丈夫そう？",
+      "鍵の返却は、管理人室までお願いします。",
+      "到着予定は3日後です。それでもよろしいですか。",
+      "来週のプレゼン、資料の準備は順調に進んでいますか。",
+      "雨天のため、屋外イベントは中止です。",
+      "在庫を切らしております",
+      "薬の説明は、薬剤師からお聞きください。"
+    ],
+    "reading_topics": [
+      {
+        "topic": "比較と幸福感",
+        "theme": "人間関係"
+      },
+      {
+        "topic": "郊外の団地再生",
+        "theme": "住まい",
+        "origin": "reauthored",
+        "note": "2026-09-08 lexical-load repair: the drawn topic `郊外の団地再生` produced a 問題13 whose argument could only be carried in housing-administration register (`高経年団地` `空室率` `分譲` `用途変更` `共益費` `住み継ぐ` `住戸` `配管` `作業場`) — 20 of the paper's 72 novel kanji-word tokens and 6 of its 31 （注N） lines sat in this one surface, which is the surface-re-author defect class in question-authoring/references/dokkai.md §'Lexical load'. 問題13 was re-subjected inside the SAME theme 住まい onto an ordinary everyday subject (which rooms the sun reaches, and whether those hours overlap the hours the rooms are used); the subject is authored, not drawn. Kept unchanged: theme 住まい, closing move 条件提示, the final-sentence template, the one （中略）, the 800–1070 section band (951 → 1049 JP chars) and items 67/68/69's answer_positions slots (1/3/2). The retired subject is preserved for the next paper's avoid-list under logs/topics.json key `差し替え前:問題13`. The drawn `topic` string is KEPT on this entry (unlike the 20260810_2 precedent, whose pool entry had been deleted): the pool entry still exists, reading_topics is no longer drawn from at all (AUTHORED_THEME_CATS), and the string is kept as the record of the draw so check_draw_provenance and check_ledger_spec_agreement both still resolve."
+      },
+      {
+        "topic": "通勤時間の過ごし方",
+        "theme": "交通"
+      },
+      {
+        "topic": "宅配サービスの配達時間帯指定改定通知",
+        "theme": "消費・経済"
+      },
+      {
+        "topic": "公園のベンチの役割",
+        "theme": "地域活性化"
+      },
+      {
+        "topic": "ボードゲームカフェの広がり",
+        "theme": "スポーツ・余暇"
+      },
+      {
+        "topic": "外国人材と日本語教育",
+        "theme": "教育"
+      },
+      {
+        "topic": "子どもの意見表明権",
+        "theme": "子育て・家族",
+        "origin": "reauthored",
+        "note": "2026-09-08 neutrality + lexical repair: the drawn topic `子どもの意見表明権` had been authored as a passage set inside 児童相談所 and 一時保護 — an institution defined by its power to take a child out of its home — which exam-blueprint Part II 'Neutrality' bans (distressing; the same class as the deleted `難民受け入れ` and `安楽死と尊厳死` entries). It also carried 5 institutional （注N） lines (`意見表明権` `児童相談所` `一時保護` `聴取` `代弁`). 問題11(3) was re-subjected inside the SAME theme 子育て・家族 onto an everyday subject (an adult stepping into a quarrel between siblings, and why hearing them is not the same as ruling on them); the subject is authored, not drawn. Kept unchanged: theme 子育て・家族, closing move 反論応答, the final-sentence template, the one （中略）, the ≥400 per-passage floor and the 問題11 section band (653 → 623 JP chars, section 2693 → 2663), and items 61/62's answer_positions slots (2/4). The pool entry itself is NOT deleted — the subject can be authored compliantly inside an ordinary setting; only this paper's realisation was out of band. The retired subject is preserved for the next paper's avoid-list under logs/topics.json key `差し替え前:問題11(3)`. The drawn `topic` string is KEPT on this entry (unlike the 20260810_2 precedent, whose pool entry had been deleted): the pool entry still exists, reading_topics is no longer drawn from at all (AUTHORED_THEME_CATS), and the string is kept as the record of the draw so check_draw_provenance and check_ledger_spec_agreement both still resolve."
+      },
+      {
+        "topic": "住民票のオンライン申請",
+        "theme": "行政・手続き"
+      },
+      {
+        "topic": "がん検診の受診率向上",
+        "theme": "医療・福祉"
+      },
+      {
+        "topic": "ハラスメント防止",
+        "theme": "働き方"
+      },
+      {
+        "topic": "模倣と独創",
+        "theme": "文化・伝統"
+      }
+    ],
+    "listening_scenarios": [
+      {
+        "scenario": "商店街のスタンプラリーイベント企画",
+        "theme": "地域活性化"
+      },
+      {
+        "scenario": "薬局:睡眠改善薬の相談",
+        "theme": "睡眠・健康"
+      },
+      {
+        "scenario": "美術館:館内アナウンス",
+        "theme": "文化・伝統"
+      },
+      {
+        "scenario": "観光協会:地元グルメマップ作成の会議",
+        "theme": "地域活性化"
+      },
+      {
+        "scenario": "リサイクルセンター:持ち込み方法の案内",
+        "theme": "環境"
+      },
+      {
+        "scenario": "介護施設:見学",
+        "theme": "医療・福祉"
+      },
+      {
+        "scenario": "ガス会社:開栓の予約",
+        "theme": "住まい"
+      },
+      {
+        "scenario": "倉庫:在庫確認の依頼",
+        "theme": "働き方"
+      },
+      {
+        "scenario": "バス会社:路線変更のお知らせ",
+        "theme": "交通"
+      },
+      {
+        "scenario": "ラジオ:読書習慣の話",
+        "theme": "教育"
+      },
+      {
+        "scenario": "講演会:記憶の仕組み",
+        "theme": "科学・技術"
+      },
+      {
+        "scenario": "電車遅延に伴う振替輸送の案内",
+        "theme": "交通"
+      },
+      {
+        "scenario": "大学の授業:環境と経済",
+        "theme": "環境"
+      },
+      {
+        "scenario": "見本市:名刺交換と案内",
+        "theme": "働き方"
+      },
+      {
+        "scenario": "保健所:予防接種の予約変更",
+        "theme": "医療・福祉"
+      },
+      {
+        "scenario": "講演会の受付係の手配",
+        "theme": "働き方"
+      },
+      {
+        "scenario": "テレビ:専門家の解説",
+        "theme": "メディア・情報"
+      },
+      {
+        "scenario": "新聞社:取材依頼の電話",
+        "theme": "メディア・情報"
+      },
+      {
+        "scenario": "劇場:チケット変更",
+        "theme": "文化・伝統"
+      },
+      {
+        "scenario": "自動車学校:学科",
+        "theme": "教育"
+      },
+      {
+        "scenario": "塾:進路面談",
+        "theme": "教育"
+      }
+    ]
+  },
+  "answer_positions": {
+    "問題1_語彙": [
+      1,
+      4,
+      1,
+      3,
+      4
+    ],
+    "問題2_語彙": [
+      4,
+      4,
+      1,
+      2,
+      2
+    ],
+    "問題3_語彙": [
+      1,
+      4,
+      4
+    ],
+    "問題4_語彙": [
+      1,
+      1,
+      4,
+      1,
+      3,
+      2,
+      4
+    ],
+    "問題5_語彙": [
+      2,
+      1,
+      1,
+      2,
+      2
+    ],
+    "問題6_語彙": [
+      2,
+      3,
+      3,
+      3,
+      2
+    ],
+    "問題7": [
+      1,
+      3,
+      2,
+      4,
+      4,
+      1,
+      3,
+      1,
+      2,
+      2,
+      1,
+      3
+    ],
+    "問題8": [
+      4,
+      4,
+      1,
+      1,
+      2
+    ],
+    "問題9": [
+      4,
+      2,
+      2,
+      3
+    ],
+    "問題10": [
+      3,
+      1,
+      4,
+      3,
+      3
+    ],
+    "問題11": [
+      3,
+      2,
+      4,
+      4,
+      2,
+      4,
+      3,
+      4
+    ],
+    "問題12": [
+      4,
+      4
+    ],
+    "問題13": [
+      1,
+      3,
+      2
+    ],
+    "問題14": [
+      4,
+      2
+    ],
+    "聴解_問題1": [
+      1,
+      3,
+      3,
+      3,
+      2
+    ],
+    "聴解_問題2": [
+      3,
+      1,
+      2,
+      2,
+      1,
+      2
+    ],
+    "聴解_問題3": [
+      4,
+      4,
+      3,
+      1,
+      3
+    ],
+    "聴解_問題4": [
+      2,
+      3,
+      1,
+      1,
+      2,
+      1,
+      3,
+      1,
+      2,
+      3,
+      3
+    ],
+    "聴解_問題5": [
+      3,
+      2,
+      1
+    ]
+  },
+  "pools_sha": "aadf23081392"
 }

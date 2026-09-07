@@ -749,7 +749,7 @@
       "Bài không nói về việc giảm số lần cấp trên ra chỉ thị."
     ],
     "points": [
-      "定着率《ていちゃくりつ》 (chú thích 5): tỉ lệ người ở lại.",
+      "定着率《ていちゃくりつ》: tỉ lệ người ở lại làm việc tại nơi đó.",
       "聞《き》き返《かえ》す: hỏi lại điều mình chưa nghe rõ."
     ]
   },
@@ -780,29 +780,29 @@
     ]
   },
   "61": {
-    "why_correct": "Ngay sau câu「大人が気づいていない事情が出てくるからだ」bài liệt kê「祖母の家からなら通える学校がある」và ý không muốn xa em trai.",
+    "why_correct": "Sau câu「口にしにくい言い分」bài nêu ví dụ「前に貸したものが、まだ返ってきていない」.",
     "options_analysis": [
-      "Nguyện vọng rút ngắn thời gian bảo hộ không có.",
-      "Đáp án đúng: từ nhà bà vẫn đi học được.",
-      "Trả lời đổi theo tâm trạng: lý do khó lấy nguyên lời trẻ.",
-      "Cơ chế người nói thay do người lớn lập ra."
+      "Ai ra tay trước là chuyện thắng thua, bài đã gạt đi.",
+      "Đáp án đúng: món cho mượn trước vẫn chưa được trả.",
+      "Việc anh chị nói trước là lý do khó nghe cùng lúc.",
+      "Nghe lần lượt là cách người lớn làm, không phải trẻ xin."
     ],
     "points": [
-      "代弁《だいべん》: nói thay nguyện vọng người khác.",
-      "Tìm chỗ liệt kê ngay sau câu khái quát."
+      "言《い》い分《ぶん》: lý lẽ nhìn từ phía người trong cuộc.",
+      "決着《けっちゃく》: kết thúc bằng việc phân thắng thua."
     ]
   },
   "62": {
-    "why_correct": "Câu kết viết「聞くことと決めることを分けて考えれば、意見を聞く場をもうけても、決める責任が子どもに移ることはない」.",
+    "why_correct": "Câu kết:「大人がそこに立っても、子どもが自分で折り合いをつける機会がうしなわれることはない」.",
     "options_analysis": [
-      "Đó là nỗi lo nêu ở đầu bài, tác giả đang phản bác nó.",
-      "Bài nói đã có cơ chế người nói thay, không nói bỏ thủ tục.",
-      "Biên bản có điều「書類の項目にはならんでいない」— ngược lại.",
-      "Đáp án đúng: tách việc nghe khỏi trách nhiệm quyết định."
+      "Đó là quan niệm nêu ở đầu bài, tác giả đang phản bác.",
+      "Bài vẫn giữ cách nghe lần lượt, không bảo bỏ bớt.",
+      "Bài nói「たいてい重ならない」nên ghi y nguyên là sai.",
+      "Đáp án đúng: người lớn vào cuộc, trẻ vẫn tự dàn xếp được."
     ],
     "points": [
-      "意見《いけん》表明権《ひょうめいけん》: quyền nói lên ý kiến của trẻ.",
-      "Bố cục: nêu lo ngại → phản bác → kết luận cuối bài."
+      "折《お》り合《あ》いをつける: nhường nhau để dàn xếp.",
+      "Bố cục: quan niệm chung → phản bác → kết luận."
     ]
   },
   "63": {
@@ -858,42 +858,42 @@
     ]
   },
   "67": {
-    "why_correct": "Ngay sau câu「残す部分と変える部分を分けた」bài viết「ほねぐみと配管は直して持たせ、内がわの壁は取りはらって」.",
+    "why_correct": "Sau câu「明るくする部屋と暗くしてよい部屋を分けていく」bài dẫn「台所の窓を広げ…厚いカーテンをかける」.",
     "options_analysis": [
-      "Đáp án đúng: giữ khung và ống, phá tường trong.",
-      "Không có thang máy chỉ là điều kiện bất lợi ban đầu.",
-      "Mua lại căn đã bán không có trong bài.",
-      "Bãi đất trống được cho thuê làm chợ phiên, không giữ làm bãi xe."
+      "Đáp án đúng: nới rộng cửa sổ bếp, che rèm dày phòng ngủ.",
+      "Bài làm thay cho xây lại, không dựng lại vách ngăn.",
+      "Bài dựng ván ngoài cửa sổ tây, không bịt kín cửa.",
+      "Phòng ngủ được che rèm dày, không đem đi đổi phòng."
     ],
     "points": [
-      "用途《ようと》変更《へんこう》: đổi mục đích sử dụng công trình.",
-      "Dạng \"ví dụ nào\": tìm câu minh họa sau câu khái quát."
+      "西日《にしび》: nắng gắt hướng tây lúc chiều muộn.",
+      "Dạng hỏi ví dụ: câu minh họa nằm sau câu khái quát."
     ]
   },
   "68": {
-    "why_correct": "Bài viết khác biệt nằm ở「住む人が自分たちで使い方を決められるところが、建物の中に残されていたかどうか」.",
+    "why_correct": "Bài viết「差になっていたのは、日の入る時間と、その部屋を使う時間が重なっているかどうかだった」.",
     "options_analysis": [
-      "Bài phủ định rõ:「家賃の安さではなかった」— nơi vắng còn rẻ hơn.",
-      "Xây lại là cách khó làm nên không được đem ra so sánh.",
-      "Đáp án đúng: còn chỗ để cư dân tự quyết cách sống.",
-      "Bếp chung gắn với việc quen hàng xóm, không nói phí chung giảm."
+      "Bài phủ định rõ「日の入る時間の長さではなかった」.",
+      "Khảo sát không so hướng nam; đèn ít là nhờ bếp có nắng sớm.",
+      "Đáp án đúng: giờ nắng trùng giờ người nhà dùng phòng.",
+      "Nới cửa sổ là cách ở đoạn ba, không phải mục đem so."
     ],
     "points": [
-      "空室率《くうしつりつ》 (chú thích 2): tỉ lệ căn hộ bỏ trống.",
-      "Hỏi kết quả khảo sát: tìm đoạn có「差《さ》になっていた」."
+      "重《かさ》なる: trùng khớp, chồng lên nhau về thời gian.",
+      "Hỏi kết quả khảo sát: tìm câu có「差《さ》になっていた」."
     ]
   },
   "69": {
-    "why_correct": "Bài kết bằng「手を加えられる余白を残したという共通点がある」— quyết định là phần cư dân được tự sửa.",
+    "why_correct": "Bài kết bằng「動かせるのは、どの部屋をいつ使うかという、暮らしの側である」.",
     "options_analysis": [
-      "Bài nói thống nhất ý kiến mất nhiều năm, không đòi bỏ bước đó.",
-      "Đáp án đúng: quyết định là phạm vi cư dân được tự sửa.",
-      "Đó là cách nhìn chung dẫn bằng「と言われてきた」.",
-      "Tỉ lệ chuyển đi hai năm đầu「低かった」, không phải hết hẳn."
+      "Chiều cao nhà bên chỉ nêu như thứ không đổi được.",
+      "Đáp án đúng: giờ nắng khớp giờ dùng phòng mới quyết định.",
+      "Bài chỉ dẫn chênh lệch giá thuê, không bàn hướng nào lợi.",
+      "Đóng rèm cả năm là cảnh nhà lúng túng, không phải lời khuyên."
     ],
     "points": [
-      "住《す》み継《つ》ぐ: thế hệ sau nối tiếp sống ở nhà cũ.",
-      "余白《よはく》: khoảng chừa trống cho cư dân tự quyết."
+      "住《す》み心地《ごこち》: cảm giác dễ chịu khi sống trong nhà.",
+      "Dạng「最《もっと》も言《い》いたいこと」: bám đoạn kết, bỏ ví dụ."
     ]
   },
   "70": {

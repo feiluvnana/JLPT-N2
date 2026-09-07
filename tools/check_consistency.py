@@ -585,6 +585,16 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     # passage actually uses and actually needs explaining.
     "note_anchored":                  ("passage prose",        "assisted"),
     "dokkai_lexical_load_warn":       ("<surface re-author>",  "authoring"),
+    # The FLOOR is the opposite artifact from the ceiling above, and that is why
+    # it gets its own row. Too MUCH load is a property of the subject (a passage
+    # about 内水氾濫 needs 貯留管), so it costs a re-author; too LITTLE is a
+    # property of the sentences — the overshoot of a de-jargoning pass, repaired
+    # by putting ordinary transparent compounds back into the prose that is
+    # already there. Measured on `20260818_1` (2026-09-08): 4.99 -> 7.10/1k with
+    # no surface re-subjected, by un-glossing transparent compounds (定着率,
+    # 精密検査, 西日) and restoring compounds the kana-isation had dissolved
+    # (中断, 同時, 年齢差, 壁面, 引越費用, 方角, 日焼, 対戦相手).
+    "dokkai_lexical_load_floor":      ("passage prose",        "assisted"),
     # 聴解 volume. The script is the artifact and the MP3 follows it, so a
     # repair here always costs `make mp3` — which is why the tier is authoring
     # and not assisted even when the edit looks like deleting turns.
@@ -2670,6 +2680,14 @@ def check_dokkai_abs_quantifiers(name: str, opts: dict[int, list[str]]):
 # surfaces (exam-blueprint §"The four theme rules").
 READING_SURFACE = re.compile(r"^問題(9|1[0-4])(\(|$)")
 HEADLINE_READING = ("問題9", "問題12", "問題13", "問題14")
+# `logs/topics.json` keeps a repair's RETIRED subject under a
+# `差し替え前:<surface>` key so `used_subjects_by_theme()` still puts it on the
+# next paper's avoid-list, while the surface's SHIPPED subject takes the plain
+# key (`exam-blueprint` §"Replacing a shipped subject"). Such a key is a record
+# of what the paper no longer contains — never a surface it ships — so every
+# per-surface column skips it. `READING_SURFACE` already does not match it;
+# this constant is for the checks that enumerate `surfaces` directly.
+RETIRED_SURFACE_PREFIX = "差し替え前:"
 
 
 def surface_group(key: str) -> str:
@@ -7326,7 +7344,22 @@ def check_topics_claim_field():
                        "date are named in CLAIM_FIELD_PRE_RULE and are NOT "
                        "retrofitted — see that constant's comment)")
             continue
-        surfaces = e.get("surfaces") or {}
+        # A `差し替え前:問題10(1)` key records the subject a repair RETIRED, so
+        # `used_subjects_by_theme()` keeps handing it to the next paper's
+        # avoid-list (`exam-blueprint` §"Replacing a shipped subject"). It is
+        # not a surface this paper ships: it asserts nothing, and its narrator
+        # is not one of the paper's narrators. The theme rules already ignore
+        # these keys because `READING_SURFACE` will not match them; this check
+        # used `not k.startswith("聴解")` instead and so demanded a `claim` and
+        # a `persona` for every retired subject AND counted its persona against
+        # `PERSONA_CAP` — which made the documented convention unusable for any
+        # paper after CLAIM_FIELD_PRE_RULE (found on `20260904_2`, 2026-09-08:
+        # five retired 読解 subjects, two of them 職業人, would have put that
+        # token at 4 against a cap of 2 while the paper ships exactly 2).
+        # A doc and a gate that disagree is a defect in one of them; the doc is
+        # the owner here, so the predicate is fixed rather than the record.
+        surfaces = {k: v for k, v in (e.get("surfaces") or {}).items()
+                    if not k.startswith(RETIRED_SURFACE_PREFIX)}
         claims = e.get("claim") or {}
         personas = e.get("persona") or {}
         missing = [k for k in surfaces if not str(claims.get(k, "")).strip()]
