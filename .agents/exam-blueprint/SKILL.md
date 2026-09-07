@@ -1145,6 +1145,20 @@ source, no fetch, no citation.
   the whole design rests on, so **a paper that does not write its
   `surfaces`/`themes` rows leaves the next paper blind.** That is why
   `check_topics_shapes_field` FAILs a missing row.
+- **Replacing a shipped subject: never rewrite the drawn `topic` string.**
+  When a repair re-subjects a surface, `test_spec.json` and its mirrored
+  `logs/ledger.json` row must keep the entry-string they were drawn with —
+  `recency_map()` keys on that string, so substituting a new one leaves the
+  retired draw permanently un-cooled and `check_draw_provenance` can no longer
+  resolve the draw at all. Annotate the entry (`origin: "reauthored"` plus a
+  note naming the old subject) and leave `topic` alone. Record the change in
+  `logs/topics.json` instead: the SHIPPED subject goes in `surfaces`/`themes`,
+  and the retired one is preserved under a `差し替え前:問題10(1)`-style key —
+  outside `READING_SURFACE`'s regex, so the four theme rules ignore it, but
+  still read by `used_subjects_by_theme()`, which is the point. Two agents
+  derived this independently on 2026-09-08 after a coordinator instruction to
+  rewrite the strings produced 4 unresolvable draws.
+
 - **A near-miss counts as used.** 「空き家の増加」 against an `avoid` entry of
   「空き家と相続後の判断の先延ばし」 is the same subject with a shorter name. The
   test is whether a candidate who sat both papers would recognise the situation,
