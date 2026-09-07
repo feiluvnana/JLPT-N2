@@ -9607,7 +9607,9 @@ def check_mondai5_prints_nothing(name: str, ct: str, origin: str, bi):
 # in `聴解_チャプター.json` and re-uploads a 30 MB release asset), so they are
 # named here rather than silently repaired. The fix for each is two prefixes in
 # `聴解スクリプト.txt` + `make mp3` + `make sheet` + `make upload-files`.
-P5_QUESTION_MARKER_GRANDFATHERED = {"20260828_2", "20260903_1"}
+# 20260828_2 removed 2026-09-08: its 聴解 repair prefixed both question lines
+# with 質問1。/質問2。 and re-synthesised 聴解.mp3, so it now passes on merit.
+P5_QUESTION_MARKER_GRANDFATHERED = {"20260903_1"}
 
 
 def check_mondai5_question_markers(name: str, script_text: str, origin: str):
@@ -12767,9 +12769,16 @@ CHOUKAI_DECIDER_GRANDFATHERED = {
 # never a widening of the rule. Measured 2026-09-04 over every paper on disk
 # carrying the column; papers with no column at all skip both halves.
 CHOUKAI_DECIDER_FORMULA_GRANDFATHERED = {
+    # 20260828_2 removed 2026-09-08: its 問題1 構成表 now prints 「n行目／全m行」
+    # in all six rows, re-derived from the repaired script (two labels moved —
+    # 例 中盤→終盤, 3番 冒頭→中盤).
+    # 20260828_1 removed 2026-09-08: the turn-shape repair rewrote every 問題1
+    # item, so its whole 決め手の位置 column was re-derived from the new script
+    # and now prints 「n行目／全m行」 in all six rows (例 6/9 中盤, 1番 5/8 中盤,
+    # 2番 7文/8文 終盤, 3番 5/6 終盤, 4番 5/7 終盤, 5番 2/7 冒頭 — buckets 1/2/3,
+    # inside the ≤3-rows cap). It passes on merit, as a `check`, not a `warn`.
     "20260807_1", "20260810_1", "20260810_2", "20260817_3", "20260818_1",
-    "20260819_1", "20260821_1", "20260827_1", "20260827_2", "20260828_1",
-    "20260828_2",
+    "20260819_1", "20260821_1", "20260827_1", "20260827_2",
 }
 CHOUKAI_PROBE_GRANDFATHERED = {
     # 20260807_1 removed 2026-08-27: P5C2-20260807_1 rewrote 問題1 with 0/6

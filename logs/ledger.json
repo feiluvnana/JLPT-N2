@@ -4258,7 +4258,9 @@
           },
           {
             "topic": "動画配信と著作権",
-            "theme": "メディア・情報"
+            "theme": "メディア・情報",
+            "origin": "reauthored",
+            "note": "2026-09-08 lexical-load repair: 問題11(1) re-subjected inside the same theme 「メディア・情報」 — the copyright/licensing register (著作権・権利者・無断利用・転載・配信会社) could not be argued in ordinary words and carried 25 novel tokens in one 526-char passage. Replaced by a radio-vs-video essay (「音だけの番組は伝わる量が少ない」という見方 → 音だけを聞いた側のほうが話し手の心の動きをとらえていた) at 0 novel tokens. Keys (57=3, 58=2), theme, closing move (反論応答), persona (論者) and voice (評論) unchanged."
           },
           {
             "topic": "廃校を活用した宿泊施設",
@@ -4392,7 +4394,9 @@
           },
           {
             "topic": "最低賃金引上げ",
-            "theme": "働き方"
+            "theme": "働き方",
+            "origin": "reauthored",
+            "note": "問題10(3) を働き方テーマ内で再著述（2026-09-08）。`check_dokkai_lexical_load` の FAIL（novel 23.7%／unglossed 18.4/1k）に対し、本面が novel 42.9% と最悪だったため、人件費・商工会・最低賃金・上昇分・若手社員・賃上 の専門語彙を捨て、休みの取り方と月末の残業という日常語の題材に差し替えた。テーマ（働き方）・締めの型（条件提示）・キー（54=4）は不変。"
           },
           {
             "topic": "食文化の歴史とグローバル化の影響",
@@ -4412,7 +4416,9 @@
           },
           {
             "topic": "介護離職を防ぐ制度",
-            "theme": "医療・福祉"
+            "theme": "医療・福祉",
+            "origin": "reauthored",
+            "note": "問題11(3) を医療・福祉テーマ内で再著述（2026-09-08）。介護離職・在職者・要介護度・時短勤務・調整幅・離職者数 等の制度語彙が novel 28.8% を作っていたため、診察前に聞きたいことを書いておく取り組みという日常語の題材に差し替えた。テーマ（医療・福祉）・締めの型（説明）・指示語項目の①マーク・キー（61=2, 62=4）は不変。"
           },
           {
             "topic": "訪日客のマナー啓発",
@@ -4424,7 +4430,9 @@
           },
           {
             "topic": "LGBTQと制度",
-            "theme": "人間関係"
+            "theme": "人間関係",
+            "origin": "reauthored",
+            "note": "問題13 を人間関係テーマ内で再著述（2026-09-08）。理由は二つ。(a) `exam-blueprint` Part II のNEUTRALITY 条項——同性カップルの法的承認をめぐる文章は「差別をめぐる議論」かつ政治的争点で、同条項が名指しで禁じる主題である（`難民受け入れ`／`安楽死と尊厳死` と同じ判断）。(b) novel 23.9%（同性・婚姻・相続・税制上・法律上・事業者・公営住宅・審査・業種）。年に一度出す手紙と返事という日常語の題材に差し替えた。テーマ（人間関係）・締めの型（説明）・キー（67=1, 68=4, 69=3）は不変。プール項目 `LGBTQと制度` 自体は `reading_topics` が `AUTHORED_THEME_CATS` に入って以降は抽選対象外のため、本紙の記録を孤児にしないよう削除せず据え置いた。"
           }
         ],
         "listening_scenarios": [

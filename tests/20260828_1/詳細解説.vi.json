@@ -666,8 +666,8 @@
     "why_correct": "Thông báo: \"chia 3 lớp theo trình độ\", \"cần đăng ký trước\" → đáp án 4.",
     "options_analysis": [
       "[Sai] \"chỉ dành người trình độ cao\": ngược \"từ sơ cấp đến cao\".",
-      "[Sai] \"phí tài liệu tính riêng\": ngược \"đã gồm trong học phí\".",
-      "[Sai] \"hết chỗ vẫn đăng ký được\": ngược \"hết chỗ là ngừng nhận\".",
+      "[Sai] \"phí tài liệu phải tự lo riêng\": ngược \"đã gồm trong học phí\".",
+      "[Sai] \"hôm đó vẫn đăng ký được\": ngược \"muộn nhất 10 ngày trước\".",
       "[Đúng] \"lớp ít người, cần đăng ký trước\": đúng nội dung."
     ],
     "points": [
@@ -694,11 +694,11 @@
       "[Sai] \"giảm rác lớn là giải quyết xong\": ngược ý chính.",
       "[Đúng] \"thành hạt vô hình vẫn tồn tại\": đúng ý.",
       "[Sai] \"nhựa dần biến mất tự nhiên\": ngược \"không phân hủy\".",
-      "[Sai] \"cấm túi nilon là giải quyết xong\": khái quát quá mức."
+      "[Sai] \"cấm túi nilon là xong\": khái quát quá mức."
     ],
     "points": [
       "マイクロプラスチック: hạt nhựa vỡ nhỏ dưới 5mm",
-      "紫外線《しがいせん》: tia cực tím khiến nhựa vỡ vụn dần"
+      "分解《ぶんかい》: phân hủy tự nhiên — điều nhựa không làm được"
     ]
   },
   "55": {
@@ -715,42 +715,42 @@
     ]
   },
   "56": {
-    "why_correct": "Bài nói \"cách hình thành đất quyết định thiệt hại hơn cả độ rung\" → đáp án 3.",
+    "why_correct": "Bài: \"cách hình thành đất quyết định thiệt hại hơn cả độ rung\" → đáp án 3.",
     "options_analysis": [
       "[Sai] \"độ rung luôn quyết định thiệt hại\": ngược ý chính.",
       "[Sai] \"đất cứng do san núi thiệt hại hơn\": ngược thực tế.",
       "[Đúng] \"cách hình thành đất quyết định hơn độ rung\": đúng ý.",
-      "[Sai] \"hóa lỏng chỉ xảy ra ở đất lấn biển\": khẳng định sai."
+      "[Sai] \"chỉ đất lấn biển mới hóa lỏng\": bài không nói vậy."
     ],
     "points": [
-      "液状化現象《えきじょうかげんしょう》: đất no nước hóa mềm khi rung chấn mạnh",
-      "地盤《じばん》: nền đất, yếu tố quyết định mức chịu rung chấn"
+      "液状化《えきじょうか》: mặt đất hóa mềm như chất lỏng khi rung mạnh",
+      "埋め立て地《うめたてち》: đất lấn ra từ mặt nước"
     ]
   },
   "57": {
-    "why_correct": "Video cắt ghép giúp \"nhiều người biết tác phẩm gốc, đăng ký chính thức\" → đáp án 3.",
+    "why_correct": "Bài: \"người chỉ nghe mới nói được tâm trạng người nói\" → đáp án 3.",
     "options_analysis": [
-      "[Sai] \"khán giả bỏ hẳn dịch vụ chính thức\": ngược thực tế.",
-      "[Sai] \"sao chép toàn bộ được cho phép\": bài nói không miễn trừ.",
-      "[Đúng] \"quan tâm gốc rồi đăng ký chính thức\": đúng.",
-      "[Sai] \"chủ quyền xử lý nghiêm video\": không có trong bài."
+      "[Sai] \"bên xem hình nắm tâm trạng\": đảo ngược kết quả.",
+      "[Sai] \"bên nghe không nhớ gì\": trái kết quả khảo sát.",
+      "[Đúng] \"bên nghe nắm được tâm trạng\": đúng bài.",
+      "[Sai] \"bên nghe nhớ con số\": số liệu thuộc bên xem hình."
     ],
     "points": [
-      "切り抜き動画《どうが》: video cắt từ chương trình gốc",
-      "免罪符《めんざいふ》: lý do miễn trách nhiệm, ở đây không áp dụng"
+      "おのずと: tự nhiên mà thành, không cần tác động",
+      "延長線上《えんちょうせんじょう》: cùng mạch với cách nghĩ vừa nêu"
     ]
   },
   "58": {
-    "why_correct": "Câu cuối: \"coi là kẻ thù có thể tự đóng cửa cơ hội kết nối\" → đáp án 2.",
+    "why_correct": "Câu cuối: \"chỗ thiếu ấy chừa phần việc cho người nghe\" → đáp án 2.",
     "options_analysis": [
-      "[Sai] \"nên cấm nghiêm bằng luật pháp\": ngược lập luận cởi mở.",
-      "[Đúng] \"không loại bỏ hoàn toàn mà nên kết nối\": đúng ý.",
-      "[Sai] \"số đăng ký không đổi\": ngược khảo sát.",
-      "[Sai] \"mọi vi phạm đều nên chấp nhận\": bài nói không miễn trừ."
+      "[Sai] \"nên thay hết bằng chương trình có hình\": ngược tác giả.",
+      "[Đúng] \"chỗ thiếu chừa việc cho người nghe\": đúng câu cuối.",
+      "[Sai] \"hình, bảng cũng nên truyền bằng âm thanh\": bài nói ngược.",
+      "[Sai] \"có hình thì chính xác hơn\": chỉ đúng một nửa."
     ],
     "points": [
-      "一律《いちりつ》に敵視《てきし》する: coi tất cả là kẻ thù, thái độ cực đoan",
-      "還元《かんげん》: chia lại lợi ích cho người đóng góp nội dung"
+      "ゆだねる: giao hẳn phán đoán, vai trò cho người khác",
+      "まかなう: xoay xở cho đủ bằng thứ đang có"
     ]
   },
   "59": {
