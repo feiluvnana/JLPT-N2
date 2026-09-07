@@ -664,22 +664,22 @@
     ]
   },
   "52": {
-    "why_correct": "Thư viết「この扱いを二つに分けます」, ranh giới là ngành nghề và số giờ mỗi tháng.",
+    "why_correct": "Chỉ phòng tiếp điện thoại và khách mới chia hai tổ; cách chia do phòng tự bàn rồi báo lên.",
     "options_analysis": [
-      "Việc ở「同業他社」vẫn cần xin phép, nên ngành nghề vẫn tính.",
-      "Trước đây xin phép là làm được, không phải giờ mới cho phép.",
-      "Thư đòi nộp khai báo trước khi bắt đầu, không phải sau đó.",
-      "Ngành nghề và số giờ quyết định khai báo hay xin phép."
+      "Các phòng khác giữ nguyên 12 giờ, không phải toàn thể.",
+      "Tổ do cả phòng bàn, không phải từng người chọn.",
+      "Phòng báo lên tổng vụ, chiều ngược lại.",
+      "Chỉ một số phòng chia hai tổ, cách chia do phòng quyết."
     ],
     "points": [
-      "届出《とどけで》: bản khai báo, nộp là đủ.",
-      "申請《しんせい》と許可《きょか》: đơn xin và sự chấp thuận."
+      "組分《くみわ》け: việc chia người thành tổ.",
+      "当番《とうばん》: phiên trực, luân phiên."
     ]
   },
   "53": {
     "why_correct": "Thông báo ghi「賞味期限までの日数が九十日以上ある品に限ります」— chín mươi ngày tức ba tháng.",
     "options_analysis": [
-      "Chỉ áp dụng cho「加工食品の一部」, không phải mọi hàng.",
+      "Chỉ áp dụng cho「加工した食品の一部」, không phải mọi hàng.",
       "Hàng có「消費期限」vẫn ghi đến ngày như trước.",
       "Hàng còn hạn từ ba tháng trở lên sẽ không ghi ngày.",
       "Hàng nhập tới 31 tháng 8 bán hết tồn với cách ghi cũ."
@@ -859,42 +859,42 @@
     ]
   },
   "67": {
-    "why_correct": "Bài nêu「同じ薬を続けている人の決まった受診」và「はじめての症状について診断を求める受診」.",
+    "why_correct": "Ngay sau đó bài nêu hai vế: đồ và cách sắp xếp của người đi thăm, rồi cái người nằm viện nhận.",
     "options_analysis": [
-      "Khám định kỳ khi đã có thuốc, và khám để tìm bệnh lần đầu.",
-      "Gửi số đo ở nhà chỉ là mô tả lớp thứ nhất, không phải một lớp riêng.",
-      "Đó là chia theo người dùng, không phải hai lớp bài nêu.",
-      "Nguyên tắc và ngoại lệ là chuyện quy định, khác hai lớp."
+      "Đồ cùng cách sắp xếp, và cái người kia nhận được.",
+      "Giờ thăm và đồ mang vào đều thuộc vế thứ nhất.",
+      "Bài không bàn quy định của bệnh viện.",
+      "Đó là phân biệt ở đoạn cuối theo độ dài nằm viện."
     ],
     "points": [
-      "受診《じゅしん》: việc đi khám bệnh.",
-      "診断《しんだん》がつく: đã có kết luận bệnh."
+      "段取《だんど》り: trình tự và sự chuẩn bị.",
+      "出《で》どころ: nguồn gốc, chỗ phát sinh."
     ]
   },
   "68": {
-    "why_correct": "Bài viết「対面の代わりに置かれるものではなく…成り立つ部分を引き受けるしくみ」.",
+    "why_correct": "Vế đầu「選び方をまちがえても取り返しはつく」, vế sau「袋に入れて渡せるものではない」.",
     "options_analysis": [
-      "Chính câu đó phủ định việc thay thế khám trực tiếp.",
-      "Với triệu chứng lần đầu thì quy định lấy đối diện làm gốc.",
-      "Việc gửi số đo ở nhà chỉ là phần mô tả một lớp, không phải quan hệ.",
-      "Nhận phần việc vẫn thành với ít thông tin: đúng cách định vị."
+      "Bài nói cái túi không quyết định giá trị buổi thăm.",
+      "Bài tách hai vế thành hai thứ khác nhau.",
+      "Bài không nói lượng đồ quyết định cái người kia nhận.",
+      "Chỉ vế đầu là gắng được; vế sau không trao tay được."
     ],
     "points": [
-      "引《ひ》き受《う》ける: nhận lấy, đảm nhận.",
-      "線《せん》引《び》き: việc vạch ranh giới."
+      "取《と》り返《かえ》しがつく: còn làm lại được.",
+      "内《うち》がわ: bên trong lòng người."
     ]
   },
   "69": {
-    "why_correct": "Bài nói phạm vi là「伝わるものが少なくても成り立つ部分」, và người thấy tiện là「通うのが重い人」.",
+    "why_correct": "Câu cuối nói cùng ba mươi phút ấy mang nghĩa khác nhau tùy người mới nhập viện hay nằm đã lâu.",
     "options_analysis": [
-      "Bài quy sự chênh lệch về gánh nặng đi lại, không hạ tầng.",
-      "Bài nói lớp thứ nhất gần như không kém khám đối diện.",
-      "Bài không kiến nghị đẩy nhanh việc sửa quy định.",
-      "Lượng thông tin xử lý được và gánh nặng đi lại: đúng hai trục."
+      "Bài phủ định: túi đồ không quyết định.",
+      "Đó là chuyện gỡ băn khoăn cho người đi thăm.",
+      "Bài nói nằm càng lâu thì phần nhận càng nặng.",
+      "Nghĩa buổi thăm đổi theo mức đứt liên lạc bên ngoài."
     ],
     "points": [
-      "触診《しょくしん》: khám bằng cách chạm vào.",
-      "通《かよ》うのが重《おも》い: đi lại là gánh nặng."
+      "善《よ》しあし: tốt hay xấu, hay dở.",
+      "行《い》き来《き》: sự qua lại."
     ]
   },
   "70": {
