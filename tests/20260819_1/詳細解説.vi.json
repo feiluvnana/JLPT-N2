@@ -663,15 +663,15 @@
     ]
   },
   "52": {
-    "why_correct": "Lý do nêu thẳng: 「川と林とをつなぐ回廊になっているからだ」, và cắt đi thì 「生き物の通り道はそこで切れ」, nhiều năm cũng không hồi phục.",
+    "why_correct": "Lý do: 「積もった葉が土をやわらかく保ち、雨をしみこませるふとん（注1）の役をしている」, dọn sạch thì đất chai cứng.",
     "options_analysis": [
-      "Bài viết 「刈られた土手のほうが歩きやすい」, tức ngược lại.",
-      "Chi phí cắt cỏ không được nhắc tới ở câu nào.",
-      "Giữ lối đi của sinh vật chính là lý do bài nêu.",
-      "Số loài côn trùng là kết quả đếm, không phải mục đích."
+      "Bài công nhận 「掃いた地面のほうが歩きやすい」rồi vẫn giữ lá.",
+      "Chi phí dọn lá không được nhắc tới ở câu nào.",
+      "Giữ độ tơi của đất — thứ đã chai thì không trở lại.",
+      "Số loài sinh vật là kết quả đếm, không phải mục đích."
     ],
     "points": [
-      "「回廊《かいろう》」là hành lang nối các vùng sống của sinh vật.",
+      "「ふとん」ở đây là ví von: lớp phủ che cho phần bên dưới.",
       "「もとには戻《もど》らない」nhấn tính không phục hồi được."
     ]
   },
@@ -750,11 +750,11 @@
     ],
     "points": [
       "Ba mức: đã xác minh, đang xác minh, chưa đụng tới.",
-      "「裏取《うらど》り」là xác minh với nguồn khác."
+      "「裏《うら》を取《と》る」là xác minh với nguồn khác."
     ]
   },
   "59": {
-    "why_correct": "Câu chốt của đoạn ba: 「分かれ目は、代わりのバスの道すじをいつ引き始めたかにあった」.",
+    "why_correct": "Câu chốt của đoạn ba: 「分かれ目（注3）は、代わりのバスの道すじをいつ引き始めたかにあった」.",
     "options_analysis": [
       "Bài không nói thời điểm lỗ lệch nhau giữa các vùng.",
       "Bài không so sánh số người ký tên.",
@@ -763,7 +763,7 @@
     ],
     "points": [
       "「分《わ》かれ目《め》」là chỗ rẽ quyết định kết quả.",
-      "「輸送《ゆそう》人員《じんいん》」là số lượt hành khách chuyên chở."
+      "Ba năm sau được so bằng 「バスに乗る人の数」."
     ]
   },
   "60": {
@@ -771,38 +771,38 @@
     "options_analysis": [
       "Bài không nói tới việc lùi ngày chạy chuyến cuối.",
       "Thu chữ ký là hoạt động chung, không phải nét riêng.",
-      "Trái với 「駅を起点にするのをやめて」.",
+      "Trái với 「駅を中心にするのをやめて」.",
       "Thu giờ đi lại của dân rồi vẽ tuyến trước — đúng bài."
     ],
     "points": [
-      "「起点《きてん》」là điểm khởi đầu của tuyến đường.",
+      "「決まりがつく」là ngã ngũ, có kết luận (注2).",
       "Ngày tàu dừng là ngày chạy tuyến đã vẽ sẵn."
     ]
   },
   "61": {
-    "why_correct": "Ngay trước câu gạch chân có 「自分が消えたあとに残る困りごとを、一つずつ数えていたのだ」, kèm chỗ để chìa khóa, tên chủ ruộng.",
+    "why_correct": "Con gái làm thay quá nhanh nên tác giả 「流しの前に立つのをやめていた」.",
     "options_analysis": [
-      "Bài viết 「預金や保険の欄はほとんど空白のまま」.",
-      "Cuốn sổ không có lời cảm ơn hay hồi tưởng.",
-      "Việc vặt khiến người ở lại lúng túng là thứ mẹ ghi.",
-      "Không có chỗ nào nói nơi cất giấy tờ thủ tục."
+      "Bài không nói sức của cổ tay yếu thêm ra sao.",
+      "Không phải số lần nhờ tăng; không nhờ vẫn được làm thay.",
+      "Giúp càng nhanh thì dịp tự thử của tác giả càng mất đi.",
+      "Không có chỗ nào nói đã chia việc nhà theo phần."
     ],
     "points": [
-      "「手続《てつづ》き」là thủ tục giấy tờ, thứ mẹ đã không ghi.",
-      "「結《むす》び目《め》」là mối ràng buộc với người khác."
+      "「手《て》を貸《か》す」là ra tay giúp người khác.",
+      "「ためす」là thử làm xem có được hay không."
     ]
   },
   "62": {
-    "why_correct": "Đoạn cuối viết 「書き留められていたのは、片づけようのない結び目のほうだった」, rồi liệt kê 「誰かに返すもの、誰かに頼むこと」.",
+    "why_correct": "Đoạn giữa viết 「代わってもらった数だけ、自分でできることが減っていったのである」.",
     "options_analysis": [
-      "Bài nhấn các mục tài sản bị bỏ trống, không khuyên bắt đầu từ đó.",
-      "Thứ được ghi là các mối ràng buộc không dọn cho xong được.",
-      "Tác giả không bàn tới việc phát cuốn sổ rộng hơn.",
-      "Bài không khuyên gì về thời điểm nên viết."
+      "Ngược với bài: càng được làm thay thì càng làm được ít.",
+      "Thứ mất trước là thói quen tự thử, không phải sức tay.",
+      "Bài không bàn tới người sống một mình.",
+      "Bài không khuyên gì về cách chia việc nhà."
     ],
     "points": [
-      "「終活《しゅうかつ》」là việc chuẩn bị trước cho cuối đời.",
-      "「片《かた》づけようのない」là không dọn cho xong được."
+      "「手《て》ぎわ」là sự nhanh và chắc trong cách làm (注4).",
+      "「歯《は》がゆい」là sốt ruột vì việc không trôi (注5)."
     ]
   },
   "63": {
@@ -992,7 +992,7 @@
     "options_analysis": [
       "Phòng riêng vẫn giữ: 「個室はそのままお取りしております」.",
       "Chỗ hết là ở suất khác: 「ほかのコースですと…埋まって」.",
-      "Tối thứ sáu không ai rảnh: 「みんな仕事で無理なんです」.",
+      "Tối thứ sáu không ai rảnh: 「みんな仕事で無理なので」.",
       "Có người không ăn được trứng mà suất đã đặt lại dùng trứng."
     ],
     "points": [
