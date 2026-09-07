@@ -190,7 +190,18 @@ def scaffold_test(test_dir: Path, lean: bool = False, merge_existing: bool = Tru
 
         stem = ex_item.get("stem") or raw_info.get("stem") or stem_fallback(q_num)
         options = ex_item.get("options") or raw_info.get("options") or [f"選択肢 {i}" for i in range(1, 5)]
-        passage = ex_item.get("passage") if "passage" in ex_item else raw_info.get("passage")
+        # THE PASSAGE: same rule as `script` below — keep the stored copy while it
+        # still says what the booklet says, re-derive it the moment it does not.
+        # This line preferred the stored copy unconditionally until 2026-09-07,
+        # and a 読解 repair therefore left 11 stale `passage` copies in
+        # `20260813_1/詳細解説.json`: 模範解答.html would have printed passages the
+        # booklet no longer contains. Found by the repair agent, not by a check.
+        stored_passage = ex_item.get("passage")
+        raw_passage = raw_info.get("passage")
+        if stored_passage and raw_passage:
+            passage = stored_passage if _same_modulo_furigana(stored_passage, raw_passage) else raw_passage
+        else:
+            passage = stored_passage or raw_passage
         ans_val = exp_info.get("ans", 1)
 
         auto_scaff = auto_generate_linguistic_scaffold(q_num, raw_info, exp_info)

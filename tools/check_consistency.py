@@ -613,6 +613,7 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     "kaisetsu_passage_translation":   ("詳細解説.<lang>.json", "authoring"),
     # Stale stored script: mechanical, `make scaffold-explanations` re-derives it.
     "kaisetsu_stale_script":          ("詳細解説.json",        "assisted"),
+    "kaisetsu_stale_passage":         ("詳細解説.json",        "assisted"),
     "kaisetsu_language":              ("詳細解説.<lang>.json", "authoring"),
     # The placeholder defect (qa-report-20260904_2): a line still carrying the
     # scaffold's own pre-filled prose. Repaired by re-solving the item and
@@ -12058,6 +12059,41 @@ def check_kaisetsu_wording_matches_source(test_id: str, ja: dict):
     furigana, unlike `stem`, so there is nothing to lose). This is the backstop —
     and the thing that would catch a hand-edit of either file.
     """
+    # The 読解 half of the same rule (added 2026-09-07, one commit after the
+    # 聴解 half). `詳細解説.json` stores a copy of each 読解 passage that
+    # 模範解答.html prints, and the scaffold used to preserve it unconditionally
+    # — so a 読解 repair left `20260813_1` holding 11 passages the booklet no
+    # longer contained. Same defect, same blind spot, found by a repair agent
+    # rather than by this file.
+    gengo = ROOT / "tests" / test_id / "言語知識・読解.md"
+    if gengo.is_file() and ja:
+        booklet = gengo.read_text(encoding="utf-8").split("\n# 解答")[0]
+        _bare = lambda t: re.sub(r"[\s　]|《[^》]*》|\*\*", "", t)
+        flat = _bare(booklet)
+        stale_p = []
+        for key, item in ja.items():
+            if not isinstance(item, dict):
+                continue
+            stored = item.get("passage")
+            if not stored:
+                continue
+            # Compare on the passage's OPENING run — enough to identify it,
+            # short enough not to trip on a trailing （注N） block the parser
+            # includes for one 大問 and not another.
+            head = _bare(stored)[:40]
+            if head and head not in flat:
+                stale_p.append(f"{key}「{stored.strip()[:20]}…」")
+        check(f"{test_id}: 詳細解説.json's 読解 passages are the ones the booklet "
+              f"prints ({sum(1 for v in ja.values() if isinstance(v, dict) and v.get('passage'))} items carry one)",
+              not stale_p,
+              f"{len(stale_p)} item(s) store a superseded passage: "
+              f"{', '.join(stale_p[:6])}{' …' if len(stale_p) > 6 else ''} — "
+              f"模範解答.html prints these, so it would show text the booklet no "
+              f"longer contains. Re-run `make scaffold-explanations {test_id}` "
+              f"(it re-derives `passage` from the booklet and preserves every "
+              f"authored explanation), then `make model-answer {test_id}`",
+              slug="kaisetsu_stale_passage", test_id=test_id)
+
     st_path = ROOT / "tests" / test_id / "聴解スクリプト.txt"
     if not st_path.is_file() or not ja:
         return
