@@ -405,10 +405,10 @@ for the grandfathered ids in `P5_QUESTION_MARKER_GRANDFATHERED`), and
 `check_mondai5_question_markers` in `make check` is the per-paper line. 26 of
 the 29 papers on disk — 18 generated, all 8 imports — already carried the markers
 when the rule landed; `20260828_2` and `20260903_1` did not, and their audio had
-the same missing pause. **`20260828_2` was repaired 2026-09-08** — both question
-lines now carry the prefix and `聴解.mp3` was re-synthesised, so it passes on
-merit and left the set; `20260903_1` is still open (**re-cutting a released
-paper is a separate decision**).
+the same missing pause. **Both were repaired 2026-09-08** — each 問題5-2番 now
+prefixes its two question lines and its `聴解.mp3` was re-synthesised, so both
+pass on merit and `P5_QUESTION_MARKER_GRANDFATHERED` is now **empty**. Keep it
+empty: the repair is two prefixes plus `make mp3`, never a new exemption.
 
 Two other consumers read the same marker, which is why the drift was expensive:
 `check_consistency.choukai_p5_2ban_options()` returns `[]` without `^質問1。`,
@@ -626,7 +626,10 @@ ratio the volume band fixes. **Do not "fix" a paper against the 7% floor by
 adding turns — that breaks the volume gate, which is calibrated against
 official and this one is not.** Treat the WARN as open until the floor is
 re-derived from papers that are inside the volume band; `20260811_1` is the
-first such data point at 6.2%.
+first such data point at 6.2%, and `20260903_1` is the second at **6.0%** —
+repaired 2026-09-08 from 163 turns to 102 (5666 spoken chars, 55.5 chars/turn,
+all three volume figures inside the band) and its tail moved the wrong way,
+9% → 6%, exactly as this paragraph predicts.
 
 ### A gap is only real if the segments around it are trimmed
 

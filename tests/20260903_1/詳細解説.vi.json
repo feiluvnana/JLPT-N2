@@ -702,16 +702,16 @@
     ]
   },
   "55": {
-    "why_correct": "Người viết đã hiểu cách điền đơn, chỉ chưa rõ ngoài khai báo còn phải xin phép riêng hay không.",
+    "why_correct": "Người viết hỏi cách đặt phòng: mỗi tuần phải đặt lại hay đăng ký gộp một lần.",
     "options_analysis": [
-      "Thư nói rõ là không dùng đến bản vẽ nội bộ.",
-      "Điều đang hỏi: chỉ khai báo hay còn cần xin phép.",
-      "Thư nói cách viết đơn thì đã hiểu rõ.",
-      "Thư không hỏi về số người được chấp nhận."
+      "Thư chỉ nêu tình hình, không xin ép ai dự họp.",
+      "Đúng: hỏi có thể đăng ký gộp lịch đặt phòng không.",
+      "Thư chỉ nghe nói phòng hay trống, không xin giữ riêng.",
+      "Thư đổi giờ, thứ vẫn là thứ hai nên không hỏi đổi thứ."
     ],
     "points": [
-      "届け出《とどけで》: sự khai báo",
-      "副業《ふくぎょう》: việc làm thêm"
+      "予約《よやく》: sự đặt chỗ",
+      "登録《とうろく》: sự đăng ký"
     ]
   },
   "56": {
@@ -754,29 +754,29 @@
     ]
   },
   "59": {
-    "why_correct": "Số ca dùng quyền mạnh chỉ là phần rất nhỏ, còn gần nửa số tư vấn là chuyện dạy con và nuôi con.",
+    "why_correct": "Nhà cho con làm việc nhà thì nhiều, nhưng hơn nửa là con chỉ làm khi được nhờ.",
     "options_analysis": [
-      "Chiếm gần nửa là nỗi lo nuôi dạy, không phải tố giác.",
-      "Cửa sổ của thành phố cũng nhận cùng loại tư vấn.",
-      "Việc đưa ra tòa gia đình chỉ là số rất ít.",
-      "Ít ca tách trẻ, nhiều nỗi lo về dạy và nuôi con."
+      "Bảy phần mười là nhà có con làm việc; lịch trực chỉ ba.",
+      "Bài không so sánh giữa việc rửa bát và đổ rác.",
+      "Bài không nói chỉ nhà nghiêm khắc mới cho làm.",
+      "Đúng: nhiều nhà có, nhưng hơn nửa là làm khi được nhờ."
     ],
     "points": [
-      "児童相談所《じどうそうだんじょ》: trung tâm tư vấn trẻ em",
-      "しつけ: sự dạy dỗ"
+      "当番《とうばん》: phiên trực",
+      "家事《かじ》: việc nhà"
     ]
   },
   "60": {
-    "why_correct": "Ở phần hỗ trợ thường ngày, việc của hai nơi trùng nhau nhiều; khác là có quyền hành động khi gia đình không đồng ý hay không.",
+    "why_correct": "Việc con làm là như nhau; khác nhau ở chỗ cha mẹ có phải ra hiệu bắt đầu hay không.",
     "options_analysis": [
-      "Bài không chia theo mức nặng nhẹ của ca tư vấn.",
-      "Bài nói phần việc trùng nhau là rất lớn.",
-      "Trùng ở hỗ trợ hằng ngày, khác ở quyền không cần đồng ý.",
-      "Bài không nói quyền ấy cần thành phố cho phép."
+      "Ngược lại: con trực tự đi bếp dù cha mẹ im lặng.",
+      "Bài nói nội dung công việc không phân biệt được.",
+      "Đúng: việc giống nhau, khác ở người ra hiệu bắt đầu.",
+      "Bài không nói giúp việc rồi sẽ thành trực."
     ],
     "points": [
-      "権限《けんげん》: quyền hạn",
-      "措置《そち》: biện pháp"
+      "合図《あいず》: dấu hiệu, hiệu lệnh",
+      "区別《くべつ》: sự phân biệt"
     ]
   },
   "61": {
@@ -858,42 +858,42 @@
     ]
   },
   "67": {
-    "why_correct": "Bài nói phần lớn ngập ở thành phố không phải nước sông, mà là nước mưa trào lên khi cống không tiêu kịp.",
+    "why_correct": "Khi người dẫn vắng mặt hoặc lối đi bị chắn thì mọi người không xoay xở được.",
     "options_analysis": [
-      "Sai ở chỗ coi đó là nước sông tràn bờ.",
-      "Nước mưa trào lên mặt đất vì hệ thống tiêu không kịp.",
-      "Bài không nói ống trữ ngầm bị tràn.",
-      "Bài không nêu chuyện mặt đường thấm nước bị lão hóa."
+      "Bài không coi thời gian thoát ra là vấn đề.",
+      "Đúng: thiếu người dẫn và lối đi bị chắn thì tắc.",
+      "Ngược lại: người tham gia nói vẫn nhớ đường.",
+      "Bài không nói gì về tư thế chui xuống bàn."
     ],
     "points": [
-      "内水氾濫《ないすいはんらん》: ngập do nước mưa nội đô",
-      "下水道《げすいどう》: hệ thống cống"
+      "案内役《あんないやく》: người dẫn đường",
+      "通路《つうろ》: lối đi"
     ]
   },
   "68": {
-    "why_correct": "Bài viết rằng thay ống mất nhiều năm và nhiều tiền, lại bị giới hạn bởi chiều rộng đường đào được.",
+    "why_correct": "Làm nhiều lần thì lớp học và công việc dừng lâu, người tham gia thêm vất vả.",
     "options_analysis": [
-      "Tốn thời gian, tốn tiền và bị hạn chế bởi bề rộng đường.",
-      "Cống hiện có vốn tiêu được mưa khoảng năm mươi mi-li-mét.",
-      "Bài không nói nước sân trường chảy xuống ống ngầm.",
-      "Bài không giới hạn công trình ở ruộng làm hồ điều tiết."
+      "Đúng: giờ học, giờ làm dừng lâu và tốn công hơn.",
+      "Bài không nói số người đến sẽ giảm.",
+      "Bài không nói cách này khác với lúc thật.",
+      "Bài không nói công việc hôm đó bị đình trệ."
     ],
     "points": [
-      "時間雨量《じかんうりょう》: lượng mưa mỗi giờ",
-      "費用《ひよう》: chi phí"
+      "負担《ふたん》: gánh nặng",
+      "事前《じぜん》: trước, từ trước"
     ]
   },
   "69": {
-    "why_correct": "Kết bài nói kỹ thuật giảm nhẹ đã có đủ, thiếu là cách quyết định trữ bao nhiêu nước trên đất của ai.",
+    "why_correct": "Cần quyết trước ai sẽ nhận vai của người vắng mặt, chứ không phải học thuộc đường.",
     "options_analysis": [
-      "Bài nêu giới hạn của cách làm ống to hơn.",
-      "Bài nói kỹ thuật thì đã có đủ cả rồi.",
-      "Cần quyết cùng người dân cách chia phần gánh nước.",
-      "Trữ nước ở sân trường, ở ruộng là cách đang được làm."
+      "Bài không đòi cố định số lần hay bắt cả nhà trường dự.",
+      "Ngược lại: bài nói thời của kiểu tập ấy đã hết.",
+      "Đúng: quyết trước cách nhận vai khi có người vắng.",
+      "Bài nêu gánh nặng nhưng không bảo giảm số lần."
     ],
     "points": [
-      "減災《げんさい》: giảm nhẹ thiệt hại",
-      "貯留《ちょりゅう》: sự trữ nước"
+      "役割《やくわり》: vai trò",
+      "避難《ひなん》: sự lánh nạn"
     ]
   },
   "70": {
@@ -1275,17 +1275,30 @@
       "警備《けいび》: bảo vệ"
     ]
   },
-  "問5-2": {
-    "why_correct": "Lúc đầu cả hai cùng muốn đi buổi Mặt Trời; vì chỉ còn một suất, anh nhường chị và chọn buổi chòm sao.",
+  "問5-2-1": {
+    "why_correct": "Người nữ rủ đi buổi quan sát mặt trời, người nam đồng ý ngay từ đầu.",
     "options_analysis": [
-      "Buổi Mặt Trăng chỉ mở ngày gần trăng tròn, tháng này đã hết.",
-      "Buổi chòm sao 7 giờ tối, mưa vẫn làm: anh chọn sau cùng.",
-      "Nguyện vọng chung lúc đầu; còn một suất nên chị đi.",
-      "Buổi chụp ảnh cần chân máy mà nhà không có."
+      "Buổi ngắm trăng tháng này đã kết thúc rồi.",
+      "Buổi giảng chòm sao là lựa chọn riêng của người nam sau đó.",
+      "Đúng: lúc đầu hai người cùng chọn buổi quan sát mặt trời.",
+      "Buổi chụp ảnh bị loại vì nhà không có chân máy."
     ],
     "points": [
-      "観望会《かんぼうかい》: buổi ngắm trời",
-      "三脚《さんきゃく》: chân máy ảnh"
+      "観察《かんさつ》: sự quan sát",
+      "黒点《こくてん》: vết đen mặt trời"
+    ]
+  },
+  "問5-2-2": {
+    "why_correct": "Người nam chốt lại là sẽ đăng ký buổi giảng chòm sao.",
+    "options_analysis": [
+      "Buổi ngắm trăng tháng này đã hết ngày tổ chức.",
+      "Đúng: bảy giờ tối đi được sau giờ làm, mưa vẫn có trong nhà.",
+      "Buổi mặt trời chỉ còn một chỗ, anh nhường cho người nữ.",
+      "Không có chân máy và cũng không đáng mua để đi chụp."
+    ],
+    "points": [
+      "解説《かいせつ》: sự giải thích",
+      "屋上《おくじょう》: sân thượng"
     ]
   }
 }
