@@ -10157,10 +10157,18 @@ def check_choukai_key_duplication(test_id: str, ct: str, st: str, m, bi):
 # Bands measured over the ten `tests/imported-*` sittings by
 # `choukai_profile.official_volume_band()` (問題4 excluded — see its comment):
 #
-#                          official cur (n=7)   generated (n=23)
-#   spoken chars 問1/2/3/5  5043–5445            4326–6745
+#                          official cur (n=7)   generated (n=23, pre-repair)
+#   spoken chars 問1/2/3/5  5043–5529            4326–6745
 #   speaker turns              86–100               101–178
 #   chars per turn          50.9–62.5             32.0–49.7
+#
+# The chars ceiling read 5445 until 2026-09-07, when `choukai_profile`'s turn
+# regex was widened from {1,6} to {1,8}: `女性アナウンサー`/`男性アナウンサー` are
+# EIGHT characters and had been parsing as narration, so their turns were
+# invisible to every measurement here — including on `imported-n2-2023-07`, one
+# of the seven sittings this band is derived FROM. The band was computed short.
+# Widening it moved only the ceiling (5445 -> 5529) and failed no paper that had
+# been passing.
 #
 # The reference is the CURRENT-ERA imports only (12/2022 onward), per the era
 # rule in `official_calibration.md` §1. Over all ten imports the turn band reads

@@ -780,29 +780,29 @@
     ]
   },
   "61": {
-    "why_correct": "Câu trước:「担当者を一か所に集めればよい」— それ chỉ việc gom cán bộ một chỗ.",
+    "why_correct": "「それ」thay cho ý ngay trước: gom nhân viên phụ trách về một chỗ. Đáp án 4.",
     "options_analysis": [
-      "Nội dung này nói số hóa sổ sách, khác điều それ chỉ đến.",
-      "Bài không nói về việc giảm loại giấy tờ cần thiết.",
-      "Bài không đề cập thống nhất mẫu giấy tờ giữa các quầy.",
-      "Đúng — gom cán bộ một chỗ để tiếp nhận thủ tục đổi địa chỉ."
+      "Việc gộp sổ ghi làm một xảy ra sau, ở đoạn dưới.",
+      "Không nói tới việc giảm số loại giấy tờ.",
+      "Không nói tới việc thống nhất cách viết giấy.",
+      "Đúng — gom nhân viên về một chỗ để nhận hồ sơ chung."
     ],
     "points": [
-      "縦割《たてわ》り: chia theo bộ phận, thiếu liên kết.",
-      "台帳《だいちょう》: sổ sách."
+      "「それ」chỉ nội dung câu ngay trước.",
+      "「ように思えます」: có vẻ vậy, thực tế khác."
     ]
   },
   "62": {
-    "why_correct": "Tác giả:「見た目の変化の裏では、部署をまたいで情報を渡す仕組みが、先に組み直されていた」.",
+    "why_correct": "Trước khi quầy trông như một, thành phố đã dựng lại đường đi của thông tin giữa các bộ phận. Đáp án 4.",
     "options_analysis": [
-      "Bài nói rõ nếu chỉ gom cán bộ mà không đổi sổ sách thì chờ「không rút ngắn được」.",
-      "Bài không nói mục tiêu giảm mạnh loại thủ tục.",
-      "Thứ tự thực tế ngược lại — sổ sách được gộp trước.",
-      "Đúng — chia sẻ thông tin giữa bộ phận được chuẩn bị trước khi gộp quầy."
+      "Bị bác bỏ: sổ còn tách rời thì chờ vẫn lâu.",
+      "Không nói tới việc giảm số loại thủ tục.",
+      "Ngược thứ tự: gộp sổ ghi được làm trước.",
+      "Đúng — chuẩn bị nằm trước thay đổi bề ngoài."
     ],
     "points": [
-      "ワンストップ化: gộp thành một cửa.",
-      "台帳《だいちょう》: sổ sách ghi chép."
+      "「表向き」: mặt nhìn thấy từ bên ngoài.",
+      "Bài đối lập thay đổi thấy được với việc phía sau."
     ]
   },
   "63": {
@@ -858,42 +858,42 @@
     ]
   },
   "67": {
-    "why_correct": "Tác giả:「責任とは…書いたことに対してどう振る舞うかにあるのではないか」.",
+    "why_correct": "Uy tín không quyết ở lúc viết, mà ở cách xử sự sau khi viết. Đáp án 2.",
     "options_analysis": [
-      "Bài không nói người ẩn danh chịu trách nhiệm nặng hơn.",
-      "Đúng — trách nhiệm quyết định bởi hành động sau khi viết.",
-      "Bài không nói danh tính thật sẽ luôn bị xác định.",
-      "Bài nói ngược:「実名の場よりもかえって活発に行われる」."
+      "Không nói người viết chuyên nghiệp thì vô ích hơn.",
+      "Đúng — uy tín do hành động về sau quyết định.",
+      "Không nói mọi bài đều được kiểm chứng trước.",
+      "Không so sánh bài khen với bài chê."
     ],
     "points": [
-      "振《ふ》る舞《ま》う: ứng xử, hành động.",
-      "匿名《とくめい》: ẩn danh."
+      "「〜わけではない」là phủ định một phần.",
+      "Câu diễn giải nằm ở đoạn kế tiếp."
     ]
   },
   "68": {
-    "why_correct": "Tác giả:「消して謝るという行動は…責任の取り方の一つだったと今では思う」.",
+    "why_correct": "Tác giả sửa ngay và báo lại đã sửa chỗ nào — một cách tự nhận trách nhiệm. Đáp án 4.",
     "options_analysis": [
-      "Bài nói tác giả đã「投稿を消して謝った」, không tiếp tục tranh luận.",
-      "Bài nói tác giả「指摘され」, tức đã bị chỉ ra, không phải không ai biết.",
-      "Tác giả đã nhận ra và xử lý ngay, không để nguyên nhiều năm.",
-      "Đúng — xóa bài và xin lỗi là cách tự nhận trách nhiệm."
+      "Bài viết 'sửa ngay', không cãi tới cùng.",
+      "Tác giả có nhận được thông báo từ người đọc.",
+      "Sửa ngay khi được báo, không bỏ mặc.",
+      "Đúng — sửa rồi báo lại là cách nhận trách nhiệm."
     ],
     "points": [
-      "責任《せきにん》の取《と》り方《かた》: cách nhận trách nhiệm.",
-      "指摘《してき》される: bị chỉ ra (lỗi)."
+      "Chuyện thất bại của bản thân làm bằng chứng cho lập luận.",
+      "「引き受ける」: gánh lấy trách nhiệm."
     ]
   },
   "69": {
-    "why_correct": "Kết:「責任は…どう振る舞うかによって、匿名の場でも問われ続けている」.",
+    "why_correct": "Câu cuối: uy tín vẫn bị hỏi tới qua cách sửa và báo lại sau khi viết. Đáp án 1.",
     "options_analysis": [
-      "Đúng — dù ẩn danh hay không, trách nhiệm vẫn cần được đặt ra.",
-      "Tác giả nói rõ「行き過ぎた中傷まで擁護するつもりはない」.",
-      "Tác giả nói cần phân biệt công kích vô căn cứ với ý kiến thẳng thắn.",
-      "Bài không nói đối đáp ở nơi ẩn danh cần hạn chế hơn."
+      "Đúng — trách nhiệm bị hỏi tới dù nghiệp dư hay không.",
+      "Bài không chấp nhận lối viết làm tổn thương quán.",
+      "Bài phê phán chính cách quy chụp đó.",
+      "Không nói nên hạn chế việc trao đổi qua lại."
     ],
     "points": [
-      "問《と》われ続《つづ》ける: liên tục bị chất vấn.",
-      "中傷《ちゅうしょう》: công kích vô căn cứ."
+      "Ý chính thường nằm ở đoạn cuối.",
+      "「たしかに〜。だが〜」: nhượng bộ rồi nêu lập luận."
     ]
   },
   "70": {
@@ -1066,11 +1066,11 @@
     ]
   },
   "問3-1": {
-    "why_correct": "Toàn bài nói cách dùng máy tra cứu và thủ tục gia hạn mượn sách.",
+    "why_correct": "Toàn bài nói về cách dùng máy tra cứu và cách kéo dài thời hạn mượn sách.",
     "options_analysis": [
       "Không có nội dung về thời gian giữ sách đã đặt trước.",
       "Không có nội dung về số máy tính trong thư viện.",
-      "Đúng — nội dung chính là cách dùng máy và thủ tục gia hạn.",
+      "Đúng — nội dung chính là cách dùng máy và cách kéo dài thời hạn mượn.",
       "Không có nội dung về cách liên hệ khi trả sách trễ."
     ],
     "points": [

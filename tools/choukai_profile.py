@@ -426,13 +426,21 @@ def parse_generated_sitting(test_dir: Path) -> Sitting:
             question = ""
             if "？" in leadin or "か。" in leadin:
                 question = leadin
-            if len(lines) > 1 and not re.match(r"^[1-4]、", lines[-1]) and not re.match(r"^[^:：]{1,6}[:：]", lines[-1]):
+            if len(lines) > 1 and not re.match(r"^[1-4]、", lines[-1]) and not re.match(r"^[^:：]{1,8}[:：]", lines[-1]):
                 question = lines[-1]
 
             turns: list[Turn] = []
             opts: list[str] = []
             for l in lines[1:]:
-                spk_m = re.match(r"^([^:：]{1,6})[:：](.*)$", l)
+                # {1,8}, not {1,6} (2026-09-07). `SPEAKER_MAP`'s longest labels
+                # are 女性アナウンサー and 男性アナウンサー at EIGHT characters, so a
+                # 6-char cap silently parsed them as narration: their turns were
+                # invisible to every measurement in this module, including
+                # `volume_profile()`. Two of the ten imported sittings use one —
+                # and the imports ARE the official band `check_choukai_volume`
+                # thresholds against, so the band itself was computed short.
+                # Found by a repair agent on 20260827_1, not by this file.
+                spk_m = re.match(r"^([^:：]{1,8})[:：](.*)$", l)
                 opt_m = re.match(r"^([1-4])、(.*)$", l)
                 if spk_m:
                     turns.append(Turn(spk_m.group(1).strip(), spk_m.group(2).strip()))
