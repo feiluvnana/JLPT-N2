@@ -2791,7 +2791,9 @@
           },
           {
             "topic": "副業・兼業の広がり",
-            "theme": "働き方"
+            "theme": "働き方",
+            "origin": "reauthored",
+            "note": "2026-09-08 lexical-load repair (see logs/topics.json 20260817_3 notes): the surface authored from this drawn topic was re-subjected inside the SAME theme because its register carried the paper's 読解 lexical load. The drawn `topic` string is KEPT unchanged so check_draw_provenance and check_ledger_spec_agreement still resolve; the shipped subject is recorded in logs/topics.json `surfaces`, and the retired one under `差し替え前:<surface>`."
           },
           {
             "topic": "手書きの価値",
@@ -2815,7 +2817,9 @@
           },
           {
             "topic": "遠隔診療の普及",
-            "theme": "医療・福祉"
+            "theme": "医療・福祉",
+            "origin": "reauthored",
+            "note": "2026-09-08 lexical-load repair (see logs/topics.json 20260817_3 notes): the surface authored from this drawn topic was re-subjected inside the SAME theme because its register carried the paper's 読解 lexical load. The drawn `topic` string is KEPT unchanged so check_draw_provenance and check_ledger_spec_agreement still resolve; the shipped subject is recorded in logs/topics.json `surfaces`, and the retired one under `差し替え前:<surface>`."
           },
           {
             "topic": "子どもの習い事とやめ方",
@@ -2954,7 +2958,9 @@
           },
           {
             "topic": "郊外の団地再生",
-            "theme": "住まい"
+            "theme": "住まい",
+            "origin": "reauthored",
+            "note": "2026-09-08 lexical-load repair: the drawn topic `郊外の団地再生` produced a 問題13 whose argument could only be carried in housing-administration register (`高経年団地` `空室率` `分譲` `用途変更` `共益費` `住み継ぐ` `住戸` `配管` `作業場`) — 20 of the paper's 72 novel kanji-word tokens and 6 of its 31 （注N） lines sat in this one surface, which is the surface-re-author defect class in question-authoring/references/dokkai.md §'Lexical load'. 問題13 was re-subjected inside the SAME theme 住まい onto an ordinary everyday subject (which rooms the sun reaches, and whether those hours overlap the hours the rooms are used); the subject is authored, not drawn. Kept unchanged: theme 住まい, closing move 条件提示, the final-sentence template, the one （中略）, the 800–1070 section band (951 → 1049 JP chars) and items 67/68/69's answer_positions slots (1/3/2). The retired subject is preserved for the next paper's avoid-list under logs/topics.json key `差し替え前:問題13`. The drawn `topic` string is KEPT on this entry (unlike the 20260810_2 precedent, whose pool entry had been deleted): the pool entry still exists, reading_topics is no longer drawn from at all (AUTHORED_THEME_CATS), and the string is kept as the record of the draw so check_draw_provenance and check_ledger_spec_agreement both still resolve."
           },
           {
             "topic": "通勤時間の過ごし方",
@@ -2978,7 +2984,9 @@
           },
           {
             "topic": "子どもの意見表明権",
-            "theme": "子育て・家族"
+            "theme": "子育て・家族",
+            "origin": "reauthored",
+            "note": "2026-09-08 neutrality + lexical repair: the drawn topic `子どもの意見表明権` had been authored as a passage set inside 児童相談所 and 一時保護 — an institution defined by its power to take a child out of its home — which exam-blueprint Part II 'Neutrality' bans (distressing; the same class as the deleted `難民受け入れ` and `安楽死と尊厳死` entries). It also carried 5 institutional （注N） lines (`意見表明権` `児童相談所` `一時保護` `聴取` `代弁`). 問題11(3) was re-subjected inside the SAME theme 子育て・家族 onto an everyday subject (an adult stepping into a quarrel between siblings, and why hearing them is not the same as ruling on them); the subject is authored, not drawn. Kept unchanged: theme 子育て・家族, closing move 反論応答, the final-sentence template, the one （中略）, the ≥400 per-passage floor and the 問題11 section band (653 → 623 JP chars, section 2693 → 2663), and items 61/62's answer_positions slots (2/4). The pool entry itself is NOT deleted — the subject can be authored compliantly inside an ordinary setting; only this paper's realisation was out of band. The retired subject is preserved for the next paper's avoid-list under logs/topics.json key `差し替え前:問題11(3)`. The drawn `topic` string is KEPT on this entry (unlike the 20260810_2 precedent, whose pool entry had been deleted): the pool entry still exists, reading_topics is no longer drawn from at all (AUTHORED_THEME_CATS), and the string is kept as the record of the draw so check_draw_provenance and check_ledger_spec_agreement both still resolve."
           },
           {
             "topic": "住民票のオンライン申請",

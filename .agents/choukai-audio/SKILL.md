@@ -629,7 +629,16 @@ re-derived from papers that are inside the volume band; `20260811_1` is the
 first such data point at 6.2%, and `20260903_1` is the second at **6.0%** —
 repaired 2026-09-08 from 163 turns to 102 (5666 spoken chars, 55.5 chars/turn,
 all three volume figures inside the band) and its tail moved the wrong way,
-9% → 6%, exactly as this paragraph predicts.
+9% → 6%, exactly as this paragraph predicts. `20260904_3` is the **third**, at
+**6%** (759 sub-2 s pauses, spikes 21%): repaired 2026-09-08 from 179 turns to
+97 (5507 spoken chars, 56.8 chars/turn, all three volume figures and all four
+per-大問 figures inside the band), and its tail went `ok` → WARN on the same
+move. `20260904_2` is the **fourth**, at **6%** (740 sub-2 s pauses, spikes 20%,
+median 0.43 s): repaired from 159 turns to 98 (5410 spoken chars, 55.2
+chars/turn, all three volume figures and all four per-大問 figures inside the
+band), MP3 re-synthesised 2026-09-08. Four papers, four times the same
+direction, and the three most recent cluster on 6% — the floor is what is
+wrong, not the papers. Do not add turns to any of them.
 
 ### A gap is only real if the segments around it are trimmed
 

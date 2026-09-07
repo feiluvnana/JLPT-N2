@@ -671,7 +671,7 @@
       "Bài không nói giờ bấp bênh thì dân sẽ chê tốc độ."
     ],
     "points": [
-      "「過疎《かそ》」: dân giảm quá nhiều, làng khó sống tiếp.",
+      "「停留所《ていりゅうじょ》」: điểm dừng cho khách lên xuống xe.",
       "Kết luận nằm ở câu mở bằng 「町の答えは」."
     ]
   },
@@ -684,7 +684,7 @@
       "Bản nháp đã gửi rồi; thư không nhắc hạn trong tháng."
     ],
     "points": [
-      "「逐語訳《ちくごやく》」: dịch lần lượt từng chữ.",
+      "「一語ずつの置きかえ」: cách dịch thay từng chữ một.",
       "Thư việc nêu câu hỏi chính sau 「つきましては」."
     ]
   },
@@ -749,12 +749,12 @@
       "Đúng: đặt cái chặn vài giây trước khi dạy phân biệt."
     ],
     "points": [
-      "「衝動《しょうどう》」: đà làm ngay trước khi kịp nghĩ.",
+      "「見出し《みだし》」: dòng tiêu đề ngắn đặt đầu bài viết.",
       "Mẫu 「必要《ひつよう》なのは…より…だ」 nêu thứ tự ưu tiên."
     ]
   },
   "59": {
-    "why_correct": "Vế thức ăn chăn nuôi chỉ hỏi giá mỗi ki lô và 「同じ量を出せるかどうか」.",
+    "why_correct": "Vế thức ăn chăn nuôi chỉ hỏi giá mỗi ki lô và 「同じ量をまかなえるかどうか」.",
     "options_analysis": [
       "Làm thức ăn thì 「見た目も形も問われません」.",
       "Tỉ lệ pha trộn và ghi chú dị ứng thuộc vế thực phẩm.",
@@ -762,20 +762,20 @@
       "Bột cá xuống giá thì đơn hỏi dừng, không bàn cách giữ đơn."
     ],
     "points": [
-      "「養殖《ようしょく》」: nuôi cá, nuôi trai cho sinh sôi.",
+      "「家畜《かちく》」: gia súc người nuôi để lấy thịt, sữa.",
       "Mẫu 「問われるのは…その二つです」 gói sẵn hai điều kiện."
     ]
   },
   "60": {
-    "why_correct": "Hai hướng dùng là 「性質の違う二つ」, đo bằng 「別の指標」: giá và lượng, hay hình và nhãn.",
+    "why_correct": "Hai hướng dùng là 「性質の違う二つ」, đo bằng 「別のものさし」: giá và lượng, hay hình và nhãn.",
     "options_analysis": [
       "Bài không nói vế thức ăn lớn lên thì bớt ngại.",
       "Đúng: hai vế đo bằng thước khác nhau.",
       "Với thực phẩm thì 「値段より先に」 hình dạng là rào cản.",
-      "Nghiền bột vẫn phải ghi thành phần, 「いくつも増えます」."
+      "Nghiền bột vẫn phải ghi thành phần, 「いくつもかさみます」."
     ],
     "points": [
-      "「指標《しひょう》」: mốc số dùng để đo tiến độ.",
+      "「ものさし」: thước đo dùng làm chuẩn khi đánh giá.",
       "Đoạn mở bằng 「ですから」 chốt lập luận."
     ]
   },
@@ -814,7 +814,7 @@
       "Hỏi đáp tại chỗ cũng là điều thấy sau khi so ba khóa."
     ],
     "points": [
-      "「随時《ずいじ》」: lúc nào cũng được, không định ngày.",
+      "「段取り《だんどり》」: trình tự và sự chuẩn bị để tiến hành.",
       "Câu hỏi giới hạn ở lúc 「申しこむとき」."
     ]
   },
@@ -866,7 +866,7 @@
       "Nay con đã đi cơ sở hỗ trợ ba buổi mỗi tuần."
     ],
     "points": [
-      "「経管栄養《けいかんえいよう》」: cho ăn qua ống nhỏ.",
+      "「くだでの食事」: cho ăn qua ống thông vào dạ dày.",
       "Số lặp lại như 「八回《はちかい》」 chỉ thẳng tới đáp án."
     ]
   },
@@ -879,7 +879,7 @@
       "Đúng: chế độ thì có, không ai ôm trọn toàn bộ."
     ],
     "points": [
-      "「所管《しょかん》」: phần việc một cơ quan phụ trách.",
+      "「持ち場《もちば》」: phạm vi công việc mỗi nơi phụ trách.",
       "Hỏi 「どういうことか」: đọc câu ngay sau chỗ gạch."
     ]
   },
@@ -892,7 +892,7 @@
       "Phỏng vấn lặp ở từng cửa chính là gánh nặng."
     ],
     "points": [
-      "「連携《れんけい》」: các bên báo tin nhau để cùng lo một việc.",
+      "「橋が架かる」: có nhịp nối giữa các chế độ với nhau.",
       "「筆者《ひっしゃ》が最も言いたいこと」 nằm ở đoạn cuối."
     ]
   },
@@ -970,7 +970,7 @@
       "Tính khoản trừ lương để 「初めてのお給料の前の月」."
     ],
     "points": [
-      "「手をつける」: bắt tay vào làm việc đầu tiên.",
+      "「そこが決まらないと」: nếu chỗ đó chưa chốt thì mọi thủ tục khác đều không chạy.",
       "Nghe kỹ 「まず」: nó chỉ việc phải làm trước nhất."
     ]
   },

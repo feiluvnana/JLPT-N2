@@ -1158,6 +1158,17 @@ source, no fetch, no citation.
   still read by `used_subjects_by_theme()`, which is the point. Two agents
   derived this independently on 2026-09-08 after a coordinator instruction to
   rewrite the strings produced 4 unresolvable draws.
+  **A `差し替え前:` key takes a `themes` entry and nothing else.** It records
+  what the paper NO LONGER contains, so it gets no `claim`, no `persona`, no
+  `closing_moves`, no `voices`, and it is never counted against `PERSONA_CAP`
+  or any other per-surface cap. `check_topics_claim_field` enumerated
+  `surfaces` directly and so demanded both columns for every retired subject
+  and counted its persona against the cap — which made this convention
+  unusable for any paper after `CLAIM_FIELD_PRE_RULE` and was found the first
+  time one tried to use it (`20260904_2`, 2026-09-08: five retired 読解
+  subjects, two of them 職業人, against a cap of 2 the shipped paper met).
+  The check now skips `RETIRED_SURFACE_PREFIX`; if you add a new per-surface
+  column, skip it there too.
 
 - **A near-miss counts as used.** 「空き家の増加」 against an `avoid` entry of
   「空き家と相続後の判断の先延ばし」 is the same subject with a shorter name. The
