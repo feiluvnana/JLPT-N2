@@ -296,6 +296,25 @@ the five textbook extracts; leave-one-out on the official side):
 **Author to ≤15.8 % novel.** `check_dokkai_lexical_load` WARNs above 16.8 % and
 FAILs above 19.3 %; both lines are the current era's, not the whole archive's.
 
+**The band has a FLOOR, and overshooting it is a real defect.** Official
+current-era papers leave 6.3–9.3 unglossed novel words per 1000 chars, and
+`check_dokkai_lexical_load_floor` WARNs below 6.3. A paper under the floor is
+mis-calibrated as surely as one over the ceiling — it just fails in the
+friendlier direction. Two distinct shapes produce it, and they need opposite
+repairs, so measure `gloss_headwords` before acting:
+
+| shape | signature | repair |
+|---|---|---|
+| **over-glossed** | novel % normal, headwords high (15+) | DELETE the over-cautious （注N） on words an N2 candidate decodes unaided. Raises unglossed and lowers headwords at once. |
+| **genuinely thin** | novel % low, headwords low | put back transparent, UNGLOSSED compounds (面会時間, 見舞客, 談話室, 検温) |
+
+**Never repair a floor breach with more （注N）** — a gloss moves a word into the
+apparatus column, it does not add load. Nine of the 23 papers were under the
+floor when the check was added on 2026-09-08, four of them over-glossed at
+2.7–6.0/1k against 18–19 headwords: the campaign's lexical repairs had
+systematically overshot, because kana-ising and de-jargoning shrink the
+kanji-word denominator this ratio divides by.
+
 The word proxy peels a leading 「numeral + counter」 phrase off a kanji run before
 measuring (`strip_numeral_phrase`): the run 「二時間座」 out of 「二時間座って」 is a
 quantity welded to a verb stem, no reference text contains it, and it scored as a

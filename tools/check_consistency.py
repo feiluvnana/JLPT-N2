@@ -1987,6 +1987,16 @@ NOVEL_SHARE_WARN = 16.8
 NOVEL_SHARE_FAIL = 19.3
 UNGLOSSED_PER_1K_WARN = 10.8
 UNGLOSSED_PER_1K_FAIL = 12.8
+# The floor. A lexical repair that overshoots leaves a paper PLAINER than
+# official, which is as mis-calibrated as one that is too hard — it just fails
+# in the friendlier direction, and nothing used to catch it: three papers went
+# under on one day (20260817_3 caught its own at 5.44, 20260818_1 landed at
+# 4.99, 20260904_2 at 4.00) because kana-ising and de-jargoning shrink the
+# kanji-word denominator this ratio divides by. Set at the current era's
+# observed minimum, so a paper under it is outside the official range, not
+# merely near its edge. The repair is transparent UNGLOSSED compounds, never
+# more （注N） — a gloss makes a word apparatus, not load.
+UNGLOSSED_PER_1K_FLOOR = 6.3
 # Glossing is credit against the novelty count, so without a cap the cheapest
 # way to pass the two lines above is to footnote a technical register rather
 # than write a plainer one — which is what the generated papers were already
@@ -2056,6 +2066,19 @@ def check_dokkai_lexical_load(test_id: str):
          and p.unglossed_per_1k <= UNGLOSSED_PER_1K_WARN
          and p.gloss_headwords <= GLOSS_HEADWORD_WARN,
          detail, slug="dokkai_lexical_load_warn", test_id=test_id)
+
+    warn(f"{test_id}: 読解 lexical load above the current-era FLOOR",
+         p.unglossed_per_1k >= UNGLOSSED_PER_1K_FLOOR,
+         f"unglossed {p.unglossed_per_1k:.1f}/1k chars is BELOW the official "
+         f"current-era minimum of {UNGLOSSED_PER_1K_FLOOR} (band 6.3-9.3) — the "
+         f"passages carry too FEW unfamiliar words, which mis-calibrates the "
+         f"paper as surely as too many. This is the overshoot side of a lexical "
+         f"repair: kana-ising and de-jargoning shrink the kanji-word "
+         f"denominator. Put back transparent, UNGLOSSED compounds an N2 "
+         f"candidate decodes without a footnote (20260817_3 recovered with "
+         f"面会時間/見舞客/談話室/検温); do NOT add （注N）, which moves the word "
+         f"into the gloss-headword column instead of raising load",
+         slug="dokkai_lexical_load_floor", test_id=test_id)
 
 
 # The "not-A(system/singular)-but-B(human/relational) reframe" shape
