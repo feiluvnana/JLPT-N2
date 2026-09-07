@@ -754,29 +754,29 @@
     ]
   },
   "59": {
-    "why_correct": "Người dân quanh tuyến đường chịu đường phong tỏa nhiều giờ, cửa hàng mất doanh thu.",
+    "why_correct": "Người dựng lều, đun nước, dọn dẹp và các nhà quanh sân chịu tiếng loa, cho mượn chỗ để xe.",
     "options_analysis": [
-      "Người dân dọc tuyến đường bị ảnh hưởng sinh hoạt, buôn bán.",
-      "Ngân sách vận hành của nhân viên chính quyền không có.",
-      "Người chạy marathon hưởng lễ hội, không âm thầm chịu đựng.",
-      "Tình nguyện viên không lương không được nhắc đến."
+      "Người lo chuẩn bị, dọn dẹp và các nhà lân cận chịu tiếng ồn, xe cộ.",
+      "Bài không nói ban điều hành khu phố bù phần chi phí thiếu.",
+      "Người đến xem chỉ là kết quả tăng lên, không phải người gánh công.",
+      "Bài không nhắc thầy cô xếp hàng hay hướng dẫn cho trẻ."
     ],
     "points": [
-      "封鎖《ふうさ》される: bị phong tỏa",
-      "沿道《えんどう》: dọc tuyến đường"
+      "世話人《せわにん》: người lo việc chung",
+      "拡声器《かくせいき》: loa phóng thanh"
     ]
   },
   "60": {
-    "why_correct": "Giải chạy nào bỏ công hỏi thăm, phát bản đồ trước thì duy trì được lâu dài.",
+    "why_correct": "Khu nào chịu khó đi hỏi từng nhà trước thì hội thao duy trì được lâu dài.",
     "options_analysis": [
-      "Xem nhẹ khiếu nại của dân là ngược chủ trương tác giả.",
-      "Thái độ giải thích cẩn thận quyết định tồn tại lâu dài.",
-      "Trái với việc dân tham gia vận hành tạo sự gắn kết.",
-      "Mở rộng phong tỏa để tăng thành tích không có trong bài."
+      "Xem nhẹ công sức hàng xóm là ngược chủ trương tác giả.",
+      "Báo trước cẩn thận cho nhà lân cận quyết định việc duy trì.",
+      "Trái với chi tiết các nhà thường ngày không chào nay gọi tên nhau.",
+      "Tăng giờ gây tiếng ồn hay chỗ mượn không có trong bài."
     ],
     "points": [
-      "苦情《くじょう》: khiếu nại, phàn nàn",
-      "戸別《こべつ》に: đến từng nhà"
+      "労《ろう》をいとわない: không ngại công sức",
+      "苦情《くじょう》: khiếu nại, phàn nàn"
     ]
   },
   "61": {
@@ -858,7 +858,7 @@
     ]
   },
   "67": {
-    "why_correct": "Bí quyết gia công và khả năng nghe tiếng máy trục trặc là tri thức không thể ghi giấy.",
+    "why_correct": "Cảm giác tay khi thử độ cứng bột và tai nghe tiếng máy đổi là tri thức không ghi ra giấy được.",
     "options_analysis": [
       "Là nội dung đã ghi rõ trong văn bản, trái ý không thể ghi giấy.",
       "Ghi chép lại được thì đã mâu thuẫn với đề bài.",
@@ -866,33 +866,33 @@
       "Nghe tiếng máy để nhận biết trục trặc."
     ],
     "points": [
-      "加工《かこう》のこつ: bí quyết gia công",
-      "聞《き》き分《わ》ける: phân biệt bằng tai"
+      "加減《かげん》: mức độ vừa tay",
+      "呼吸《こきゅう》: sự ăn ý khi cùng làm"
     ]
   },
   "68": {
-    "why_correct": "Vai trò phù hợp là xác định rõ phạm vi công việc, giao trách nhiệm đào tạo lớp sau.",
+    "why_correct": "Vai trò phù hợp là khoanh rõ phạm vi việc và giao trách nhiệm đào tạo người đến sau.",
     "options_analysis": [
-      "Là kiểu vai trò giữ nguyên như trước, bị bài viết phủ định.",
-      "Là kiểu chỉ giúp việc vặt, cũng bị bài viết phủ định.",
-      "Xác định phạm vi và giao trách nhiệm đào tạo.",
-      "Quay lại làm quản lý không được nhắc đến."
+      "Giữ nguyên phần việc rồi dạy lúc rảnh, đúng kiểu bị phủ định.",
+      "Chỉ phụ việc vặt, cũng là kiểu bị bài viết phủ định.",
+      "Khoanh rõ phạm vi và giao trách nhiệm đào tạo.",
+      "Rời hiện trường trái với việc đứng cạnh cùng làm."
     ],
     "points": [
       "受《う》け持《も》ち: phần việc đảm nhận",
-      "後《あと》に続《つづ》く人《ひと》: người kế tiếp"
+      "手探《てさぐ》り: mò mẫm tự tìm cách"
     ]
   },
   "69": {
     "why_correct": "Câu kết khẳng định phát huy năng lực tùy vào cách nơi làm việc thiết kế vai trò.",
     "options_analysis": [
-      "Thiết kế vai trò tỉ mỉ quyết định làm việc lâu dài.",
-      "Khuyến khích công ty tái tuyển dụng hơn không phải kết luận.",
-      "Giữ nguyên đãi ngộ như trước để hết vấn đề cũng không phải.",
-      "Trái ngược hoàn toàn với kết luận của bài viết."
+      "Cách thiết kế vai trò quyết định người làm phát huy được hay không.",
+      "Bài không kêu gọi coi việc dạy là nghĩa vụ phải phổ biến.",
+      "Chỉ tăng lương thì hết vấn đề, bài không nói vậy.",
+      "Bỏ qua đào tạo người mới là trái với kết luận bài viết."
     ],
     "points": [
-      "再雇用《さいこよう》: tái tuyển dụng",
+      "循環《じゅんかん》: vòng tuần hoàn tốt",
       "組《く》み立《た》て: cách thiết kế"
     ]
   },
