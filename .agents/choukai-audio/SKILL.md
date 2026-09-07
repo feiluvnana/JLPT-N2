@@ -195,9 +195,27 @@ noticing the pattern, without Japanese.
   because the rule had a number for closings only. Official runs 0–4 of a given
   request frame per WHOLE paper, scattered across 問題1/4/5 — never four
   item-openers in one section.
-- **Turn shape & ping-pong**: generated papers have drifted into short turns
-  (median 27 chars vs official 38 chars) and higher turn counts (107–198 vs
-  66–143). Write substantive dialogue turns rather than rapid transaction ping-pong.
+- **Turn shape & ping-pong — now gated, and the old numbers here were wrong.**
+  This bullet used to read 「median 27 chars vs official 38, turn counts 107–198
+  vs 66–143」. Both official figures came from `refs/*/script.md`, and 28 of the
+  31 script PDFs have no text layer — they extract to instruction lines only
+  (`official_calibration.md` §0), so that was OCR loss being read as a register
+  measurement. Measured instead on the ten `tests/imported-*` sittings, which are
+  the same papers retyped complete, the current era (12/2022–12/2025) runs:
+
+  | 問題1/2/3/5, 例 excluded | official current era | our 23 papers |
+  |---|---|---|
+  | spoken chars | **5043–5445** | 4326–6745 |
+  | speaker turns | **86–100** | 101–178 |
+  | chars per turn | **50.9–62.5** | 32.0–49.7 |
+
+  **All 23 sit above the turn ceiling and all 23 below the chars-per-turn
+  floor** — a unanimous drift, not a few outliers, and one no check could see
+  because 聴解 had no length rule in either direction outside 問題3's floor.
+  `check_choukai_volume` bounds all three now. Write substantive dialogue turns
+  rather than rapid transaction ping-pong, and when you cut to come into band,
+  **cut candidates and content, never the short reactions** (rule 8 below) and
+  never a pause.
 - **Vary who drives.** Official 問題1 is as often an instruction-giver
   assigning tasks (「〜してくれる？」) as a customer being redirected.
 - 「まず」 is the QUESTION's word (このあとまず何をしますか); inside the
@@ -584,7 +602,11 @@ sound like two — and our papers carry ~120 boundaries against ~480 within-turn
 pauses because our median turn is 27 chars against official's 37
 (`official_register.md` §1). The tail is therefore capped near 9% by SCRIPT
 SHAPE, and the way to lift it is fewer, longer turns, not a bigger constant
-(`official_pacing.md` §6.1).
+(`official_pacing.md` §6.1). **The 27-vs-37 figure in that sentence is the stale
+pair corrected in Part 1's turn-shape rule** — the real current-era gap is
+32.0–49.7 chars/turn against 50.9–62.5 — so the conclusion holds and is in fact
+understated: bringing a paper inside `check_choukai_volume`'s band lifts this
+tail on its own.
 
 ### A gap is only real if the segments around it are trimmed
 

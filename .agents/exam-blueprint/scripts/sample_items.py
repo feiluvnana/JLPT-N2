@@ -66,6 +66,44 @@ ADJUNCT_CAP = 0.20  # max share of each category draw filled from staging
 # draw, so distinctness leaves 7 themes spare.
 THEME_CAP = {"reading_topics": 1, "listening_scenarios": 5}
 
+# --- Themed surfaces are AUTHORED, not drawn (2026-09-07) --------------------
+# The two themed categories used to be curated pools of ~290 subject strings
+# each, sampled with the same cooldown machinery as the linguistic pools. They
+# are no longer. What is drawn now is the **theme**; the SUBJECT is invented by
+# the authoring agent, which is handed the subjects already used for that theme
+# so it can avoid them.
+#
+# WHY THE CHANGE. The founding invariant at the top of this skill — "a model
+# asked to pick 12 N2 grammar points picks nearly the same 12" — is about TESTED
+# LINGUISTIC ITEMS, and it still binds them absolutely. A topic is not a tested
+# item: `exam-blueprint` Part II has always said the entry supplies scene and
+# content only and the author writes the passage. So the pool was buying
+# randomness for the one field where randomness was never the point, while
+# costing:
+#   * exhaustion — 23 papers x 12 reading draws is 276 of 291 entries, so the
+#     cooldown windows were permanently tight and every paper printed a
+#     "pool is tight" note;
+#   * curation debt — every entry has to clear Part II's neutrality gate and the
+#     N2 register, and two that did not shipped: 「安楽死と尊厳死」 (deleted
+#     2026-09-04) and 「難民受け入れ」, which reached a printed 問題10(1) passage
+#     in `20260810_2` with a （注2） defining 難民 as 戦争で国を離れた人;
+#   * a false sense of control — 158 of 271 entries carried a word in their own
+#     title that appears nowhere in the archive or the textbooks, and it turned
+#     out (measured, r = -0.09) not to predict a paper's lexical load at all.
+#
+# WHAT IS LOST, stated plainly: errand-key rotation for 聴解 was computed from
+# pool `key` fields at draw time and cannot be. It moves to the record — the
+# `shapes` column of `logs/topics.json`, which already stores each 聴解 item's
+# errand and which the whole-paper pass in `jlpt-test-generation` already reads
+# across three papers. That is the check reading what SHIPPED instead of what
+# was drawn, which this repo's own rules ask for everywhere else.
+AUTHORED_THEME_CATS = {"reading_topics", "listening_scenarios"}
+
+# How many previously-used subjects to hand the author per theme. All of them,
+# in practice — a theme carries at most a few dozen across 23 papers, and the
+# whole point is that the author can see the full list.
+AVOID_LIST_CAP = 60
+
 # Categories whose draw must hold at most one entry per theme, enforced during
 # the draw by `sample_distinct_theme()` rather than warned about afterwards.
 DISTINCT_THEME_CATS = {"reading_topics"}
@@ -109,6 +147,54 @@ KUN_CAP = {"kanji_reading": 2}
 # enforced by `sample_kun_capped()` and re-checked by
 # `check_mondai1_reading_type_mix()`.
 KUN_FLOOR = {"kanji_reading": 1}
+
+# 問題1's reading TRAP, added 2026-09-07 (audit: "vocabulary may be undertuned").
+# A 促音/拗音 in the keyed reading (っ/ゃ/ゅ/ょ) is what the 2×2 清濁/長短 grid
+# actually discriminates on — 出席(しゅっせき) can be mis-read four ways, 父親
+# (ちちおや) cannot. Measured over every parsable official 問題1 item:
+#
+#   official, all 31 sittings   54/152 = 35.5 %
+#   official, current era        14/35 = 40.0 %
+#   generated, 23 papers         24/115 = 20.9 %   (z = 2.61, p = 0.009)
+#
+# The cause is NOT the authors: `pools.json`'s `kanji_reading` is itself only
+# 25.8 % trap-carrying (z = 2.58, p = 0.010 against official), and an unweighted
+# draw of 5 reproduces the pool, not the archive. So the rate is the ARCHIVE's,
+# exactly as KUN_TARGET_RATE's comment says of its own: do not re-derive either
+# from the pool. Enforced at draw time by `sample_kun_capped()` (both the full
+# and `--reroll-one` paths) and re-checked by `check_mondai1_reading_trap_corpus()`,
+# which imports `has_reading_trap()` from here so the two cannot disagree.
+#
+# THE CURRENT-ERA rate, not the all-era one (2026-09-07). KUN_TARGET_RATE reads
+# the whole archive because its own evidence base is five hand-classified
+# sittings and it has nothing finer; this rate is machine-recoverable from the
+# key column of every sitting, so it can and does follow the era rule — 14/35
+# over 12/2022–12/2025 rather than 54/152 over all 31.
+TRAP_TARGET_RATE = {"kanji_reading": 14 / 35}
+# NO per-paper floor, and that is measured rather than conceded: official
+# per-paper trap counts run 0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,3,3,
+# 3,3,4,4,4 — median 2, and FIVE of the 31 sittings carry zero. A floor of 2
+# would reject 13 real sittings, which `question-authoring` §"Calibrate to the
+# BAND" calls a wrong floor. The rate alone lifts the expected count from the
+# pool's 1.29 to the archive's 1.78 per paper, and it is the CORPUS rate that
+# the gate then checks (`check_mondai1_reading_trap_mix`), because a per-paper
+# band of 0–4 out of 5 cannot discriminate anything.
+TRAP_FLOOR: dict[str, int] = {}
+
+_TRAP_KANA = "っゃゅょ"
+
+
+def has_reading_trap(entry) -> bool:
+    """True when a `kanji_reading` entry's READING carries 促音 or 拗音.
+
+    Reads the recorded reading, not the spelling: 「出席(しゅっせき)」 is a trap,
+    「学校(がっこう)」 is a trap, 「父親(ちちおや)」 is not. An entry with no
+    recorded reading cannot be judged and counts as no trap — the same
+    under-counting direction `is_kun_target()` documents, i.e. toward letting a
+    draw through rather than failing a compliant one.
+    """
+    _, reading = split_reading_entry(entry)
+    return any(ch in _TRAP_KANA for ch in reading)
 
 # 問題4 stimulus register, enforced during the draw by `sample_keigo_capped()`
 # (REPORT-CHOUKAI.md §F4, measured 2026-08-25). `quick_response` holds two kinds
@@ -409,7 +495,9 @@ def sample_kun_capped(rng: random.Random, eligible: list, n: int,
                       target_rate: float, cap: int, name: str,
                       already: int = 0, weight_fn=None,
                       floor: int = 0, conflict_fn=None,
-                      seen: set | None = None) -> list:
+                      seen: set | None = None,
+                      trap_rate: float = 0.0, trap_floor: int = 0,
+                      trap_already: int = 0) -> list:
     """`n` entries whose 訓読み count sits inside the archive's BAND.
 
     Same shape as `sample_katakana_capped()`, and for the same reason: the
@@ -434,6 +522,30 @@ def sample_kun_capped(rng: random.Random, eligible: list, n: int,
               f"({len(plain)}) to fill {n - k} of {n} slots — falling back "
               f"to an uncapped draw; grow the 音読み side of this pool")
         return pick(eligible, n)
+
+    # Second dimension: the 促音/拗音 reading trap. Independent of 音/訓 — a
+    # 訓読み target can carry one (湿って=しめって) — so it is a split WITHIN each
+    # branch, not a third branch. Traps are allocated to the 音読み side first,
+    # because that is where the 2×2 清濁/長短 grid the trap feeds actually lives.
+    if trap_floor or trap_rate:
+        want = sum(rng.random() < trap_rate for _ in range(n))
+        want = max(want, max(0, trap_floor - trap_already))
+        want = min(want, n)
+        on_trap = [e for e in plain if has_reading_trap(e)]
+        on_flat = [e for e in plain if not has_reading_trap(e)]
+        kun_trap = [e for e in kun if has_reading_trap(e)]
+        kun_flat = [e for e in kun if not has_reading_trap(e)]
+        t_on = min(want, n - k, len(on_trap))
+        t_kun = min(want - t_on, k, len(kun_trap))
+        if (len(on_flat) >= (n - k) - t_on) and (len(kun_flat) >= k - t_kun):
+            picked = (pick(on_trap, t_on) + pick(on_flat, (n - k) - t_on)
+                      + pick(kun_trap, t_kun) + pick(kun_flat, k - t_kun))
+            rng.shuffle(picked)
+            return picked
+        print(f"  warning: pool '{name}' cannot fill the 促音/拗音 quota "
+              f"({want} of {n}) without exhausting a branch — falling back to "
+              f"the 音訓-only draw; grow the trap-carrying side of this pool")
+
     picked = pick(plain, n - k) + pick(kun, k)
     rng.shuffle(picked)
     return picked
@@ -1508,6 +1620,99 @@ def recency_map(history: list) -> dict:
     return rec
 
 
+# --- Authored themed surfaces: draw the theme, hand over the used subjects ---
+
+TOPICS_LOG = LOGS_DIR / "topics.json"
+
+
+def used_subjects_by_theme() -> dict[str, list[str]]:
+    """{theme: [subject, ...]} over every paper `logs/topics.json` records.
+
+    This IS the "note the topic that is used already" half of the design. The
+    file already stores, per paper, a `surfaces` map (one noun phrase per
+    surface) and a `themes` map keyed identically, written by the Stage-3
+    whole-paper pass — so the used-list is a join over two columns that already
+    exist, not a new registry to keep in step with anything.
+
+    A surface with a theme but no subject, or the reverse, is skipped rather
+    than guessed: a half-recorded row is a hole in the record (which
+    `check_topics_shapes_field` already reports), and inventing the missing half
+    here would hide it.
+    """
+    out: dict[str, list[str]] = {}
+    try:
+        rows = json.loads(TOPICS_LOG.read_text(encoding="utf-8"))["history"]
+    except (FileNotFoundError, KeyError, json.JSONDecodeError):
+        return out
+    for row in rows:
+        surfaces = row.get("surfaces") or {}
+        themes = row.get("themes") or {}
+        for surface, theme in themes.items():
+            subject = surfaces.get(surface)
+            if not theme or not subject:
+                continue
+            out.setdefault(theme, [])
+            if subject not in out[theme]:
+                out[theme].append(subject)
+    return out
+
+
+def theme_recency(history: list) -> dict[str, int]:
+    """How many draws ago each theme was last used, for weighting the draw.
+
+    Themes are a closed list of twenty and a paper spends twelve of them on
+    reading alone, so without recency weighting the same themes would recur
+    every other paper. Same `ago(x)+1` shape as
+    `weighted_sample_no_replacement()` uses for pool entries.
+    """
+    ago: dict[str, int] = {}
+    for i, row in enumerate(reversed(history)):
+        for cat in AUTHORED_THEME_CATS:
+            for e in row.get("items", {}).get(cat, []) or []:
+                t = e.get("theme") if isinstance(e, dict) else None
+                if t and t not in ago:
+                    ago[t] = i
+    return ago
+
+
+def draw_authored_themes(rng: random.Random, n: int, name: str,
+                         history: list, kept_themes=()) -> list[dict]:
+    """`n` themed surface slots whose SUBJECT the author will invent.
+
+    Reading takes twelve all-distinct themes (`THEME_CAP` 1); listening takes
+    twenty-one with at most `THEME_CAP` per theme. Both are drawn from `THEMES`,
+    the closed twenty-value vocabulary, weighted so a theme unused for longer is
+    likelier — the same recency pressure the pools used to get from the ledger.
+    """
+    cap = THEME_CAP.get(name, 1)
+    ago = theme_recency(history)
+    used = used_subjects_by_theme()
+    pool: list[str] = []
+    for t in THEMES:
+        pool += [t] * cap
+    # Weighted shuffle: longer-unused themes first, ties broken randomly.
+    weights = {t: (ago.get(t, len(history)) + 1) for t in THEMES}
+    order = sorted(pool, key=lambda t: -(weights[t] * rng.random()))
+
+    counts: dict[str, int] = {}
+    for t in kept_themes:
+        counts[t] = counts.get(t, 0) + 1
+    picked: list[str] = []
+    for t in order:
+        if len(picked) >= n:
+            break
+        if counts.get(t, 0) >= cap:
+            continue
+        counts[t] = counts.get(t, 0) + 1
+        picked.append(t)
+    if len(picked) < n:
+        sys.exit(f"cannot fill {n} '{name}' slots from {len(THEMES)} themes "
+                 f"at cap {cap} — THEME_CAP or DRAW is wrong")
+    rng.shuffle(picked)
+    return [{"theme": t, "origin": "authored",
+             "avoid": used.get(t, [])[:AVOID_LIST_CAP]} for t in picked]
+
+
 def sample_distinct_theme(rng: random.Random, eligible: list, n: int,
                           name: str, weight_fn=None, used_themes=(),
                           conflict_fn=None, seen: set | None = None
@@ -1727,7 +1932,10 @@ def draw(rng: random.Random, pool: list, recency: dict, n: int,
                     rng, eligible, n, KUN_TARGET_RATE[name], KUN_CAP[name],
                     name, already=sum(1 for x in kept if is_kun_target(x)),
                     weight_fn=weight, floor=KUN_FLOOR.get(name, 0),
-                    conflict_fn=taken_tokens, seen=seen)), cool
+                    conflict_fn=taken_tokens, seen=seen,
+                    trap_rate=TRAP_TARGET_RATE.get(name, 0.0),
+                    trap_floor=TRAP_FLOOR.get(name, 0),
+                    trap_already=sum(1 for x in kept if has_reading_trap(x)))), cool
             if name in KEIGO_CAP:
                 return top_up(sample_keigo_capped(
                     rng, eligible, n, KEIGO_CAP[name], name, kept=kept,
@@ -1945,7 +2153,36 @@ def main():
     ledger = load_ledger()
     history = ledger["history"]
     staging_by_cat = {} if args.no_adjunct else load_staging_ready()
-    recency = recency_map(history)
+
+    # RE-SAMPLING AN EXISTING TEST ID IS AN UPDATE, NOT A NEW DRAW (2026-09-07).
+    # A paper being regenerated keeps its slot in history: it is the same sitting
+    # with new content, not a 24th paper. Two consequences, and both were wrong
+    # before this block existed:
+    #
+    #   1. `recency` must be built from the papers BEFORE it, not from all 23.
+    #      Using the full history cools this paper down against its own stale
+    #      row and against papers that come AFTER it — a draw can then be
+    #      rejected for colliding with its own previous content, which is
+    #      precisely what a regeneration is trying to replace.
+    #   2. the new row must REPLACE the old one at the same index (below), not
+    #      append. `check_spec_rotation` proves a test against `hist[:self_idx]`
+    #      and `self_idx` finds the FIRST row with that id, so an appended row
+    #      would leave every rotation check reading the stale draw forever, and
+    #      the ledger would carry 46 rows for 23 papers.
+    #
+    # ORDERING: regenerate in chronological order. When paper i is redrawn,
+    # papers i+1.. are still the old ones, so a collision with them is possible —
+    # it resolves as those papers are themselves redrawn against the updated
+    # `history[:i+1]`. Regenerating out of order leaves collisions behind.
+    resample_idx = next((i for i, h in enumerate(history)
+                         if str(h.get("test_id")) == str(args.test_id)), None)
+    if resample_idx is not None:
+        print(f"  re-sampling existing test id '{args.test_id}' at history "
+              f"slot {resample_idx} of {len(history)} — its ledger row will be "
+              f"REPLACED, and this draw sees only the {resample_idx} paper(s) "
+              f"before it")
+    recency = recency_map(history if resample_idx is None
+                          else history[:resample_idx])
 
     if args.reroll:
         cat = args.reroll
@@ -2153,6 +2390,12 @@ def main():
         theme_warns: list[str] = []
         effective_cool = None
         for cat, n in DRAW.items():
+            # Themed surfaces are authored, not drawn: what comes back is the
+            # theme plus the subjects already used for it, and no pool entry is
+            # consumed. See AUTHORED_THEME_CATS for why.
+            if cat in AUTHORED_THEME_CATS:
+                items[cat] = draw_authored_themes(rng, n, cat, history)
+                continue
             if cat not in pools:
                 sys.exit(f"category '{cat}' is in DRAW but missing from pools.json")
             cool_max = cooldown_for(cat, pools[cat])
@@ -2183,10 +2426,16 @@ def main():
             "items": items,
             "answer_positions": positions,
         }
-        history.append({"test_id": args.test_id, "seed": seed,
-                        "generated_at": spec["generated_at"],
-                        "pools_sha": spec["pools_sha"], "items": items,
-                        "draw": dict(DRAW)})
+        row = {"test_id": args.test_id, "seed": seed,
+               "generated_at": spec["generated_at"],
+               "pools_sha": spec["pools_sha"], "items": items,
+               "draw": dict(DRAW)}
+        # Replace in place when this id already has a slot (see the re-sampling
+        # note where `resample_idx` is computed); append only for a new id.
+        if resample_idx is None:
+            history.append(row)
+        else:
+            history[resample_idx] = row
         print(f"  answer positions over the {sum(pos_totals.values())} "
               f"four-choice items: " +
               ", ".join(f"{p}x{pos_totals[p]}" for p in (1, 2, 3, 4)) +
@@ -2199,9 +2448,17 @@ def main():
         rotation_check_items = spec["items"]
 
     # Invariant: no item may be tested by two different 問題 in the same paper.
+    # AUTHORED_THEME_CATS are exempt: they carry no item text (the subject does
+    # not exist yet), so every one of them would collide with every other on the
+    # empty string. Their distinctness rule is a different one — themes, capped
+    # by THEME_CAP inside `draw_authored_themes()` — and the SUBJECTS they turn
+    # into are compared by the Stage-3 whole-paper pass, which is where two
+    # surfaces on one subject actually become visible.
     collisions = {}
-    for a, b in itertools.combinations(spec["items"], 2):
-        both = {item_text(x) for x in spec["items"][a]} & {item_text(x) for x in spec["items"][b]}
+    _texts = {c: {item_text(x) for x in xs} - {""}
+              for c, xs in spec["items"].items() if c not in AUTHORED_THEME_CATS}
+    for a, b in itertools.combinations(_texts, 2):
+        both = _texts[a] & _texts[b]
         if both:
             collisions[f"{a} x {b}"] = sorted(both)
     if collisions:

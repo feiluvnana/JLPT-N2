@@ -211,6 +211,9 @@ extract-kanji-tables:
 extract-shinkanzen-goi:
 	python3 tools/extract_shinkanzen_goi.py
 
+extract-hajimete:
+	python3 tools/extract_hajimete.py
+
 extract-shinkanzen-dokkai:
 	python3 tools/extract_shinkanzen_dokkai.py
 

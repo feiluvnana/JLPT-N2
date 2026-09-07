@@ -116,6 +116,13 @@ SAMPLE_ITEMS = load(".agents/exam-blueprint/scripts/sample_items.py")
 GOI = load("tools/goi_profile.py")
 DOKKAI = load("tools/dokkai_profile.py")
 CHOUKAI = load("tools/choukai_profile.py")
+# Lexical LOAD, as opposed to lexical SHAPE. The four 読解 measurements that
+# existed before it — passage length, sentence length, kanji density, （注N）
+# count — are all properties of the prose's shape, and a paper can sit inside
+# every one of them while using twice the unfamiliar vocabulary of any official
+# sitting, which all 23 generated papers did (audit 2026-09-07). Owner of the
+# measurement: `tools/lexical_profile.py`; this file owns the thresholds.
+LEXICAL = load("tools/lexical_profile.py")
 
 
 # One record per emitted finding, for `--json` (REPORT-CHOUKAI.md §5.0). A finding
@@ -566,6 +573,26 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     "dokkai_lengths":                 ("passage prose",        "assisted"),
     "dokkai_sentence_rhythm":         ("passage prose",        "assisted"),
     "dokkai_kanji_density":           ("passage prose",        "assisted"),
+    # Lexical load (audit 2026-09-07). NOT "assisted": the repair is never a
+    # word-swap pass over the shipped prose, because the words are what the
+    # SUBJECT requires — a passage arguing about 内水氾濫 needs 貯留管 and
+    # 遊水地 whatever you do to its sentences. Bringing one into band means
+    # re-choosing what the surface is about, so it is a surface re-author, and
+    # `make repair-plan` must not offer it as a prose edit.
+    "dokkai_lexical_load":            ("<surface re-author>",  "authoring"),
+    "dokkai_lexical_load_warn":       ("<surface re-author>",  "authoring"),
+    # 聴解 volume. The script is the artifact and the MP3 follows it, so a
+    # repair here always costs `make mp3` — which is why the tier is authoring
+    # and not assisted even when the edit looks like deleting turns.
+    "choukai_volume":                 ("聴解スクリプト.txt",   "authoring"),
+    "choukai_volume_warn":            ("聴解スクリプト.txt",   "authoring"),
+    # The 問題1 trap rate is a property of the DRAW, not of any paper on disk —
+    # no item edit can move it, and a hand-substituted target never touches the
+    # ledger (moji-goi.md §問題1). The sufficient artifact is therefore a fresh
+    # `--reroll kanji_reading` plus re-authoring the five items it feeds, which
+    # is `<section re-author>`; the sampler and pool fix that PREVENTS it
+    # recurring is a pipeline change, not a per-paper repair.
+    "mondai1_trap_rate":              ("<section re-author>",  "authoring"),
     "dokkai_register_voice":          ("<surface re-author>",  "authoring"),
     # 詳細解説 (exam-model-answer). Both findings are repaired in the explanation
     # file alone — the paper itself is frozen by the time this pass runs, so
@@ -1908,6 +1935,112 @@ def check_dokkai_rhetorical_monotony(name: str, body: str):
          f"until no more than two share one; then re-check that the keys did "
          f"not inherit it (question-authoring/references/dokkai.md "
          f"§'Thirteen surfaces, thirteen different essays')")
+
+
+# --- 読解 lexical load -----------------------------------------------------
+# Every threshold below sits ABOVE an observed official maximum, as every
+# threshold in this repo must (`question-authoring` §"Calibrate to the BAND":
+# a floor that rejects an official paper is a wrong floor). Measured by
+# `tools/lexical_profile.py --baseline`; refresh from that, never by retyping.
+#
+#                          official cur (n=7)   official all (n=31)   generated (n=23)
+#   novel words, % tokens   9.7–16.4             8.0–19.0              12.1–28.6
+#   unglossed novel /1k     6.5–9.5              4.1–13.5               6.1–18.4
+#   gloss headwords            4–20                4–24                  9–31
+#
+# Refreshed 2026-09-07 after `refs/Hajimete/vocab_reference.md` (はじめての N2単語
+# 2500) joined the reference corpus — a curated N2 word list moves every figure
+# down slightly, because more words are now correctly counted as known.
+#
+# CALIBRATED TO THE CURRENT ERA, both lines (2026-09-07, at the user's
+# instruction: "tune closer to near current test; tests too far in the past are
+# just for ref"). The first cut set the WARN line at the current-era maximum and
+# the FAIL line at the ALL-era maximum, which let a paper sit 4 points above
+# anything the exam has printed since 12/2022 and still pass. Both lines now
+# come from the 7 sittings 12/2022–12/2025 that `official_calibration.md` §1
+# names as the format the repo models; 2010–7/2022 is reference, not calibration.
+#
+# Verified against every official paper before shipping:
+#   * of the 7 current-era sittings, **none FAILs and none WARNs**;
+#   * of the 10 `tests/imported-*` retypings, none FAILs;
+#   * of the 24 pre-12/2022 sittings, ONE FAILs (12/2017, unglossed 13.5 against
+#     a ceiling of 13.0) and 9 WARN. That is the era rule working, not a wrong
+#     threshold — those papers are a different format, read for reference only.
+#   * of the 23 generated papers this rule was written against, 13 FAIL.
+NOVEL_SHARE_TARGET = 16.5   # the current-era observed max — author BELOW this
+NOVEL_SHARE_WARN = 17.5
+NOVEL_SHARE_FAIL = 20.0
+UNGLOSSED_PER_1K_WARN = 11.0
+UNGLOSSED_PER_1K_FAIL = 13.0
+# Glossing is credit against the novelty count, so without a cap the cheapest
+# way to pass the two lines above is to footnote a technical register rather
+# than write a plainer one — which is what the generated papers were already
+# doing (20 gloss headwords against official's 9, and 36–50% of their novel
+# words glossed against official's 13%).
+GLOSS_HEADWORD_WARN = 22
+GLOSS_HEADWORD_FAIL = 24
+
+
+def check_dokkai_lexical_load(test_id: str):
+    """The words a 読解 half uses, not the shape of its prose.
+
+    THE INCIDENT (audit 2026-09-07, this repo's own 23 papers). Kanji density,
+    sentence length and passage length were all inside band on papers whose
+    passages ran on 約款/法令/権限/措置 (legal), 血小板/赤血球/経管栄養 (medical) and
+    内水氾濫/貯留管/遊水地 (civil engineering). Official papers' unfamiliar words
+    are invented proper nouns and transparent compounds — 森田様, 回収日, 割引後,
+    個数 — which a reader skips past; ours were terminology a reader must decode.
+    Across the 23 papers the novelty rate climbed steadily (Spearman +0.72
+    against generation order) while kanji density stayed flat (+0.05), so the
+    metric the gate DID have could not have caught it at any threshold.
+
+    `lexical_profile` credits a （注N）-defined headword as apparatus, so the
+    unglossed figure is the load actually left on the reader. Both numbers are
+    reported because they fail differently: a high novel share with a low
+    unglossed figure is a paper that footnoted its way out, which
+    GLOSS_HEADWORD_* then catches.
+    """
+    stem = f"{test_id}: 読解 lexical load inside the official band"
+    if not LEXICAL.reference().available:
+        return skip(stem, "no reference corpus — refs/*/booklet.md and the "
+                          "textbook extracts are tracked; a clone missing them "
+                          "is broken, not offline")
+    try:
+        profiles = LEXICAL.profile_tests([test_id])
+    except Exception as exc:                       # noqa: BLE001 - reported, not raised
+        return skip(stem, f"lexical_profile could not parse this paper: {exc}")
+    if not profiles or not profiles[0].word_tokens:
+        return skip(stem, "no 問題10–13 passage prose parsed")
+    p = profiles[0]
+
+    print(f"        読解 lexical load: novel {p.novel_share:.1f}% of "
+          f"{p.word_tokens} kanji-words, unglossed {p.unglossed_per_1k:.1f}/1k "
+          f"chars, {p.gloss_headwords} gloss headwords  "
+          f"[author ≤{NOVEL_SHARE_TARGET}% / official cur 9.7–16.4%]")
+
+    worst = ", ".join(p.unglossed_words[:12])
+    detail = (f"novel {p.novel_share:.1f}% (official current era 9.7–16.4), "
+              f"unglossed {p.unglossed_per_1k:.1f}/1k chars (official 6.5–9.5), "
+              f"{p.gloss_headwords} gloss headwords (official 4–20). "
+              f"Unglossed novel words include: {worst}. "
+              f"The repair is PLAINER SUBJECT MATTER, not more （注N） — pick a "
+              f"topic whose argument can be made in ordinary words, and re-read "
+              f"question-authoring/references/dokkai.md §'Lexical load'")
+
+    # No grandfather set: the 23 papers this rule was written against are being
+    # regenerated under it, so an exemption list would have no members and would
+    # only be a place for the next paper to hide.
+    check(stem,
+          p.novel_share <= NOVEL_SHARE_FAIL
+          and p.unglossed_per_1k <= UNGLOSSED_PER_1K_FAIL
+          and p.gloss_headwords <= GLOSS_HEADWORD_FAIL,
+          detail, slug="dokkai_lexical_load", test_id=test_id)
+
+    warn(f"{test_id}: 読解 lexical load at the current-era ceiling",
+         p.novel_share <= NOVEL_SHARE_WARN
+         and p.unglossed_per_1k <= UNGLOSSED_PER_1K_WARN
+         and p.gloss_headwords <= GLOSS_HEADWORD_WARN,
+         detail, slug="dokkai_lexical_load_warn", test_id=test_id)
 
 
 # The "not-A(system/singular)-but-B(human/relational) reframe" shape
@@ -3849,8 +3982,16 @@ def check_dokkai_register(name: str, gt: str, origin: str = "generated"):
     prof.compute()
 
     kd = prof.kanji_density
+    # The WARN ceiling moved 32 % -> 31 % on 2026-09-07, with the 23 papers it
+    # would have flagged being regenerated under it rather than grandfathered.
+    # It sat above the official current-era maximum (30.1 %) by nearly two
+    # points, and papers were authored to the GATE rather than the band: five
+    # shipped at exactly 32.0 %. 31 % still clears every current-era sitting;
+    # the three pre-2019 papers above it are a different era (§1,
+    # official_calibration.md), the same reading `check_dokkai_lexical_load`
+    # takes. The FAIL line is unchanged — it sits above the all-era max, 32.4 %.
     kd_fail = 0.22 <= kd <= 0.34
-    kd_warn = 0.24 <= kd <= 0.32
+    kd_warn = 0.245 <= kd <= 0.31
     kd_detail = f"kanji density is {kd:.1%} (official current-era band 25.5%–30.1%, median 28.4%; dokkai.md §'Axis 3')"
 
     if origin != "generated" or name in DOKKAI_DISTRIBUTION_GRANDFATHERED:
@@ -3863,7 +4004,7 @@ def check_dokkai_register(name: str, gt: str, origin: str = "generated"):
     # used to read 「in target 24–32%」, so a paper printing 31.6% read as having
     # hit a target it in fact missed by 1.6 points. Text only — no threshold
     # moves, no id moves.
-    warn(f"{name}: 読解 kanji density inside the gate WARN band 24–32% "
+    warn(f"{name}: 読解 kanji density inside the gate WARN band 24.5–31% "
          f"(author target 25–30%; got {kd:.1%})",
          kd_warn, kd_detail, slug="dokkai_kanji_density", test_id=name)
 
@@ -5533,11 +5674,29 @@ def check_spec_blend(spec: dict):
     for field, key in (("reading_topics", "topic"),
                        ("listening_scenarios", "scenario")):
         recs = spec.get("items", {}).get(field, [])
-        names = [r.get(key) if isinstance(r, dict) else r for r in recs]
+        # `origin: "authored"` entries carry a THEME and no subject — the
+        # subject does not exist until the author invents it (exam-blueprint
+        # §AUTHORED_THEME_CATS). Their distinctness rule is the theme cap the
+        # sampler enforces at draw time, checked just below; comparing their
+        # absent `topic` fields would report every one of them as a duplicate
+        # of every other.
+        authored = [r for r in recs if isinstance(r, dict)
+                    and r.get("origin") == "authored"]
+        drawn = [r for r in recs if r not in authored]
+        if authored:
+            themes = [r.get("theme") for r in authored]
+            cap = 1 if field == "reading_topics" else 5
+            over = sorted({t for t in themes if themes.count(t) > cap})
+            check(f"test_spec {field}: themed surfaces inside THEME_CAP "
+                  f"({len(authored)} authored, cap {cap})", not over,
+                  f"theme(s) over cap: {over} — the sampler enforces this at "
+                  f"draw time (`draw_authored_themes`), so a breach here means "
+                  f"the spec was hand-edited; re-run `make sample`")
+        names = [r.get(key) if isinstance(r, dict) else r for r in drawn]
         dups = sorted({n for n in names if names.count(n) > 1})
-        check(f"test_spec {field}: one distinct topic per surface", not dups,
-              f"repeated: {dups} — re-run merge_seeds.py (it restores the "
-              f"pool draw first); do not author from a spec that repeats itself")
+        check(f"test_spec {field}: one distinct topic per surface "
+              f"({len(drawn)} drawn)", not dups,
+              f"repeated: {dups} — do not author from a spec that repeats itself")
         web = sum(1 for r in recs if isinstance(r, dict) and r.get("origin") == "web")
         over = recs and web > int(len(recs) * 0.60)
         check(f"test_spec {field}: pool keeps >=40% ({web}/{len(recs)} web)",
@@ -6475,6 +6634,54 @@ def check_mondai1_reading_type_mix(d, spec: dict, sample):
     if d.name in MONDAI1_KUN_GRANDFATHERED:
         return warn(name, not outside, detail + GRANDFATHER_NOTE)
     check(name, not outside, detail)
+
+
+# The 促音/拗音 reading trap, measured over the WHOLE generated corpus rather
+# than per paper. Official per-paper counts are 0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,
+# 2,2,2,2,2,2,2,2,3,3,3,3,4,4,4 out of 5 — five sittings carry zero — so a
+# per-paper band of 0–4 discriminates nothing and a floor of 2 would reject 13
+# real sittings. The property is distributional and so is the check.
+TRAP_RATE_OFFICIAL = 14 / 35           # 40.0 %, current era (12/2022-12/2025)
+TRAP_RATE_ALL_ERA = 54 / 152           # 35.5 %, all 31 — reference only
+TRAP_RATE_WARN = 0.31
+TRAP_RATE_FAIL = 0.24
+
+
+def check_mondai1_reading_trap_corpus(trap_hits: int, trap_items: int):
+    """Do our 問題1 targets carry the reading trap as often as official's?
+
+    THE INCIDENT (audit 2026-09-07, in answer to "the vocabulary feels
+    undertuned"). A 促音/拗音 in the keyed reading is what the 2×2 清濁/長短 grid
+    discriminates on: 出席(しゅっせき) can be mis-read four ways, 父親(ちちおや)
+    cannot. Official runs 54/152 = 35.5 % of items (current era 40.0 %); the 23
+    generated papers ran 24/115 = 20.9 %, z = 2.61, p = 0.009 — 問題1 was
+    reliably easier than the real exam and no check could see it.
+
+    THE CAUSE was not the authors. `pools.json`'s `kanji_reading` is itself only
+    25.8 % trap-carrying (p = 0.010 against the archive), and an unweighted draw
+    of 5 reproduces the pool. `sample_kun_capped()` now stratifies on it at draw
+    time at the archive's own rate, so this check is the backstop — and the one
+    that would catch the pool drifting again as entries are added.
+
+    WARN, not FAIL, while the corpus is mixed: during a regeneration the papers
+    on disk are half old and half new, and a corpus statistic cannot tell which
+    paper is responsible. Resolve it or say why (AGENTS.md §0.5).
+    """
+    stem = (f"問題1 reading-trap rate across generated papers "
+            f"({trap_hits}/{trap_items}, official {TRAP_RATE_OFFICIAL:.1%})")
+    if trap_items < 40:
+        return skip(stem, f"only {trap_items} 問題1 items on disk — a rate "
+                          f"needs a corpus, not a paper")
+    rate = trap_hits / trap_items
+    detail = (f"{rate:.1%} of {trap_items} 問題1 targets carry 促音/拗音 in the "
+              f"keyed reading, against official {TRAP_RATE_OFFICIAL:.1%} "
+              f"(54/152; current era 40.0 %). Below this band 問題1 stops "
+              f"exercising the 清濁/長短 grid and measures word recognition "
+              f"instead. The fix is the DRAW, not the item: "
+              f"`sample_kun_capped()` stratifies on `has_reading_trap()` — if "
+              f"this is low, check that the papers on disk were sampled after "
+              f"TRAP_TARGET_RATE landed (moji-goi.md §問題1)")
+    warn(stem, rate >= TRAP_RATE_WARN, detail, slug="mondai1_trap_rate")
 
 
 # `word_formation` entries notate the affix's SIDE: `X〜(例)` is a prefix and
@@ -7518,6 +7725,7 @@ def check_rotation_inputs():
     # never runs here, so without it `form_family()` resolves to None and
     # check_p8_form_family() would silently pass every spec.
     sample._FAMILY_BY_TEXT = sample.build_family_index(pools)
+    trap_hits = trap_items = 0
     for d, spec in specs:
         print(f"  {d.name}/test_spec.json")
         check_spec_blend(spec)
@@ -7528,6 +7736,9 @@ def check_rotation_inputs():
         check_grammar_cross_category_rotation(d, spec, sample, pools)
         check_p8_form_family(d, spec, sample, pools)
         check_mondai1_reading_type_mix(d, spec, sample)
+        kr = (spec.get("items") or {}).get("kanji_reading") or []
+        trap_items += len(kr)
+        trap_hits += sum(1 for x in kr if sample.has_reading_trap(x))
         if not harvest:
             continue
         blended: list[tuple[str, str]] = []
@@ -7584,6 +7795,8 @@ def check_rotation_inputs():
               "; ".join(orphans) + " — logs/seeds.json IS this spec's own "
               "harvest (sha matches), so a web entry missing from it was "
               "invented rather than blended; re-run merge_seeds")
+
+    check_mondai1_reading_trap_corpus(trap_hits, trap_items)
 
 
 def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
@@ -9699,6 +9912,16 @@ COUNTER_RE = re.compile(r"(窓口|受付|フロント|レジ|店で|店に|店�
 BROADCAST_RE = re.compile(r"(ラジオ|テレビ|ニュース|講演|講座|インタビュー|番組|広報)")
 P3_TALK_FLOOR = 175
 P3_TALK_TARGET = 220
+# The CEILING the rule was missing until 2026-09-07. `P3_TALK_FLOOR` and
+# `P3_TALK_TARGET` were one-directional — "target 220+" — and the number the
+# author was shown beside them, 「official median 305」, was wrong: it was ONE
+# sitting's per-paper median, not the corpus median, which `choukai_profile`
+# measures at 243 over 123 items (current era 268 over 28). So the only length
+# guidance 聴解 had pushed length UP, from a figure 25 % above the truth, with
+# nothing pushing back — half the mechanism behind the volume drift
+# `check_choukai_volume` now bounds. 400 sits above the current-era maximum
+# of 397, as a ceiling must.
+P3_TALK_CEILING = 400
 
 # GRANDFATHER SCOPE, stated exactly: the eight papers on disk on 2026-08-13 were
 # authored before any of these rules existed, and every one breaches at least the
@@ -9845,6 +10068,93 @@ def check_choukai_key_duplication(test_id: str, ct: str, st: str, m, bi):
            "Rewrite one item's task (choukai-items.md §'Write the SECTION TABLE')")
 
 
+# --- 聴解 volume ------------------------------------------------------------
+# Bands measured over the ten `tests/imported-*` sittings by
+# `choukai_profile.official_volume_band()` (問題4 excluded — see its comment):
+#
+#                          official cur (n=7)   generated (n=23)
+#   spoken chars 問1/2/3/5  5043–5445            4326–6745
+#   speaker turns              86–100               101–178
+#   chars per turn          50.9–62.5             32.0–49.7
+#
+# The reference is the CURRENT-ERA imports only (12/2022 onward), per the era
+# rule in `official_calibration.md` §1. Over all ten imports the turn band reads
+# 84–128 and chars-per-turn 43.0–62.5, but both loose ends are 12/2021, a
+# previous-era sitting — calibrating to it would have licensed exactly the
+# ping-pong shape this check exists to catch. Measured: all 23 generated papers
+# sit ABOVE the current-era turn ceiling (100) and all 23 sit BELOW its
+# chars-per-turn floor (50.9) — the drift is unanimous, not a few outliers.
+#
+# Every threshold is derived from that band at runtime rather than typed here,
+# so re-importing a sitting moves the gate with the evidence. The MARGINS below
+# are the only constants, and they exist because n=7 is a small reference: a
+# ceiling sits 15 % above the observed maximum before it FAILs, a floor 15 %
+# below the observed minimum, with the WARN line at half that.
+VOLUME_FAIL_MARGIN = 0.15
+VOLUME_WARN_MARGIN = 0.07
+
+
+def check_choukai_volume(test_id: str, test_dir):
+    """How much speech a 聴解 half carries, and in how many turns.
+
+    THE INCIDENT (audit 2026-09-07). `20260904_3` shipped 7043 spoken chars over
+    179 turns against an official band of 5043–5505 over 84–128 — 20 % more
+    speech in 40 % more speaker changes, i.e. more to hold and more hand-offs to
+    track, on every item. The drift was monotone across the 23 papers (Spearman
+    +0.71 against generation order) and no check could see it: 問題3's talk had
+    a FLOOR and no ceiling, and 問題1/2/5 had no length rule at all in either
+    direction. `choukai-audio/SKILL.md` had NAMED the ping-pong drift since
+    2026-08 ("median 27 chars vs official 38") without a gate behind it, and its
+    own official figure came from the OCR-truncated script extracts; measured on
+    the ten complete imports, official runs 43.0–62.5 chars per turn and 17 of
+    our 23 papers sit below its minimum.
+
+    The three figures fail differently and all three are reported: too many
+    chars is retention load, too many turns is tracking load, and a low
+    chars-per-turn is the transaction ping-pong that produces both.
+    """
+    stem = f"{test_id}: 聴解 spoken volume inside the official band"
+    band = CHOUKAI.official_volume_band()
+    if band is None:
+        return skip(stem, "fewer than 5 tests/imported-* sittings on disk — "
+                          "the official volume band is measured from them, "
+                          "because 28 of 31 archive script PDFs have no text layer")
+    try:
+        vp = CHOUKAI.volume_profile(CHOUKAI.parse_generated_sitting(test_dir))
+    except Exception as exc:                       # noqa: BLE001
+        return skip(stem, f"choukai_profile could not parse this script: {exc}")
+    if not vp["turns"]:
+        return skip(stem, "no speaker turns parsed")
+
+    def verdict(key, value, margin):
+        lo, hi = band[key]
+        return lo * (1 - margin) <= value <= hi * (1 + margin)
+
+    figures = (("spoken_chars", vp["spoken_chars"], "{:.0f}"),
+               ("turns", vp["turns"], "{:.0f}"),
+               ("chars_per_turn", vp["chars_per_turn"], "{:.1f}"))
+    print("        聴解 volume (問1/2/3/5, 例 excluded): "
+          + ", ".join(f"{k}={f.format(v)} [official {band[k][0]:.0f}–{band[k][1]:.0f}]"
+                      for k, v, f in figures))
+
+    bad_fail = [k for k, v, _ in figures if not verdict(k, v, VOLUME_FAIL_MARGIN)]
+    bad_warn = [k for k, v, _ in figures if not verdict(k, v, VOLUME_WARN_MARGIN)]
+    detail = ("; ".join(f"{k} {f.format(v)} against official "
+                        f"{band[k][0]:.0f}–{band[k][1]:.0f}"
+                        for k, v, f in figures)
+              + f" (per 大問: " + ", ".join(
+                  f"問題{s}={vp['per_section'][s]} "
+                  f"[{band[f'section_{s}'][0]:.0f}–{band[f'section_{s}'][1]:.0f}]"
+                  for s in CHOUKAI.VOLUME_SECTIONS) + "). "
+              + "Cut CONTENT, not pauses: fewer candidates raised per 問題1/2 "
+                "item and fewer, longer turns. Lengthening a turn must not "
+                "delete a short reaction (choukai-audio/SKILL.md register rule 8)")
+
+    check(stem, not bad_fail, detail, slug="choukai_volume", test_id=test_id)
+    warn(f"{test_id}: 聴解 spoken volume near the official edge",
+         not bad_warn, detail, slug="choukai_volume_warn", test_id=test_id)
+
+
 def check_choukai_countable_mix(test_id: str, ct: str, st: str, m, bi):
     """The section-mix rules a regex can decide (G16)."""
     keys = choukai_key_table(ct, bi)
@@ -9865,14 +10175,23 @@ def check_choukai_countable_mix(test_id: str, ct: str, st: str, m, bi):
         print("        問題3 talk chars (p3_talk_chars, spoken only): "
               + ", ".join(f"{choukai_item_label(l[0])}={p3_talk_chars(l)}"
                           for l in p3)
-              + f"  [floor {P3_TALK_FLOOR}, target {P3_TALK_TARGET}+, "
-                f"official median 305]")
+              + f"  [band {P3_TALK_FLOOR}-{P3_TALK_CEILING}, target "
+                f"{P3_TALK_TARGET}-300, official current era 158-397, "
+                f"median 268]")
     short = [f"{choukai_item_label(l[0])}={p3_talk_chars(l)}" for l in p3
              if p3_talk_chars(l) < P3_TALK_FLOOR]
     if short:
-        bad.append(f"問題3: talk shorter than any of the archive's 149 — "
-                   f"{', '.join(short)} chars, official median 305 / p10 251 / "
-                   f"min 177, target {P3_TALK_TARGET}+")
+        bad.append(f"問題3: talk shorter than the archive's own minimum — "
+                   f"{', '.join(short)} chars, official current era 158-397 "
+                   f"(median 268; all-era median 243, p10 202), target "
+                   f"{P3_TALK_TARGET}-300")
+    over = [f"{choukai_item_label(l[0])}={p3_talk_chars(l)}" for l in p3
+            if p3_talk_chars(l) > P3_TALK_CEILING]
+    if over:
+        bad.append(f"問題3: talk longer than any in the archive — "
+                   f"{', '.join(over)} chars, official current era 158-397. "
+                   f"A 概要理解 talk is a gist to summarise, not a passage to "
+                   f"retain; cut content, never the answer pause")
 
     p4 = choukai_item_blocks(choukai_span(st, 4), m, True)
     done, akey = [], []
@@ -13435,6 +13754,7 @@ def check_tests():
         if origin == "generated":
             check_dokkai_key_table_parses(d.name, gt)
             check_dokkai_lengths(d.name, gengo_prose, bi, origin=origin)
+            check_dokkai_lexical_load(d.name)
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
             check_dokkai_closing_reframe(d.name, gengo_prose, bi)
             check_dokkai_closing_reframe_scope(d.name, gengo_prose, bi)
@@ -13598,6 +13918,7 @@ def check_tests():
                 # G16 — section-level, i.e. what item-by-item review cannot see.
                 check_choukai_key_duplication(d.name, ct, st, m, bi)
                 check_choukai_countable_mix(d.name, ct, st, m, bi)
+                check_choukai_volume(d.name, d)
                 check_choukai_same_speaker_lines(d.name, st, m)
                 check_choukai_section_table(d.name, ct, bi)
                 check_choukai_elimination_tokens(d.name, ct, bi)

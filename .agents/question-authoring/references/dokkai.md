@@ -274,6 +274,99 @@ Distractor sets must vary in kind across the section; a section whose wrong
 options are uniformly overstatements is strategy-solvable regardless of how
 well each item reads alone.
 
+## Lexical load — WHICH words, not how many kanji
+
+**This is the axis that was missing, and it is the one that decides whether a
+paper is N2** (added 2026-09-07 after an audit of all 31 official sittings
+against all 23 generated papers). Passage length, sentence length, kanji density
+and （注N） counts are all properties of the prose's SHAPE. A paper can sit inside
+every one of them and still be far harder than any real sitting, because none of
+them can see which words it uses.
+
+Measured by `tools/lexical_profile.py` (word = a kanji run of 2–4 chars bounded
+by non-kanji; reference = every OTHER sitting's `booklet.md` + `script.md` plus
+the five textbook extracts; leave-one-out on the official side):
+
+| | official 12/2022–12/2025 | our 23 papers |
+|---|---|---|
+| novel words, % of tokens | **9.7–16.4** (med 11.3) | 12.1–28.6 (med 20.0) |
+| UNGLOSSED novel / 1000 chars | **6.5–9.5** (med 8.6) | 6.1–18.4 (med 9.5) |
+| （注N） gloss headwords | **4–20** (med 9) | 9–31 (med 20) |
+
+**Author to ≤16.5 % novel.** `check_dokkai_lexical_load` WARNs above 17.5 % and
+FAILs above 20 %; both lines are the current era's, not the whole archive's.
+
+**The qualitative finding, which is the actual rule.** Official papers DO carry
+unfamiliar words — 10–16 % of their vocabulary — but of a specific kind:
+invented proper nouns and transparent compounds a reader skips past.
+
+> 島本陸太 · 水石食品 · 北坂鉄道 · 森田様 · 回収日 · 割引後 · 社員向 · 個数 · 二度目
+
+Ours carried a different kind — subject-matter terminology a reader must decode:
+
+> 約款 · 法令 · 権限 · 措置 · 審議会 · 過失 · 予見 (legal)
+> 血小板 · 赤血球 · 経管栄養 · 訪問看護 · 療育 · 助産師 (medical)
+> 内水氾濫 · 貯留管 · 遊水地 · 減災 · 制動痕 · 透水性舗装 (civil engineering)
+> 指物 · 木目 · 台直 · 開架 · 逐語訳 (trade jargon)
+
+**So the repair is the SUBJECT, not the sentences.** A passage arguing about
+内水氾濫 needs 貯留管 and 遊水地 whatever you do to its prose — that is why
+`FINDING_REPAIR` files this finding as a surface re-author and not a prose edit.
+Choose a subject whose argument can be made in ordinary words. Official's
+essays are about noticing, remembering, working, teaching, growing things,
+and living with other people; a specialist domain is where this axis breaks.
+
+**Glossing is credit, and therefore capped.** `lexical_profile` does not count a
+（注N）-defined headword as load, so without a cap the cheapest way to pass would
+be to footnote a technical register rather than write a plainer one — which is
+what the generated papers were already doing: 20 gloss headwords against
+official's 9, and 36–50 % of their novel words glossed against official's 13 %.
+`check_dokkai_lexical_load` FAILs above 24 headwords. Read this beside the
+（注N） floor below: the floor says a paper too thin to need glosses is thin, the
+cap says a paper that needs 30 is about the wrong thing. **Both are satisfied by
+the same move — an ordinary subject argued at length — and neither by adding or
+deleting notes.**
+
+### A refuted candidate fix, recorded so it is not re-derived
+
+**"Prune the jargon-forcing entries out of `reading_topics`" was proposed,
+measured, and refuted on 2026-09-07 — do not build it.**
+
+The proposal was reasonable: 158 of the 271 `reading_topics` entries carry a word
+in their own TITLE that appears nowhere in the 31 sittings or the four textbook
+extracts (`経済安保`, `地方創生`, `医療的ケア児`, `機密保持`, `半導体`,
+`キャッシュレス決済`), and `exam-blueprint` Part I already has the precedent for
+deleting an entry that can never yield a compliant surface (the 安楽死と尊厳死
+deletion). So an author handed 「半導体と経済安保」 looked doomed to fail this
+section's band.
+
+**Measured across all 23 papers**, scoring each paper's twelve drawn topics for
+unattested words in their titles and correlating that against the paper's own
+lexical load:
+
+| | Pearson r |
+|---|---|
+| topic-pool jargon vs the paper's novel-word share | **−0.085** |
+| topic-pool jargon vs its unglossed novel words /1k | **−0.196** |
+
+Zero, and if anything the wrong way round. `20260828_2` drew the LEAST jargon-y
+topic set of all 23 (score 4) and shipped the WORST unglossed rate (19.8/1k);
+`20260811_1` drew the MOST (13) and shipped one of the lowest novel shares
+(13.1 %).
+
+**So the draw is not the cause and pruning the pool would have fixed nothing.**
+The register is chosen when the passage is written, not when the topic is drawn —
+which is exactly what `exam-blueprint` Part II already says the division of
+labour is: the entry sets the scene and the content, and you write it at N2
+level. 「半導体と経済安保」 can be a passage about a town whose work all depends on
+one factory. Take the subject; leave the policy vocabulary.
+
+**Kanji density is NOT this measurement and does not substitute for it.** Across
+the 23 papers density was flat (Spearman +0.05 against generation order) while
+novelty climbed steadily (+0.72). The paper with the *lowest* kanji density of
+all 23 (`20260904_3`, 28.7 %, the only one inside the official band) had the
+FOURTH-HIGHEST novelty. Green density is not a lexical clearance.
+
 **Axis 3 — Voice & Register (the voice quota).**
 Official 読解 passages are excerpts from published essays and books (first-person, half addressed to the reader in です・ます, with quoted speech and rhetorical devices). A compliant paper must avoid uniform impersonal policy prose:
 - **First-person quota**: ≥4 of the 12 essay-type surfaces (問9, 問10×5, 問11×4, 問12, 問13) are written in the first person (containing 私/僕/自分).
@@ -282,11 +375,13 @@ Official 読解 passages are excerpts from published essays and books (first-per
   prose — the archive's own current-era range (25.5–30.1%, median 28.4,
   `official_calibration.md` §15.2, refreshed from `make dokkai-profile
   BASELINE=1`). The gate is deliberately looser and unchanged: it WARNs
-  outside 24–32% and FAILs outside 22–34%, because tightening it would move 17
-  of 21 shipped papers (see that section for the id list and the standing
-  proposal). **Every generated paper on disk sits above official's maximum**
-  (30.2–33.9%), so this number is a pipeline-wide drift to author down, not a
-  per-paper defect (`qa-report-20260904_1` S2). Green here is not "in band".
+  outside **24.5–31%** and FAILs outside 22–34%. The WARN ceiling was 32 % until
+  2026-09-07 — nearly two points above the official current-era maximum — and
+  papers were authored to the gate rather than to the band: five shipped at
+  exactly 32.0 %. It was pulled to 31 % with the papers it would have flagged
+  regenerated under it rather than grandfathered. Green here is still not "in
+  band", and density is the WEAKER of the two lexical axes: see §"Lexical load"
+  above, which is the one that moved.
 - **Rhetorical & discourse devices**:
   - ≥1 passage carrying quoted dialogue/speech 「…」
   - ≥1 passage carrying a 疑問提示文 (Shin Kanzen discourse device 4: 「〜のだろうか」「〜だろう」)

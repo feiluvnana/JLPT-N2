@@ -574,6 +574,86 @@ def calculate_sitting_profile(sitting: Sitting) -> dict[str, Any]:
     }
 
 
+# --- Volume: how much speech an item carries, and in how many turns ---------
+# The reference is the TEN `tests/imported-*` sittings, not `refs/*/script.md`,
+# and that is not a shortcut: 28 of the 31 archive script PDFs have no text
+# layer and extract to instructions only (`official_calibration.md` §0), so a
+# volume measured over them would be reading OCR loss. The ten imports are the
+# same official papers retyped complete, and they cluster tightly enough to be a
+# band (spoken chars 5043–5505, a 9 % spread across four years).
+#
+# 問題4 is EXCLUDED from every figure here. Its stimulus is a single turn and
+# the import parser records none for it (0 chars on all ten), so including it
+# would compare a section the two corpora do not parse the same way.
+VOLUME_SECTIONS = (1, 2, 3, 5)
+
+
+def volume_profile(sitting: Sitting) -> dict[str, Any]:
+    """Spoken volume of 問題1/2/3/5, 例 excluded — the measurement the gate reads.
+
+    WHY THIS EXISTS (audit 2026-09-07). `make check` bounded 問題3's talk length
+    from BELOW (`P3_TALK_FLOOR`) and nothing else in 聴解 had a length rule in
+    either direction, so the four most recent papers carried 13–20 % more speech
+    than the largest real N2 sitting, spread over 33–43 % more speaker turns,
+    with every line green. Worse, the only length number an author was given —
+    「official 問題3 talks run a median of 305 spoken chars」 — was wrong (the
+    corpus median is 243, current era 268; the 305 was one sitting's per-paper
+    median) and one-directional, so the documentation actively pushed length up.
+    """
+    items = [it for sec in VOLUME_SECTIONS for it in sitting.items_for_section(sec)]
+    turns = sum(len(it.turns) for it in items)
+    chars = sum(it.spoken_chars for it in items)
+    return {
+        "test_id": sitting.test_id,
+        "spoken_chars": chars,
+        "turns": turns,
+        "chars_per_turn": (chars / turns) if turns else 0.0,
+        "per_section": {sec: sum(it.spoken_chars
+                                 for it in sitting.items_for_section(sec))
+                        for sec in VOLUME_SECTIONS},
+    }
+
+
+# `imported-n2-YYYY-MM` at or after 12/2022 — the format era the repo models
+# (`official_calibration.md` §1). Restricting the band to it was not cosmetic:
+# over all ten imports the turn band is 84–128 and chars-per-turn 43.0–62.5,
+# but the 128-turn and 43.0-chars-per-turn ends are both 12/2021, a previous-era
+# sitting. The seven current-era papers run 86–100 turns at 50.9–62.5 chars
+# each, which is a far tighter statement of the same rule and the one the
+# generated papers actually miss.
+_CURRENT_ERA_IMPORT_MIN = (2022, 12)
+
+
+def _import_is_current_era(name: str) -> bool:
+    m = re.match(r"^imported-n2-(\d{4})-(\d{2})$", name)
+    return bool(m) and (int(m.group(1)), int(m.group(2))) >= _CURRENT_ERA_IMPORT_MIN
+
+
+def official_volume_band() -> dict[str, tuple[float, float]] | None:
+    """min/max of each volume figure over the CURRENT-ERA `tests/imported-*`
+    sittings, falling back to all imports when too few of them are on disk.
+
+    Returns None when neither set reaches 5 papers, so the gate skips rather
+    than thresholding against a band of two.
+    """
+    everything = []
+    for d in sorted(TESTS.iterdir()) if TESTS.is_dir() else []:
+        if not d.name.startswith("imported-") or not (d / "聴解スクリプト.txt").is_file():
+            continue
+        everything.append((d.name, volume_profile(parse_generated_sitting(d))))
+    current = [p for n, p in everything if _import_is_current_era(n)]
+    profiles = current if len(current) >= 5 else [p for _, p in everything]
+    if len(profiles) < 5:
+        return None
+    band = {k: (min(p[k] for p in profiles), max(p[k] for p in profiles))
+            for k in ("spoken_chars", "turns", "chars_per_turn")}
+    for sec in VOLUME_SECTIONS:
+        vals = [p["per_section"][sec] for p in profiles]
+        band[f"section_{sec}"] = (min(vals), max(vals))
+    band["_n"] = (len(profiles), len(profiles))
+    return band
+
+
 def format_baseline_markdown(official_profiles: list[dict[str, Any]], current_only: bool = False) -> str:
     n_sittings = len(official_profiles)
     all_turns = sum(p["total_turns"] for p in official_profiles)

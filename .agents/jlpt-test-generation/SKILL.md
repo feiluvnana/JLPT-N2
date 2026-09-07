@@ -1,425 +1,326 @@
 ---
 name: jlpt-test-generation
-description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5, primarily N2). Use this skill whenever the user asks to create, generate, or build a JLPT test, mock exam, 模擬試験, practice test, or any subset of one (言語知識, 文字・語彙, 文法, 読解, 聴解/choukai), or asks to regenerate/fix exam deliverables. This is the entry-point skill for generation — it owns the 4-stage pass structure and the per-stage reading map, and routes to the specialized skills. Consult it FIRST before any generated exam work, even for partial requests like "make a listening section" or "create N2 grammar questions". For importing an external PDF/past paper, use external-test-import instead.
+description: End-to-end workflow for generating a complete JLPT mock exam (N1-N5, primarily N2). Use this skill whenever the user asks to create, generate, or build a JLPT test, mock exam, 模擬試験, practice test, or any subset of one (言語知識, 文字・語彙, 文法, 読解, 聴解/choukai), or asks to regenerate/fix exam deliverables. This is the entry-point skill for generation — it owns the 5-stage pass structure and the per-stage reading map, and routes to the specialized skills. Consult it FIRST before any generated exam work, even for partial requests like "make a listening section" or "create N2 grammar questions". For importing an external PDF/past paper, use external-test-import instead.
 ---
 
 # JLPT Test Generation (Orchestrator)
 
-## Import vs generate
+**Importing an existing exam** (PDF, past paper, script, MP3) → stop and read
+`external-test-import/SKILL.md`; those live in `tests/imported-<slug>/`. This
+file is for **generating** new mocks only.
 
-If the user wants to **import** an existing external exam (PDF booklet, past
-paper under `refs/JLPT_N2_NEW/`, script PDF, listening MP3) into project
-format → stop here and read `external-test-import/SKILL.md` instead. Those
-tests live under `tests/imported-<slug>/`. This file is only for
-**generating** new mocks.
+**Read this file to the end before your first tool call.** `AGENTS.md` §0 is
+the compliance rule and says what to report at the end; §2–3 own layout,
+deliverable filenames, and `refs/` paths.
 
-## Read this file to the end before your first tool call
+## The 5-stage pipeline
 
-This is the entry point for **all generated** exam work, including partial
-requests. `AGENTS.md` §0 states the compliance rule and what to report at
-the end. Layout, deliverable filenames, and `refs/` paths: `AGENTS.md` §2–3.
+**Orchestrate, don't work.** The context owning the request spawns subagents and
+does no content work itself. State flows between stages **through files on disk
+only** — an orchestrator paraphrasing content into a prompt is the "memory of
+what I meant" that shipped every historical mis-key.
 
-## The 4-stage pipeline
-
-**Run it as an orchestrator, not as a worker.** The context that owns the
-request spawns subagents per the table below and does none of the content
-work itself. State flows between stages only through files on disk — never
-through the orchestrator paraphrasing content into a prompt, which is
-exactly the "memory of what I meant" that shipped every historical mis-key.
-
-Two context-isolation rules are non-negotiable, because both shipped failure
-modes are context problems: (a) **no long single-run authoring** — defects
-cluster in whatever one context writes last; (b) **QA is a context that
-authored nothing** — an author cannot audit its own intent.
+Two context-isolation rules, non-negotiable in any harness: **(a) no long
+single-run authoring** — defects cluster in whatever one context writes last;
+**(b) QA is a context that authored nothing** — an author cannot audit its own
+intent.
 
 | Stage | Job | Contexts |
 |-------|-----|----------|
-| 1. Blueprint | Sample the pool (topics/scenarios authored directly from the draw — no web harvest) | 1 subagent |
-| 2. Author | 文字・語彙 (問1–6) \| 文法 (問7–9) \| 読解 (問10–14) \| 聴解 (booklet §聴解 + script) | 4 subagents, **in parallel** |
-| 3. Build + gate | Booklet HTML, MP3, 解答.html, `make check`, whole-paper topic table | 1 subagent |
-| 4. QA | `exam-qa-review` in full — blind-solve first, all 101 items, root-cause table | 1 **fresh** subagent |
-| 5. Model Answer (Final) | `詳細解説.json` (JA) and `詳細解説.vi.json` (VI) → `make model-answer <id>` → `模範解答.html` — **MUST always be the final step** after QA PASS | **2 subagents, one per language** — they must not share a context, or the second set comes out a translation of the first (`exam-model-answer`) |
+| 1. Blueprint | Sample the item pools; draw a THEME per themed surface | 1 |
+| 2. Author | 文字・語彙 (問1–6) ǀ 文法 (問7–9) ǀ 読解 (問10–14) ǀ 聴解 (booklet + script) | **4, in parallel** |
+| 3. Build + gate | Booklet HTML, MP3, 解答.html, `make check`, whole-paper topic table | 1 |
+| 4. QA | `exam-qa-review` in full — blind-solve, all 101 items, root-cause table | 1 **fresh** |
+| 5. Model answer | `詳細解説.json` (JA) + `詳細解説.vi.json` (VI) → `make model-answer` | **2, one per language**, no shared context |
 
-Every QA finding adds a fix + re-review round: the fix may reuse an
-authoring context; the re-review of the touched items must again be fresh
-eyes. **Exception: a QA round returning FAIL with ≤3 findings total may be
-fixed directly** — same rigor as the round-2 fallback below (root-cause,
-verify `make check`, sanity-read the diff), stated explicitly in the final
-report. The loop ends at `QA: PASS`, **capped at 2 fresh-eyes QA rounds
-total** (lowered from 3 on 2026-08-24: rounds 1 and 2 are where the paper
-defects surface, and round 3 has historically returned skill/gate findings
-that block the next run rather than this paper — those do not need a third
-review to be dispositioned). Once PASS, proceed to Stage 5. If round 2 still
-FAILs, apply that round's findings directly (same rigor) without a 3rd
-fresh-eyes pass; ship and say so explicitly — which findings were fixed
-without independent re-verification, and why. PASS closes the *paper*, not the *generator*: an
-open entry in QA's root-cause table blocks the next generation run until
-applied or rejected with a reason.
+**The fix loop.** Every QA finding costs a fix + a fresh-eyes re-review of the
+touched items. **Exception:** a round returning FAIL with ≤3 findings may be
+fixed directly, with the same rigor (root-cause, `make check`, read the diff),
+stated in the final report. Capped at **2 fresh-eyes rounds**; if round 2 still
+FAILs, apply its findings directly and say explicitly which were fixed without
+independent re-verification. PASS closes the *paper*, not the *generator* — an
+open row in QA's root-cause table blocks the next run until applied or rejected
+with a reason.
 
 **`make sample <next>` may not run while any test's QA is open** — not while a
-round is being written, not while its findings are being applied. The ledger it
-writes, `logs/ledger.json`, is the same file the open review is auditing, so
-sampling underneath a reviewer invalidates the provenance half of the pass it is
-reading (step 6) and reds `make check` for every finished paper on disk while it
-does. `20260818_1` was sampled at 11:31 during round 3 of `20260817_3` and did
-exactly that (R3-6). The next paper starts when the open paper's findings are
-applied or rejected — that is the same gate the sentence above names, stated as
-a command instead of as a principle.
+round is being written, not while findings are being applied. It writes
+`logs/ledger.json`, the file the open review is auditing, and doing so reds
+`make check` for every finished paper on disk. (`20260818_1` was sampled at
+11:31 during round 3 of `20260817_3` and did exactly that — R3-6.)
 
-**Fallback with no subagents:** approximate the table with new sessions,
-one stage per session, handing off through disk. The one split that
-survives every fallback: **authoring and QA in different contexts.**
+**No subagents available:** approximate with new sessions, one stage each,
+handing off through disk. The split that survives every fallback is
+**authoring vs QA**.
 
 ## Per-stage reading map
 
-Each subagent reads exactly these files at the START of its stage (from
-disk, never from the orchestrator's summary), and nothing else:
+Each subagent reads exactly these, from disk, at the start of its stage — never
+the orchestrator's summary — and nothing else:
 
 | Stage | Reads | Writes |
 |-------|-------|--------|
 | 1 Blueprint | `exam-blueprint/SKILL.md` | `tests/<id>/test_spec.json`, `logs/ledger.json` |
-| 2 文字・語彙 | `test_spec.json` + `question-authoring/SKILL.md` + `references/moji-goi.md` + `jlpt-exam-structure/SKILL.md` | 問1–6 fragment of `言語知識・読解.md` |
+| 2 文字・語彙 | `test_spec.json` + `question-authoring/SKILL.md` + `references/moji-goi.md` + `jlpt-exam-structure/SKILL.md` | 問1–6 fragment |
 | 2 文法 | same, with `references/bunpou.md` | 問7–9 fragment |
 | 2 読解 | same, with `references/dokkai.md` | 問10–14 fragment |
 | 2 聴解 | `test_spec.json` + `question-authoring/SKILL.md` + `references/choukai-items.md` + `choukai-audio/SKILL.md` + `jlpt-exam-structure/SKILL.md` | `聴解.md` (incl. セクション構成表), `聴解スクリプト.txt` |
-| 3 Build+gate | `exam-app/SKILL.md`, `choukai-audio/SKILL.md` (synthesis §), this file's topic-table § | `言語知識・読解.md` (merged), HTML/MP3, `logs/topics.json` row, gate report |
-| 4 QA | `exam-qa-review/SKILL.md` (routes to what it needs) | `qa/qa-report-<id>.md` |
-| 5 Model Answer | `exam-model-answer/SKILL.md` | `tests/<id>/詳細解説.json`, `tests/<id>/詳細解説.vi.json`, `tests/<id>/模範解答.html` |
+| 3 Build+gate | `exam-app/SKILL.md`, `choukai-audio/SKILL.md` (synthesis §), this file's topic-table § | merged `言語知識・読解.md`, HTML/MP3, `logs/topics.json` row, gate report |
+| 4 QA | `exam-qa-review/SKILL.md` | `qa/qa-report-<id>.md` |
+| 5 Model answer | `exam-model-answer/SKILL.md` | `詳細解説.json`, `詳細解説.vi.json`, `模範解答.html` |
 
-Stage-2 authors write **section fragments** to
-`tests/<id>/_sections/<問題range>.md` — booklet body, then its
-answer-key/解説 rows under a literal `<!-- KEY -->` marker. Stage 3 merges
-mechanically: all bodies in booklet order (問1→問14), then ONE key heading
-at the END, followed by key tables in the same order — the sheet builder's
-`strip_key()` truncates at that heading, so a fragment must never carry its
-own. Parallel authors never write to the same file. The 聴解 author owns
-both `聴解.md` and `聴解スクリプト.txt` complete (body + keys at end,
-synchronized), finishing by writing its **セクション構成表** after the key
-heading and checking its columns against `choukai-items.md`'s per-section
-quotas — the only view in which a repeated key or a one-shape section is
-visible.
+Stage-2 authors write fragments to `tests/<id>/_sections/<問題range>.md`: booklet
+body, then key/解説 rows under a literal `<!-- KEY -->` marker. Stage 3 merges
+mechanically — bodies in booklet order, then ONE key heading at the end followed
+by key tables in the same order. The sheet builder's `strip_key()` truncates at
+that heading, so **a fragment must never carry its own**. Parallel authors never
+share a file. The 聴解 author owns both `聴解.md` and `聴解スクリプト.txt`
+complete, finishing with the **セクション構成表** checked against
+`choukai-items.md`'s per-section quotas — the only view in which a repeated key
+or a one-shape section is visible.
 
-### Subagent prompt template (all stages)
+### Subagent prompt template
 
-> Read, in full, from disk: [stage's reading-map row]. Your inputs are
-> [files]; your only outputs are [files]. Author ONLY what
-> `tests/<id>/test_spec.json` prescribes — items, topics, and
-> `answer_positions` are the contract; do not substitute, and treat every
-> `origin` field as binding. Report at the end: what you read, what you
-> ran, what you wrote, and anything you skipped and why.
+> Read, in full, from disk: [stage's reading-map row]. Your inputs are [files];
+> your only outputs are [files]. Author ONLY what `tests/<id>/test_spec.json`
+> prescribes — items, topics and `answer_positions` are the contract; do not
+> substitute, and treat every `origin` field as binding. Report at the end: what
+> you read, what you ran, what you wrote, and anything you skipped and why.
 >
-> (読解 subagent only) Your assigned closing-move shape for each surface in
-> your range is: [surface → shape]. Write to that shape; note if a draft
-> genuinely cannot fit its assignment and why.
+> (読解 only) Your assigned closing-move shape per surface is: [surface → shape].
 
-## Stage 1 — blueprint rules
+## Stage 1 — blueprint
 
 ```bash
-make sample <id> SEED=<n>          # -> tests/<id>/test_spec.json + ledger
+make sample <id> SEED=<n>          # -> test_spec.json + ledger
 ```
 
-- **The seed is an RNG output, never a number you write down** — run
+- **The seed is an RNG output, never a number you write down.** Run
   `python3 -c "import secrets; print(secrets.randbelow(10**8))"` and use it
-  verbatim. Agent-"picked" seeds are date-shaped and collide across
-  sessions. Must be a seed no previous test used (`logs/ledger.json`).
-- No harvest/merge step. `test_spec.json`'s `reading_topics` and
-  `listening_scenarios` are what every 読解/聴解 surface is authored from
-  (`exam-blueprint` Part II).
-- **Do not run this while another test's QA is open** — `make sample` writes
-  `logs/ledger.json`, which the open review is auditing (§"The 4-stage
-  pipeline"). Check for an unresolved `qa/qa-report-*.md` before sampling.
+  verbatim — agent-"picked" seeds are date-shaped and collide across sessions.
+  Must be unused (`logs/ledger.json`).
+- No harvest step. Each themed surface gets `{theme, origin:"authored",
+  avoid:[…]}`; the author invents the subject (`exam-blueprint` Part II).
+- Do not run while another test's QA is open (above).
 
-## Stage 2 — authoring rules
+## Stage 2 — authoring
 
-Construction rules live in `question-authoring` (core + the per-section
-reference file from the reading map).
+Construction rules: `question-authoring` core + the one reference file from the
+reading map.
 
 ```bash
-make scaffold-sections <id>        # -> pre-scaffolds tests/<id>/_sections/ templates
+make scaffold-sections <id>
 ```
 
 - Author ONLY items in `test_spec.json`; keys go where `answer_positions` says.
-- **文字・語彙 stems are quota-bound too, not just its items** — 問題1/2/5 median
-  17 JP chars with ≥9 of 15 comma-free, ≥7 of the 25 問題1–5 stems in です・ます
-  with ≥1 first-person and ≤2 institution-actor stems, 問題4 median ≤30 and no
-  stem past 44 (`moji-goi.md` Part 0 §"The stem"). Fourteen papers missed all of
-  these before they were written down; `make check` now measures every one.
-- For 問題1 & 問題2 2×2 matrices, build the grid BY HAND against
-  `moji-goi.md`, then CHECK it with
-  `python3 tools/matrix_helper.py validate --reading <かな> <4 options>`.
-  The tool's two GENERATORS are hard-disabled — they had no 音訓 table and
-  invented readings and glyphs (F4, qa-report-20260819_1).
-- Tested items (grammar/vocab/kanji) are ALWAYS pool-sampled; the assigned
-  `reading_topics`/`listening_scenarios` entry supplies scene/content only —
-  you write the passage/dialogue from it yourself.
+- **文字・語彙 stems are quota-bound too** — 問題1/2/5 median 17 JP chars, ≥9 of
+  15 comma-free, ≥7 of 25 問題1–5 stems in です・ます with ≥1 first-person and ≤2
+  institution-actor, 問題4 median ≤30 and none past 44 (`moji-goi.md` Part 0).
+  Fourteen papers missed all of these before they were written down.
+- 問題1/2 2×2 matrices: build BY HAND against `moji-goi.md`, then check with
+  `python3 tools/matrix_helper.py validate --reading <かな> <4 options>`. **The
+  two generators are hard-disabled** (F4, qa-report-20260819_1).
+- **Tested items are ALWAYS pool-sampled. Topics are not.** Since 2026-09-07 a
+  `reading_topics`/`listening_scenarios` entry is `{theme, origin:"authored",
+  avoid:[…]}` — a THEME plus every subject previous papers used under it. The
+  author invents a subject not in `avoid` and not a re-wording of one, then
+  writes the passage/dialogue from it (`exam-blueprint` Part II). The grammar,
+  vocabulary and kanji pools are untouched by this and remain absolutely binding.
+- **`avoid` is only as good as the record**, so Stage 3's `logs/topics.json` row
+  is now load-bearing for the NEXT paper's draw, not just for its topic pass.
 - Answer keys go at the END of each Markdown source, never inline.
-- **Before spawning the 4 subagents, pre-assign each of the 13
-  読解/cloze surfaces a closing-move shape** from
-  `dokkai.md`'s named list, without exceeding its per-shape cap — 4
-  subagents blind to each other's choices converge on the same "safe"
-  default shape (documented 3 times over). Pass each 読解 subagent its
-  assigned shapes as part of its prompt.
+- **Pre-assign each of the 13 読解/cloze surfaces a closing-move shape** from
+  `dokkai.md`'s list before spawning, without exceeding its per-shape cap — four
+  subagents blind to each other converge on the same "safe" default (documented
+  3×). Pass each 読解 subagent its assigned shapes.
 
 ## Stage 3 — build + gate
 
 ```bash
-make autofix <id> && make lint-draft <id> && make verify-scramble <id> && make booklet <id> && make mp3 <id> && make sheet <id> && make check
+make autofix <id> && make lint-draft <id> && make verify-scramble <id> \
+  && make booklet <id> && make mp3 <id> && make sheet <id> && make check
 ```
 
-- Run `autofix`/`lint-draft` first: auto-applies conversational
-  contractions, catches contractions/reaction-turns/abs-quantifiers/missing
-  blanks at zero tokens before QA.
-- `make check` validates every test on disk; **read every line, including
-  WARN** — resolve each or justify it in the report. Fix failures before
-  stage 4: a mis-keyed item is invisible once the MP3 is built.
-- **A WARN naming the test under review is resolved, or the stage-3 report
-  records it as deferred-to-QA WITH THE REASON, before stage 4 is started.**
-  `AGENTS.md` §0.5 and §4 and `exam-qa-review` §"Entry condition" all say WARN
-  is part of the output; deferring one to the reviewer is defensible, but only
-  when the hand-off says so **in writing, in `qa/` or the stage-3 report** —
-  **a WARN carried silently is indistinguishable from one nobody read.**
-  The incident (`qa-report-20260904_1-round2` §5, process row): stage 3 handed
-  round 2 an exit-0 gate as its entry condition while a live
-  `check_goi_option_set_valence` WARN named 問題5-24 of that very paper. The
-  disposition existed — in the orchestrator's prompt, which no reviewer reads —
-  so the reviewer had to re-adjudicate it from scratch, and it turned out to be
-  a true positive and an automatic fail. List, per WARN naming this test:
-  the line, and either the fix or the one-sentence reason it is deferred.
+- Run `autofix`/`lint-draft` first — contractions, reaction turns, absolute
+  quantifiers, missing blanks, at zero token cost before QA.
+- `make check` validates every test on disk. **Read every line, including
+  WARN.** Fix failures before stage 4: a mis-keyed item is invisible once the
+  MP3 is built.
+- **A WARN naming this test is resolved, or recorded as deferred-to-QA WITH THE
+  REASON, in writing, in `qa/` or the stage-3 report** — a WARN carried silently
+  is indistinguishable from one nobody read. (Round 2 of `20260904_1` was handed
+  an exit-0 gate as its entry condition while a live
+  `check_goi_option_set_valence` WARN named 問題5-24 of that paper; the
+  disposition existed only in the orchestrator's prompt, which no reviewer
+  reads, and it turned out to be a true positive.)
 - **A repair made to clear one gate check is not verified by that check
   passing.** After ANY edit to 問題10–14 prose — （注N） glosses included —
-  re-grep every 問題7/8/9 keyed form across the whole 読解 half, **record the
-  counts AND the frames (文末／連用／連体) in the hand-off**, and re-read the
-  edited passage's closing move. A one-line fix has the same defect rate as a
-  one-line authoring pass; it just skips the reading that a fresh passage gets.
-  **The incident (2026-09-03, `20260903_1` F2):** this stage rewrote
-  問題11(1)'s 「（注3）変遷」 gloss to clear a byte-identical-gloss FAIL, re-ran
-  `make check` — which went green — and stopped. The new wording,
-  「時代が進むにつれて、少しずつ変わっていくこと」, planted 問題8-44's own drawn
-  target 「〜につれて…ていく」 in its own frame, in a line printed in the booklet.
-  The gate was blind to frames at the time (it counted occurrences and read
-  1 ≤ 1); it is not any more (`check_key_grammar_exposure`), but the reading is
-  still yours, because the next repair will be to a rule no check has yet.
-- Then the **whole-paper topic pass** (below) — no script sees it — and
-  **append this test's row to `logs/topics.json`**: `surfaces` (each 読解
-  passage, 問題9, 問題14, every 聴解 item incl. 例, one noun phrase each) and
-  `shapes` (each 聴解 item's errand shape). Row format:
-  `exam-blueprint` §"logs/topics.json" — the next test's whole-paper pass reads it.
+  re-grep every 問題7/8/9 keyed form across the whole 読解 half, record the counts
+  AND the frames (文末／連用／連体) in the hand-off, and re-read the edited
+  passage's closing move. (`20260903_1` F2: a gloss rewritten to clear a
+  byte-identical-gloss FAIL planted 問題8-44's own drawn target in its own frame,
+  in printed booklet text, and `make check` went green.)
+- Then the **whole-paper topic pass** (below) — no script does it — and
+  **append this test's row to `logs/topics.json`** (`surfaces`, `shapes`,
+  `claim`, `persona`; format in `exam-blueprint` §"logs/topics.json").
 
 ## One topic, one surface (whole-paper pass, stage 3)
 
-The failure mode that survives every automated gate: the same content on
-two surfaces of one paper, or recycled from recent papers. List every
-surface's topic in ONE table — 問題9 cloze, each 問題10–13 passage, the
-問題14 flyer, each 聴解 item — with one column per test (this one and the
-two before it), plus a `theme` column and, for 読解 surfaces, a
-closing-move column, and check:
+The failure mode that survives every automated gate: the same content on two
+surfaces of one paper, or recycled from recent papers. Build ONE table — 問題9
+cloze, each 問題10–13 passage, the 問題14 flyer, every 聴解 item — with a column
+per test (this one and the two before), plus `theme`, `closing move` (読解), and
+the DRAWN topic string. Then read it:
 
-- **The theme column is filled from the SHIPPED surface, for every
-  surface.** Every entry carries its pool theme by construction, but a
-  drafted passage can still wander off its tag — re-tag from what you
-  actually wrote. Apply `exam-blueprint` §"The four theme rules" and write
-  the counts into your report.
-- **The closing-move column is a 読解 rule** — `dokkai.md` §"Thirteen
-  surfaces, thirteen different essays". Two passages on unrelated subjects
-  both ending 「〜だけでは足りない、〜こそが要る」 is one essay written twice;
-  official ships that move 5–9 times per 読解 half.
-- **Add a column for the DRAWN topic string, and read each surface against its
-  OWN draw before you read it against the others.** Every check in the pipeline
-  compares surfaces to each other or themes to themes; nothing compares a
-  shipped surface's SUBJECT against the `test_spec.json` string it was drawn
-  from, so a passage can wander off its own draw with every line green — and it
-  then silently spends a cooldown the sampler thought it was honouring.
-  `20260904_3` drew 「高齢者向け軽スポーツの**普及**」 and shipped a passage arguing
-  **定着**, which is `20260904_2` 問題9's subject one paper earlier; that drift is
-  the mechanism behind `qa-report-20260904_3` F1, and its own root-cause table
-  filed it as a process failure with no owner.
-  **This is a READ, not a gate, and that is measured, not assumed.** The obvious
-  predicate — count the drawn topic's distinctive subject tokens that survive
-  into `logs/topics.json`'s `surfaces`/`claim` text — was run over all 23 papers
-  on 2026-09-05: it reports **1–6 zero-overlap draws on every paper on disk**,
-  median 3–4, because a surface legitimately writes 「自動で走るバス」 for
-  「自動運転バス」; and it does **not** fire on the founding case, since 高齢者
-  survives a re-angle from 普及 to 定着. A predicate that flags every paper and
-  misses the defect it was written for is refuted. So: put the drawn string in
-  the table, and say in the report, per surface, whether the shipped subject is
-  the one drawn. A surface that moved off its draw is either re-angled back onto
-  it (no stamp — it moved TOWARD the record) or stamped `"origin": "reauthored"`
-  in spec AND ledger with a note, per `exam-qa-review` §"A fix that changes WHAT
-  a surface tests".
-- **A 読解 topic and a 聴解 scenario may name one subject, and no check sees it.**
-  `check_surface_subjects()` does compare every `reading_topics` ×
-  `listening_scenarios` pair of a spec, but it matches maximal kanji runs for
-  equality, so 「健康保険組合からの人間ドック補助案内」 and 「人事部からの健康診断の
-  お知らせ」 — one paper, one subject, both tagged 睡眠・健康 — share nothing it
-  can see (`qa-report-20260904_3` F5). The errand-key route is closed for this
-  pair and `exam-blueprint` §"`key` — the errand identity" records why. Read the
-  読解 rows and the 聴解 rows of the table as ONE list, not two.
-- **No topic appears twice in this paper**, even in a different register.
-  Avoid e.g. a 問題14 flyer spelling out a 聴解 item's keyed answer, or one
-  subject serving both 問題9 and 問題10(1).
-- **The drawn `quick_response` phrases are content too — put every one of them
-  in the table as a row** (`test_spec.json["items"]["quick_response"]`, 11 in a
-  current paper = 聴解問題4-1番〜11番), with the setting you invented for each. They are the surfaces nobody thinks of as
-  topics because nobody *chose* their subject: the sampler hands over an idiom
-  and the author invents a scene around it, so the scene never gets tagged and
-  never gets compared. `20260817_3` wrote a 問題9 cloze whose thesis was
-  「何をどう書けばよいのか分からないまま紙に向かう心細さ」 while its own drawn
-  聴解問題4-1番 stimulus was 「この申請書の書き方がよく分からないのですが」 — an
-  in-paper echo, and the 12 rows would have shown it in one read. A
-  quick_response scene that restates another surface's subject is a repeat
-  even though nobody chose it. Check them against 問題9's subject
-  specifically — the cloze is the other unpooled surface (`exam-blueprint`
-  §"The four theme rules" rule 4b).
-- **No topic repeats the previous test**, especially in the same 聴解 slots.
-  **Do this as a table read, not as a recollection:** build the slot × 3-paper
-  table from `logs/topics.json` — it is already stored, so this is a lookup, not
-  a re-derivation — and read each ROW across the columns. A shared domain in one
-  row is a finding even when the errand keys differ and the theme tags differ.
-  `20260818_1` put 自動車学校の危険予測運転 in 聴解問題3-4番 directly after
-  `20260817_3`'s 問題3-4番 整備担当が運転の癖を伝える話 (tagged 教育 and 交通, so
-  no tag matched) and put a house-move gas appointment in 問題2-1番 after a
-  house-move quote in the same slot. The 問題2-1番 half was re-angled in the
-  round-2 fix pass (same drawn errand, a tenant returning from a year abroad
-  instead of a move); the 問題3-4番 half was closed before round 3 by the cheaper
-  of its two repairs — its scenario 自動車学校:学科 is DRAWN, so the talk was
-  RE-SLOTTED (swapped with 問題3-2番's), which costs a re-order of both items'
-  spoken options so each key still lands where `answer_positions` says and a
-  re-derivation of both 解説, and costs no new authoring. A reroll is the other
-  route and is the dearer one: a fresh 220+-char 概要理解 talk plus four new
-  topic-level options plus a scenario that must itself clear cooldown, theme and
-  slot rules. `check_slot_theme_repeat()`
-  WARNs the half a tag can see (**問題2/3/5 slots only** — 問題4's scenes are
-  invented, so its tags measure the tagger, and 問題1's item mix is quota-bound,
-  so 働き方 there measures the rule: R2-F7); the 運転 half is exactly what a tag
-  cannot see, which is why this row read stays mandatory.
-- **A topic/domain match in the 2-tests-back column is a minor finding**,
-  not an automatic fail — note it so a domain doesn't become a recurring
-  crutch one skip apart.
-- **No condition/number/rule shared** between the 問題14 flyer and any 聴解
-  item. Shared setting is tolerable; shared decisive detail is not.
-- **Two 聴解 items may not run the same errand**, and errand archetypes
-  (reschedule call, model choice at a store, campaign flyer…) must not
-  repeat within the last two tests — including **both 聴解問題5 items**, each of
-  which has its own fixed task shape:
-  - **問題5-1番** — a multi-person meeting choosing among proposals.
-  - **問題5-2番** — a two-person pick-one-from-a-shared-list decision.
-
-  For **each** of them, vary the underlying DECISION STRUCTURE across
-  consecutive papers, not just the subject: who proposes, in what order
-  candidates are killed, and whether the adopted one is a late arrival, an
-  opening proposal held pending a condition, or a plan someone reverses. The
-  bullet named 2番 only until 2026-08-19, and 4 of 4 papers carrying a
-  セクション構成表 documented 2番's structure against the last three papers while
-  saying nothing about 1番 — so `20260818_1` shipped a 問題5-1番 with
-  `20260817_3`'s exact archetype (a three-person local-association meeting that
-  rejects three proposals on three grounds and adopts a NEW idea raised late) in
-  the same slot, one paper apart, with the rule "already written"
-  (`qa-report-20260818_1` F3). **The construction step, not the judgment:** the
-  聴解 author writes the 問題5 構成表's structure note for **1番 as well as 2番**,
-  each against the previous three papers by name — see
-  `question-authoring/references/choukai-items.md` §統合理解.
+- **Fill the theme column from the SHIPPED surface**, not the spec draw — a
+  drafted passage wanders off its tag. Apply `exam-blueprint` §"The four theme
+  rules" and put the counts in your report.
+- **The closing-move column is a 読解 rule** (`dokkai.md` §"Thirteen surfaces").
+  Two passages on unrelated subjects both ending 「〜だけでは足りない、〜こそが要る」
+  are one essay written twice; official ships that move 5–9 times per 読解 half.
+- **Read each surface against its OWN draw before reading it against the
+  others.** Nothing compares a shipped surface's SUBJECT to the
+  `test_spec.json` string it came from, so a passage can wander off its draw with
+  every line green and silently spend a cooldown. (`20260904_3` drew
+  「高齢者向け軽スポーツの**普及**」 and shipped a passage arguing **定着**, which
+  is `20260904_2` 問題9's subject one paper earlier — the mechanism behind
+  qa-report-20260904_3 F1.) **This is a READ, not a gate, and that is measured:**
+  the obvious predicate — counting drawn-topic tokens surviving into
+  `logs/topics.json` — was run over all 23 papers on 2026-09-05, reports 1–6
+  zero-overlap draws on *every* paper (median 3–4, because a surface legitimately
+  writes 「自動で走るバス」 for 「自動運転バス」), and does not fire on the founding
+  case. A predicate that flags every paper and misses its own founding case is
+  refuted. So: put the drawn string in the table and say, per surface, whether
+  the shipped subject is the one drawn. A surface that moved is either re-angled
+  back onto its draw (no stamp) or stamped `"origin": "reauthored"` in spec AND
+  ledger with a note (`exam-qa-review` §"A fix that changes WHAT a surface tests").
+- **A 読解 topic and a 聴解 scenario may name one subject and no check sees it.**
+  `check_surface_subjects()` matches maximal kanji runs for equality, so
+  「健康保険組合からの人間ドック補助案内」 and 「人事部からの健康診断のお知らせ」 — one
+  paper, one subject, both 睡眠・健康 — share nothing it can see
+  (qa-report-20260904_3 F5). Read the 読解 rows and 聴解 rows as ONE list.
+- **No topic appears twice in this paper**, even in a different register (a
+  問題14 flyer spelling out a 聴解 item's keyed answer; one subject serving both
+  問題9 and 問題10(1)).
+- **The drawn `quick_response` phrases are content — give every one its own
+  row** (11 in a current paper), with the setting you invented for it. They are
+  the surfaces nobody thinks of as topics because nobody *chose* their subject.
+  (`20260817_3` wrote a 問題9 cloze on 「何をどう書けばよいのか分からないまま紙に
+  向かう心細さ」 while its own 問題4-1番 stimulus was 「この申請書の書き方がよく
+  分からないのですが」.) Check them against 問題9's subject specifically — the
+  cloze is the other unpooled surface.
+- **Errand identity is checked HERE now.** It used to be a draw-time comparison
+  of pool `key` fields; with authored scenarios there is no key, so the only
+  place two items running one errand becomes visible is the `shapes` column of
+  `logs/topics.json`. Read it across three papers, every time — this row is no
+  longer backed up by a spec-time check.
+- **No topic repeats the previous test, especially in the same 聴解 slots.** Do
+  it as a table read from `logs/topics.json` (a lookup, not a re-derivation) and
+  read each ROW across the columns. A shared domain in one row is a finding even
+  when errand keys and theme tags differ — `20260818_1` put 自動車学校の危険予測運転
+  in 問題3-4番 directly after `20260817_3`'s 問題3-4番 整備担当が運転の癖を伝える話
+  (tagged 教育 and 交通, so no tag matched). `check_slot_theme_repeat()` WARNs
+  only the half a tag can see (問題2/3/5 slots — 問題4's scenes are invented so its
+  tags measure the tagger; 問題1's mix is quota-bound), which is why this row read
+  stays mandatory. **Two repairs, and the cheap one is usually right:** RE-SLOT
+  (swap two talks, re-order their spoken options so each key still lands where
+  `answer_positions` says, re-derive both 解説) costs no new authoring; a reroll
+  costs a fresh 220–300-char talk, four new options, and a scenario that must
+  itself clear cooldown/theme/slot rules.
+- **A topic/domain match in the 2-tests-back column is a minor finding** — note
+  it so a domain doesn't become a crutch one skip apart.
+- **No condition/number/rule shared** between the 問題14 flyer and any 聴解 item.
+  Shared setting is tolerable; shared decisive detail is not.
+- **Two 聴解 items may not run the same errand**, and errand archetypes must not
+  repeat within the last two tests — **including both 問題5 items**, each with its
+  own fixed task shape: **1番** a multi-person meeting choosing among proposals,
+  **2番** a two-person pick-one-from-a-shared-list decision. For **each**, vary
+  the DECISION STRUCTURE across consecutive papers, not just the subject: who
+  proposes, in what order candidates die, and whether the adopted one is a late
+  arrival, an opening proposal held pending a condition, or a plan someone
+  reverses. (The rule named 2番 only until 2026-08-19, and four papers documented
+  2番's structure while saying nothing about 1番 — so `20260818_1` shipped a
+  問題5-1番 with `20260817_3`'s exact archetype in the same slot, one paper apart,
+  with the rule "already written": qa-report-20260818_1 F3.) **The construction
+  step:** the 聴解 author writes the 構成表 structure note for 1番 as well as 2番,
+  each against the previous three papers by name (`choukai-items.md` §統合理解).
 - **問題12 (A/B) gets its own cross-test column** — one topic per paper.
 - **A duplicated topic in the spec is a sampler defect**: `check_spec_blend`
-  fails a repeated draw. `--reroll` the category; never invent a substitute
-  by hand.
+  fails a repeated draw. `--reroll` the category; never hand-invent a substitute.
 
 ## Stage 4 — QA
 
-Read `exam-qa-review/SKILL.md` in full and run it with fresh eyes. NOT
-optional: generated papers can ship content defects through a green gate if
-QA is skipped. A test that hasn't survived this pass is not done, whatever
-the gate says.
+Read `exam-qa-review/SKILL.md` in full and run it with fresh eyes. A test that
+hasn't survived this pass is not done, whatever the gate says.
 
-### The fix loop — closing a finding includes re-greppng its notes
+### Closing a finding includes re-grepping its notes
 
-A repair is not finished when the artifact changes. **A repair is finished
-when every note that narrates the finding says what is now on disk.** After
-applying a fix, `grep` for the finding id and for the strings the fix
-removed, in all four places a repair gets narrated, and update each:
+A repair is finished when **every note that narrates the finding says what is now
+on disk.** After applying a fix, grep for the finding id and for the strings the
+fix removed, in all four places a repair gets narrated:
 
-1. the 構成表 / 解説 cells in `tests/<id>/聴解.md` and `言語知識・読解.md`
-   (a fix that ADDS or CHANGES a script or passage line must re-derive
-   **every** 解説 cell and 構成表 cell that cites that item, not only the cell
-   the finding named — `20260821_1` NF-3: F6 wrote a new deciding line into
-   the script and the 構成表 and left the 解説 quoting the old, weaker line);
+1. the 構成表 / 解説 cells in `聴解.md` and `言語知識・読解.md` — a fix that adds or
+   changes a script or passage line must re-derive **every** cell citing that
+   item, not only the one the finding named (`20260821_1` NF-3: F6 wrote a new
+   deciding line into the script and the 構成表 and left the 解説 quoting the old);
 2. `logs/topics.json`'s `notes` for that test;
-3. `tests/<id>/test_spec.json` and `logs/ledger.json`, if the fix changed
-   what a recorded draw shipped as;
+3. `test_spec.json` and `logs/ledger.json`, if the fix changed what a recorded
+   draw shipped as;
 4. the QA report's disposition column.
 
-**A note that says a step is 未実施 after you implemented it is a defect of
-the same class as a note quoting a removed string**, and both are worse than
-no note: the next paper's blueprint stage reads these fields and will chase a
-bug that is already fixed, or trust a claim the fix invalidated. Precedents:
-`20260817_3` (two false `notes` claims), `20260821_1` NF-5 (a 聴解.md 申し送り
-still saying `logs/topics.json` was 未実施 after it had been updated, and a
-`notes` field still arguing at length about a WARN the gate had stopped
-emitting — with a stale warning TOTAL attached).
+**A note that says a step is 未実施 after you implemented it is the same class of
+defect as a note quoting a removed string**, and both are worse than no note: the
+next paper's blueprint reads these fields and will chase a fixed bug or trust an
+invalidated claim (`20260817_3`, `20260821_1` NF-5).
 
 **Do not pin a repo-wide number in a note.** A warning total is true for one
-minute; state the per-test invariant instead ("the only WARN line naming this
-test is X"), and if you do quote a total, date it and say what would move it.
+minute; state the per-test invariant instead ("the only WARN naming this test is
+X"), and if you quote a total, date it and say what would move it.
 
-## Stage 5 — Model Answer & Detailed Explanation (FINAL STEP)
+## Stage 5 — model answer (FINAL)
 
 ```bash
-make scaffold-explanations <id>            # -> auto-scaffold tests/<id>/詳細解説.json from markdown
-make scaffold-explanations <id> LANG=vi    # -> empty tests/<id>/詳細解説.vi.json skeleton
-make model-answer <id>             # -> tests/<id>/模範解答.html
+make scaffold-explanations <id>            # -> 詳細解説.json
+make scaffold-explanations <id> LANG=vi    # -> empty 詳細解説.vi.json
+make model-answer <id>                     # -> 模範解答.html
 ```
 
-- **MUST always be the final step** — run only AFTER Stage 4 returns
-  `QA: PASS` and all item/option/audio fixes are frozen.
-- Scaffold `詳細解説.json`, then author the explanations (`why_correct`,
-  `options_analysis`, `points`). Stems/options/passages/audio scripts are
-  auto-populated from the finalized markdown.
+- **Only AFTER stage 4 returns `QA: PASS`** and all item/option/audio fixes are
+  frozen. Generating it earlier is prohibited — any later fix desynchronizes it.
 - **The scaffold PRE-FILLS every `options_analysis` line, and a pre-filled line
-  is not an authored one.** `scaffold_explanations.py` writes 「[不正解] 選択肢2
-  「…」は、文脈に合いません。」 and three sibling templates into every slot — a
-  fresh scaffold of a finished paper is 100 % of them (measured: 393/393 on
-  `20260904_2`, 397/397 on `imported-n2-2021-07`). They are well-formed,
-  correctly tagged and inside every terseness band, so they used to survive the
-  whole gate: **both 2021 imports shipped 100 % placeholder Japanese panes
-  green**, and only a human read caught it.
-  `check_kaisetsu_no_scaffold_placeholders` now FAILs any paper with
-  `模範解答.html` on disk that still carries one. Replace every line with a
-  reason drawn from THAT item; do not delete lines, which breaks per-option
-  parity.
-- Then scaffold and author `詳細解説.vi.json` **in a second subagent that has
-  not seen the Japanese set**. Both panes of `模範解答.html` print the exam's
-  own wording (stored once, in `詳細解説.json`) above the explanation; only the
-  explanation switches. The Vietnamese set is written from the items — a
-  translation of the Japanese one is a defect (`exam-model-answer`).
-- **Every field is capped** by `exam-model-answer`'s terseness bands and the
-  gate FAILs a field over the cap. Cut padding, never a concrete reason.
-- **Pedagogical Quality & Furigana**: concise, natural, learner-friendly
-  explanations; zero internal pipeline metadata leaks (`[kanji-n2.json]`,
-  `[N1]`, etc.); all four options get concrete individual explanations (no
-  placeholder text); mandatory furigana (`《...》`) on target kanji/stems/key vocabulary.
-- Generating `模範解答.html` earlier is prohibited — any subsequent
-  question/distractor/key fix during QA would desynchronize the explanations.
-- Re-run `make check` after generating it, to confirm all file contracts
-  remain green.
+  is not an authored one.** A fresh scaffold is 100 % placeholders (393/393 on
+  `20260904_2`), and they are well-formed, correctly tagged and inside every
+  band — so **both 2021 imports shipped 100 % placeholder Japanese panes green**
+  and only a human read caught it. `check_kaisetsu_no_scaffold_placeholders`
+  FAILs them now. Replace every line with a reason drawn from THAT item; never
+  delete a line, which breaks per-option parity.
+- Then scaffold and author `詳細解説.vi.json` **in a second subagent that has not
+  seen the Japanese set** — a translation is a defect. Both panes print the exam's
+  own wording (stored once, in `詳細解説.json`); only the explanation switches.
+- **Every field is capped** by `exam-model-answer`'s terseness bands; the gate
+  FAILs an over-cap field. Cut padding, never a concrete reason.
+- Concise, learner-friendly prose; zero pipeline metadata (`[kanji-n2.json]`,
+  `[N1]`); all four options get individual concrete explanations; furigana
+  (`《...》`) on target kanji/stems/key vocabulary.
+- Re-run `make check` afterwards.
 
-## Taking the exam (after QA and Model Answer)
+## Taking the exam
 
-`make serve` (no test id — one server lists every test), answer, press
-「採点する」: the page saves `採点結果.json` + `ユーザー解答.json` into
-`tests/<id>/`. CLI: `make grade <id>`. See `exam-app`.
+`make serve` (no id — one server lists every test), answer, press 「採点する」:
+the page writes `採点結果.json` + `ユーザー解答.json`. CLI: `make grade <id>`.
 
 ## Invariants (every run)
 
-- Japanese file names for all deliverables (table: `AGENTS.md` §2).
-- Markdown is the single editable source. **Every source edit carries its
-  rebuild in the same change**: `聴解スクリプト.txt` → `make mp3 <id>`;
-  either `.md` → `make booklet <id> && make sheet <id>`. Artifacts carry the
-  sha of the bytes they were built from, and the gate compares them — but
-  the gate is the backstop, not the workflow. Never hand-edit a sha.
-- `聴解.md` and `聴解スクリプト.txt` stay synchronized: printed 例 options ↔
-  spoken 例; any script item change requires a key check.
+- Japanese file names for all deliverables (`AGENTS.md` §2).
+- Markdown is the single editable source, and **every source edit carries its
+  rebuild in the same change**: `聴解スクリプト.txt` → `make mp3 <id>`; either
+  `.md` → `make booklet <id> && make sheet <id>`. Artifacts carry the sha of the
+  bytes they were built from and the gate compares them — but the gate is the
+  backstop, not the workflow. Never hand-edit a sha.
+- `聴解.md` and `聴解スクリプト.txt` stay synchronized: printed 例 options ↔ spoken
+  例; any script item change requires a key check.
 - After script/audio edits, re-run the dry-run validators in `choukai-audio`.
-- Never copy questions from the copyrighted textbooks in `refs/` —
-  calibration only; all items original. The sampled topic gives WHAT to
-  write about; compose the words yourself — no web fetch.
-- Commit `tests/<test_id>/` and updated `logs/` together with the pipeline
-  changes that produced them.
+- Never copy questions from the copyrighted textbooks in `refs/` — calibration
+  only, all items original. The sampled topic gives WHAT to write about; compose
+  the words yourself, no web fetch.
+- Commit `tests/<id>/` and updated `logs/` together with the pipeline changes
+  that produced them.

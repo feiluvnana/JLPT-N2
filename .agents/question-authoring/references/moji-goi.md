@@ -141,6 +141,32 @@ kanji_reading:<index>` and a fresh RNG seed** — never a hand substitution
 (§"Build the set BEFORE you accept the target"), and never by re-balancing the
 option field, which cannot change what kind of reading the printed target has.
 
+## The reading TRAP — 促音/拗音 in the key, drawn not authored
+
+A 促音 or 拗音 in the keyed reading (っ/ゃ/ゅ/ょ) is what the 2×2 清濁/長短 grid
+actually discriminates on: 出席(しゅっせき) can be mis-read four ways, 父親
+(ちちおや) cannot. Measured over every parsable official 問題1 item:
+
+| corpus | items with 促音/拗音 in the key |
+|---|---|
+| official, current era 12/2022–12/2025 | **14/35 = 40.0 %** |
+| official, all 31 sittings | 54/152 = 35.5 % |
+| our 23 papers | **24/115 = 20.9 %** (z = 2.61, p = 0.009) |
+
+問題1 was reliably easier than the real exam, and the cause was the DRAW, not
+the authoring: `pools.json`'s `kanji_reading` is itself 25.8 % trap-carrying
+(p = 0.010 against the archive), so an unweighted sample of 5 reproduces the
+pool. `sample_kun_capped()` now stratifies on `has_reading_trap()` at the
+current-era rate, alongside the 訓読み band; a simulated 500 draws lands 38.4 %.
+
+**There is no per-paper floor and there must not be one.** Official per-paper
+counts run 0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,4,4,4 of 5 —
+median 2, and five sittings carry zero. A floor of 2 would reject 13 real
+sittings. The check is therefore a CORPUS statistic
+(`check_mondai1_reading_trap_corpus`, WARN below 31 %), and the repair is always
+the sampler or the pool, never the item — a hand-substituted target does not
+touch the ledger (§"Build the set BEFORE you accept the target").
+
 ## 2-kanji on-reading compounds: the 2×2 Cartesian product matrix
 
 For 2-kanji 音読み targets (矛盾, 縮小, 概要, 効率, 措置), official tests each kanji's
@@ -225,7 +251,9 @@ Both blanket rules are wrong ("every option a dictionary word" fails 23/35;
 derivation of the key's own reading.**
 
 Procedure: (1) reduce each option to dictionary form (さだまった→さだまる); (2) check
-all four against Shinkanzen/Soumatome pages, per option; (3) a HIT is evidence —
+all four against Shinkanzen/Soumatome **and `refs/Hajimete/vocab_reference.md`**
+(a flat 2500-word N2 list, so it is the fastest of the three to check a headword
+against — `AGENTS.md` §3), per option; (3) a HIT is evidence —
 write the confirmed headword + branch label into the source line
 (`さだまる=定まる[N1, Shinkanzen p.NNN]`), citing whichever source you checked; (4) a
 MISS is a debt — confirm via 常用漢字表 音訓 or the archive, record

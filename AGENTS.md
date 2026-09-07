@@ -207,8 +207,8 @@ All calibration inputs must be looked up in `refs/`:
   - Vocabulary: `refs/Soumatome/nihongo-soumatome-n2-goi.pdf` → extract
     `refs/Soumatome/goi_reference.md` (`make extract-shinkanzen-goi`)
   - Kanji: `refs/Soumatome/nihongo-soumatome-n2-kanji.pdf` (no extract yet)
-  - Together with Shinkanzen's Goi/Kanji volumes, these are exam-blueprint's
-    ONLY vocabulary/kanji pool authority (`pools.json`'s `kanji_reading`,
+  - Together with Shinkanzen's Goi/Kanji volumes **and `refs/Hajimete/` below**,
+    these are exam-blueprint's ONLY vocabulary/kanji pool authority (`pools.json`'s `kanji_reading`,
     `context_words`, `paraphrase`, `usage`) — the vendored OpenJLPT JSON corpus
     was removed 2026-08-11 (exam-blueprint/SKILL.md). All four PDFs are scanned
     images with no text layer (`pdffonts` prints an empty table), so
@@ -223,6 +223,20 @@ All calibration inputs must be looked up in `refs/`:
     cap** (漢字 264 MB, Soumatome 漢字 173 MB, Soumatome 語彙 103 MB; Shin
     Kanzen 語彙 at 40 MB is the only direct read) — slice one with
     `--split-pdf DIR` rather than trying to open it whole.
+- **Vocabulary list (`refs/Hajimete/`) — はじめての日本語能力試験 N2単語 2500**:
+  - `refs/Hajimete/はじめての日本語能力試験 N2単語 2500.pdf` (45 MB, 314 pp.) →
+    extract `refs/Hajimete/vocab_reference.md` (`make extract-hajimete`).
+  - Added 2026-09-07. A flat, numbered **2500-word N2 list** — headword, reading,
+    part of speech, one example sentence, EN/ZH/VI glosses — where Shin Kanzen and
+    Soumatome are graded exercise volumes whose headwords sit around the drills.
+    It is the third vocabulary authority for `pools.json` and for
+    `question-authoring`'s per-key verification, and it is a reference corpus for
+    `tools/lexical_profile.py`'s 読解 lexical-load gate.
+  - Scanned images, no text layer (`pdffonts` prints an empty table), like the
+    other four books; 45 MB is under the 100 MB read cap, so a page can be opened
+    directly to check a reading the OCR got wrong. **Same trust rules as every
+    textbook extract: secondary evidence, never a count or a length.**
+
 - **Official Past Exam Archive (`refs/JLPT_N2_NEW/`) — 31 Sittings (Booklet PDF, Script PDF, Audio MP3)**:
   - **July 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023 (script).pdf`, Audio `refs/JLPT_N2_NEW/14. N2 7-2023/File nghe N2 7-2023.mp3`
   - **Dec 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 12-2023/14.N2 12-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 12-2023/14. script N2 12-2023.pdf`, Audio `refs/JLPT_N2_NEW/14. N2 12-2023/14. Nghe N2 T12-2023.mp3`
@@ -282,6 +296,7 @@ restate them here or in a skill; fix them there.
 | `make extract-keys`       | `extract_jlpt_n2_key.py` — key PDF → `key.md` + JSON | §3 above |
 | `make extract-shinkanzen-dokkai` | `tools/extract_shinkanzen_dokkai.py` — Shin Kanzen Dokkai → Markdown | §3 above |
 | `make extract-shinkanzen` | `tools/extract_shinkanzen_choukai.py` — Shin Kanzen Choukai → Markdown | §3 above |
+| `make extract-hajimete`   | `tools/extract_hajimete.py` — はじめての N2単語 2500 → Markdown | §3 above |
 | `make upload-files [TARGET=tests\|refs\|all [TEST=…]]` | `tools/upload_files.py` — push exam audio (release `audio`) and the `refs/` archive as one zip per folder (release `refs`); uploads each asset **once** and again only when it changes | §3 above |
 
 The pool-growth tooling (classify/promote/expand/suggest/fetch) is parked in

@@ -726,13 +726,22 @@ one row each. Neither sitting repeats an arc.
   it. Re-keying it changes WHAT the surface tests, so the `origin: reauthored`
   stamp and the `surfaces`/`claim`/`shapes` update apply as above.
 
-**The talk must be long enough to have a gist.** Official 問題3 talks run a
-median of **305 spoken chars** (p10 251, minimum 177 over 149 items,
-`official_register.md` §7.4); a four-sentence talk has no structure to
-summarize, so a 概要 question degenerates into 沿って聞く. **Target: 220+
-spoken chars** — make the point twice in different words. `make check` FAILs
-below 175 (the archive minimum); clearing the gate is not the same as hitting
-the target.
+**The talk must be long enough to have a gist, and short enough to be one.**
+Official 問題3 talks run **158–397 spoken chars in the current era, median 268**
+(all 31 sittings: median 243, p10 202, p90 320) — the table in §3 above is the
+same measurement and this line must always agree with it. A four-sentence talk
+has no structure to summarize, so a 概要 question degenerates into 沿って聞く; a
+400-character talk stops being a gist and becomes a passage to retain.
+**Target: 220–300 spoken chars** — make the point twice in different words.
+`make check` FAILs outside 175–400.
+
+**The 305 this line used to carry was wrong, and it was wrong in the expensive
+direction** (corrected 2026-09-07). It was one sitting's per-paper median read
+as the corpus median, it sat 25 % above the truth, and it was paired with a
+one-sided 「220+」 — so the only length guidance 聴解 had told authors to write
+longer than official, and nothing anywhere bounded 問題1/2/5 at all. The four
+most recent papers shipped 13–20 % more speech than the largest real sitting.
+`check_choukai_volume` now bounds the whole 聴解 half in both directions.
 
 ## Spoken choice pacing
 

@@ -1,6 +1,6 @@
 ---
 name: exam-blueprint
-description: Single owner of WHAT each exam tests — RANDOM, non-repeating pool sampling of grammar points, vocabulary, kanji, listening scenarios, and reading topics, and answer-position balance. Use BEFORE authoring any questions, whenever generating a new test, whenever the user asks for "another test", "random questions", "different questions", or says tests repeat, feel stale, or feel textbook-bound. Never let the language model choose items from memory — model choices are heavily biased toward the same famous items and are NOT random; selection must come from scripts/sample_items.py.
+description: Single owner of WHAT each exam tests — RANDOM, non-repeating pool sampling of grammar points, vocabulary and kanji; theme assignment plus the already-used-subject list for reading topics and listening scenarios (their subjects are authored, not drawn); and answer-position balance. Use BEFORE authoring any questions, whenever generating a new test, whenever the user asks for "another test", "random questions", "different questions", or says tests repeat, feel stale, or feel textbook-bound. Never let the language model choose items from memory — model choices are heavily biased toward the same famous items and are NOT random; selection must come from scripts/sample_items.py.
 ---
 
 # Exam Blueprint — pool sampling
@@ -41,7 +41,7 @@ already drawn the target invents non-words instead of rejecting it. Write the
 three distractors before adding or keeping an entry; if you can't, it's out.
 
 **A pool spelling must match its headword in Shin Kanzen Master N2-Goi/
-N2-Kanji or 日本語総まとめ N2 語彙/漢字.** 問題1 tests a reading off a printed
+N2-Kanji, 日本語総まとめ N2 語彙/漢字, or はじめての N2単語 2500.** 問題1 tests a reading off a printed
 spelling, so okurigana is part of the item (`労わる` vs the dictionary's
 `労る`). Fix the pool, never just the paper.
 
@@ -65,7 +65,16 @@ nothing to fix on the paper, and leaving the entry hands the same defect to the
 next paper that draws it. `20260904_1` drew 「安楽死と尊厳死」 (医療・福祉) —
 a bioethics-of-dying debate — and a scan of the two themed pools for the ban
 list turned up one more never-drawn entry, 「選挙の投票率低下と対策」
-(行政・手続き), which Part II bans by name. Both were deleted. **Check the
+(行政・手続き), which Part II bans by name. Both were deleted.
+
+**That scan was incomplete, and the miss shipped** (2026-09-07). It looked for the
+ban list's own words and missed 「難民受け入れ」 (人間関係) — displacement by war,
+which the list covers under war/victims and again as a contested immigration
+debate. `20260810_2` had already drawn it and shipped a 問題10(1) passage carrying
+「（注2）難民：戦争などで国を離れ、行き場を失った人」. The entry is now deleted, and
+the lesson is the scan's shape: **enumerate the ban list's SUBJECTS, not its
+vocabulary** — 難民 contains none of 戦争/被害者/差別 as a string, and a topic pool
+is small enough to read. **Check the
 ledger before deleting**: `check_draw_provenance()` requires every RECORDED
 draw to resolve to a pool entry, so an entry a shipped paper drew is corrected
 or kept, never removed (「がん検診の受診率向上」 stays — 20260818_1 drew it, and
@@ -119,7 +128,8 @@ entry must satisfy all four:
    and no katakana (a dot is a raw KANJIDIC kunyomi with okurigana detached;
    katakana is a bound-morpheme on-reading dump — neither is a printable word).
 2. **Attested.** `(語, よみ)` appears as a headword+reading in Shin Kanzen
-   N2-Goi/N2-Kanji or Soumatome N2 — decisive for single-kanji entries, which
+   N2-Goi/N2-Kanji, Soumatome N2, or はじめての N2単語 2500
+   (`refs/Hajimete/vocab_reference.md` — a flat numbered list, so check it first) — decisive for single-kanji entries, which
    have no fallback.
 3. **One 語, two 訓読み → keep the LOWER-graded reading.** Rank by whether
    the reading is the one carried in the N2 volume, or by which reading the
@@ -136,8 +146,21 @@ previously-shipped `領: えり` defect, and can refute but never confirm an
 entry). Both PDFs are scanned images with no text layer — read the relevant
 pages or corroborate against the official archive's OCR'd `booklet.md`/`key.md`.
 
-The 2026-08-06 audit removed 103 of 218 entries; 112 remain, 22× headroom
-over `DRAW` of 5. `kanji_reading` is the only category whose parenthetical is
+The 2026-08-06 audit removed 103 of 218 entries, leaving 112. **The pool now
+holds 1526 `kanji_reading` entries** — it was grown after that audit, and the
+growth was manual by policy (below), so the audit's coverage does NOT extend to
+the current pool. `無事(むじ)` was found in it on 2026-09-07 by a routine draw and
+corrected to `無事(ぶじ)`: Shin Kanzen 漢字 別冊1 gives 無 as ム (無理/無料) and
+**ブ** (無事), so the entry would have keyed an unanswerable item, the same class
+as the `領(えり)` defect the original audit removed.
+
+**A full re-audit of the 1526 entries is outstanding and cannot be scripted.**
+The obvious proxy — "is the headword attested in the archive or the four textbook
+extracts?" — was measured on 2026-09-07 and is too weak to act on: it clears only
+71 % of the pool, and the 443 it flags include 措置, 潔い, 焦る, 誇る, 覆う, 漂う,
+委託, 迅速 and 挑む, which are plainly N2. Both textbook volumes are OCR of scanned
+images, so absence is evidence of nothing. Verifying an entry still means reading
+the page (rules 1–5 above). `kanji_reading` is the only category whose parenthetical is
 a reading (`納める(税金)` is context, `詫びる(謝る)` a synonym).
 
 **Growth history, briefly** (2026-08-11): grown to 200 sourcing candidates
@@ -1197,20 +1220,51 @@ matters is depth.
 
 # Part II — Author the passage yourself
 
-`sample_items.py`'s draw assigns one `reading_topics` entry to every 読解
-surface of 問題10–14 (12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info — 問題9
-cloze has no pool seat: its author composes the topic, keeping it distinct
-under the four theme rules, and the build pass records what shipped as a
-13th `reading_topics` entry with `origin: "reauthored"` + note) and one
-`listening_scenarios` entry to every 聴解 setting (問題1/2/3/5). Compose every
-passage/dialogue/flyer/notice/即時応答 setting yourself, in original prose,
-directly from that assigned string. No external source, no fetch, no citation.
+**The SUBJECT is yours to invent. What the draw gives you is a THEME and the
+subjects already used for it** (changed 2026-09-07 — see `AUTHORED_THEME_CATS`
+in `sample_items.py` for the measurements behind it). Each entry reads:
+
+```json
+{"theme": "住まい", "origin": "authored",
+ "avoid": ["空き家と相続後の判断の先延ばし", "マンション置き配ボックス利用申込", …]}
+```
+
+`sample_items.py` assigns one such entry to every 読解 surface of 問題10–14
+(12 = 5 short + 4 medium + 1 A/B + 1 long + 1 info; the 問題9 cloze has no seat
+and its author composes a 13th theme, distinct under the four theme rules) and
+one to every 聴解 setting of 問題1/2/3/5 (21). Reading themes are drawn
+all-distinct; listening allows up to `THEME_CAP` 5 per theme.
+
+**Your job, per surface:** invent a subject inside the assigned theme that is
+not in `avoid` and not a re-wording of anything in it, then compose the
+passage/dialogue/flyer/notice/即時応答 from it in original prose. No external
+source, no fetch, no citation.
+
+- `avoid` is built by `used_subjects_by_theme()` from `logs/topics.json` —
+  every subject every previous paper shipped under that theme. It is the record
+  the whole design rests on, so **a paper that does not write its
+  `surfaces`/`themes` rows leaves the next paper blind.** That is why
+  `check_topics_shapes_field` FAILs a missing row.
+- **A near-miss counts as used.** 「空き家の増加」 against an `avoid` entry of
+  「空き家と相続後の判断の先延ばし」 is the same subject with a shorter name. The
+  test is whether a candidate who sat both papers would recognise the situation,
+  not whether the strings differ.
+- Errand identity for 聴解 (「two items may not run the same errand」) is no
+  longer checkable at draw time, because there is no pool `key` to compare. It is
+  checked on what SHIPPED, in the `shapes` column of `logs/topics.json`, by the
+  whole-paper pass in `jlpt-test-generation` §"One topic, one surface" — read it
+  across three papers, every time.
 
 Apply this N2 gate to your own draft:
 
 - **Expressibility.** Draft one sentence using only N2-and-below vocabulary;
   generalize anything needing N1 jargon (生成AIの著作権問題 → 新しい技術と
-  仕事の変化).
+  仕事の変化). **This is now measured, not just advised** — a 読解 half whose
+  vocabulary sits outside the official band FAILs `check_dokkai_lexical_load`,
+  and the repair is the subject, not the sentences
+  (`question-authoring/references/dokkai.md` §"Lexical load"). Choosing the
+  subject yourself is exactly where that gate is cheapest to satisfy: pick
+  something whose argument can be made in ordinary words.
 - **Neutrality.** Avoid politics/elections, religion, war/crime/accidents
   with victims, discrimination debates, celebrity gossip, anything
   distressing. Prefer daily life, work customs, technology in daily use,
