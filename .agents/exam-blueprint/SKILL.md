@@ -425,177 +425,71 @@ WARN is only a backstop for a hand-edited spec. Listening keeps the WARN-vs-
 defect asymmetry deliberately — the sampler can't see which scenario maps to
 which 問題.
 
-### `key` — the errand identity, and the rule for near-duplicate entries
+### `key` — the errand identity (now `quick_response` only)
 
-A themed entry is `{"topic"|"scenario": …, "theme": …}` plus an **optional
-`"key"`**: the entry's errand identity, written `institution:errand`
-(`引っ越し業者:見積もり`, `カルチャースクール:受講申し込み`). Two entries whose
-display strings differ but whose errand is the same carry the **same** `key`,
-and `sample_items.py` resolves rotation through `errand_key()` before it
-compares display strings, so one errand cools down once however many ways the
-pool spells it. An entry with no `key` is its own key — most of the pool is
-genuinely distinct and needs none. Currently 49 themed entries carry one in 23
-clusters, plus 10 `quick_response` phrases in 4 (§"`quick_response` has keys
-too") — 27 clusters in all, which is the number `check_pool_errand_keys()`
-prints; re-read it there rather than trusting this sentence. (2026-08-21,
-`20260821_1` blueprint: five clusters were added when the draw kept landing on
-unkeyed near-duplicates of the previous two papers' surfaces —
-`美術館:館内ルール案内`, `市役所:住民票`, `レストラン:予約・注文の変更`,
-`パン屋:予約注文`, and the `店:在庫照会` phrase
-「お客様、こちらの商品はただいまお取り寄せとなりますが…」. Each addition made the
-sampler refuse a pick it had just made, which is the mechanism working; keying
-them also turned `20260819_1`'s two "0 keyed draws compared" **skip** lines into
-`ok`.)
+A pool entry may carry an optional **`"key"`**: its errand identity, written
+`institution:errand` (`引っ越し業者:見積もり`). Two entries whose display strings
+differ but whose errand is the same carry the **same** key, and `errand_key()`
+resolves rotation through it before comparing display strings, so one errand
+cools down once however many ways the pool spells it. An entry with no key is
+its own key.
 
-**The incident (2026-08-19, R14):** the cooldown compared display strings, so
-`引越し:見積もり` / `引っ越し業者との見積もり調整` / `引っ越し業者との調整` were
-three separate items to it and two of them went out in consecutive papers with
-every gate green (`qa-report-20260817_3` F6). Re-measured across the whole
-ledger once the keys landed: **nine of the twelve papers on disk** had drawn an
-errand a recent predecessor drew, every one of them invisible to the string
-comparison.
+**SCOPE CHANGED 2026-09-07.** `reading_topics` and `listening_scenarios` are no
+longer drawn from (see `AUTHORED_THEME_CATS`), so their keys no longer gate
+anything: the surfaces they used to key are now invented by the author and their
+errand identity is checked on what SHIPPED, in the `shapes` column of
+`logs/topics.json`, by the whole-paper pass in `jlpt-test-generation`. Their
+`key` fields stay in `pools.json` because `check_draw_provenance()` still has to
+resolve the draws recorded by papers not yet regenerated — they are history, not
+machinery. **Everything below now governs `quick_response` alone**, which is
+still pool-drawn, 11 items per paper.
 
-**The authoring rule — key it, never re-spell it.** A new `listening_scenarios`
-/`reading_topics` entry naming an errand an existing entry already names must
-carry **that entry's `key`, verbatim**, not a new string and not a new
-paraphrase of the errand. Adding the near-duplicate unkeyed re-opens the hole
-by construction: the pool grows, the cooldown does not.
+**The incident that created keys (2026-08-19, R14):** the cooldown compared
+display strings, so `引越し:見積もり` / `引っ越し業者との見積もり調整` /
+`引っ越し業者との調整` were three items to it and two shipped in consecutive
+papers, every gate green (`qa-report-20260817_3` F6). Re-measured once the keys
+landed: **nine of twelve papers** had drawn an errand a recent predecessor drew,
+all invisible to string comparison.
 
-**EVERY NEW ENTRY CARRIES A `key`, not only a near-duplicate (S1,
-2026-09-04).** "An entry with no `key` is its own key" is true of the cooldown
-arithmetic and false of what the gate can then SEE, and the gap is not
-marginal: measured over all 21 generated specs, the share of a paper's
-errand-category draws carrying a `key` runs **0–9 %** (best: 4 of 44), so
-`check_spec_errand_rotation()`'s green line was a statement about two surfaces
-printed as if it covered forty-four. It now prints the ratio and **WARNs below
-50 %** (`ERRAND_COVERAGE_MIN`), which every paper on disk trips — that WARN is
-the finding, and the only thing that clears it is keys in `pools.json`. Write
-`institution:errand` for the new entry even when nothing shares it; a
-one-member cluster costs no pool depth (`check_pool_errand_keys()` counts
-depth against clusters of **2+**) and it is what makes the next near-duplicate
-collide instead of slipping past. Do NOT lower the threshold to make the line
-green.
+**`quick_response` keys live in a separate map**, `"quick_response_keys":
+{"<phrase>": "<institution:errand>"}`, because its entries are bare strings and
+making them objects would orphan every recorded draw (`check_draw_provenance()`
+resolves by string). `build_key_index()` folds it into the same index, so
+`errand_key()`, `recency_map()` and `draw()`'s `taken` set all see it.
+`20260818_1` drew 「…ご記入いただけますでしょうか」 and
+「キャンセル待ちの方は、こちらに名前をお書きください」 as 問題4-2番 and 4-9番 — two
+items, one errand, an `exam-qa-review` automatic fail. Four clusters exist
+(`窓口:記名依頼`, `店:在庫照会`, `窓口:担当者不在`, `職場:進捗確認`).
+`check_spec_quick_response_errand_pair()` FAILs a paper drawing two from one.
 
-Same reasoning, one level up in the sampler: two entries can be *adjacent*
-without being one errand — `20260904_1`'s QA read 「空き家のリノベーション活用」
-against 「空き店舗:改装計画の打ち合わせ」 as a near-miss (both are "an empty
-property someone is deciding what to do with") and cleared it only because the
-two surfaces shared no deciding detail. The sampler cannot see adjacency at
-all; give such a pair a shared key (e.g. `空き物件:活用の相談`) when you next
-touch either entry.
+**Rules for `quick_response` keys:**
 
-**`quick_response` has keys too, in a separate map (F4, 2026-08-19.)** Its
-entries are bare strings, so a `key` cannot sit on the entry: making them
-objects would orphan every recorded draw, which `check_draw_provenance()`
-resolves by string. The keys live in a top-level
-`"quick_response_keys": {"<phrase>": "<institution:errand>"}` map instead, and
-`build_key_index()` folds it into the same index, so `errand_key()`,
-`recency_map()` and `draw()`'s in-test `taken` set all see it with no signature
-change. Clustering covered `listening_scenarios`/`reading_topics` ONLY until
-this landed, and `quick_response` had been drawn 11-at-a-time in all 13 papers
-with no errand identity at all: `20260818_1` drew both
-「…こちらにお名前とご連絡先をご記入いただけますでしょうか」 and
-「キャンセル待ちの方は、こちらに名前をお書きください」 — 問題4-2番 and 4-9番, two
-items running one errand, which `exam-qa-review` counts as an AUTOMATIC fail.
-Four clusters exist today (`窓口:記名依頼`, `店:在庫照会`, `窓口:担当者不在`,
-`職場:進捗確認`); add a key whenever you add a phrase whose errand the pool
-already carries. `check_spec_quick_response_errand_pair()` FAILs a paper drawing
-two phrases from one cluster.
-
-**`quick_response` is also inside the CROSS-paper cooldown now (F1,
-2026-08-19).** The pair check above is in-paper only, and
-`check_spec_errand_rotation()` — the cross-paper half — looped
-`listening_scenarios`/`reading_topics` and nothing else, so for 13 papers a
-16-draw `quick_response` cooldown was enforced by no gate at all: `20260818_1`
-drew 窓口:記名依頼 one paper after `20260817_3` did, plus 職場:進捗確認 and
-店:在庫照会 inside their windows, with every line green. The check now loops all
-three keyed categories (`ERRAND_ROTATION_CATEGORIES` in
-`tools/check_consistency.py`), prints how many keyed draws it compared, and
-`skip`s a paper whose draws carry no key — `20260818_1` had **zero** keyed
-themed draws, so its old green line had compared nothing (F5). Repair a
-`quick_response` hit with `--reroll-one quick_response:<index>`, which costs one
-問題4 item instead of eleven.
-
-**And never delete a duplicate to solve it.** Four shipped tests name those
-strings in `logs/ledger.json`, and `check_draw_provenance()` requires every
-recorded draw to resolve to a pool entry — deleting a duplicate FAILs the gate
-on papers that are already out. Add the `key`; a shared `key` is correct data,
-never a defect.
-
-**The ONE thing that stops you adding a key: it would retro-FAIL a shipped
-paper. Measure before you add, and write the measurement down (2026-09-05).**
-Adding a `key` is retroactive by construction — `errand_key()` resolves recorded
-history through the index built off the CURRENT pool, so a key added today
-re-reads every draw ever made. Usually that is the point. Occasionally the
-re-read puts a committed paper inside its own cooldown window, and then the key
-is a change to papers that are already out, not to the sampler.
-
-Standing case, measured and **left undone on purpose**: `listening_scenarios`'
-「保険窓口:内容変更」 carries no `key` while naming the errand of an existing
-cluster (「保険の契約内容の確認と見直し」 / 「保険会社:契約内容の見直し」, key
-`保険会社:契約内容の見直し`). By 「key it, never re-spell it」 it should carry that
-key verbatim. It does not, because the string HAS been drawn — 20260814_1 (ledger
-index 8) and 20260904_2 (index 21) — and the cluster's other spellings were drawn
-at indices 2, 4 and **16** (`20260827_2`). Against `listening_scenarios`'
-11-draw window, adding the key was run and produces **two new FAILs**:
-`20260827_2` (5 draws after 20260814_1) and `20260904_2` (5 draws after
-20260827_2), neither of them in `ERRAND_ROTATION_GRANDFATHERED`, plus a second
-WARN breach on the already-exempt `20260814_1`. Both would qualify for an
-exemption under that set's own criterion (their draws predate the key), so the
-repair is **one grandfather entry per id in `tools/check_consistency.py` landed
-in the same edit as the key** — the two halves are not separable, and adding the
-key alone turns the gate red on shipped work. Do it that way or leave it; do not
-add the key and then reroll a committed paper to quiet the gate.
-
-**A worked example of doing it, 2026-09-05:** `reading_topics`' 「自動運転と責任」
-and 「自動運転バスの実証実験」 are two pool entries on one subject with no shared
-cooldown key, and `20260904_2` drew the first while `20260904_3` drew the second
-**one draw later**, inside a 22-draw window, with every line green
-(`qa-report-20260904_3` F6, filed WON'T FIX at the paper level precisely because
-「no prose edit removes the technology without abandoning the draw」 — the repair
-belongs here). Measured before the edit, per the paragraph above: the shared key
-`自動運転:社会実装` produces **exactly one** new breach, `20260904_3`, whose draw
-(`generated_at` 2026-09-05 02:01:19) predates the key. Cost: one entry in
-`ERRAND_ROTATION_GRANDFATHERED`, landed in the same edit as the key, which
-`prove_grandfather()` re-asserts every run. That is the whole procedure — measure,
-add the key, add the exemptions the measurement names, never reroll a committed
-paper.
-
-**And a key you must NOT add, also measured, also 2026-09-05.**
-`qa-report-20260904_3` F5 filed `reading_topics`' 「健康保険組合からの人間ドック
-補助案内」 against `listening_scenarios`' 「人事部からの健康診断のお知らせ」 — one
-paper, two surfaces, one subject (a staff health screening), both tagged
-睡眠・健康 — and proposed a shared key. **Rejected on two measurements.** (a) A
-`key` is `institution:errand`, and these are two institutions running two
-errands: an insurer changing how a cost is SETTLED, and an HR department saying
-who may READ a result. A shared key there is false data, and false data in the
-index is worse than a missing entry, because `errand_key()` re-reads the whole
-ledger through it. (b) It would not fire anyway:
-`check_spec_errand_rotation()`'s in-paper `seen` map is rebuilt per CATEGORY, so
-a `reading_topics` entry and a `listening_scenarios` entry are never compared,
-whatever keys they carry. What these two share is a SUBJECT, and the subject
-axis does exist — `check_surface_subjects()` compares every `reading_topics` ×
-`listening_scenarios` pair of one spec — but its tokenizer matches maximal kanji
-runs for equality, and 「健康保険組合」 and 「健康診断」 share no maximal run. So
-this is a **whole-paper-pass rule, not a gate rule** (see below); it is written
-into `jlpt-test-generation` §"One topic, one surface" and stays open there
-rather than being closed with a key that is not true.
-
-**What the gate does with it.** `check_pool_errand_keys()` FAILs a blank or
-non-string `key` (drop the field rather than leave it empty — a blank key is an
-identity shared with every other blank one) and WARNs the **effective depth**
-the clusters cost, currently 23 clusters over 27 entries, so `cooldown_for()`'s
-headroom is optimistic by that many. Resolve that by **growing** the pool, never
-by unsharing a key. `check_spec_errand_rotation()` FAILs a draw whose errand a
-paper inside its own cooldown window already drew, across all three keyed
-categories; the papers that already breached it are exempted by name and print
-the same measurement as a WARN — **read the set in
-`tools/check_consistency.py`** (`ERRAND_ROTATION_GRANDFATHERED`) for who and how
-many, and note that each id carries the date of the key that put it in breach,
-which is a different date for `quick_response` than for the two themed
-categories.
-Repair a hit with `sample_items.py --reroll <category>`, never a hand
-substitution (§"Rotation model").
+- **Key it, never re-spell it.** A new phrase naming an errand an existing entry
+  names carries THAT entry's key verbatim. Adding an unkeyed near-duplicate
+  re-opens the hole by construction: the pool grows, the cooldown does not.
+- **Every new phrase carries a key, not only a near-duplicate** (S1,
+  2026-09-04). "No key is its own key" is true of the arithmetic and false of
+  what the gate can SEE: measured over 21 specs, the share of a paper's
+  errand-category draws carrying a key ran **0–9 %**, so
+  `check_spec_errand_rotation()`'s green line described two surfaces while
+  reading as if it covered forty-four. It prints the ratio and WARNs below 50 %
+  (`ERRAND_COVERAGE_MIN`). A one-member cluster costs no pool depth
+  (`check_pool_errand_keys()` counts clusters of 2+) and is what makes the next
+  near-duplicate collide. Do not lower the threshold to clear the line.
+- **Cross-paper cooldown applies** (F1, 2026-08-19). `check_spec_errand_rotation()`
+  once looped the themed pools only, so a 16-draw `quick_response` cooldown was
+  enforced by nothing for 13 papers. It now loops every keyed category
+  (`ERRAND_ROTATION_CATEGORIES`), prints how many keyed draws it compared, and
+  `skip`s a paper whose draws carry no key. Repair a hit with
+  `--reroll-one quick_response:<index>` — one 問題4 item, not eleven.
+- **Never delete a duplicate to solve it.** Shipped papers name those strings in
+  `logs/ledger.json` and `check_draw_provenance()` requires every recorded draw
+  to resolve. Add the key; a shared key is correct data.
+- **The one thing that stops you adding a key: it would retro-FAIL a shipped
+  paper.** `errand_key()` resolves recorded history through the index built off
+  the CURRENT pool, so a key added today re-reads every draw ever made. Usually
+  that is the point; occasionally it puts a committed paper inside its own
+  cooldown. Measure before adding, and write the measurement down (2026-09-05).
 
 ### The four theme rules
 
@@ -637,12 +531,18 @@ binds only the **headline set** = 問題9 cloze, 問題12 A/B (one surface),
 **Rule 5 — VOICE is the third axis, and it is a per-paper quota.** Subject
 (rules 1–4) and closing move (`dokkai.md`) govern *what* a surface is about and
 *how it ends*; neither says what register it is written in, and the corpus
-answered that question with one register in fourteen papers: **です・ます in 0%
-of essay surfaces against official's 30–45%, first-person in 37% against 60–100%,
-kanji density 35.5–41.7% against 25.5–30.1% — a band with no overlap at all**
-(REPORT-DOKKAI.md §F3). Official 読解 passages are excerpts from published
-essays; ours read as policy prose, and that single fact is most of the
-"読解 feels harder than the real thing" complaint.
+answered that with one register across fourteen papers: **です・ます in 0% of
+essay surfaces against official's 30–45%, first-person 37% against 60–100%,
+kanji density 35.5–41.7% against 25.5–30.1%** (REPORT-DOKKAI.md §F3). Official
+読解 passages are excerpts from published essays; ours read as policy prose.
+
+**That was called "most of the 読解-feels-harder complaint" and it is not**
+(corrected 2026-09-07). Re-measured across all 23 papers: kanji density is FLAT
+against generation order (Spearman +0.05) while the paper's share of unfamiliar
+VOCABULARY climbs (+0.72), and the paper with the lowest density of all 23 had
+the fourth-highest novelty. Voice and density are real and stay quotas; the
+dominant axis is lexical load, which has its own gate and its own section —
+`dokkai.md` §"Lexical load". Fix both; do not treat this one as the explanation.
 
 So each of the thirteen surfaces records a **voice** alongside its subject and
 closing move — `一人称随筆` / `評論` / `解説` / `通知` — and the paper's tally must
@@ -652,16 +552,16 @@ reach, over the 12 essay-type surfaces (問題14 excluded):
 |---|---|---|
 | ≥4 surfaces in the **first person** (私/僕/自分) | 60–100%, median 78% | WARN |
 | ≥3 surfaces in **です・ます throughout** | 30.5–45.2% of endings, median 35% | WARN |
-| kanji density per paper **24–32%** | 25.5–30.1%, median 28.4% | FAIL outside 22–34% |
+| kanji density per paper **24.5–31%** | 25.5–30.1%, median 28.4% | WARN outside 24.5–31, FAIL outside 22–34 |
+| novel vocabulary ≤16.5% of kanji-words | 9.7–16.4%, median 11.3 | FAIL above 20 (`dokkai.md` §"Lexical load") |
 | ≥1 surface carrying quoted speech 「…」; ≥1 carrying a 疑問提示文 | 21–51 / 10k, 1–7 / 10k | QA reads it |
 
 Record it in `logs/topics.json` beside the subjects, as a **`voices` map keyed
 by the same surface keys** — `{"問題10(1)": "一人称随筆", "問題11(2)": "評論", …}`.
 That extends the record instead of adding a file (the same argument the rotation
 history makes), and `surfaces` keeps its existing shape so every reader of it
-still works. `make check` WARNs on a paper whose entry has no `voices` map; all
-fourteen papers on disk are in that state, and each leaves it when its surfaces
-are re-authored under this rule. A paper that reaches the length ceiling only by reverting
+still works. `make check` WARNs on a paper whose entry has no `voices` map; a paper leaves
+that state when its surfaces are re-authored under this rule. A paper that reaches the length ceiling only by reverting
 to plain style **fails this rule rather than passing the length one**: です・ます
 prose runs longer for the same content, so author both together
 (`dokkai.md` §"Length bands", §"Axis 3").
@@ -1176,27 +1076,27 @@ not what the rule measures (`qa-report-20260818_1-round2` R2-F2). The sanctioned
 repair now costs one item. **It is still a redraw, not a hand substitution** — the
 index selects WHICH entry leaves, never which entry arrives.
 
-**KNOWN DEFECT — `--reroll-one` is a NO-OP on an entry the pool has never drawn
-before (measured 2026-08-21, `20260821_1` blueprint; NOT yet fixed).**
-`draw()`'s recency weight is `ago(x) + 1` with `ago = 10**9` for a never-used
-item, and the reroll path pops THIS paper's own entry out of the history before
-re-drawing (correctly — its own draw must not count as recent). So the entry you
-just rejected returns to the candidate set as "never used", weight `10**9 + 1`
-against `12–16` for every cooled rival: it is re-picked with probability ≈
-0.99999997. Two of `20260821_1`'s repairs hit this and could not be moved at all
+**FIXED 2026-09-07 — `--reroll-one` used to be a NO-OP on an entry the pool had
+never drawn before.** `draw()` weights by `ago(x) + 1` with `ago = 10**9` for a
+never-used item, and the reroll path pops this paper's own entry out of the
+history before re-drawing (correctly — its own draw must not count as recent).
+So the entry you had just rejected re-entered the candidate set as "never used",
+weight `10**9 + 1` against `12–16` for every cooled rival: re-picked with
+probability ≈ 0.99999997. Two of `20260821_1`'s repairs could not be moved at all
 (`商店街組合:イベント出店の相談`, `テレビ:地域の祭りの紹介` — each redrew ITSELF on
-consecutive fresh seeds), and the same signature is visible in the recorded seed
-strings of earlier papers: `20260819_1` carries `reroll-one(listening_scenarios:16,…)`
-**five times in a row**, `20260814_1` carries `orthography:0` and `orthography:4`
-twice each. A rerolled entry that HAS been drawn before moves normally, and so
-does one whose errand `key` puts it inside the cooldown window — which is why
-adding the missing `key` (§"`key` — the errand identity") is the repair that
-actually works when the reject is a near-duplicate. Proposed fix: exclude the
-replaced entry's own `identity_tokens()` from the candidate set on the
-`--reroll-one` path (a one-line change in the reroll branch, no effect on the
-full-draw RNG stream). Until then: state in the handoff that the entry could not
-be moved, and carry the authoring constraint that keeps it clear of the previous
-papers' surfaces — never hand-substitute a different entry to get around it.
+consecutive fresh seeds), and the signature is in earlier seed strings:
+`20260819_1` carries `reroll-one(listening_scenarios:16,…)` **five times in a
+row**, `20260814_1` carries `orthography:0` and `orthography:4` twice each.
+
+The repair is the one this section had already proposed: the reroll branch now
+adds the replaced entry's own `identity_tokens()` to `taken_text`, so the index
+selects which entry LEAVES and it cannot come back. Verified by three
+consecutive `--reroll-one quick_response:8` runs on fresh seeds, each landing on
+a different entry. The full-draw RNG stream is untouched.
+
+**A rerolled entry can still come back on a LATER paper** — that is the cooldown
+working, not this defect. And adding a missing errand `key` remains the repair
+when the reject is a near-duplicate rather than the same string.
 
 `tests/<test_id>/test_spec.json` is the authoring contract — per section,
 the exact items to test, scenario/topic lists, and the answer-position

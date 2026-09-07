@@ -2325,6 +2325,26 @@ def main():
         taken_text = {tok for c, xs in spec["items"].items() if c != cat
                       for x in xs for tok in taken_tokens(x)}
         taken_text |= {tok for x in kept for tok in taken_tokens(x)}
+        # ...AND THE ENTRY BEING REJECTED (fixed 2026-09-07; the defect was
+        # documented in exam-blueprint §"scripts/sample_items.py — usage" as
+        # "KNOWN DEFECT — --reroll-one is a NO-OP on an entry the pool has never
+        # drawn before" and left unfixed).
+        #
+        # THE MECHANISM: `draw()` weights by `ago(x) + 1`, and `ago` is 10**9
+        # for a never-drawn entry. This path correctly pops the paper's own
+        # entry out of the history first, so the entry you just rejected goes
+        # back into the candidate set as "never used" — weight 10**9 + 1 against
+        # 12–16 for every cooled rival, i.e. re-picked with probability
+        # ~0.99999997. `20260821_1` had two repairs that could not be moved at
+        # all (商店街組合:イベント出店の相談, テレビ:地域の祭りの紹介 — each redrew
+        # ITSELF on consecutive fresh seeds), and the signature is visible in
+        # earlier seed strings: `20260819_1` carries
+        # `reroll-one(listening_scenarios:16,…)` five times in a row.
+        #
+        # The index selects WHICH entry leaves; excluding it is what makes that
+        # true. This is the one-line fix the doc proposed, and it touches only
+        # the reroll-one branch — the full-draw RNG stream is unchanged.
+        taken_text |= set(taken_tokens(replaced))
         # THIS TEST'S OWN ENTRY LEAVES THE HISTORY, not just its rerolled
         # category (F1 fix pass, 2026-08-20). Popping the category alone left
         # the entry occupying a slot, so every `ago` draw() measured was one
