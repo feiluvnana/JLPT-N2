@@ -305,8 +305,25 @@ repairs, so measure `gloss_headwords` before acting:
 
 | shape | signature | repair |
 |---|---|---|
-| **over-glossed** | novel % normal, headwords high (15+) | DELETE the over-cautious （注N） on words an N2 candidate decodes unaided. Raises unglossed and lowers headwords at once. |
-| **genuinely thin** | novel % low, headwords low | put back transparent, UNGLOSSED compounds (面会時間, 見舞客, 談話室, 検温) |
+| **over-glossed** | glossed share of novel tokens above ~34 % | DELETE the over-cautious （注N） on words an N2 candidate decodes unaided. Raises unglossed and lowers headwords at once. |
+| **genuinely thin** | glossed share normal, novel % low | put back transparent, UNGLOSSED compounds (面会時間, 見舞客, 談話室, 検温) |
+
+**Use the glossed SHARE, not the headword count, to tell the shapes apart.**
+`(novel_tokens - unglossed_tokens) / novel_tokens` measures how much of the
+paper's unfamiliar vocabulary is hidden behind footnotes. Official current era
+runs **7.3–34.3 %, median 15.0 %** (measure it with `profile_official("cur")` —
+the era key is `cur`, and a wrong key silently returns all 31 sittings, whose
+range is a useless 3.1–62.5 %). The headword COUNT misses cases: `20260827_2`
+had only 12 headwords, which looked near-median, while 37.5 % of its novel
+tokens sat behind a footnote — over the official maximum. Four deletions plus
+six additions cleared it, where a pure-additions repair would have needed ten
+new compounds and left the gloss share untouched.
+
+No gate check reads this share, deliberately. The floor check already catches
+every paper whose delivered load is actually deficient; a second overlapping
+check would flag papers that clear the floor and are therefore giving the
+reader official-level unglossed vocabulary already. Use the share to choose the
+LEVER when a paper is under the floor, not as an independent defect.
 
 **Never repair a floor breach with more （注N）** — a gloss moves a word into the
 apparatus column, it does not add load.
