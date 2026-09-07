@@ -309,7 +309,29 @@ repairs, so measure `gloss_headwords` before acting:
 | **genuinely thin** | novel % low, headwords low | put back transparent, UNGLOSSED compounds (面会時間, 見舞客, 談話室, 検温) |
 
 **Never repair a floor breach with more （注N）** — a gloss moves a word into the
-apparatus column, it does not add load. Nine of the 23 papers were under the
+apparatus column, it does not add load.
+
+**Deleting a note buys exactly +1 unglossed token — not more.** The headword's
+body occurrence flips from glossed to unglossed, but its copy on the definition
+line vanishes at the same moment, because `（注N）` definition lines sit inside
+the prose `lexical_profile.py` measures. So un-glossing is a weak lever and
+cannot carry a floor repair by itself: on `20260904_1` (2026-09-08), a base of
+16 unglossed at 5509 chars needed ~35 tokens to clear 6.3, and un-glossing all
+16 novel headwords — including the four that plainly earned theirs — topped out
+near 32, about 5.8/1k. The `（注N）` marker floor of 25 then forces each deletion
+to be paired 1:1 with an addition, which cancels the character saving too.
+**Transparent unglossed compounds are the load-bearing lever; un-glossing only
+trims the headword count alongside it.**
+
+**An added marker belongs on a KANA or single-kanji headword.** That satisfies
+the 25-marker floor without spending a gloss-headword slot and without
+subtracting from lexical load — nine of the ten notes added to `20260904_1` cost
+no headword (やりくり, かたよる, 仲たがい, よこす, まかなう, もっともな,
+まちまち, 置き去り …). It is also the official shape: 39 markers carried on 9
+headwords. The opposite move manufactures the over-glossed defect — that paper's
+own earlier fix met the marker floor by swapping ordinary words for "genuinely
+over-level terms" (qa-report-20260904_1 F3), which is exactly how 25 markers
+came to sit on 18 headwords. Nine of the 23 papers were under the
 floor when the check was added on 2026-09-08, four of them over-glossed at
 2.7–6.0/1k against 18–19 headwords: the campaign's lexical repairs had
 systematically overshot, because kana-ising and de-jargoning shrink the
