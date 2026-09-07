@@ -7176,7 +7176,12 @@ def check_topics_shapes_field():
 TOPICS_QUOTE_GRANDFATHERED = {
     "20260810_2": 1, "20260813_2": 1, "20260818_1": 5, "20260819_1": 9,
     "20260821_1": 1, "20260827_2": 6, "20260828_1": 5, "20260828_2": 3,
-    "20260903_1": 2, "20260904_1": 3, "20260904_2": 16,
+    "20260903_1": 2, "20260904_1": 3,
+    # `20260904_2` (16 spans) was REPAIRED on 2026-09-07, not exempted: every
+    # unmatched 「…」 in its row named a rule, a gate message, a pool entry, a
+    # template skeleton or a string one of its own fix passes removed, so all 33
+    # were rewritten to backticks per this check's own convention. It is the only
+    # id to have left this set.
 }
 TOPICS_QUOTE_FIELDS = ("notes", "surfaces", "claim", "shapes")
 TOPICS_QUOTE_FLOOR = 8
@@ -7948,9 +7953,17 @@ Q14_RUN_MAX = 20        # FAIL at or above; see the measurement above
 # 問題14 was reviewed and passed; clearing the entry means re-authoring a shipped
 # 大問 and re-rendering its booklet, which is a decision about that paper, not
 # about this gate. Delete the id when its 問題14 is re-authored.
-Q14_APPARATUS_GRANDFATHERED = {
-    "20260904_2": "24 chars vs 20260904_1: 「受付でお支払いください。駐車場はありませんので、」",
-}
+# Empty on purpose. `20260904_2` was the founding case and was listed here on
+# 2026-09-05; it was REPAIRED on 2026-09-07 instead, which is the only way an id
+# may leave a grandfather set (choukai-items.md §non-dialogue rotation states the
+# rule; `20260903_1` is its precedent). Two edits: the two closing apparatus lines
+# it shared with `20260904_1` almost verbatim (「参加費は当日、受付でお支払いくださ
+# い。」/「駐車場はありませんので、公共の交通機関で…」 — the same lines with one word
+# swapped), and the 問題71 stem tail 「〜さんが会場で支払う金額は、全部でいくらになる
+# か」, which was verbatim in 2 papers and has ZERO archive occurrences. Measured
+# after the repair: longest shared run 15 (refs/), 10 (imported-*), 16 (generated),
+# against a corpus median of 13 and a legitimate max of 19. It passes on merit.
+Q14_APPARATUS_GRANDFATHERED: dict[str, str] = {}
 
 
 def q14_block(text: str) -> str:
