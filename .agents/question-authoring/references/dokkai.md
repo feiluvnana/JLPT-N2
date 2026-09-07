@@ -602,6 +602,37 @@ All figures from `official_calibration.md` §4 — current era, n=7 sittings,
     leak did not exist before round 1's own （注N） repair created it, which is
     the repair-collateral class `exam-qa-review` §5 now names.
 
+### （注N） — a SECOND refuted candidate check (2026-09-07)
+
+`qa-report-20260814_1` F5 proposed making the "do not gloss standard N2
+vocabulary" rule string-decidable, now that `refs/Hajimete/vocab_reference.md`
+gives a flat 2500-word N2 list: **"grep the headword in the three vocabulary
+extracts; a listing in any of them disqualifies it."** It was measured before
+being built, and it is **refuted — do not build it.**
+
+Measured over every 読解 gloss headword on disk against
+`refs/Hajimete/vocab_reference.md` + `refs/Shinkanzen/goi_reference.md` +
+`refs/Soumatome/goi_reference.md`:
+
+| corpus | headwords that ARE textbook entries, per paper |
+|---|---|
+| the 10 official sittings under `tests/imported-*` | **2–9 each** — いざ, 構え, 細菌, つぶやく, 使いこなす, 本能, 腹が立つ, 一切, 配慮, もはや, 認識, 挑戦, 履歴, 余地, 源, 人見知り, 成す, 及ぶ, 一見, 前もって, 心する … |
+| the 23 generated papers | 0–10 each |
+
+Official glosses listed N2 vocabulary two to nine times **in every sitting**,
+because a word being in a vocabulary book does not make it easy IN THAT
+SENTENCE — 一切, もはや, 成す and 心する are all N2 headwords and all worth a note
+where official put one. A rule that fails ten of ten real sittings is refuted,
+and raising the threshold does not rescue it: our own worst paper (10) sits
+inside official's own range.
+
+**So the gloss-band rule stays a reviewer judgment**, supported by the
+BANNED list, the subtraction test (`check_note_band`), the same-paper reuse test
+(`check_note_band_reuse`), and — new, and the one part that IS decidable —
+`check_note_anchored`, which asks whether the definition annotates a word that is
+in its own passage at all. The specific F5 finding (相次ぐ, 受け持つ glossed on
+`20260814_1`) stands as a judgment call; what does not stand is automating it.
+
 ### （注N） — a refuted candidate check, recorded so it is not re-derived
 
 `qa-report-20260904_1` F3 proposed replacing the hand-written BANNED list above
