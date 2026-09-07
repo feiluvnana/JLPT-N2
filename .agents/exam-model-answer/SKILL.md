@@ -1,6 +1,6 @@
 ---
 name: exam-model-answer
-description: Single owner of generating the model answer and comprehensive explanation deliverable (模範解答.html). Generates a complete, interactive, concise explanation document for every question in an exam (71 Language Knowledge & Reading questions + 30-31 Listening questions), in Japanese AND Vietnamese behind an in-page segmented control — the two sets independently written, never translated from one another. Explains why the correct answer is right (with evidence, grammar rules, dictionary definitions, passage quotes, listening script evidence) and why each distractor option is incorrect. Use whenever generating 模範解答.html for a test, updating question explanations, reviewing model answers, or explaining exam solutions.
+description: Single owner of generating the model answer and comprehensive explanation deliverable (模範解答.html). Generates a complete, interactive, concise explanation document for every question in an exam (71 Language Knowledge & Reading questions + 30-31 Listening questions), in Japanese AND Vietnamese behind an in-page segmented control — the two EXPLANATION sets independently written, never translated from one another (the 読解 passage itself is the one field the Vietnamese pane does translate). Explains why the correct answer is right (with evidence, grammar rules, dictionary definitions, passage quotes, listening script evidence) and why each distractor option is incorrect. Use whenever generating 模範解答.html for a test, updating question explanations, reviewing model answers, or explaining exam solutions.
 ---
 
 # Exam Model Answer & Explanation (模範解答・詳細解説)
@@ -315,3 +315,38 @@ make model-answer <id>          # or: make explanation <id>
   (すべて/文字・語彙/文法/読解/聴解); a 1–71 + 聴解 1–30 quick-nav grid; a
   search/filter box; an embedded 聴解 audio player with chapter timestamps;
   print-friendly (`@media print`) and mobile-responsive layout.
+
+## 読解 passages: grouped once, and translated (2026-09-07)
+
+**One passage per GROUP, not per question.** A 問題11 passage carries two items,
+問題13 three, 問題14 two — and every card used to reprint the whole passage, so a
+reader scrolled the same 700 characters four times. `build_model_answer.py` now
+emits the passage box ONCE, before the first card of the group, and no card
+carries it. Grouping is by passage TEXT, not by 大問: 問題10's five passages sit
+in one 大問 and must stay five boxes. A current paper has **13 groups** (問題9 +
+問題10×5 + 問題11×4 + 問題12 + 問題13 + 問題14).
+
+**The Vietnamese pane translates the passage.** The `ja` pane prints the source;
+the `vi` pane prints `passage_translation` from `詳細解説.vi.json`, under the
+heading 「Bản dịch đoạn văn」.
+
+- It lives on the **first item of each group only.** One passage, one
+  translation — a copy on a second item of the same group is a second thing to
+  drift, which is exactly what "詳細解説.json owns the wording" exists to prevent.
+  `make scaffold-explanations <id> LANG=vi` writes the empty slots in the right
+  places.
+- **It does not break the no-exam-wording rule, and the gate says so.**
+  `check_kaisetsu_languages` FAILs a vi item carrying `stem`/`options`/`passage`/
+  `script`, because those are the exam's own wording and it must have exactly one
+  copy. A translation is authored prose ABOUT the passage — the same status as
+  `why_correct` — so it has its own field name and is explicitly excluded from
+  that list. Do not rename it to `passage`.
+- **An empty translation degrades, it does not blank.** The renderer falls back
+  to printing the Japanese source, so a paper mid-authoring still reads.
+  `check_kaisetsu_passage_translation` WARNs on the groups still missing one.
+- It is the one vi field that may be long: the terseness bands cap explanation
+  fields, and a passage translation is not one.
+
+**The result page groups too** — `exam-app`'s `解答.html` shows each 読解 passage
+once above its questions, for the same reason.
+

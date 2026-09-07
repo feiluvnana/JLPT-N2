@@ -603,6 +603,10 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     # A mis-tag is never repaired by moving the tag: the entry is stale prose
     # from an earlier revision, so the item is re-solved and the entry rewritten.
     "kaisetsu_tag_key":               ("詳細解説.json",        "authoring"),
+    # The Vietnamese 読解 passage translation. Repaired in the vi file alone —
+    # the paper is frozen by the time this runs, so it may never be "fixed" by
+    # touching a passage, and it is authoring, not a cut-to-band edit.
+    "kaisetsu_passage_translation":   ("詳細解説.<lang>.json", "authoring"),
     "kaisetsu_language":              ("詳細解説.<lang>.json", "authoring"),
     # The placeholder defect (qa-report-20260904_2): a line still carrying the
     # scaffold's own pre-filled prose. Repaired by re-solving the item and
@@ -11847,6 +11851,13 @@ def check_kaisetsu_languages(test_id: str, ja: dict):
         for key, item in sorted(data.items()):
             if not isinstance(item, dict):
                 continue
+            # `passage_translation` is deliberately NOT in this list (2026-09-07).
+            # The rule these four fields enforce is that the exam's own WORDING
+            # has exactly one copy, in 詳細解説.json, so the two panes cannot
+            # drift. A translation is authored prose about the passage, not the
+            # passage — the same status as `why_correct`. It is the one field of
+            # the vi set that may be long, and it renders in the passage box
+            # rather than the explanation box.
             dupes = [f for f in ("stem", "options", "passage", "script") if f in item]
             if dupes:
                 wording.append(f"{key}({'/'.join(dupes)})")
@@ -11949,6 +11960,57 @@ def check_grandfather_sets_are_live():
 # WARN, not FAIL: the reading has to be right, and a wrong one is a worse defect
 # than a missing one, so this points at work to do rather than blocking on it.
 _VI_POINT_TERM = re.compile(r"[一-龥々]{2,}")
+
+
+def check_kaisetsu_passage_translation(test_id: str, ja: dict):
+    """Every 読解 passage group carries a Vietnamese translation.
+
+    THE REQUIREMENT (2026-09-07): the Vietnamese edition of 模範解答.html
+    translates the 読解 passages, so a learner reading the VI pane reads the
+    passage in Vietnamese instead of falling back to Japanese.
+
+    WHERE IT LIVES: on the FIRST item of each passage group, in
+    `passage_translation`. A passage is shared by 2-3 items and the renderer
+    prints it once per group, so one translation per group is the whole
+    requirement — a copy on a second item of the same group is a second thing to
+    drift, which is the defect `詳細解説.json`-owns-the-wording exists to prevent.
+    `scaffold_explanations.py --lang vi` writes the empty slots in the right
+    places; `build_model_answer.py` falls back to printing the Japanese source
+    when one is empty, so an unauthored translation degrades rather than blanks.
+
+    WARN, not FAIL, while the 23 papers are being repaired: this is new scope
+    across every paper on disk and a FAIL would block repairs that have nothing
+    to do with it. It becomes a FAIL when the corpus is through.
+    """
+    path = ROOT / "tests" / test_id / "詳細解説.vi.json"
+    if not path.is_file() or not ja:
+        return
+    try:
+        vi = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return
+    prev, leaders = None, []
+    for key, item in ja.items():
+        if not isinstance(item, dict):
+            continue
+        text = item.get("passage")
+        if text and text != prev:
+            leaders.append(key)
+        prev = text
+    if not leaders:
+        return
+    missing = [k for k in leaders
+               if not ((vi.get(k) or {}).get("passage_translation") or "").strip()]
+    warn(f"{test_id}: 詳細解説.vi.json translates every 読解 passage "
+         f"({len(leaders) - len(missing)}/{len(leaders)} groups)",
+         not missing,
+         f"{len(missing)} passage group(s) with no `passage_translation`: "
+         f"{', '.join(missing[:10])}{' …' if len(missing) > 10 else ''} — the VI "
+         f"pane falls back to printing the Japanese passage for these. Scaffold "
+         f"the slots with `make scaffold-explanations {test_id} LANG=vi` and "
+         f"translate the passage; it is authored prose, so it does NOT trip the "
+         f"exam-wording rule (exam-model-answer)",
+         slug="kaisetsu_passage_translation", test_id=test_id)
 
 
 def check_kaisetsu_vi_points_furigana(test_id: str):
@@ -12303,6 +12365,7 @@ def check_kaisetsu_prose(test_id: str):
              "stage, and a scaffolded file is legal until it does")
     check_kaisetsu_languages(test_id, ja)
     check_kaisetsu_vi_points_furigana(test_id)
+    check_kaisetsu_passage_translation(test_id, ja)
 
 
 # 模範解答 explains the options the candidate actually saw (G18). 詳細解説.json stores its

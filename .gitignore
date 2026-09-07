@@ -12,6 +12,13 @@ __pycache__/
 
 # Temporary per-question audio cache (auto-deleted on success anyway)
 tests/*/segments/
+# make_choukai_mp3.py's concat intermediate. It is ~113 MB of 24 kHz WAV and it
+# exists only between "concat the shaped segments" and "encode the MP3 once", so
+# a `git add -A` that lands mid-build sweeps it in and GitHub rejects the push at
+# its 100 MB limit (2026-09-07). The MP3 beside it is the deliverable, and it is
+# itself gitignored — the audio ships through the `audio` release (AGENTS.md §3).
+tests/*/_n2_full.wav
+tests/*/*.wav
 
 # PDF text dumps from external-test-import (working cache only)
 tests/*/_extract/

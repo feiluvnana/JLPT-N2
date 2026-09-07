@@ -671,21 +671,21 @@
       "Đông khách có thể khiến đóng sớm cho người chưa đặt trước."
     ],
     "points": [
-      "献血《けんけつ》: hiến máu.",
+      "血液製剤《けつえきせいざい》: chế phẩm máu.",
       "予約《よやく》: đặt trước."
     ]
   },
   "53": {
-    "why_correct": "Trải nghiệm 御朱印 tạo khoảng lặng để rời xa bận rộn thường ngày và nhìn lại bản thân.",
+    "why_correct": "Điều đọng lại không phải dòng chữ đã ghi, mà vài phút đứng lại tìm chữ.",
     "options_analysis": [
-      "Không nói việc đi nhiều nơi để thu thập càng nhiều càng tốt.",
-      "Không nói được nghe sư trụ trì kể lịch sử chi tiết.",
-      "Khoảng lặng để đối diện với chính mình.",
-      "Không nói niềm vui tăng nhờ sưu tập màu mực, màu son."
+      "Bài không nói ghi chép để lưu cảnh chính xác hơn ảnh chụp.",
+      "Bài không nói ghi để sau này tra lại lịch sử, nguồn gốc.",
+      "Vài phút dừng lại đọng lại rõ hơn cả nội dung đã ghi.",
+      "Bài không nói cuốn sổ là công cụ lên lịch trình."
     ],
     "points": [
-      "所作《しょさ》: cử chỉ, dáng điệu.",
-      "向《む》き合《あ》う: đối diện với."
+      "たたずまい: dáng vẻ, không khí của một nơi.",
+      "そっけない: khô khan, thiếu tình cảm."
     ]
   },
   "54": {
@@ -710,8 +710,8 @@
       "Bài nói ngược lại: nghệ thuật gợi nhiều góc nhìn khác nhau."
     ],
     "points": [
-      "見過《みす》ごされがちな: dễ bị bỏ qua.",
-      "思《おも》いこみ: định kiến, suy nghĩ mặc định."
+      "思《おも》いこみ: định kiến, suy nghĩ mặc định.",
+      "ゆさぶる: lay động, làm rung chuyển."
     ]
   },
   "56": {
@@ -728,16 +728,16 @@
     ]
   },
   "57": {
-    "why_correct": "Cây cỏ, côn trùng bản địa lại biến mất khi ánh sáng lọt vào rừng tỉa thưa.",
+    "why_correct": "Cây cỏ, côn trùng vốn có lại biến mất khi ánh sáng lọt vào rừng đã tỉa thưa.",
     "options_analysis": [
-      "Cây cỏ, côn trùng bản địa biến mất sau khi có ánh sáng.",
+      "Cây cỏ, côn trùng vốn có biến mất sau khi có ánh sáng.",
       "Bài không so sánh mức sạt lở giữa hai loại rừng.",
       "Bài nói thực vật tăng tạm thời, không ngừng hẳn.",
-      "Bài không nói đất màu mỡ hơn hay cây ngoại lai khó sống."
+      "Bài không nói đất màu mỡ hơn hay cây từ ngoài vào khó sống."
     ],
     "points": [
       "間伐《かんばつ》: tỉa bớt cây trong rừng trồng.",
-      "繁茂《はんも》: cây cỏ mọc lan rộng."
+      "相次《あいつ》ぐ: xảy ra liên tiếp."
     ]
   },
   "58": {
@@ -750,7 +750,7 @@
     ],
     "points": [
       "湿《しめ》り気《け》: độ ẩm của đất.",
-      "手《て》を入《い》れる: can thiệp, chăm sóc."
+      "人工林《じんこうりん》: rừng do người trồng để lấy gỗ."
     ]
   },
   "59": {
@@ -763,7 +763,7 @@
     ],
     "points": [
       "睡眠《すいみん》負債《ふさい》: nợ ngủ tích lũy.",
-      "錯覚《さっかく》: nhầm tưởng về nhận thức."
+      "高《たか》をくくる: xem thường, đánh giá nhẹ."
     ]
   },
   "60": {
@@ -788,8 +788,8 @@
       "Món ăn kèm gói nhỏ cho người già, sống một mình tăng."
     ],
     "points": [
-      "陳列棚《ちんれつだな》: kệ trưng bày hàng hóa.",
-      "変遷《へんせん》: sự thay đổi theo thời gian."
+      "顔《かお》ぶれ: thành phần, dàn mặt hàng có ở đó.",
+      "品《しな》ぞろえ: chủng loại hàng cửa hàng bày bán."
     ]
   },
   "62": {
@@ -801,8 +801,8 @@
       "Bài không nói sẽ thay thế hoàn toàn siêu thị."
     ],
     "points": [
-      "変貌《へんぼう》: thay đổi hẳn diện mạo.",
-      "安堵感《あんどかん》: cảm giác yên tâm."
+      "よりどころ: chỗ dựa tinh thần.",
+      "ささやか: nhỏ nhẹ nhưng ấm áp."
     ]
   },
   "63": {
@@ -814,8 +814,8 @@
       "Bài không nói nới lỏng tiêu chuẩn tuyển dụng."
     ],
     "points": [
-      "分業化《ぶんぎょうか》: phân chia công việc.",
-      "処遇《しょぐう》: đãi ngộ người lao động."
+      "受《う》け持《も》つ: đảm nhận phần việc của mình.",
+      "なり手《て》: người chịu nhận vai trò, công việc đó."
     ]
   },
   "64": {
@@ -827,7 +827,7 @@
       "Bài không đề xuất giao giáo dục cho cơ sở tư nhân."
     ],
     "points": [
-      "逼迫《ひっぱく》: tình trạng thiếu thốn nghiêm trọng.",
+      "解《と》き放《はな》つ: cởi bỏ ràng buộc, giải phóng.",
       "打《う》ちこむ: dốc sức, toàn tâm vào."
     ]
   },
@@ -879,12 +879,12 @@
       "Bài không nói nâng cao cảnh quan hay đạo đức lái xe."
     ],
     "points": [
-      "蛇行《だこう》: đường uốn khúc.",
+      "クランク: đoạn đường bẻ gấp khúc cố ý.",
       "余儀《よぎ》なくされる: bị buộc phải."
     ]
   },
   "69": {
-    "why_correct": "Xã hội cần dựng sẵn đường không thể lái nguy hiểm, vì người vốn hay bỏ sót.",
+    "why_correct": "Xã hội cần dựng sẵn đường không thể lái nguy hiểm, vì người ta vốn hay lơ đãng.",
     "options_analysis": [
       "Bài không chủ trương tăng hình phạt hay siết kiểm soát.",
       "Bài không đặt giáo dục đạo đức trước biện pháp công trình.",
@@ -892,8 +892,8 @@
       "Bài không chủ trương cấm hoàn toàn xe lưu thông."
     ],
     "points": [
-      "危険《きけん》な運転《うんてん》: lái xe nguy hiểm.",
-      "注意義務《ちゅういぎむ》: trách nhiệm chú ý."
+      "ゆだねる: phó thác toàn bộ cho phía kia.",
+      "取《と》りつける: thương lượng để có được sự đồng ý."
     ]
   },
   "70": {

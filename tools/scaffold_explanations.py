@@ -257,6 +257,19 @@ def scaffold_secondary(test_dir: Path, existing: dict) -> dict:
     ja = json.loads(ja_path.read_text(encoding="utf-8"))
 
     out = {}
+    # A 読解 passage is shared by 2-3 items, and 模範解答.html now renders it ONCE
+    # per group. Its translation is scaffolded on the group's FIRST item only, so
+    # the passage has exactly one translation the way it has exactly one source —
+    # `passage_translation` on any other item of the group would be a second copy
+    # to drift (2026-09-07).
+    prev_passage = None
+    leaders = set()
+    for key, ja_item in ja.items():
+        text = ja_item.get("passage")
+        if text and text != prev_passage:
+            leaders.add(key)
+        prev_passage = text
+
     for key, ja_item in ja.items():
         prev = existing.get(key, {})
         n_opts = len(ja_item.get("options_analysis") or ja_item.get("options") or []) or 4
@@ -268,6 +281,10 @@ def scaffold_secondary(test_dir: Path, existing: dict) -> dict:
             "options_analysis": analysis,
             "points": prev.get("points", []),
         }
+        if key in leaders:
+            # Empty means "not written yet" — the renderer falls back to the
+            # Japanese source rather than printing a blank box.
+            out[key]["passage_translation"] = prev.get("passage_translation", "")
     return out
 
 

@@ -103,6 +103,7 @@ UI = {
         "tab_choukai": "聴解",
         "search_placeholder": "問題番号・キーワード検索...",
         "passage_title": "本文 / 資料",
+        "passage_tr_title": "本文の訳",
         "script_title": "音声スクリプト",
         "play_btn": "音声再生",
         "audio_label": "聴解音声",
@@ -134,6 +135,7 @@ UI = {
         "tab_choukai": "Nghe",
         "search_placeholder": "Tìm theo số câu hoặc từ khoá...",
         "passage_title": "Đoạn văn / Tư liệu",
+        "passage_tr_title": "Bản dịch đoạn văn",
         "script_title": "Lời thoại audio",
         "play_btn": "Phát audio",
         "audio_label": "Audio phần nghe",
@@ -1259,6 +1261,7 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
     n_gengo = n_goi + n_bunpou + n_dokkai
     n_choukai = len(canonical_choukai_keys) or len(choukai_exps) or 30
     n_all = n_gengo + n_choukai
+    prev_passage_text = None
     for tax_key, tax_info in gengo_tax.items():
         sec_name = tax_info["section"]
         sec_code = "goi" if sec_name == "文字・語彙" else ("bunpou" if sec_name == "文法" else "dokkai")
@@ -1287,14 +1290,38 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
             stem_text = apply_furigana(raw_stem)
             raw_opts = detail.get("options") or raw_q.get("options") or [f"選択肢 {i}" for i in range(1, 5)]
             options = [apply_furigana(opt) for opt in raw_opts]
+            # ONE passage per GROUP, not per question (2026-09-07). A 問題11
+            # passage carries two items and 問題13 three, and each card used to
+            # reprint the whole passage — the reader scrolled past the same 700
+            # characters four times. Consecutive questions whose passage text is
+            # byte-identical are one group: the box is emitted once, before the
+            # first card, and no card carries it. Grouping by TEXT rather than by
+            # 大問 is deliberate — 問題10's five passages sit in one 大問 and must
+            # stay five boxes.
             passage_html = ""
             passage_text = detail.get("passage") if "passage" in detail else raw_q.get("passage")
-            if passage_text:
-                passage_html = (
-                    '<div class="passage-box">'
-                    '<div class="passage-title">'
-                    + pane(langs, lambda lg: UI[lg]["passage_title"])
-                    + f'</div>{format_passage_text(passage_text)}</div>')
+            if passage_text and passage_text != prev_passage_text:
+                # The Vietnamese pane translates the passage; the Japanese pane
+                # prints it. `passage_translation` lives in 詳細解説.vi.json on
+                # the group's FIRST item — it is authored prose, not the exam
+                # wording 詳細解説.json owns, which is why it has its own field
+                # name and does not trip check_kaisetsu_languages' paste rule.
+                def _passage_pane(lg, _txt=passage_text, _q=q_num):
+                    if lg == "ja":
+                        return (f'<div class="passage-title">{UI[lg]["passage_title"]}</div>'
+                                + format_passage_text(_txt))
+                    tr = ((details.get(lg) or {}).get(str(_q)) or {}).get("passage_translation")
+                    if not tr:
+                        # No translation authored yet: show the source rather
+                        # than an empty box, so the pane never goes blank.
+                        return (f'<div class="passage-title">{UI[lg]["passage_title"]}</div>'
+                                + format_passage_text(_txt))
+                    return (f'<div class="passage-title">{UI[lg]["passage_tr_title"]}</div>'
+                            + format_passage_text(tr))
+                content_blocks.append(
+                    f'<div class="passage-box passage-group" data-section="{sec_code}">'
+                    + pane(langs, _passage_pane) + '</div>')
+            prev_passage_text = passage_text
 
             opt_items_html = []
             for i, opt in enumerate(options, 1):

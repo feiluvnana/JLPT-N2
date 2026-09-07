@@ -123,7 +123,7 @@ Inside `tests/<test_id>/` — this table is the single copy; skills point here:
 | Combined Grading Result              | `採点結果.json`                        | Generated on submit from `解答.html` or written by `grade_answers.py`. There is no Markdown report — the result is data, read back by the result screen and by the test list |
 | Model Answer & Detailed Explanation  | `模範解答.html`                        | Comprehensive model answer and explanation document for all 101 items, rendered by `build_model_answer.py` |
 | Model Answer Explanations (JA)        | `詳細解説.json`                        | Hand-authored per-item explanations — the source `模範解答.html` renders (`exam-model-answer`). Also the ONE copy of the exam wording (`stem`/`options`/`passage`/`script`) both language panes print |
-| Model Answer Explanations (VI)        | `詳細解説.vi.json`                     | The Vietnamese pane. Prose only — no exam wording — and **written from the items, never translated** from `詳細解説.json` (`exam-model-answer`) |
+| Model Answer Explanations (VI)        | `詳細解説.vi.json`                     | The Vietnamese pane. Explanations are **written from the items, never translated** from `詳細解説.json` (`exam-model-answer`). It carries no exam wording, with ONE deliberate exception: `passage_translation`, the Vietnamese rendering of a 読解 passage, on the FIRST item of each passage group |
 | Import provenance (imported only)    | `import_meta.json`                     | Written by `external-test-import` for `tests/imported-<slug>/` only — generated tests must not have this file |
 
 ---
