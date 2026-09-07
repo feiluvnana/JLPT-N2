@@ -580,6 +580,10 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     # re-choosing what the surface is about, so it is a surface re-author, and
     # `make repair-plan` must not offer it as a prose edit.
     "dokkai_lexical_load":            ("<surface re-author>",  "authoring"),
+    # An orphan gloss is repaired in the note or the prose it should point at —
+    # a cell edit, but never mechanical: the replacement has to be a word the
+    # passage actually uses and actually needs explaining.
+    "note_anchored":                  ("passage prose",        "assisted"),
     "dokkai_lexical_load_warn":       ("<surface re-author>",  "authoring"),
     # 聴解 volume. The script is the artifact and the MP3 follows it, so a
     # repair here always costs `make mp3` — which is why the tier is authoring
@@ -3232,6 +3236,80 @@ def check_chuuryaku(name: str, body: str):
     check(f"{name}: 読解 cuts at least one passage with （中略） ({inside} in-passage)",
           inside >= 1,
           "official 中文/長文 cut with （中略）; generated tests shipped none")
+
+
+NOTE_ANCHOR_WARN = 1
+NOTE_ANCHOR_FAIL = 2
+
+
+def _note_headword_anchor(head: str) -> str:
+    """The headword's leading CONTENT word — what a reader scans the passage for.
+
+    Matching the whole headword does not work, and that is measured, not assumed:
+    official glosses the DICTIONARY form of a word the passage inflects
+    (「費やす」 for 費やして, 「こびりつく」 for こびりついた, 「躍起になる」 for
+    躍起になって), so a whole-string test reports 3-12 orphans on every one of the
+    ten imported sittings. Dropping an inflectional tail is not enough either —
+    multi-word headwords (念頭に置く, 目算が立つ, 眠けを催す) rearrange. The leading
+    kanji run is the part that survives all of it.
+    """
+    head = re.sub(r"^[〜～]|[〜～]$", "", head).strip()
+    head = re.sub(r"（.*?）|\(.*?\)", "", head)
+    m = re.match(r"[一-鿿]{2,}|[ァ-ヶー]{3,}", head) or re.match(r"[一-鿿]", head)
+    return m.group(0) if m else head[: max(2, int(len(head) * 0.6))]
+
+
+def check_note_anchored(name: str, body: str):
+    """A （注N） definition annotates a word that is IN its own passage.
+
+    THE HOLE (found 2026-09-07, by a repair agent, not by this file).
+    `check_note_pairing` below claims in its own docstring to catch "a paper that
+    has defined 格段/精神論/屋上緑化 for passages that no longer contain them" —
+    but it only compares the NUMBERS 注1..注N on both sides. A definition line
+    reading 「（注1）指標：…」 paired with a 「（注1）」 marker sitting on the word
+    目安 passes it: the numbers match and the headword annotates nothing.
+
+    `20260814_1` shipped **18 of its 34 definition lines** in that state — the
+    prose had been simplified at some point and the notes were never re-derived,
+    so 18 of its 29 gloss headwords were pure apparatus inflation. That matters
+    twice over now: the （注N） floor was being met by notes annotating nothing,
+    and `check_dokkai_lexical_load` CREDITS a glossed word as explained.
+
+    Measured with the anchor above: the ten imported official sittings run 0-1
+    per paper (two carry one each, 生態学 and 飼育下, where the passage prints the
+    stem without its suffix). Generated papers run up to 12.
+    """
+    bad = []
+    for n in (9, 10, 11, 12, 13, 14):
+        sec = dokkai_section(body, n)
+        if not sec:
+            continue
+        for i, sc in enumerate(passage_scopes(sec, n), 1):
+            lines = sc.splitlines()
+            prose = "\n".join(l for l in lines if not NOTE_DEF.match(l))
+            for l in lines:
+                m = NOTE_DEF.match(l)
+                if not m:
+                    continue
+                head = (m.group(2) or "").strip()
+                a = _note_headword_anchor(head)
+                if head and a and a not in prose:
+                    bad.append(f"問題{n}({i}):「{head}」")
+    detail = (f"{len(bad)} definition line(s) annotate a word their own passage "
+              f"does not contain: {', '.join(bad[:8])}"
+              f"{' …' if len(bad) > 8 else ''} — the （注N） count is then met by "
+              f"notes explaining nothing, and `check_dokkai_lexical_load` credits "
+              f"the glossed word as explained. Re-point each note at an "
+              f"over-level word actually in the prose, or delete it and lengthen "
+              f"the passage until it needs a real one — never gloss down to a "
+              f"number (dokkai.md §（注N）). Official runs 0-1 per paper")
+    check(f"{name}: every （注N） definition annotates a word in its own passage "
+          f"({len(bad)} orphan(s))",
+          len(bad) <= NOTE_ANCHOR_FAIL, detail,
+          slug="note_anchored", test_id=name)
+    warn(f"{name}: （注N） orphan count at official's own ceiling",
+         len(bad) <= NOTE_ANCHOR_WARN, detail,
+         slug="note_anchored", test_id=name)
 
 
 def check_note_pairing(name: str, body: str):
@@ -13865,6 +13943,7 @@ def check_tests():
         check_dokkai_span_anchor_bold(gengo.name, gengo_prose)
         check_dokkai_span_anchor_identity(gengo.name, gengo_prose)
         check_note_pairing(d.name, gengo_prose)
+        check_note_anchored(d.name, gengo_prose)
         check_note_answer_leak(d.name, gengo_prose, keys, opts)
         check_note_band(d.name, gt, origin)
         check_note_band_reuse(d.name, gt, st_text, origin)

@@ -559,6 +559,15 @@ All figures from `official_calibration.md` §4 — current era, n=7 sittings,
 ## （注N） glosses
 
 - **Pairing is 1-to-1 per passage, both directions** — every definition line annotates a word actually in that passage's body, and every in-body marker has a definition line.
+  **Both halves are gated now, and they were not.** `check_note_pairing` compares
+  only the NUMBERS 注1..注N, so 「（注1）指標：…」 paired with a 「（注1）」 marker
+  sitting on 目安 passed it — the numbers match and the headword annotates
+  nothing. `20260814_1` shipped **18 of its 34 definition lines** that way, which
+  made 18 of its 29 gloss headwords apparatus inflation. `check_note_anchored`
+  now measures it: official runs **0–1 orphans per paper**, FAIL above 2.
+  It matches on the headword's leading kanji run, because official glosses the
+  DICTIONARY form of a word the passage inflects (「費やす」 for 費やして) and a
+  whole-string test reports 3–12 orphans on every real sitting.
 - **Count in-body markers**: gate WARNs below 25 in-body glosses (`GLOSS_MARKER_MIN`). **Author to the band**: current-era band 27–61/paper, median 39, target ~30–40.
 - **25 is a floor on OVER-LEVEL glosses, not on 「（注N）」 strings.** A word the
   official papers print bare is not a gloss for this count, and padding the
