@@ -108,75 +108,45 @@ defect through.
     or from an `imported-*` paper** (`jlpt-test-generation` §Invariants:
     reference material is calibration only) — check against imported papers
     directly, not just test-against-test. **A RE-AUTHORED surface's provenance
-    scan must be re-run against `refs/` and `tests/imported-*`, because the scan
-    that cleared the pre-fix text is evidence about text that no longer
-    exists.** A round-1 finding of this class names a threshold against the
-    previous GENERATED papers, and a fix pass will meet exactly the threshold it
-    was given: `20260904_3`'s 問題14 was re-authored to clear a
-    near-verbatim-vs-`20260904_1`/`_2` automatic fail, measured 10 chars against
-    both — and landed on official 7/2025's 問題14 (`tests/imported-n2-2025-07`),
-    reproducing its five-course ①〜⑤ 公開講座 notice, its one-course-without-実習
-    device, its 定員+抽選, its 受付期間 split at ①② / ③④⑤, its
-    past-the-deadline-until-N-days-before-開講-phone-to-check late route, both
-    stems (「〜さんはどのように申し込まなければならないか」, 21 chars verbatim,
-    against 10–13 for every other paper on disk) and its Q71 date × method
-    option grid. **The string run is the trigger, never the verdict** — a stem
-    SHAPE shared with official is legitimate; what fails is the apparatus,
-    and none of those seven coincidences is string-decidable. Round 2 of a
-    fixed paper owns this scan for every surface the fix pass rewrote
-    (`qa-report-20260904_3-round2.md` F1). For **問題14 specifically** the gate
-    now runs the three-corpus scan for you —
-    `check_q14_apparatus_reuse()` FAILs a shared run of 20+ characters against
-    the previous two generated papers, every `tests/imported-*` and every
-    `refs/JLPT_N2_NEW/*/booklet.md` (`dokkai.md` §問題14 carries the corpus
-    measurement: baseline median 13, legitimate max 19, the two founding cases
-    24 and 21). Green there still is not a clearance, for the reason in the
-    previous sentence, and no other 大問 has such a scan — those you run;
+    scan must be re-run**, because the scan that cleared the pre-fix text is
+    evidence about text that no longer exists. A round-1 finding of this class
+    names a threshold against the previous GENERATED papers, and a fix pass
+    meets exactly the threshold it was given: `20260904_3`'s 問題14 was
+    re-authored to clear a near-verbatim-vs-`20260904_1`/`_2` fail, measured 10
+    chars against both — and landed on official 7/2025's 問題14, reproducing its
+    五-course 公開講座 notice, 定員+抽選, 受付期間 split, phone-to-check late route
+    and a 21-char stem run (`qa-report-20260904_3-round2` F1). **The string run
+    is the trigger, never the verdict** — a stem SHAPE shared with official is
+    legitimate; the apparatus is not, and none of those coincidences is
+    string-decidable. For **問題14 only**, `check_q14_apparatus_reuse()` runs the
+    three-corpus scan for you (previous two generated papers, every
+    `tests/imported-*`, every `refs/JLPT_N2_NEW/*/booklet.md`; FAILs a shared run
+    of 20+ chars — `dokkai.md` §問題14 carries the measurement). Green there is
+    still not a clearance, and no other 大問 has such a scan — those you run;
 
   - **a surface's `theme` in `test_spec.json` disagreeing with the same
-    surface's `theme` in `logs/topics.json` WHERE `topics.json` relieves a
-    quota or headline collision that the spec value creates** — a relabel in
-    one file that dodges a collision without re-authoring or updating the other
-    hides the collision instead of resolving it (`20260813_1`'s 問題13
-    precedent). Decide it by counting, not by spotting the disagreement: tally
-    the themes under each file's values and see whether the `topics.json`
-    tagging is what brings a per-theme count inside its cap or takes a surface
-    out of the headline set. If both tallies comply, the disagreement is a
-    **`要修正` bookkeeping desync**, not an automatic fail — §5 *instructs* you
-    to distrust the spec's theme and re-tag from the shipped text, so a paper
-    that follows §5 honestly will routinely disagree with a stale pool tag
-    (`20260821_1`'s 聴解問題2-3番/2-6番 precedent: neither relabel moved any
-    count, both files were simply out of sync with a wrong `pools.json` tag).
-    Then record the divergence — do NOT reconcile it by moving a `theme` value
-    and do NOT edit `pools.json`. On the spec entry **and** the byte-identical
-    ledger entry, keep the drawn `scenario`/`topic` string untouched
-    (`recency_map()` keys on it) and keep `theme` at the value the sampler drew
-    (the ledger is a record of the DRAW), then add three fields:
-    `"shipped_theme"`, `"shipped_surface"` and a `"note"` saying, with the
-    deciding line quoted, why the pool tag does not describe the authored
-    surface. One paper's surface drifting off a tag is a record-keeping fact
-    about that paper, not a pool defect. **`check_theme_record_agreement()`
-    reads ONE of the three** — it joins each spec/ledger row to its
-    `topics.json` surface, FAILs on a disagreement with no `"note"`, and goes
-    silent once the note is there. `shipped_theme`, `shipped_surface`, and the
-    requirement that the note QUOTE the deciding line rather than describe it,
-    are read by this pass and by nothing else: check them off the row by hand.
-    This paragraph said "reads exactly this" until 2026-09-04, i.e. it asserted
-    a three-field contract the predicate never had, and the drift was found the
-    only way it could be — by a reviewer reading the check
-    (`qa-report-20260903_1-round2.md` §5, the trailing note). `20260821_1` is
-    the sole paper on disk carrying `shipped_surface`; `20260903_1`'s 市役所 row
-    carries `shipped_theme` + a note that describes rather than quotes, and
-    passes. **Do not "resolve" this by dropping a field** — the three-field
-    record is the authoring requirement, and the gap is in what the gate can
-    see. Gating the other two is a live proposal, not a done deal: it would
-    newly WARN every paper on disk that recorded a divergence under the
-    one-field predicate, so it is taken as a deliberate widening (§6.5's
-    re-run-and-state rule), not as a silent tightening. That check exists because this bullet
-    previously ended in a prose sync instruction that nothing read: round 1 of
-    `20260821_1` filed the desync, the rule was rewritten, and round 2 measured
-    that not one byte had moved in either file (NF-4). Prose no check reads is
-    prose that does not run;
+    surface's `theme` in `logs/topics.json` WHERE `topics.json` relieves a quota
+    or headline collision the spec value creates** — a relabel in one file that
+    dodges a collision without re-authoring hides it. **Decide it by counting,
+    not by spotting the disagreement:** tally the themes under each file's
+    values and see whether the `topics.json` tagging is what brings a count
+    inside its cap. If both tallies comply it is a `要修正` bookkeeping desync,
+    not an automatic fail — §5 *instructs* you to re-tag from the shipped text,
+    so an honest paper routinely disagrees with a stale pool tag
+    (`20260813_1` 問題13 is the collision case; `20260821_1` 聴解問題2-3番/2-6番
+    the benign one).
+    **Record, never reconcile:** keep the drawn string and the drawn `theme`
+    untouched in spec AND ledger (`recency_map()` keys on the string; the ledger
+    records the DRAW), and add `"shipped_theme"`, `"shipped_surface"` and a
+    `"note"` that QUOTES the deciding line. `check_theme_record_agreement()`
+    reads only the note's PRESENCE — the other two fields and the quote
+    requirement are read by this pass and nothing else, so check them off by
+    hand. Do not "resolve" this by dropping a field: the three-field record is
+    the authoring requirement and the gap is in what the gate can see. (This
+    paragraph asserted a three-field predicate the check never had until
+    2026-09-04, found by a reviewer reading the check —
+    `qa-report-20260903_1-round2` §5.)
+
   - **a headline theme (問題9/12/13/14/聴解問題5-1番/聴解問題5-2番) repeating the
     immediately-previous test's headline theme in ANY slot** —
     `exam-blueprint` rule 4's zero-tolerance clause, unchecked by any script.
@@ -226,57 +196,37 @@ defect through.
   original draws through a whole QA pass — a mismatch a same-file re-review
   cannot see, because it's BETWEEN files.
 - **The same fix must also update every relevant field in that surface's OWN
-  `logs/topics.json` entry** — the row's keys, which are
-  **`surfaces`, `themes`, `closing_moves`, `voices`, `claim`, `persona`,
-  `shapes`, `notes`** (read them off the row). **Two of those columns are
-  CLOSED vocabularies and the gate says so**: `themes` (`level_data.THEMES`)
-  and, since 2026-09-05, `closing_moves` — the six shapes plus 実用文・分類外,
-  owned by `dokkai.md` and enforced by
-  `check_topics_closing_moves_vocabulary()`. `20260904_2` invented three
-  closing labels (対比整理 ×2, 留保つき提示, 両面提示); its closings were
-  defensible and its RECORD was false, which is the more expensive half,
-  because this row is what the next paper's blueprint stage diffs against. If a
-  re-derived tally puts a shape at 3, re-read those three final sentences —
-  never invent a label to make it fit.
-  **Correction, 2026-09-03:** this bullet briefly claimed "no row on disk has
-  ever had a `shapes` key". That measurement was wrong — `shapes` (each 聴解
-  item's errand shape, 33 entries) was present on **16 of the 20 rows**, on
-  every paper through `20260827_1`; four papers had dropped it, silently,
-  because no gate check read it. Deleting it from this
-  list would have ratified that drift instead of catching it, so it is restored:
-  `exam-blueprint` §"`logs/topics.json`" and `jlpt-test-generation` §stage 3
-  both still require the field, and the errand-archetype rule ("two 聴解 items
-  may not run the same errand, and archetypes must not repeat within the last
-  two tests") has no other data to read. `20260903_1`'s row was then filled in
-  from its shipped 聴解 (17 of 20), and `check_topics_shapes_field()` now reads
-  the field, so the drift cannot recur silently: the three rows still empty are
-  named in `TOPICS_SHAPES_DRIFT_GRANDFATHERED` and WARN, any other id FAILs.
-  Verify a field's presence by grepping
-  the rows, never from a claim about them — including this one.
-  `20260817_1` updated
-  `surfaces`/`themes` and left the closing-shape field describing the discarded
-  pre-fix draw; no check compares it against `surfaces`. Update all of them
-  together.
-  **`surfaces` and `claim` are verifiable against the item, and must be
-  verified — not only `notes`.** Both are one-line prose retellings of what
-  shipped, and a retelling can invert the item while every gate stays green:
-  `20260903_1` recorded 聴解問題5-2番 as 「男は太陽の観察会・女は星座の解説会」 and
-  「太陽の観察会は男が、席を譲った女は…星座の解説会を選ぶ」 when the script has the
-  woman take 太陽 (「私が太陽の観察会に申し込むね」) and the man take 星座 (「じゃあ、
-  星座の解説会にするよ」) — the two people swapped, in the file the next paper's
-  blueprint reads, with the KEYS correct and `notes` correct. Re-read each
-  `surfaces`/`claim` line against the item's own deciding lines, naming who did
-  what; a row whose actors are reversed is a false record even when no count
-  moves.
-  **`notes` is verifiable, and must be verified: every claim in `notes` that
-  quotes a paper string must quote a string that is still in the paper.** The
-  four-field list above stood until 2026-08-19, so `notes` was the one field
-  nobody re-read — `20260817_3` shipped a note saying 「願ってもない is a printed
-  distractor at 問題9-51」 (0 occurrences after the fix) and another saying the
-  聴解問題2-2番 key still shared 「よそ」 with the script (0 occurrences).
-  `notes` is the hand-off the NEXT paper's blueprint stage plans around; a note
-  naming an artifact the fix removed is worse than no note. `grep` each quoted
-  string before you leave it there.
+  `logs/topics.json` entry.** The row's keys are **`surfaces`, `themes`,
+  `closing_moves`, `voices`, `claim`, `persona`, `shapes`, `notes`** — read them
+  off the row, and verify each is PRESENT by grepping rather than from any claim
+  about them, including this one. (`shapes` was missing from four rows for weeks
+  because no check read it; a 2026-09-03 note in this file wrongly said no row
+  had ever carried it. `check_topics_shapes_field()` reads it now — three empty
+  rows are named in `TOPICS_SHAPES_DRIFT_GRANDFATHERED` and WARN, any other id
+  FAILs.)
+  - **Two columns are CLOSED vocabularies and the gate says so**: `themes`
+    (`level_data.THEMES`) and `closing_moves` (the six shapes plus 実用文・分類外,
+    owned by `dokkai.md`, enforced by
+    `check_topics_closing_moves_vocabulary()`). `20260904_2` invented three
+    labels (対比整理 ×2, 留保つき提示, 両面提示): its closings were defensible and its
+    RECORD was false, which is the more expensive half, because this row is what
+    the next paper's blueprint diffs against — and, since 2026-09-07, what
+    `used_subjects_by_theme()` builds the next draw's `avoid` list from. If a
+    re-derived tally puts a shape at 3, re-read those three final sentences;
+    never invent a label to make it fit.
+  - **`surfaces` and `claim` are verifiable against the item, and must be** —
+    both are one-line retellings, and a retelling can invert the item while every
+    gate stays green. `20260903_1` recorded 聴解問題5-2番 with the two speakers
+    swapped (the script has the woman take 太陽, the man 星座), keys correct,
+    `notes` correct. Re-read each line against the deciding lines, naming who did
+    what.
+  - **Every claim in `notes` that quotes a paper string must quote a string
+    still in the paper.** `notes` was the one field nobody re-read until
+    2026-08-19: `20260817_3` shipped notes citing 「願ってもない」 and 「よそ」, both
+    at 0 occurrences after its own fix. `grep` each quoted string before leaving
+    it there. `20260817_1` updated `surfaces`/`themes` and left the closing-shape
+    field describing the discarded draft — update all of them together.
+
 - **The reviewer does not negotiate the bar** — no waiving a rule because the
   test is "mostly fine" or the deadline is close. Propose a change in the
   report if a rule seems wrong; apply it as written to this test.
