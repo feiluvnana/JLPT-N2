@@ -728,16 +728,16 @@
     ]
   },
   "57": {
-    "why_correct": "Nguyên nhân xa cách: gia đình cùng đi làm tăng và muốn không bị can thiệp đời tư.",
+    "why_correct": "Bài nêu hai nguyên nhân: vợ chồng cùng đi làm tăng, và ngại bị can thiệp đời tư.",
     "options_analysis": [
-      "Camera an ninh làm tập tục cũ không cần thiết — suy diễn sai.",
-      "Không có quy định cấm giao lưu nào được nhắc.",
-      "Bài không so sánh mức ảnh hưởng hai nguyên nhân kiểu này.",
-      "Khớp: hai nguyên nhân đúng như bài nêu."
+      "Camera, dự họp thay có nhắc nhưng không phải nguyên nhân.",
+      "Không có quy định nào cấm cư dân qua lại.",
+      "Bài không xếp thiếu dịch vụ trên ý muốn ẩn danh.",
+      "Khớp: cùng đi làm và ngại bị can thiệp đời tư."
     ],
     "points": [
-      "Đọc nhân quả trong xã luận: chỉ chọn đúng nguyên nhân đã liệt kê.",
-      "疎遠化《そえんか》: quan hệ nhạt dần, xa cách."
+      "干渉《かんしょう》: xen vào chuyện người khác.",
+      "匿名性《とくめいせい》: tính ẩn danh, không lộ tên."
     ]
   },
   "58": {
@@ -754,68 +754,68 @@
     ]
   },
   "59": {
-    "why_correct": "Mức công khai lý do không tiết lộ tùy quyền quyết định (裁量) người phụ trách từng cơ quan.",
+    "why_correct": "Cho xem hay không tùy quyền tự quyết của người phụ trách từng phòng.",
     "options_analysis": [
-      "Số đơn yêu cầu theo dân số không được đề cập.",
-      "Khớp: mức công khai tùy quyền quyết định người phụ trách.",
-      "Bài không nói luật riêng địa phương quyết định thời hạn.",
-      "Số nhân viên phụ trách không được nhắc."
+      "Số đơn nhiều ít theo dân số không được nhắc tới.",
+      "Khớp: mức giải thích lý do tùy người phụ trách.",
+      "Bài không nói luật địa phương định ra thời hạn.",
+      "Số nhân viên của phòng phụ trách không được nhắc."
     ],
     "points": [
-      "裁量《さいりょう》: quyền tự quyết trong phạm vi cho phép.",
-      "恣意的《しいてき》: tùy tiện theo ý riêng."
+      "裁量《さいりょう》: phạm vi tự mình quyết định.",
+      "うやむや: để lấp lửng, không làm cho rõ."
     ]
   },
   "60": {
-    "why_correct": "Cơ quan xem xét kỹ lý do quyết định thì ít bị khiếu nại hơn.",
+    "why_correct": "Có khảo sát: cơ quan xem xét kỹ lý do quyết định thì ít bị người dân khiếu nại.",
     "options_analysis": [
-      "Bài không nói số đơn yêu cầu giảm đi.",
-      "Bài khẳng định có khác biệt rõ tùy cơ quan, trái「không đổi」.",
-      "Khớp: xem xét kỹ thì ít bị khiếu nại.",
-      "Bài không nói cơ quan làm ẩu quyết định nhanh hơn."
+      "Bài không nói giải thích kỹ thì số đơn giảm đi.",
+      "Ngược bài: chỉnh đốn bộ máy thì khiếu nại giảm.",
+      "Khớp: xem xét kỹ lý do thì ít bị khiếu nại.",
+      "Làm qua loa thì bị lặp đơn, không nhanh hơn."
     ],
     "points": [
-      "Đọc quan hệ tỉ lệ: chú ý cụm「càng... thì càng...」.",
-      "精査《せいさ》する: xem xét kỹ lưỡng."
+      "精査《せいさ》: xem xét kỹ từng chi tiết.",
+      "おざなり: làm qua loa cho xong."
     ]
   },
   "61": {
-    "why_correct": "Thực tế trái lo ngại ban đầu: ngừng bay ngày xấu trời khiến độ trễ giao hàng giảm.",
+    "why_correct": "Trái lo ngại: có mái và ghế nên chờ không bị ướt, người đi lại tăng.",
     "options_analysis": [
-      "Đúng dự đoán ban đầu, nhưng thực tế ngược lại (trễ giảm).",
-      "Bài không nói về khu đô thị trong đoạn này.",
-      "Việc tăng phí vận chuyển không được đề cập.",
-      "Khớp: chủ động ngừng bay, độ trễ giảm."
+      "Kết quả ngược dự đoán, không giữ nguyên như cũ.",
+      "Ngày mưa thành chờ được, người dùng không giảm.",
+      "Nơi nhiều người bỏ xe riêng thì giảm chậm lại.",
+      "Khớp: chờ đỡ vất vả nên người đi xe buýt tăng."
     ],
     "points": [
-      "Đối chiếu「dự đoán ban đầu」và「thực tế xảy ra」.",
-      "誤算《ごさん》: tính toán sai, ngoài dự tính."
+      "うらはら: hoàn toàn trái với dự đoán.",
+      "見込《みこ》み違《ちが》い: tính trước lệch thực tế."
     ]
   },
   "62": {
-    "why_correct": "Vùng thiếu nhân lực càng nhiều thì hiệu quả drone càng rõ — ngược dự đoán ban đầu.",
+    "why_correct": "Nơi nhiều người bỏ xe riêng hiệu quả rõ hơn, và lan ra ngược ý nghĩ ban đầu.",
     "options_analysis": [
-      "Trái ngược: vùng nông thôn hiệu quả rõ hơn đô thị.",
-      "Bài nói phản ứng người dân「ngoài dự tính」, không phải đúng dự đoán.",
-      "Khớp: vùng thiếu nhân lực hiệu quả rõ, ngược dự đoán.",
-      "Bài nói còn vướng thể chế, chưa hoàn toàn giải quyết."
+      "Ngược bài: lan trước ở thị trấn ít khách.",
+      "Phản ứng người dân là điều tính sai lớn nhất.",
+      "Khớp: nơi ít người hiệu quả rõ, lan ngược dự đoán.",
+      "Chủ đất không thuận nên vài kế hoạch còn dừng."
     ],
     "points": [
-      "逆《ぎゃく》の展開《てんかい》: ngược dự đoán ban đầu.",
-      "過疎《かそ》: vùng dân cư thưa thớt."
+      "難色《なんしょく》: thái độ không tán thành.",
+      "おっくう: ngại, thấy phiền nên không muốn làm."
     ]
   },
   "63": {
-    "why_correct": "Câu trước mô tả được người dân bắt chuyện, ghé quán bất ngờ — chính là「こうした積み重ね」.",
+    "why_correct": "「こうした」chỉ về ngay trước: được người địa phương bắt chuyện, ghé vào quán bất ngờ.",
     "options_analysis": [
-      "Khớp: những cuộc gặp gỡ bất ngờ ngay trước đó.",
-      "Luyện dùng bản đồ điện tử không được nhắc.",
-      "Lời khuyên bạn bè chỉ là chi tiết phụ.",
-      "Tính đường ngắn nhất trái ngược chủ đề không dùng bản đồ."
+      "Khớp: các cuộc gặp và phát hiện bất ngờ vừa kể.",
+      "Không nhắc tới việc luyện dùng ứng dụng bản đồ.",
+      "Bạn chỉ cười là hiếu kỳ, không đưa lời khuyên.",
+      "Tính đường ngắn nhất trái với đi không bản đồ."
     ],
     "points": [
-      "指示語《しじご》: từ chỉ định quy về câu ngay trước.",
-      "偶発的《ぐうはつてき》: ngẫu nhiên, bất ngờ xảy ra."
+      "目星《めぼし》: sự phỏng đoán đại khái.",
+      "道《みち》すがら: trên đường đi tới đâu đó."
     ]
   },
   "64": {
@@ -858,42 +858,42 @@
     ]
   },
   "67": {
-    "why_correct": "Ý kiến ban đầu: chăm sóc phụ thuộc kinh nghiệm cá nhân, máy thay thế có hạn.",
+    "why_correct": "Ý kiến lúc đầu: sáng eo hẹp, hiện trường không đủ thư thả để chờ từng người.",
     "options_analysis": [
-      "Khớp: phụ thuộc kinh nghiệm cá nhân, hạn chế máy móc.",
-      "Chi phí đầu tư/duy trì không được đề cập.",
-      "Bài không nói hoàn toàn không ai vận hành được robot.",
-      "Từ chối trò chuyện với robot không được nhắc."
+      "Khớp: sáng bận, không đủ thời gian chờ từng người.",
+      "Bài không nói tự làm thì bị thương nhiều hơn.",
+      "Không có khiếu nại của gia đình về chi phí.",
+      "Bài không nói không ai biết cách làm mới."
     ],
     "points": [
-      "属人的《ぞくじんてき》: phụ thuộc kinh nghiệm cá nhân.",
-      "懐疑的《かいぎてき》: hoài nghi, thái độ nghi ngờ."
+      "余裕《よゆう》がない: không dư thời gian, sức lực.",
+      "指摘《してき》: chỉ ra điểm đáng chú ý."
     ]
   },
   "68": {
-    "why_correct": "Cảm biến báo động nhầm liên tục khiến nhân viên phải xác nhận, việc thêm rắc rối.",
+    "why_correct": "Có báo cáo: nhân viên kèm sát một người nên lơ là những người dùng khác.",
     "options_analysis": [
-      "Trái ngược: trực đêm KHÔNG giảm mà thêm phiền phức.",
-      "Khớp: báo động nhầm, việc thêm rắc rối.",
-      "Không có việc tăng nhân sự trực đêm.",
-      "Bài không nói ghi chép tự động hoàn toàn không cần."
+      "Ngược cả hai vế: có ngày không tụ đủ, vẫn phải kèm sát.",
+      "Khớp: kèm sát một người thì lơ là người còn lại.",
+      "Không hề tăng nhân viên hay giảm số phụ trách.",
+      "Việc hỗ trợ thay đồ chưa mất, sáng vẫn nặng."
     ],
     "points": [
-      "煩雑《はんざつ》になる: trở nên rắc rối hơn.",
-      "誤作動《ごさどう》: hoạt động sai, báo động nhầm."
+      "つきっきり: ở sát bên, không rời ra.",
+      "目配《めくば》り: để mắt chú ý xung quanh."
     ]
   },
   "69": {
-    "why_correct": "Câu kết: robot không thay thế hoàn toàn con người, mà giảm gánh nặng thể lực.",
+    "why_correct": "Đoạn kết: vai trò không phải làm thay, mà là chờ để tạo thời gian nhận ra người đó.",
     "options_analysis": [
-      "Trái ngược hoàn toàn với kết luận bài.",
-      "Bài không nói mọi vấn đề đã giải quyết hết.",
-      "Bài khẳng định robot CÓ ảnh hưởng đến thời gian nhân viên.",
-      "Khớp: giảm gánh nặng, tạo thời gian quan tâm người dùng."
+      "Ngược kết luận: làm thay hết không phải mục tiêu.",
+      "Bài nói vẫn dò dẫm, ý kiến chưa thống nhất.",
+      "Bài nói thời gian của nhân viên có thay đổi.",
+      "Khớp: chờ tạo thời gian nhận ra tình trạng người dùng."
     ],
     "points": [
-      "Câu kết bài luận nêu rõ quan điểm tổng kết nhất.",
-      "補完《ほかん》する: bổ sung, bù đắp phần thiếu."
+      "見《み》きわめる: nhìn rõ rồi mới phán đoán.",
+      "根気《こんき》: sức bền bỉ theo đuổi lâu."
     ]
   },
   "70": {
