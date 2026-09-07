@@ -666,7 +666,7 @@
     "why_correct": "Thông báo dịch vụ tin thiên tai mới, cần đăng ký trước cuối tháng sau.",
     "options_analysis": [
       "Sai: loa cũ vẫn giữ, chỉ THÊM dịch vụ mới, không bãi bỏ.",
-      "Sai: có chế độ chữ tiết kiệm để nhận tin cả khi mất điện.",
+      "Sai: có màn hình chỉ chữ, nhận được tin cả khi mất điện.",
       "Đúng: dịch vụ mới ra mắt, cần đăng ký trước hạn.",
       "Sai: không nói chỉ nhận đăng ký tại quầy."
     ],
@@ -689,16 +689,16 @@
     ]
   },
   "54": {
-    "why_correct": "DN tăng lương vượt mức tối thiểu nhiều hơn thì giữ chân nhân viên trẻ tốt hơn.",
+    "why_correct": "Số ngày nghỉ như nhau, nhưng bộ phận cho nghỉ nửa ngày thì ít người ở lại muộn hơn.",
     "options_analysis": [
-      "Sai: bài nói DN đã điều chỉnh cách làm để bù đắp, không giảm lợi nhuận mạnh.",
-      "Sai: DN cắt giảm lãng phí mới đi kèm tỷ lệ giữ chân cao.",
-      "Sai: bài khẳng định CÓ liên hệ rõ ràng.",
-      "Đúng: tăng lương vượt mức tối thiểu giúp giữ chân nhân viên trẻ."
+      "Sai: bài nói số ngày nghỉ hầu như KHÔNG đổi.",
+      "Sai: ngược chiều với kết quả bài nêu.",
+      "Sai: bài chỉ ra CÓ khác biệt giữa hai cách nghỉ.",
+      "Đúng: cùng số ngày nghỉ, nghỉ nửa ngày thì ít ở lại muộn."
     ],
     "points": [
-      "最低賃金《さいていちんぎん》: mức lương tối thiểu.",
-      "相関関係《そうかんかんけい》: tương quan giữa hai yếu tố."
+      "半日単位《はんにちたんい》: theo đơn vị nửa ngày.",
+      "月末《げつまつ》: cuối tháng, lúc dễ phải ở lại muộn."
     ]
   },
   "55": {
@@ -776,33 +776,33 @@
     ],
     "points": [
       "機動的《きどうてき》: linh hoạt, ứng phó nhanh.",
-      "学業継続《がくぎょうけいぞく》: duy trì việc học."
+      "学業《がくぎょう》を続《つづ》ける: duy trì việc học."
     ]
   },
   "61": {
-    "why_correct": "介護休業給付 hỗ trợ tiền lúc nghỉ; chế độ mới bảo vệ quyền đổi cách làm việc.",
+    "why_correct": "Người nhà đi cùng để thêm người nhớ lời bác sĩ; thẻ để bệnh nhân tự chọn thứ tự nói.",
     "options_analysis": [
-      "Sai: bài không so sánh cái nào ra đời trước sau.",
-      "Đúng: một bên hỗ trợ tiền, một bên bảo vệ quyền đổi cách làm.",
-      "Sai: chế độ mới CHỈ áp dụng mức cần chăm sóc từ cấp 3.",
-      "Sai: bài không nói phạm vi 介護休業給付 rộng hơn nhiều."
+      "Sai: đi cùng có từ trước, thẻ mới bắt đầu năm ngoái.",
+      "Đúng: một bên thêm người nghe, một bên cho bệnh nhân tự quyết thứ tự nói.",
+      "Sai: thẻ chỉ phát cho người mới và người đến từ 1 lần/tháng trở lên.",
+      "Sai: bài không nói phạm vi việc đi cùng rộng hơn."
     ],
     "points": [
-      "介護休業給付: trợ cấp khi nghỉ chăm sóc người thân.",
-      "要介護度《ようかいごど》: mức độ cần chăm sóc theo quy định."
+      "同席《どうせき》: cùng có mặt tại chỗ đó.",
+      "これに対《たい》し: cụm báo hiệu so sánh hai đối tượng."
     ]
   },
   "62": {
-    "why_correct": "①それ chỉ 2 câu trước: đối tượng giới hạn mức chăm sóc cấp 3+.",
+    "why_correct": "①それ chỉ 2 câu ngay trước: người ít đến khám thì không được phát thẻ.",
     "options_analysis": [
-      "Sai: câu trước không nói về 介護休業給付.",
-      "Sai: đây là ý ở đoạn SAU, không phải nội dung それ chỉ tới.",
-      "Sai: cũng là ý đoạn SAU, không phải nội dung それ chỉ tới.",
-      "Đúng: chỉ việc gia đình mức 1-2 không được dùng chế độ mới."
+      "Sai: câu trước không nói phạm vi của việc người nhà đi cùng.",
+      "Sai: ý kiến đòi xem lại nằm ở CUỐI đoạn, không phải câu trước.",
+      "Sai: chuyện giảm người quay lại quầy nằm ở đoạn TRƯỚC.",
+      "Đúng: người mỗi năm chỉ đến 1-2 lần thì không được phát thẻ."
     ],
     "points": [
-      "指示語問題: tìm câu/ý ngay TRƯỚC từ chỉ định.",
-      "それ quy chiếu nội dung đã nêu, không phải sắp nêu."
+      "指示語《しじご》: từ chỉ định, tìm ý ngay TRƯỚC.",
+      "限《かぎ》られている: chỉ giới hạn trong phạm vi nào đó."
     ]
   },
   "63": {
@@ -814,8 +814,8 @@
       "Sai: có ga tăng gấp 3 bảng mà khiếu nại hầu như không đổi."
     ],
     "points": [
-      "苦情件数《くじょうけんすう》: số khiếu nại/phàn nàn.",
-      "掲示物: bảng thông báo dán tại nơi công cộng."
+      "苦情《くじょう》の件数《けんすう》: số lời phàn nàn.",
+      "貼《は》り紙《がみ》: giấy dán thông báo nơi công cộng."
     ]
   },
   "64": {
@@ -858,42 +858,42 @@
     ]
   },
   "67": {
-    "why_correct": "Chứng nhận của địa phương không bảo đảm quyền thừa kế hay thuế.",
+    "why_correct": "Chỉ người có viết thư trả lời mới góp ý kiến; người không viết được thì không có tiếng nói.",
     "options_analysis": [
-      "Đúng: chứng nhận không bảo đảm quyền thừa kế, thuế.",
-      "Sai: bài không nói chế độ chỉ dành cho người ở nhà công.",
-      "Sai: bài không nói dùng chế độ này mất quyền đăng ký kết hôn.",
-      "Sai: bài nói nội dung KHÁC NHAU tùy địa phương."
+      "Đúng: dữ liệu chỉ đến từ người đã viết thư trả lời.",
+      "Sai: tác giả không nêu số lần gửi thư là hạn chế.",
+      "Sai: bài nói có cả đồng nghiệp cũ, không chỉ bạn thời đi học.",
+      "Sai: bài không nói người trả lời nhớ sai số bạn bè."
     ],
     "points": [
-      "相続《そうぞく》: quyền thừa kế tài sản.",
-      "限定的な仕組《しく》み: cơ chế có giới hạn, phạm vi hẹp."
+      "もっとも: tuy vậy, dùng để thêm điều kiện hạn chế.",
+      "限界《げんかい》: giới hạn, điểm chưa nói được."
     ]
   },
   "68": {
-    "why_correct": "Khoảng 3 thành nói hiệu lực không lan tới nơi làm việc.",
+    "why_correct": "Nhiều người có bạn lâu không liên lạc, nhưng ít người thấy quan hệ đã chấm dứt.",
     "options_analysis": [
-      "Sai: bài không nói thủ tục khác nhau là nguyên nhân bất mãn.",
-      "Sai: bài không đề cập bị từ chối tư cách vào nhà công.",
-      "Sai: khảo sát nói khoảng 6 thành cảm thấy AN TÂM HƠN.",
-      "Đúng: khoảng 3 thành cho biết hiệu lực không lan tới nơi làm việc."
+      "Sai: đảo lộn hai con số 7 phần và 3 phần.",
+      "Sai: chỉ khoảng 3 phần thấy quan hệ đã kết thúc.",
+      "Sai: bài không nói thời gian càng dài thì càng thấy đã kết thúc.",
+      "Đúng: khoảng 7 phần có bạn lâu không liên lạc, chỉ 3 phần thấy đã hết."
     ],
     "points": [
-      "効力が及ぶ: hiệu lực pháp lý áp dụng được.",
-      "勤務先: nơi làm việc."
+      "およそ: khoảng chừng, xấp xỉ.",
+      "〜にとどまる: chỉ dừng ở mức đó, không hơn."
     ]
   },
   "69": {
-    "why_correct": "Tác giả: cần nhìn rõ giới hạn, chế độ chỉ là cơ chế phạm vi hẹp.",
+    "why_correct": "Tác giả cho rằng khoảng cách liên lạc không đồng nghĩa quan hệ đã kết thúc.",
     "options_analysis": [
-      "Sai: ngược lại, tác giả nói chế độ CHƯA đủ thay hôn nhân.",
-      "Sai: bài nói khoảng 3 thành (không phải đa số) không hài lòng.",
-      "Đúng: chế độ chỉ là cơ chế có giới hạn, cần nhìn thẳng hạn chế đó.",
-      "Sai: bài không nói thống nhất toàn quốc là cấp bách nhất."
+      "Sai: tác giả không cho rằng thư từ quyết định quan hệ.",
+      "Sai: đây chính là quan điểm tác giả phản bác.",
+      "Đúng: khoảng cách liên lạc khác với việc quan hệ chấm dứt.",
+      "Sai: bài nói KHÔNG biết được suy nghĩ của người không trả lời."
     ],
     "points": [
-      "筆者《ひっしゃ》の主張: quan điểm tác giả thường ở đoạn kết.",
-      "限界《げんかい》: điểm chưa hoàn thiện."
+      "間《ま》があく: có khoảng trống thời gian.",
+      "途切《とぎ》れる: bị đứt quãng, gián đoạn."
     ]
   },
   "70": {

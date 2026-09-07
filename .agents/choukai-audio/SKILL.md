@@ -401,11 +401,14 @@ The rule shipped broken three times because the code only tested CO-LOCATION —
 this table claimed the row was enforced. `validate_script()` now enforces
 PRESENCE on any 問題5 item block carrying 8 spoken choice lines
 (`require_p5_question_markers`, default on; `make check` passes it `False` only
-for the two grandfathered ids in `P5_QUESTION_MARKER_GRANDFATHERED`), and
+for the grandfathered ids in `P5_QUESTION_MARKER_GRANDFATHERED`), and
 `check_mondai5_question_markers` in `make check` is the per-paper line. 26 of
-the 29 papers on disk — 18 generated, all 8 imports — already carry the markers;
-`20260828_2` and `20260903_1` do not, and their audio has the same missing
-pause (**not repaired: re-cutting a released paper is a separate decision**).
+the 29 papers on disk — 18 generated, all 8 imports — already carried the markers
+when the rule landed; `20260828_2` and `20260903_1` did not, and their audio had
+the same missing pause. **`20260828_2` was repaired 2026-09-08** — both question
+lines now carry the prefix and `聴解.mp3` was re-synthesised, so it passes on
+merit and left the set; `20260903_1` is still open (**re-cutting a released
+paper is a separate decision**).
 
 Two other consumers read the same marker, which is why the drift was expensive:
 `check_consistency.choukai_p5_2ban_options()` returns `[]` without `^質問1。`,

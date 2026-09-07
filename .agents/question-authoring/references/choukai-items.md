@@ -360,7 +360,7 @@ moment that paper's 聴解 is repaired** — never by widening a threshold:
 |---|---|---|
 | 問題1 質問型 mix | `CHOUKAI_Q1_FORMS_GRANDFATHERED` | all 14 — every paper runs one frame |
 | 問題1 決め手の位置 (bucket spread) | `CHOUKAI_DECIDER_GRANDFATHERED` | all 14 (7 of them have no 構成表 column yet, so they skip) |
-| 問題1 決め手の位置 label vs its own n/m (added 2026-09-04) | `CHOUKAI_DECIDER_FORMULA_GRANDFATHERED` | the 11 papers whose cells print no 「n行目／全m行」 — `20260807_1`, `20260810_1`, `20260810_2`, `20260817_3`, `20260818_1`, `20260819_1`, `20260821_1`, `20260827_1`, `20260827_2`, `20260828_1`, `20260828_2`. `20260903_1` prints all six and passes on merit |
+| 問題1 決め手の位置 label vs its own n/m (added 2026-09-04) | `CHOUKAI_DECIDER_FORMULA_GRANDFATHERED` | the 10 papers whose cells print no 「n行目／全m行」 — `20260807_1`, `20260810_1`, `20260810_2`, `20260817_3`, `20260818_1`, `20260819_1`, `20260821_1`, `20260827_1`, `20260827_2`, `20260828_1`. `20260903_1` prints all six and passes on merit; `20260828_2` left the set 2026-09-08 by re-deriving its own column against the repaired script |
 | 問題1 主導 row cap (added 2026-09-04) | `LEADER_PAIR_GRANDFATHERED` | **none** — measured over every paper on disk, no 問題1 表 puts one 主導 string on more than 2 rows |
 | 問題1 probe carousel | `CHOUKAI_PROBE_GRANDFATHERED` | `20260807_1`, `20260810_2`, `20260817_3`, `20260818_1`, `20260819_1` |
 | 問題2 質問型 mix | `CHOUKAI_Q2_MIX_GRANDFATHERED` | all but `20260813_2` |
