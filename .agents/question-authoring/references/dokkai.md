@@ -323,6 +323,16 @@ to be paired 1:1 with an addition, which cancels the character saving too.
 **Transparent unglossed compounds are the load-bearing lever; un-glossing only
 trims the headword count alongside it.**
 
+**An added compound must not displace wording a key or distractor is built
+from.** Options are frozen, and a distractor is often built on the passage's
+exact phrasing, so swapping a word in the prose silently breaks the item that
+quoted it. On `20260821_1` (2026-09-08) two otherwise-good substitutions had to
+be reverted for this: 落ち葉→落葉 broke item 53's distractor 3
+(「落ち葉を集める人が増えすぎたから」) and 距離→走行距離 broke item 69's
+distractor 4 (「元の距離から始め直す」), each with its 解説 alongside. Grep every
+candidate compound against all four options of every item on its passage before
+committing to it — the gate does not catch this.
+
 **An added marker belongs on a KANA or single-kanji headword.** That satisfies
 the 25-marker floor without spending a gloss-headword slot and without
 subtracting from lexical load — nine of the ten notes added to `20260904_1` cost
