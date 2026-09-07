@@ -665,13 +665,13 @@
   "52": {
     "why_correct": "Bài kết「あの料理は、台所の事情ごと出ていた」— vị gắn với điều kiện của chính căn bếp.",
     "options_analysis": [
-      "Nước giếng là thứ không thể mang về, không phải thứ cần sắm.",
-      "Bài viết「伯母のあの味にはなりませんでした」— làm mãi vẫn không ra.",
+      "Nước máy cũ là thứ không thể mang về, không phải thứ cần sắm.",
+      "Bài viết「母のあの味にはなりませんでした」— làm mãi vẫn không ra.",
       "Bài chỉ tả món ăn「見た目のよくない」, không bàn việc tiếp nhận.",
       "Vị món ăn sinh ra cùng điều kiện của căn bếp làm ra nó."
     ],
     "points": [
-      "「いとこ煮《に》」là món đậu đỏ nấu khoai sọ, nêm miso.",
+      "「煮物《にもの》」là món hầm rau củ nêm nước tương.",
       "「〜ごと」nghĩa là gộp cả cái đó vào."
     ]
   },
@@ -680,7 +680,7 @@
     "options_analysis": [
       "Chặt cây là chuyện thời củi than, không phải lý do rừng hoang.",
       "Việc vốn tự xong kèm khai thác nay thành gánh nặng không sinh lợi.",
-      "Phân hóa học thay chỗ việc gom lá, người gom lá không tăng.",
+      "Phân mua sẵn thay chỗ việc gom lá, người gom lá không tăng.",
       "Cắt cỏ vốn để mở lối đi; mất lối đi không phải nguyên nhân."
     ],
     "points": [
@@ -689,7 +689,7 @@
     ]
   },
   "54": {
-    "why_correct": "Thư viết「まず車体の状態だけを見る日を設けます」rồi nhờ báo cho khách biết ngày này.",
+    "why_correct": "Thư viết「まず車の底の状態だけを見る日を設けます」rồi nhờ báo cho khách biết ngày này.",
     "options_analysis": [
       "Thư không nói đổi nơi tiếp nhận đơn sang xưởng.",
       "Việc nhờ chi nhánh làm là giải thích cho khách về ngày kiểm tra.",
@@ -698,7 +698,7 @@
     ],
     "points": [
       "「載《の》せ替《か》え」là tháo bộ phận cũ, lắp bộ phận khác vào.",
-      "「各位《かくい》」là lối xưng kính gửi quý vị."
+      "「各位《かくい》」là lối xưng kính gửi tới nhiều người."
     ]
   },
   "55": {
@@ -730,7 +730,7 @@
   "57": {
     "why_correct": "Ngay trước đó bài nêu ở cửa hàng đổi phiếu lấy bài đăng thì「買った直後にまとまって集まる」.",
     "options_analysis": [
-      "Điểm trung bình đổi theo việc bài đăng gom về lúc nào.",
+      "Điểm trung bình đổi theo lối bài đăng gom về và gom lúc nào.",
       "Bài nói ngược:「品物の出来を写しているとはかぎらない」.",
       "Bài không hề nói bài đăng viết ngay sau khi mua bị xóa.",
       "Bài nói có「食い違い」với tỉ lệ mua lại, không trùng khớp."
@@ -754,28 +754,28 @@
     ]
   },
   "59": {
-    "why_correct": "Ở nơi giao trẻ chạy được, bài viết「ことわらずに受けられる条件が、先にととのった」.",
+    "why_correct": "Ở thị trấn chạy được, bài viết「ことわらずに受けられる用意が先にととのった」.",
     "options_analysis": [
-      "Bài chỉ nói tỉ lệ cơ sở đảm nhận vốn cao, không nói trẻ tăng vọt.",
-      "Bài viết nhà nước「広報に力を入れてきた」, tức vẫn đang làm.",
-      "Bài chỉ nêu nhân viên sắp lịch gặp, không nói trẻ ngại rời.",
-      "Địa phương chưa dựng đủ điều kiện để gia đình dám nhận."
+      "Bài không hề bàn số trẻ cần kèm học tăng hay giảm.",
+      "Bài viết「市は登録の呼びかけに力を入れてきた」, tức vẫn đang làm.",
+      "Lý do từ chối là hoàn cảnh của người nhận, không phải phía nhà trẻ.",
+      "Thị trấn chưa dựng sẵn thứ giúp người đã đăng ký dễ hành động."
     ],
     "points": [
-      "「里親《さとおや》委託《いたく》」là việc giao trẻ cho gia đình nhận nuôi.",
-      "「〜にとどまる」là chỉ dừng lại ở mức đó."
+      "「名《な》ばかり」là chỉ có danh, không có thực chất.",
+      "「尻込《しりご》み」là chùn lại, ngại không dám bước tới."
     ]
   },
   "60": {
-    "why_correct": "Bài nêu ba thứ ở nơi giao trẻ chạy được rồi kết「支える人と仕組みこそが要る」.",
+    "why_correct": "Bài nêu ba thứ ở thị trấn chạy được rồi kết「引き受ける人を支える人と仕組みこそが要る」.",
     "options_analysis": [
-      "Bài viết「登録の数を増やすだけでは、預かれる家庭は増えない」.",
-      "Bài không bàn tới trần thời gian trẻ ở cơ sở nuôi dưỡng.",
-      "Bài nói nhân viên sắp lịch gặp, không nói giảm số lần gặp.",
-      "Cần người hỗ trợ cha mẹ nuôi và cơ chế san sẻ việc trông trẻ."
+      "Bài viết「登録の数を増やすだけでは、動ける人は増えない」.",
+      "Bài không bàn tới trần số trẻ mà một người phụ trách.",
+      "Việc sắp lịch là do người của tòa thị chính nhận, không giao lại.",
+      "Cần người phụ trách để hỏi và cơ chế thay phiên cho nhau."
     ],
     "points": [
-      "「一時《いちじ》預《あず》かり」là gửi trẻ tạm vài ngày sang nhà khác.",
+      "「手薄《てうす》」là mỏng người, lo không xuể.",
       "「〜こそ」nhấn mạnh chính cái này mới là thứ cần."
     ]
   },
@@ -1031,7 +1031,7 @@
     "options_analysis": [
       "Giá hai ngày như nhau:「土曜も日曜も変わりません」.",
       "Cô gạt đi:「三十分は、まあ、なくても大丈夫です」.",
-      "Từ ga đi bộ tới thì「同じ場所です」.",
+      "Từ ga đi bộ tới thì「どちらの日も同じ場所です」.",
       "Có nhân viên hướng dẫn cách chơi là điều cô đặt lên đầu."
     ],
     "points": [
