@@ -663,16 +663,16 @@
     ]
   },
   "52": {
-    "why_correct": "Bài nêu ý cho rằng vũ trụ xa lạ với đời sống rồi bác lại: thành quả đã len vào việc rất đời thường.",
+    "why_correct": "Bài mở bằng ý “ngành vũ trụ chẳng dính gì tới đời sống”, rồi bác lại: xưởng nhỏ trong phố đỡ nó từ dưới.",
     "options_analysis": [
-      "Bài nói nhiều vệ tinh nhỏ được gom lại phóng chung.",
-      "Bài viết là nắm được thiệt hại trước khi cử người tới.",
-      "Đúng: đỡ cho ngày thu hoạch và việc tính tiền bảo hiểm.",
-      "Cả ruộng lẫn vùng biển tàu cá tụ đều nắm được."
+      "Bài chỉ nói xưởng có chừng mười người, không so số đông.",
+      "Khâu cuối vẫn là sờ tay kiểm tra, không phải máy làm.",
+      "Đúng: nghề tay chân bình thường của xưởng phố đỡ ngành này.",
+      "Bài nói chỗ xưởng, không nói linh kiện nhỏ nên xưởng hẹp cũng được."
     ],
     "points": [
-      "人工衛星《じんこうえいせい》: vệ tinh nhân tạo",
-      "見積《みつ》もり: sự ước tính"
+      "工場《こうじょう》: nhà xưởng",
+      "部品《ぶひん》: linh kiện"
     ]
   },
   "53": {
@@ -806,29 +806,29 @@
     ]
   },
   "63": {
-    "why_correct": "Bài nêu rõ lý do: cỡ tay, dáng đứng và thớ gỗ mỗi người mỗi khác.",
+    "why_correct": "Lý do nằm ở câu: người thời trước thấp hơn bây giờ nên vạt áo không đủ dài.",
     "options_analysis": [
-      "Đế bào mòn đi là sau khi dùng, không phải bào ở tiệm.",
-      "Đúng: dụng cụ bán sẵn không khớp với từng người.",
-      "Bài không nói cấu tạo khiến lưỡi bào không thò ra được.",
-      "Câu chê khó dùng là phản ứng của người mượn."
+      "Bài nói cất lâu trong tủ, không nói vải đã hỏng.",
+      "Đúng: vóc người lúc may và người mặc bây giờ khác nhau.",
+      "Tháo chỉ là việc tác giả làm, chỉ không tự bung ra.",
+      "Chuyện màu hay hoa văn không còn bán không có trong bài."
     ],
     "points": [
-      "指物《さしもの》: nghề ghép gỗ",
-      "木目《もくめ》: thớ gỗ, vân gỗ"
+      "丈《たけ》: chiều dài áo",
+      "ほどく: tháo chỉ, gỡ ra"
     ]
   },
   "64": {
-    "why_correct": "Bài chốt: độ ăn của đế đã chỉnh cho hợp tay quyết định mặt gỗ bào ra thế nào.",
+    "why_correct": "Bài bác ý “cắt vải là mất áo”: tấm vải bị kéo cắt lại ở bên người lâu nhất.",
     "options_analysis": [
-      "Tác giả bác chính suy nghĩ hồi trẻ về thời gian bào.",
-      "Bài nói bào ở tiệm cái nào cũng tốt, không do chỗ mua.",
-      "Đúng: tay nghề được khắc vào chính cái đế đã sửa.",
-      "Bài không hề chê tay nghề của người mượn."
+      "Đơn đặt không may lại còn tăng, nghề đâu có mất đi.",
+      "Bài nói ngược: vải cất kỹ bị quên rồi bị vứt.",
+      "Đúng: cắt ra làm vật khác cũng là cách giữ chiếc áo.",
+      "Khách phân vân vì “cắt rồi không về lại được”, không vì kiểu may."
     ],
     "points": [
-      "台直《だいなお》し: việc sửa đế bào",
-      "鉋《かんな》: cái bào gỗ"
+      "布《ぬの》: vải",
+      "縫《ぬ》い直《なお》す: may lại"
     ]
   },
   "65": {
