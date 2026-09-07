@@ -282,7 +282,7 @@
    "generated_at": "2026-08-10 14:02:48",
    "surfaces": {
     "問題9": "就労状況に関わらない新しい保育通園制度",
-    "問題10(1)": "難民受け入れと地域住民との関係構築",
+    "問題10(1)": "たがいの素性を尋ねない喫茶店の常連どうしの付き合い",
     "問題10(2)": "協調性も評価する新しい人事評価制度",
     "問題10(3)": "集合住宅の避難訓練での点呼の遅れ",
     "問題10(4)": "授業中の話し合いと教師の説明の順序",
@@ -413,7 +413,7 @@
     "聴解問題5-1番": "消費・経済",
     "聴解問題5-2番": "住まい"
    },
-   "notes": "2026-08-10 repair: 問題10(3)/(4)/(5) re-authored onto independent themes (スポーツ・余暇/食/環境 duplicated other surfaces or a headline); closing moves varied across the 読解 half; item 51 no longer keys 餅 while 問題11(4) prints 絵に描いた餅. test_spec.json and logs/ledger.json record the DRAW and are deliberately not edited; this row records what shipped (exam-blueprint §'logs/topics.json'). 2026-08-13 repair: 聴解問題4-1番〜11番 fully rerolled — the prior 5番 (「山田さん、資料の作成、手伝ってくれて本当にありがとう」→「お役に 立てたなら、何よりです」) was a near-duplicate of test 20260813_1's own 問題4-5番 (thanked for helping prepare materials, near-identical deflection reply), found by a cross-test duplication audit. Since 20260813_1 was not editable, the quick_response pool category was re-drawn via `sample_items.py --reroll quick_response --seed 90988406 --test-id 20260810_2` (test_spec.json and logs/ledger.json updated) and all 11 items re-authored from the new draw; MP3/booklet/sheet rebuilt, make check green for this test."
+   "notes": "2026-08-10 repair: 問題10(3)/(4)/(5) re-authored onto independent themes (スポーツ・余暇/食/環境 duplicated other surfaces or a headline); closing moves varied across the 読解 half; item 51 no longer keys 餅 while 問題11(4) prints 絵に描いた餅. test_spec.json and logs/ledger.json record the DRAW and are deliberately not edited; this row records what shipped (exam-blueprint §'logs/topics.json'). 2026-08-13 repair: 聴解問題4-1番〜11番 fully rerolled — the prior 5番 (「山田さん、資料の作成、手伝ってくれて本当にありがとう」→「お役に 立てたなら、何よりです」) was a near-duplicate of test 20260813_1's own 問題4-5番 (thanked for helping prepare materials, near-identical deflection reply), found by a cross-test duplication audit. Since 20260813_1 was not editable, the quick_response pool category was re-drawn via `sample_items.py --reroll quick_response --seed 90988406 --test-id 20260810_2` (test_spec.json and logs/ledger.json updated) and all 11 items re-authored from the new draw; MP3/booklet/sheet rebuilt, make check green for this test. 2026-09-07 neutrality repair (問題10(1) only): the surface's drawn topic `難民受け入れ` was deleted from pools.json as an exam-blueprint Part II neutrality violation (displacement by war / victims, and a contested immigration debate), and the passage it produced carried the note `難民：戦争などで国を離れ、行き場を失った人`. The passage, item 52's stem and all four options, and both （注N） glosses were re-authored onto an ordinary everyday subject inside the SAME theme 人間関係 — the regulars of an old coffee shop who never ask one another's name or background. Kept: theme 人間関係, closing move 条件提示, the 150-350 per-passage band (269 → 268 JP chars of body; 問題10 section 1328 → 1324), the two in-body （注N） markers (paper stays at 25), and item 52's key on answer_positions slot 3. Lexical load improved (novel 14.86% → 14.42%, unglossed 6.86 → 6.68 /1k, 15 gloss headwords unchanged) and 読解 kanji density 31.8% → 31.5%. test_spec.json and logs/ledger.json now record this entry as {theme, origin: reauthored, note} so check_draw_provenance() resolves; themes and the recorded closing move are unchanged."
   },
   {
    "test_id": "20260811_1",

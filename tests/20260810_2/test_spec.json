@@ -224,8 +224,9 @@
   ],
   "reading_topics": [
    {
-    "topic": "難民受け入れ",
-    "theme": "人間関係"
+    "theme": "人間関係",
+    "origin": "reauthored",
+    "note": "2026-09-07 neutrality repair: the drawn topic `難民受け入れ` was DELETED from pools.json as an exam-blueprint Part II neutrality violation (displacement by war / victims, and a contested immigration debate), so no pool string resolves for this surface any more. 問題10(1) was re-subjected inside the SAME theme 人間関係 onto an ordinary everyday subject (regulars of a coffee shop who never ask one another's background); the subject is authored, not drawn. Theme, closing move (条件提示), the 150-350 per-passage band, the 問題10 section band and item 52's answer_positions slot are unchanged."
    },
    {
     "topic": "働き方と評価",
