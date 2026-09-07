@@ -672,7 +672,7 @@
     ],
     "points": [
       "「ふとん」ở đây là ví von: lớp phủ che cho phần bên dưới.",
-      "「もとには戻《もど》らない」nhấn tính không phục hồi được."
+      "「もとに戻《もど》らない」nhấn tính không phục hồi được."
     ]
   },
   "53": {
@@ -758,7 +758,7 @@
     "options_analysis": [
       "Bài không nói thời điểm lỗ lệch nhau giữa các vùng.",
       "Bài không so sánh số người ký tên.",
-      "Trái với 「お年寄りの割合も、ほとんど変わらない」.",
+      "Trái với 「お年寄りの割合も、どちらもほとんど変わらない」.",
       "Thời điểm bắt đầu vẽ tuyến buýt chính là 「分かれ目」."
     ],
     "points": [
@@ -845,7 +845,7 @@
     ]
   },
   "66": {
-    "why_correct": "A đề xuất 「今週終える仕事を三つまで書き出しておき」; B đòi 「見えにくい仕事を評価の表に書きこんでおかないかぎり」.",
+    "why_correct": "A đề xuất 「今週終える仕事を三つまで書き出しておき」; B đòi 「見えにくい仕事を評価表に書きこんでおかないかぎり」.",
     "options_analysis": [
       "A khuyên viết trước việc phải xong, B đòi thêm việc không lộ ra.",
       "A nói rõ mình 「反対で」với công cụ chụp màn hình.",
