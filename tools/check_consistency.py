@@ -11984,6 +11984,11 @@ def check_kaisetsu_wording_matches_source(test_id: str, ja: dict):
     if not st_path.is_file() or not ja:
         return
     script = st_path.read_text(encoding="utf-8")
+    # Stored scripts carry hand-applied furigana 《…》 the raw script has none of
+    # (11 of 30 items on 20260814_1). Comparing without stripping it reports
+    # every ruby'd item as superseded — which is what the first cut of this
+    # check did, on a paper whose scripts were entirely current.
+    _strip = lambda s: re.sub(r"《[^》]*》", "", s)
     stale = []
     for key, item in ja.items():
         if not isinstance(item, dict):
@@ -11993,7 +11998,7 @@ def check_kaisetsu_wording_matches_source(test_id: str, ja: dict):
             continue
         # Compare on spoken BODIES, not whole lines: the stored copy may differ
         # in speaker-label spacing without differing in what is said.
-        for line in [l for l in stored.split("\n") if len(l) > 18][:4]:
+        for line in [l for l in _strip(stored).split("\n") if len(l) > 18][:4]:
             body = line.split(":", 1)[-1].strip()
             if body and body[:16] not in script:
                 stale.append(f"{key}「{body[:20]}…」")

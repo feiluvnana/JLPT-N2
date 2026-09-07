@@ -147,6 +147,15 @@ def stem_fallback(q_num: int) -> str:
     return f"第 {q_num} 問"
 
 
+_FURIGANA = re.compile(r"《[^》]*》")
+
+
+def _same_modulo_furigana(a: str, b: str) -> bool:
+    """Do two copies of the same spoken text differ only in ruby and whitespace?"""
+    norm = lambda t: re.sub(r"\s+", "", _FURIGANA.sub("", t or ""))
+    return norm(a) == norm(b)
+
+
 def scaffold_test(test_dir: Path, lean: bool = False, merge_existing: bool = True) -> dict:
     test_dir = Path(test_dir)
     gengo_md, choukai_md, script_text = vf.load_sources(test_dir)
@@ -211,15 +220,31 @@ def scaffold_test(test_dir: Path, lean: bool = False, merge_existing: bool = Tru
 
         stem = ex_item.get("stem") or raw_info.get("stem") or f"{key_id} 聴解問題"
         options = ex_item.get("options") or raw_info.get("options") or [f"選択肢 {i}" for i in range(1, 5)]
-        # The SCRIPT always comes from the source, never from the stored copy
-        # (2026-09-07). `stem`/`options` prefer the stored value because a few
-        # carry hand-applied furigana 《…》 that re-deriving would lose; script
-        # fields carry none (measured: 0 of 19 on 20260811_1), so preferring the
-        # stored one bought nothing and cost correctness. THE INCIDENT: the
-        # 聴解 volume repair of `20260811_1` rewrote 13 item blocks, and this
-        # line kept the pre-repair dialogue in 詳細解説.json — 模範解答.html would
-        # have printed lines that are not in the MP3, and no check read them.
-        script = raw_info.get("script") or ex_item.get("script")
+        # THE SCRIPT: keep the stored copy while it still says what the source
+        # says, and re-derive it the moment it does not (2026-09-07).
+        #
+        # THE INCIDENT: the 聴解 volume repair of `20260811_1` rewrote 13 item
+        # blocks, and this line — which preferred the stored copy
+        # unconditionally — left 詳細解説.json holding pre-repair dialogue.
+        # 模範解答.html would have printed lines the MP3 does not speak, and no
+        # check read these fields.
+        #
+        # THE CORRECTION, half an hour later: "always take the source" is wrong
+        # too. Stored scripts carry hand-applied furigana 《…》 (11 of 30 items on
+        # `20260814_1`) that the raw script has none of, so overwriting blindly
+        # DELETES authored ruby. Measuring one paper (0 of 19 on `20260811_1`)
+        # and generalising is what produced that mistake.
+        #
+        # So: compare modulo furigana. Equal -> keep the stored copy and its
+        # ruby. Different -> the source has moved and correctness wins over ruby;
+        # the item is reported by `check_kaisetsu_wording_matches_source` either
+        # way, so a re-ruby is visible work rather than a silent loss.
+        stored_script = ex_item.get("script")
+        raw_script = raw_info.get("script")
+        if stored_script and raw_script:
+            script = stored_script if _same_modulo_furigana(stored_script, raw_script) else raw_script
+        else:
+            script = stored_script or raw_script
         ans_val = exp_info.get("ans", 1)
         raw_kaisetsu = exp_info.get("raw_kaisetsu", "")
 

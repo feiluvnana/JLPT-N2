@@ -2017,8 +2017,10 @@
       "theme": "医療・福祉"
      },
      {
-      "topic": "御朱印巡りの人気",
-      "theme": "旅行・観光"
+      "topic": "旅先で手帳に書きとめる習慣",
+      "theme": "旅行・観光",
+      "origin": "reauthored",
+      "note": "問題10(2) re-subjected 2026-09-07 during the 読解 lexical-load repair (check_dokkai_lexical_load). Originally drawn as 「御朱印巡りの人気」; that subject forces 御朱印・墨書・朱色・住職・一文字, and the passage measured 56.2% novel words — the worst surface on the paper. Re-authored inside the SAME theme (旅行・観光) as a first-person memoir about jotting notes in a travel notebook, which argues in ordinary words. Theme, closing move (随筆) and key position (3) unchanged; pool ITEMS untouched."
      },
      {
       "topic": "AIと仕事の変化",
