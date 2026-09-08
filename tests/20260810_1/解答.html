@@ -163,6 +163,22 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   background:rgba(255,255,255,0.2);
   border-color:rgba(255,255,255,0.35);
 }
+/* 採点する stays disabled until every item is answered (build_interactive's
+   updateCounter). It must READ disabled, not just refuse the click. */
+#bar button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+#bar button:disabled:hover{
+  background:rgba(255,255,255,0.1);
+  border-color:rgba(255,255,255,0.2);
+}
+#bar button.primary:disabled,
+#bar button.primary:disabled:hover{
+  background:var(--accent);
+  border-color:var(--accent);
+}
 #bar button.primary{
   background:var(--accent);
   color:#ffffff;
@@ -419,6 +435,9 @@ html.is-result-mode #screen-exam{display:none!important}
 html.is-result-mode #screen-result{display:block!important}
 html.is-result-mode #bar-controls{display:none!important}
 html.is-result-mode #where{display:none!important}
+/* 経過時間 — ticks only while this tab is visible AND focused (see initClock). */
+#clock{font-variant-numeric:tabular-nums}
+#clock.paused{color:#f59e0b}
 .qa{display:flex;flex-wrap:wrap;gap:.25em 1.1em;margin:.25em 0 .65em 1.2em}
 .qa label{display:inline-flex;align-items:center;gap:.32em;cursor:pointer;
   padding:.15em .6em;border:1px solid #cbd5e1;border-radius:9999px;font-size:10pt;
@@ -562,7 +581,7 @@ html.is-result-mode #where{display:none!important}
   .rs-detail-body{padding:.7em .85em;font-size:10pt}
   .section-title{font-size:13.5pt;padding:.4em .7em;margin:1.5em 0 .8em}
 }
-</style></head><body><div id="bar"><a class="back" href="/">← テスト一覧</a><b id="bar-title">テスト 20260810_1（受験）</b><span class="sub" id="where"></span><span class="grow"></span><span id="bar-controls"><span class="sub" id="done">解答済み 0 / 101</span> <button onclick="clearAll()">消去</button> <button onclick="save()" class="primary">採点する</button></span></div><script>if(document.documentElement.classList.contains("is-result-mode")){document.getElementById("bar-title").textContent="テスト 20260810_1（採点結果）";}</script><div id="screen-exam"><div id="section-gengo"><h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1><h1>【文字・語彙】</h1>
+</style></head><body><div id="bar"><a class="back" href="/">← テスト一覧</a><b id="bar-title">テスト 20260810_1（受験）</b><span class="sub" id="where"></span><span class="grow"></span><span id="bar-controls"><span class="sub" id="clock">経過 00:00</span> <span class="sub" id="done">解答済み 0 / 101</span> <button onclick="clearAll()">消去</button> <button onclick="save()" id="grade-btn" class="primary" disabled>採点する</button></span></div><script>if(document.documentElement.classList.contains("is-result-mode")){document.getElementById("bar-title").textContent="テスト 20260810_1（採点結果）";}</script><div id="screen-exam"><div id="section-gengo"><h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1><h1>【文字・語彙】</h1>
 <h2>問題1</h2>
 <p>＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。</p>
 <p><strong>1</strong> 兄が舞台で主役を<strong>演じる</strong>そうです。<br />
@@ -1543,6 +1562,16 @@ function updateCounter(ans){
   const total = gCount + cCount;
   document.getElementById('done').textContent =
     "言語: " + gCount + "/" + GENGO_KEYS.length + " | 聴解: " + cCount + "/" + CHOUKAI_KEYS.length + " | 計: " + total + " / " + KEYS.length;
+  // 採点する is unavailable until the paper is complete: a partial 採点 yields a
+  // 180-point score that means nothing, and an unanswered item is not a wrong
+  // answer. save() re-checks — this is the visible half of the same rule.
+  const btn = document.getElementById('grade-btn');
+  if (btn){
+    const left = KEYS.length - total;
+    btn.disabled = left > 0;
+    btn.title = left > 0 ? left + "問が未解答です。すべて解答すると採点できます。"
+                         : "すべて解答済みです。採点できます。";
+  }
 }
 function refresh(){
   const ans = state();
@@ -2064,6 +2093,7 @@ function showScreen(name){
   // bounce you straight back into the (now stale) result view.
   if (exam && location.search) history.replaceState(null, '', location.pathname);
   window.scrollTo(0, 0);
+  clockSync();   // the clock runs on screen 2 only
 }
 
 let LAST_RESULT = null;
@@ -2077,8 +2107,19 @@ function showResult(res, msg, saved){
 
 async function save(){
   const ans = state();
-  const unanswered = KEYS.filter(k => ans[k] === undefined).length;
-  if (unanswered && !confirm(unanswered + "問が未解答です。このまま採点しますか？")) return;
+  // All-or-nothing, deliberately: grading a partial paper scales a raw count no
+  // one produced. The button is already disabled by updateCounter; this second
+  // gate catches a stray call and points at the first gap.
+  const unanswered = KEYS.filter(k => ans[k] === undefined);
+  if (unanswered.length){
+    alert(unanswered.length + "問が未解答です。すべての設問に解答してから採点してください。"
+          + "（未解答: " + unanswered.slice(0, 8).join("、")
+          + (unanswered.length > 8 ? " …" : "") + "）");
+    const first = document.querySelector(
+      '#screen-exam input[name="q_' + CSS.escape(unanswered[0]) + '"]');
+    if (first) first.scrollIntoView({block: 'center'});
+    return;
+  }
 
   const res = computeResult(ans);
   res.graded_at = new Date().toISOString();
@@ -2104,6 +2145,52 @@ function downloadResult(res, answers){
   dl("採点結果.json", res);
   dl("ユーザー解答.json", answers);
   return "採点結果.json および ユーザー解答.json としてダウンロードしました。";
+}
+
+/* ------------------------------------------------------------------- 経過時間
+   The clock measures time actually spent ON this paper: it ticks only while
+   this tab is both visible and focused AND screen 2 is up, so switching tabs,
+   switching windows, or landing on the result screen freezes it. Elapsed time
+   lives in memory only — ユーザー解答.json / 採点結果.json have no field for it
+   (their shape is a contract with grade_answers.py), so a reload restarts it. */
+let CLOCK_MS = 0, CLOCK_FROM = null, CLOCK_IV = null;
+
+function clockActive(){
+  const exam = document.getElementById('screen-exam');
+  return !!exam && exam.style.display !== 'none'
+      && !document.hidden && (!document.hasFocus || document.hasFocus());
+}
+function clockText(ms){
+  const t = Math.floor(ms / 1000);
+  const two = n => String(n).padStart(2, '0');
+  return (t >= 3600 ? two(Math.floor(t / 3600)) + ':' : '')
+       + two(Math.floor(t / 60) % 60) + ':' + two(t % 60);
+}
+function clockPaint(){
+  const el = document.getElementById('clock');
+  if (!el) return;
+  const ms = CLOCK_MS + (CLOCK_FROM === null ? 0 : Date.now() - CLOCK_FROM);
+  el.textContent = '経過 ' + clockText(ms) + (CLOCK_FROM === null ? '（停止中）' : '');
+  el.classList.toggle('paused', CLOCK_FROM === null);
+}
+function clockSync(){
+  if (clockActive()){
+    if (CLOCK_FROM === null) CLOCK_FROM = Date.now();
+  } else if (CLOCK_FROM !== null){
+    CLOCK_MS += Date.now() - CLOCK_FROM;
+    CLOCK_FROM = null;
+  }
+  clockPaint();
+}
+function initClock(){
+  // visibilitychange catches a tab switch; focus/blur catches another window
+  // taking focus while this tab is still on screen.
+  document.addEventListener('visibilitychange', clockSync);
+  window.addEventListener('focus', clockSync);
+  window.addEventListener('blur', clockSync);
+  // Repainted from Date.now(), so a throttled background timer cannot drift.
+  if (CLOCK_IV === null) CLOCK_IV = setInterval(clockPaint, 500);
+  clockSync();
 }
 
 /* --------------------------------------------------- where am I in the paper
@@ -2151,6 +2238,7 @@ function fitPlayer(){
 async function boot(){
   fitPlayer();
   initSpy();
+  initClock();
   window.addEventListener('resize', fitPlayer);
   const isResult = location.search.indexOf('screen=result') !== -1;
   if (isResult){

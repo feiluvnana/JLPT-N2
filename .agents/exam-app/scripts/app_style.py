@@ -96,6 +96,22 @@ APP_CSS = """
   background:rgba(255,255,255,0.2);
   border-color:rgba(255,255,255,0.35);
 }
+/* 採点する stays disabled until every item is answered (build_interactive's
+   updateCounter). It must READ disabled, not just refuse the click. */
+#bar button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+#bar button:disabled:hover{
+  background:rgba(255,255,255,0.1);
+  border-color:rgba(255,255,255,0.2);
+}
+#bar button.primary:disabled,
+#bar button.primary:disabled:hover{
+  background:var(--accent);
+  border-color:var(--accent);
+}
 #bar button.primary{
   background:var(--accent);
   color:#ffffff;

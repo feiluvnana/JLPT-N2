@@ -158,7 +158,23 @@ Grades all 101 questions against embedded keys, evaluates section cutoffs
 (≥19/60) and total (≥90/180), switches to screen 3, and saves to whichever
 store this build uses (`採点結果.json`/`ユーザー解答.json`): into `tests/<id>/`
 under `make serve`, into localStorage on Pages, or as browser downloads with
-no server/store. Unanswered items appear as 「未解答」 chips, not wrong.
+no server/store. Unanswered items appear as 「未解答」 chips, not wrong — the
+CLI grader still grades a partial paper, and a result loaded back from
+`採点結果.json` may carry them.
+
+**In the page, grading is all-or-nothing.** 採点する stays `disabled` until all
+101 items are answered (`updateCounter`), and `save()` re-checks and scrolls to
+the first gap — a partial 採点 scales a raw count nobody produced, and the old
+「このまま採点しますか？」 confirm made that one keypress away. The counter beside
+it is the only progress readout; do not add a second one.
+
+**経過時間 — the clock in the bar ticks only while the exam is in front of you.**
+`initClock()` runs it from `Date.now()` and freezes it whenever the tab is
+hidden (`visibilitychange`), the window loses focus (`blur`), or screen 3 is up;
+the frozen readout says 「（停止中）」. It is **in memory only**: `ユーザー解答.json`
+and `採点結果.json` have no field for elapsed time and their shape is a contract
+with `grade_answers.py` (below), so a reload restarts the clock. Adding a field
+for it means changing both graders and the parity test.
 
 **全設問解答チェック表 expands as one list** — 「すべての設問詳細を展開」builds
 detail blocks for all 101 items from the still-in-DOM exam screen plus
