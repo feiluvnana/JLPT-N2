@@ -622,7 +622,8 @@
     "points": [
       "その反面《はんめん》: trái lại, mặt khác.",
       "中身《なかみ》を減《へ》らす: giảm lượng bên trong."
-    ]
+    ],
+    "passage_translation": "Hãy đọc đoạn văn sau, dựa trên chủ ý của toàn bài, và chọn một đáp án đúng nhất trong số 1・2・3・4 để điền vào các ô từ 48 đến 51.\n\nGiá và lượng\n\n　Tăng giá là một việc dễ hiểu với người mua. Thứ đến hôm qua còn một trăm năm mươi yên mà thành một trăm bảy mươi yên thì ai cũng nhận ra ngay tại chỗ. Ta kể với gia đình rằng nó đã đắt lên, và hôm nay cũng có thể thôi không mua. （ 48 ）, khi đúng cái gánh nặng hai mươi yên ấy đến ở dạng phần bên trong bị giảm đi, thì hôm ấy người mua ra khỏi tiệm mà chẳng cảm thấy gì.\n\n　Khi chi phí cho nguyên liệu và vận chuyển tăng, người làm ra hàng có hai con đường. Tăng giá, hoặc để nguyên giá mà giảm phần bên trong. Xét ở điểm gánh nặng của người mua tăng lên thì cả hai đều như nhau. Dù vậy, nhiều công ty đã chọn cách sau. Miễn cái con số lúc cầm món hàng lên không xê dịch thì khách sẽ mua tiếp như trước （ 49 ）. Chí ít thì phía bán vẫn nghĩ vậy.\n\n　Nhưng cái tiền đề ấy có thật đứng được không? Sự đổi khác của giá thì biết ngay lúc mua, còn sự đổi khác của lượng thì chỉ biết khi ta dùng hết nó. Chai nước giặt mua với ý nghĩ vẫn như thường lại hết sớm hơn thường. Đến đó người mua mới biết rằng gánh nặng của mình đã tăng. Cái dịp để phía bán nói cho họ biết điều đó thì đến cùng cũng chẳng có một lần. Càng định cho qua mà không để bị nhận ra thì sự tin cậy của người mua càng （ 50 ）.\n\n　Vốn là doanh số để khách mua tiếp, mà lại cắt phần bên trong đi để giữ lấy doanh số ấy thì （ 51 ）. Nghe nói một công ty thực phẩm nọ đã thử hai cách: với mặt hàng tăng giá một phần mười thì doanh số hầu như chẳng tụt, còn với mặt hàng để nguyên giá mà giảm phần bên trong một phần mười thì hai tháng sau đã tụt hơn một phần mười. Tăng giá là một sự thay đổi mà người mua chọn được là có nhận hay không. Bởi khi về sau mới biết rằng phần bên trong đã giảm, người mua lại cảm thấy mình đã bị lặng lẽ tước đi cái dịp chọn lựa ấy."
   },
   "49": {
     "why_correct": "Ngay sau đó là「少なくとも、売る側はそう考えてきた」, nên chỗ trống là dự tính của bên bán.",
@@ -674,7 +675,8 @@
     "points": [
       "組分《くみわ》け: việc chia người thành tổ.",
       "当番《とうばん》: phiên trực, luân phiên."
-    ]
+    ],
+    "passage_translation": "Dưới đây là thư điện tử một công ty nọ gửi cho nhân viên.\n\nKính gửi toàn thể nhân viên\n\n　Tôi là Kawamura của Phòng Tổng vụ. Từ tháng sau, cách nghỉ trưa sẽ đổi tùy theo từng phòng.\n　Từ trước đến giờ thì tất cả mọi người nghỉ một tiếng từ mười hai giờ. Từ tháng sau, những phòng phải nhận điện thoại và khách từ bên ngoài thì xin chia thành hai tốp mà nghỉ: tốp từ mười hai giờ và tốp từ một giờ. Như thế thì phiên trực điện thoại giờ nghỉ trưa như trước sẽ không cần nữa. Những phòng khác thì vẫn từ mười hai giờ như trước, không đổi. Các phòng nghỉ chia tốp thì xin bàn trong phòng xem ai vào tốp nào, rồi cho Phòng Tổng vụ biết cách chia tốp ấy trước ngày hai mươi lăm tháng này.\n　Có điểm nào chưa rõ thì xin cứ trao đổi."
   },
   "53": {
     "why_correct": "Thông báo ghi「賞味期限までの日数が九十日以上ある品に限ります」— chín mươi ngày tức ba tháng.",
@@ -687,7 +689,8 @@
     "points": [
       "賞味期限《しょうみきげん》: hạn dùng ngon nhất.",
       "消費期限《しょうひきげん》: hạn an toàn để ăn; 入荷《にゅうか》: hàng nhập về."
-    ]
+    ],
+    "passage_translation": "Dưới đây là thông báo được dán ở một tiệm bán thực phẩm nọ.\n\nCách ghi hạn ngon nhất sẽ thay đổi\n\n　Một phần những thực phẩm chế biến mà tiệm chúng tôi bán, với phần hàng nhập về từ ngày một tháng chín, sẽ đổi cách ghi hạn ngon nhất từ \"năm tháng ngày\" sang \"năm tháng\". Là vì với những mặt hàng giữ được lâu thì không cần ghi đến cả ngày.\n\n　Diện áp dụng chỉ giới hạn ở những mặt hàng còn từ chín mươi ngày trở lên đến hạn ngon nhất. Những mặt hàng có ghi hạn dùng, như cơm hộp hay món phụ, thì vẫn ghi đến cả ngày như trước. Mặt hàng mà ô ghi là \"năm tháng\" thì mốc hạn là đến hết tháng đó.\n　Phần hàng đã nhập về trước ngày ba mươi mốt tháng tám thì chúng tôi bán với cách ghi như trước, cho đến khi hết hàng."
   },
   "54": {
     "why_correct": "Bài đối chiếu lộ trình dài qua đường trục với lộ trình ngắn có đường riêng.",
@@ -700,7 +703,8 @@
     "points": [
       "道《みち》すじ: lộ trình, tuyến đường.",
       "幹線道路《かんせんどうろ》: đường trục nhiều xe lớn."
-    ]
+    ],
+    "passage_translation": "　Những người dùng xe đạp đi làm đang nhiều lên trong phố. Cũng có tiếng nói bám rễ chắc rằng xe đạp chạy trên lòng đường thì dễ gặp tai nạn, và công ty nào cho phép đi làm bằng xe đạp là vô trách nhiệm. Chỉ có điều, cứ lần theo số vụ tai nạn ở các nơi thì ta hiểu ra rằng mức độ nguy hiểm không phải như nhau cả. Trên những tuyến đường một chiều dài quá mười ki-lô-mét và đi qua những trục đường lớn (chú 1) nhiều xe to thì tỷ lệ bị thương cao, nhưng trên những tuyến trong vòng năm ki-lô-mét và có đường cho xe đạp đi được đã sắp đủ thì lại chẳng khác gì trường hợp đi bộ đi làm. Câu hỏi có được đi làm bằng xe đạp hay không chính là câu hỏi cho xe chạy trên con đường nào và bao nhiêu ki-lô-mét.\n\n(chú 1) 幹線道路: con đường nhiều xe, nối thị trấn với thị trấn."
   },
   "55": {
     "why_correct": "Bài viết「書き出す前に、相手の顔を思いうかべ」— giấy không xoá được nên có mấy phút nghĩ trước.",
@@ -713,7 +717,8 @@
     "points": [
       "思《おも》いうかべる: hình dung trong đầu.",
       "ひとしきり: một hồi, liền một lúc."
-    ]
+    ],
+    "passage_translation": "　Tôi thôi viết thiếp chúc năm mới đã lâu lắm. Dù vậy, một năm một hai lần, tôi vẫn ngồi trước tờ giấy viết thư (chú 1) với chiếc bút mực. Vừa bắt đầu viết là tôi nhận ra ngay: bàn tay không theo được tốc độ của cái nghĩ. Nếu là trên màn hình thì trong lúc viết rồi xóa, câu văn tự nó cứ ngay ngắn dần. Thế nhưng trên mặt giấy thì dòng đã viết một lần thì không xóa được. Vì vậy, trước khi hạ bút, tôi hình dung ra mặt người kia và nghĩ một hồi (chú 2) xem sẽ truyền gì, theo thứ tự nào. Suốt một thời gian dài, tôi vẫn đinh ninh rằng cái cẩn trọng của chữ viết tay là chuyện chữ đẹp. Cái mà giờ đây tôi muốn gọi bằng tên ấy lại là mấy phút im lặng kia, trước khi ngồi vào tờ giấy.\n\n(chú 1) 便箋: tờ giấy để viết thư.\n(chú 2) ひとしきり: một hồi, liên tục trong một lúc."
   },
   "56": {
     "why_correct": "Bài đề nghị「やめる時期を自分で決めさせること」sau khi cho trẻ tự nói ra lý do.",
@@ -726,7 +731,8 @@
     "points": [
       "忍耐力《にんたいりょく》: sức chịu đựng, tính bền bỉ.",
       "手《て》ごたえ: cảm giác tự mình làm được."
-    ]
+    ],
+    "passage_translation": "　Xem ra nhiều cha mẹ cho rằng để con bỏ dở lớp học thêm thì sức nhẫn nại không lớn lên được. Đúng là cứ hễ thấy khổ là quẳng đi thì chẳng thấm được gì vào người. Nhưng nếu người lớn quyết một chiều việc tiếp tục hay bỏ, thì đứa trẻ mất đi cái dịp xác nhận xem sự quan tâm của mình nằm ở đâu. Cái lối nghĩ rằng không cho bỏ thì sẽ nuôi được sức nhẫn nại, chẳng phải là bất khả hay sao? Hãy để chính đứa trẻ chuyển thành lời rằng vì sao mình đã bắt đầu, cái gì đã thành ra không còn thú vị, và để nó tự quyết thời điểm bỏ. Đứa trẻ đã đi qua đoạn đường này thì lần sau bắt đầu một việc gì cũng giữ được cái cảm giác chắc tay rằng mình đã tự chọn."
   },
   "57": {
     "why_correct": "Bài viết「二晩のあいだに見たのは、畑と台所と…山の稜線くらいのものである」— tầm mắt chỉ gói trong việc nhà.",
@@ -739,7 +745,8 @@
     "points": [
       "縁側《えんがわ》: hành lang gỗ ven nhà kiểu Nhật.",
       "紛《まぎ》れ込《こ》む: lẫn vào, hoà vào khó phân biệt."
-    ]
+    ],
+    "passage_translation": "　Mùa thu năm ngoái, nhân chuyến đi lấy tin, tôi trú lại ở một nhà nông trong ngôi làng giữa núi. Đó là cơ chế gọi là trú nhà nông (chú 1); chẳng có tòa nhà nào mang tên nhà nghỉ, tôi thuê một phòng trong căn nhà rời (chú 2) mà thường ngày gia đình vẫn dùng, rồi ở hai đêm.\n\n　Chiều cái hôm mới tới, tôi được chủ nhà dẫn ra ruộng. Không phải là họ nhờ tôi giúp. Họ hỏi tôi có đi cùng không, vì họ ra hái rau lá (chú 3) để dùng cho bữa sáng mai; tôi chẳng có lý do gì để chối nên chỉ đi theo thế thôi. Chúng tôi mang cái giỏ có mùi đất về, rửa đất ở nhà bếp, rồi cứ thế ngồi vào bữa cơm chiều. Đó là một khoảng thời gian mà tôi như đã lẫn vào (chú 4) một chút công việc của cái nhà ấy hôm đó, hơn là được người ta làm gì cho mình như một người khách của nhà nghỉ.\n\n　②**Hầu như chẳng còn đọng lại ký ức nào về việc đi đến một nơi du lịch**. Trong hai đêm ấy, thứ tôi thấy chỉ chừng là cái ruộng, cái nhà bếp, và đường sống núi (chú 5) nhìn từ hành lang hiên. Vậy mà về nhà rồi, một thời gian tôi vẫn nhớ lại những tiếng động buổi sáng của cái nhà ấy. Ai đó mở cửa, xả nước, đặt nồi lên lửa. Đến cả cái thứ tự ấy vẫn còn đọng trong tai.\n\n　Chủ nhà cười nói rằng trong làng có mấy căn nhà nghỉ đang trống. Dù vậy người ta vẫn chọn nhà rời của nhà nông mà đến trú. Nghĩ ra thì thứ chúng ta mang về từ chuyến đi, có lẽ là cái thường ngày mà ai đó ở đó đang lặp lại, hơn là tấm ảnh danh thắng. Những chỗ ta có mặt được trong một ngày của người khác đã lặng lẽ ít dần đi khỏi các chuyến đi. Cái nặng của chiếc giỏ có mùi đất, tay tôi vẫn còn nhớ.\n\n(chú 1) 農泊: hình thức đi chơi mà ta trú ở nhà nông, chạm vào đời sống và công việc của vùng đất ấy.\n(chú 2) 離れ: căn phòng dựng tách ra khỏi nhà chính.\n(chú 3) 菜っ葉: những loại rau ăn lá, như rau bó xôi hay cải komatsuna.\n(chú 4) 紛れ込む: lẫn vào xung quanh, thành ra không phân biệt được.\n(chú 5) 稜線: đường nối từ đỉnh này sang đỉnh khác của núi."
   },
   "58": {
     "why_correct": "Đoạn cuối viết「持ち帰るのは、名所の写真よりも、そこで誰かが繰り返している日常のほう」.",
@@ -765,7 +772,8 @@
     "points": [
       "共用部《きょうようぶ》: phần dùng chung của toà nhà.",
       "言葉《ことば》を交《か》わす: trao đổi đôi câu."
-    ]
+    ],
+    "passage_translation": "　Trong những cuộc tìm hiểu quanh việc quản lý khu chung cư, có một cuộc bàn về mối liên hệ giữa lời chào và trạng thái của tòa nhà. Đó là cuộc mà người ta hỏi chuyện người phụ trách của ban quản trị (chú 1), rồi ghi lại theo từng bậc mức độ vẽ bôi và hư hỏng ở phần dùng chung (chú 2) cùng lượng đồ để bừa, rồi đem chồng lên bản hỏi ý kiến người dân.\n\n　Kết quả thì rành rành. Những tòa nhà càng có tỷ lệ cao người trả lời rằng họ trao lời chào khi gặp mặt nhau ở hành lang hay thang máy, thì phần dùng chung càng ít hư hỏng và ít đồ để bừa, và tiền phải bỏ ra để sửa cũng được kìm ở mức thấp. Nghe nói dù có so giữa những tòa nhà gần nhau về số hộ và số năm tuổi (chú 3), thì cái hướng này cũng không đổi. （lược một đoạn）\n\n　Vì sao lại thành ra thế? Một người phụ trách nêu ra cái cảm giác đang bị ai nhìn. Nếu người mình đi ngang ở hành lang là một người khác mà mình chẳng biết cả tên thì chỗ đó thành ra một nơi chẳng liên quan gì đến mình. Thế nhưng nếu là người mình đã một lần trao lời thì chỗ đó thành ra lọt vào mắt như một nơi người ấy đi qua. Nghe nói lời chào đang đổi phần dùng chung từ \"một nơi chẳng của ai\" thành \"một nơi có người mình biết mặt đi qua\".\n\n　Chỉ có điều, không phải cứ chào nhau là không cần đến công sức nữa. Phần riêng (chú 4) thì từng hộ tự chăm, nhưng cái giữ lấy phần dùng chung lại là những thỏa thuận kiểm tra và dọn dẹp đã định, và cũng cần khoản tích góp theo kế hoạch sửa chữa dài hạn (chú 5). Dù vậy, những tòa nhà càng có lời chào được trao thì cùng một số tiền lại giữ được trạng thái lâu hơn.\n\n(chú 1) 管理組合: hội do tất cả những người chủ của khu chung cư bán lập nên, để lo cho tòa nhà.\n(chú 2) 共用部: hành lang ・ cầu thang ・ cửa ra vào v.v. mà người ở cùng dùng.\n(chú 3) 築年数: việc tòa nhà đã dựng xong được bao nhiêu năm.\n(chú 4) 専有部: chỗ mà người ở dùng riêng cho mình, như từng căn nhà.\n(chú 5) 長期修繕計画: kế hoạch định trước thời điểm và số tiền cho những lần sửa lớn về sau."
   },
   "60": {
     "why_correct": "Điều tra cho thấy nhà nào tỉ lệ chào hỏi cao thì「共用部のこわれ具合」ít và tiền sửa cũng thấp.",
@@ -791,7 +799,8 @@
     "points": [
       "不祥事《ふしょうじ》: vụ việc làm mất uy tín tổ chức.",
       "見出《みだ》し: tiêu đề bài báo."
-    ]
+    ],
+    "passage_translation": "　Câu chữ hay hình ảnh đã một lần đưa lên mạng thì dù ta tưởng đã xóa, nó cũng không mất hẳn. Nó bị đăng lại (chú 1), bị lưu, và cứ còn lại như một kết quả tìm kiếm. Ví (chú 3) với hình xăm (chú 2) không xóa được, những dấu vết (chú 4) như thế được gọi là hình xăm số.\n\n　Cái người ta nghĩ tới vào thời chữ này mới bắt đầu được dùng là những tình huống kiểu một dòng viết hớ hênh hồi trẻ bị phát hiện lúc xin việc. Thế nhưng nhìn vào số lượng mà các đầu mối tư vấn đang xử lý thì cái nằm ở trung tâm lại hơi khác. Nghe nói nổi rõ hơn lại là những thứ người khác viết về chính người ấy, chứ không phải những thứ người ấy tự viết. （lược một đoạn）\n\n　Cũng có tiếng nói rằng ghi chép của phía bị hại lại khó xóa hơn ghi chép của phía gây hại. Người bị nêu tên như đương sự của một vụ việc hay tai nạn, người bị đưa ảnh lên cùng với chuyện tai tiếng (chú 5) của chỗ làm, thì bao nhiêu năm sau vẫn cứ thấy tên mình và cái tựa đề thời ấy ở phía trên trong kết quả tìm kiếm. Những cơ chế để đề nghị xóa thì đang dần được sắp cho đủ, nhưng lần cho hết những nơi đã đăng lại là điều khó.\n\n　Người phụ trách của một đầu mối nọ nói rằng phần nhiều những người đến trao đổi đều thốt ra cùng một điều. Là: tôi vẫn tưởng chuyện đã xong rồi. Ở bên kia màn hình thì chẳng có gì xong cả. Cái tựa đề mười năm trước xếp cùng một cỡ với bài đăng hôm nay. Người đến trao đổi nhìn cái màn hình ấy một lúc, rồi đặt ngón tay xuống mà nói: chỗ tôi muốn xóa là đúng một dòng này.\n\n(chú 1) 転載: việc đưa y nguyên một câu chữ hay hình ảnh vốn ở nơi khác sang một chỗ khác.\n(chú 2) 入れ墨: thứ đưa màu vào da bằng kim, vẽ nên một hình không xóa được.\n(chú 3) なぞらえる: diễn đạt một thứ bằng cách coi nó như một thứ khác tương tự.\n(chú 4) 痕跡: cái dấu còn lại sau khi một điều gì đã có.\n(chú 5) 不祥事: việc rắc rối làm mất uy tín của một tổ chức."
   },
   "62": {
     "why_correct": "Bài viết「目立つのは、本人が書いたものではなく、ほかの人が本人について書いたもののほう」.",
@@ -817,7 +826,8 @@
     "points": [
       "口実《こうじつ》: cái cớ để bào chữa.",
       "一次情報《いちじじょうほう》: thông tin gốc."
-    ]
+    ],
+    "passage_translation": "　Việc người ta thuyết về sự cần thiết của sức nhận ra thông tin thì đã lâu. Ở trường cũng vậy, người ta dạy rằng đừng nuốt trọn (chú 1) những gì được viết, mà trước hết hãy thử nghi. Như một kỹ thuật mà người đọc phải học lấy, cái tầm quan trọng ấy được thừa nhận rộng khắp.\n\n　Thế nhưng người đã học được cách nghi thì không hẳn nhờ đó mà phán đoán chính xác hơn. Trong một cuộc điều tra, nghe nói những người càng trả lời \"tôi vẫn giữ cách nghi thông tin trước đã\" thì càng thấy có khuynh hướng gạt (chú 2) mạnh những chuyện mình không tin. Sự nghi vừa là công cụ để nhận ra, mà đồng thời cũng thành cái cớ (chú 3) đẩy xa những thông tin không thuận cho mình.\n\n　Nghi và xác nhận thì không phải là một. Xác nhận là cái việc lần xem thông tin ấy ban đầu ra từ đâu, rồi đi xem cái tổ chức hay con người đã công bố nó lấy gì làm mục đích. Nếu là thống kê của cơ quan nhà nước thì mở bảng gốc ra, nếu là cuộc điều tra được dẫn lại thì xác nhận tên cơ quan đã thực hiện và thời điểm. Có mất công, nhưng cái thông tin bậc một (chú 4) mà ta lần đến được thì thường có lối viết thận trọng hơn cái tựa đề.\n\n　Cái sức chọn lọc thông tin không phải chỉ là sự nhạy của trực giác đoán ra thật giả. Có thể nói rằng chính cái thái độ không xót cái công mộc mạc là tạm gác phán đoán lại mà lần theo nguồn ra (chú 5) mới là phần bên trong của sức nhận ra ấy.\n\n(chú 1) うのみにする: việc tin y nguyên mà không nghĩ cho kỹ về nội dung.\n(chú 2) 退ける: không tiếp nhận mà đẩy xa hay từ chối.\n(chú 3) 口実: cái lý do để biện bạch cho thuận lợi.\n(chú 4) 一次情報: cái tin đúng như lúc đầu được công bố, không qua tay ai.\n(chú 5) 出所: cái gốc mà thông tin ấy ban đầu ra từ đó."
   },
   "64": {
     "why_correct": "Câu kết:「その地味な手間を惜しまない態度こそが、見分ける力の中身なのだ」.",
@@ -843,7 +853,8 @@
     "points": [
       "異論《いろん》はない: không có ý kiến phản đối.",
       "作《つく》り直《なお》す: làm lại từ đầu."
-    ]
+    ],
+    "passage_translation": "**A**\n　Tiếng nói lo rằng việc phát triển làm mất đi chỗ ở của các sinh vật đang mạnh lên. Dù vậy, ngay ở những vùng người đang ít đi thì việc dựng lại đường sá và các cơ sở vẫn phải tiếp tục, nên con đường thôi không làm chúng nữa thì không thực tế. Vì vậy, cách đang được làm ở khắp nơi là dựng lại ở gần đó một môi trường đúng bằng phần thiên nhiên bị mất. Lấp cái hồ thì đào một cái hồ ở chỗ khác, cắt cánh rừng thì nuôi một cánh rừng cùng diện tích. Cũng có lời phê rằng ở những chỗ dựng lại thì mối nối của các sinh vật vốn có sẽ không trở về, nhưng ở những nơi đã ra tay chăm liên tục mười năm, hai mươi năm thì khắp nơi đã có báo cáo về ví dụ những loài lẽ ra đã biến mất lại trở về. Muốn giữ thiên nhiên mà không dừng việc phát triển thì cái cơ chế đếm lấy phần bị mất rồi chuẩn bị một môi trường đúng bằng thế ở gần đó mới là thực tế.\n\n**B**\n　Về điểm không thể thôi không làm đường sá và cơ sở thì tôi không phản đối. Nhưng tôi vẫn muốn cẩn thận với cái lối nghĩ rằng thiên nhiên đã mất thì cứ dựng lại sau là được. Chỗ dựng lại thì phải mất nhiều năm dài mới lấy lại được cái chức năng như cũ, và nếu giữa đường việc chăm bị đứt thì chỗ đó thành ra một nơi chẳng phải đồng cỏ mà cũng chẳng phải rừng. Điều quan trọng là ngay ở giai đoạn lập kế hoạch, hãy đưa những nơi không có gì thay được ra ngoài diện phát triển. Cũng có tiếng nói rằng thủ tục nhiều thêm thì dự án bị chậm, nhưng nghĩ đến số tiền dựng lại về sau, và việc thất bại thì không trả về như cũ được, thì chọn lại địa điểm ngay từ đầu rốt cuộc lại rẻ hơn. Việc định trước những nơi phải giữ lại chính là điều kiện để tiến hành việc phát triển."
   },
   "66": {
     "why_correct": "A đề cao việc「同じだけの環境を近くに用意していく」, B đề cao「代えのきかない場所を…外しておく」.",
@@ -869,7 +880,8 @@
     "points": [
       "段取《だんど》り: trình tự và sự chuẩn bị.",
       "出《で》どころ: nguồn gốc, chỗ phát sinh."
-    ]
+    ],
+    "passage_translation": "　Nghe tin một người bạn nhập viện thì điều tôi nghĩ trước nhất là mang gì đến. Trái cây thì nặng mà ăn không hết, hoa thì phòng bệnh chẳng có chỗ đặt, sách thì chẳng biết bạn còn hơi sức (chú 1) mà đọc hay không. Hôm nọ cũng vậy, đêm trước tôi cứ kể ra những thứ ấy rồi lại gạch đi, rốt cuộc lại cất công chọn ở nhà ga một món bánh mà quầy trong bệnh viện cũng mua được, rồi mang đi.\n\n　Phòng bệnh hôm ấy cũng chẳng có khách nào khác đến thăm. Dù vậy, cái túi tôi mang đi thì hầu như chẳng được nhắc tới trong câu chuyện. Cái bạn tôi muốn nghe là chuyện chỗ tôi làm. Ai đã chuyển sang bộ phận nào, cái việc kia rồi sau đó thành ra thế nào. Bạn như đang xác nhận từng thứ một những gì đang chuyển động ở bên ngoài trong lúc mình không có mặt. Chúng tôi nói đến hết giờ thăm bệnh, và khi đi qua trước căn phòng sinh hoạt chung ở cuối hành lang mà ra ngoài, tôi nhận ra rằng cái thời gian tôi đã dốc ra để chọn và cái thời gian đã có ích ở đó xem ra là hai thứ khác nhau.\n\n　①**Chia việc thăm bệnh thành hai** thì cái nguồn ra (chú 2) của sự bất an này dễ thấy hơn. Một là những thứ và những sắp xếp mà phía đi thăm chuẩn bị. Chọn bánh, tra giờ thăm bệnh, định trước cái giờ sẽ ngắt câu chuyện lại cho gọn (chú 3). Ở cái chỗ mà cử động tay là thành hình được thì ta có phân vân, nhưng chọn sai cách cũng còn kịp lấy lại. Một cái nữa là những thứ mà phía được thăm — tức là người đang nằm viện — nhận lấy. Cái tin rằng tình hình bên ngoài vẫn còn đang chuyển động, và cái cảm giác rằng ngày tháng đang chắc chắn tiến lên. Cái này là chuyện xảy ra ở bên trong người kia, không phải thứ cho vào túi mà trao được.（lược một đoạn）\n\n　Hai thứ này thì cả những lúc cần đến cũng không trùng nhau. Việc cần đến đồ và cần đến sắp xếp thì cũng nửa phần là để phía đi thăm tự an lòng (chú 4). Còn phần những thứ được nhận lấy thì càng nằm viện lâu càng nặng thêm. Người nào càng ở trong phòng bệnh suốt cái khoảng dài sau khi đã đo nhiệt độ buổi sáng, thì cái chuyện chuyển đổi bộ phận hay chuyện cơn mưa trên đường đến mà tôi vô tình kể lại càng thành ra trung tâm của ngày hôm ấy. Cùng một câu chuyện, người ở bên ngoài thì quên luôn trong ngày.\n\n　Vì vậy, cái hay dở (chú 5) của một lần thăm bệnh không được định bởi phần bên trong cái túi mình mang đi. Cùng một buổi thăm ba mươi phút, mà với người vừa mới nhập viện thì thành khoảng thời gian nhận lấy đồ mang tới, còn với người đã nằm viện lâu thì thành khoảng thời gian nhận lấy một ngày ở bên ngoài.\n\n(chú 1) 気力: cái đà của tấm lòng muốn làm cho xong một việc gì.\n(chú 2) 出どころ: chỗ làm gốc cho nó.\n(chú 3) そこそこに: cái vẻ chưa làm cho đủ mà đã gấp gáp kết thúc.\n(chú 4) 気休め: thứ chẳng mấy có ích, chỉ để tạm làm lòng mình lắng lại ngay lúc đó.\n(chú 5) 善しあし: tốt hay xấu, và việc nhận ra điều đó."
   },
   "68": {
     "why_correct": "Vế đầu「選び方をまちがえても取り返しはつく」, vế sau「袋に入れて渡せるものではない」.",
@@ -908,7 +920,8 @@
     "points": [
       "同意書《どういしょ》: giấy đồng ý của người bảo hộ.",
       "締切《しめきり》: hạn cuối nhận đơn."
-    ]
+    ],
+    "passage_translation": "**Đại hội thể thao công dân Midori lần thứ 20 — Thể lệ nhận đăng ký tham gia**\n\n　Năm nay chúng tôi cũng mở đại hội thể thao công dân. Chúng tôi đã gom đủ những môn mà cả quý vị ngày thường không vận động cũng tham gia được. Xin quý vị xem cho rõ môn mình muốn và các điều kiện ở bảng dưới, rồi đăng ký.\n\nNgày đại hội: 26 tháng 10 (CN)\n\n| Môn | Quý vị tham gia được | Phí tham gia | Hạn đăng ký | Địa điểm |\n|---|---|---|---|---|\n| Chạy 5 ki-lô-mét | Quý vị từ trung học cơ sở trở lên | 1.000 yên | 3/10 | Công viên công dân |\n| Chạy tiếp sức đôi cha mẹ – con | 1 nhóm 2 người gồm học sinh tiểu học và người bảo hộ | 1.500 yên/nhóm | 26/9 | Sân điền kinh thành phố |\n| Bóng bàn (đơn) | Quý vị từ trung học phổ thông trở lên | 800 yên | 3/10 | Nhà thể chất tổng hợp thành phố |\n| Đại hội đi bộ | Không hạn chế tuổi | Miễn phí | Nhận trong ngày | Công viên công dân |\n\n【Đăng ký】\n・Chúng tôi nhận qua trang web của thành phố hoặc ở quầy Trung tâm Thể thao công dân. Không nhận qua bưu điện.\n・Những môn có quý vị từ trung học cơ sở trở xuống tham gia thì cần giấy đồng ý của người bảo hộ (in được từ trang web của đại hội).\n・Một người đăng ký được tối đa 2 môn. Chỉ có điều, đại hội đi bộ không tính vào con số này.\n\n【Phí tham gia và ngày diễn ra】\n・Phí tham gia thì xin quý vị chuyển vào tài khoản được chỉ định, trong vòng 3 ngày sau hạn đăng ký. Trong ngày, quý vị không thanh toán bằng tiền mặt tại địa điểm được.\n・Trong ngày, chúng tôi tiếp nhận tại từng địa điểm. Xin quý vị đến trước giờ bắt đầu 30 phút.\n\n※ Trường hợp mưa, chạy 5 ki-lô-mét và chạy tiếp sức đôi cha mẹ – con sẽ dời sang ngày 3 tháng 11. Bóng bàn và đại hội đi bộ vẫn tiến hành như dự định."
   },
   "71": {
     "why_correct": "Tiếp sức phụ huynh hết hạn「9月26日」nên ngày 1 tháng 10 đã trễ; đi bộ thì「当日受付」.",
