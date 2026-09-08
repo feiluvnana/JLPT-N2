@@ -937,29 +937,29 @@
   ]
  },
  "問1-1": {
-  "why_correct": "女「ペンションにも、到着時間の変更を伝えてあるよね？」男「そうでした、すみません」→ chưa báo giờ đến cho nhà nghỉ → đáp án 3.",
+  "why_correct": "Nam nhờ「ポスターを頼める？」và dặn「今週中にお願い」＝nữ sinh lên mẫu poster.",
   "options_analysis": [
-   "Báo công ty xe buýt đã xong「もう知らせた」.",
-   "Báo giờ tập trung cho HLV đã do nữ tiền bối làm.",
-   "Còn quên chưa báo giờ đến cho nhà nghỉ.",
-   "Báo mang áo khoác là việc nữ tiền bối tự làm."
+   "Phân công trực là việc「今日…決める」, cả nhóm bàn hôm nay, không riêng nữ.",
+   "Nội dung khảo sát cũng là việc「みんなで見直す」cả nhóm.",
+   "Gửi email do nam đảm nhận「僕から送る」.",
+   "Đúng."
   ],
   "points": [
-   "ペンション: nhà nghỉ kiểu nhỏ.",
-   "貸切バス《かしきりバス》: xe buýt thuê riêng."
+   "発表会《はっぴょうかい》: nghĩa “buổi báo cáo”.",
+   "案《あん》: nghĩa “bản dự thảo”."
   ]
  },
  "問1-2": {
-  "why_correct": "Vì ngại đổi tàu nên chọn tàu tốc hành đi thẳng; ghế chỉ định lại chỉ còn toa hút thuốc.",
+  "why_correct": "Nữ quản lý giao「ホールの入口」(ア)và「清掃」(ウ)cho nam hôm nay.",
   "options_analysis": [
-   "Shinkansen bị loại vì phải đổi tàu ở 北山.",
-   "Cũng là shinkansen, đã bị loại vì phải chuyển tàu.",
-   "Ghế chỉ định chỉ còn toa hút thuốc, khách từ chối.",
-   "Đúng: tàu tốc hành, ghế tự do."
+   "“ア・イ” sai vì イ(bán đồ ăn)là việc buổi trước, không phải hôm nay.",
+   "Đúng, cả ア và ウ.",
+   "“イ・ウ” sai vì イ không phải việc hôm nay.",
+   "“ア・イ・ウ” sai vì gồm cả イ không thuộc hôm nay."
   ],
   "points": [
-   "乗《の》り換《か》え: việc chuyển tàu.",
-   "自由席《じゆうせき》: ghế tự do, không chỉ định."
+   "清掃《せいそう》: nghĩa “dọn dẹp”.",
+   "研修《けんしゅう》: nghĩa “đào tạo, tập huấn”."
   ]
  },
  "問1-3": {
@@ -976,16 +976,16 @@
   ]
  },
  "問1-4": {
-  "why_correct": "Quà lưu niệm chưa tới, bình hoa hoãn lại; còn lại「名前を書いた紙を椅子に貼って」.",
+  "why_correct": "Nữ nhân viên hỏi về chất liệu, sếp trả lời:「ガラスも悪くはないと思うけど…和紙なんかも合うね」và cô đáp「そうしてみます」— sẽ đổi chất liệu đèn.",
   "options_analysis": [
-   "Quà lưu niệm CHƯA giao tới, còn 1 tiếng nữa.",
-   "Chuyển bình hoa bị đổi sang làm CÙNG NHAU sau, không phải ngay.",
-   "Dán tên khách lên ghế trong lúc chờ quà tới.",
-   "Tập dượt phát biểu hẹn vào sáng sớm MAI."
+   "[Sai] Vị trí đèn được khen「よく考えてあるね」, không cần đổi.",
+   "[Đúng] Sẽ đổi chất liệu đèn từ kính sang giấy dó.",
+   "[Sai] Độ sáng của đèn được giữ nguyên「案の通りで」.",
+   "[Sai] Màu ánh sáng cũng được giữ nguyên「案の通りで」."
   ],
   "points": [
-   "納品《のうひん》: giao hàng.",
-   "出席者《しゅっせきしゃ》: người tham dự."
+   "照明器具《しょうめいきぐ》: dụng cụ chiếu sáng.",
+   "そざい: chất liệu."
   ]
  },
  "問1-5": {
@@ -1015,16 +1015,16 @@
   ]
  },
  "問2-2": {
-  "why_correct": "「自分が仕事でどう力を発揮できるか、そこを知りたい」＝muốn tìm thế mạnh bản thân.",
+  "why_correct": "Kết luận:「あんまり使ってない大きい家具のもらい手を探そうか」.",
   "options_analysis": [
-   "Cô nói rõ chưa nghĩ đến việc lợi cho xin việc.",
-   "Lo lắng giao tiếp là mối bận tâm, không phải điều kỳ vọng.",
-   "“Hiểu đời sống công ty” là gợi ý của bạn nam, không phải của cô.",
-   "Đúng."
+   "Tìm người nhận đồ nội thất lớn ít dùng như sofa.",
+   "Vợ phản đối ngay khi chồng đề xuất bán tủ lạnh.",
+   "Chồng cho là bốc dỡ vất vả, nên thuê công ty chuyển nhà.",
+   "Vợ nói khó tìm công ty chuyển nhà rẻ."
   ],
   "points": [
-   "実習《じっしゅう》: nghĩa “thực tập”.",
-   "発揮《はっき》する: nghĩa “phát huy”."
+   "もらい手《て》: người nhận (đồ cho tặng).",
+   "費用《ひよう》を抑《おさ》える: tiết kiệm chi phí."
   ]
  },
  "問2-3": {
@@ -1041,42 +1041,42 @@
   ]
  },
  "問2-4": {
-  "why_correct": "Nữ nói:「合わせるもので同じ着物とは思えないってくらい印象が変わるんだよ」＋「毎日着たいくらい大好きになっちゃった」.",
+  "why_correct": "「佐藤さんにはやっぱり僕と同じ方法がお勧めだね」＝mặc đồ đơn giản.",
   "options_analysis": [
-   "[Sai] Giá rẻ chỉ là lý do mua được nhiều, không phải lý do mê.",
-   "[Sai] Cô nói KHÔNG đặc biệt thích đồ cũ「そういうわけじゃない」.",
-   "[Đúng] Say mê vì cách phối đồ đổi hẳn ấn tượng bộ kimono.",
-   "[Sai] Cô nói KHÔNG quan tâm ánh mắt người khác."
+   "Chỉ nói tạp chí 'có thể tham khảo' rồi chuyển ý khác.",
+   "Nữ từ chối vì trả lại đồ phiền phức.",
+   "Khuyên áp dụng cách của chính nam sinh.",
+   "Nữ ngần ngại với đồ cũ."
   ],
   "points": [
-   "組《く》み合《あ》わせ: sự phối đồ.",
-   "印象《いんしょう》: ấn tượng."
+   "制服化《せいふくか》: mặc theo kiểu cố định mỗi ngày.",
+   "似合《にあ》う: hợp, phù hợp."
   ]
  },
  "問2-5": {
-  "why_correct": "Giám đốc tăng doanh số bằng quảng cáo gây ấn tượng mạnh về nguy cơ ngừng bán.",
+  "why_correct": "先生「子供と接する時、もう少し低く屈んで話せたら」「先生の顔を見上げなくてもいいように」→ đáp án 3.",
   "options_analysis": [
-   "Tặng nước miễn phí chỉ là ý kiến nêu ra, không được áp dụng.",
-   "Đúng: quảng cáo gây ấn tượng mạnh giúp tăng doanh số.",
-   "Idol chỉ quay video đăng mạng, không được mời làm quảng cáo.",
-   "Bài phỏng vấn không nói đến giảm giá (bán nửa giá là chuyện sắp tới)."
+   "Sự chú ý an toàn đã được khen, không phải điểm cần sửa.",
+   "Cách ra chỉ thị dễ hiểu cũng đã được khen.",
+   "Cần cúi thấp để ngang tầm mắt trẻ.",
+   "Chào hỏi vui vẻ cũng đã được khen, không cần sửa."
   ],
   "points": [
-   "インパクト: ấn tượng mạnh.",
-   "売《う》り上《あ》げを伸《の》ばす: tăng doanh số."
+   "屈む《かがむ》: cúi, khom người xuống.",
+   "保護者《ほごしゃ》: phụ huynh."
   ]
  },
  "問2-6": {
-  "why_correct": "Giám đốc kể ông quyết định đi bộ mỗi ngày khoảng một tiếng, và vợ ông cũng bắt đầu đi cùng.",
+  "why_correct": "Phóng viên nói rèm chạm vào lò sưởi đặt trong phòng khách rồi bắt lửa và cháy.",
   "options_analysis": [
-   "[Sai] Đá bóng với bạn bè là cách hồi ông còn trẻ.",
-   "[Sai] Chạy bộ là điều bạn gợi ý nhưng ông chưa thực hiện.",
-   "[Đúng] Hiện nay ông đi bộ cùng vợ mỗi ngày.",
-   "[Sai] Du lịch chỉ là dịp ông tiếp tục việc đi bộ."
+   "Tầng 1 cháy nặng là kết quả lan ra, không phải nguyên nhân.",
+   "Bếp cũng chỉ là nơi cháy nặng; lò sưởi không đặt ở đó.",
+   "Rèm bắt lửa là rèm phòng khách, không phải rèm bếp.",
+   "Đúng: rèm phòng khách bén lửa từ lò sưởi."
   ],
   "points": [
-   "解消《かいしょう》する: giải tỏa, xóa bỏ.",
-   "家内《かない》: vợ (cách nói khiêm nhường)."
+   "居間《いま》: phòng khách, phòng sinh hoạt.",
+   "燃《も》え移《うつ》る: lửa lan sang."
   ]
  },
  "問3-1": {
@@ -1106,16 +1106,16 @@
   ]
  },
  "問3-3": {
-  "why_correct": "「子供たちが笑顔で駆け寄ってきて…元気をもらえてありがたい」→ toàn bài nói về niềm vui bán kẹo.",
+  "why_correct": "Bài xâu chuỗi sự thay đổi: từ gạo sang thịt và dầu, rồi cả cách ăn cũng khác xưa.",
   "options_analysis": [
-   "Đúng: toàn bài nói về niềm vui khi trẻ em ghé thăm cửa hàng.",
-   "Món kẹo xưa chỉ được nam MC giới thiệu, không phải chủ đề chính.",
-   "Bài không so sánh sự khác biệt giữa kẹo xưa và nay.",
-   "Bài không nói về bí quyết duy trì cửa hàng lâu dài."
+   "Nói cả nội dung lẫn cách ăn đều 「昔とは大きく異なる」.",
+   "Không chỉ từ 1950 mà theo dòng thay đổi từ xưa tới nay.",
+   "Không đánh giá về dinh dưỡng.",
+   "Đồ ăn ngoại chỉ được nhắc như nguyên nhân của thay đổi."
   ],
   "points": [
-   "駆け寄る: chạy đến gần.",
-   "元気をもらう: được tiếp thêm năng lượng."
+   "食生活《しょくせいかつ》: sinh hoạt ăn uống.",
+   "〜に伴《ともな》って: kéo theo đó, cùng với đó."
   ]
  },
  "問3-4": {
@@ -1145,15 +1145,15 @@
   ]
  },
  "問4-1": {
-  "why_correct": "「色はともかく使いやすいのよね」＝màu tạm gác qua, nhưng dễ dùng — đáp lại tự nhiên nhất là phản hồi về điểm màu sắc「そう？色も悪くないと思うけどね」.",
+  "why_correct": "Người kia kể đã lạc nhưng cuối cùng vẫn tới → mừng vì kịp giờ là đúng.",
   "options_analysis": [
-   "[Sai]「完璧ってわけだね」hiểu nhầm thành khen hoàn hảo, không đúng ý câu nói.",
-   "[Đúng] Phản hồi đúng về màu sắc, điều người nói vừa nhắc đến.",
-   "[Sai]「君が好きな色だよね」không liên quan đến ý câu gốc."
+   "Nói về sự bất cẩn của chính mình, không phản ứng lại.",
+   "Ghi nhận sự vất vả rồi mừng vì đã kịp giờ.",
+   "Là đề nghị khi còn đang tìm, nhưng người kia đã tới rồi."
   ],
   "points": [
-   "〜はともかく: tạm gác…qua một bên.",
-   "使《つか》いやすい: dễ sử dụng."
+   "うろうろする: đi lòng vòng không biết hướng.",
+   "間《ま》に合《あ》う: kịp giờ, đúng hẹn."
   ]
  },
  "問4-2": {
@@ -1193,15 +1193,15 @@
   ]
  },
  "問4-5": {
-  "why_correct": "「選ばれたからには」cho thấy việc chọn đã xong, đây là lời động viên → đáp bằng quyết tâm.",
+  "why_correct": "「うまくやれるか不安でしょうがないよ」＝rất lo lắng → đáp án 2.",
   "options_analysis": [
-   "Nói lần sau sẽ cố để được chọn, tức là chưa được chọn.",
-   "Nói chưa biết có được chọn không, mâu thuẫn với câu gốc.",
-   "Đúng: hứa sẽ làm hết sức mình."
+   "Hiểu ngược ý câu gốc (đang lo, không phải tự tin).",
+   "「大変かもしれないけど、頑張って」＝động viên, cổ vũ cố gắng.",
+   "Ngược nghĩa, người nói đã đang rất lo chứ không thờ ơ."
   ],
   "points": [
-   "〜からには: đã ... thì (phải ...).",
-   "精一杯《せいいっぱい》: hết sức mình."
+   "不安でしょうがない: rất lo lắng.",
+   "海外勤務《かいがいきんむ》: công tác nước ngoài."
   ]
  },
  "問4-6": {
@@ -1217,39 +1217,39 @@
   ]
  },
  "問4-7": {
-  "why_correct": "「終わり次第」nghĩa là ngay sau khi nhập liệu xong → đáp bằng lời hứa xong là làm ngay.",
+  "why_correct": "Đây là lời mời nhận đồ 「使ってもらえるとありがたい」→ nhận với lòng biết ơn.",
   "options_analysis": [
-   "Hiểu thành người kia đã làm xong hộ mình rồi.",
-   "Hiểu thành chỉ cần nhập nửa chừng, sai với「終わり次第」.",
-   "Đúng: xong việc nhập là in tài liệu ngay."
+   "Hỏi lại cho chắc rồi nhận, không khách sáo.",
+   "Là lời của bên đưa đồ, không phải bên được mời.",
+   "「もう使わない」là giải thích của bên đưa, ngược vai."
   ],
   "points": [
-   "〜次第《しだい》: ngay khi ... xong thì.",
-   "入力《にゅうりょく》: việc nhập dữ liệu."
+   "〜てもらえるとありがたい: nhờ vả một cách gián tiếp.",
+   "遠慮《えんりょ》なく: không khách sáo, cứ tự nhiên."
   ]
  },
  "問4-8": {
-  "why_correct": "「夕立が来たら、途中で中止にせざるをえませんね」＝nếu mưa thì buộc phải dừng → đáp án 1.",
+  "why_correct": "Đây là lời xin được làm việc đó → đáp bằng cách giao việc cho người ấy.",
   "options_analysis": [
-   "「続行できないですもんね」＝đồng tình sẽ không thể tiếp tục.",
-   "Ngược nghĩa với ý 'buộc phải dừng'.",
-   "Hiểu nhầm là đã bị hủy, câu gốc chỉ giả định 'nếu mưa đến'."
+   "「差し上げる」là đưa đồ, không phải giao việc.",
+   "「お疲れ様」nói với người đã làm xong, không hợp.",
+   "「じゃ、お願いします」= vậy nhờ bạn làm nhé."
   ],
   "points": [
-   "〜せざるを得ない: buộc phải ~.",
-   "夕立《ゆうだち》: mưa rào chiều."
+   "やらせていただく: xin được cho làm (khiêm nhường).",
+   "お願《ねが》いします: nhờ bạn, giao cho bạn."
   ]
  },
  "問4-9": {
-  "why_correct": "「食べ応えあったね」＝phần ăn no nê, cần lời đồng tình.",
+  "why_correct": "「全員が揃ったところで」đặt điều kiện là mọi người có mặt đủ → đáp bằng số người còn thiếu.",
   "options_analysis": [
-   "Đồng tình về phần ăn no nê.",
-   "Nói phần ăn KHÔNG ĐỦ no, trái ngược nghĩa gốc.",
-   "Nói phần ăn ÍT nhưng vừa đủ, trái ngược nghĩa gốc."
+   "Đúng: cho biết còn thiếu 5 người nữa.",
+   "Trả lời về địa điểm, không phải về số người.",
+   "Trả lời về thời lượng, lệch khỏi câu hỏi."
   ],
   "points": [
-   "食《た》べ応《ごた》えがある: phần ăn no nê.",
-   "お腹《なか》いっぱい: no bụng."
+   "揃《そろ》う: tụ họp đông đủ.",
+   "〜たところで: khi mà ... xong thì."
   ]
  },
  "問4-10": {
@@ -1265,28 +1265,28 @@
   ]
  },
  "問4-11": {
-  "why_correct": "Trả lời phù hợp với kết quả bất ngờ (trái dự đoán) là bày tỏ sự ngạc nhiên và thắc mắc lý do.",
+  "why_correct": "「笑わせないでくれよ」= nghe không thật → đáp rằng mình hoàn toàn nghiêm túc.",
   "options_analysis": [
-   "Đúng: 「意外ですね。なんででしょう」= đồng cảm với sự bất ngờ và thắc mắc lý do.",
-   "「この結果を予想していたんですね」mâu thuẫn với ý 'trái với dự đoán'.",
-   "「思ったより厳しかったんですね」hiểu ngược ý (thực tế là được ưa chuộng)."
+   "「大真面目」= rất nghiêm túc, không phải nói đùa.",
+   "Hiểu 「笑わせないで」theo nghĩa mặt chữ, lệch ý.",
+   "Nói về sự thú vị, không đáp việc có thật lòng hay không."
   ],
   "points": [
-   "予想《よそう》に反《はん》して: trái với dự đoán.",
-   "各年代《かくねんだい》: mọi lứa tuổi."
+   "大真面目《おおまじめ》: hoàn toàn nghiêm túc.",
+   "笑《わら》わせないで: đừng nói chuyện vô lý."
   ]
  },
  "問5-1": {
-  "why_correct": "Sau khi bác tăng giá, giờ mở cửa, đổi bột mì, ông chủ chọn thu nhỏ bánh.",
+  "why_correct": "上司「一部の子供だけ舞台に上がるより客席から皆が声を出して参加できるっていうのがいいですね」→ chọn kịch rối.",
   "options_analysis": [
-   "Tăng giá chỉ là đề xuất của nam nhân viên, ông chủ không đồng tình rõ.",
-   "Đúng: ông chủ quyết định thu nhỏ kích cỡ bánh vì ít gây phản cảm.",
-   "Rút ngắn giờ mở cửa bị bác vì khách thích tiệm mở đến 9h tối.",
-   "Đổi bột mì bị bác vì chỉ loại đó mới giữ được hương vị riêng."
+   "Hòa nhạc cổ điển chỉ vài trẻ được lên sân khấu, không được chọn.",
+   "Ảo thuật cũng chỉ vài trẻ lên sân khấu, bị loại vì lý do tương tự.",
+   "Đúng, kịch rối cho mọi trẻ tham gia được.",
+   "Múa ba lê bị chê vì không có lời thoại nên khó thu hút."
   ],
   "points": [
-   "値上《ねあ》げ: tăng giá.",
-   "抵抗《ていこう》が少《すく》ない: ít gây phản cảm."
+   "人形劇《にんぎょうげき》: kịch rối",
+   "舞台《ぶたい》: sân khấu"
   ]
  },
  "問5-2-1": {

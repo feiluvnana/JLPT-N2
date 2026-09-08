@@ -949,16 +949,16 @@
   ]
  },
  "問1-2": {
-  "why_correct": "Cô nói:「ネギの畑の雑草を抜く作業やってもらえますか？収穫は明日機械でする」— việc đầu tiên là nhổ cỏ dại, thu hoạch để đến mai làm.",
+  "why_correct": "Vì ngại đổi tàu nên chọn tàu tốc hành đi thẳng; ghế chỉ định lại chỉ còn toa hút thuốc.",
   "options_analysis": [
-   "[Sai] Thu hoạch hành là việc của NGÀY MAI, không phải việc đầu tiên.",
-   "[Đúng] Việc đầu tiên là nhổ cỏ dại ở ruộng hành.",
-   "[Sai] Gieo hạt rau chân vịt là việc SAU KHI nhổ cỏ xong.",
-   "[Sai] Cày đất cô nói「済んでる」(đã xong) rồi."
+   "Shinkansen bị loại vì phải đổi tàu ở 北山.",
+   "Cũng là shinkansen, đã bị loại vì phải chuyển tàu.",
+   "Ghế chỉ định chỉ còn toa hút thuốc, khách từ chối.",
+   "Đúng: tàu tốc hành, ghế tự do."
   ],
   "points": [
-   "雑草《ざっそう》を抜《ぬ》く: nhổ cỏ dại.",
-   "収穫《しゅうかく》する: thu hoạch."
+   "乗《の》り換《か》え: việc chuyển tàu.",
+   "自由席《じゆうせき》: ghế tự do, không chỉ định."
   ]
  },
  "問1-3": {
@@ -1014,29 +1014,29 @@
   ]
  },
  "問2-2": {
-  "why_correct": "Ca sĩ nói chính nhờ thắng giải cuộc thi âm nhạc mà được vào công ty làm ca sĩ.",
+  "why_correct": "課長「駐車場が…駐車場がある施設の方が参加者の数が増える」→ vấn đề là hội trường thiếu bãi đỗ xe.",
   "options_analysis": [
-   "Học trường nhạc chuyên nghiệp chỉ là dự định không thành.",
-   "Hát ở ga chỉ là hy vọng được chú ý, chưa phải cách thành công.",
-   "Gửi bản ghi âm là nỗ lực trước đó, chưa mang lại kết quả.",
-   "Cô nói rõ nhờ thắng cuộc thi mà được nhận vào công ty."
+   "Đúng, đây là điểm bị chỉ ra là vấn đề.",
+   "Chi phí vượt dự toán được chấp nhận là hợp lý.",
+   "Đối tượng (trẻ nhỏ, phụ huynh) đã rõ ràng, không bị nêu là vấn đề.",
+   "An toàn là lý do hợp lý cho chi phí tăng, không bị phê bình."
   ],
   "points": [
-   "優勝《ゆうしょう》する: giành chiến thắng.",
-   "音楽事務所《おんがくじむしょ》: công ty quản lý ca sĩ."
+   "企画《きかく》: kế hoạch, dự án",
+   "見積もり《みつもり》: dự toán"
   ]
  },
  "問2-3": {
-  "why_correct": "Nam trả lời:「仕事以外でも人間関係を広げたいと思っていたから」— muốn mở rộng quan hệ với phụ huynh khác.",
+  "why_correct": "Vận động viên giải nghệ vì được mời làm huấn luyện viên điền kinh đại học.",
   "options_analysis": [
-   "[Đúng] Muốn mở rộng quan hệ với phụ huynh khác.",
-   "[Sai] Gắn bó địa phương là lý do NGƯỜI KHÁC nói.",
-   "[Sai] Hiểu thầy cô cũng là lý do người khác nói.",
-   "[Sai] Biết con ở trường ra sao là mối quan tâm của NỮ."
+   "Đúng: được mời làm huấn luyện viên khiến anh giải nghệ sớm.",
+   "Anh đã vào cao học từ trước, không phải lý do giải nghệ.",
+   "'Còn đủ sức thi đấu' là điều khiến anh phân vân, không phải lý do quyết định.",
+   "Bài phỏng vấn không nói đến thể lực giảm sút."
   ],
   "points": [
-   "人間関係《にんげんかんけい》: quan hệ con người.",
-   "保護者《ほごしゃ》: phụ huynh."
+   "指導者《しどうしゃ》: người chỉ đạo, huấn luyện viên.",
+   "引退《いんたい》: giải nghệ, nghỉ hưu."
   ]
  },
  "問2-4": {
@@ -1053,16 +1053,16 @@
   ]
  },
  "問2-5": {
-  "why_correct": "「思い切ってスピードを上げて、それが効いた」＝dứt khoát tăng tốc chặng cuối là lý do thắng.",
+  "why_correct": "Vì gửi phát nhanh mất 2 ngày, cô quyết định cố đến ga Sakura ngay hôm nay.",
   "options_analysis": [
-   "Đúng.",
-   "“Dẫn đầu sớm hơn” là điều tiếc nuối chưa làm được, không phải lý do thắng.",
-   "Cô không nói giảm tốc, chỉ nói không tự tin vì gió mạnh, vẫn bám nhóm dẫn đầu.",
-   "Dẫn đầu sớm là mục tiêu lần sau, chưa xảy ra ở trận này."
+   "Cô kết luận cố đến ga Sakura (trung tâm đồ thất lạc) hôm nay.",
+   "Ga Morikawa chỉ là nơi cô làm rơi thẻ, không cần liên hệ tiếp.",
+   "Đồ sẽ chuyển cho cảnh sát ngày mai nếu không ai đến lấy.",
+   "Thủ tục gửi phát nhanh ở ga Nishiyama bị từ chối vì mất 2 ngày."
   ],
   "points": [
-   "思《おも》い切《き》って: nghĩa “dứt khoát”.",
-   "効《き》く: nghĩa “có hiệu quả”."
+   "問《と》い合《あ》わせ: hỏi thông tin.",
+   "定期券《ていきけん》: vé tháng."
   ]
  },
  "問2-6": {
@@ -1079,42 +1079,42 @@
   ]
  },
  "問3-1": {
-  "why_correct": "Ông nhận là người này quen hát và hát khá, nhưng chỉ dừng ở đó, không đọng lại gì.",
+  "why_correct": "Nhà nghỉ nhỏ: khách cùng ăn với chủ, nhanh thân thiết, khách quen lẫn mới đều đông → đáp án 3.",
   "options_analysis": [
-   "Ông nói rõ là không có gì đọng lại trong lòng.",
-   "Đúng: hát tốt nhưng không để lại ấn tượng.",
-   "Ông không chê giọng hát chỉ ở mức trung bình.",
-   "Ông thừa nhận là hát khá, không hề nói dở."
+   "Món ăn chỉ là chi tiết phụ, không phải chủ đề chính.",
+   "Kinh nghiệm thời trẻ chủ nhà không được nhắc.",
+   "Nội dung chính là lý do khách yêu thích nơi này.",
+   "Sự kiện sắp tổ chức chỉ là ví dụ, không phải chủ đề."
   ],
   "points": [
-   "印象《いんしょう》に残《のこ》る: đọng lại ấn tượng.",
-   "発表会《はっぴょうかい》: buổi biểu diễn ở trường."
+   "常連《じょうれん》: khách quen.",
+   "オーナー: chủ sở hữu, người điều hành nơi ở."
   ]
  },
  "問3-2": {
-  "why_correct": "「何を表現したいかを意識して撮ることで全く違った写真になる」.",
+  "why_correct": "Người nói kể theo mốc thời gian＝lịch sử của mật ong như thực phẩm.",
   "options_analysis": [
-   "Ý thức muốn truyền tải gì quyết định bức ảnh.",
-   "Chỉ nhắc thoáng qua việc đi nhiều nơi.",
-   "Bài không nói về cảm xúc vui thích khi chụp.",
-   "Ông nói dù chụp vụng cũng không sao, kỹ thuật không trọng tâm."
+   "Thần thoại chỉ nhắc thoáng qua, không phải nội dung kể chuyện chính.",
+   "Không có thông tin nào về dinh dưỡng.",
+   "Việc dễ lấy mật hơn chỉ là một chi tiết trong dòng lịch sử.",
+   "Đúng."
   ],
   "points": [
-   "尋《たず》ねる: hỏi (ai đó).",
-   "意識《いしき》する: có chủ đích khi làm gì."
+   "普及《ふきゅう》する: nghĩa “phổ biến”.",
+   "書物《しょもつ》: nghĩa “sách vở”."
   ]
  },
  "問3-3": {
-  "why_correct": "Nội dung là điều cần lưu ý khi nhắc con, gồm cả việc công nhận nỗ lực của con.",
+  "why_correct": "Chuyên gia nói game cũng giúp rèn kỹ năng giao tiếp, nhấn mạnh mặt tích cực.",
   "options_analysis": [
-   "Bài nói không bàn về việc cùng nhau học tập.",
-   "Bài nói không chỉ bàn thời điểm khen, mà cách nhắc nhở nói chung.",
-   "Bài nói không bàn về mặt hại của việc mắng con.",
-   "Đúng: nội dung là điều cần lưu ý khi nhắc con, gồm công nhận nỗ lực."
+   "Chuyên gia không đề xuất biện pháp giảm game bạo lực.",
+   "Chuyên gia kết luận game cũng giúp phát triển giao tiếp.",
+   "Vấn đề chơi game một mình lâu chỉ nhắc thoáng, không trọng tâm.",
+   "Không giải thích lý do trẻ mê game."
   ],
   "points": [
-   "肯定感《こうていかん》: cảm giác tự tin, được công nhận.",
-   "目《め》を向《む》けさせる: hướng sự chú ý đến."
+   "コミュニケーション能力《のうりょく》: khả năng giao tiếp.",
+   "暴力的《ぼうりょくてき》: mang tính bạo lực."
   ]
  },
  "問3-4": {
@@ -1131,16 +1131,16 @@
   ]
  },
  "問3-5": {
-  "why_correct": "「田んぼの水に浮かぶ小型のロボット」「手間を減らすことができる」→ toàn bài nói về ứng dụng robot trồng lúa.",
+  "why_correct": "Bài đặt câu hỏi vì sao chọn mail rồi kể ra các lý do: thiếu thời gian, khó nói, có trách nhiệm.",
   "options_analysis": [
-   "Bài nói về lợi ích giảm công sức, không phải vấn đề của kỹ thuật.",
-   "Bài không nói về hương vị của gạo không dùng thuốc trừ sâu.",
-   "Bài không nói về độ khó khi chế tạo robot.",
-   "Đúng: toàn bài nói về việc ứng dụng robot nhỏ trong trồng lúa."
+   "Cầu hôn chỉ là một ví dụ, không phải chủ đề.",
+   "Bài trả lời cho câu hỏi 「なぜメールのほうがいいのか」.",
+   "Không nói nhược điểm, chỉ nêu lý do của ưu điểm.",
+   "Không hướng dẫn cách viết, mà nói lý do dùng mail."
   ],
   "points": [
-   "雑草: cỏ dại.",
-   "手間を減らす: giảm bớt công sức."
+   "手段《しゅだん》: phương tiện, cách thức.",
+   "積極的《せっきょくてき》: tích cực, chủ động."
   ]
  },
  "問4-1": {
@@ -1168,15 +1168,15 @@
   ]
  },
  "問4-3": {
-  "why_correct": "Người nói ước gì bài kiểm tra dời sang tuần sau — điều không thành sự thật; đáp lại là chắc không dời được.",
+  "why_correct": "Đối phương xin lỗi vì đã gây rắc rối → đáp bằng cách phủ nhận và nói mình cũng vậy.",
   "options_analysis": [
-   "[Sai] Hiểu nhầm thành một thông báo có thật về việc đổi ngày.",
-   "[Đúng] Đáp rằng chắc chắn sẽ không dời sang tuần sau.",
-   "[Sai] Nói may quá đã dời rồi, trái với thực tế trong câu."
+   "Phủ nhận là rắc rối, rồi nói lại mình cũng thế.",
+   "Câu chào của bên đang được giúp đỡ, sai vai.",
+   "「おかまいなく」= đừng bận tâm vì tôi, không phải đáp lời xin lỗi."
   ],
   "points": [
-   "〜たらいいのに: giá mà… thì tốt.",
-   "覚《おぼ》える: học thuộc, ghi nhớ."
+   "ご迷惑《めいわく》をおかけする: gây rắc rối cho người khác.",
+   "とんでもない: không có gì, đâu có."
   ]
  },
  "問4-4": {
@@ -1204,15 +1204,15 @@
   ]
  },
  "問4-6": {
-  "why_correct": "「ありえない」ở đây nghĩa là chuyện Mori đi trễ thật khó tin → đáp rằng cậu ấy vốn luôn đúng giờ.",
+  "why_correct": "Người nói đang phỏng đoán lý do lâu không thấy → nêu một lý do khác là đúng.",
   "options_analysis": [
-   "Nói cậu ấy hay trễ, ngược hẳn với ý câu gốc.",
-   "Hiểu nhầm thành đã có báo trước là sẽ đến muộn.",
-   "Đúng: bình thường Mori luôn giữ đúng giờ."
+   "Nói chưa từng gặp, nhưng chủ đề là dạo này không thấy.",
+   "「都合が悪い」nói về lịch trình, không phải lý do vắng.",
+   "Nêu lý do khác là đi du lịch, đáp lại phỏng đoán."
   ],
   "points": [
-   "ありえない: không thể có chuyện đó.",
-   "時間《じかん》を守《まも》る: giữ đúng giờ hẹn."
+   "見《み》かける: tình cờ trông thấy.",
+   "具合《ぐあい》が悪《わる》い: sức khỏe không tốt."
   ]
  },
  "問4-7": {
@@ -1240,39 +1240,39 @@
   ]
  },
  "問4-9": {
-  "why_correct": "「体に悪いと知りつつ…やめられない」＝biết có hại mà vẫn không bỏ được — đáp lại tự nhiên là đồng cảm「わかっていてもやめられないことってあるよね？」.",
+  "why_correct": "Người kia kể chuyện vất vả phải đi bộ về vì tàu gặp sự cố → đáp bằng lời thông cảm.",
   "options_analysis": [
-   "[Sai]「体に悪いって知らなかったの？」sai vì người nói đã nói rõ「知りつつ」(biết rồi).",
-   "[Đúng] Đồng cảm: biết vẫn không bỏ được là chuyện thường.",
-   "[Sai]「健康に良くないから我慢してるんだね」ngược nghĩa (nói người kia đang nhịn được)."
+   "Chỉ bình luận về khoảng cách, không nhắc tới sự vất vả.",
+   "「大したことにならなかった」dùng khi thiệt hại nhẹ.",
+   "「ひどい目にあう」thể hiện sự thông cảm với người kia."
   ],
   "points": [
-   "〜つつ: dù biết…（vẫn）.",
-   "我慢《がまん》する: nhịn, kiềm chế."
+   "ひどい目《め》にあう: gặp chuyện khổ, bị một vố đau.",
+   "大《たい》したことはない: không đáng kể."
   ]
  },
  "問4-10": {
-  "why_correct": "「迫る」nghĩa là áp sát, gần đạt tới → phản hồi hợp lý là nói suýt nữa thì đạt vị trí đầu.",
+  "why_correct": "Câu gốc nhờ thay trưởng phòng điều hành cuộc họp, phản hồi tự nhiên là đồng ý và hỏi lý do vắng.",
   "options_analysis": [
-   "Khẳng định đã đạt vị trí nhất, ngược ý 'chỉ áp sát chứ chưa đạt'.",
-   "Nói khoảng cách lớn mâu thuẫn với ý 'áp sát vị trí đầu'.",
-   "Đúng: diễn tả đúng ý 'chỉ còn chút nữa là đạt vị trí đầu'."
+   "Đúng, đồng ý và hỏi lý do vắng mặt.",
+   "Hiểu ngược thành trưởng phòng sẽ tự làm.",
+   "Hiểu sai thành làm cùng trưởng phòng."
   ],
   "points": [
-   "迫る: áp sát, tiến gần đến.",
-   "勢い: đà, khí thế."
+   "進行役《しんこうやく》: người điều hành",
+   "代わりに《かわりに》: thay cho"
   ]
  },
  "問4-11": {
-  "why_correct": "「半分も解ければいい方だ」＝nghĩa là người lớn giải được nửa đã là giỏi — đáp lại tự nhiên là ngạc nhiên về độ khó「大人でもそんなに難しいの？」.",
+  "why_correct": "Người nói đang bày tỏ sự bực mình → phản ứng tự nhiên là hỏi lại lý do.",
   "options_analysis": [
-   "[Đúng] Ngạc nhiên vì sách đố trẻ em lại khó với cả người lớn.",
-   "[Sai]「子供にとっても優しいの？」ngược nghĩa (nói sách dễ với trẻ em).",
-   "[Sai]「大人なら簡単に解けるの？」ngược nghĩa (nói người lớn dễ giải)."
+   "「そろそろ」nói về thời điểm, không đáp lại sự bực mình.",
+   "Hỏi lại lý do, kéo câu chuyện đi tiếp.",
+   "「もういい」là câu cắt ngang, không hỏi lý do."
   ],
   "points": [
-   "謎々《なぞなぞ》: câu đố.",
-   "〜ばいい方《ほう》だ: được vậy đã là khá."
+   "いらいらする: bực mình, sốt ruột.",
+   "なんで: tại sao (khẩu ngữ của どうして)."
   ]
  },
  "問5-1": {

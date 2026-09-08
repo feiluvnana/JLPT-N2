@@ -988,29 +988,29 @@
   ]
  },
  "問1-5": {
-  "why_correct": "「日光がよく当たる窓際に移してあげるといいですよ」→ nên đổi chỗ đặt cây đầu tiên.",
+  "why_correct": "Nhân viên yêu cầu đặt đồ trong thùng lên bàn cho dễ lấy trước tiên.",
   "options_analysis": [
-   "Đúng, việc đầu tiên là đổi chỗ đặt cây.",
-   "Cách tưới nước hiện tại đã ổn, không cần đổi.",
-   "Nhân viên nói không cần cắt cành yếu.",
-   "Đổi chậu chỉ nên làm sau khi cây khỏe lại."
+   "Đóng túi sẵn đã bị thay đổi, không còn áp dụng.",
+   "Đặt thùng carton dưới bàn nhân viên nói đã làm xong.",
+   "Nhân viên yêu cầu rõ đặt đồ trong thùng lên bàn cho dễ lấy.",
+   "Kiểm tra số lượng chỉ liên quan lúc phát đồ cho SV sau này."
   ],
   "points": [
-   "日当たり《ひあたり》: hướng có nắng",
-   "鉢《はち》: chậu cây"
+   "取《と》りやすいように: để dễ lấy.",
+   "ボランティア: tình nguyện viên."
   ]
  },
  "問2-1": {
-  "why_correct": "男「討論番組で司会している時の進行の仕方に感心させられるよ」→ khen khả năng dẫn dắt chương trình.",
+  "why_correct": "女「映画は主人公の明るい未来を予感させるような終わり方…そこが最高だったなあ」→ đáp án 3.",
   "options_analysis": [
-   "Nam nói mình không xét đến điểm này, đó là ý của nữ.",
-   "Cũng là điểm nữ và mọi người đánh giá, không phải điều nam nhấn mạnh.",
-   "Đúng, đây là điểm nam khen nhất.",
-   "Nam nói cô phỏng vấn thể thao có lúc chưa tốt."
+   "Âm nhạc ấn tượng là nhận xét của nam giới.",
+   "Cảnh biển đẹp cũng là nhận xét của nam giới.",
+   "Điều cô thích nhất là cái kết đầy hy vọng.",
+   "Diễn xuất nam diễn viên cũng là nhận xét của nam giới."
   ],
   "points": [
-   "討論番組《とうろんばんぐみ》: chương trình tranh luận",
-   "進行《しんこう》: dẫn dắt"
+   "きぼうが持てるラストシーン: đoạn kết mang lại hy vọng.",
+   "評判通り《ひょうばんどおり》: đúng như lời đồn."
   ]
  },
  "問2-2": {
@@ -1040,29 +1040,29 @@
   ]
  },
  "問2-4": {
-  "why_correct": "「自分が納得いくまで何度でも消してやり直せるっていうところが、特にいいと思ってる」.",
+  "why_correct": "Người nữ đề nghị chia theo cỡ rồi xếp thêm theo thứ tự giá, người nam đồng ý mai làm sớm.",
   "options_analysis": [
-   "Vẽ như ảnh là điều người khác làm được, anh tự nhận vẽ chưa giỏi.",
-   "Anh không nói về việc tiến bộ nhanh.",
-   "Chi phí thấp chỉ là lý do bạn bè giới thiệu ban đầu.",
-   "Đúng, điểm thích nhất là xóa vẽ lại được nhiều lần."
+   "[Sai] Chia theo cỡ là việc hôm nay hai người đã làm rồi.",
+   "[Sai] Xếp theo màu bị người nam gạt vì không cần đến vậy.",
+   "[Sai] Chuyện sửa giá lên cao đã được chốt là cứ để nguyên.",
+   "[Đúng] Việc thêm mới cho ngày mai là xếp theo thứ tự giá."
   ],
   "points": [
-   "消しゴム《けしゴム》: cục tẩy",
-   "納得《なっとく》: hài lòng"
+   "値札《ねふだ》: nhãn ghi giá.",
+   "取《と》り掛《か》かる: bắt tay vào làm."
   ]
  },
  "問2-5": {
-  "why_correct": "「私自身は流れてきた木の枝を拾って、テーブルや椅子なんかを作っています」→ mục đích là làm đồ nội thất.",
+  "why_correct": "Giám đốc tăng doanh số bằng quảng cáo gây ấn tượng mạnh về nguy cơ ngừng bán.",
   "options_analysis": [
-   "Làm trang sức là việc của người khác.",
-   "Đúng, anh dùng để làm đồ nội thất.",
-   "Nghiên cứu vỏ sò là việc của bạn anh.",
-   "Nói về rác biển chỉ là cảm nhận thêm, không phải lý do thu gom."
+   "Tặng nước miễn phí chỉ là ý kiến nêu ra, không được áp dụng.",
+   "Đúng: quảng cáo gây ấn tượng mạnh giúp tăng doanh số.",
+   "Idol chỉ quay video đăng mạng, không được mời làm quảng cáo.",
+   "Bài phỏng vấn không nói đến giảm giá (bán nửa giá là chuyện sắp tới)."
   ],
   "points": [
-   "拾う《ひろう》: nhặt",
-   "貝《かい》: vỏ sò"
+   "インパクト: ấn tượng mạnh.",
+   "売《う》り上《あ》げを伸《の》ばす: tăng doanh số."
   ]
  },
  "問2-6": {
@@ -1079,42 +1079,42 @@
   ]
  },
  "問3-1": {
-  "why_correct": "Nhân viên báo thầy Sato bận đột xuất muốn đổi lịch, dạy dồn ba tiết vào thứ sáu tuần sau.",
+  "why_correct": "「年齢に合った運動や食事をさせることが大切」「定期的に健康診断を受けることを強くお勧めします」.",
   "options_analysis": [
-   "[Sai] Không hề có chuyện đổi giáo viên phụ trách.",
-   "[Sai] Chuyện học bổng bị nhân viên gạt đi ngay từ đầu.",
-   "[Sai] Sinh viên nói học phí đã đóng hôm trước rồi.",
-   "[Đúng] Nội dung là việc thay đổi lịch buổi học."
+   "Đúng, nói về những điều cần thiết cho sức khỏe của chó.",
+   "Bài không đề cập ảnh hưởng của chó lên con người.",
+   "Bệnh sinh hoạt tăng chỉ được nhắc qua, không phải trọng tâm.",
+   "Không có nội dung về mở bệnh viện thú y mới."
   ],
   "points": [
-   "日程《にってい》: lịch trình.",
-   "奨学金《しょうがくきん》: học bổng."
+   "生活習慣病《せいかつしゅうかんびょう》: bệnh do lối sống",
+   "健康診断《けんこうしんだん》: khám sức khỏe"
   ]
  },
  "問3-2": {
-  "why_correct": "「木の模様が美しくなり…傷に愛着が湧くこともある」→ toàn bài nói về sức hấp dẫn của đồ gỗ.",
+  "why_correct": "Bài nói về việc dùng phương ngữ vùng khác làm tiếng của nhóm bạn.",
   "options_analysis": [
-   "Bài không nói cách chọn đồ ít bị trầy xước.",
-   "Sự thay đổi màu sắc chỉ được nêu ra, không giải thích lý do.",
-   "Đúng: toàn bài nói về sức hấp dẫn của đồ nội thất gỗ.",
-   "Bài không nói về cách dùng đồ gỗ được lâu."
+   "Chủ đề là cách dùng từ ngữ, không phải cách đối xử với bạn.",
+   "Chỉ là một ví dụ được nhắc qua, không phải chủ đề.",
+   "Bài nói cả người không phải dân vùng đó, nên không đúng.",
+   "「仲間言葉として使う」là trọng tâm của bài nói."
   ],
   "points": [
-   "模様: hoa văn, vân gỗ.",
-   "愛着が湧く: nảy sinh tình cảm gắn bó."
+   "方言《ほうげん》: tiếng địa phương.",
+   "仲間言葉《なかまことば》: tiếng dùng trong nhóm thân."
   ]
  },
  "問3-3": {
-  "why_correct": "Nội dung là điều cần lưu ý khi nhắc con, gồm cả việc công nhận nỗ lực của con.",
+  "why_correct": "Huấn luyện viên nói cơ không lên là do cách tập chưa đúng, rồi nêu số lần, số hiệp hợp lý.",
   "options_analysis": [
-   "Bài nói không bàn về việc cùng nhau học tập.",
-   "Bài nói không chỉ bàn thời điểm khen, mà cách nhắc nhở nói chung.",
-   "Bài nói không bàn về mặt hại của việc mắng con.",
-   "Đúng: nội dung là điều cần lưu ý khi nhắc con, gồm công nhận nỗ lực."
+   "[Sai] Cô không nói về lợi ích của việc duy trì tập luyện.",
+   "[Đúng] Nội dung là cách tập luyện sao cho có hiệu quả.",
+   "[Sai] Cô không nhắc tới khung giờ thích hợp trong ngày.",
+   "[Sai] Cô không bàn về tầm quan trọng của việc tập luyện."
   ],
   "points": [
-   "肯定感《こうていかん》: cảm giác tự tin, được công nhận.",
-   "目《め》を向《む》けさせる: hướng sự chú ý đến."
+   "適切《てきせつ》な: thích hợp, đúng đắn.",
+   "逆効果《ぎゃくこうか》: phản tác dụng."
   ]
  },
  "問3-4": {
@@ -1156,15 +1156,15 @@
   ]
  },
  "問4-2": {
-  "why_correct": "「いまいち」nghĩa là chưa được như mong đợi → đáp bằng sự tiếc nuối vì đã trông chờ.",
+  "why_correct": "Câu hỏi xin phép 「よろしいでしょうか」→ đáp 「かまいませんよ」nghĩa là được, cứ nói.",
   "options_analysis": [
-   "Khen là phim hay nhất gần đây, ngược ý người nói.",
-   "Đúng: đồng tình, tiếc vì đã kỳ vọng nhiều.",
-   "Hiểu ngược thành muốn xem lại thêm lần nữa."
+   "「おかまいなく」= đừng bận tâm vì tôi, không phải cho phép.",
+   "「どういたしまして」đáp lời cảm ơn, không đáp lời xin phép.",
+   "「かまいません」= không sao, tôi đồng ý."
   ],
   "points": [
-   "いまいち: chưa tới, chưa được như ý.",
-   "期待《きたい》する: kỳ vọng, trông đợi."
+   "かまいません: không sao, được thôi.",
+   "おかまいなく: đừng bận tâm đến tôi."
   ]
  },
  "問4-3": {
@@ -1180,27 +1180,27 @@
   ]
  },
  "問4-4": {
-  "why_correct": "Cấp dưới hỏi trưởng phòng đã xem bản báo cáo chưa; trưởng phòng đáp lại là xin lỗi, mình chưa xem.",
+  "why_correct": "「お変わりありませんか」là câu chào hỏi tình hình → đáp là vẫn như cũ.",
   "options_analysis": [
-   "[Sai] Câu này là lời người ngoài cuộc nói về việc người khác được xem.",
-   "[Sai] Giục nộp sớm là ngược vai, vì báo cáo đã gửi từ tuần trước.",
-   "[Đúng] Trưởng phòng đáp rằng mình vẫn chưa xem."
+   "「ご苦労様」là lời ghi công, không đáp câu hỏi tình hình.",
+   "「ごめんください」dùng khi tới nhà ai hoặc lúc chia tay.",
+   "「相変わらず」= vẫn như trước, không gì thay đổi."
   ],
   "points": [
-   "ご覧《らん》いただく: kính mời (ai) xem.",
-   "報告書《ほうこくしょ》: bản báo cáo."
+   "ご無沙汰《ぶさた》: lâu không liên lạc.",
+   "相変《あいか》わらず: vẫn như cũ."
   ]
  },
  "問4-5": {
-  "why_correct": "「買い替えるほかない」＝chỉ còn cách mua mới; đáp lại là xác nhận không sửa được.",
+  "why_correct": "「うまくやれるか不安でしょうがないよ」＝rất lo lắng → đáp án 2.",
   "options_analysis": [
-   "Đúng.",
-   "“Sửa được à, tốt quá” ngược nghĩa với thông báo phải mua mới.",
-   "“Chưa biết có sửa được không” mâu thuẫn với câu đã khẳng định chắc chắn."
+   "Hiểu ngược ý câu gốc (đang lo, không phải tự tin).",
+   "「大変かもしれないけど、頑張って」＝động viên, cổ vũ cố gắng.",
+   "Ngược nghĩa, người nói đã đang rất lo chứ không thờ ơ."
   ],
   "points": [
-   "〜ほかない: nghĩa “không còn cách nào khác”.",
-   "修理《しゅうり》: nghĩa “sửa chữa”."
+   "不安でしょうがない: rất lo lắng.",
+   "海外勤務《かいがいきんむ》: công tác nước ngoài."
   ]
  },
  "問4-6": {
@@ -1216,27 +1216,27 @@
   ]
  },
  "問4-7": {
-  "why_correct": "Trả lời phù hợp câu hỏi lo lắng về hạn chót là lời quyết tâm hoàn thành kịp.",
+  "why_correct": "Người nói truyền lại lời khen của trưởng phòng dành cho bài thuyết trình; đáp lại là ngạc nhiên vui.",
   "options_analysis": [
-   "Đúng: 「とにかく間に合わせるよ」= quyết tâm hoàn thành kịp hạn.",
-   "「それは心配だね」là cảm nhận như người ngoài cuộc, không hợp làm lời đáp.",
-   "「期限のばしてもらえたの？」là phản ứng với tin chưa hề được nói."
+   "[Sai] Hiểu nhầm lời khen thành lời nhận xét khắt khe.",
+   "[Đúng] Ngạc nhiên và vui vì trưởng phòng đã khen mình.",
+   "[Sai] Hỏi chỗ nào còn mơ hồ, tức hiểu thành lời chê."
   ],
   "points": [
-   "締《し》め切《き》り: hạn chót.",
-   "何《なん》とかなる: sẽ ổn thôi, sẽ xoay xở được."
+   "大《たい》したもんだ: cừ thật, giỏi thật.",
+   "褒《ほ》める: khen ngợi."
   ]
  },
  "問4-8": {
-  "why_correct": "Câu gốc chê nhạc đoạn cuối làm hỏng phim, phản hồi tự nhiên là đồng tình đoạn nhạc đó không ổn.",
+  "why_correct": "Đây là lời mời nhận đồ 「使ってもらえるとありがたい」→ nhận với lòng biết ơn.",
   "options_analysis": [
-   "Khen nhạc giúp phim hay hơn, ngược ý chê của câu gốc.",
-   "Đúng, đồng tình đoạn nhạc cuối không ổn, đáng tiếc.",
-   "Khen riêng đoạn nhạc cuối hay nhất, ngược ý chê."
+   "Hỏi lại cho chắc rồi nhận, không khách sáo.",
+   "Là lời của bên đưa đồ, không phải bên được mời.",
+   "「もう使わない」là giải thích của bên đưa, ngược vai."
   ],
   "points": [
-   "台無《だいな》しにする: làm hỏng hết.",
-   "音楽《おんがく》: âm nhạc."
+   "〜てもらえるとありがたい: nhờ vả một cách gián tiếp.",
+   "遠慮《えんりょ》なく: không khách sáo, cứ tự nhiên."
   ]
  },
  "問4-9": {
@@ -1252,15 +1252,15 @@
   ]
  },
  "問4-10": {
-  "why_correct": "「昨日私が話したこと、やっぱり聞かなかったことにしてくれない？」＝xin coi như chưa nghe → đáp án 2.",
+  "why_correct": "Đây là lời đề nghị nghe hộ nội dung công việc → từ chối và hẹn quay lại là đúng.",
   "options_analysis": [
-   "Lạc đề, không phải hỏi có nghe hay không.",
-   "え、どうして？何かあった？＝hỏi lý do yêu cầu bất ngờ này.",
-   "Lạc đề, không liên quan yêu cầu 'coi như chưa nghe'."
+   "Từ chối đề nghị, nói sẽ đến lại lần khác.",
+   "Là lời đánh giá món đồ hay ý kiến, không đáp đề nghị.",
+   "Là câu chào khi về trước, không trả lời câu hỏi."
   ],
   "points": [
-   "〜たことにする: coi như là ~.",
-   "やっぱり: quả nhiên, rốt cuộc lại."
+   "出直《でなお》す: quay lại lần nữa vào dịp khác.",
+   "お伺《うかが》いする: dạng khiêm nhường của 聞く."
   ]
  },
  "問4-11": {
@@ -1289,29 +1289,29 @@
   ]
  },
  "問5-2-1": {
-  "why_correct": "Nam nói:「映画の音楽に合わせてみんなで歌ってもいいっていう映画…一体感があって楽しかったよ」— chọn phim hát theo nhạc「白い雲」.",
+  "why_correct": "Người phụ nữ muốn an toàn khi đi làm nên chọn xe ổn định nhất, xe số 3.",
   "options_analysis": [
-   "[Đúng]『白い雲』cho phép vừa xem vừa hát, đúng ý nam.",
-   "[Sai]『緑の列車』có dàn nhạc sống, không phải phim nam nói.",
-   "[Sai]『美しい一日』là phim ngoài trời, nữ chọn phim này.",
-   "[Sai]『旅の空』xem kèm bữa ăn, không liên quan lựa chọn của nam."
+   "Xe số 1 hợp đi mua sắm, nhẹ và rẻ, nhưng không nói về độ ổn định.",
+   "Xe số 2 gấp gọn được, không hợp mong muốn ổn định khi đi làm.",
+   "Đúng: xe số 3 chạy xa và ổn định nhất, được cô chọn.",
+   "Xe số 4 chịu xóc tốt nhưng giá cao, không đúng điều kiện cô đưa ra."
   ],
   "points": [
-   "一体感《いったいかん》: cảm giác đồng điệu.",
-   "雰囲気《ふんいき》を味《あじ》わう: cảm nhận không khí."
+   "安定性《あんていせい》: tính ổn định.",
+   "通勤《つうきん》: đi làm."
   ]
  },
  "問5-2-2": {
-  "why_correct": "Nữ nói:「開放感がある外で見てみたいな」— muốn xem ngoài trời, đúng với「美しい一日」, rạp ngoài trời duy nhất của lễ hội.",
+  "why_correct": "Người đàn ông muốn chở cá bằng ô tô nên chọn xe gấp gọn, xe số 2.",
   "options_analysis": [
-   "[Sai]『白い雲』là lựa chọn của NAM sinh.",
-   "[Sai]『緑の列車』không được nữ nhắc đến.",
-   "[Đúng]『美しい一日』là rạp ngoài trời duy nhất của lễ hội.",
-   "[Sai]『旅の空』nữ chỉ khen ăn ngon nhưng chọn ngoài trời hơn."
+   "Xe số 1 hợp đi mua sắm, không khớp mục đích chở bằng ô tô.",
+   "Đúng: xe số 2 gấp gọn, chở lên ô tô được, khớp ý anh.",
+   "Xe số 3 hợp đường dài, ổn định cao, không liên quan việc chở xe.",
+   "Xe số 4 chịu xóc tốt do cô đề xuất, nhưng anh chọn đi ô tô nên không dùng."
   ],
   "points": [
-   "開放感《かいほうかん》: cảm giác thoáng đãng.",
-   "屋外《おくがい》: ngoài trời."
+   "折《お》りたためる: có thể gấp gọn lại.",
+   "凸凹道《でこぼこみち》: đường gồ ghề."
   ]
  }
 }

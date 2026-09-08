@@ -936,16 +936,16 @@
   ]
  },
  "問1-1": {
-  "why_correct": "女「ペンションにも、到着時間の変更を伝えてあるよね？」男「そうでした、すみません」→ chưa báo giờ đến cho nhà nghỉ → đáp án 3.",
+  "why_correct": "Nữ nhờ「スケジュール表...今週中にお願いしていい?」, nam nhận lời ngay.",
   "options_analysis": [
-   "Báo công ty xe buýt đã xong「もう知らせた」.",
-   "Báo giờ tập trung cho HLV đã do nữ tiền bối làm.",
-   "Còn quên chưa báo giờ đến cho nhà nghỉ.",
-   "Báo mang áo khoác là việc nữ tiền bối tự làm."
+   "Dán poster ĐÃ xong rồi, không phải việc tiếp theo.",
+   "Làm bảng lịch trình, việc nhận lời làm trước tiên.",
+   "Copy tài liệu phải chờ đủ tài liệu từ diễn giả trước.",
+   "Liên hệ diễn giả là việc của NỮ SINH, không phải nam."
   ],
   "points": [
-   "ペンション: nhà nghỉ kiểu nhỏ.",
-   "貸切バス《かしきりバス》: xe buýt thuê riêng."
+   "スケジュール表《ひょう》: bảng lịch trình.",
+   "集《あつ》まり次第《しだい》: ngay khi gom đủ."
   ]
  },
  "問1-2": {
@@ -1079,16 +1079,16 @@
   ]
  },
  "問3-1": {
-  "why_correct": "Ông nhận là người này quen hát và hát khá, nhưng chỉ dừng ở đó, không đọng lại gì.",
+  "why_correct": "Bài nói về việc dùng phương ngữ vùng khác làm tiếng của nhóm bạn.",
   "options_analysis": [
-   "Ông nói rõ là không có gì đọng lại trong lòng.",
-   "Đúng: hát tốt nhưng không để lại ấn tượng.",
-   "Ông không chê giọng hát chỉ ở mức trung bình.",
-   "Ông thừa nhận là hát khá, không hề nói dở."
+   "Chủ đề là cách dùng từ ngữ, không phải cách đối xử với bạn.",
+   "Chỉ là một ví dụ được nhắc qua, không phải chủ đề.",
+   "Bài nói cả người không phải dân vùng đó, nên không đúng.",
+   "「仲間言葉として使う」là trọng tâm của bài nói."
   ],
   "points": [
-   "印象《いんしょう》に残《のこ》る: đọng lại ấn tượng.",
-   "発表会《はっぴょうかい》: buổi biểu diễn ở trường."
+   "方言《ほうげん》: tiếng địa phương.",
+   "仲間言葉《なかまことば》: tiếng dùng trong nhóm thân."
   ]
  },
  "問3-2": {
@@ -1105,16 +1105,16 @@
   ]
  },
  "問3-3": {
-  "why_correct": "「体が床から浮きます」「1センチくらい背が伸びる」「顔が丸くなる」「足の裏の皮が柔らかくなります」— toàn bài kể các thay đổi cơ thể trong không gian.",
+  "why_correct": "Bà nêu số người nuôi chó giảm rồi kể lý do: bận đi làm, thiếu giờ dắt đi dạo, tốn phí y tế.",
   "options_analysis": [
-   "[Sai] Bài không giải thích cơ chế vô trọng lực, chỉ kể hiện tượng.",
-   "[Sai] Bài không nói về thí nghiệm trong vũ trụ.",
-   "[Sai] Bài không nói về sinh hoạt thường ngày của phi hành gia.",
-   "[Đúng] Toàn bài kể các thay đổi của cơ thể trong không gian."
+   "Bà không xếp hạng các loại thú cưng được ưa chuộng.",
+   "Phí y tế chỉ là một lý do, không phải chủ đề.",
+   "Đúng: lý do khiến người nuôi chó ít đi.",
+   "Bà chỉ nói mình ngần ngại, không giới thiệu giống chó."
   ],
   "points": [
-   "無重力《むじゅうりょく》: không trọng lực.",
-   "背《せ》が伸《の》びる: cao lên."
+   "共働《ともばたら》き: cả hai vợ chồng cùng đi làm.",
+   "決心《けっしん》がつく: hạ được quyết tâm."
   ]
  },
  "問3-4": {
@@ -1144,15 +1144,15 @@
   ]
  },
  "問4-1": {
-  "why_correct": "Câu gốc là lời nhờ đi làm thêm, phản hồi tự nhiên là đưa ra điều kiện có thể đến.",
+  "why_correct": "Câu hỏi là ghế này có trống không → đáp gián tiếp rằng có hành lý, tức là đã có người.",
   "options_analysis": [
-   "Giả định đã tìm được người thay, không hợp lời nhờ trực tiếp.",
-   "Đúng, đưa ra điều kiện đáp ứng lời nhờ.",
-   "Đáp lại như lời xin lỗi, không hợp lời nhờ vả này."
+   "Nói có hành lý = ghế không trống, cách từ chối gián tiếp.",
+   "「閉めた」nói về cửa sổ hay cửa hàng, không phải ghế.",
+   "「満員」nói cả xe hay cả hội trường, không phải một ghế."
   ],
   "points": [
-   "助かる《たすかる》: được giúp, nhẹ nhõm",
-   "アルバイト: việc làm thêm"
+   "空《あ》いている: đang trống, chưa ai dùng.",
+   "〜けど…: bỏ lửng câu để từ chối nhẹ."
   ]
  },
  "問4-2": {
@@ -1168,75 +1168,75 @@
   ]
  },
  "問4-3": {
-  "why_correct": "「プレゼンを聞いたら文句のつけようがなかったよ」＝định từ chối nhưng hết chê được → đáp án 1.",
+  "why_correct": "Quên ví nên gây rắc rối = thầy đã trả tiền → xác nhận là được thầy mời.",
   "options_analysis": [
-   "じゃあ、受けることにしたの？＝hỏi xác nhận đã đổi ý nhận lời.",
-   "Hiểu nhầm 文句 thành lời phàn nàn với người nghe.",
-   "Ngược nghĩa, vì bài thuyết trình khiến KHÔNG còn lý do từ chối."
+   "「払わされた」thành ra chính người nói phải trả, sai.",
+   "Không có chuyện tìm kiếm; thứ bị quên là cái ví.",
+   "Xác nhận là thầy đã trả tiền, tức là được mời."
   ],
   "points": [
-   "文句のつけようがない: không có gì để chê.",
-   "断る《ことわる》: từ chối."
+   "ごちそうする: mời (trả tiền) ai ăn.",
+   "今日《きょう》に限《かぎ》って: đúng hôm nay lại..."
   ]
  },
  "問4-4": {
-  "why_correct": "Trả lời phù hợp với lời nhờ tư vấn là vui vẻ nhận lời và hỏi thời gian.",
+  "why_correct": "「忘れられつつあるよね」＝đang dần bị quên lãng — đáp lại tự nhiên là hồi tưởng mơ hồ「ああ、そんな人いたね」.",
   "options_analysis": [
-   "「ちゃんと話を聞いてもらえたんですね」nghe như lời của người vừa được tư vấn, không hợp làm câu đáp lại.",
-   "Đúng: 「構いませんよ。いつがいいですか」= vui vẻ nhận lời và hỏi thời gian.",
-   "「喜んでもらえて私もうれしいです」là phản ứng sau khi đã tư vấn xong, không hợp làm câu đáp lại lời nhờ."
+   "[Sai]「ずっと人気あるよね」ngược nghĩa (nói vẫn nổi tiếng).",
+   "[Sai]「確かによくテレビで見るね」ngược nghĩa (nói vẫn thường xuất hiện).",
+   "[Đúng] Hồi tưởng mơ hồ, khớp với ý đang bị lãng quên."
   ],
   "points": [
-   "相談《そうだん》に乗《の》る: tư vấn, lắng nghe góp ý.",
-   "快諾《かいだく》する: vui vẻ nhận lời."
+   "忘《わす》れられつつある: đang dần bị quên.",
+   "〜つつある: đang dần…（xu hướng）."
   ]
  },
  "問4-5": {
-  "why_correct": "「やめるべきじゃなかったんじゃない？」＝lẽ ra không nên bỏ việc — đáp lại tự nhiên là thừa nhận hối tiếc「ちょっと後悔してるんだ」.",
+  "why_correct": "「相談したうえで決めて」nghĩa là quyết định sau khi bàn với cha mẹ → phản hồi hợp lý là hứa sẽ nói chuyện.",
   "options_analysis": [
-   "[Đúng] Thừa nhận có chút hối tiếc, khớp ý câu hỏi.",
-   "[Sai]「もっと早くやめるべきだったってこと？」hiểu sai thành hỏi ngược lại.",
-   "[Sai]「やめてよかったよね」ngược nghĩa (nói bỏ việc là đúng)."
+   "Hiểu sai thành được tự quyết một mình, ngược yêu cầu phải bàn bạc.",
+   "Đúng: hứa sẽ nói chuyện nghiêm túc với cha mẹ như được yêu cầu.",
+   "Hiểu sai thành không cần hỏi ý kiến cha mẹ, ngược nghĩa câu gốc."
   ],
   "points": [
-   "〜べきじゃなかった: lẽ ra không nên.",
-   "後悔《こうかい》する: hối tiếc."
+   "〜たうえで: sau khi đã làm gì đó.",
+   "受験する: dự thi tuyển sinh."
   ]
  },
  "問4-6": {
-  "why_correct": "「ありえない」ở đây nghĩa là chuyện Mori đi trễ thật khó tin → đáp rằng cậu ấy vốn luôn đúng giờ.",
+  "why_correct": "「笑わせないでくれよ」= nghe không thật → đáp rằng mình hoàn toàn nghiêm túc.",
   "options_analysis": [
-   "Nói cậu ấy hay trễ, ngược hẳn với ý câu gốc.",
-   "Hiểu nhầm thành đã có báo trước là sẽ đến muộn.",
-   "Đúng: bình thường Mori luôn giữ đúng giờ."
+   "「大真面目」= rất nghiêm túc, không phải nói đùa.",
+   "Hiểu 「笑わせないで」theo nghĩa mặt chữ, lệch ý.",
+   "Nói về sự thú vị, không đáp việc có thật lòng hay không."
   ],
   "points": [
-   "ありえない: không thể có chuyện đó.",
-   "時間《じかん》を守《まも》る: giữ đúng giờ hẹn."
+   "大真面目《おおまじめ》: hoàn toàn nghiêm túc.",
+   "笑《わら》わせないで: đừng nói chuyện vô lý."
   ]
  },
  "問4-7": {
-  "why_correct": "「森さんに限って、まさか試合に遅刻することはないよね」＝tin tưởng không trễ → đáp án 3.",
+  "why_correct": "Câu gốc đề nghị dừng việc vì trời tối, phản hồi tự nhiên là đồng tình dừng lại hôm nay.",
   "options_analysis": [
-   "Không liên quan, câu gốc không nhắc việc liên lạc.",
-   "Ngược nghĩa với sự tin tưởng 'không bao giờ trễ'.",
-   "「森さん今まで遅れたことないからね」＝xác nhận niềm tin."
+   "Khẳng định đã hoàn thành hết việc, không khớp ý dừng giữa chừng.",
+   "Hiểu ngược thành phải làm xong hôm nay.",
+   "Đúng, đồng tình dừng lại hôm nay."
   ],
   "points": [
-   "〜に限って: riêng ~ thì (chắc chắn không xảy ra).",
-   "遅刻《ちこく》: đến trễ."
+   "切り上げる《きりあげる》: kết thúc, dừng lại",
+   "作業《さぎょう》: công việc, thao tác"
   ]
  },
  "問4-8": {
-  "why_correct": "Trả lời phù hợp với thông báo sẽ họp sau khi về từ trụ sở chính là xác nhận lại thời điểm đó.",
+  "why_correct": "「部長抜きでやってくれ」＝cứ họp mà không cần trưởng phòng.",
   "options_analysis": [
-   "「本社に行かれる前にやった方がいいんですね」hiểu ngược ý câu nói.",
-   "「今日はこちらには戻られないんですね」mâu thuẫn với ý 'ngay khi về'.",
-   "Đúng: 「午後戻られてからですね」= xác nhận lại thời điểm sau khi về từ trụ sở chính."
+   "“Đợi trưởng phòng đến” ngược hẳn yêu cầu không cần chờ.",
+   "Đúng.",
+   "“Hủy họp à” hiểu sai, cuộc họp vẫn diễn ra."
   ],
   "points": [
-   "戻《もど》り次第《しだい》: ngay khi quay về.",
-   "打《う》ち合《あ》わせ: buổi họp bàn."
+   "〜抜《ぬ》きで: nghĩa “không có, bỏ qua”.",
+   "サンプル: từ mượn, nghĩa “mẫu thử”."
   ]
  },
  "問4-9": {
@@ -1264,15 +1264,15 @@
   ]
  },
  "問4-11": {
-  "why_correct": "「半分も解ければいい方だ」＝nghĩa là người lớn giải được nửa đã là giỏi — đáp lại tự nhiên là ngạc nhiên về độ khó「大人でもそんなに難しいの？」.",
+  "why_correct": "Người kia mang hàng mẫu đến → bên xem đáp bằng khiêm nhường 「拝見しました」.",
   "options_analysis": [
-   "[Đúng] Ngạc nhiên vì sách đố trẻ em lại khó với cả người lớn.",
-   "[Sai]「子供にとっても優しいの？」ngược nghĩa (nói sách dễ với trẻ em).",
-   "[Sai]「大人なら簡単に解けるの？」ngược nghĩa (nói người lớn dễ giải)."
+   "「拝見する」là dạng khiêm nhường của 見る, dùng cho mình.",
+   "「ご覧くださる」là tôn kính ngữ cho hành động của người kia.",
+   "「お見えになる」là tôn kính ngữ của 来る, không dùng cho vật."
   ],
   "points": [
-   "謎々《なぞなぞ》: câu đố.",
-   "〜ばいい方《ほう》だ: được vậy đã là khá."
+   "拝見《はいけん》する: xem (khiêm nhường).",
+   "お見《み》えになる: đến (tôn kính)."
   ]
  },
  "問5-1": {

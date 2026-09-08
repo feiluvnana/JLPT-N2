@@ -936,29 +936,29 @@
   ]
  },
  "問1-1": {
-  "why_correct": "Nữ nhân viên nhờ:「先生に電話して確かめてもらえないかな」— việc làm ngay là gọi cho thầy Kimura.",
+  "why_correct": "男「速度を少し落として話す練習をしといて」→ nữ sinh cần tập nói chậm lại.",
   "options_analysis": [
-   "[Sai] Việc kiểm tra chỗ trống đã xong rồi, cô nói đã ổn.",
-   "[Sai] Báo cho anh Yamada là sau khi hỏi thầy xong.",
-   "[Đúng] Gọi cho thầy Kimura để hỏi nội dung buổi học tiếp theo.",
-   "[Sai] Sửa danh sách học viên là việc sau khi đã liên lạc xong."
+   "Nội dung nói đã được khen là gọn gàng, không cần chỉnh lại.",
+   "Tiền bối nói không cần thêm nội dung nữa.",
+   "Đúng, đây là điều tiền bối yêu cầu.",
+   "Tiền bối nói có thể nhìn giấy khi nói, không cần thuộc lòng."
   ],
   "points": [
-   "確《たし》かめる: xác nhận, kiểm chứng.",
-   "名簿《めいぼ》: danh sách, sổ ghi tên."
+   "原稿《げんこう》: bản thảo, kịch bản",
+   "詰め込む《つめこむ》: nhồi nhét"
   ]
  },
  "問1-2": {
-  "why_correct": "Dán tem đã lên kế hoạch trước; đếm cà phê「シールを貼る作業が終わってからでいい」.",
+  "why_correct": "Ghế trống イ・ウ liền nhau; giám đốc muốn ngồi イ (cạnh cửa sổ) và ngồi một mình→ hai người còn lại lấy ア・エ.",
   "options_analysis": [
-   "Việc đã lên lịch làm trước, đếm cà phê làm sau.",
-   "Đếm cà phê được nói rõ là làm SAU khi dán tem xong.",
-   "Giúp thu ngân là việc của CHÍNH cửa hàng trưởng.",
-   "Xếp hàng lên kệ làm vào sáng mai, không phải hôm nay."
+   "Thiếu イ, ghế giám đốc chỉ định.",
+   "Đúng, khớp ア・イ・エ.",
+   "Có ウ liền kề, ngược ý muốn ngồi một mình của giám đốc.",
+   "Thiếu イ, sai vì giám đốc chỉ định chỗ đó."
   ],
   "points": [
-   "値引《ねび》きシール: tem giảm giá.",
-   "倉庫《そうこ》: kho hàng."
+   "空席《くうせき》: ghế trống",
+   "窓側《まどがわ》: cạnh cửa sổ"
   ]
  },
  "問1-3": {
@@ -1118,16 +1118,16 @@
   ]
  },
  "問3-4": {
-  "why_correct": "Đầu bếp kể cảm giác gần gũi khách, thấy phản ứng trực tiếp khiến công việc ý nghĩa hơn.",
+  "why_correct": "Người nói kể ra cái hay của trượt băng nghệ thuật: thể hiện được mình, phục trang và nhạc đẹp.",
   "options_analysis": [
-   "Không nói rõ lý do bắt đầu đăng ký dịch vụ này.",
-   "Không so sánh trực tiếp món ăn giữa hai hình thức làm.",
-   "Không giải thích cách thức được khách chỉ định.",
-   "Toàn bộ nội dung xoay quanh sức hút khi làm dịch vụ tại nhà khách."
+   "Không nói lý do bắt đầu, chỉ nhắc lý do đã bỏ.",
+   "Nói về giới hạn của việc chỉ dựa vào tốc độ.",
+   "「人によって評価が変わる」chỉ là một phần của sức hút.",
+   "Nêu sự thỏa mãn, trang phục và nhạc đẹp."
   ],
   "points": [
-   "やりがい: ý nghĩa, động lực công việc.",
-   "出張《しゅっちょう》サービス: dịch vụ đến tận nơi."
+   "魅力《みりょく》: sức hấp dẫn.",
+   "限界《げんかい》を感《かん》じる: thấy đã tới hạn."
   ]
  },
  "問3-5": {
@@ -1180,27 +1180,27 @@
   ]
  },
  "問4-4": {
-  "why_correct": "Cấp dưới hỏi trưởng phòng đã xem bản báo cáo chưa; trưởng phòng đáp lại là xin lỗi, mình chưa xem.",
+  "why_correct": "Đây là lời xin được làm việc đó → đáp bằng cách giao việc cho người ấy.",
   "options_analysis": [
-   "[Sai] Câu này là lời người ngoài cuộc nói về việc người khác được xem.",
-   "[Sai] Giục nộp sớm là ngược vai, vì báo cáo đã gửi từ tuần trước.",
-   "[Đúng] Trưởng phòng đáp rằng mình vẫn chưa xem."
+   "「差し上げる」là đưa đồ, không phải giao việc.",
+   "「お疲れ様」nói với người đã làm xong, không hợp.",
+   "「じゃ、お願いします」= vậy nhờ bạn làm nhé."
   ],
   "points": [
-   "ご覧《らん》いただく: kính mời (ai) xem.",
-   "報告書《ほうこくしょ》: bản báo cáo."
+   "やらせていただく: xin được cho làm (khiêm nhường).",
+   "お願《ねが》いします: nhờ bạn, giao cho bạn."
   ]
  },
  "問4-5": {
-  "why_correct": "Câu gốc nhắc quên tắt đèn kho, phản hồi tự nhiên là xin lỗi vì quên tắt.",
+  "why_correct": "Người kia mang hàng mẫu đến → bên xem đáp bằng khiêm nhường 「拝見しました」.",
   "options_analysis": [
-   "Hiểu ngược thành được bật đèn giúp, sai ý bị nhắc nhở.",
-   "Phủ nhận có bật đèn, không hợp vì đèn đang bật để quên.",
-   "Đúng, xin lỗi vì quên tắt đèn."
+   "「拝見する」là dạng khiêm nhường của 見る, dùng cho mình.",
+   "「ご覧くださる」là tôn kính ngữ cho hành động của người kia.",
+   "「お見えになる」là tôn kính ngữ của 来る, không dùng cho vật."
   ],
   "points": [
-   "つけっぱなし: để quên bật",
-   "倉庫《そうこ》: nhà kho"
+   "拝見《はいけん》する: xem (khiêm nhường).",
+   "お見《み》えになる: đến (tôn kính)."
   ]
  },
  "問4-6": {
@@ -1216,15 +1216,15 @@
   ]
  },
  "問4-7": {
-  "why_correct": "Người nói truyền lại lời khen của trưởng phòng dành cho bài thuyết trình; đáp lại là ngạc nhiên vui.",
+  "why_correct": "Quên ví nên gây rắc rối = thầy đã trả tiền → xác nhận là được thầy mời.",
   "options_analysis": [
-   "[Sai] Hiểu nhầm lời khen thành lời nhận xét khắt khe.",
-   "[Đúng] Ngạc nhiên và vui vì trưởng phòng đã khen mình.",
-   "[Sai] Hỏi chỗ nào còn mơ hồ, tức hiểu thành lời chê."
+   "「払わされた」thành ra chính người nói phải trả, sai.",
+   "Không có chuyện tìm kiếm; thứ bị quên là cái ví.",
+   "Xác nhận là thầy đã trả tiền, tức là được mời."
   ],
   "points": [
-   "大《たい》したもんだ: cừ thật, giỏi thật.",
-   "褒《ほ》める: khen ngợi."
+   "ごちそうする: mời (trả tiền) ai ăn.",
+   "今日《きょう》に限《かぎ》って: đúng hôm nay lại..."
   ]
  },
  "問4-8": {
@@ -1252,15 +1252,15 @@
   ]
  },
  "問4-10": {
-  "why_correct": "Câu gốc nhờ thay trưởng phòng điều hành cuộc họp, phản hồi tự nhiên là đồng ý và hỏi lý do vắng.",
+  "why_correct": "Câu hỏi xin phép 「よろしいでしょうか」→ đáp 「かまいませんよ」nghĩa là được, cứ nói.",
   "options_analysis": [
-   "Đúng, đồng ý và hỏi lý do vắng mặt.",
-   "Hiểu ngược thành trưởng phòng sẽ tự làm.",
-   "Hiểu sai thành làm cùng trưởng phòng."
+   "「おかまいなく」= đừng bận tâm vì tôi, không phải cho phép.",
+   "「どういたしまして」đáp lời cảm ơn, không đáp lời xin phép.",
+   "「かまいません」= không sao, tôi đồng ý."
   ],
   "points": [
-   "進行役《しんこうやく》: người điều hành",
-   "代わりに《かわりに》: thay cho"
+   "かまいません: không sao, được thôi.",
+   "おかまいなく: đừng bận tâm đến tôi."
   ]
  },
  "問4-11": {

@@ -936,16 +936,16 @@
   ]
  },
  "問1-2": {
-  "why_correct": "Việc đầu tiên giao cho nam nhân viên là bày salad ra đĩa nhỏ để phụ bếp.",
+  "why_correct": "Cô nói:「ネギの畑の雑草を抜く作業やってもらえますか？収穫は明日機械でする」— việc đầu tiên là nhổ cỏ dại, thu hoạch để đến mai làm.",
   "options_analysis": [
-   "Việc dọn đĩa bàn trống do nữ quản lý đảm nhận.",
-   "Đúng: việc đầu tiên là bày salad ra đĩa nhỏ để phụ bếp.",
-   "Việc hướng dẫn khách do nữ quản lý phụ trách.",
-   "Đưa thực đơn cho khách chờ ngoài là việc làm sau khi bếp ổn định."
+   "[Sai] Thu hoạch hành là việc của NGÀY MAI, không phải việc đầu tiên.",
+   "[Đúng] Việc đầu tiên là nhổ cỏ dại ở ruộng hành.",
+   "[Sai] Gieo hạt rau chân vịt là việc SAU KHI nhổ cỏ xong.",
+   "[Sai] Cày đất cô nói「済んでる」(đã xong) rồi."
   ],
   "points": [
-   "盛《も》る: bày, xếp món ăn ra đĩa.",
-   "空《あ》いた席《せき》: bàn/ghế đã trống khách."
+   "雑草《ざっそう》を抜《ぬ》く: nhổ cỏ dại.",
+   "収穫《しゅうかく》する: thu hoạch."
   ]
  },
  "問1-3": {
@@ -988,29 +988,29 @@
   ]
  },
  "問2-1": {
-  "why_correct": "男「討論番組で司会している時の進行の仕方に感心させられるよ」→ khen khả năng dẫn dắt chương trình.",
+  "why_correct": "Người nam nói đây là do con trai bảo muốn tự trồng thử rau gì đó nên anh mới làm.",
   "options_analysis": [
-   "Nam nói mình không xét đến điểm này, đó là ý của nữ.",
-   "Cũng là điểm nữ và mọi người đánh giá, không phải điều nam nhấn mạnh.",
-   "Đúng, đây là điểm nam khen nhất.",
-   "Nam nói cô phỏng vấn thể thao có lúc chưa tốt."
+   "[Sai] Chuyện rau ngon không được nêu làm lý do trồng.",
+   "[Sai] Về thuốc trừ sâu, anh nói bản thân không mấy bận tâm.",
+   "[Sai] Anh cười bảo trồng chừng này thì chẳng tiết kiệm được gì.",
+   "[Đúng] Vì con trai anh nói muốn tự tay trồng rau."
   ],
   "points": [
-   "討論番組《とうろんばんぐみ》: chương trình tranh luận",
-   "進行《しんこう》: dẫn dắt"
+   "農薬《のうやく》: thuốc trừ sâu.",
+   "節約《せつやく》: sự tiết kiệm."
   ]
  },
  "問2-2": {
-  "why_correct": "「あまり長い時間は厳禁ですよ」→ bác sĩ cấm đi bộ lâu.",
+  "why_correct": "「自分が仕事でどう力を発揮できるか、そこを知りたい」＝muốn tìm thế mạnh bản thân.",
   "options_analysis": [
-   "Đúng: bác sĩ nói rõ đi bộ lâu bị cấm tuyệt đối.",
-   "Ngừng thuốc là chỉ định của bác sĩ, không phải điều cấm.",
-   "Đi xe đạp đi làm được nói là không sao, không bị cấm.",
-   "Tập cổ chân được khuyến khích, không phải cấm."
+   "Cô nói rõ chưa nghĩ đến việc lợi cho xin việc.",
+   "Lo lắng giao tiếp là mối bận tâm, không phải điều kỳ vọng.",
+   "“Hiểu đời sống công ty” là gợi ý của bạn nam, không phải của cô.",
+   "Đúng."
   ],
   "points": [
-   "厳禁: cấm nghiêm ngặt.",
-   "日常生活の範囲: phạm vi sinh hoạt hằng ngày."
+   "実習《じっしゅう》: nghĩa “thực tập”.",
+   "発揮《はっき》する: nghĩa “phát huy”."
   ]
  },
  "問2-3": {
@@ -1066,16 +1066,16 @@
   ]
  },
  "問3-1": {
-  "why_correct": "Nhân viên báo thầy Sato bận đột xuất muốn đổi lịch, dạy dồn ba tiết vào thứ sáu tuần sau.",
+  "why_correct": "Bài xâu chuỗi sự thay đổi: từ gạo sang thịt và dầu, rồi cả cách ăn cũng khác xưa.",
   "options_analysis": [
-   "[Sai] Không hề có chuyện đổi giáo viên phụ trách.",
-   "[Sai] Chuyện học bổng bị nhân viên gạt đi ngay từ đầu.",
-   "[Sai] Sinh viên nói học phí đã đóng hôm trước rồi.",
-   "[Đúng] Nội dung là việc thay đổi lịch buổi học."
+   "Nói cả nội dung lẫn cách ăn đều 「昔とは大きく異なる」.",
+   "Không chỉ từ 1950 mà theo dòng thay đổi từ xưa tới nay.",
+   "Không đánh giá về dinh dưỡng.",
+   "Đồ ăn ngoại chỉ được nhắc như nguyên nhân của thay đổi."
   ],
   "points": [
-   "日程《にってい》: lịch trình.",
-   "奨学金《しょうがくきん》: học bổng."
+   "食生活《しょくせいかつ》: sinh hoạt ăn uống.",
+   "〜に伴《ともな》って: kéo theo đó, cùng với đó."
   ]
  },
  "問3-2": {
@@ -1092,16 +1092,16 @@
   ]
  },
  "問3-3": {
-  "why_correct": "Xe siêu thị di động bán tận nhà người già, quan sát biểu hiện để báo chính quyền nếu bất thường → đáp án 1.",
+  "why_correct": "「子供たちが笑顔で駆け寄ってきて…元気をもらえてありがたい」→ toàn bài nói về niềm vui bán kẹo.",
   "options_analysis": [
-   "Nội dung chính là vai trò hỗ trợ, theo dõi sức khỏe người già.",
-   "Sự phong phú hàng hóa chỉ nhắc lướt qua.",
-   "Không nói dịch vụ đưa đón, chỉ bán hàng tận nhà.",
-   "Không đề cập ý kiến phản hồi từ người dùng."
+   "Đúng: toàn bài nói về niềm vui khi trẻ em ghé thăm cửa hàng.",
+   "Món kẹo xưa chỉ được nam MC giới thiệu, không phải chủ đề chính.",
+   "Bài không so sánh sự khác biệt giữa kẹo xưa và nay.",
+   "Bài không nói về bí quyết duy trì cửa hàng lâu dài."
   ],
   "points": [
-   "自治体《じちたい》: chính quyền địa phương.",
-   "補助金《ほじょきん》: tiền trợ cấp."
+   "駆け寄る: chạy đến gần.",
+   "元気をもらう: được tiếp thêm năng lượng."
   ]
  },
  "問3-4": {
@@ -1118,16 +1118,16 @@
   ]
  },
  "問3-5": {
-  "why_correct": "Ông giải thích chim trống bắt chước giọng chim mái để thu hút bạn tình; chim nuôi cũng vậy với chủ.",
+  "why_correct": "「田んぼの水に浮かぶ小型のロボット」「手間を減らすことができる」→ toàn bài nói về ứng dụng robot trồng lúa.",
   "options_analysis": [
-   "[Sai] Ông nói rõ nghe như đang nói nhưng chim không hiểu.",
-   "[Sai] Trí nhớ của loài chim không được nhắc tới.",
-   "[Sai] Điểm chung với người nuôi không phải chủ đề bài nói.",
-   "[Đúng] Lý do vì sao loài chim này bắt chước tiếng người."
+   "Bài nói về lợi ích giảm công sức, không phải vấn đề của kỹ thuật.",
+   "Bài không nói về hương vị của gạo không dùng thuốc trừ sâu.",
+   "Bài không nói về độ khó khi chế tạo robot.",
+   "Đúng: toàn bài nói về việc ứng dụng robot nhỏ trong trồng lúa."
   ],
   "points": [
-   "真似《まね》する: bắt chước.",
-   "愛情《あいじょう》を示《しめ》す: thể hiện tình cảm."
+   "雑草: cỏ dại.",
+   "手間を減らす: giảm bớt công sức."
   ]
  },
  "問4-1": {
@@ -1155,15 +1155,15 @@
   ]
  },
  "問4-3": {
-  "why_correct": "「プレゼンを聞いたら文句のつけようがなかったよ」＝định từ chối nhưng hết chê được → đáp án 1.",
+  "why_correct": "Đây là lời phàn nàn gián tiếp rằng khó nghe rõ → xin lỗi và tỏ ý sẽ sửa là đúng.",
   "options_analysis": [
-   "じゃあ、受けることにしたの？＝hỏi xác nhận đã đổi ý nhận lời.",
-   "Hiểu nhầm 文句 thành lời phàn nàn với người nghe.",
-   "Ngược nghĩa, vì bài thuyết trình khiến KHÔNG còn lý do từ chối."
+   "Nhận lời nhắc, xin lỗi và tỏ ý sẽ sửa.",
+   "Hỏi lại về mức độ, không đáp việc nghe không rõ.",
+   "Là lời biện hộ rằng khác dự tính, không xử lý phàn nàn."
   ],
   "points": [
-   "文句のつけようがない: không có gì để chê.",
-   "断る《ことわる》: từ chối."
+   "聞《き》き取《と》りにくい: khó nghe rõ.",
+   "〜んですが…: nói lửng để phàn nàn nhẹ."
   ]
  },
  "問4-4": {
@@ -1179,15 +1179,15 @@
   ]
  },
  "問4-5": {
-  "why_correct": "Câu bày tỏ bất ngờ vì gặp nhau ở nơi không ngờ tới; đáp lại tự nhiên là đồng tình rằng thật tình cờ.",
+  "why_correct": "「お変わりありませんか」là câu chào hỏi tình hình → đáp là vẫn như cũ.",
   "options_analysis": [
-   "[Đúng] Đồng tình rằng đúng là quá tình cờ.",
-   "[Sai] Hiểu nhầm thành người kia cố ý tới gặp mình.",
-   "[Sai] Hiểu「こんなところ」thành lời chê địa điểm."
+   "「ご苦労様」là lời ghi công, không đáp câu hỏi tình hình.",
+   "「ごめんください」dùng khi tới nhà ai hoặc lúc chia tay.",
+   "「相変わらず」= vẫn như trước, không gì thay đổi."
   ],
   "points": [
-   "〜とは: không ngờ lại… (bày tỏ ngạc nhiên).",
-   "偶然《ぐうぜん》: sự tình cờ."
+   "ご無沙汰《ぶさた》: lâu không liên lạc.",
+   "相変《あいか》わらず: vẫn như cũ."
   ]
  },
  "問4-6": {
@@ -1215,15 +1215,15 @@
   ]
  },
  "問4-8": {
-  "why_correct": "Trả lời phù hợp với thông báo sẽ họp sau khi về từ trụ sở chính là xác nhận lại thời điểm đó.",
+  "why_correct": "「笑わせないでくれよ」= nghe không thật → đáp rằng mình hoàn toàn nghiêm túc.",
   "options_analysis": [
-   "「本社に行かれる前にやった方がいいんですね」hiểu ngược ý câu nói.",
-   "「今日はこちらには戻られないんですね」mâu thuẫn với ý 'ngay khi về'.",
-   "Đúng: 「午後戻られてからですね」= xác nhận lại thời điểm sau khi về từ trụ sở chính."
+   "「大真面目」= rất nghiêm túc, không phải nói đùa.",
+   "Hiểu 「笑わせないで」theo nghĩa mặt chữ, lệch ý.",
+   "Nói về sự thú vị, không đáp việc có thật lòng hay không."
   ],
   "points": [
-   "戻《もど》り次第《しだい》: ngay khi quay về.",
-   "打《う》ち合《あ》わせ: buổi họp bàn."
+   "大真面目《おおまじめ》: hoàn toàn nghiêm túc.",
+   "笑《わら》わせないで: đừng nói chuyện vô lý."
   ]
  },
  "問4-9": {
@@ -1251,15 +1251,15 @@
   ]
  },
  "問4-11": {
-  "why_correct": "「他の人に手伝ってもらうより他ないか」＝chỉ còn cách nhờ người khác → đáp án 1.",
+  "why_correct": "Được khen thì đáp lại bằng cách khiêm tốn phủ nhận là tự nhiên nhất.",
   "options_analysis": [
-   "そうですね。誰か呼んできます＝đồng ý, đi gọi người giúp ngay.",
-   "Hiểu sai thành không còn ai để gọi.",
-   "Dùng thì đã xong việc, câu gốc đang ở giai đoạn đề xuất."
+   "Nói về việc sẽ thử làm, không phải đáp lời khen.",
+   "「大したことになった」= chuyện thành to, sai nghĩa.",
+   "Cách khiêm tốn quen dùng để gạt lời khen."
   ],
   "points": [
-   "〜より他ない: không còn cách nào khác ngoài ~.",
-   "発送作業《はっそうさぎょう》: công việc gửi hàng."
+   "それほどでもない: không đến mức như vậy.",
+   "えらい: giỏi, đáng khen."
   ]
  },
  "問5-1": {
@@ -1276,29 +1276,29 @@
   ]
  },
  "問5-2-1": {
-  "why_correct": "Cả hai đi trước đến khu tự nướng ăn tại chỗ, đó là khu trung tâm.",
+  "why_correct": "Người nam muốn thử đi trực thăng, người nữ giục đi ngay vì chỉ có 10 suất theo thứ tự đến.",
   "options_analysis": [
-   "Khu trung tâm là nơi tự nướng hải sản tại chỗ.",
-   "Khu nam có lớp câu cá cho người mới, không đi trước.",
-   "Khu đông quan sát sinh vật biển, quyết định đi SAU.",
-   "Khu tây bán hải sản, mua sắm để dành SAU CÙNG."
+   "[Sai] Nhà thi đấu là nơi hai người định tới sau.",
+   "[Đúng] Sân vận động, nơi có huấn luyện cất cánh trực thăng.",
+   "[Sai] Bãi đỗ xe trưng bày xe cứu hỏa đã bị bỏ qua.",
+   "[Sai] Bể bơi có mục bơi mặc nguyên quần áo, để sau."
   ],
   "points": [
-   "その場《ば》で: ngay tại chỗ.",
-   "お召《め》し上《あ》がりいただけます: kính ngữ 'ăn được'."
+   "先着順《せんちゃくじゅん》: theo thứ tự đến trước.",
+   "離陸《りりく》訓練《くんれん》: huấn luyện cất cánh."
   ]
  },
  "問5-2-2": {
-  "why_correct": "Sau khu trung tâm, nam rủ đi ngắm sinh vật biển gần đó, đó là khu đông.",
+  "why_correct": "Người nữ nói còn tới ba tiếng nên rủ đi phần sơ cứu vì thấy hữu ích, và người nam đồng ý.",
   "options_analysis": [
-   "Khu trung tâm là nơi đến ĐẦU TIÊN, không phải thứ hai.",
-   "Khu nam bị từ chối vì là lớp dành cho người mới.",
-   "Khu đông quan sát sinh vật biển, đi tiếp theo.",
-   "Khu tây mua sắm hải sản, để dành đi SAU CÙNG."
+   "[Đúng] Nhà thi đấu, nơi trải nghiệm sơ cứu khi bị thương.",
+   "[Sai] Sân vận động là nơi hai người vừa đi trước đó.",
+   "[Sai] Bãi đỗ xe với xe cứu hỏa không được hai người chọn.",
+   "[Sai] Bể bơi được hoãn lại vì vẫn còn nhiều thời gian."
   ],
   "points": [
-   "生《い》き物《もの》を観察《かんさつ》する: quan sát sinh vật.",
-   "間近《まぢか》で見《み》る: nhìn ở cự ly gần."
+   "応急手当《おうきゅうてあて》: sơ cứu.",
+   "役立《やくだ》つ: có ích, hữu dụng."
   ]
  }
 }

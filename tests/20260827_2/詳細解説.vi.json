@@ -949,16 +949,16 @@
   ]
  },
  "問1-2": {
-  "why_correct": "Việc đầu tiên giao cho nam nhân viên là bày salad ra đĩa nhỏ để phụ bếp.",
+  "why_correct": "Vì ngại đổi tàu nên chọn tàu tốc hành đi thẳng; ghế chỉ định lại chỉ còn toa hút thuốc.",
   "options_analysis": [
-   "Việc dọn đĩa bàn trống do nữ quản lý đảm nhận.",
-   "Đúng: việc đầu tiên là bày salad ra đĩa nhỏ để phụ bếp.",
-   "Việc hướng dẫn khách do nữ quản lý phụ trách.",
-   "Đưa thực đơn cho khách chờ ngoài là việc làm sau khi bếp ổn định."
+   "Shinkansen bị loại vì phải đổi tàu ở 北山.",
+   "Cũng là shinkansen, đã bị loại vì phải chuyển tàu.",
+   "Ghế chỉ định chỉ còn toa hút thuốc, khách từ chối.",
+   "Đúng: tàu tốc hành, ghế tự do."
   ],
   "points": [
-   "盛《も》る: bày, xếp món ăn ra đĩa.",
-   "空《あ》いた席《せき》: bàn/ghế đã trống khách."
+   "乗《の》り換《か》え: việc chuyển tàu.",
+   "自由席《じゆうせき》: ghế tự do, không chỉ định."
   ]
  },
  "問1-3": {
@@ -975,16 +975,16 @@
   ]
  },
  "問1-4": {
-  "why_correct": "Thầy nói phần mở đầu viết kỹ nhưng xét độ dài cả bài thì nên gọn lại.",
+  "why_correct": "男「場所は、玄関に置けば？」女「置き場所を変えてみる」→ đáp án 4.",
   "options_analysis": [
-   "[Sai] Thầy nói bố cục không tệ, viết dễ hiểu.",
-   "[Đúng] Rút gọn phần mở đầu vì cả bài đang quá dài.",
-   "[Sai] Phần kể trải nghiệm là chỗ quan trọng, thầy bảo cứ để nguyên.",
-   "[Sai] Phần kết thầy bảo tạm để nguyên, chưa cần sửa."
+   "Không phải tăng số lần vệ sinh bể.",
+   "Con vật ăn rêu đã có sẵn, không cần thêm.",
+   "Lượng thức ăn đã đúng, hơi ít cũng không sao.",
+   "Cần chuyển bể cá ra chỗ khác vì nắng làm bẩn nhanh."
   ],
   "points": [
-   "導入《どうにゅう》: phần mở đầu, dẫn nhập.",
-   "簡潔《かんけつ》にする: làm cho ngắn gọn."
+   "餌《えさ》: thức ăn cho vật nuôi.",
+   "ガラスケース: bể kính (nuôi cá)."
   ]
  },
  "問1-5": {
@@ -1014,16 +1014,16 @@
   ]
  },
  "問2-2": {
-  "why_correct": "「自分が仕事でどう力を発揮できるか、そこを知りたい」＝muốn tìm thế mạnh bản thân.",
+  "why_correct": "Bình luận viên nói khác biệt nằm ở thể lực; Green giữ được cường độ vận động tới phút cuối.",
   "options_analysis": [
-   "Cô nói rõ chưa nghĩ đến việc lợi cho xin việc.",
-   "Lo lắng giao tiếp là mối bận tâm, không phải điều kỳ vọng.",
-   "“Hiểu đời sống công ty” là gợi ý của bạn nam, không phải của cô.",
-   "Đúng."
+   "Cầu thủ kỹ thuật giỏi là nói về đội Blue, đội thua.",
+   "Đúng: thể lực cầu thủ vượt trội hơn.",
+   "Ông nói trong trận hầu như không nghe được chỉ đạo.",
+   "Ông cho rằng phán đoán của chính cầu thủ mới quan trọng."
   ],
   "points": [
-   "実習《じっしゅう》: nghĩa “thực tập”.",
-   "発揮《はっき》する: nghĩa “phát huy”."
+   "体力《たいりょく》: thể lực.",
+   "運動量《うんどうりょう》: cường độ vận động."
   ]
  },
  "問2-3": {
@@ -1053,29 +1053,29 @@
   ]
  },
  "問2-5": {
-  "why_correct": "Vì gửi phát nhanh mất 2 ngày, cô quyết định cố đến ga Sakura ngay hôm nay.",
+  "why_correct": "「前に勤めてた会社に...不満があったわけじゃなく、新たな世界を見てみたい」.",
   "options_analysis": [
-   "Cô kết luận cố đến ga Sakura (trung tâm đồ thất lạc) hôm nay.",
-   "Ga Morikawa chỉ là nơi cô làm rơi thẻ, không cần liên hệ tiếp.",
-   "Đồ sẽ chuyển cho cảnh sát ngày mai nếu không ai đến lấy.",
-   "Thủ tục gửi phát nhanh ở ga Nishiyama bị từ chối vì mất 2 ngày."
+   "Chỉ là ví dụ về NGƯỜI KHÁC cô nêu ra.",
+   "Cũng chỉ là ví dụ về người khác, không phải lý do của cô.",
+   "Đây là lý do của LẦN CHUYỂN VIỆC ĐẦU TIÊN.",
+   "Không bất mãn, muốn thử lĩnh vực mới."
   ],
   "points": [
-   "問《と》い合《あ》わせ: hỏi thông tin.",
-   "定期券《ていきけん》: vé tháng."
+   "不満《ふまん》: bất mãn, không hài lòng.",
+   "新《あら》たな世界《せかい》: thế giới mới."
   ]
  },
  "問2-6": {
-  "why_correct": "「他社製品は2センチ以上の段差…グリーンは1センチ以上に対応できず」→ vấn đề là vượt bậc thềm thấp hơn.",
+  "why_correct": "Phóng viên nói rèm chạm vào lò sưởi đặt trong phòng khách rồi bắt lửa và cháy.",
   "options_analysis": [
-   "Tiếng ồn được đánh giá yên tĩnh hơn, không phải vấn đề.",
-   "Thời gian sạc được đánh giá ngắn hơn, không phải vấn đề.",
-   "Lực hút được đánh giá mạnh hơn, không phải vấn đề.",
-   "Đúng, khả năng vượt bậc thềm là vấn đề."
+   "Tầng 1 cháy nặng là kết quả lan ra, không phải nguyên nhân.",
+   "Bếp cũng chỉ là nơi cháy nặng; lò sưởi không đặt ở đó.",
+   "Rèm bắt lửa là rèm phòng khách, không phải rèm bếp.",
+   "Đúng: rèm phòng khách bén lửa từ lò sưởi."
   ],
   "points": [
-   "段差《だんさ》: bậc thềm",
-   "吸い込む《すいこむ》: hút vào"
+   "居間《いま》: phòng khách, phòng sinh hoạt.",
+   "燃《も》え移《うつ》る: lửa lan sang."
   ]
  },
  "問3-1": {
@@ -1131,28 +1131,28 @@
   ]
  },
  "問3-5": {
-  "why_correct": "Thị trưởng: học bổng cho sinh viên y cam kết làm bệnh viện tư, hỗ trợ kinh phí nghiên cứu bác sĩ → đáp án 2.",
+  "why_correct": "Bài xâu chuỗi sự thay đổi: từ gạo sang thịt và dầu, rồi cả cách ăn cũng khác xưa.",
   "options_analysis": [
-   "Không nói ảnh hưởng thiếu bác sĩ đến người dân.",
-   "Nội dung chính là biện pháp đảm bảo đủ bác sĩ.",
-   "Không nói lý do bệnh viện giảm số lượng.",
-   "Không nói tình hình đăng ký học bổng."
+   "Nói cả nội dung lẫn cách ăn đều 「昔とは大きく異なる」.",
+   "Không chỉ từ 1950 mà theo dòng thay đổi từ xưa tới nay.",
+   "Không đánh giá về dinh dưỡng.",
+   "Đồ ăn ngoại chỉ được nhắc như nguyên nhân của thay đổi."
   ],
   "points": [
-   "奨学金《しょうがくきん》: học bổng.",
-   "研究費《けんきゅうひ》: kinh phí nghiên cứu."
+   "食生活《しょくせいかつ》: sinh hoạt ăn uống.",
+   "〜に伴《ともな》って: kéo theo đó, cùng với đó."
   ]
  },
  "問4-1": {
-  "why_correct": "「おかゆすら」nghĩa là ngay cả cháo cũng không ăn nổi → phản hồi hợp lý là hỏi 'không ăn được gì cả à?'.",
+  "why_correct": "Câu hỏi là mang đi có được không → đáp rằng đã được người ta bảo mang đi.",
   "options_analysis": [
-   "Hiểu sai thành 'chỉ ăn được cháo', ngược ý câu gốc.",
-   "Đúng: xác nhận đúng ý 'không ăn được gì, kể cả cháo'.",
-   "Không hợp vì câu gốc nói về hôm qua, không phải lời khuyên chung."
+   "Là lời đánh giá món đồ, không đáp được hay không.",
+   "Là báo cáo đã mang đi rồi, không khớp với đồ trước mắt.",
+   "Nói đã được bảo mang đi, tức là có phép."
   ],
   "points": [
-   "〜すら: ngay cả... (trường hợp cực đoan nhất).",
-   "腹痛: đau bụng."
+   "持《も》ってっちゃう = 持って行ってしまう: dạng rút gọn.",
+   "〜って言《い》われた: được ai đó bảo thế."
   ]
  },
  "問4-2": {
@@ -1168,15 +1168,15 @@
   ]
  },
  "問4-3": {
-  "why_correct": "Câu hỏi lý do vắng mặt; đáp lại tự nhiên là xin lỗi và nêu lý do.",
+  "why_correct": "Đây là lời nhờ đổi tiền giấy thành tiền lẻ → hỏi lại loại xu là đúng.",
   "options_analysis": [
-   "“Vì sắp thi nên không muốn nghỉ” ngược nghĩa với câu hỏi vì sao nghỉ.",
-   "Đúng.",
-   "“Tự tập một mình” không khớp câu hỏi về việc vắng các buổi tập."
+   "Xác nhận loại xu sẽ đổi, tức là nhận lời nhờ.",
+   "Vẫn là tờ 1000 yên, trái với yêu cầu đổi ra tiền lẻ.",
+   "Là cảm nhận về cái máy, không đáp lời nhờ."
   ],
   "points": [
-   "がち: hậu tố, nghĩa “hay có xu hướng”.",
-   "卓球部《たっきゅうぶ》: nghĩa “câu lạc bộ bóng bàn”."
+   "細《こま》かくする: đổi tiền to ra tiền lẻ.",
+   "お札《さつ》: tiền giấy; xu là 玉《だま》."
   ]
  },
  "問4-4": {
@@ -1192,51 +1192,51 @@
   ]
  },
  "問4-5": {
-  "why_correct": "Câu gốc nhắc quên tắt đèn kho, phản hồi tự nhiên là xin lỗi vì quên tắt.",
+  "why_correct": "「もう少しで...遅れるところだった」＝suýt trễ nhưng thực tế đã kịp.",
   "options_analysis": [
-   "Hiểu ngược thành được bật đèn giúp, sai ý bị nhắc nhở.",
-   "Phủ nhận có bật đèn, không hợp vì đèn đang bật để quên.",
-   "Đúng, xin lỗi vì quên tắt đèn."
+   "Mừng vì đã kịp nộp.",
+   "Hiểu sai thành đã bị trễ thật sự.",
+   "Sắc thái tiếc nuối như đã không kịp, trái thực tế."
   ],
   "points": [
-   "つけっぱなし: để quên bật",
-   "倉庫《そうこ》: nhà kho"
+   "〜ところだった: suýt nữa thì... (không xảy ra).",
+   "締《し》め切《き》り: hạn chót."
   ]
  },
  "問4-6": {
-  "why_correct": "「来られたらよかったのに」＝tiếc vì không đến được → đáp án 1.",
+  "why_correct": "Người nói đang phỏng đoán lý do lâu không thấy → nêu một lý do khác là đúng.",
   "options_analysis": [
-   "「行きたかったんだけどね」＝cũng muốn đi nhưng không được, hợp lời tiếc nuối.",
-   "Hiểu nhầm là đã tham gia, câu gốc nói KHÔNG đến được.",
-   "Dùng cho tương lai, không hợp vì tiệc đã diễn ra hôm qua."
+   "Nói chưa từng gặp, nhưng chủ đề là dạo này không thấy.",
+   "「都合が悪い」nói về lịch trình, không phải lý do vắng.",
+   "Nêu lý do khác là đi du lịch, đáp lại phỏng đoán."
   ],
   "points": [
-   "〜たらよかったのに: giá mà ~ thì tốt (tiếc việc đã qua).",
-   "ゼミ: hội thảo học thuật."
+   "見《み》かける: tình cờ trông thấy.",
+   "具合《ぐあい》が悪《わる》い: sức khỏe không tốt."
   ]
  },
  "問4-7": {
-  "why_correct": "「緊張のあまり食欲もないよ」＝quá căng thẳng, cần lời an ủi.",
+  "why_correct": "「スタッフの分を含めて30個」＝tổng cộng 30 suất, gồm cả nhân viên.",
   "options_analysis": [
-   "Khen bình tĩnh, trái ngược trạng thái rất căng thẳng.",
-   "An ủi người đang quá lo lắng.",
-   "Khuyên căng thẳng hơn, ngược với thực tế đã quá căng thẳng."
+   "“Chỉ riêng nhân viên 30 suất” hiểu sai, đó là tổng số.",
+   "Đúng.",
+   "“Suất nhân viên đặt riêng” ngược với yêu cầu gộp chung."
   ],
   "points": [
-   "〜のあまり: vì quá... (kết quả không mong muốn).",
-   "食欲《しょくよく》: cảm giác thèm ăn."
+   "含《ふく》める: nghĩa “bao gồm”.",
+   "予約《よやく》: nghĩa “đặt trước”."
   ]
  },
  "問4-8": {
-  "why_correct": "Câu hỏi về việc có đủ thời gian xem hết vườn thú, phản hồi tự nhiên là khẳng định đủ.",
+  "why_correct": "「書くのはともかく会話ぐらいは」= muốn học hội thoại → đồng tình với hội thoại.",
   "options_analysis": [
-   "Đúng, khẳng định một ngày là đủ.",
-   "Hiểu sai thành không cần quan tâm thời gian.",
-   "Hiểu ngược thành xem xong quá nhanh, không khớp câu hỏi."
+   "Khuyên luyện viết, phần vừa được gạt ra, lệch trọng tâm.",
+   "Đồng tình, ủng hộ ý muốn học hội thoại.",
+   "Nói hội thoại không cần học, trái ý người kia."
   ],
   "points": [
-   "回り切る《まわりきる》: đi hết một vòng",
-   "動物園《どうぶつえん》: vườn thú"
+   "〜はともかくとして: cái đó thì để riêng, khoan bàn.",
+   "〜ぐらいは: ít nhất là cái đó."
   ]
  },
  "問4-9": {
@@ -1289,29 +1289,29 @@
   ]
  },
  "問5-2-1": {
-  "why_correct": "Người nam muốn thử đi trực thăng, người nữ giục đi ngay vì chỉ có 10 suất theo thứ tự đến.",
+  "why_correct": "Nữ không tự tin đi bộ 2 tiếng quanh hồ nhưng thích khóa thăm nhà tác giả — chọn cho sáng.",
   "options_analysis": [
-   "[Sai] Nhà thi đấu là nơi hai người định tới sau.",
-   "[Đúng] Sân vận động, nơi có huấn luyện cất cánh trực thăng.",
-   "[Sai] Bãi đỗ xe trưng bày xe cứu hỏa đã bị bỏ qua.",
-   "[Sai] Bể bơi có mục bơi mặc nguyên quần áo, để sau."
+   "Khóa hồ (đi bộ) bị nữ từ chối vì đi bộ gần 2 tiếng.",
+   "Đúng, cả hai chọn khóa thăm nhà tác giả bằng xe đạp cho sáng.",
+   "Khóa đền chùa nam đề xuất ban đầu cho chiều, sau không chọn.",
+   "Khóa xưởng làm bút được chọn cho chiều, không phải sáng."
   ],
   "points": [
-   "先着順《せんちゃくじゅん》: theo thứ tự đến trước.",
-   "離陸《りりく》訓練《くんれん》: huấn luyện cất cánh."
+   "自転車《じてんしゃ》で巡《めぐ》る: đi vòng bằng xe đạp.",
+   "ハイキング: đi bộ đường dài."
   ]
  },
  "問5-2-2": {
-  "why_correct": "Người nữ nói còn tới ba tiếng nên rủ đi phần sơ cứu vì thấy hữu ích, và người nam đồng ý.",
+  "why_correct": "Nữ đang đọc tiểu thuyết có nhân vật chính là bậc thầy thư pháp nên hứng thú khóa xưởng làm bút.",
   "options_analysis": [
-   "[Đúng] Nhà thi đấu, nơi trải nghiệm sơ cứu khi bị thương.",
-   "[Sai] Sân vận động là nơi hai người vừa đi trước đó.",
-   "[Sai] Bãi đỗ xe với xe cứu hỏa không được hai người chọn.",
-   "[Sai] Bể bơi được hoãn lại vì vẫn còn nhiều thời gian."
+   "Khóa hồ xếp cho buổi sáng, không liên quan lựa chọn chiều.",
+   "Khóa thăm nhà tác giả đã chọn cho sáng, không phải chiều.",
+   "Khóa đền chùa bị bỏ qua để chọn khóa hợp sở thích nữ.",
+   "Đúng, nữ hứng thú thư pháp trong tiểu thuyết nên chọn khóa này."
   ],
   "points": [
-   "応急手当《おうきゅうてあて》: sơ cứu.",
-   "役立《やくだ》つ: có ích, hữu dụng."
+   "書道《しょどう》の名人《めいじん》: bậc thầy thư pháp.",
+   "歴史小説《れきししょうせつ》: tiểu thuyết lịch sử."
   ]
  }
 }
