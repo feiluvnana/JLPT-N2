@@ -294,6 +294,7 @@ def check_filename_contracts():
         ("聴解_チャプター.json", ".agents/choukai-audio/scripts/make_choukai_mp3.py"),
         ("choukai_bank.json", "tools/build_choukai_bank.py"),
         ("choukai_draws.json", "tools/compose_choukai.py"),
+        ("choukai_number_calls.json", "tools/harvest_number_calls.py"),
         ("ledger.json", ".agents/exam-blueprint/scripts/sample_items.py"),
         ("test_spec.json", ".agents/exam-blueprint/scripts/sample_items.py"),
         ("import_meta.json", ".agents/external-test-import/scripts/init_imported_test.py"),
@@ -11898,6 +11899,131 @@ def check_choukai_key_exclusive_token(test_id: str, ct: str, st: str, m, bi):
          slug="choukai_key_exclusive_token", test_id=test_id)
 
 
+# ------------------------------------------------- the mixed 聴解 clip pool
+def check_choukai_source_mix():
+    """The mixed pool's two standing promises, and the file the prepend needs.
+
+    The user's requirement for the pool is a SHAPE, not a preference: exactly
+    ONE paper composed from official recordings only, every other paper mixed.
+    Nothing about a composed paper's artifacts shows which it is —
+    `聴解_チャプター.json` says `composed` either way — so without this check the
+    suite could drift to all-official (a bank rebuilt without the textbook half)
+    or to none (a second id added to OFFICIAL_ONLY_TESTS) and every other gate
+    line would still be green.
+
+    The number-call file is checked here too, because a textbook clip is
+    unusable without it: `compose_choukai.number_call()` exits if it is missing,
+    but only when someone next runs `make mp3`. The 11 spans are also RE-verified
+    against the harvester's own acceptance bands — imported, never restated, so a
+    band change cannot leave a stale span passing.
+    """
+    print("\nmixed 聴解 clip pool (one official-only paper, the rest mixed)")
+    try:
+        composer = load("tools/compose_choukai.py")
+        harvester = load("tools/harvest_number_calls.py")
+    except Exception as exc:                              # pragma: no cover
+        check("compose_choukai.py and harvest_number_calls.py import", False,
+              str(exc))
+        return
+
+    # --- the harvested 「N番。」 spans
+    calls_path = ROOT / "logs" / "choukai_number_calls.json"
+    if not calls_path.is_file():
+        check("logs/choukai_number_calls.json exists", False,
+              "no harvested 「N番。」 clips — a textbook item is banked body-only, "
+              "so `make mp3` on any mixed paper exits. Run `make number-calls`")
+    else:
+        calls = json.loads(calls_path.read_text(encoding="utf-8"))["calls"]
+        missing = [n for n in harvester.NUMBERS if str(n) not in calls]
+        check(f"logs/choukai_number_calls.json covers 1番–11番 "
+              f"({len(calls)} span(s))", not missing,
+              f"no span for {missing} — run `make number-calls`")
+        bad = []
+        for n in harvester.NUMBERS:
+            c = calls.get(str(n))
+            if not c:
+                continue
+            if not (harvester.SPEECH_MIN <= c["speech"] <= harvester.SPEECH_MAX):
+                bad.append(f"{n}番 speech {c['speech']}s")
+            if c["pause_after"] < harvester.PAUSE_MIN:
+                bad.append(f"{n}番 pause {c['pause_after']}s")
+        check(f"every harvested 「N番。」 is inside harvest_number_calls.py's own "
+              f"bands ({harvester.SPEECH_MIN}–{harvester.SPEECH_MAX}s speech, "
+              f"{harvester.PAUSE_MIN}s+ pause)", not bad,
+              ", ".join(bad) + " — re-run `make number-calls`; a span outside "
+              "the bands is not a bare number call and would splice part of the "
+              "situation line onto a textbook item")
+        one = calls.get("1", {}).get("source_test")
+        same = all(c.get("source_test") == one for c in calls.values())
+        warn("all eleven 「N番。」 come from ONE sitting", same,
+             "the eleven prepended calls are spoken by more than one announcer, "
+             "so a mixed paper's numbers change voice between items. Three "
+             "sittings cover 1–11 on their own (textbook_bank_plan.md §1) — "
+             "re-run `make number-calls`")
+
+    # --- the bank must actually carry a textbook half for the sections the
+    #     policy draws from, or every "mixed" paper is silently official-only.
+    bank_path = ROOT / "logs" / "choukai_bank.json"
+    if not bank_path.is_file():
+        check("logs/choukai_bank.json exists", False, "run `make choukai-bank`")
+        return
+    bank = json.loads(bank_path.read_text(encoding="utf-8"))
+    pool = collections.Counter(
+        r["section"] for r in bank["records"]
+        if r["kind"] == "item" and r.get("needs_number_call"))
+    thin = [f"{s} wants {n}, bank has {pool.get(s, 0)}"
+            for s, n in composer.TEXTBOOK_SLOTS.items() if pool.get(s, 0) < n]
+    check(f"the bank carries enough textbook items for TEXTBOOK_SLOTS "
+          f"({dict(sorted(pool.items()))})", not thin,
+          "; ".join(thin) + " — `make choukai-bank` builds both halves; a bank "
+          "with no textbook records makes every paper official-only while the "
+          "policy still claims a mix (build_textbook_bank.py)")
+
+    # --- exactly one official-only paper, and every other one genuinely mixed
+    draws = {}
+    draws_path = ROOT / "logs" / "choukai_draws.json"
+    if draws_path.is_file():
+        draws = {r["test_id"]: r
+                 for r in json.loads(draws_path.read_text(encoding="utf-8"))["history"]}
+    composed = sorted(
+        d.name for d in sorted((ROOT / "tests").glob("*"))
+        if d.is_dir() and not ORIGIN.is_imported(d.name)
+        and ORIGIN.choukai_origin(d) == "composed")
+    if not composed:
+        skip("exactly one composed paper is official-only",
+             "no composed papers on disk")
+        return
+
+    pre_policy, by_source = [], {}
+    for test_id in composed:
+        row = draws.get(test_id)
+        if row is None or "sources" not in row:
+            # A row with no `sources` predates the mixed pool. It is NOT read as
+            # official-only: an absent field is an absent measurement, and
+            # guessing here is how a paper that was never re-drawn would pass.
+            pre_policy.append(test_id)
+            continue
+        by_source[test_id] = row["sources"]
+    check(f"every composed paper's draw records its source mix "
+          f"({len(by_source)} of {len(composed)} paper(s))", not pre_policy,
+          f"{pre_policy} have no `sources` in logs/choukai_draws.json, so their "
+          f"draw predates the mixed pool and nothing says what they are made "
+          f"of — re-compose each with `make mp3 <id> SEED=<rng>` "
+          f"(choukai-audio Part 0)")
+
+    official_only = sorted(t for t, s in by_source.items()
+                           if set(s) <= {"official"})
+    want = sorted(set(composer.OFFICIAL_ONLY_TESTS) & set(composed))
+    check(f"exactly ONE composed paper is official-only, and it is the one "
+          f"`compose_choukai.OFFICIAL_ONLY_TESTS` names ({want})",
+          official_only == want and len(want) == 1,
+          f"on disk the official-only papers are {official_only}, the policy "
+          f"names {sorted(composer.OFFICIAL_ONLY_TESTS)} — the requirement is "
+          f"ONE control paper and a mixed pool everywhere else. Re-compose the "
+          f"extras with `make mp3 <id> SEED=<rng>`, or fix the policy if the "
+          f"control paper has moved")
+
+
 # ------------------------------------------------- 詳細解説: length and languages
 # THE TERSENESS BANDS. Measured across all 20 papers on 2026-08-25, before the
 # rule existed: why_correct averaged 101 chars (newest three papers 139/148/173),
@@ -14642,6 +14768,7 @@ def main():
         check_choukai_kimochi_repeat()
         check_cross_test_listening_subjects()
         check_choukai_nondialogue_medium_rotation()
+        check_choukai_source_mix()
         check_draw_provenance()
         check_pools_sha_replayability()
         check_invented_proper_nouns()

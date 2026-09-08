@@ -1,0 +1,1113 @@
+{
+ "_readme": [
+  "Hand-transcribed textbook 聴解 items for the mixed clip pool.",
+  "",
+  "OWNER: tools/build_textbook_bank.py, which resolves each (book, cd, track)",
+  "to an audio file, measures the item's BODY span (skipping the track-id or",
+  "marker announcement at the head and the built-in answer pause + end tone at",
+  "the tail), duration-checks it against the item type this file claims, and",
+  "appends the result to logs/choukai_bank.json beside the official records.",
+  "",
+  "EVERY `answer` HERE WAS READ OFF THE PAGE, never from an OCR extract and",
+  "never inferred (AGENTS.md §3.2; refs/Shinkanzen/choukai_script.md is",
+  "unusable for keys — its OCR renders 男 as 第/勤/顎/舅 and mangles the option",
+  "digits). `source_page` names the page each key came from so the next reader",
+  "can re-check it in one look.",
+  "",
+  "`script_lines[0]` goes on the item's marker line, straight after 「N番。」 —",
+  "the same shape the official records carry. Textbook tracks speak no number",
+  "call at all, so the composer prepends a harvested official 「N番。」",
+  "(tools/harvest_number_calls.py) and these items are SLOT-FREE.",
+  "",
+  "Sections deliberately absent, and why (references/textbook_bank_plan.md §6):",
+  "  問題1 / 問題2 — their options are PRINTED, and the printed lists live in the",
+  "    main 問題冊子, not in either answer booklet. Shin Kanzen additionally",
+  "    lays only a 10 s option-reading pause inside a 問題2 track where official",
+  "    lays 20.2 s.",
+  "  問題5 — Shin Kanzen prints 1番's four choices instead of speaking them, and",
+  "    neither book lays the 10 s 質問1 answer pause that sits INSIDE an official",
+  "    2番. Both would need composer surgery, not just a transcript."
+ ],
+ "items": [
+  {
+   "id": "soumatome:cd1-40",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 40,
+   "section": "問題4",
+   "answer": 1,
+   "source_page": "別冊 p.16 第2章 まとめ問題 問題I 2番 (問題冊子 p.36)",
+   "script_lines": [
+    "いろいろとご迷惑をおかけして、申し訳ありませんでした。",
+    "1、とんでもないです。こちらこそ。",
+    "2、いつもお世話になっております。",
+    "3、いいえ、おかまいなく。"
+   ],
+   "kaisetsu_cell": "「ご迷惑をおかけして、申し訳ありませんでした」＝深く謝っている→迷惑を打ち消して「こちらこそ」と返す1。2 ✗「いつもお世話になっております」→世話になる側の挨拶。3 ✗「おかまいなく」→気を使わないでという遠慮。",
+   "explanation": {
+    "why_correct": "深《ふか》く謝《あやま》る相手《あいて》には、迷惑《めいわく》を打《う》ち消《け》して「こちらこそ」と返《かえ》すのが自然《しぜん》。",
+    "options_analysis": [
+     "迷惑《めいわく》ではないと打《う》ち消《け》し、こちらも悪《わる》かったと返《かえ》す。",
+     "世話《せわ》になっている側《がわ》の挨拶《あいさつ》で、謝《あやま》られた側《がわ》の返事《へんじ》にならない。",
+     "「おかまいなく」は気《き》を使《つか》わないでという遠慮《えんりょ》の言葉《ことば》。"
+    ],
+    "points": [
+     "ご迷惑《めいわく》をおかけする：相手《あいて》に面倒《めんどう》をかける謙譲《けんじょう》表現《ひょうげん》。",
+     "とんでもないです：相手《あいて》の言葉《ことば》を強《つよ》く打《う》ち消《け》す返事《へんじ》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Đối phương xin lỗi vì đã gây rắc rối → đáp bằng cách phủ nhận và nói mình cũng vậy.",
+    "options_analysis": [
+     "Phủ nhận là rắc rối, rồi nói lại mình cũng thế.",
+     "Câu chào của bên đang được giúp đỡ, sai vai.",
+     "「おかまいなく」= đừng bận tâm vì tôi, không phải đáp lời xin lỗi."
+    ],
+    "points": [
+     "ご迷惑《めいわく》をおかけする: gây rắc rối cho người khác.",
+     "とんでもない: không có gì, đâu có."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd1-41",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 41,
+   "section": "問題4",
+   "answer": 2,
+   "source_page": "別冊 p.16 第2章 まとめ問題 問題I 3番 (問題冊子 p.36)",
+   "script_lines": [
+    "昨日から入ったバイトの子、まったくいらいらするよ。",
+    "1、うん、そろそろだね。",
+    "2、えー？ なんで？",
+    "3、もういいんじゃない？"
+   ],
+   "kaisetsu_cell": "「まったくいらいらするよ」＝不満をぶつけている→理由を聞き返す2。1 ✗「そろそろだね」→時期の話。3 ✗「もういいんじゃない？」→話を打ち切る言葉。",
+   "explanation": {
+    "why_correct": "「いらいらする」という不満《ふまん》に、理由《りゆう》を尋《たず》ね返《かえ》す反応《はんのう》が自然《しぜん》。",
+    "options_analysis": [
+     "「そろそろ」は時期《じき》の話《はなし》で、不満《ふまん》への反応《はんのう》にならない。",
+     "不満《ふまん》の理由《りゆう》を聞《き》き返《かえ》し、話《はなし》を続《つづ》ける自然《しぜん》な反応《はんのう》。",
+     "「もういい」は話《はなし》を打《う》ち切《き》る言葉《ことば》で、理由《りゆう》を聞《き》かない。"
+    ],
+    "points": [
+     "いらいらする：思《おも》うようにならず腹《はら》が立《た》つ。",
+     "「なんで？」：理由《りゆう》を尋《たず》ねる話《はな》し言葉《ことば》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Người nói đang bày tỏ sự bực mình → phản ứng tự nhiên là hỏi lại lý do.",
+    "options_analysis": [
+     "「そろそろ」nói về thời điểm, không đáp lại sự bực mình.",
+     "Hỏi lại lý do, kéo câu chuyện đi tiếp.",
+     "「もういい」là câu cắt ngang, không hỏi lý do."
+    ],
+    "points": [
+     "いらいらする: bực mình, sốt ruột.",
+     "なんで: tại sao (khẩu ngữ của どうして)."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd1-42",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 42,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "別冊 p.16 第2章 まとめ問題 問題I 4番 (問題冊子 p.36)",
+   "script_lines": [
+    "電車の事故で、昨日は会社から歩いて帰ったんだ。",
+    "1、そうか、ずいぶん遠いんだね。",
+    "2、大したことにならなかったね。",
+    "3、それはひどい目にあったね。"
+   ],
+   "kaisetsu_cell": "「会社から歩いて帰った」＝苦労した話→同情する3。1 ✗「ずいぶん遠いんだね」→距離の感想。2 ✗「大したことにならなかったね」→被害が軽い時の言葉。",
+   "explanation": {
+    "why_correct": "事故《じこ》で歩《ある》いて帰《かえ》ったという苦労《くろう》話《ばなし》には、同情《どうじょう》を示《しめ》す返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "距離《きょり》の感想《かんそう》で、歩《ある》かされた苦労《くろう》に触《ふ》れていない。",
+     "「大《たい》したことにならなかった」は被害《ひがい》が軽《かる》い時《とき》の言葉《ことば》。",
+     "「ひどい目《め》にあう」で相手《あいて》の苦労《くろう》に同情《どうじょう》する。"
+    ],
+    "points": [
+     "ひどい目《め》にあう：つらい経験《けいけん》をする。",
+     "大《たい》したことはない：問題《もんだい》にならない程度《ていど》だ。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Người kia kể chuyện vất vả phải đi bộ về vì tàu gặp sự cố → đáp bằng lời thông cảm.",
+    "options_analysis": [
+     "Chỉ bình luận về khoảng cách, không nhắc tới sự vất vả.",
+     "「大したことにならなかった」dùng khi thiệt hại nhẹ.",
+     "「ひどい目にあう」thể hiện sự thông cảm với người kia."
+    ],
+    "points": [
+     "ひどい目《め》にあう: gặp chuyện khổ, bị một vố đau.",
+     "大《たい》したことはない: không đáng kể."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd1-43",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 43,
+   "section": "問題4",
+   "answer": 1,
+   "source_page": "別冊 p.16 第2章 まとめ問題 問題I 5番 (問題冊子 p.36)",
+   "script_lines": [
+    "あのう、この席、空いていますか。",
+    "1、えーっと、荷物が置いてありますけど…。",
+    "2、え、閉めたはずですけど…。",
+    "3、あー、あいにく、満員なんですが…。"
+   ],
+   "kaisetsu_cell": "「この席、空いていますか」＝一つの席について尋ねる→荷物があると遠回しに断る1。2 ✗「閉めたはずですけど」→窓や店の話。3 ✗「満員なんですが」→乗り物や会場全体の話。",
+   "explanation": {
+    "why_correct": "席《せき》が空《あ》いているかという問《と》いに、荷物《にもつ》があると遠回《とおまわ》しに断《ことわ》る返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "荷物《にもつ》があると言《い》って、空《あ》いていないと遠回《とおまわ》しに伝《つた》える。",
+     "「閉《し》めた」は窓《まど》や店《みせ》の話《はなし》で、席《せき》の問《と》いに合《あ》わない。",
+     "「満員《まんいん》」は乗《の》り物《もの》や会場《かいじょう》全体《ぜんたい》の話《はなし》である。"
+    ],
+    "points": [
+     "空《あ》いている：使《つか》われていない状態《じょうたい》だ。",
+     "「〜けど…。」：言《い》い切《き》らずに断《ことわ》る言《い》い方《かた》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Câu hỏi là ghế này có trống không → đáp gián tiếp rằng có hành lý, tức là đã có người.",
+    "options_analysis": [
+     "Nói có hành lý = ghế không trống, cách từ chối gián tiếp.",
+     "「閉めた」nói về cửa sổ hay cửa hàng, không phải ghế.",
+     "「満員」nói cả xe hay cả hội trường, không phải một ghế."
+    ],
+    "points": [
+     "空《あ》いている: đang trống, chưa ai dùng.",
+     "〜けど…: bỏ lửng câu để từ chối nhẹ."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-44",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 44,
+   "section": "問題4",
+   "answer": 1,
+   "source_page": "別冊 p.51 第5章 問題IV 2番 (問題冊子 p.69)",
+   "script_lines": [
+    "あのう、ちょっと聞き取りにくいんですが…。",
+    "1、あ、そうですか、すみません。",
+    "2、えーっと、これくらいじゃありませんか。",
+    "3、そんなはずじゃなかったんですが…。"
+   ],
+   "kaisetsu_cell": "「聞き取りにくいんですが…」＝遠回しな苦情→謝って直そうとする1。2 ✗「これくらいじゃありませんか」→量や程度を尋ね返す言葉。3 ✗「そんなはずじゃなかった」→言い訳で、苦情に応じていない。",
+   "explanation": {
+    "why_correct": "声《こえ》が聞《き》き取《と》りにくいという遠回《とおまわ》しな苦情《くじょう》。謝《あやま》って直《なお》そうとする返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "指摘《してき》を受《う》けて謝《あやま》り、直《なお》す姿勢《しせい》を示《しめ》す。",
+     "量《りょう》や程度《ていど》を尋《たず》ね返《かえ》す言葉《ことば》で、答《こた》えにならない。",
+     "予定《よてい》と違《ちが》ったと言《い》い訳《わけ》する言葉《ことば》で、苦情《くじょう》に応《おう》じていない。"
+    ],
+    "points": [
+     "聞《き》き取《と》りにくい：聞《き》いて理解《りかい》しづらい。",
+     "「〜んですが…。」：遠回《とおまわ》しに苦情《くじょう》を言《い》う。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Đây là lời phàn nàn gián tiếp rằng khó nghe rõ → xin lỗi và tỏ ý sẽ sửa là đúng.",
+    "options_analysis": [
+     "Nhận lời nhắc, xin lỗi và tỏ ý sẽ sửa.",
+     "Hỏi lại về mức độ, không đáp việc nghe không rõ.",
+     "Là lời biện hộ rằng khác dự tính, không xử lý phàn nàn."
+    ],
+    "points": [
+     "聞《き》き取《と》りにくい: khó nghe rõ.",
+     "〜んですが…: nói lửng để phàn nàn nhẹ."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-45",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 45,
+   "section": "問題4",
+   "answer": 2,
+   "source_page": "別冊 p.51 第5章 問題IV 3番 (問題冊子 p.69)",
+   "script_lines": [
+    "会場がわかんなくて、うろうろしちゃったよ。",
+    "1、うっかりしてたよ。",
+    "2、でも、よかったじゃない、間に合って。",
+    "3、だれかに聞いてみる？"
+   ],
+   "kaisetsu_cell": "「うろうろしちゃった」＝迷ったが着いた話→間に合った点を喜ぶ2。1 ✗「うっかりしてたよ」→自分の不注意の話。3 ✗「だれかに聞いてみる？」→これから探す時の提案。",
+   "explanation": {
+    "why_correct": "迷《まよ》ったが結果《けっか》として来《こ》られたという話《はなし》。間《ま》に合《あ》ったことを喜《よろこ》ぶ返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "自分《じぶん》の不注意《ふちゅうい》を述《の》べる言葉《ことば》で、相手《あいて》の話《はなし》への反応《はんのう》でない。",
+     "迷《まよ》った苦労《くろう》を受《う》け、間《ま》に合《あ》った点《てん》をよかったと言《い》う。",
+     "これから探《さが》す時《とき》の提案《ていあん》で、もう着《つ》いた話《はなし》に合《あ》わない。"
+    ],
+    "points": [
+     "うろうろする：あてもなく歩《ある》き回《まわ》る。",
+     "間《ま》に合《あ》う：決《き》められた時刻《じこく》に遅《おく》れない。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Người kia kể đã lạc nhưng cuối cùng vẫn tới → mừng vì kịp giờ là đúng.",
+    "options_analysis": [
+     "Nói về sự bất cẩn của chính mình, không phản ứng lại.",
+     "Ghi nhận sự vất vả rồi mừng vì đã kịp giờ.",
+     "Là đề nghị khi còn đang tìm, nhưng người kia đã tới rồi."
+    ],
+    "points": [
+     "うろうろする: đi lòng vòng không biết hướng.",
+     "間《ま》に合《あ》う: kịp giờ, đúng hẹn."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-46",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 46,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "別冊 p.51 第5章 問題IV 4番 (問題冊子 p.69)",
+   "script_lines": [
+    "こんなこと、よくやったよね。えらい！",
+    "1、やってみるだけだよ。",
+    "2、大したことになったよ。",
+    "3、いや、それほどでもないよ。"
+   ],
+   "kaisetsu_cell": "「よくやったよね。えらい！」＝ほめている→謙遜して打ち消す3。1 ✗「やってみるだけだよ」→これからやる話。2 ✗「大したことになったよ」→事が大きくなった意味。",
+   "explanation": {
+    "why_correct": "ほめられた時《とき》の返事《へんじ》。謙遜《けんそん》して軽《かる》く打《う》ち消《け》すのが自然《しぜん》。",
+    "options_analysis": [
+     "これからやってみるという話《はなし》で、ほめへの返事《へんじ》でない。",
+     "「大《たい》したことになった」は事《こと》が大《おお》きくなった意味《いみ》。",
+     "ほめを軽《かる》く打《う》ち消《け》す、決《き》まった謙遜《けんそん》の言《い》い方《かた》。"
+    ],
+    "points": [
+     "それほどでもない：言《い》われるほどではない。",
+     "えらい：立派《りっぱ》だとほめる言葉《ことば》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Được khen thì đáp lại bằng cách khiêm tốn phủ nhận là tự nhiên nhất.",
+    "options_analysis": [
+     "Nói về việc sẽ thử làm, không phải đáp lời khen.",
+     "「大したことになった」= chuyện thành to, sai nghĩa.",
+     "Cách khiêm tốn quen dùng để gạt lời khen."
+    ],
+    "points": [
+     "それほどでもない: không đến mức như vậy.",
+     "えらい: giỏi, đáng khen."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-47",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 47,
+   "section": "問題4",
+   "answer": 1,
+   "source_page": "別冊 p.51 第5章 問題IV 5番 (問題冊子 p.69)",
+   "script_lines": [
+    "ご用件、お伺いしておきましょうか。",
+    "1、いえ、また出直しますので…。",
+    "2、えー、けっこうだと思います。",
+    "3、そうですねえ。お先に失礼します。"
+   ],
+   "kaisetsu_cell": "「お伺いしておきましょうか」＝用件を代わりに聞く申し出→断って出直す1。2 ✗「けっこうだと思います」→品物や案の評価。3 ✗「お先に失礼します」→先に帰る時の挨拶。",
+   "explanation": {
+    "why_correct": "用件《ようけん》を代《か》わりに聞《き》いておこうかという申《もう》し出《で》。断《ことわ》って出直《でなお》すと答《こた》える。",
+    "options_analysis": [
+     "申《もう》し出《で》を断《ことわ》り、改《あらた》めて来《く》ると伝《つた》える。",
+     "品物《しなもの》や案《あん》の評価《ひょうか》を述《の》べる言葉《ことば》で、申《もう》し出《で》の返事《へんじ》でない。",
+     "先《さき》に帰《かえ》る時《とき》の挨拶《あいさつ》で、答《こた》えにならない。"
+    ],
+    "points": [
+     "出直《でなお》す：改《あらた》めてもう一度《いちど》来《く》る。",
+     "お伺《うかが》いする：「聞《き》く」の謙譲語《けんじょうご》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Đây là lời đề nghị nghe hộ nội dung công việc → từ chối và hẹn quay lại là đúng.",
+    "options_analysis": [
+     "Từ chối đề nghị, nói sẽ đến lại lần khác.",
+     "Là lời đánh giá món đồ hay ý kiến, không đáp đề nghị.",
+     "Là câu chào khi về trước, không trả lời câu hỏi."
+    ],
+    "points": [
+     "出直《でなお》す: quay lại lần nữa vào dịp khác.",
+     "お伺《うかが》いする: dạng khiêm nhường của 聞く."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-48",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 48,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "別冊 p.51 第5章 問題IV 6番 (問題冊子 p.69)",
+   "script_lines": [
+    "最近、加藤君見かけないよね。具合でも悪いのかな。",
+    "1、会ったことないからわかんないよ。",
+    "2、都合悪いって言ってたから。",
+    "3、旅行にでも行ってんじゃない？"
+   ],
+   "kaisetsu_cell": "「具合でも悪いのかな」＝姿を見ない理由の推測→別の理由を挙げる3。1 ✗「会ったことないから」→話題は最近見ないこと。2 ✗「都合悪いって言ってた」→予定の話で、理由にならない。",
+   "explanation": {
+    "why_correct": "姿《すがた》を見《み》ない理由《りゆう》を推測《すいそく》している。別《べつ》の理由《りゆう》を挙《あ》げて答《こた》える。",
+    "options_analysis": [
+     "会《あ》ったことがないと言《い》うが、話題《わだい》は最近《さいきん》見《み》ないことである。",
+     "「都合《つごう》が悪《わる》い」は予定《よてい》の話《はなし》で、理由《りゆう》にならない。",
+     "旅行《りょこう》という別《べつ》の理由《りゆう》を挙《あ》げて推測《すいそく》に応《おう》じる。"
+    ],
+    "points": [
+     "見《み》かける：偶然《ぐうぜん》目《め》にする。",
+     "具合《ぐあい》が悪《わる》い：体《からだ》の調子《ちょうし》がよくない。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Người nói đang phỏng đoán lý do lâu không thấy → nêu một lý do khác là đúng.",
+    "options_analysis": [
+     "Nói chưa từng gặp, nhưng chủ đề là dạo này không thấy.",
+     "「都合が悪い」nói về lịch trình, không phải lý do vắng.",
+     "Nêu lý do khác là đi du lịch, đáp lại phỏng đoán."
+    ],
+    "points": [
+     "見《み》かける: tình cờ trông thấy.",
+     "具合《ぐあい》が悪《わる》い: sức khỏe không tốt."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-49",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 49,
+   "section": "問題4",
+   "answer": 1,
+   "source_page": "別冊 p.51 第5章 問題IV 7番 (問題冊子 p.69)",
+   "script_lines": [
+    "これ、細かくしてくれない？ この自動販売機、お札は使えないみたい。",
+    "1、五百円玉、混じってもいい？",
+    "2、じゃ、千円にしようよ。",
+    "3、不便なんじゃない？"
+   ],
+   "kaisetsu_cell": "「細かくしてくれない？」＝札を小銭に替える頼み→硬貨の種類を確かめる1。2 ✗「千円にしようよ」→札のままで頼みに反する。3 ✗「不便なんじゃない？」→機械への感想。",
+   "explanation": {
+    "why_correct": "札《さつ》を小銭《こぜに》に替《か》えてほしいという頼《たの》み。硬貨《こうか》が混《ま》ざってよいか確《たし》かめる。",
+    "options_analysis": [
+     "替《か》える硬貨《こうか》の種類《しゅるい》を確《たし》かめ、頼《たの》みに応《おう》じている。",
+     "千円札《せんえんさつ》のままで、細《こま》かくしてほしい頼《たの》みに反《はん》する。",
+     "機械《きかい》への感想《かんそう》で、頼《たの》まれたことへの返事《へんじ》でない。"
+    ],
+    "points": [
+     "細《こま》かくする：大《おお》きな金《かね》を小銭《こぜに》に替《か》える。",
+     "お札《さつ》：紙《かみ》のお金《かね》。硬貨《こうか》は「玉《だま》」。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Đây là lời nhờ đổi tiền giấy thành tiền lẻ → hỏi lại loại xu là đúng.",
+    "options_analysis": [
+     "Xác nhận loại xu sẽ đổi, tức là nhận lời nhờ.",
+     "Vẫn là tờ 1000 yên, trái với yêu cầu đổi ra tiền lẻ.",
+     "Là cảm nhận về cái máy, không đáp lời nhờ."
+    ],
+    "points": [
+     "細《こま》かくする: đổi tiền to ra tiền lẻ.",
+     "お札《さつ》: tiền giấy; xu là 玉《だま》."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-65",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 65,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "別冊 p.42 模擬試験 問題4 1番 (B65)",
+   "script_lines": [
+    "お忙しいところ、すみません。ご相談したいことがあるんですが、今ちょっとよろしいでしょうか。",
+    "1、ええ、おかまいなく。何でしょう？",
+    "2、ええ、どういたしまして。何でしょう？",
+    "3、ええ、かまいませんよ。何でしょう？"
+   ],
+   "kaisetsu_cell": "「今ちょっとよろしいでしょうか」＝許可を求める→「かまいませんよ」と許す3。1 ✗「おかまいなく」→気を使わないでという遠慮。2 ✗「どういたしまして」→礼への返事。",
+   "explanation": {
+    "why_correct": "「よろしいでしょうか」と許可《きょか》を求《もと》める問《と》いに、「かまいませんよ」と許《ゆる》す返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "「おかまいなく」は気《き》を使《つか》わないでという遠慮《えんりょ》の言葉《ことば》。",
+     "「どういたしまして」は礼《れい》への返事《へんじ》で、許可《きょか》の返事《へんじ》でない。",
+     "「かまいません」で差《さ》し支《つか》えないと許《ゆる》している。"
+    ],
+    "points": [
+     "かまいません：差《さ》し支《つか》えない、いいですよ。",
+     "おかまいなく：私《わたし》に気《き》を使《つか》わないで。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Câu hỏi xin phép 「よろしいでしょうか」→ đáp 「かまいませんよ」nghĩa là được, cứ nói.",
+    "options_analysis": [
+     "「おかまいなく」= đừng bận tâm vì tôi, không phải cho phép.",
+     "「どういたしまして」đáp lời cảm ơn, không đáp lời xin phép.",
+     "「かまいません」= không sao, tôi đồng ý."
+    ],
+    "points": [
+     "かまいません: không sao, được thôi.",
+     "おかまいなく: đừng bận tâm đến tôi."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-66",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 66,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "別冊 p.42 模擬試験 問題4 2番 (B66)",
+   "script_lines": [
+    "最初は引き受けなきゃよかったかなと思ったんだけど。",
+    "1、やっぱり引き受けないほうがいいでしょう？",
+    "2、やっぱり引き受けたらよかったでしょ？",
+    "3、やっぱり引き受けてよかったでしょ？"
+   ],
+   "kaisetsu_cell": "「最初は引き受けなきゃよかったかなと思ったんだけど」＝今は違うという含み→よかったと確かめる3。1 ✗「引き受けないほうがいい」→これから決める話。2 ✗「引き受けたらよかった」→引き受けなかった人への言葉。",
+   "explanation": {
+    "why_correct": "「最初《さいしょ》は」後悔《こうかい》したが今《いま》は違《ちが》うという含《ふく》み。よかったと確《たし》かめる返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "これから引《ひ》き受《う》けるかの助言《じょげん》で、済《す》んだ話《はなし》に合《あ》わない。",
+     "引《ひ》き受《う》けなかった人《ひと》への言葉《ことば》で、事実《じじつ》に反《はん》する。",
+     "「最初《さいしょ》は」の裏《うら》にある今《いま》の満足《まんぞく》を確《たし》かめている。"
+    ],
+    "points": [
+     "〜なきゃよかった：しなければよかったと後悔《こうかい》する。",
+     "「最初《さいしょ》は」：後《あと》で気持《きも》ちが変《か》わったと示《しめ》す。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "「最初は」hàm ý lúc đầu hối hận nhưng giờ đã khác → xác nhận là may mà đã nhận.",
+    "options_analysis": [
+     "Là lời khuyên trước khi nhận, nhưng việc đã xong rồi.",
+     "Nói với người đã không nhận, trái với thực tế.",
+     "Xác nhận sự hài lòng hiện tại ẩn sau 「最初は」."
+    ],
+    "points": [
+     "〜なきゃよかった: giá mà đã không làm (hối hận).",
+     "最初《さいしょ》は: lúc đầu thì... (ngụ ý sau đã khác)."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-67",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 67,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "別冊 p.43 模擬試験 問題4 3番 (B67)",
+   "script_lines": [
+    "どうもすっかりご無沙汰してしまって……。お変わりありませんか。",
+    "1、ええ、ご苦労様です。",
+    "2、ええ、ごめんください。",
+    "3、ええ、相変わらずです。"
+   ],
+   "kaisetsu_cell": "「お変わりありませんか」＝近況を尋ねる挨拶→変わりないと答える3。1 ✗「ご苦労様です」→労をねぎらう言葉。2 ✗「ごめんください」→訪問や別れの挨拶。",
+   "explanation": {
+    "why_correct": "「お変《か》わりありませんか」は近況《きんきょう》を尋《たず》ねる挨拶《あいさつ》。変《か》わりないと答《こた》える。",
+    "options_analysis": [
+     "「ご苦労様《くろうさま》」は労《ろう》をねぎらう言葉《ことば》で、近況《きんきょう》の答《こた》えでない。",
+     "「ごめんください」は訪問《ほうもん》や別《わか》れの挨拶《あいさつ》である。",
+     "「相変《あいか》わらず」で以前《いぜん》と変《か》わらないと答《こた》える。"
+    ],
+    "points": [
+     "ご無沙汰《ぶさた》：長《なが》く連絡《れんらく》しないでいること。",
+     "相変《あいか》わらず：前《まえ》と同《おな》じようすで。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "「お変わりありませんか」là câu chào hỏi tình hình → đáp là vẫn như cũ.",
+    "options_analysis": [
+     "「ご苦労様」là lời ghi công, không đáp câu hỏi tình hình.",
+     "「ごめんください」dùng khi tới nhà ai hoặc lúc chia tay.",
+     "「相変わらず」= vẫn như trước, không gì thay đổi."
+    ],
+    "points": [
+     "ご無沙汰《ぶさた》: lâu không liên lạc.",
+     "相変《あいか》わらず: vẫn như cũ."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-68",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 68,
+   "section": "問題4",
+   "answer": 2,
+   "source_page": "別冊 p.43 模擬試験 問題4 4番 (B68)",
+   "script_lines": [
+    "あのー、できたらこの荷物、ここで夕方まで預かっといてほしいんですけど。",
+    "1、そうですか。じゃ、よろしくお願いします。",
+    "2、わかりました。何時に取りに来ますか。",
+    "3、じゃ、できたらご連絡します。"
+   ],
+   "kaisetsu_cell": "「預かっといてほしいんですけど」＝預かる側への頼み→引き受けて受取時刻を聞く2。1 ✗「よろしくお願いします」→頼む側の言葉。3 ✗「ご連絡します」→預かる話に応じていない。",
+   "explanation": {
+    "why_correct": "荷物《にもつ》を預《あず》かってほしいという頼《たの》み。引《ひ》き受《う》けて受《う》け取《と》る時刻《じこく》を聞《き》く。",
+    "options_analysis": [
+     "頼《たの》む側《がわ》の言葉《ことば》で、頼《たの》まれた側《がわ》の返事《へんじ》にならない。",
+     "引《ひ》き受《う》けた上《うえ》で、取《と》りに来《く》る時刻《じこく》を確《たし》かめる。",
+     "連絡《れんらく》するという申《もう》し出《で》で、預《あず》かる話《はなし》に応《おう》じていない。"
+    ],
+    "points": [
+     "預《あず》かる：人《ひと》の物《もの》を一時《いちじ》的《てき》に保管《ほかん》する。",
+     "〜といて＝〜ておいて：話《はな》し言葉《ことば》の縮約形《しゅくやくけい》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Đây là lời nhờ giữ hành lý → nhận lời rồi hỏi giờ đến lấy là đúng.",
+    "options_analysis": [
+     "Là lời của bên đi nhờ, không phải bên được nhờ.",
+     "Nhận lời rồi xác nhận giờ khách quay lại lấy.",
+     "Là đề nghị sẽ liên lạc, không đáp việc giữ hành lý."
+    ],
+    "points": [
+     "預《あず》かる: nhận giữ hộ đồ của người khác.",
+     "〜といて = 〜ておいて: dạng rút gọn khẩu ngữ."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-69",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 69,
+   "section": "問題4",
+   "answer": 1,
+   "source_page": "別冊 p.43 模擬試験 問題4 5番 (B69)",
+   "script_lines": [
+    "この間お話しした物、実物をお持ちしたんですが……。",
+    "1、あ、もう、拝見しましたよ。",
+    "2、え？ もう、ご覧くださいましたよ。",
+    "3、ええ、もう、お見えになりましたよ。"
+   ],
+   "kaisetsu_cell": "「実物をお持ちしたんですが」＝見せる申し出→見る側が謙譲語で答える1。2 ✗「ご覧くださいました」→相手の行為の尊敬語で自分に使えない。3 ✗「お見えになりました」→人が来ることの尊敬語。",
+   "explanation": {
+    "why_correct": "実物《じつぶつ》を持《も》ってきたという申《もう》し出《で》。見《み》る側《がわ》が謙譲語《けんじょうご》「拝見《はいけん》」で答《こた》える。",
+    "options_analysis": [
+     "「拝見《はいけん》する」は「見《み》る」の謙譲語《けんじょうご》で、自分《じぶん》の行為《こうい》に合《あ》う。",
+     "「ご覧《らん》くださる」は相手《あいて》の行為《こうい》の尊敬語《そんけいご》で、自分《じぶん》に使《つか》えない。",
+     "「お見《み》えになる」は人《ひと》が来《く》ることの尊敬語《そんけいご》で、物《もの》に使《つか》わない。"
+    ],
+    "points": [
+     "拝見《はいけん》する：「見《み》る」の謙譲語《けんじょうご》。",
+     "お見《み》えになる：「来《く》る」の尊敬語《そんけいご》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Người kia mang hàng mẫu đến → bên xem đáp bằng khiêm nhường 「拝見しました」.",
+    "options_analysis": [
+     "「拝見する」là dạng khiêm nhường của 見る, dùng cho mình.",
+     "「ご覧くださる」là tôn kính ngữ cho hành động của người kia.",
+     "「お見えになる」là tôn kính ngữ của 来る, không dùng cho vật."
+    ],
+    "points": [
+     "拝見《はいけん》する: xem (khiêm nhường).",
+     "お見《み》えになる: đến (tôn kính)."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-70",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 70,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "別冊 p.43 模擬試験 問題4 6番 (B70)",
+   "script_lines": [
+    "あれ？ それ、持ってっちゃっていいんですか。",
+    "1、うん、すごくいいんじゃないかな。",
+    "2、うん、持ってっちゃったよ。",
+    "3、うん、持ってってって言われたんだ。"
+   ],
+   "kaisetsu_cell": "「持ってっちゃっていいんですか」＝可否を尋ねる→許しを得た根拠を示す3。1 ✗「すごくいいんじゃないかな」→品物の評価。2 ✗「持ってっちゃったよ」→すでに持ち去った報告。",
+   "explanation": {
+    "why_correct": "持《も》ち帰《かえ》ってよいのかという疑問《ぎもん》。許《ゆる》しを得《え》ていると根拠《こんきょ》を示《しめ》す返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "品物《しなもの》の評価《ひょうか》で、持《も》ち帰《かえ》りの可否《かひ》の答《こた》えでない。",
+     "すでに持《も》ち去《さ》った報告《ほうこく》で、目《め》の前《まえ》の物《もの》の説明《せつめい》に合《あ》わない。",
+     "言《い》われたと伝《つた》え、持《も》ち帰《かえ》ってよい根拠《こんきょ》を示《しめ》す。"
+    ],
+    "points": [
+     "持《も》ってっちゃう＝持《も》って行《い》ってしまう：縮約形《しゅくやくけい》。",
+     "〜って言《い》われた：許可《きょか》や指示《しじ》を受《う》けたと示《しめ》す。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Câu hỏi là mang đi có được không → đáp rằng đã được người ta bảo mang đi.",
+    "options_analysis": [
+     "Là lời đánh giá món đồ, không đáp được hay không.",
+     "Là báo cáo đã mang đi rồi, không khớp với đồ trước mắt.",
+     "Nói đã được bảo mang đi, tức là có phép."
+    ],
+    "points": [
+     "持《も》ってっちゃう = 持って行ってしまう: dạng rút gọn.",
+     "〜って言《い》われた: được ai đó bảo thế."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-71",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 71,
+   "section": "問題4",
+   "answer": 2,
+   "source_page": "別冊 p.43 模擬試験 問題4 7番 (B71)",
+   "script_lines": [
+    "今日はうっかりいつもの電車に乗るところだったよ。",
+    "1、ああ、あそこから乗ったんだね。",
+    "2、間違えてたら、大変だったね。",
+    "3、えー！ いつものに乗っちゃったの？"
+   ],
+   "kaisetsu_cell": "「乗るところだった」＝乗らずに済んだ→もし乗っていたらと言う2。1 ✗「あそこから乗ったんだね」→乗った場所の話。3 ✗「乗っちゃったの？」→乗ったと理解し事実に反する。",
+   "explanation": {
+    "why_correct": "「乗《の》るところだった」は乗《の》らずに済《す》んだ意味《いみ》。もし乗《の》っていたらと言《い》う返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "乗《の》った場所《ばしょ》の話《はなし》で、乗《の》らずに済《す》んだ点《てん》に触《ふ》れていない。",
+     "乗《の》っていたら大変《たいへん》だったと、避《さ》けられた点《てん》を受《う》ける。",
+     "乗《の》ってしまったと理解《りかい》しており、事実《じじつ》と反《はん》する。"
+    ],
+    "points": [
+     "〜ところだった：しそうになったが、しなかった。",
+     "うっかり：気《き》をつけずに、思《おも》わず。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "「乗るところだった」nghĩa là suýt lên nhưng đã không lên → đáp nếu lên thì to chuyện.",
+    "options_analysis": [
+     "Nói về nơi đã lên tàu, không nhắc việc suýt lên nhầm.",
+     "Nói nếu lên thì gay, tiếp nhận việc đã tránh được.",
+     "Hiểu là đã lên rồi, trái với sự thật."
+    ],
+    "points": [
+     "〜ところだった: suýt nữa thì..., mà đã không.",
+     "うっかり: vô ý, không để ý."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-72",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 72,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "別冊 pp.43-44 模擬試験 問題4 8番 (B72)",
+   "script_lines": [
+    "この仕事、わたしにやらせていただけないでしょうか。",
+    "1、あ、そうですか。じゃ、差し上げます。",
+    "2、はい、そうですね。じゃ、お疲れ様でした。",
+    "3、わかりました。じゃ、お願いします。"
+   ],
+   "kaisetsu_cell": "「やらせていただけないでしょうか」＝仕事をやりたいという願い出→任せる3。1 ✗「差し上げます」→物を渡す言葉。2 ✗「お疲れ様でした」→終えた人への挨拶。",
+   "explanation": {
+    "why_correct": "仕事《しごと》をやらせてほしいという願《ねが》い出《で》。任《まか》せると答《こた》える返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "「差《さ》し上《あ》げる」は物《もの》を渡《わた》す言葉《ことば》で、仕事《しごと》を任《まか》せる返事《へんじ》でない。",
+     "「お疲《つか》れ様《さま》」は終《お》えた人《ひと》への挨拶《あいさつ》で、これからの話《はなし》に合《あ》わない。",
+     "「じゃ、お願《ねが》いします」で仕事《しごと》を任《まか》せている。"
+    ],
+    "points": [
+     "やらせていただく：させてほしいと願《ねが》う謙譲《けんじょう》表現《ひょうげん》。",
+     "お願《ねが》いします：任《まか》せる、頼《たの》むと伝《つた》える。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Đây là lời xin được làm việc đó → đáp bằng cách giao việc cho người ấy.",
+    "options_analysis": [
+     "「差し上げる」là đưa đồ, không phải giao việc.",
+     "「お疲れ様」nói với người đã làm xong, không hợp.",
+     "「じゃ、お願いします」= vậy nhờ bạn làm nhé."
+    ],
+    "points": [
+     "やらせていただく: xin được cho làm (khiêm nhường).",
+     "お願《ねが》いします: nhờ bạn, giao cho bạn."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-73",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 73,
+   "section": "問題4",
+   "answer": 2,
+   "source_page": "別冊 p.44 模擬試験 問題4 9番 (B73)",
+   "script_lines": [
+    "英語の勉強、し直そうと思ってるの。書くのはともかくとして会話ぐらいはね。",
+    "1、そうだね。書く練習は必要だよね。",
+    "2、そうだね。話せると楽しいもんね。",
+    "3、そうだね。会話なんて勉強しなくてもね。"
+   ],
+   "kaisetsu_cell": "「書くのはともかくとして会話ぐらいはね」＝会話をやりたい→会話に賛成する2。1 ✗「書く練習は必要だよね」→いったん外した話。3 ✗「会話なんて勉強しなくても」→やりたいという話に反する。",
+   "explanation": {
+    "why_correct": "「書《か》くのはともかくとして会話《かいわ》ぐらいはね」＝会話《かいわ》をやりたい。会話《かいわ》を後押《あとお》しする返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "いったん外《はず》した「書《か》く」を勧《すす》め、話《はなし》の力点《りきてん》とずれる。",
+     "会話《かいわ》をやりたい気持《きも》ちに寄《よ》り添《そ》って賛成《さんせい》する。",
+     "会話《かいわ》は不要《ふよう》と言《い》い、やりたいという話《はなし》に反《はん》する。"
+    ],
+    "points": [
+     "〜はともかくとして：それは別《べつ》にして。",
+     "〜ぐらいは：最低限《さいていげん》それだけは。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "「書くのはともかく会話ぐらいは」= muốn học hội thoại → đồng tình với hội thoại.",
+    "options_analysis": [
+     "Khuyên luyện viết, phần vừa được gạt ra, lệch trọng tâm.",
+     "Đồng tình, ủng hộ ý muốn học hội thoại.",
+     "Nói hội thoại không cần học, trái ý người kia."
+    ],
+    "points": [
+     "〜はともかくとして: cái đó thì để riêng, khoan bàn.",
+     "〜ぐらいは: ít nhất là cái đó."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-74",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 74,
+   "section": "問題4",
+   "answer": 1,
+   "source_page": "別冊 p.44 模擬試験 問題4 10番 (B74)",
+   "script_lines": [
+    "え？ タレントになりたい？ 笑わせないでくれよ。",
+    "1、いえ、大真面目よ。",
+    "2、いえ、笑ってなんかいないわよ。",
+    "3、いえ、すごく面白いのよ。"
+   ],
+   "kaisetsu_cell": "「笑わせないでくれよ」＝本気とは思えないという意味→本気だと返す1。2 ✗「笑ってなんかいないわよ」→字義通りに取っている。3 ✗「すごく面白いのよ」→面白さの話。",
+   "explanation": {
+    "why_correct": "「笑《わら》わせないで」は本気《ほんき》とは思《おも》えないという意味《いみ》。本気《ほんき》だと返《かえ》す返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "「大真面目《おおまじめ》」で冗談《じょうだん》ではなく本気《ほんき》だと示《しめ》す。",
+     "「笑《わら》わせないで」を字義《じぎ》通《どお》りに取《と》り、意図《いと》とずれる。",
+     "面白《おもしろ》さの話《はなし》で、本気《ほんき》かどうかの答《こた》えにならない。"
+    ],
+    "points": [
+     "大真面目《おおまじめ》：まったく本気《ほんき》であるようす。",
+     "笑《わら》わせないで：ばかなことを言《い》うな。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "「笑わせないでくれよ」= nghe không thật → đáp rằng mình hoàn toàn nghiêm túc.",
+    "options_analysis": [
+     "「大真面目」= rất nghiêm túc, không phải nói đùa.",
+     "Hiểu 「笑わせないで」theo nghĩa mặt chữ, lệch ý.",
+     "Nói về sự thú vị, không đáp việc có thật lòng hay không."
+    ],
+    "points": [
+     "大真面目《おおまじめ》: hoàn toàn nghiêm túc.",
+     "笑《わら》わせないで: đừng nói chuyện vô lý."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-75",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 75,
+   "section": "問題4",
+   "answer": 1,
+   "source_page": "別冊 p.44 模擬試験 問題4 11番 (B75)",
+   "script_lines": [
+    "これ、使ってもらえるとありがたいんだけど。",
+    "1、え？ ほんとにいいんですか。じゃ、遠慮なく。",
+    "2、ええ、どうぞ。よかったらこれもいかがですか。",
+    "3、どういたしまして。もう使わないものなんで。"
+   ],
+   "kaisetsu_cell": "「使ってもらえるとありがたい」＝差し出す申し出→ありがたく受け取る1。2 ✗「ええ、どうぞ」→差し出す側の言葉。3 ✗「もう使わないものなんで」→差し出す側の説明で立場が逆。",
+   "explanation": {
+    "why_correct": "使《つか》ってほしいと差《さ》し出《だ》す申《もう》し出《で》。ありがたく受《う》け取《と》る返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "確《たし》かめてから遠慮《えんりょ》なく受《う》け取《と》ると答《こた》える。",
+     "差《さ》し出《だ》す側《がわ》の言葉《ことば》で、勧《すす》められた側《がわ》の返事《へんじ》でない。",
+     "「もう使《つか》わない」は差《さ》し出《だ》す側《がわ》の説明《せつめい》で、立場《たちば》が逆《ぎゃく》。"
+    ],
+    "points": [
+     "〜てもらえるとありがたい：遠回《とおまわ》しな依頼《いらい》。",
+     "遠慮《えんりょ》なく：気《き》を使《つか》わずに、そのまま。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Đây là lời mời nhận đồ 「使ってもらえるとありがたい」→ nhận với lòng biết ơn.",
+    "options_analysis": [
+     "Hỏi lại cho chắc rồi nhận, không khách sáo.",
+     "Là lời của bên đưa đồ, không phải bên được mời.",
+     "「もう使わない」là giải thích của bên đưa, ngược vai."
+    ],
+    "points": [
+     "〜てもらえるとありがたい: nhờ vả một cách gián tiếp.",
+     "遠慮《えんりょ》なく: không khách sáo, cứ tự nhiên."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-76",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 76,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "別冊 p.44 模擬試験 問題4 12番 (B76)",
+   "script_lines": [
+    "山田先生とお昼をご一緒したんだけど、今日に限って財布忘れちゃってさ、ご迷惑かけちゃったよ。",
+    "1、昼食代を払わされたんですか。",
+    "2、一緒に探してくださったんですか。",
+    "3、ごちそうしてもらったんですか。"
+   ],
+   "kaisetsu_cell": "「財布忘れちゃってさ、ご迷惑かけちゃった」＝先生が払った→それを確かめる3。1 ✗「払わされたんですか」→本人が払った意味になる。2 ✗「一緒に探してくださった」→探す話は出ていない。",
+   "explanation": {
+    "why_correct": "財布《さいふ》を忘《わす》れて迷惑《めいわく》をかけた＝先生《せんせい》が代金《だいきん》を払《はら》った。それを確《たし》かめる。",
+    "options_analysis": [
+     "「払《はら》わされた」は先生《せんせい》ではなく本人《ほんにん》が払《はら》った意味《いみ》になる。",
+     "探《さが》す話《はなし》は出《で》ておらず、忘《わす》れたのは財布《さいふ》である。",
+     "先生《せんせい》に払《はら》ってもらったのかと確《たし》かめている。"
+    ],
+    "points": [
+     "ごちそうする：代金《だいきん》を払《はら》ってもてなす。",
+     "今日《きょう》に限《かぎ》って：よりによって今日《きょう》だけ。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Quên ví nên gây rắc rối = thầy đã trả tiền → xác nhận là được thầy mời.",
+    "options_analysis": [
+     "「払わされた」thành ra chính người nói phải trả, sai.",
+     "Không có chuyện tìm kiếm; thứ bị quên là cái ví.",
+     "Xác nhận là thầy đã trả tiền, tức là được mời."
+    ],
+    "points": [
+     "ごちそうする: mời (trả tiền) ai ăn.",
+     "今日《きょう》に限《かぎ》って: đúng hôm nay lại..."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-59",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 59,
+   "section": "問題3",
+   "answer": 4,
+   "source_page": "別冊 p.40 模擬試験 問題3 1番 (B59)",
+   "script_lines": [
+    "テレビで女の人が話しています。",
+    "女:最近の若い人は方言を好んで使う傾向があるようです。特に面白いのが、自分がその地方の出身でなくても、その方言が面白ければ取り入れていって、友達同士のコミュニケーションをスムーズにするための仲間言葉として使うという考え方です。ですから、東京出身の若者が、関西の言葉を混ぜながら話すということが起こるのです。例えば「なんでやねん」というのは、「どうしてだよ」という意味の関西の方言ですが、全国の若者に使われています。これは、友達との間の真面目すぎる雰囲気を崩し、親しみやすさを表すためだと考えられます。",
+    "女の人は何について話していますか。",
+    "1、若い人の友達との接し方。",
+    "2、関西の方言の「なんでやねん」の意味。",
+    "3、地方出身者の方言の使い方。",
+    "4、仲間同士の言葉としての方言。"
+   ],
+   "kaisetsu_cell": "「仲間言葉として使うという考え方」→仲間同士の言葉としての方言が主題。1 ✗「友達との間の…親しみやすさ」→目的の説明で、接し方の話ではない。2 ✗「なんでやねん」→例として一言触れただけ。3 ✗「自分がその地方の出身でなくても」→出身者の話ではない。",
+   "explanation": {
+    "why_correct": "出身地《しゅっしんち》でない方言《ほうげん》を仲間言葉《なかまことば》として取《と》り入《い》れる話《はなし》で、その働《はたら》きが主題《しゅだい》。",
+    "options_analysis": [
+     "接《せっ》し方《かた》ではなく、言葉《ことば》の使《つか》い方《かた》が話題《わだい》である。",
+     "例《れい》として一言《ひとこと》触《ふ》れただけで、主題《しゅだい》ではない。",
+     "「出身《しゅっしん》でなくても」使《つか》う話《はなし》なので、出身者《しゅっしんしゃ》の話《はなし》ではない。",
+     "「仲間言葉《なかまことば》として使《つか》う」が話《はなし》の中心《ちゅうしん》。"
+    ],
+    "points": [
+     "方言《ほうげん》：ある地方《ちほう》だけで使《つか》われる言葉《ことば》。",
+     "仲間言葉《なかまことば》：親《した》しい者《もの》同士《どうし》で使《つか》う言葉《ことば》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Bài nói về việc dùng phương ngữ vùng khác làm tiếng của nhóm bạn.",
+    "options_analysis": [
+     "Chủ đề là cách dùng từ ngữ, không phải cách đối xử với bạn.",
+     "Chỉ là một ví dụ được nhắc qua, không phải chủ đề.",
+     "Bài nói cả người không phải dân vùng đó, nên không đúng.",
+     "「仲間言葉として使う」là trọng tâm của bài nói."
+    ],
+    "points": [
+     "方言《ほうげん》: tiếng địa phương.",
+     "仲間言葉《なかまことば》: tiếng dùng trong nhóm thân."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-61",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 61,
+   "section": "問題3",
+   "answer": 4,
+   "source_page": "別冊 p.41 模擬試験 問題3 3番 (B61)",
+   "script_lines": [
+    "スケート選手が話しています。",
+    "女:わたしは子供のころはスピードスケートをやっていました。でも、スピードスケートはだれが速かったかを数字で決めるので、速さだけに頼るというのに限界を感じるようになりました。でも、フィギュアスケートは技術力と美しさで勝負するものですから、その人のスケートがきれいかどうかということは、人によって評価が変わりますし、わたし自身の気持ちが入っているときは、高い点がもらえるんです。ですから自分を表現するという意味で、満足感もあります。それに、着る服や音楽もとてもきれいで、そこからその選手の性格や国の文化がわかるのも、楽しみのひとつですね。",
+    "スケート選手は何について話していますか。",
+    "1、スピードスケートを始めた理由。",
+    "2、スピードスケートに必要な要素。",
+    "3、フィギュアスケートの評価方法。",
+    "4、フィギュアスケートの魅力。"
+   ],
+   "kaisetsu_cell": "「自分を表現するという意味で、満足感もあります」「着る服や音楽もとてもきれいで…楽しみのひとつ」→フィギュアの魅力が主題。1 ✗ 始めた理由は述べていない。2 ✗「速さだけに頼るというのに限界を感じる」→限界の話。3 ✗「人によって評価が変わります」→魅力の一部。",
+   "explanation": {
+    "why_correct": "表現《ひょうげん》できる満足感《まんぞくかん》、衣装《いしょう》や音楽《おんがく》の美《うつく》しさなど、良《よ》さを並《なら》べている。",
+    "options_analysis": [
+     "始《はじ》めた理由《りゆう》は述《の》べず、やめた理由《りゆう》に触《ふ》れるだけ。",
+     "速《はや》さだけという限界《げんかい》を述《の》べ、必要《ひつよう》な要素《ようそ》の説明《せつめい》でない。",
+     "「人《ひと》によって評価《ひょうか》が変《か》わる」は魅力《みりょく》の説明《せつめい》の一部《いちぶ》。",
+     "満足感《まんぞくかん》や衣装《いしょう》・音楽《おんがく》の美《うつく》しさを挙《あ》げて魅力《みりょく》を語《かた》る。"
+    ],
+    "points": [
+     "魅力《みりょく》：人《ひと》を引《ひ》きつける良《よ》さ。",
+     "限界《げんかい》を感《かん》じる：これ以上《いじょう》は無理《むり》だと思《おも》う。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Người nói kể ra cái hay của trượt băng nghệ thuật: thể hiện được mình, phục trang và nhạc đẹp.",
+    "options_analysis": [
+     "Không nói lý do bắt đầu, chỉ nhắc lý do đã bỏ.",
+     "Nói về giới hạn của việc chỉ dựa vào tốc độ.",
+     "「人によって評価が変わる」chỉ là một phần của sức hút.",
+     "Nêu sự thỏa mãn, trang phục và nhạc đẹp."
+    ],
+    "points": [
+     "魅力《みりょく》: sức hấp dẫn.",
+     "限界《げんかい》を感《かん》じる: thấy đã tới hạn."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-62",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 62,
+   "section": "問題3",
+   "answer": 2,
+   "source_page": "別冊 pp.41-42 模擬試験 問題3 4番 (B62)",
+   "script_lines": [
+    "テレビで男の人が話しています。",
+    "男:最近は、結婚の申し込みや大きな頼み事などの大切な話を、直接言うよりもメールで伝えるほうがいいという若い人もいるようです。なぜ顔の見えないメールのほうがいいのでしょうか。ゆっくり会う時間がない、話すのが苦手で書いたほうがうまく伝えられるという人もいるでしょう。しかし、もっと積極的な理由もあるようです。言葉は言ったらすぐに消えてしまいますが、メールは後から何度も読み返すことができて、しっかりと残ります。それで、メールの文章は責任のある言葉だと感じられるようです。",
+    "男の人は何について話していますか。",
+    "1、結婚を申し込むときの手段。",
+    "2、大切な話にメールを使う理由。",
+    "3、メールの長所と短所。",
+    "4、メールの文章の書き方。"
+   ],
+   "kaisetsu_cell": "「なぜ顔の見えないメールのほうがいいのでしょうか」と問い、時間・苦手・責任という理由を並べる→使う理由が主題。1 ✗ 結婚の申し込みは例の一つ。3 ✗ 短所は述べていない。4 ✗ 書き方の説明はない。",
+   "explanation": {
+    "why_correct": "「なぜ顔《かお》の見《み》えないメールのほうがいいのでしょうか」と問《と》い、時間《じかん》・苦手《にがて》・責任《せきにん》という理由《りゆう》を並《なら》べる。",
+    "options_analysis": [
+     "結婚《けっこん》の申《もう》し込《こ》みは例《れい》の一《ひと》つで、主題《しゅだい》ではない。",
+     "「なぜ〜がいいのでしょうか」の答《こた》えを並《なら》べている。",
+     "短所《たんしょ》は述《の》べず、良《よ》い点《てん》の理由《りゆう》だけを挙《あ》げる。",
+     "書《か》き方《かた》の説明《せつめい》はなく、使《つか》う理由《りゆう》の話《はなし》である。"
+    ],
+    "points": [
+     "手段《しゅだん》：目的《もくてき》を果《は》たすための方法《ほうほう》。",
+     "積極的《せっきょくてき》な理由《りゆう》：進《すす》んでそうする理由《りゆう》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Bài đặt câu hỏi vì sao chọn mail rồi kể ra các lý do: thiếu thời gian, khó nói, có trách nhiệm.",
+    "options_analysis": [
+     "Cầu hôn chỉ là một ví dụ, không phải chủ đề.",
+     "Bài trả lời cho câu hỏi 「なぜメールのほうがいいのか」.",
+     "Không nói nhược điểm, chỉ nêu lý do của ưu điểm.",
+     "Không hướng dẫn cách viết, mà nói lý do dùng mail."
+    ],
+    "points": [
+     "手段《しゅだん》: phương tiện, cách thức.",
+     "積極的《せっきょくてき》: tích cực, chủ động."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd2-63",
+   "book": "shinkanzen",
+   "cd": 2,
+   "track": 63,
+   "section": "問題3",
+   "answer": 1,
+   "source_page": "別冊 p.42 模擬試験 問題3 5番 (B63)",
+   "script_lines": [
+    "講演会で先生が話しています。",
+    "女:日本では、「ご飯」という言葉が白い米だけでなく、食事そのものを指すことからもわかるように、昔からたくさんの米を食べていました。それが、1950年ごろから、アメリカなど外国からさまざまな食べ物が入ってきて、米の消費量はぐんと減り、肉や乳製品を多くとるようになりました。それに伴って料理法も変化したため、多くの油を使うようになっています。また、生活スタイルの変化により、食事の時間が平日と週末で違う、家族そろって食卓を囲む機会が減るなど、食事の中身だけでなく、食事のとり方も昔とは大きく異なっています。この講演会ではこのようなことをお話ししたいと思います。",
+    "この講演会のテーマは何ですか。",
+    "1、日本人の食生活の変化。",
+    "2、1950年以降の食事の内容。",
+    "3、日本人がとっている栄養。",
+    "4、外国から入ってきた料理の特徴。"
+   ],
+   "kaisetsu_cell": "「食事の中身だけでなく、食事のとり方も昔とは大きく異なっています」→食生活の変化が主題。2 ✗「昔からたくさんの米を食べていました」→1950年以降だけの話ではない。3 ✗ 栄養そのものの評価はない。4 ✗ 外国の食べ物は変化の原因として触れるだけ。",
+   "explanation": {
+    "why_correct": "米中心《こめちゅうしん》から肉《にく》・油《あぶら》へ、さらに食事《しょくじ》のとり方《かた》までと、変化《へんか》で話《はなし》をまとめる。",
+    "options_analysis": [
+     "中身《なかみ》もとり方《かた》も「昔《むかし》とは大《おお》きく異《こと》なる」と述《の》べる。",
+     "1950年以降《ねんいこう》だけでなく、昔《むかし》からの流《なが》れを追《お》っている。",
+     "栄養《えいよう》そのものの評価《ひょうか》には触《ふ》れていない。",
+     "外国《がいこく》の食《た》べ物《もの》は変化《へんか》の原因《げんいん》として触《ふ》れるだけ。"
+    ],
+    "points": [
+     "食生活《しょくせいかつ》：日常《にちじょう》の食事《しょくじ》のしかた全体《ぜんたい》。",
+     "〜に伴《ともな》って：それと一緒《いっしょ》に変化《へんか》して。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Bài xâu chuỗi sự thay đổi: từ gạo sang thịt và dầu, rồi cả cách ăn cũng khác xưa.",
+    "options_analysis": [
+     "Nói cả nội dung lẫn cách ăn đều 「昔とは大きく異なる」.",
+     "Không chỉ từ 1950 mà theo dòng thay đổi từ xưa tới nay.",
+     "Không đánh giá về dinh dưỡng.",
+     "Đồ ăn ngoại chỉ được nhắc như nguyên nhân của thay đổi."
+    ],
+    "points": [
+     "食生活《しょくせいかつ》: sinh hoạt ăn uống.",
+     "〜に伴《ともな》って: kéo theo đó, cùng với đó."
+    ]
+   }
+  }
+ ],
+ "excluded": [
+  {
+   "id": "soumatome:cd1-39",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 39,
+   "section": "問題4",
+   "source_page": "別冊 p.16 第2章 まとめ問題 問題I 1番 (問題冊子 p.36)",
+   "reason": "The FIRST track of a Soumatome section run holds the 問題 instruction as well as the item. Measured: body span 24.9 s against 15.4–18.3 s for its four siblings (cd1/40–43), and 0.36 s/char against their 0.13–0.17 — refused by build_textbook_bank's CHAR_RATE guard. Recoverable only by locating where the instruction ends, which nothing measures yet."
+  },
+  {
+   "id": "soumatome:cd2-43",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 43,
+   "section": "問題4",
+   "source_page": "別冊 p.51 第5章 問題IV 1番 (問題冊子 p.69)",
+   "reason": "Same class as cd1/39, and what confirmed it is a PATTERN rather than one odd track: both are their section's 1番. Body span 29.5 s against 14.6–17.4 s for cd2/44–49, 0.36 s/char against 0.13–0.15. The transcript is correct; the track is not only the item."
+  }
+ ]
+}

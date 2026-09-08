@@ -73,7 +73,7 @@ mechanically — bodies in booklet order, then ONE key heading at the end follow
 by key tables in the same order. The sheet builder's `strip_key()` truncates at
 that heading, so **a fragment must never carry its own**. Parallel authors never
 share a file. **There is no 聴解 author**: stage 3 composes the listening half
-from official clips, and a composed paper carries no セクション構成表 because
+from banked clips, and a composed paper carries no セクション構成表 because
 nobody chose its items' 場面, 決め手 or 質問型 — the archive did.
 
 ### Subagent prompt template
@@ -142,7 +142,7 @@ make autofix <id> && make lint-draft <id> && make verify-scramble <id> \
 
 - **`make mp3` runs FIRST now and writes the entire 聴解 half** — script,
   booklet, audio, chapters and the 30 choukai `詳細解説` entries — by drawing
-  official clips (`choukai-audio` Part 0). It must precede `make booklet`,
+  banked clips (`choukai-audio` Part 0). It must precede `make booklet`,
   which renders the `聴解.md` it produces.
 
 - Run `autofix`/`lint-draft` first — contractions, reaction turns, absolute

@@ -25,6 +25,18 @@ between them, so renumbering an item would mean cutting inside speech. Keeping
 the slot means every cut lands in a structural silence. All 31 sittings run the
 same 5/6/5/11/2 shape, so each slot has one candidate per sitting.
 
+The mixed pool (bank v2)
+------------------------
+Since 2026-09-08 the bank is not official-only: `tools/build_textbook_bank.py`
+appends Shin Kanzen and Soumatome items to the same file, so every record now
+carries `source` ("official" | "shinkanzen" | "soumatome") and
+`needs_number_call`. This script owns the OFFICIAL records only and always
+writes `source: "official"`, `needs_number_call: False` — an official item
+speaks its own 「N番。」 and is slot-preserved, which is exactly what the
+paragraph above is about. Textbook items have no number call, so they are banked
+body-only, are slot-FREE, and the composer prepends a harvested call
+(`tools/harvest_number_calls.py`).
+
 Usage
 -----
     python3 tools/build_choukai_bank.py              # all imports -> logs/
@@ -43,11 +55,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 
+from build_textbook_bank import build_records as build_textbook_records  # noqa: E402
 from choukai_segment import (  # noqa: E402
     EXPECTED_SLOTS, NotSegmented, hint_from_script, segment)
 
 BANK_PATH = ROOT / "logs" / "choukai_bank.json"
-BANK_VERSION = 1
+BANK_VERSION = 2
 
 # Keep the cut this far inside the surrounding silence, so a soft breath or a
 # speech tail the envelope read as quiet is never clipped. The composer lays
@@ -233,6 +246,12 @@ def build_sitting(test_dir: Path) -> list[dict]:
                 "sitting": sitting,
                 "source_test": test_dir.name,
                 "kind": "item",
+                # Bank v2: the mixed pool carries textbook items too
+                # (`build_textbook_bank.py`). An official item speaks its own
+                # 「N番。」 and is slot-preserved; a textbook item does not and
+                # is slot-free, so the composer must prepend a harvested call.
+                "source": "official",
+                "needs_number_call": False,
                 "section": section,
                 "slot": slot,
                 "audio": {
@@ -269,6 +288,7 @@ def build_sitting(test_dir: Path) -> list[dict]:
             "sitting": sitting,
             "source_test": test_dir.name,
             "kind": "preamble",
+            "source": "official",
             "section": section,
             "slot": 0,
             "audio": {"start": round(max(0.0, lo - GUARD_S), 3),
@@ -323,6 +343,25 @@ def main(argv: list[str] | None = None) -> int:
     if failures:
         print(f"\n{failures} sitting(s) did not reconcile — bank not written")
         return 1
+
+    # --- the textbook half. One writer for one file: a bank half-written by
+    #     two scripts could leave official records fresh beside textbook records
+    #     from a previous data file, and `bank_version` would not say so.
+    textbook, refusals = build_textbook_records()
+    for line in refusals:
+        print(f"REFUSED  {line}")
+    if refusals:
+        print(f"\n{len(refusals)} textbook item(s) refused — bank not written. "
+              f"A refusal is the guard against a mis-read CD track number "
+              f"(build_textbook_bank.py §'The guard'); fix the declaration in "
+              f".agents/choukai-audio/references/textbook_items.json or move "
+              f"the item to its `excluded` list with a measured reason.")
+        return 1
+    from collections import Counter as _Counter
+    shape = _Counter((r["source"], r["section"]) for r in textbook)
+    print(f"ok    textbook items          {len(textbook)} items — "
+          + ", ".join(f"{b}/{s} ×{n}" for (b, s), n in sorted(shape.items())))
+    all_records.extend(textbook)
 
     if args.check:
         print(f"\n--check: {len(all_records)} records reconciled, nothing written")

@@ -65,7 +65,7 @@ not route around it silently.
   2. `jlpt-exam-structure`: Official JLPT exam format facts — section layouts, question counts, timing, booklet printing conventions, answer-key table format.
   3. `exam-blueprint`: WHAT each exam tests — random non-repeating pool sampling (`sample_items.py`), answer-position balance. Runs before any authoring.
   4. `question-authoring`: HOW to write N2-calibrated items — distractors, item integrity, per-section construction rules (`references/moji-goi.md`, `bunpou.md`, `dokkai.md`, `choukai-items.md`), and calibration against `refs/` (`references/official_calibration.md`).
-  5. `choukai-audio`: The listening audio end to end — **composed from official recordings** since 2026-09-08 (`tools/build_choukai_bank.py` builds the clip bank, `tools/compose_choukai.py` draws and assembles a paper's whole 聴解 half), plus the pacing table those pauses come from and the method for measuring official audio. Edge-TTS is retired.
+  5. `choukai-audio`: The listening audio end to end — **composed from real recordings** since 2026-09-08 (`tools/build_choukai_bank.py` builds the clip bank from the ten imported sittings plus `tools/build_textbook_bank.py`'s Shin Kanzen / Soumatome items, `tools/compose_choukai.py` draws and assembles a paper's whole 聴解 half), plus the pacing table those pauses come from and the method for measuring official audio. Exactly one paper is official-only; every other paper draws from the MIXED pool. Edge-TTS is retired.
   6. `exam-app`: Rendering and running the exam — booklet HTML (`build_booklet.py`, no PDF), the merged answer sheet `解答.html` with in-page grading (`build_interactive.py`), the one server (`serve_sheet.py`), the static GitHub Pages build (`build_pages.py`), and CLI grading (`grade_answers.py`).
   7. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test). It also root-causes every finding back to the skill, script, or gate check that let it through, so the next test does not reproduce it.
   8. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
@@ -84,7 +84,11 @@ not route around it silently.
   (`logs/choukai_remediation_state.json`) — a long repair plan's resumable
   step list, tracked for the same reason the ledger is: the next run depends
   on it. A fresh context starts there, then re-derives what it claims by
-  measuring the artifact, never by trusting the flag. `logs/upload_manifest.json`
+  measuring the artifact, never by trusting the flag. `logs/choukai_bank.json`
+  (the clip pool), `logs/choukai_draws.json` (which clips each paper spent, and
+  its per-source mix) and `logs/choukai_number_calls.json` (the 11 harvested
+  「N番。」 spans) are tracked for the same reason — the next draw depends on
+  them. `logs/upload_manifest.json`
   is tracked for the same reason: it is what stops `make upload-files` from
   pushing 2.5 GB of unchanged binaries a second time, and a fresh clone that
   loses it re-uploads the archive. `logs/findings.json` is
@@ -276,8 +280,10 @@ restate them here or in a skill; fix them there.
 | `make scaffold-sections <id>` | `scaffold_sections.py` → scaffolds `_sections/` authoring templates | `question-authoring` |
 | `make matrix`             | `matrix_helper.py` — **validate only**; both generators are hard-disabled (they had no 音訓 table and emitted kana-skeleton-violating grids — qa-report-20260819_1 F4) | `question-authoring` |
 | `make booklet <id>`       | `build_booklet.py` on both Markdown sources | `exam-app` |
-| `make mp3 <id> SEED=n`    | `tools/compose_choukai.py` — composes the whole 聴解 half from official clips (script, booklet, MP3, chapters, both 詳細解説 panes). Edge-TTS is retired | `choukai-audio` |
-| `make choukai-bank [CHECK=1]` | `tools/build_choukai_bank.py` → `logs/choukai_bank.json` from the ten imported sittings | `choukai-audio` |
+| `make mp3 <id> SEED=n`    | `tools/compose_choukai.py` — composes the whole 聴解 half from banked clips (script, booklet, MP3, chapters, both 詳細解説 panes). Edge-TTS is retired | `choukai-audio` |
+| `make choukai-bank [CHECK=1]` | `tools/build_choukai_bank.py` → `logs/choukai_bank.json`; BOTH halves of the mixed pool — the ten imported sittings plus the textbook items | `choukai-audio` |
+| `make textbook-bank`      | `tools/build_textbook_bank.py` — report-only: what the Shin Kanzen / Soumatome half measures, and which declared items the duration/rate guards refuse | `choukai-audio` |
+| `make number-calls [CHECK=1]` | `tools/harvest_number_calls.py` → `logs/choukai_number_calls.json` — the 11 official 「N番。」 spans a textbook clip is given | `choukai-audio` |
 | `make sheet <id>`         | `build_interactive.py` → `解答.html` | `exam-app` |
 | `make model-answer <id>`  | `build_model_answer.py` → `模範解答.html` | `exam-model-answer` |
 | `make scaffold-explanations <id> [LANG=vi]` | `scaffold_explanations.py` → scaffolds `詳細解説.json` (or an empty `詳細解説.<lang>.json`) | `exam-model-answer` |
@@ -337,9 +343,10 @@ The generation pipeline runs as **4 stages + final model-answer step** — bluep
 authoring sections → build+gate → fresh-eyes QA → model-answer generation (`make model-answer <id>`),
 each a subagent with a bounded reading list, handing off through files on disk only.
 **聴解 is no longer one of the authoring sections**: since 2026-09-08 the whole
-listening half is composed from official recordings at build time by
-`make mp3 <id> SEED=<rng>` (`choukai-audio` Part 0), so there is nothing to
-author and no 聴解 subagent.
+listening half is composed from real recordings at build time by
+`make mp3 <id> SEED=<rng>` (`choukai-audio` Part 0) — the ten imported official
+sittings plus Shin Kanzen and Soumatome items, with exactly one paper kept
+official-only — so there is nothing to author and no 聴解 subagent.
 `jlpt-test-generation` owns the stage table, the reading map, the prompt
 template, and the fix→re-review loop; read it before any generation work.
 

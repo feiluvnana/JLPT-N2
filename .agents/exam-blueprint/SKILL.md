@@ -25,7 +25,8 @@ table).
 > **The two 聴解 pools are INERT since 2026-09-08.** `sample_items.py` still
 > draws `quick_response` and `listening_scenarios`, and `test_spec.json` still
 > records them, but **nothing consumes either any more**: a generated paper's
-> listening half is composed from official recordings, not authored
+> listening half is composed from real recordings — a mixed pool of official
+> sittings plus textbook items — not authored
 > (`choukai-audio` Part 0). `check_spec_target_items` no longer requires the
 > drawn `quick_response` phrases to appear in 問題4, and
 > `answer_positions.聴解_問題N` prescribes nothing.

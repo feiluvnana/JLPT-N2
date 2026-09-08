@@ -3,7 +3,8 @@
 .PHONY: help check check-tests goi-profile dokkai-profile choukai-profile grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
        init-import extract-pdf extract-archive extract-keys extract-kanji-tables extract-shinkanzen-goi extract-shinkanzen-dokkai extract-shinkanzen \
        lint-draft lint verify-scramble scaffold-explanations irt \
-       scaffold-sections matrix qa-eval autofix findings repair-plan choukai-bank
+       scaffold-sections matrix qa-eval autofix findings repair-plan choukai-bank \
+       textbook-bank number-calls
 
 # Positional test-id argument: "make grade 1", "make sheet 2", "make sample 5".
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
@@ -61,7 +62,9 @@ help:
 	@echo "  make matrix           2x2 Cartesian matrix generator for 問題1 & 問題2"
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
 	@echo "  make mp3 1 SEED=n     Compose listening audio for test 1 from official clips (聴解.mp3)"
-	@echo "  make choukai-bank     Rebuild logs/choukai_bank.json from the imported sittings"
+	@echo "  make choukai-bank     Rebuild logs/choukai_bank.json (official sittings + textbook items)"
+	@echo "  make textbook-bank    Measure/validate the Shin Kanzen + Soumatome half of the bank"
+	@echo "  make number-calls     Re-harvest the 11 official 「N番。」 clips textbook items are given"
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
 	@echo "  make model-answer 1   Build model answer & explanation for test 1 (模範解答.html)"
 	@echo "  make explanation 1    Alias for make model-answer"
@@ -146,8 +149,21 @@ mp3:
 	@test -n "$(SEED)" || { echo "SEED= is required: SEED=\$$(python3 -c 'import secrets;print(secrets.randbelow(10**8))')"; exit 1; }
 	python3 tools/compose_choukai.py $(TEST) --seed $(SEED)
 
+# One writer for logs/choukai_bank.json: this target builds BOTH halves — the
+# official records from the ten imports, then the textbook records
+# build_textbook_bank.py measures out of the Shin Kanzen / Soumatome CDs.
 choukai-bank:
 	python3 tools/build_choukai_bank.py $(if $(CHECK),--check,)
+
+# Report-only: what the textbook half measures, and which declared items the
+# duration/rate guards refuse. Writes nothing — `make choukai-bank` does.
+textbook-bank:
+	python3 tools/build_textbook_bank.py
+
+# The 11 official 「N番。」 spans a textbook clip is given, since textbook tracks
+# speak no number call. CHECK=1 re-harvests and diffs against the file on disk.
+number-calls:
+	python3 tools/harvest_number_calls.py $(if $(CHECK),--check,)
 
 sheet:
 	python3 .agents/exam-app/scripts/build_interactive.py tests/$(TEST)

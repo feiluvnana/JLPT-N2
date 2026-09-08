@@ -1,0 +1,123 @@
+{
+ "version": 1,
+ "bands": {
+  "speech_min": 0.6,
+  "speech_max": 1.2,
+  "pause_min": 1.2,
+  "lead_s": 0.08,
+  "tail_s": 0.06
+ },
+ "one_sitting": "imported-n2-2022-12",
+ "calls": {
+  "1": {
+   "number": 1,
+   "from_item": "2022-12:問題1-1",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 109.82,
+   "end": 110.86,
+   "speech": 0.9,
+   "pause_after": 2.66
+  },
+  "2": {
+   "number": 2,
+   "from_item": "2022-12:問題4-2",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 2035.52,
+   "end": 2036.56,
+   "speech": 0.9,
+   "pause_after": 2.68
+  },
+  "3": {
+   "number": 3,
+   "from_item": "2022-12:問題1-3",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 292.74,
+   "end": 293.78,
+   "speech": 0.9,
+   "pause_after": 2.74
+  },
+  "4": {
+   "number": 4,
+   "from_item": "2022-12:問題3-4",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 1661.02,
+   "end": 1662.06,
+   "speech": 0.9,
+   "pause_after": 2.74
+  },
+  "5": {
+   "number": 5,
+   "from_item": "2022-12:問題2-5",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 1095.82,
+   "end": 1096.86,
+   "speech": 0.9,
+   "pause_after": 2.7
+  },
+  "6": {
+   "number": 6,
+   "from_item": "2022-12:問題2-6",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 1228.96,
+   "end": 1230.0,
+   "speech": 0.9,
+   "pause_after": 2.68
+  },
+  "7": {
+   "number": 7,
+   "from_item": "2022-12:問題4-7",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 2204.44,
+   "end": 2205.48,
+   "speech": 0.9,
+   "pause_after": 2.68
+  },
+  "8": {
+   "number": 8,
+   "from_item": "2022-12:問題4-8",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 2239.98,
+   "end": 2241.0,
+   "speech": 0.88,
+   "pause_after": 2.7
+  },
+  "9": {
+   "number": 9,
+   "from_item": "2022-12:問題4-9",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 2276.28,
+   "end": 2277.32,
+   "speech": 0.9,
+   "pause_after": 2.74
+  },
+  "10": {
+   "number": 10,
+   "from_item": "2022-12:問題4-10",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 2311.82,
+   "end": 2312.84,
+   "speech": 0.88,
+   "pause_after": 2.7
+  },
+  "11": {
+   "number": 11,
+   "from_item": "2022-12:問題4-11",
+   "source_test": "imported-n2-2022-12",
+   "sitting": "2022-12",
+   "start": 2344.86,
+   "end": 2345.9,
+   "speech": 0.9,
+   "pause_after": 2.68
+  }
+ }
+}

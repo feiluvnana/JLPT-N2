@@ -580,7 +580,8 @@ as "N1"/"N3", so a single source's label was never sufficient.
 ### 4. 聴解 structure
 
 > **First: check the paper's 聴解 ORIGIN.** Since 2026-09-08 a generated paper's
-> listening half is COMPOSED from official recordings (`choukai-audio` Part 0);
+> listening half is COMPOSED from real recordings — official sittings plus
+> textbook items (`choukai-audio` Part 0);
 > `聴解_チャプター.json` says `"source": "composed"` and `make check` prints an
 > explicit skip line for the whole authoring/register/pacing family.
 >

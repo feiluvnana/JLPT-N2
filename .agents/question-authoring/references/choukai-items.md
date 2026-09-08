@@ -1,7 +1,7 @@
 # 聴解 items — construction rules
 
 > **RETIRED AS INSTRUCTIONS, 2026-09-08. This file no longer tells anyone what
-> to write.** A generated paper's listening half is composed from official
+> to write.** A generated paper's listening half is composed from banked
 > recordings (`choukai-audio` Part 0) — there is no 聴解 authoring stage, no
 > セクション構成表, and `make check` skips every band below for a composed paper.
 >
