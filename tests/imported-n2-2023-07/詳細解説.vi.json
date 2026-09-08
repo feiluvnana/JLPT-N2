@@ -621,7 +621,8 @@
     "points": [
       "〜といっても: tuy gọi là…nhưng thực ra…",
       "香木《こうぼく》: gỗ trầm tạo hương."
-    ]
+    ],
+    "passage_translation": "Dưới đây là đoạn văn một du học sinh viết để thuyết trình.\n\n**Hương đạo**\n\nBernard Marie\n\n　\"Hương đạo\" là một nét văn hóa truyền thống Nhật Bản thưởng thức mùi hương. Nhân dịp một người bạn rủ tôi đến lớp có thể trải nghiệm hương đạo, tôi mới lần đầu biết đến hương đạo. Ngày thường tôi vẫn thưởng thức mùi hương bằng nước hoa chẳng hạn, nên buổi trải nghiệm hương đạo tôi cũng thấy thích.\n\n　Hương đạo là đốt nóng những mảnh gỗ gọi là \"hương mộc\" rồi thưởng thức mùi hương của nó. \"Hương mộc\" （ 48 ）không phải là vốn có sẵn một loài cây mang cái tên như vậy. Trong vài loài cây, dưới đủ thứ điều kiện tự nhiên, những cây mà theo năm tháng đã sinh ra được mùi hương thì được gọi như thế. Vì không sản xuất nhân tạo được nên nó （ 49 ）là thứ rất quý.\n\n　Hương đạo có hơn 600 năm lịch sử, nhưng sự tồn tại của nó thì ít người biết. Hương mộc có số lượng hạn chế, nên nếu hương đạo lan rộng và nhu cầu tăng quá thì cũng có nguy cơ nó hết hẳn. （ 50 ）, hương đạo đã không nhận nhiều đệ tử cho lắm. Nghe nói việc hương đạo ít được biết đến cũng có phần vì hoàn cảnh như vậy.\n\n　Trong hương đạo, việc ngửi mùi hương rồi nghiền ngẫm cho thấu được gọi là \"nghe mùi hương\". Lấy việc dốc lòng vào mùi hương mà nghe làm gốc, người ta còn vừa nghe mùi hương vừa thưởng thức văn học cổ điển, hay đoán xem mùi nào là mùi của hương mộc nào để lấy làm vui.\n\n　Qua việc chậm rãi nghiền ngẫm trong lòng một mùi hương mảnh mai, tôi có cảm giác như đã hiểu ra ý nghĩa của \"nghe mùi hương\". Nó không nhẹ nhàng như nước hoa, nhưng một cách thưởng thức mùi hương như thế này cũng （ 51 ）."
   },
   "49": {
     "why_correct": "「貴重なものとされています」＝được coi là vật quý — thể bị động khách quan, hợp cách diễn đạt sự thật được công nhận chung.",
@@ -673,7 +674,8 @@
     "points": [
       "期待《きたい》する: kỳ vọng.",
       "穏《おだ》やかな: bình thản."
-    ]
+    ],
+    "passage_translation": "　Nếu ngay từ đầu ta bỏ được việc trông đợi ở người khác thì cả cơn giận lẫn sự bực bội đều không sinh ra, và ta sống được với một tâm thế êm ả. Trông đợi ở người rồi sống trong bực bội, hay là nỗ lực buông cái trông đợi ấy ra mà sống êm ả — cái này là việc của chính bạn, nên điều khiển được.\n\n　Nói \"không trông đợi\" thì có thể có người thấy như là đang nói một điều gì đó buồn tủi, nhưng không phải vậy.\n\n　Trong phần nhiều trường hợp, môi trường và những con người xung quanh sẽ đổi thay đến mức thú vị, nhờ chính bản thân ta đổi thay."
   },
   "53": {
     "why_correct": "「昼休みの間は会議室を開放していただけないでしょうか」— yêu cầu chính là mở phòng họp làm nơi nghỉ trưa.",
@@ -686,7 +688,8 @@
     "points": [
       "開放《かいほう》する: mở cửa cho dùng tự do.",
       "休憩室《きゅうけいしつ》: phòng nghỉ."
-    ]
+    ],
+    "passage_translation": "Dưới đây là thư điện tử một nhân viên của một công ty nọ gửi cho Phòng Tổng vụ.\n\nKính gửi người phụ trách, Phòng Tổng vụ\n\n　Tôi viết thư này vì có một việc muốn nhờ, liên quan đến phòng nghỉ.\n\n　Hôm trước quý phòng đã cho tăng thêm bàn và ghế để nhiều người dùng được phòng nghỉ hơn, nhưng vào giờ ăn trưa vẫn còn nhiều người không dùng được và thấy bất tiện. Vì vậy, trong giờ nghỉ trưa liệu quý phòng có thể mở phòng họp cho mọi người dùng được không? Được như thế thì tôi nghĩ sẽ có nhiều người nghỉ ngơi ở đó hơn.\n\n　Mong quý phòng xem xét.\n\nNhóm Kinh doanh 1　Ootsuki Tomoyo"
   },
   "54": {
     "why_correct": "「どの生物もすべての環境条件で競争の勝者になることはできません」＋「自分に適した環境を見つけることができます」— thua môi trường này vẫn sống ở nơi khác.",
@@ -699,7 +702,8 @@
     "points": [
       "生態学《せいたいがく》: sinh thái học.",
       "多様《たよう》な: đa dạng."
-    ]
+    ],
+    "passage_translation": "　Điều kiện mà khác đi thì kẻ thắng thành kẻ thua, kẻ thua thành kẻ thắng — xã hội sinh vật trong tự nhiên là như vậy. Chẳng loài nào có thể thành kẻ thắng trong cạnh tranh ở mọi điều kiện môi trường. Điều mà nghiên cứu sinh thái học (chú 1) cho thấy là tầm quan trọng của môi trường đa dạng. Chính vì có cạnh tranh mà sinh vật tìm ra được, trong môi trường đa dạng, cái môi trường phù hợp với mình.\n\n　Có lẽ cũng có thể nói rằng cạnh tranh không phải là quá trình gạt bỏ (chú 2) kẻ thua, mà là quá trình tạo ra trong môi trường đa dạng một chỗ đứng cho từng loài sinh vật.\n\n(chú 1) 生態学: khoa học về cách sống của sinh vật và về môi trường.\n(chú 2) 排除する: ở đây là gạt bỏ đi."
   },
   "55": {
     "why_correct": "「部品の交換をお勧めいたします」kèm phí và thời gian, cùng「ご連絡をお待ちしております」— cần khách quyết định có sửa thêm nguồn không.",
@@ -712,7 +716,8 @@
     "points": [
       "部品《ぶひん》: linh kiện.",
       "交換《こうかん》する: thay thế."
-    ]
+    ],
+    "passage_translation": "Dưới đây là thư điện tử một nhân viên cửa hàng máy tính gửi đến.\n\nKính gửi chị Takayama Kaori\n\n　Tôi là Gouda của cửa hàng Forest Nishiyama.\n\n　Chúng tôi đang giữ chiếc máy tính xách tay hãng Runi để sửa màn hình, nhưng khi kiểm tra thì thấy bộ phận nguồn điện cũng có vấn đề, chỗ tiếp xúc đã kém đi. Cứ để thế này thì có khả năng máy đột nhiên không lên nguồn, nên chúng tôi khuyên chị nên thay bộ phận đó. Trường hợp này sẽ mất thêm phí 2 vạn yên, và việc trả máy sẽ là từ ngày 10 tháng 6 trở đi.\n\n　Việc sửa màn hình sẽ xong vào ngày 5 tháng 6, nên nếu chị không muốn sửa phần nguồn điện thì chúng tôi trả máy đúng như dự định.\n\n　Xin lỗi vì đã làm mất thời gian của chị, chúng tôi chờ chị liên lạc.\n\nCửa hàng PC Forest Nishiyama\nPhụ trách: Gouda Eiko　support_hm@pcforest.co.jp"
   },
   "56": {
     "why_correct": "「まだ生まれていない生命は、抗議の声を上げることもできない」nhưng thế hệ hiện tại vẫn phá môi trường của họ.",
@@ -725,7 +730,8 @@
     "points": [
       "抗議《こうぎ》: phản đối.",
       "資源《しげん》: tài nguyên."
-    ]
+    ],
+    "passage_translation": "　Xét ở điểm ở vào thế yếu, thì không gì yếu bằng các thế hệ tương lai. Bởi lẽ, dù có bị làm điều tệ đến đâu, những sinh mệnh chưa sinh ra cũng chẳng thể lên tiếng phản đối (chú 1) được. Lấy đó làm chuyện thuận cho mình (chú 2), thế hệ đang sống hôm nay đang phá hủy cái môi trường vốn là điều kiện tuyệt đối (chú 3) để các thế hệ tương lai sống, và định dùng cho hết cả phần tài nguyên mà họ sẽ dùng. Chứ còn gì trái với tinh thần công bằng hơn thế nữa?\n\n(chú 1) 抗議: ở đây là sự phản đối hay tức giận.\n(chú 2) それをいいことに: ở đây là coi điều đó là thuận cho mình.\n(chú 3) 絶対条件: điều kiện cần phải có."
   },
   "57": {
     "why_correct": "「まず子どもたちに表紙を見せます」「それもゆっくりと見せます」— dẫn dắt từ từ vào thế giới sách qua bìa trước.",
@@ -738,7 +744,8 @@
     "points": [
       "表紙《ひょうし》: bìa sách.",
       "案内《あんない》する: dẫn dắt."
-    ]
+    ],
+    "passage_translation": "Dưới đây là đoạn văn viết về việc người thủ thư (chú 1) ở thư viện đọc sách cho trẻ con nghe.\n\n　Khi đọc sách cho nghe, trước hết chúng tôi cho các em xem bìa. Rồi đọc chậm rãi lên tên sách và tên tác giả, tên họa sĩ. Lật bìa ra thì hiện ra tờ lót bìa — có khi là tờ giấy màu trơn, có khi lại có bức tranh liên quan đến ruột sách — và cái đó chúng tôi cũng cho xem chậm rãi. Đây là trang để chuẩn bị tâm thế trước khi vào ruột sách. Rồi có trang nhan đề, mở ra là thế giới của cuốn sách ấy trải ra.\n\n　Nghĩa là không lao ngay vào ruột sách, mà cho các em xem sách cho thấu, để dẫn các em vào thế giới của câu chuyện. Không phải cứ các em thấy thích là được, mà là từng em một đi vào thế giới ấy, rồi tự mình cảm nhận ra một điều gì — đó mới là buổi kể chuyện ở thư viện.\n\n　Khi ấy, người kể không phải là vai chính. Vì đây là công việc thay tác giả mà truyền đi điều tác giả muốn truyền cho người đọc, nên hơn cả những điệu bộ hay giọng điệu (chú 2) làm quá, chúng tôi cố truyền cái lòng của tác giả bằng một lối nói hết mực (chú 3) tự nhiên, cùng những điệu bộ chừng mực (chú 4) đi theo nó.\n\n（lược một đoạn）\n\n　Vì thế, trước khi đọc cho nghe hay kể chuyện, người thủ thư đọc kỹ cuốn sách ấy nhiều lần, nghĩ xem tác giả này định nói điều gì, nghĩ xem nên ngắt nghỉ ở chỗ nào. Rồi mới bắt đầu luyện. Cả với trường hợp đọc cho nghe, người ta cũng đòi phải đọc kỹ đến mức gần như thuộc lòng phần ruột sách. Muốn nối được đứa trẻ với cuốn sách thì cần cái lòng để tâm (chú 5) và sự luyện tập nghiêm khắc như thế.\n\n(chú 1) 司書: người làm công việc chuyên môn ở thư viện.\n(chú 2) 声色: giọng điệu.\n(chú 3) ごく: hết mực.\n(chú 4) 控えめな: không làm quá.\n(chú 5) 配慮: ở đây là cái lòng để tâm."
   },
   "58": {
     "why_correct": "「その本を何度も読みこんで」「本文をほとんど暗記するほどに読みこむ」＋「練習に入ります」— đọc kỹ hiểu nội dung rồi luyện tập.",
@@ -764,7 +771,8 @@
     "points": [
       "高等教育機関《こうとうきょういくきかん》: cơ sở giáo dục bậc cao.",
       "普及《ふきゅう》: sự phổ cập."
-    ]
+    ],
+    "passage_translation": "　Bây giờ, cả Harvard, MIT (Viện Công nghệ Massachusetts), hay cả Đại học Kyoto của Nhật, đều đã bắt đầu công khai nội dung giờ học trên Internet. Đã vào được đại học và cũng đang trả học phí, mà nội dung ấy lại xem được trên Internet, thế thì là thế nào?\n\n　Nói gọn lại thì đến giờ (chú 1), tri thức và thông tin — tức nội dung — thu được ở đó đã thành của chung cả thế giới. Xưa thì đúng là có những tri thức không đến Tokyo thì không lấy được, hay những thông tin không đi đến tận Paris, New York thì không lấy được. Nhưng bây giờ (chú 2), mọi thông tin, mọi tri thức đều có thể lấy được dễ dàng trên Internet. Trên cái tiền đề lớn ấy, mà vẫn cứ là cái thời mà việc \"ở đây, cùng nhau, học\" trở nên quan trọng. Đến giờ thì giá trị tồn tại của nhà trường, ít nhất là của các cơ sở giáo dục bậc cao từ đại học trở lên, đã chỉ còn nằm ở một điểm: cùng học, cùng tranh luận, cùng làm việc — chứ không còn là nơi để thu được tri thức và thông tin mới.\n\n　Nếu vậy thì phía đại học cũng phải công bố cho đàng hoàng rằng mình sẽ hiện thực hóa một cộng đồng học tập như thế nào ở đó. Cùng với việc nêu ra mình muốn những sinh viên nào đến, họ phải chỉ ra cho rõ rằng ở đó có những giảng viên, nhân viên nào, và ở đó \"việc học\" nào sẽ được hiện thực hóa.\n\n(chú 1) もはや: đã.\n(chú 2) いまや: bây giờ thì."
   },
   "60": {
     "why_correct": "「どのような学びの共同体をそこに実現するかを、きちんと公表していかなければならない」— trường phải công bố cụ thể mình xây dựng ra sao.",
@@ -790,7 +798,8 @@
     "points": [
       "ウソをつく: nói dối.",
       "本心《ほんしん》: cảm xúc thật."
-    ]
+    ],
+    "passage_translation": "　Như một bí quyết để không đánh mất (chú 1) chính mình, tôi vẫn giữ cách \"chuyện gì cũng nói thật\".\n\n　Nếu ta chỉ nói với người khác những điều nghe êm tai (chú 3), không làm dậy sóng gió (chú 2) ngay tại chỗ, thì rồi ta cũng sẽ nói với chính mình trong lòng những điều tương tự như thế. Nhìn về lâu dài, ảnh hưởng xấu của việc \"không nói ra cái lòng thật (chú 4)\" là rất lớn. Cái dối ta bám vào mình thì lúc chưa nhận ra, ta đã không còn biết nó là dối hay thật nữa. Không phân biệt được là mình đang nói ra để tự an ủi, hay là thực tế nó đúng như vậy. Cái này mới đáng sợ.\n\n（lược một đoạn）\n\n　Việc không tự dối mình còn một điểm lợi nữa. Là \"phí ghi nhớ\" hạ xuống.\n\n　Cứ theo không khí tại chỗ mà hùa vào cho hợp thì ta phải nhớ \"mình đã nói gì ở đâu\". Khi cùng lúc đang chạy nhiều việc (chú 5) một loạt, thì việc nhớ xem mình đã lấy tiêu chuẩn nào, đã phán đoán thế nào, trở thành một việc cực kỳ mệt.\n\n　Còn nếu chỉ đặt sự thật thà lên hàng đầu thì ngay cả với cái việc mình đã quên, ta cũng lần đến được gần như đúng cái quyết định ấy. Cứ hùa theo xung quanh rồi tự dối mình thì có khi ta nói ra điều hoàn toàn trái ngược, và phán đoán thành ra lệch đi (chú 6).\n\n(chú 1) ～を見失う: không còn biết ～ là gì nữa.\n(chú 2) 波風を立てずに: ở đây là không làm xấu không khí.\n(chú 3) 聞き心地: cảm giác lúc nghe.\n(chú 4) 本心: cái lòng thật.\n(chú 5) 案件: việc, sự vụ.\n(chú 6) ぶれる: ở đây là không còn giống nhau nữa."
   },
   "62": {
     "why_correct": "「その場の空気で調子を合わせていると…記憶しておかなければ」đối lập「忘れてしまっている案件でも、ほぼ同じ決断に辿り着ける」— thật thì không cần nhớ vẫn quyết định đúng.",
@@ -816,7 +825,8 @@
     "points": [
       "焦点《しょうてん》が絞《しぼ》られる: trọng tâm rõ ràng.",
       "芽生《めば》える: nảy nở, hình thành."
-    ]
+    ],
+    "passage_translation": "Dưới đây là đoạn văn viết cho những người muốn chụp được ảnh đẹp.\n\n　Việc làm một tập ảnh tuyển (chú 1) có hai ý nghĩa lớn. Trước là cho chính mình, và một ý nghĩa nữa là để cho người khác xem (để trình bày). Trong lúc cứ chụp ảnh mãi, ta dần thấy ra được mình đang định làm gì. Chỗ mà trước đây ta chỉ có được một cách nhìn (chú 4) mờ mịt (chú 3) về đối tượng chụp (chú 2) thì nay tiêu điểm thu lại rõ ràng, và cái tự tin rằng cách làm này là được cứ nhú lên. Đến lúc đó thì nên thử làm một tập ảnh tuyển.\n\n　Người ta hay nói \"không thử làm thành hình thì không biết được\", và tôi cho là đúng. Bởi vì nhờ gom các tác phẩm lại mà cái tự tin vẫn thường biến thành cái xác tín. Ngược lại, cứ thử làm thành tập ảnh tuyển thì cả chỗ yếu của ảnh mình cũng lộ ra rõ. Cái mà trong lúc chụp ta bỏ qua không thấy (chú 5) thì về sau bình tĩnh xem lại là nó nổi lên rành rành. Nhờ bù (chú 6) vào chỗ đang thiếu, hẳn ta làm cho tác phẩm hay thêm được.\n\n　Việc cho người khác xem cũng là điều quan trọng. Với người muốn công bố ảnh ở đâu đó hay muốn làm nghề nhiếp ảnh thì là chuyện đương nhiên, nhưng ngay cả khi chưa nghĩ đến mức ấy, tôi vẫn cho rằng cho người ta xem tập ảnh tuyển là rất có ý nghĩa. Bởi nó thành cái cớ để ta phán đoán một cách khách quan xem tác phẩm của mình đang ở mức nào, đang có sức tác động đến đâu.\n\n（lược một đoạn）\n\n　Tác phẩm chỉ có giá trị khi đã đến được với người khác cho đàng hoàng. Cái thế giới nhỏ đã tự nó xong xuôi (chú 7) sẽ lớn thêm nhờ việc tung hứng qua lại với người nhận. Bước đầu tiên cho việc đó: hãy thử cho ai đó xem tập ảnh tuyển của mình.\n\n(chú 1) ポートフォリオ: ở đây là tập gom những tấm ảnh mình đã chụp.\n(chú 2) 被写体: đối tượng được chụp vào ảnh.\n(chú 3) 漠然とした: mờ mịt, không rõ.\n(chú 4) 認識: ở đây là cách nắm bắt.\n(chú 5) 見過ごしている: ở đây là không nhận ra.\n(chú 6) 修整する: ở đây là bù vào.\n(chú 7) 自己完結した: ở đây là chỉ tự mình mà xong."
   },
   "64": {
     "why_correct": "「自分の作品がどれくらいのレベルにあるのか…客観的に判断するきっかけになる」— cho người khác xem để biết đánh giá khách quan.",
@@ -842,7 +852,8 @@
     "points": [
       "専門用語《せんもんようご》: thuật ngữ chuyên môn.",
       "限定《げんてい》する: giới hạn, hạn chế."
-    ]
+    ],
+    "passage_translation": "**A**\n　Làm việc ở công ty thì cũng sẽ có lúc ta ở vào vị trí dạy việc cho cấp dưới. Những lúc như thế, tôi cố hết sức không dùng từ ngữ nội bộ hay thuật ngữ chuyên môn, mà giải thích bằng những lời ai nghe cũng hiểu. Bởi giữa bên dạy và bên được dạy, tri thức và kinh nghiệm chênh nhau rất lớn.\n\n　Nếu nghĩ rằng rồi cũng phải nhớ thôi mà ngay từ đầu đã dùng những từ khó để giải thích, thì ta gây ra cái ấn tượng rằng bản thân công việc là khó, và cấp dưới mất luôn cái ý muốn hiểu công việc. Chẳng phải điều quan trọng là dạy theo cách tương ứng với năng lực của cấp dưới hay sao? Dùng những lời dễ hiểu với cấp dưới để họ hiểu chắc công việc, rồi kéo cái hăng hái của họ ra — đó là vai trò quan trọng của người trên.\n\n**B**\n　Khi dạy việc cho cấp dưới, có nhiều người định nhồi cho họ thật nhiều việc một lúc. Cái tâm muốn họ nhớ việc cho nhanh thì tôi hiểu được, nhưng không nghĩ đến gánh nặng của phía người phải nhớ việc là có vấn đề. Muốn họ nhớ việc cho chính xác thì điều quan trọng là dạy trong khi nghĩ xem cấp dưới đang có những tri thức, kinh nghiệm nào và làm được gì.\n\n　Điều tôi đang thực hành là không định dạy hết việc trong một lần, mà bó lại chỉ dạy phần việc họ sẽ đảm nhiệm ngay. Nếu hạn định nội dung dạy thì với chỗ cấp dưới thấy khó ta dành thời gian mà giải thích, còn chỗ cấp dưới giỏi thì để họ tự làm một mình — nghĩa là dạy được với nội dung và tốc độ vừa với trình độ của họ. Dạy từ chỗ đứng của cấp dưới, ấy là đường ngắn nhất để họ nhớ việc cho chắc."
   },
   "66": {
     "why_correct": "A:「部下の能力に応じた教え方をすること」B:「部下のレベルに合わせた内容やスピードで教える」— cả hai đều nhấn mạnh dạy theo năng lực của cấp dưới.",
@@ -868,7 +879,8 @@
     "points": [
       "緊張感《きんちょうかん》: cảm giác căng thẳng.",
       "味《あじ》わう: cảm nhận."
-    ]
+    ],
+    "passage_translation": "　Cái nơi đã cho ta niềm xúc động lớn thì ta lại muốn đến nữa. Nếu được thì muốn ở lại nơi ấy mãi. Nghĩ như vậy là cảm xúc tự nhiên của con người.\n\n　Với nhà du hành vũ trụ Mouri Mamoru thì \"vũ trụ\" chính là cái nơi ấy.\n\n　Nghe nói sau khi từ chuyến bay vũ trụ đầu tiên trên tàu con thoi trở về, một thời gian ông làm công việc diễn thuyết và quản lý, nhưng một đời sống như thế thì thiếu thốn không sao chịu được. Đã hoàn thành xong một mơ ước rồi thì lại thấy như cả cuộc đời mình cũng đã kết thúc luôn. Cái tâm ý \"muốn đi vũ trụ một lần nữa\" trào lên, hẳn cũng là cảm xúc tự nhiên.\n\n　Muốn sống lại một lần nữa cái đời sống có sự căng thẳng căng như dây đàn. Muốn nếm lại một lần nữa niềm xúc động khi nhìn trái đất từ vũ trụ…\n\n　Khi quyết tâm thử thách (chú 1) chuyến bay vũ trụ lần thứ hai, ông Mouri đã bốn mươi tám tuổi. Đó là chương trình huấn luyện khổ với một người đã không còn trẻ, nhưng ông cũng vượt qua được cách này cách khác (chú 2), rồi lại lên đường ra vũ trụ.\n\n　Tôi nghĩ không chỉ riêng ông Mouri. Cầu thủ bóng chày chuyên nghiệp hẳn cũng muốn cứ đứng mãi trên sân, và người làm công ăn lương thì đến tuổi về hưu hẳn cũng thấy khó rời chỗ làm. Rồi cái \"lúc\" phải rời nơi ấy cũng đến. Ông Mouri, thật ra, ngay từ khi đang huấn luyện lần thứ hai đã lờ mờ (chú 3) cảm thấy điều đó. Cả thể lực lẫn phản xạ (chú 4) đều không hơn được (chú 5) người trẻ nữa.\n\n　Bay vào vũ trụ không phải là cứ muốn thì ai cũng đi được. Tàu con thoi có \"số suất\", và không được chọn thì không đi vũ trụ được.\n\n　\"Lần thứ ba\" có lẽ sẽ không có. Cũng có cái buồn như bị níu lại phía sau (chú 6), nhưng nghe nói ông Mouri bây giờ không còn cái day dứt mạnh kiểu \"bằng mọi giá (chú 7), phải một lần nữa\".\n\n　Nghe nói ấy là vì ông đã tìm ra được một \"lẽ sống\" mới. Mình có kinh nghiệm. Cũng có tri thức. Chẳng phải là thay vì tranh mãi với người trẻ, còn có \"niềm vui\" truyền lại cho người trẻ những gì mình đã thu được hay sao?\n\n　Từ một cuộc đời đi theo đuổi mơ ước của mình, sang một cuộc đời ủng hộ mơ ước của những người thế hệ sau. Quả thật, nếu chuyển được lối nghĩ như vậy thì tìm ra một \"lẽ sống\" mới xem ra cũng nhanh.\n\n　Nối mơ ước sang thế hệ sau chính là công việc quan trọng của người \"lính già\".\n\n(chú 1) 挑戦: sự thử thách.\n(chú 2) どうにか: cách này cách khác cũng xong.\n(chú 3) 薄々: lờ mờ.\n(chú 4) 反射神経: ở đây là độ nhanh của phản ứng.\n(chú 5) かなわない: không thắng được.\n(chú 6) 後ろ髪を引かれる: ở đây là mãi không dứt ra được.\n(chú 7) なにがなんでも: bằng mọi giá."
   },
   "68": {
     "why_correct": "「その場所を去らなければならない『とき』がやってくる。毛利さんも…薄々感じていた」— ông cảm nhận trước sẽ đến lúc rời nơi mình tỏa sáng.",
@@ -907,7 +919,8 @@
     "points": [
       "登山鉄道《とざんてつどう》: xe điện leo núi.",
       "合計時間《ごうけいじかん》: tổng thời gian."
-    ]
+    ],
+    "passage_translation": "**Công viên tự nhiên hồ Aomizu**\n\n**Hướng dẫn các chặng đi bộ đề xuất ・ tua có người dẫn**\n\n**◆ Các chặng đề xuất**（tổng thời gian là thời gian đại khái, đã gồm cả nghỉ ngơi v.v.）\n\n| Tên chặng | Nội dung chặng | Tổng thời gian |\n|---|---|---|\n| Chặng nhẹ nhàng | Từ cửa Bắc đi tàu leo núi lên đỉnh → đi bộ đến vườn thực vật → từ trước vườn thực vật đi thuyền về trước cửa Bắc → đi bộ ra cửa Bắc | 1 tiếng |\n| Chặng ngắm hoa | Từ cửa Bắc đi tàu leo núi lên đỉnh → đi bộ đến vườn thực vật → từ trước vườn thực vật đi thuyền đến trước nhà hướng dẫn công viên → đi bộ ra cửa Nam | 1,5 tiếng |\n| Chặng nửa vòng | Từ cửa Nam đi bộ đến vườn thực vật → đi bộ lên đỉnh → đi bộ ra cửa Bắc | 1,5 tiếng |\n| Chặng một vòng | Từ cửa Nam đi bộ đến nhà hướng dẫn công viên → từ trước nhà hướng dẫn công viên đi thuyền về trước cửa Bắc → đi tàu leo núi lên đỉnh → đi bộ đến vườn thực vật → đi bộ ra cửa Nam | 3 tiếng |\n\n※ Về chi tiết tàu leo núi và thuyền, xin quý khách xem trang \"Phương tiện di chuyển trong công viên\" trên trang web này.\n\n**◆ Hướng dẫn tua có người dẫn**\n\n- Người dẫn sẽ cùng quý khách đi hết một \"chặng đề xuất\" và hướng dẫn trong công viên. Chúng tôi nhận đăng ký qua điện thoại, đến 6 giờ chiều của ngày trước 10 ngày so với ngày quý khách muốn đi tua. Xin cho biết ngày muốn đi tua, giờ khởi hành, số người và chặng.\n- Chặng nào cũng vậy, phí người dẫn là 500 yên cho mỗi 1 người tham gia (tiền tàu leo núi, tiền thuyền tính riêng). Xin thanh toán cho người dẫn khi tập trung trong ngày.\n- Số lượng của 1 nhóm là 10 người. Trường hợp đăng ký từ 11 người trở lên, xin quý khách chia thành nhiều nhóm trong ngày.\n- Giờ khởi hành xin chỉ định trong khoảng từ lúc mở cổng (tháng 4～tháng 9: 8 giờ 30 sáng, tháng 10～tháng 3: 9 giờ sáng) đến 11 giờ sáng.\n- Việc hủy xin gọi điện trước 6 giờ chiều của 3 ngày trước. Trường hợp tua bị dừng vì thời tiết xấu, chúng tôi sẽ liên lạc trước 7 giờ tối hôm trước.\n\nĐặt tua có người dẫn: 029－123-4568"
   },
   "71": {
     "why_correct": "「出発時間は開園…午前11時までの間で指定してください」— giờ xuất phát phải trong khoảng mở cửa đến 11 giờ.",
