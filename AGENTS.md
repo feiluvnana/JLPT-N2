@@ -119,7 +119,7 @@ Inside `tests/<test_id>/` — this table is the single copy; skills point here:
 | Listening Audio MP3                  | `聴解.mp3`                             | Synthesized audio generated from the TTS script                                        |
 | Interactive Answer Sheet             | `解答.html`                            | Combined booklet (71 Gengo/Dokkai + 30 Choukai + Audio player); in-page 180pt grading |
 | Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
-| User Answers Record                  | `ユーザー解答.json`                    | Saved automatically on submit from `解答.html`                                         |
+| User Answers Record                  | `ユーザー解答.json`                    | Written by `解答.html` on every click; also carries the sitting's `受験状態` (phase + the two clocks) — `exam-app` |
 | Combined Grading Result              | `採点結果.json`                        | Generated on submit from `解答.html` or written by `grade_answers.py`. There is no Markdown report — the result is data, read back by the result screen and by the test list |
 | Model Answer & Detailed Explanation  | `模範解答.html`                        | Comprehensive model answer and explanation document for all 101 items, rendered by `build_model_answer.py` |
 | Model Answer Explanations (JA)        | `詳細解説.json`                        | Hand-authored per-item explanations — the source `模範解答.html` renders (`exam-model-answer`). Also the ONE copy of the exam wording (`stem`/`options`/`passage`/`script`) both language panes print |

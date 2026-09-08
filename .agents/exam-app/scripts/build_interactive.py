@@ -24,6 +24,7 @@ import argparse
 import importlib.util
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -47,6 +48,14 @@ app_style = importlib.util.module_from_spec(_style_spec)
 _style_spec.loader.exec_module(app_style)
 
 import markdown  # noqa: E402  (after booklet, which asserts its deps)
+
+# The two countdown clocks, in MINUTES. `jlpt-exam-structure` owns both numbers
+# (§'言語知識(文字・語彙・文法)・読解 — 105 min' and §'聴解 — ~50 min'); they are
+# restated here because the sheet has to enforce them, and check_consistency's
+# check_exam_time_limits reads them back out of that skill so the two cannot
+# drift apart. Change the exam's timing there first, never here.
+GENGO_LIMIT_MIN = 105
+CHOUKAI_LIMIT_MIN = 50
 
 # Everything from here down is the answer key — never rendered.
 KEY_HEADING = re.compile(r"^#+\s*(解答|【?正解)", re.M)
@@ -90,9 +99,33 @@ html.is-result-mode #screen-exam{display:none!important}
 html.is-result-mode #screen-result{display:block!important}
 html.is-result-mode #bar-controls{display:none!important}
 html.is-result-mode #where{display:none!important}
-/* 経過時間 — ticks only while this tab is visible AND focused (see initClock). */
-#clock{font-variant-numeric:tabular-nums}
+/* 残り時間 — the section countdown. Ticks only while this tab is visible AND
+   focused (see clockRunning); red under five minutes, amber while frozen. */
+#clock{font-variant-numeric:tabular-nums;font-weight:700;color:#e2e8f0}
 #clock.paused{color:#f59e0b}
+#clock.low{color:#fca5a5}
+/* The two sections as tabs. During a sitting they are INDICATORS, not
+   navigation: the future one is out of reach and the finished one is closed
+   for good. They become real buttons only on a graded paper (PHASE 'done'). */
+#tabs{display:flex;gap:.3em;flex:0 0 auto}
+#tabs button{font-size:9.5pt;font-weight:700;padding:.28em .7em;border-radius:6px;
+  border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);
+  color:#cbd5e1;white-space:nowrap;min-height:30px;cursor:default}
+#tabs button.active{background:#2563eb;border-color:#2563eb;color:#ffffff}
+#tabs button.finished{color:#64748b}
+#tabs button.clickable{cursor:pointer}
+#tabs button.clickable:hover{background:rgba(255,255,255,0.18)}
+#tabs .state{font-weight:400;opacity:.85;margin-left:.35em}
+/* 開始する gate — one per section. The clock does not move until it is pressed,
+   so opening a test to look at it costs nothing. */
+.gate{max-width:34em;margin:4em auto;padding:2.2em 2em;border:1px solid #cbd5e1;
+  border-radius:12px;background:#f8fafc;text-align:center;font-family:var(--ui)}
+.gate h2{margin:0 0 .6em;font-size:15pt;border:none;padding:0}
+.gate .lim{margin:.2em 0 1.2em;font-size:11pt;color:#334155}
+.gate .lim b{font-size:15pt;color:#0f172a;font-variant-numeric:tabular-nums}
+.gate .note{margin:0 0 1.6em;font-size:10pt;line-height:1.9;color:#475569;text-align:left}
+.gate .warn{color:#b91c1c;font-weight:700}
+.gate button{font-size:12pt;padding:.6em 2.4em}
 .qa{display:flex;flex-wrap:wrap;gap:.25em 1.1em;margin:.25em 0 .65em 1.2em}
 .qa label{display:inline-flex;align-items:center;gap:.32em;cursor:pointer;
   padding:.15em .6em;border:1px solid #cbd5e1;border-radius:9999px;font-size:10pt;
@@ -382,7 +415,14 @@ function answersPayload(ans){
   const gengoAns = {}, choukaiAns = {};
   for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gengoAns[k] = ans[k]; }
   for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) choukaiAns[k] = ans[k]; }
-  return {"言語知識_読解": gengoAns, "聴解": choukaiAns};
+  // 受験状態 rides in the SAME document as the answers, deliberately: it is the
+  // record of ONE sitting and has to survive a reload together with the answers
+  // it belongs to. Every reader of this file picks the two named halves out BY
+  // NAME and ignores the rest — grade_answers.py (user_answers.get), the test
+  // list's progress count in serve_sheet.py, and flattenSaved() below — so no
+  // grader changes, and 採点結果.json's shape (compared field for field by
+  // make check) is untouched.
+  return {"言語知識_読解": gengoAns, "聴解": choukaiAns, "受験状態": statePayload()};
 }
 let _saveTimer = null;
 function persistAnswers(ans){
@@ -393,23 +433,37 @@ function persistAnswers(ans){
   clearTimeout(_saveTimer);
   _saveTimer = setTimeout(()=>{ STORE.saveAnswers(answersPayload(ans)); }, 250);
 }
+function sectionKeys(sec){ return sec === 'choukai' ? CHOUKAI_KEYS : GENGO_KEYS; }
+function unansweredIn(sec, ans){
+  const a = ans || state();
+  return sectionKeys(sec).filter(k => a[k] === undefined);
+}
 function updateCounter(ans){
   let gCount = 0, cCount = 0;
   for (const k of GENGO_KEYS){ if (ans[k] !== undefined) gCount++; }
   for (const k of CHOUKAI_KEYS){ if (ans[k] !== undefined) cCount++; }
-  const total = gCount + cCount;
+  // The readout follows the phase: during 言語知識・読解 the 聴解 count is noise,
+  // and on a graded paper both halves are open again.
   document.getElementById('done').textContent =
-    "言語: " + gCount + "/" + GENGO_KEYS.length + " | 聴解: " + cCount + "/" + CHOUKAI_KEYS.length + " | 計: " + total + " / " + KEYS.length;
-  // 採点する is unavailable until the paper is complete: a partial 採点 yields a
-  // 180-point score that means nothing, and an unanswered item is not a wrong
-  // answer. save() re-checks — this is the visible half of the same rule.
-  const btn = document.getElementById('grade-btn');
-  if (btn){
-    const left = KEYS.length - total;
-    btn.disabled = left > 0;
-    btn.title = left > 0 ? left + "問が未解答です。すべて解答すると採点できます。"
-                         : "すべて解答済みです。採点できます。";
-  }
+    PHASE === 'gengo'   ? "言語知識・読解 " + gCount + " / " + GENGO_KEYS.length
+  : PHASE === 'choukai' ? "聴解 " + cCount + " / " + CHOUKAI_KEYS.length
+  : "計 " + (gCount + cCount) + " / " + KEYS.length;
+  // Advancing or grading BY HAND needs the section complete: a partial submit
+  // scales a raw count nobody produced, and an unanswered item is not a wrong
+  // answer. The clock is the one thing allowed to submit an incomplete section
+  // — see timeUp(). Both handlers re-check; this is the visible half.
+  gateButton('advance-btn', unansweredIn('gengo', ans).length,
+             "聴解へ進む", "問が未解答です。71問すべてに答えると聴解へ進めます。");
+  gateButton('grade-btn',
+             PHASE === 'done' ? (KEYS.length - gCount - cCount)
+                              : unansweredIn('choukai', ans).length,
+             "採点する", "問が未解答です。すべて解答すると採点できます。");
+}
+function gateButton(id, missing, label, hint){
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.disabled = missing > 0;
+  btn.title = missing > 0 ? missing + hint : label;
 }
 function refresh(){
   const ans = state();
@@ -439,14 +493,28 @@ function flattenSaved(data){
   return o;
 }
 async function restore(){
-  const o = flattenSaved(await STORE.loadAnswers());
-  applyAnswers(o);
+  const saved = await STORE.loadAnswers();
+  applyState(saved && saved["受験状態"]);
+  applyAnswers(flattenSaved(saved));
   // Apply without re-POSTing: refresh() would persistAnswers and race the load.
   updateCounter(state());
 }
 function clearAll(){
-  if (!confirm("すべての解答を消去しますか？")) return;
-  document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+  // The escape hatch, and the only way back into a sitting you have left: it
+  // resets the CLOCKS and the phase as well as the answers, because a half-run
+  // countdown with no answers under it is not a state anyone can finish from.
+  if (!confirm("すべての解答と受験状態（残り時間・提出済みの部分）を消去して、"
+             + "最初からやり直しますか？")) return;
+  document.querySelectorAll('input[type=radio]').forEach(r=>{
+    r.checked = false; r.disabled = false;
+  });
+  PHASE = 'gengo';
+  STARTED = {gengo: false, choukai: false};
+  LEFT = {gengo: LIMITS.gengo, choukai: LIMITS.choukai};
+  TICK_FROM = null; EXPIRING = false;
+  const audio = document.getElementById('au');
+  if (audio) audio.pause();
+  render();
   refresh();
 }
 
@@ -924,7 +992,7 @@ function showScreen(name){
   document.getElementById('bar-controls').style.display = exam ? '' : 'none';
   document.getElementById('where').style.display = exam ? '' : 'none';
   document.getElementById('bar-title').textContent = exam ? EXAM_TITLE : RESULT_TITLE;
-  if (exam) updateSpy();
+  if (exam){ render(); updateSpy(); }
   const audio = document.getElementById('au');
   if (!exam && audio) audio.pause();
   // Drop ?screen=result once you go back to solving, so a reload does not
@@ -943,21 +1011,54 @@ function showResult(res, msg, saved){
   showScreen('result');
 }
 
-async function save(){
-  const ans = state();
-  // All-or-nothing, deliberately: grading a partial paper scales a raw count no
-  // one produced. The button is already disabled by updateCounter; this second
-  // gate catches a stray call and points at the first gap.
-  const unanswered = KEYS.filter(k => ans[k] === undefined);
-  if (unanswered.length){
-    alert(unanswered.length + "問が未解答です。すべての設問に解答してから採点してください。"
-          + "（未解答: " + unanswered.slice(0, 8).join("、")
-          + (unanswered.length > 8 ? " …" : "") + "）");
-    const first = document.querySelector(
-      '#screen-exam input[name="q_' + CSS.escape(unanswered[0]) + '"]');
-    if (first) first.scrollIntoView({block: 'center'});
-    return;
+function reportGap(missing, lead){
+  alert(missing.length + lead
+        + "（未解答: " + missing.slice(0, 8).join("、")
+        + (missing.length > 8 ? " …" : "") + "）");
+  const first = document.querySelector(
+    '#screen-exam input[name="q_' + CSS.escape(missing[0]) + '"]');
+  if (first) first.scrollIntoView({block: 'center'});
+}
+
+/* 言語知識・読解 → 聴解. ONE WAY: the section closes behind you, its radios are
+   disabled and its half of the paper leaves the screen, because in the real
+   sitting the 読解 booklet is collected before 聴解 starts. `auto` is the clock
+   doing it at 00:00 — no completeness check, no confirm, no way to decline. */
+async function finishGengo(auto){
+  if (PHASE !== 'gengo') return;
+  if (!auto){
+    const missing = unansweredIn('gengo');
+    if (missing.length) return reportGap(missing,
+      "問が未解答です。71問すべてに答えてから聴解へ進んでください。");
+    if (!confirm("言語知識（文字・語彙・文法）・読解を提出して聴解に進みます。\\n"
+               + "提出したあとは、この部分に戻ることはできません。\\n\\nよろしいですか？")) return;
   }
+  clockFreeze();
+  PHASE = 'choukai';
+  render();
+  await persistNow();
+  window.scrollTo(0, 0);
+}
+
+/* 聴解 submitted — the whole 101-item paper is graded here, and only here. No
+   score is shown at the 言語知識 hand-off: the keys for a section you can still
+   be asked about must not be on screen while the exam is running. */
+async function submitAll(auto){
+  if (PHASE === 'gengo') return;
+  const ans = state();
+  if (!auto){
+    const missing = PHASE === 'done' ? KEYS.filter(k => ans[k] === undefined)
+                                     : unansweredIn('choukai', ans);
+    if (missing.length) return reportGap(missing,
+      "問が未解答です。すべての設問に解答してから採点してください。");
+    if (PHASE === 'choukai'
+        && !confirm("聴解を提出して採点します。\\n\\nよろしいですか？")) return;
+  }
+  clockFreeze();
+  PHASE = 'done';
+  const audio = document.getElementById('au');
+  if (audio) audio.pause();
+  render();
 
   const res = computeResult(ans);
   res.graded_at = new Date().toISOString();
@@ -985,40 +1086,184 @@ function downloadResult(res, answers){
   return "採点結果.json および ユーザー解答.json としてダウンロードしました。";
 }
 
-/* ------------------------------------------------------------------- 経過時間
-   The clock measures time actually spent ON this paper: it ticks only while
-   this tab is both visible and focused AND screen 2 is up, so switching tabs,
-   switching windows, or landing on the result screen freezes it. Elapsed time
-   lives in memory only — ユーザー解答.json / 採点結果.json have no field for it
-   (their shape is a contract with grade_answers.py), so a reload restarts it. */
-let CLOCK_MS = 0, CLOCK_FROM = null, CLOCK_IV = null;
+/* ========================================================== 受験フェーズと時計
+   The sitting is a two-phase state machine, and the phase is the ONLY thing
+   that decides what is on screen, what is answerable, and which clock runs:
 
-function clockActive(){
+     gengo    言語知識（文字・語彙・文法）・読解 — 105分 (LIMITS.gengo)
+     choukai  聴解 — 50分, or the audio's own length + 1分 when that is longer
+     done     graded; the paper reopens whole for review, with no clocks
+
+   Two rules make it an exam rather than a worksheet. The clock AUTO-SUBMITS its
+   section at 00:00 — the one submit path that does not require a complete
+   section. And gengo → choukai is ONE WAY: the 読解 booklet is collected before
+   聴解 starts in the real sitting, so its items leave the screen and its radios
+   are disabled. Nothing is graded until 聴解 is in: showing a score at the
+   hand-off would put half the answer key on screen mid-exam.
+
+   Phase, both remaining times, and which sections have been started persist in
+   ユーザー解答.json (see answersPayload), so a reload resumes the sitting where
+   it stood rather than handing back a fresh 105 minutes.
+
+   The clock only moves while the tab is VISIBLE and FOCUSED and its section is
+   on screen — switching tabs freezes it, and the readout says 「（停止中）」.
+   That is a deliberate choice of this repo's over exam realism: it also means a
+   sitting can be paused by switching away, which is fine for practice. */
+const LIMITS = {gengo: %(gengo_limit_ms)d, choukai: %(choukai_limit_ms)d};
+const LOW_MS = 5 * 60 * 1000;      // the readout turns red under five minutes
+let PHASE = 'gengo';
+let STARTED = {gengo: false, choukai: false};
+let LEFT = {gengo: LIMITS.gengo, choukai: LIMITS.choukai};
+let TICK_FROM = null;              // Date.now() when the running clock resumed
+let CLOCK_IV = null, EXPIRING = false, LAST_PERSIST = 0;
+
+function statePayload(){
+  return {phase: PHASE,
+          started: {gengo: STARTED.gengo, choukai: STARTED.choukai},
+          remaining_ms: {gengo: Math.round(clockLeft('gengo')),
+                         choukai: Math.round(clockLeft('choukai'))},
+          limits_ms: {gengo: LIMITS.gengo, choukai: LIMITS.choukai}};
+}
+function applyState(st){
+  if (!st || typeof st !== 'object') return;
+  if (['gengo', 'choukai', 'done'].indexOf(st.phase) !== -1) PHASE = st.phase;
+  const started = st.started || {}, left = st.remaining_ms || {};
+  for (const sec of ['gengo', 'choukai']){
+    STARTED[sec] = !!started[sec];
+    // Clamp to this build's limit: a stored value is only ever a remainder of
+    // it, and a longer audio (or a changed allowance) must not hand back more
+    // time than the section has.
+    if (typeof left[sec] === 'number' && isFinite(left[sec])){
+      LEFT[sec] = Math.max(0, Math.min(LIMITS[sec], left[sec]));
+    }
+  }
+}
+function clockLeft(sec){
+  const running = TICK_FROM !== null && sec === PHASE;
+  return Math.max(0, LEFT[sec] - (running ? Date.now() - TICK_FROM : 0));
+}
+function clockRunning(){
   const exam = document.getElementById('screen-exam');
-  return !!exam && exam.style.display !== 'none'
+  return (PHASE === 'gengo' || PHASE === 'choukai') && STARTED[PHASE]
+      && !!exam && exam.style.display !== 'none'
       && !document.hidden && (!document.hasFocus || document.hasFocus());
 }
+function clockFreeze(){
+  if (TICK_FROM === null) return;
+  if (PHASE === 'gengo' || PHASE === 'choukai') LEFT[PHASE] = clockLeft(PHASE);
+  TICK_FROM = null;
+}
 function clockText(ms){
-  const t = Math.floor(ms / 1000);
+  const t = Math.ceil(ms / 1000);
   const two = n => String(n).padStart(2, '0');
-  return (t >= 3600 ? two(Math.floor(t / 3600)) + ':' : '')
-       + two(Math.floor(t / 60) %% 60) + ':' + two(t %% 60);
+  return two(Math.floor(t / 60)) + ':' + two(t %% 60);
 }
 function clockPaint(){
   const el = document.getElementById('clock');
   if (!el) return;
-  const ms = CLOCK_MS + (CLOCK_FROM === null ? 0 : Date.now() - CLOCK_FROM);
-  el.textContent = '経過 ' + clockText(ms) + (CLOCK_FROM === null ? '（停止中）' : '');
-  el.classList.toggle('paused', CLOCK_FROM === null);
+  if (PHASE === 'done'){ el.textContent = '採点済み'; el.className = 'sub'; return; }
+  const ms = clockLeft(PHASE), frozen = TICK_FROM === null;
+  el.textContent = '残り ' + clockText(ms)
+                 + (!STARTED[PHASE] ? '（未開始）' : frozen ? '（停止中）' : '');
+  el.className = 'sub' + (STARTED[PHASE] && frozen ? ' paused' : '')
+               + (ms <= LOW_MS ? ' low' : '');
 }
 function clockSync(){
-  if (clockActive()){
-    if (CLOCK_FROM === null) CLOCK_FROM = Date.now();
-  } else if (CLOCK_FROM !== null){
-    CLOCK_MS += Date.now() - CLOCK_FROM;
-    CLOCK_FROM = null;
+  if (clockRunning()){
+    if (TICK_FROM === null) TICK_FROM = Date.now();
+  } else if (TICK_FROM !== null){
+    clockFreeze();
+    persistState();   // the frozen value is the one a reload must come back to
   }
   clockPaint();
+}
+function clockTick(){
+  clockPaint();
+  if (!clockRunning()) return;
+  if (clockLeft(PHASE) <= 0) return timeUp();
+  // Closing the tab outright fires no blur we can rely on, so the running
+  // remainder goes to disk on a heartbeat: a killed tab loses 15 s of elapsed
+  // time, not the whole section's worth.
+  if (Date.now() - LAST_PERSIST > 15000){ LAST_PERSIST = Date.now(); persistState(); }
+}
+async function timeUp(){
+  if (EXPIRING) return;             // the interval must not re-enter mid-alert
+  EXPIRING = true;
+  const sec = PHASE;
+  clockFreeze();
+  LEFT[sec] = 0;
+  try {
+    if (sec === 'gengo'){
+      alert("言語知識（文字・語彙・文法）・読解の時間が終了しました。\\n"
+          + "解答はそのまま提出され、聴解に進みます。");
+      await finishGengo(true);
+    } else {
+      alert("聴解の時間が終了しました。\\nこれまでの解答で採点します。");
+      await submitAll(true);
+    }
+  } finally { EXPIRING = false; }
+}
+function startSection(sec){
+  if (PHASE !== sec || STARTED[sec]) return;
+  STARTED[sec] = true;
+  render();
+  persistState();
+  clockSync();
+}
+function persistState(){ persistAnswers(state()); }
+async function persistNow(){
+  // Phase changes are the one write that must not sit in the 250 ms debounce:
+  // a reload one keystroke later would reopen a section that has been submitted.
+  clearTimeout(_saveTimer);
+  await STORE.saveAnswers(answersPayload(state()));
+}
+
+/* The single place the DOM is put into the shape PHASE describes. Everything
+   that changes a phase calls this and nothing else touches the visibility of a
+   section, a gate, a tab or a control. */
+function show(id, on){
+  const el = document.getElementById(id);
+  if (el) el.style.display = on ? '' : 'none';
+}
+function setSectionEnabled(sec, on){
+  for (const k of sectionKeys(sec)){
+    document.querySelectorAll('input[name="q_' + CSS.escape(k) + '"]')
+      .forEach(r => { r.disabled = !on; });
+  }
+}
+function paintTab(id, active, finished, label){
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = (active ? 'active' : '') + (finished ? ' finished' : '')
+               + (PHASE === 'done' ? ' clickable' : '');
+  el.innerHTML = el.dataset.label
+               + (label ? '<span class="state">' + label + '</span>' : '');
+}
+function render(){
+  const done = PHASE === 'done';
+  const openG = done || PHASE === 'gengo', openC = done || PHASE === 'choukai';
+  show('gate-gengo',      PHASE === 'gengo'   && !STARTED.gengo);
+  show('gate-choukai',    PHASE === 'choukai' && !STARTED.choukai);
+  show('section-gengo',   openG && (done || STARTED.gengo));
+  show('section-choukai', openC && (done || STARTED.choukai));
+  show('section-divider', done);
+  setSectionEnabled('gengo', openG);
+  setSectionEnabled('choukai', openC);
+  paintTab('tab-gengo', openG, PHASE === 'choukai',
+           done ? '' : PHASE === 'gengo' ? '受験中' : '提出済み');
+  paintTab('tab-choukai', openC, false,
+           done ? '' : PHASE === 'gengo' ? 'この後' : '受験中');
+  show('advance-btn', PHASE === 'gengo' && STARTED.gengo);
+  show('grade-btn', done || (PHASE === 'choukai' && STARTED.choukai));
+  updateCounter(state());
+  clockPaint();
+  fitPlayer();
+}
+function goTab(sec){
+  // Navigation only on a graded paper; during a sitting the tabs are labels.
+  if (PHASE !== 'done') return;
+  const el = document.getElementById('section-' + sec);
+  if (el) el.scrollIntoView({block: 'start'});
 }
 function initClock(){
   // visibilitychange catches a tab switch; focus/blur catches another window
@@ -1026,8 +1271,30 @@ function initClock(){
   document.addEventListener('visibilitychange', clockSync);
   window.addEventListener('focus', clockSync);
   window.addEventListener('blur', clockSync);
-  // Repainted from Date.now(), so a throttled background timer cannot drift.
-  if (CLOCK_IV === null) CLOCK_IV = setInterval(clockPaint, 500);
+  window.addEventListener('pagehide', clockSync);
+  // Recomputed from Date.now() on every paint, so a throttled background timer
+  // cannot make the countdown drift.
+  if (CLOCK_IV === null) CLOCK_IV = setInterval(clockTick, 500);
+  const audio = document.getElementById('au');
+  if (audio){
+    // The audio IS the 聴解 section, so it can never be cut off by the clock:
+    // an official recording runs past the 50-minute allowance. Build time reads
+    // the same thing off 聴解_チャプター.json / ffprobe (section_limits), and
+    // this is the machine that has neither — and the Pages build, where the MP3
+    // streams from the release. Only BEFORE the section starts: raising a
+    // running clock would hand back time that has already been spent.
+    const fitLimit = () => {
+      if (STARTED.choukai || !isFinite(audio.duration) || !audio.duration) return;
+      const need = Math.round(audio.duration * 1000) + 60000;
+      if (need > LIMITS.choukai){
+        LIMITS.choukai = need;
+        LEFT.choukai = need;
+        render();
+      }
+    };
+    audio.addEventListener('loadedmetadata', fitLimit);
+    fitLimit();
+  }
   clockSync();
 }
 
@@ -1060,6 +1327,7 @@ function updateSpy(){
   const edge = (bar ? bar.offsetHeight : 0) + 8;
   let sec = '', q = '';
   for (const s of SPOTS){
+    if (s.el.offsetParent === null) continue;   // a section this phase has closed
     if (s.el.getBoundingClientRect().top > edge) break;
     if (s.sec){ sec = s.sec; q = ''; } else { q = s.q; }
   }
@@ -1076,7 +1344,6 @@ function fitPlayer(){
 async function boot(){
   fitPlayer();
   initSpy();
-  initClock();
   window.addEventListener('resize', fitPlayer);
   const isResult = location.search.indexOf('screen=result') !== -1;
   if (isResult){
@@ -1091,6 +1358,10 @@ async function boot(){
   } else {
     await restore();
   }
+  // After restore(), so the first paint is the resumed phase and not a fresh
+  // 105:00 that a slow load would leave on screen for a moment.
+  render();
+  initClock();
 }
 
 document.addEventListener('change', e=>{ if(e.target.type==='radio') refresh(); });
@@ -1139,6 +1410,79 @@ def radios(qid: str, width: int, label: str = "") -> str:
         for i in range(1, width + 1))
     tag = f'<span class="qid">{label}</span>' if label else ""
     return f'<div class="qa">{tag}{cells}</div>'
+
+
+def mp3_duration_ms(d: Path) -> int | None:
+    """How long this test's 聴解.mp3 actually runs, or None if unknowable here.
+
+    Two sources, cheapest first: `聴解_チャプター.json`'s own `duration`, which
+    make_choukai_mp3.py writes for every GENERATED test, and ffprobe for the
+    imported ones, whose chapter file carries `"duration": null` because the MP3
+    came from the archive rather than the assembler. ffprobe is optional on
+    purpose — `make sheet` must not grow a binary dependency `make mp3` already
+    owns — so every failure falls through to None and the caller uses the
+    official allowance.
+    """
+    chap = d / "聴解_チャプター.json"
+    if chap.is_file():
+        try:
+            dur = json.loads(chap.read_text(encoding="utf-8")).get("duration")
+            if isinstance(dur, (int, float)) and dur > 0:
+                return int(dur * 1000)
+        except (json.JSONDecodeError, OSError):
+            pass
+    mp3 = d / "聴解.mp3"
+    if not mp3.is_file():
+        return None
+    try:
+        out = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "csv=p=0", str(mp3)],
+            capture_output=True, text=True, timeout=20)
+        return int(float(out.stdout.strip()) * 1000) if out.returncode == 0 else None
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return None
+
+
+def section_limits(d: Path) -> dict:
+    """The two clocks the sheet counts down, in milliseconds.
+
+    言語知識・読解 is the official 105 minutes flat. 聴解 is the official ~50, EXCEPT
+    that the audio IS the section: an official sitting's recording runs past the
+    allowance (imported-n2-2025-12 is 51.4 min), and a clock that submits the
+    paper while 問題5 is still playing is worse than a generous one. So the
+    listening allowance is whichever is longer, the official 50 minutes or the
+    recording plus a minute. `解答.html` re-checks the same way at runtime off
+    the <audio> element's own metadata, for a machine with no ffprobe and for
+    the Pages build, where the MP3 is streamed from the release.
+    """
+    audio_ms = mp3_duration_ms(d)
+    choukai = CHOUKAI_LIMIT_MIN * 60_000
+    if audio_ms:
+        choukai = max(choukai, audio_ms + 60_000)
+    return {"gengo_limit_ms": GENGO_LIMIT_MIN * 60_000, "choukai_limit_ms": choukai}
+
+
+def gate(sec: str, title: str, limit_ms: int, count: int) -> str:
+    """The 開始する panel a section sits behind until its clock is started.
+
+    Without it, opening a test to look at it would start the exam — and this
+    clock submits the paper on its own at 00:00, so 'started by accident' is a
+    lost sitting rather than a stray number.
+    """
+    extra = ("音声は最初から最後まで一続きで流れます。イヤホンなどの準備ができてから"
+             "開始してください。" if sec == "choukai" else
+             "提出したあとは、この部分に戻ることはできません。")
+    return (f'<div class="gate" id="gate-{sec}" style="display:none">'
+            f'<h2>{title}</h2>'
+            f'<p class="lim">制限時間 <b>{limit_ms // 60_000}分</b>／全{count}問</p>'
+            f'<p class="note"><span class="warn">開始すると時計が動きます。</span>'
+            f'残り時間が0になった時点で、解答はそのまま自動的に提出されます。<br>'
+            f'{extra}<br>'
+            f'時計はこのタブを見ている間だけ進み、ほかのタブや別のウィンドウに移ると'
+            f'止まります。</p>'
+            f'<button class="ui-btn primary" onclick="startSection(\'{sec}\')">'
+            f'開始する</button></div>')
 
 
 def strip_key(md: str, src: Path) -> str:
@@ -1409,6 +1753,13 @@ LIST_HREF = {"server": "/", "local": "../../index.html"}
 def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
                     out_path: Path, gdata: dict, player: str = "",
                     sources=(), storage: str = "server"):
+    gengo_limit_ms = int(gdata["gengo_limit_ms"])
+    choukai_limit_ms = int(gdata["choukai_limit_ms"])
+    # The gates print each section's own item count; 言語知識・読解's ids are the
+    # digits (1..71), 聴解's are 問N-M — never hard-code 71/30, an imported
+    # sitting's 問題5 can yield a different 聴解 total.
+    n_gengo = sum(1 for k in keys if str(k).isdigit())
+    n_choukai = len(keys) - n_gengo
     gengo_md = booklet.box_passages(gengo_md)
     gengo_md = "\n".join(booklet.widen(l) for l in gengo_md.splitlines())
     choukai_md = booklet.add_choukai_furigana(choukai_md)
@@ -1426,26 +1777,40 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
     # The SAME bar as screen 1's, so the app reads as one thing. Opened as a bare
     # file (no server, no Pages deployment) that link is dead, which is the same
     # trade-off as the /api/ POSTs.
+    # The two sections are TABS in the bar. During a sitting they are
+    # indicators — render() paints 受験中 / この後 / 提出済み onto them and only a
+    # graded paper makes them clickable — so the bar always says which half of
+    # the exam you are in and what has already been handed in.
+    tabs = ('<span id="tabs">'
+            '<button id="tab-gengo" type="button" data-label="言語知識・読解" '
+            'onclick="goTab(\'gengo\')">言語知識・読解</button>'
+            '<button id="tab-choukai" type="button" data-label="聴解" '
+            'onclick="goTab(\'choukai\')">聴解</button></span>')
     bar = (f'<div id="bar"><a class="back" href="{list_href}">← テスト一覧</a>'
            f'<b id="bar-title">テスト {testid}（受験）</b>'
+           f'{tabs}'
            f'<span class="sub" id="where"></span>'
            f'<span class="grow"></span>'
            f'<span id="bar-controls">'
-           f'<span class="sub" id="clock">経過 00:00</span> '
+           f'<span class="sub" id="clock">残り --:--</span> '
            f'<span class="sub" id="done">解答済み 0 / 101</span> '
            f'<button onclick="clearAll()">消去</button> '
-           f'<button onclick="save()" id="grade-btn" class="primary" disabled>'
-           f'採点する</button></span></div>'
+           f'<button onclick="finishGengo(false)" id="advance-btn" class="primary" '
+           f'disabled>聴解へ進む</button> '
+           f'<button onclick="submitAll(false)" id="grade-btn" class="primary" '
+           f'disabled>採点する</button></span></div>'
            f'<script>if(document.documentElement.classList.contains("is-result-mode")){{'
            f'document.getElementById("bar-title").textContent="テスト {testid}（採点結果）";}}</script>')
 
     body = (
         f'<div id="screen-exam">'
-        f'<div id="section-gengo">'
+        f'{gate("gengo", "言語知識（文字・語彙・文法）・読解", gengo_limit_ms, n_gengo)}'
+        f'<div id="section-gengo" style="display:none">'
         f'<h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1>'
         f'{gengo_body}</div>'
-        f'<hr class="section-divider">'
-        f'<div id="section-choukai">'
+        f'<hr class="section-divider" id="section-divider" style="display:none">'
+        f'{gate("choukai", "聴解", choukai_limit_ms, n_choukai)}'
+        f'<div id="section-choukai" style="display:none">'
         f'<h1 class="section-title">JLPT N2 聴解</h1>'
         f'{player}{choukai_body}</div>'
         f'</div>'
@@ -1594,6 +1959,7 @@ def build(d: Path, storage: str = "server", out_dir: Path | None = None) -> Path
     dest.mkdir(parents=True, exist_ok=True)
     out = dest / "解答.html"
     gdata = grading_data(gam, gids, ckeys, combined_keys, choukai_scripts)
+    gdata.update(section_limits(d))
     # 聴解_チャプター.json is stamped as a FOURTH source because player_html()
     # embeds it verbatim: a rebuilt MP3 changes every chapter offset while the
     # Markdown stays byte-identical, so without this stamp a sheet that seeks to

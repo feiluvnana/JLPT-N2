@@ -137,11 +137,12 @@ same screens ship as a static Pages site — only where answers are kept differs
 | # | Screen | Where it lives | What it does |
 | - | ------ | -------------- | ------------ |
 | 1 | テスト一覧 | `GET /` — `serve_sheet.py` | every test in `tests/`, answered count, last score, origin badge (`imported`/`generated`), under two collapsed `<details>` groups + a search box |
-| 2 | 受験 | `GET /tests/<id>/解答.html` | the exam; each click autosaves |
+| 2 | 受験 | `GET /tests/<id>/解答.html` | the exam, in two timed phases (below); each click autosaves |
 | 3 | 採点結果 | same page, `#screen-result` | rendered on 「採点する」 or fetched from `採点結果.json` |
 
 A graded test is never locked — 「解答に戻ってやり直す」 reopens screen 2 with
-saved answers, re-grading overwrites `採点結果.json`. `解答.html` is NOT the
+saved answers, re-grading overwrites `採点結果.json`. That is AFTER the sitting;
+during one, the phase machine below decides what reopens. `解答.html` is NOT the
 booklets, which `build_booklet.py` overwrites on every build; there are no
 per-section `*_解答.html` files.
 
@@ -159,22 +160,77 @@ Grades all 101 questions against embedded keys, evaluates section cutoffs
 store this build uses (`採点結果.json`/`ユーザー解答.json`): into `tests/<id>/`
 under `make serve`, into localStorage on Pages, or as browser downloads with
 no server/store. Unanswered items appear as 「未解答」 chips, not wrong — the
-CLI grader still grades a partial paper, and a result loaded back from
-`採点結果.json` may carry them.
+CLI grader still grades a partial paper, and the clock below can submit one.
 
-**In the page, grading is all-or-nothing.** 採点する stays `disabled` until all
-101 items are answered (`updateCounter`), and `save()` re-checks and scrolls to
-the first gap — a partial 採点 scales a raw count nobody produced, and the old
-「このまま採点しますか？」 confirm made that one keypress away. The counter beside
-it is the only progress readout; do not add a second one.
+**Grading happens ONCE, when 聴解 goes in.** There is no score at the
+言語知識・読解 hand-off: half the answer key on screen mid-exam is not a
+mid-point summary, it is a leak. `submitAll()` grades all 101 items.
 
-**経過時間 — the clock in the bar ticks only while the exam is in front of you.**
-`initClock()` runs it from `Date.now()` and freezes it whenever the tab is
-hidden (`visibilitychange`), the window loses focus (`blur`), or screen 3 is up;
-the frozen readout says 「（停止中）」. It is **in memory only**: `ユーザー解答.json`
-and `採点結果.json` have no field for elapsed time and their shape is a contract
-with `grade_answers.py` (below), so a reload restarts the clock. Adding a field
-for it means changing both graders and the parity test.
+**Advancing or grading BY HAND needs the section complete** — 聴解へ進む and
+採点する stay `disabled` until every item in the live section is answered
+(`updateCounter`), and both handlers re-check and scroll to the first gap. The
+clock is the one thing allowed to submit an incomplete section.
+
+## Screen 2 is a two-phase sitting, not a worksheet
+
+`PHASE` is the only thing that decides what is on screen, what is answerable,
+and which clock runs. `render()` is the only function that acts on it; nothing
+else touches the visibility of a section, a gate, a tab or a control.
+
+| PHASE | On screen | Clock | Ends by |
+| - | - | - | - |
+| `gengo` | 言語知識・読解 (71 items) | 105分 | 聴解へ進む, or 00:00 |
+| `choukai` | 聴解 (30) + the player | 50分, or the recording +1分 | 採点する, or 00:00 |
+| `done` | the whole paper, unlocked, no clock | — | re-grading overwrites |
+
+- **Each section sits behind a 開始する gate.** The clock does not move until it
+  is pressed, so opening a test to look at it costs nothing — and since this
+  clock submits the paper by itself, "started by accident" would otherwise be a
+  lost sitting. 聴解's gate is also where you get your headphones on.
+- **gengo → choukai is ONE WAY.** The 読解 booklet is collected before 聴解 in
+  the real sitting, so its items leave the screen and its radios are `disabled`.
+  The confirm says so before it happens; at 00:00 there is no confirm.
+- **00:00 auto-submits the section** — `timeUp()`, the one submit path that
+  skips the completeness check. `EXPIRING` guards it against the 500 ms
+  interval re-entering while its alert is up.
+- **The clock only runs while the exam is in front of you**: `clockRunning()`
+  wants the tab visible AND focused AND its section on screen, so switching
+  tabs freezes it and the readout says 「（停止中）」. Deliberately this repo's
+  choice over exam realism — it means a practice sitting can be paused by
+  switching away. Recomputed from `Date.now()` on every paint, so a throttled
+  background timer cannot make it drift.
+- **A graded paper reopens whole.** `done` is review mode: both halves visible
+  and answerable, no clocks, 採点する live again — the documented "a graded test
+  is never locked" behaviour, now confined to after the sitting.
+- **消去 is the escape hatch**, and the only way back into a section you have
+  left: it resets the clocks and the phase along with the answers, because a
+  half-run countdown with no answers under it is not a state anyone can finish
+  from.
+
+**The two allowances belong to `jlpt-exam-structure`** (§'言語知識…— 105 min',
+§'聴解 — ~50 min'). `build_interactive` restates them as `GENGO_LIMIT_MIN` /
+`CHOUKAI_LIMIT_MIN` because it has to enforce them, and `make check`
+(`check_exam_time_limits`) reads them back out of that skill so the two cannot
+drift. Change the exam's timing there first, never in the builder.
+
+**聴解's clock is never shorter than its audio.** The recording IS that section
+and an official one can run past 50 minutes (imported-n2-2025-12 is 51.4), so
+`section_limits()` takes whichever is longer, the allowance or the recording
+plus a minute — read off `聴解_チャプター.json`'s `duration` for a generated
+test, off ffprobe for an imported one (optional: `make sheet` must not grow a
+binary dependency `make mp3` already owns), and off the `<audio>` element's own
+metadata at runtime for a machine that has neither and for the Pages build.
+
+**Where the sitting is kept: `ユーザー解答.json`, in a `受験状態` block** beside
+the answers — phase, both remaining times, which sections have started. It is
+the record of ONE sitting and has to survive a reload with the answers it
+belongs to. Every reader of that file picks the two answer halves out BY NAME
+and ignores the rest (`grade_answers.py`, `serve_sheet.py`'s progress count,
+`flattenSaved()`), so this cost no grader change and left `採点結果.json`'s
+shape — the one `make check` compares field for field — untouched. Phase
+changes write through the debounce (`persistNow`); a running clock also
+heartbeats every 15 s, so a tab killed mid-section hands back 15 seconds, not
+the section.
 
 **全設問解答チェック表 expands as one list** — 「すべての設問詳細を展開」builds
 detail blocks for all 101 items from the still-in-DOM exam screen plus
@@ -320,7 +376,8 @@ hard-code it.
 
 ## Answer capture
 
-Every radio click writes to the one place this build uses:
+Every radio click writes to the one place this build uses (and so does every
+phase change and every clock freeze — same document, see 受験状態 above):
 `ユーザー解答.json` via `POST /api/tests/<id>/answers` (debounced ~250ms)
 under `make serve`, or the matching localStorage key on Pages — nothing in
 the page knows which backend it talks to. 採点する writes `採点結果.json`

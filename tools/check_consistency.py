@@ -408,6 +408,68 @@ def check_deployments():
 
 
 # ------------------------------------------------------------- exam audio hosting
+def check_exam_time_limits():
+    """The sheet's two countdown clocks are the OFFICIAL allowances, not numbers.
+
+    `解答.html` runs each section against a clock and submits it at 00:00, so
+    105 and 50 stopped being documentation the moment that shipped: a wrong
+    number here ends a sitting early. `jlpt-exam-structure` owns both (it owns
+    every format fact), `build_interactive` restates them because it has to
+    enforce them, and this is the line that stops the two drifting — the same
+    arrangement as every other measured number in this repo (AGENTS.md §4).
+
+    The 聴解 clock is allowed to be LONGER than the official allowance and never
+    shorter: the audio IS that section, an official recording can run past 50
+    minutes (imported-n2-2025-12 is 51.4), and section_limits() raises the limit
+    to the recording plus a minute rather than cutting 問題5 off mid-item.
+    """
+    print("\n受験タイマー (jlpt-exam-structure owns both allowances)")
+    bi = load(".agents/exam-app/scripts/build_interactive.py")
+    doc = (AGENTS / "jlpt-exam-structure" / "SKILL.md").read_text(encoding="utf-8")
+    for label, attr, pattern in (
+            ("言語知識・読解", "GENGO_LIMIT_MIN", r"^##[^\n]*読解 — (\d+) min"),
+            ("聴解", "CHOUKAI_LIMIT_MIN", r"^## 聴解 — ~?(\d+) min")):
+        m = re.search(pattern, doc, re.M)
+        want = int(m.group(1)) if m else None
+        got = getattr(bi, attr)
+        check(f"{label}: build_interactive.{attr} == jlpt-exam-structure's {want} min",
+              want is not None and got == want,
+              f"sheet says {got}, the skill heading says {want} — change the "
+              f"allowance in jlpt-exam-structure/SKILL.md first, never here"
+              if want is not None else
+              "could not read the allowance out of jlpt-exam-structure/SKILL.md")
+
+    floor = {"gengo": bi.GENGO_LIMIT_MIN * 60_000,
+             "choukai": bi.CHOUKAI_LIMIT_MIN * 60_000}
+    sheets = sorted((ROOT / "tests").glob("*/解答.html"))
+    if not sheets:
+        return skip("every 解答.html carries the two clocks", "no built sheets")
+    bad, stripped = [], []
+    for d in sheets:
+        html = d.read_text(encoding="utf-8")
+        m = re.search(r"const LIMITS = \{gengo: (\d+), choukai: (\d+)\}", html)
+        if not m:
+            bad.append(f"{d.parent.name}: no LIMITS block")
+            continue
+        g, c = int(m.group(1)), int(m.group(2))
+        if g != floor["gengo"] or c < floor["choukai"]:
+            bad.append(f"{d.parent.name}: gengo {g}, choukai {c}")
+        # The clocks are only an exam while the machine around them is intact.
+        missing = [t for t in ('id="gate-gengo"', 'id="gate-choukai"',
+                               "function startSection(", "async function finishGengo(",
+                               "async function timeUp(")
+                   if t not in html]
+        if missing:
+            stripped.append(f"{d.parent.name}: {missing}")
+    check(f"{len(sheets)} sheet(s) carry the official allowances", not bad,
+          f"{bad[:4]} — gengo must be exactly {floor['gengo']} ms and 聴解 at "
+          f"least {floor['choukai']} ms; run make sheet <id>")
+    check(f"{len(sheets)} sheet(s) still carry the two-phase machine", not stripped,
+          f"{stripped[:3]} — the 開始する gates, the one-way hand-off and the "
+          "00:00 auto-submit are what make the clock an exam rather than a "
+          "readout; a sheet without them grades an untimed paper")
+
+
 def check_exam_audio_hosting():
     """`tests/*/聴解.mp3` lives on the `audio` release, and NOT in git.
 
@@ -14450,6 +14512,7 @@ def main():
         check_kaisetsu_band_doc()
         check_grandfather_sets_are_live()
         check_deployments()
+        check_exam_time_limits()
         check_exam_audio_hosting()
         check_every_choukai_finding_declares_repair()
         check_remediation_state()
