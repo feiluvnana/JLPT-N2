@@ -579,6 +579,33 @@ as "N1"/"N3", so a single source's label was never sufficient.
 
 ### 4. 聴解 structure
 
+> **First: check the paper's 聴解 ORIGIN.** Since 2026-09-08 a generated paper's
+> listening half is COMPOSED from official recordings (`choukai-audio` Part 0);
+> `聴解_チャプター.json` says `"source": "composed"` and `make check` prints an
+> explicit skip line for the whole authoring/register/pacing family.
+>
+> **For a composed paper, everything in this section below is out of scope** —
+> 場面 mix, 決め手 spread, 質問型 balance, distractor shape, key length, closing
+> turns, voice casting. Nobody here chose any of it; the items are real exam
+> items and these bands were measured against the very corpus they came from.
+> There is no セクション構成表 and one must not be written.
+>
+> **What replaces it — four checks, all cheap:**
+> 1. `logs/choukai_draws.json`: no clip id repeats the PREVIOUS paper in the
+>    same slot. The composer spends least-used clips first, so this is a
+>    verification; if a slot's ten candidates are exhausted, say so.
+> 2. The audio round-trips: `python3 tools/choukai_segment.py tests/<id>/聴解.mp3`
+>    must recover 5/6/5/11/2 against the composed script. That is the one test
+>    that proves the MP3 on disk is the paper the booklet describes.
+> 3. Spot-check two items by ear against `聴解.md`'s printed options — a
+>    mis-drawn slot would print one sitting's options over another's audio.
+> 4. Keys come from the source sittings, so a 聴解 mis-key means the BANK is
+>    wrong, not the paper: fix `logs/choukai_bank.json`'s source and re-compose,
+>    never hand-edit `聴解.md`.
+>
+> The rest of this section still governs **imported** papers' fidelity review
+> and any paper whose 聴解 predates the rework.
+
 - **Read the セクション構成表 in `聴解.md` as COLUMNS, before any item** — the
   table and its per-section quotas are `question-authoring/references/choukai-items.md`'s.
   Fail on: the same 正解 twice in a section; one 消去方法 more than twice; one

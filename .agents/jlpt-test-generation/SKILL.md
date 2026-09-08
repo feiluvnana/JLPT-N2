@@ -28,8 +28,8 @@ intent.
 | Stage | Job | Contexts |
 |-------|-----|----------|
 | 1. Blueprint | Sample the item pools; draw a THEME per themed surface | 1 |
-| 2. Author | 文字・語彙 (問1–6) ǀ 文法 (問7–9) ǀ 読解 (問10–14) ǀ 聴解 (booklet + script) | **4, in parallel** |
-| 3. Build + gate | Booklet HTML, MP3, 解答.html, `make check`, whole-paper topic table | 1 |
+| 2. Author | 文字・語彙 (問1–6) ǀ 文法 (問7–9) ǀ 読解 (問10–14) | **3, in parallel** |
+| 3. Build + gate | **Compose 聴解** (`make mp3 <id> SEED=<rng>`), booklet HTML, 解答.html, `make check`, whole-paper topic table | 1 |
 | 4. QA | `exam-qa-review` in full — blind-solve, all 101 items, root-cause table | 1 **fresh** |
 | 5. Model answer | `詳細解説.json` (JA) + `詳細解説.vi.json` (VI) → `make model-answer` | **2, one per language**, no shared context |
 
@@ -63,8 +63,7 @@ the orchestrator's summary — and nothing else:
 | 2 文字・語彙 | `test_spec.json` + `question-authoring/SKILL.md` + `references/moji-goi.md` + `jlpt-exam-structure/SKILL.md` | 問1–6 fragment |
 | 2 文法 | same, with `references/bunpou.md` | 問7–9 fragment |
 | 2 読解 | same, with `references/dokkai.md` | 問10–14 fragment |
-| 2 聴解 | `test_spec.json` + `question-authoring/SKILL.md` + `references/choukai-items.md` + `choukai-audio/SKILL.md` + `jlpt-exam-structure/SKILL.md` | `聴解.md` (incl. セクション構成表), `聴解スクリプト.txt` |
-| 3 Build+gate | `exam-app/SKILL.md`, `choukai-audio/SKILL.md` (synthesis §), this file's topic-table § | merged `言語知識・読解.md`, HTML/MP3, `logs/topics.json` row, gate report |
+| 3 Build+gate | `exam-app/SKILL.md`, `choukai-audio/SKILL.md` (**Part 0**), this file's topic-table § | merged `言語知識・読解.md`, the whole 聴解 half, HTML/MP3, `logs/topics.json` row, gate report |
 | 4 QA | `exam-qa-review/SKILL.md` | `qa/qa-report-<id>.md` |
 | 5 Model answer | `exam-model-answer/SKILL.md` | `詳細解説.json`, `詳細解説.vi.json`, `模範解答.html` |
 
@@ -73,10 +72,9 @@ body, then key/解説 rows under a literal `<!-- KEY -->` marker. Stage 3 merges
 mechanically — bodies in booklet order, then ONE key heading at the end followed
 by key tables in the same order. The sheet builder's `strip_key()` truncates at
 that heading, so **a fragment must never carry its own**. Parallel authors never
-share a file. The 聴解 author owns both `聴解.md` and `聴解スクリプト.txt`
-complete, finishing with the **セクション構成表** checked against
-`choukai-items.md`'s per-section quotas — the only view in which a repeated key
-or a one-shape section is visible.
+share a file. **There is no 聴解 author**: stage 3 composes the listening half
+from official clips, and a composed paper carries no セクション構成表 because
+nobody chose its items' 場面, 決め手 or 質問型 — the archive did.
 
 ### Subagent prompt template
 
@@ -136,9 +134,16 @@ make scaffold-sections <id>
 ## Stage 3 — build + gate
 
 ```bash
+SEED=$(python3 -c "import secrets; print(secrets.randbelow(10**8))")
 make autofix <id> && make lint-draft <id> && make verify-scramble <id> \
-  && make booklet <id> && make mp3 <id> && make sheet <id> && make check
+  && make mp3 <id> SEED=$SEED \
+  && make booklet <id> && make sheet <id> && make check
 ```
+
+- **`make mp3` runs FIRST now and writes the entire 聴解 half** — script,
+  booklet, audio, chapters and the 30 choukai `詳細解説` entries — by drawing
+  official clips (`choukai-audio` Part 0). It must precede `make booklet`,
+  which renders the `聴解.md` it produces.
 
 - Run `autofix`/`lint-draft` first — contractions, reaction turns, absolute
   quantifiers, missing blanks, at zero token cost before QA.
@@ -228,21 +233,20 @@ the DRAWN topic string. Then read it:
   itself clear cooldown/theme/slot rules.
 - **A topic/domain match in the 2-tests-back column is a minor finding** — note
   it so a domain doesn't become a crutch one skip apart.
-- **No condition/number/rule shared** between the 問題14 flyer and any 聴解 item.
-  Shared setting is tolerable; shared decisive detail is not.
-- **Two 聴解 items may not run the same errand**, and errand archetypes must not
-  repeat within the last two tests — **including both 問題5 items**, each with its
-  own fixed task shape: **1番** a multi-person meeting choosing among proposals,
-  **2番** a two-person pick-one-from-a-shared-list decision. For **each**, vary
-  the DECISION STRUCTURE across consecutive papers, not just the subject: who
-  proposes, in what order candidates die, and whether the adopted one is a late
-  arrival, an opening proposal held pending a condition, or a plan someone
-  reverses. (The rule named 2番 only until 2026-08-19, and four papers documented
-  2番's structure while saying nothing about 1番 — so `20260818_1` shipped a
-  問題5-1番 with `20260817_3`'s exact archetype in the same slot, one paper apart,
-  with the rule "already written": qa-report-20260818_1 F3.) **The construction
-  step:** the 聴解 author writes the 構成表 structure note for 1番 as well as 2番,
-  each against the previous three papers by name (`choukai-items.md` §統合理解).
+- **聴解 rows are now a DRAW audit, not a topic audit.** The listening items are
+  official and their subjects were never chosen by anyone here, so errand
+  identity, 問題5 decision structure, slot-theme adjacency and 問題14-vs-聴解
+  detail overlap are no longer authoring rules — nothing in the paper can be
+  re-angled to fix them. What replaces them, and what this pass must still do:
+  read `logs/choukai_draws.json` and confirm **no clip id repeats the previous
+  paper in the same slot**. The composer already spends least-used clips first,
+  so this is a verification, not a repair. If a repeat is unavoidable (the slot's
+  ten candidates are exhausted), say so in the report rather than re-drawing
+  forever.
+- **The 読解 half still owns every topic rule above**, and a 読解 passage may now
+  legitimately share a domain with a 聴解 item, because no one picked the 聴解
+  item's domain. Only a shared *decisive detail* — a number or condition the
+  reader could carry from one surface to the other — is still a finding.
 - **問題12 (A/B) gets its own cross-test column** — one topic per paper.
 - **A duplicated topic in the spec is a sampler defect**: `check_spec_blend`
   fails a repeated draw. `--reroll` the category; never hand-invent a substitute.
@@ -319,8 +323,14 @@ the page writes `採点結果.json` + `ユーザー解答.json`. CLI: `make grad
 - `聴解.md` and `聴解スクリプト.txt` stay synchronized: printed 例 options ↔ spoken
   例; any script item change requires a key check.
 - After script/audio edits, re-run the dry-run validators in `choukai-audio`.
-- Never copy questions from the copyrighted textbooks in `refs/` — calibration
-  only, all items original. The sampled topic gives WHAT to write about; compose
-  the words yourself, no web fetch.
+- **言語知識・読解 items are always original.** Never copy questions from the
+  copyrighted textbooks in `refs/` into 問題1–14 — calibration only. The sampled
+  topic gives WHAT to write about; compose the words yourself, no web fetch.
+- **聴解 is the deliberate exception, since 2026-09-08.** The listening half is
+  lifted verbatim from official past papers by `make mp3` (`choukai-audio`
+  Part 0) — that is the point of the rework, not a violation of the line above.
+  It also means a composed paper is **personal study material**: its listening
+  items are real exam content, so a composed 聴解 must not be presented as
+  original work, and `make pages` publishes it.
 - Commit `tests/<id>/` and updated `logs/` together with the pipeline changes
   that produced them.

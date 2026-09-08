@@ -1,235 +1,144 @@
 {
- "script_sha": "41541d2b5975",
- "pacing_sha": "4d623645a38d",
- "duration": 2581.08,
+ "duration": 2737.08,
  "chapters": [
   {
-   "type": "section",
-   "section": "問題1",
    "label": "問題1",
-   "start": 9.97
+   "start": 0.0
   },
   {
-   "type": "item",
-   "section": "問題1",
-   "label": "例",
-   "start": 31.7
+   "label": "問題1 1番",
+   "start": 17.09
   },
   {
-   "type": "item",
-   "section": "問題1",
-   "label": "1番",
-   "start": 110.95
+   "label": "問題1 2番",
+   "start": 111.99
   },
   {
-   "type": "item",
-   "section": "問題1",
-   "label": "2番",
-   "start": 195.18
+   "label": "問題1 3番",
+   "start": 199.31
   },
   {
-   "type": "item",
-   "section": "問題1",
-   "label": "3番",
-   "start": 255.47
+   "label": "問題1 4番",
+   "start": 298.31
   },
   {
-   "type": "item",
-   "section": "問題1",
-   "label": "4番",
-   "start": 339.0
+   "label": "問題1 5番",
+   "start": 367.45
   },
   {
-   "type": "item",
-   "section": "問題1",
-   "label": "5番",
-   "start": 426.0
-  },
-  {
-   "type": "section",
-   "section": "問題2",
    "label": "問題2",
-   "start": 535.89
+   "start": 471.83
   },
   {
-   "type": "item",
-   "section": "問題2",
-   "label": "例",
-   "start": 562.49
+   "label": "問題2 1番",
+   "start": 613.49
   },
   {
-   "type": "item",
-   "section": "問題2",
-   "label": "1番",
-   "start": 669.23
+   "label": "問題2 2番",
+   "start": 727.01
   },
   {
-   "type": "item",
-   "section": "問題2",
-   "label": "2番",
-   "start": 770.27
+   "label": "問題2 3番",
+   "start": 835.23
   },
   {
-   "type": "item",
-   "section": "問題2",
-   "label": "3番",
-   "start": 873.27
+   "label": "問題2 4番",
+   "start": 957.37
   },
   {
-   "type": "item",
-   "section": "問題2",
-   "label": "4番",
-   "start": 983.79
+   "label": "問題2 5番",
+   "start": 1081.75
   },
   {
-   "type": "item",
-   "section": "問題2",
-   "label": "5番",
-   "start": 1087.47
+   "label": "問題2 6番",
+   "start": 1217.59
   },
   {
-   "type": "item",
-   "section": "問題2",
-   "label": "6番",
-   "start": 1199.21
-  },
-  {
-   "type": "section",
-   "section": "問題3",
    "label": "問題3",
-   "start": 1301.45
+   "start": 1320.69
   },
   {
-   "type": "item",
-   "section": "問題3",
-   "label": "例",
-   "start": 1334.69
+   "label": "問題3 1番",
+   "start": 1505.43
   },
   {
-   "type": "item",
-   "section": "問題3",
-   "label": "1番",
-   "start": 1425.02
+   "label": "問題3 2番",
+   "start": 1557.15
   },
   {
-   "type": "item",
-   "section": "問題3",
-   "label": "2番",
-   "start": 1507.16
+   "label": "問題3 3番",
+   "start": 1663.57
   },
   {
-   "type": "item",
-   "section": "問題3",
-   "label": "3番",
-   "start": 1576.57
+   "label": "問題3 4番",
+   "start": 1764.51
   },
   {
-   "type": "item",
-   "section": "問題3",
-   "label": "4番",
-   "start": 1648.91
+   "label": "問題3 5番",
+   "start": 1861.77
   },
   {
-   "type": "item",
-   "section": "問題3",
-   "label": "5番",
-   "start": 1721.56
-  },
-  {
-   "type": "section",
-   "section": "問題4",
    "label": "問題4",
-   "start": 1793.61
+   "start": 1961.45
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "例",
-   "start": 1818.4
+   "label": "問題4 1番",
+   "start": 2010.91
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "1番",
-   "start": 1856.37
+   "label": "問題4 2番",
+   "start": 2042.35
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "2番",
-   "start": 1889.27
+   "label": "問題4 3番",
+   "start": 2072.05
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "3番",
-   "start": 1920.69
+   "label": "問題4 4番",
+   "start": 2105.49
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "4番",
-   "start": 1953.28
+   "label": "問題4 5番",
+   "start": 2135.91
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "5番",
-   "start": 1985.89
+   "label": "問題4 6番",
+   "start": 2171.17
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "6番",
-   "start": 2017.11
+   "label": "問題4 7番",
+   "start": 2201.31
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "7番",
-   "start": 2045.35
+   "label": "問題4 8番",
+   "start": 2232.33
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "8番",
-   "start": 2079.24
+   "label": "問題4 9番",
+   "start": 2268.09
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "9番",
-   "start": 2114.24
+   "label": "問題4 10番",
+   "start": 2300.95
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "10番",
-   "start": 2145.56
+   "label": "問題4 11番",
+   "start": 2335.09
   },
   {
-   "type": "item",
-   "section": "問題4",
-   "label": "11番",
-   "start": 2177.73
-  },
-  {
-   "type": "section",
-   "section": "問題5",
    "label": "問題5",
-   "start": 2211.24
+   "start": 2372.27
   },
   {
-   "type": "item",
-   "section": "問題5",
-   "label": "1番",
-   "start": 2246.48
+   "label": "問題5 1番",
+   "start": 2437.59
   },
   {
-   "type": "item",
-   "section": "問題5",
-   "label": "2番",
-   "start": 2415.61
+   "label": "問題5 2番",
+   "start": 2587.09
   }
- ]
+ ],
+ "source": "composed",
+ "bank_version": 1,
+ "script_sha": "3b5c34b9e860"
 }

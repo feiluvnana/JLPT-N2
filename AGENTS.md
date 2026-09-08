@@ -65,7 +65,7 @@ not route around it silently.
   2. `jlpt-exam-structure`: Official JLPT exam format facts — section layouts, question counts, timing, booklet printing conventions, answer-key table format.
   3. `exam-blueprint`: WHAT each exam tests — random non-repeating pool sampling (`sample_items.py`), answer-position balance. Runs before any authoring.
   4. `question-authoring`: HOW to write N2-calibrated items — distractors, item integrity, per-section construction rules (`references/moji-goi.md`, `bunpou.md`, `dokkai.md`, `choukai-items.md`), and calibration against `refs/` (`references/official_calibration.md`).
-  5. `choukai-audio`: The listening audio end to end — TTS script format (`聴解スクリプト.txt`), MP3 synthesis with official pacing/voices (`make_choukai_mp3.py`), and the method for measuring official audio.
+  5. `choukai-audio`: The listening audio end to end — **composed from official recordings** since 2026-09-08 (`tools/build_choukai_bank.py` builds the clip bank, `tools/compose_choukai.py` draws and assembles a paper's whole 聴解 half), plus the pacing table those pauses come from and the method for measuring official audio. Edge-TTS is retired.
   6. `exam-app`: Rendering and running the exam — booklet HTML (`build_booklet.py`, no PDF), the merged answer sheet `解答.html` with in-page grading (`build_interactive.py`), the one server (`serve_sheet.py`), the static GitHub Pages build (`build_pages.py`), and CLI grading (`grade_answers.py`).
   7. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test). It also root-causes every finding back to the skill, script, or gate check that let it through, so the next test does not reproduce it.
   8. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
@@ -118,7 +118,7 @@ Inside `tests/<test_id>/` — this table is the single copy; skills point here:
 | Listening TTS Script                 | `聴解スクリプト.txt`                   | Pure official-style narration text                                                     |
 | Listening Audio MP3                  | `聴解.mp3`                             | Synthesized audio generated from the TTS script                                        |
 | Interactive Answer Sheet             | `解答.html`                            | Combined booklet (71 Gengo/Dokkai + 30 Choukai + Audio player); in-page 180pt grading |
-| Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `make_choukai_mp3.py`              |
+| Listening Chapter Marks              | `聴解_チャプター.json`                 | Per-問題/per-item offsets in `聴解.mp3`, written by `tools/compose_choukai.py`         |
 | User Answers Record                  | `ユーザー解答.json`                    | Written by `解答.html` on every click; also carries the sitting's `受験状態` (phase + the two clocks) — `exam-app` |
 | Combined Grading Result              | `採点結果.json`                        | Generated on submit from `解答.html` or written by `grade_answers.py`. There is no Markdown report — the result is data, read back by the result screen and by the test list |
 | Model Answer & Detailed Explanation  | `模範解答.html`                        | Comprehensive model answer and explanation document for all 101 items, rendered by `build_model_answer.py` |
@@ -276,7 +276,8 @@ restate them here or in a skill; fix them there.
 | `make scaffold-sections <id>` | `scaffold_sections.py` → scaffolds `_sections/` authoring templates | `question-authoring` |
 | `make matrix`             | `matrix_helper.py` — **validate only**; both generators are hard-disabled (they had no 音訓 table and emitted kana-skeleton-violating grids — qa-report-20260819_1 F4) | `question-authoring` |
 | `make booklet <id>`       | `build_booklet.py` on both Markdown sources | `exam-app` |
-| `make mp3 <id>`           | `make_choukai_mp3.py` on `聴解スクリプト.txt` | `choukai-audio` |
+| `make mp3 <id> SEED=n`    | `tools/compose_choukai.py` — composes the whole 聴解 half from official clips (script, booklet, MP3, chapters, both 詳細解説 panes). Edge-TTS is retired | `choukai-audio` |
+| `make choukai-bank [CHECK=1]` | `tools/build_choukai_bank.py` → `logs/choukai_bank.json` from the ten imported sittings | `choukai-audio` |
 | `make sheet <id>`         | `build_interactive.py` → `解答.html` | `exam-app` |
 | `make model-answer <id>`  | `build_model_answer.py` → `模範解答.html` | `exam-model-answer` |
 | `make scaffold-explanations <id> [LANG=vi]` | `scaffold_explanations.py` → scaffolds `詳細解説.json` (or an empty `詳細解説.<lang>.json`) | `exam-model-answer` |
@@ -332,9 +333,13 @@ the rule, the incident behind it, and the repair.
 
 ## 5. Pass structure — orchestrate, don't work
 
-The generation pipeline runs as **4 stages + final model-answer step** — blueprint → 4 parallel
+The generation pipeline runs as **4 stages + final model-answer step** — blueprint → 3 parallel
 authoring sections → build+gate → fresh-eyes QA → model-answer generation (`make model-answer <id>`),
 each a subagent with a bounded reading list, handing off through files on disk only.
+**聴解 is no longer one of the authoring sections**: since 2026-09-08 the whole
+listening half is composed from official recordings at build time by
+`make mp3 <id> SEED=<rng>` (`choukai-audio` Part 0), so there is nothing to
+author and no 聴解 subagent.
 `jlpt-test-generation` owns the stage table, the reading map, the prompt
 template, and the fix→re-review loop; read it before any generation work.
 

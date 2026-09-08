@@ -41,7 +41,7 @@ Shin Kanzen Master textbooks in `refs/`.
 | - | --- | --- | --- |
 | 1 | **Python ≥ 3.10** | everything (CI runs 3.12) | **yes** |
 | 2 | `markdown`, `pykakasi` | booklet + answer-sheet rendering, furigana | **yes** |
-| 3 | `edge-tts` + **internet** | `make mp3` — Microsoft Edge TTS, free, no API key | for listening audio |
+| 3 | ~~`edge-tts`~~ | **No longer needed.** `make mp3` composes the listening audio from the official recordings in `refs/`/`tests/imported-*` (`choukai-audio` Part 0); nothing is synthesized and no internet is required. The package is still listed below only because the retired `make_choukai_mp3.py` imports it at module load | — |
 | 4 | **ffmpeg** *and* **ffprobe** on `PATH` | `make mp3` — concat, loudness, duration | for listening audio |
 | 5 | `pdfplumber`, `pypdf`, `pdfminer.six` | PDF extraction (`make extract-*`, imports) | for imports/refs |
 | 6 | **GNU Make + a POSIX shell** | the `make` targets use `test -n … \|\| ( … )` | **yes** |

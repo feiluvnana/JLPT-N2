@@ -30,3 +30,30 @@ def imported_id(slug: str) -> str:
             f"(e.g. n2-2025-12)"
         )
     return f"{IMPORTED_PREFIX}{slug}"
+
+
+def choukai_origin(test_dir) -> str:
+    """Return ``imported``, ``composed`` or ``tts`` for a test's listening half.
+
+    Orthogonal to :func:`test_origin`: since 2026-09-08 a *generated* paper's
+    聴解 is composed from official clips (`tools/compose_choukai.py`) rather
+    than synthesized by Edge-TTS, so the folder name no longer says how the
+    audio was made. `聴解_チャプター.json`'s ``source`` field does — the composer
+    stamps ``composed`` there, `make_choukai_mp3.py` writes segment marks with
+    no ``source``, and an import carries the ``external`` stub.
+
+    Takes a pathlib.Path to the test directory.
+    """
+    import json
+
+    if is_imported(test_dir.name):
+        return "imported"
+    marks = test_dir / "聴解_チャプター.json"
+    if marks.is_file():
+        try:
+            if json.loads(marks.read_text(encoding="utf-8")).get(
+                    "source") == "composed":
+                return "composed"
+        except (ValueError, OSError):
+            pass
+    return "tts"

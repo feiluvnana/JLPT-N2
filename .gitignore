@@ -51,6 +51,14 @@ qa/repair-plan.md
 refs/**/*.pdf
 refs/**/*.mp3
 refs/**/*.rar
+refs/**/*.m3u
 
 # Generated and imported exam audio MP3s (hosted on GitHub Releases, not git)
 tests/**/*.mp3
+
+# RMS envelope + loudness cache for tools/choukai_segment.py. Decoding one
+# 42-minute official sitting takes ~25 s and the bank build re-reads all ten,
+# so the envelope is cached per (path, size, mtime). Pure derived data — it is
+# rebuilt from the MP3 on any miss, and the MP3s themselves are out of git
+# (AGENTS.md §3), so a fresh clone has nothing to cache against anyway.
+tools/.cache/

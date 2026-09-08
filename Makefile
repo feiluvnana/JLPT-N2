@@ -3,7 +3,7 @@
 .PHONY: help check check-tests goi-profile dokkai-profile choukai-profile grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
        init-import extract-pdf extract-archive extract-keys extract-kanji-tables extract-shinkanzen-goi extract-shinkanzen-dokkai extract-shinkanzen \
        lint-draft lint verify-scramble scaffold-explanations irt \
-       scaffold-sections matrix qa-eval autofix findings repair-plan
+       scaffold-sections matrix qa-eval autofix findings repair-plan choukai-bank
 
 # Positional test-id argument: "make grade 1", "make sheet 2", "make sample 5".
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
@@ -60,7 +60,8 @@ help:
 	@echo "  make scaffold-sections 1 Scaffold section authoring templates into tests/1/_sections/"
 	@echo "  make matrix           2x2 Cartesian matrix generator for 問題1 & 問題2"
 	@echo "  make booklet 1        Build booklet HTML for test 1 (言語知識・読解.html & 聴解.html)"
-	@echo "  make mp3 1            Synthesize listening audio for test 1 (聴解.mp3)"
+	@echo "  make mp3 1 SEED=n     Compose listening audio for test 1 from official clips (聴解.mp3)"
+	@echo "  make choukai-bank     Rebuild logs/choukai_bank.json from the imported sittings"
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
 	@echo "  make model-answer 1   Build model answer & explanation for test 1 (模範解答.html)"
 	@echo "  make explanation 1    Alias for make model-answer"
@@ -138,8 +139,15 @@ matrix:
 booklet:
 	python3 .agents/exam-app/scripts/build_booklet.py tests/$(TEST)/言語知識・読解.md tests/$(TEST)/聴解.md
 
+# `make mp3` composes the listening audio out of official clips. The Edge-TTS
+# synthesizer it replaced is retired — see choukai-audio/SKILL.md Part 5.
+# SEED must be an RNG output, never a number you chose (exam-blueprint).
 mp3:
-	python3 .agents/choukai-audio/scripts/make_choukai_mp3.py tests/$(TEST)/聴解スクリプト.txt
+	@test -n "$(SEED)" || { echo "SEED= is required: SEED=\$$(python3 -c 'import secrets;print(secrets.randbelow(10**8))')"; exit 1; }
+	python3 tools/compose_choukai.py $(TEST) --seed $(SEED)
+
+choukai-bank:
+	python3 tools/build_choukai_bank.py $(if $(CHECK),--check,)
 
 sheet:
 	python3 .agents/exam-app/scripts/build_interactive.py tests/$(TEST)

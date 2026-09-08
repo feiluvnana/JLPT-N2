@@ -1,26 +1,100 @@
 ---
 name: choukai-audio
-description: Single owner of the listening audio end to end — the TTS script 聴解スクリプト.txt whose block conventions the timing engine parses, MP3 synthesis via scripts/make_choukai_mp3.py with official pacing, voices, and loudness, and the method for measuring official JLPT audio in refs/ to calibrate that pacing. Use whenever creating or editing the listening script or narration text, whenever generating, fixing, or tuning the listening MP3 (voices sounding wrong, rushed pacing, missing answer pauses), and whenever an official or sample choukai MP3 needs analysis ("learn from this audio") or pacing needs calibration or verification. Do not write ad-hoc TTS loops — use scripts/make_choukai_mp3.py.
+description: Single owner of the listening audio end to end. Since 2026-09-08 a generated paper's 聴解 is COMPOSED from real official recordings (tools/build_choukai_bank.py + tools/compose_choukai.py), not synthesized — Edge-TTS is retired. Use whenever building, fixing or re-drawing a paper's listening half, whenever the clip bank needs rebuilding, whenever an official choukai MP3 needs segmenting or analysis ("learn from this audio"), and whenever pacing needs verification. Do not write ad-hoc TTS loops and do not call make_choukai_mp3.py — it is kept only as the pacing/register evidence the composer is measured against.
 ---
 
-# Choukai Audio (script → synthesis → calibration)
+# Choukai Audio (compose → verify → calibrate)
+
+## Part 0 — READ THIS FIRST: the audio is composed, not synthesized
+
+**Since 2026-09-08 a generated paper's 聴解 is cut from real official
+recordings.** The AI-written, Edge-TTS-spoken listening section is retired: it
+was the weakest half of every paper, and the repo already holds ten official
+sittings with exact transcripts, options, keys and explanations.
+
+```bash
+make choukai-bank                 # logs/choukai_bank.json <- the 10 imports
+make mp3 <test_id> SEED=<rng>     # compose that paper's whole 聴解 half
+```
+
+`make mp3` now runs `tools/compose_choukai.py`, which writes **all** of
+`聴解スクリプト.txt`, `聴解.md`, `聴解.mp3`, `聴解_チャプター.json` and the 30
+choukai entries in both `詳細解説` panes. **Nothing in the listening half is
+authored any more** — there is no 聴解 stage-2 subagent, no dialogue to write,
+no distractors to design.
+
+### The three files that own this
+
+| File | Owns |
+|---|---|
+| `tools/choukai_segment.py` | Finding item boundaries in an official MP3. The committed implementation of `references/official_pacing.md` §1's two-threshold envelope method |
+| `tools/build_choukai_bank.py` | `logs/choukai_bank.json` — 290 items + 50 preambles, offsets plus the exact text already on disk |
+| `tools/compose_choukai.py` | Drawing a paper and laying the clips out with the pacing table's pauses |
+
+### Two rules that are not style choices
+
+1. **Slot-preserving draws.** Item *k* of 問題N may only be drawn from item *k*
+   of 問題N in some sitting. Official reads 「N番。」 continuously into the
+   situation line with **no pause between them**, so renumbering would mean
+   cutting inside speech. Keeping the slot puts every cut in a structural
+   silence and keeps the announcer's own numbering correct. All 31 sittings run
+   the same 5/6/5/11/2 shape, so each slot has one candidate per sitting.
+2. **問題2's items contain their own option-reading pause.** A 問題2 item is
+   「N番。」+situation+question → ~20 s to read the printed options → the talk →
+   the question again. The 20 s pause is INSIDE the item, not between items.
+   Cutting from the pause's end instead drops the announcer's question entirely
+   and leaves the composed audio running a 12 s answer pause straight into the
+   next 20 s pause with no speech between them.
+
+### What the bank cannot give you
+
+- **No 例.** The official script PDFs do not print the practice items, so no
+  transcript of one exists in this repo (`import_meta.json` §gaps). The 例
+  *audio* is present — it rides inside the section preamble clip, uncut — so
+  the paper sounds complete while `聴解スクリプト.txt` has no 例 block. Every
+  `tests/imported-*` sitting carries the same divergence.
+- **Finite novelty.** Ten candidates per slot. `logs/choukai_draws.json` records
+  every paper's draw and the composer spends the least-used clips first, but
+  across a suite of 23 papers each official item is used two or three times.
+  Extending the bank means adding sources (Shin Kanzen / Soumatome CDs are
+  per-track already, but their transcripts are OCR and need hand-verification).
+- **No answer-position control.** Lifted options cannot be reordered — 問題3/4/5
+  read them aloud — so `answer_positions.聴解_問題N` prescribes nothing for a
+  composed paper and `make check` skips it. Balance is a SELECTION objective in
+  the composer instead.
+
+### What the rest of this file is now for
+
+| Part | Status |
+|---|---|
+| 1 — script file format | The block conventions still describe `聴解スクリプト.txt`, which the composer WRITES. Its register rules and banned formulas are now **evidence about official dialogue**, not instructions to an author |
+| 2 — casting / `SPEAKER_MAP` | **Retired.** Voices are the archive's own actors |
+| 3 — synthesis | **The pacing table is live** — `compose_choukai.py` reads those values for the pauses it lays down. The edge-tts machinery around it is retired |
+| 4 — calibration | Live, and now partly executable: `tools/choukai_segment.py` implements §1's method |
+
+`.agents/choukai-audio/scripts/make_choukai_mp3.py` **stays in the tree and is
+not called.** `make check` still diffs Part 3's pacing table against its
+constants, which is the mechanism that keeps the table honest — deleting it
+would delete the only automated tie between the documented numbers and code.
+
+---
 
 ## Executable & File Paths
 
-- **Generator**: `.agents/choukai-audio/scripts/make_choukai_mp3.py`
-- **Input**: `tests/<test_id>/聴解スクリプト.txt` — **always this name**
-  (`script.txt` is only a legacy no-argument fallback).
-- **Output**: `tests/<test_id>/聴解.mp3` + per-question files in `segments/`.
+- **Composer**: `tools/compose_choukai.py` (via `make mp3 <id> SEED=<rng>`)
+- **Clip bank**: `logs/choukai_bank.json` (via `make choukai-bank`)
+- **Draw history**: `logs/choukai_draws.json` — which clips each paper spent
+- **Output**: `tests/<test_id>/聴解.mp3`
 - **Chapters**: `tests/<test_id>/聴解_チャプター.json` — start offset of every
-  問題 and 例/N番 item, accumulated by the assembler (exact by construction;
-  never recover via `silencedetect`). Consumed by `exam-app` (chapter
-  dropdown); regenerate the MP3 to refresh. Carries `"script_sha"` and
-  `"pacing_sha"`.
+  問題 and N番 item, accumulated by the assembler (exact by construction; never
+  recover via `silencedetect`). Consumed by `exam-app` (chapter dropdown).
+  Carries `"source": "composed"`, `"script_sha"` and `"bank_version"`; it has
+  no `"pacing_sha"`, because there are no synthesis constants in a composed
+  timeline.
 - **Measured pacing evidence**: `references/official_pacing.md`.
 - **Measured REGISTER evidence**: `references/official_register.md` — the
-  countable difference between official and generated dialogue (reaction
-  density, fillers, how a wrong option gets killed, 問題4 reply shapes). Read
-  it before writing any dialogue; Part 1's register section is its enforcement.
+  countable difference between official and generated dialogue. Now a record of
+  WHY the TTS path was replaced rather than a spec to write against.
 
 ---
 

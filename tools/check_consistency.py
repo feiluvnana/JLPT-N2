@@ -284,8 +284,16 @@ def check_filename_contracts():
         ("採点結果.json", ".agents/exam-app/scripts/grade_answers.py"),
         ("ユーザー解答.json", ".agents/exam-app/scripts/build_interactive.py"),
         ("ユーザー解答.json", ".agents/exam-app/scripts/serve_sheet.py"),
+        # The composer is the writer since 2026-09-08; make_choukai_mp3.py is
+        # retired but kept, so both are asserted — if the retired one ever loses
+        # these literals it has been gutted rather than parked, and Part 3's
+        # pacing table loses the code it is diffed against.
+        ("聴解.mp3", "tools/compose_choukai.py"),
+        ("聴解_チャプター.json", "tools/compose_choukai.py"),
         ("聴解.mp3", ".agents/choukai-audio/scripts/make_choukai_mp3.py"),
         ("聴解_チャプター.json", ".agents/choukai-audio/scripts/make_choukai_mp3.py"),
+        ("choukai_bank.json", "tools/build_choukai_bank.py"),
+        ("choukai_draws.json", "tools/compose_choukai.py"),
         ("ledger.json", ".agents/exam-blueprint/scripts/sample_items.py"),
         ("test_spec.json", ".agents/exam-blueprint/scripts/sample_items.py"),
         ("import_meta.json", ".agents/external-test-import/scripts/init_imported_test.py"),
@@ -3779,7 +3787,8 @@ def check_note_band(name: str, gt: str, origin: str = "generated"):
     check(label, not circular, detail)
 
 
-def check_note_band_reuse(name: str, gt: str, st: str = "", origin: str = "generated"):
+def check_note_band_reuse(name: str, gt: str, st: str = "", origin: str = "generated",
+                          ck_origin: str = "tts"):
     """A （注N） headword must never also appear as plain text elsewhere in this
     SAME paper's 問題1–9 or its 聴解 script — a same-paper self-contradiction the
     paper proves against itself, not a judgment call.
@@ -3835,6 +3844,14 @@ def check_note_band_reuse(name: str, gt: str, st: str = "", origin: str = "gener
         return skip(f"{name}: no （注N） headword is reused as plain text in "
                     f"問題1-9 or the 聴解 script",
                     "imported test — glosses and reuse are both the source's")
+    if ck_origin == "composed":
+        # Same argument, half-applied. The rule says a paper that uses a word
+        # plainly has proved it needs no gloss — but a composed 聴解 was not
+        # written by this paper's author and is drawn at random, so a collision
+        # there says nothing about the 読解 author's judgement and could only be
+        # "repaired" by deleting a gloss because of a listening item nobody
+        # chose. 問題1-9 is still authored, so that half of the haystack stays.
+        st = ""
 
     hits = []
     for m in re.finditer(r"^.*$", gt, re.M):
@@ -8006,7 +8023,8 @@ def check_rotation_inputs():
     check_mondai1_reading_trap_corpus(trap_hits, trap_items)
 
 
-def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
+def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g,
+                           ck_origin: str = "tts"):
     """Keys must sit where sample_items.py put them (the balance contract).
 
     tests/<test_id>/test_spec.json prescribes the answer position of every item so no
@@ -8022,6 +8040,12 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
     one string-decidable corner is check_choukai_kaisetsu_keys.
     """
     label_tail = " (slot agreement only — content correctness is exam-qa-review step 1)"
+    # A composed 聴解 lifts whole official items, and their options cannot be
+    # reordered — 問題3/4/5 read them aloud. So its keys are whatever the source
+    # sittings keyed, and `answer_positions.聴解_問題N` prescribes nothing.
+    # Balance is a SELECTION objective in `tools/compose_choukai.py` instead.
+    # The 71 言語知識・読解 slots are still authored and still binding.
+    skip_choukai = ck_origin == "composed"
     spec_path = d / "test_spec.json"
     if not spec_path.is_file():
         return skip("keys match test_spec.json answer_positions" + label_tail,
@@ -8044,13 +8068,15 @@ def check_answer_positions(d, keys: dict[int, int], ck: dict[str, int], g):
                    3: [f"問3-{i}" for i in range(1, 6)],
                    4: [f"問4-{i}" for i in range(1, 12)],
                    5: ["問5-1", "問5-2-1", "問5-2-2"]}
-    for n, ids in choukai_ids.items():
-        for qid, a in zip(ids, pos.get(f"聴解_問題{n}") or []):
-            want[qid] = a
+    if not skip_choukai:
+        for n, ids in choukai_ids.items():
+            for qid, a in zip(ids, pos.get(f"聴解_問題{n}") or []):
+                want[qid] = a
 
     have = {str(q): a for q, a in keys.items()} | dict(ck)
     off = {q: (a, have.get(q)) for q, a in want.items() if have.get(q) != a}
-    check(f"keys match test_spec.json answer_positions ({len(want)} prescribed)"
+    check(f"keys match test_spec.json answer_positions ({len(want)} prescribed"
+          + (", 聴解 composed" if skip_choukai else "") + ")"
           + label_tail, not off, f"prescribed vs actual: {off}")
 
 
@@ -8275,7 +8301,14 @@ def check_invented_proper_nouns():
         if ORIGIN.test_origin(d.name) != "generated":
             continue
         found: set[str] = set()
-        for fn in ("言語知識・読解.md", "聴解スクリプト.txt"):
+        # A composed 聴解's place names come from official recordings — they are
+        # not this paper's invented apparatus, and two papers can draw the same
+        # official item's 緑市 with nobody having reused anything. Only the
+        # authored half is scanned for those papers.
+        sources = ["言語知識・読解.md"]
+        if ORIGIN.choukai_origin(d) == "tts":
+            sources.append("聴解スクリプト.txt")
+        for fn in sources:
             f = d / fn
             if f.is_file():
                 found |= {n for n in place_name_candidates(
@@ -9354,7 +9387,7 @@ def normalize_numerals(text: str) -> str:
     return _KANJI_NUM_RE.sub(repl, text)
 
 
-def check_spec_target_items(d, gt: str, st: str, bi):
+def check_spec_target_items(d, gt: str, st: str, bi, ck_origin: str = "tts"):
     """The paper must test the items the spec drew (G19).
 
     A paper's 問題4 8番 has tested 「本日は遠方からお越しいただき…」 while the spec drew
@@ -9382,6 +9415,11 @@ def check_spec_target_items(d, gt: str, st: str, bi):
         "quick_response": "".join(p4[i + 1] for i in range(1, len(p4), 2)
                                   if p4[i] == "4"),
     }
+    if ck_origin == "composed":
+        # 問題4's stimuli are lifted official items, so the paper does not — and
+        # must not — contain the spec's drawn `quick_response` phrases. The two
+        # 言語知識 categories below are still authored and still binding.
+        del haystacks["quick_response"]
     missing = []
     for cat, hay in haystacks.items():
         for entry in spec.get("items", {}).get(cat, []):
@@ -13503,6 +13541,15 @@ def check_choukai_nondialogue_medium_rotation():
     loophole: shipping no non-dialogue item at all is already reported by
     `check_choukai_non_dialogue_item()`, so a paper cannot use it to launder a
     medium without taking that WARN.
+
+    COMPOSED PAPERS ARE OUT OF SCOPE (2026-09-08). The rule's repair is
+    "re-author the item onto another medium", and there is nothing to
+    re-author: a composed paper's 問題1 items are official recordings drawn
+    slot-preserving from ten sittings, so the medium is whatever the archive
+    used and two papers can legitimately draw アナウンス into the same slot.
+    Rotation across composed papers is enforced instead by the draw itself —
+    least-used clips first, audited from `logs/choukai_draws.json`
+    (`exam-qa-review` §4).
     """
     print("\n問題1 non-dialogue item — medium/slot rotation (choukai-items.md)")
     tests = ROOT / "tests"
@@ -13510,14 +13557,23 @@ def check_choukai_nondialogue_medium_rotation():
         return skip("問題1 non-dialogue medium rotation", "no tests/ on disk")
     m = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
     seq = []
+    composed = []
     for d in sorted(p for p in tests.iterdir() if p.is_dir()):
         if ORIGIN.is_imported(d.name):
+            continue
+        if ORIGIN.choukai_origin(d) == "composed":
+            composed.append(d.name)
             continue
         st_path = d / "聴解スクリプト.txt"
         if not st_path.is_file():
             continue
         seq.append((d.name, choukai_nondialogue_q1(
             st_path.read_text(encoding="utf-8"), m)))
+    if composed:
+        skip("問題1 non-dialogue medium rotation (composed papers)",
+             f"{len(composed)} paper(s) draw 問題1 from official recordings — "
+             f"the medium is the archive's, not an authoring choice; rotation "
+             f"is audited from logs/choukai_draws.json instead")
     if not seq:
         return skip("問題1 non-dialogue medium rotation",
                     "no generated 聴解スクリプト.txt on disk")
@@ -13782,6 +13838,14 @@ def check_artifact_freshness(d):
             # eight papers, and fixing them leaves every MP3 stale with nothing
             # else to show it — the constants are not in the script bytes.
             mk = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
+            if data.get("source") == "composed":
+                # The speech is archive audio and the pauses come from the
+                # pacing TABLE via tools/compose_choukai.py; there are no
+                # edge-tts constants in the timeline to hash. script_sha above
+                # still applies and still ran.
+                skip(f"{d.name}: 聴解.mp3 was built with today's pacing",
+                     "composed from official clips (no synthesis constants)")
+                return
             want_p, got_p = mk.pacing_sha(), data.get("pacing_sha")
             p_name = f"{d.name}: 聴解.mp3 was built with today's pacing (pacing_sha {want_p})"
             p_ok = (got_p == want_p)
@@ -13984,6 +14048,17 @@ def check_tests():
     for d in dirs:
         print(f"\nper-test contracts: {d.relative_to(ROOT)}")
         origin = ORIGIN.test_origin(d.name)
+        # The listening half has its own origin since 2026-09-08: a GENERATED
+        # paper's 聴解 is composed from official clips, not synthesized. Every
+        # authoring/register/pacing check below exists to police what an author
+        # or Edge-TTS produced, and the archive is the yardstick they were
+        # measured against — so running them on lifted official audio measures
+        # the yardstick, exactly the reason imports are already exempt.
+        ck_origin = ORIGIN.choukai_origin(d)
+        choukai_authored = origin == "generated" and ck_origin == "tts"
+        # Functions that branch on `origin` for 聴解 want the composed half to
+        # behave like an import: official structure, official wording.
+        ck_arg = "imported" if ck_origin == "composed" else origin
         if origin == "imported":
             slug = d.name[len(ORIGIN.IMPORTED_PREFIX):]
             check("imported- slug is non-empty kebab-case",
@@ -14095,7 +14170,7 @@ def check_tests():
             check_moji1_okurigana_exposure(d.name, gt)
         st_text = (d / "聴解スクリプト.txt").read_text(encoding="utf-8") if (d / "聴解スクリプト.txt").is_file() else ""
         check_banned_collocations(d, gt, ct, st_text, origin)
-        check_answer_positions(d, keys, ck, g)
+        check_answer_positions(d, keys, ck, g, ck_origin)
         if origin == "generated":
             spec_p = d / "test_spec.json"
             spec_here = (json.loads(spec_p.read_text(encoding="utf-8"))
@@ -14127,7 +14202,7 @@ def check_tests():
         check_note_anchored(d.name, gengo_prose)
         check_note_answer_leak(d.name, gengo_prose, keys, opts)
         check_note_band(d.name, gt, origin)
-        check_note_band_reuse(d.name, gt, st_text, origin)
+        check_note_band_reuse(d.name, gt, st_text, origin, ck_origin)
         if origin == "generated":
             check_dokkai_key_table_parses(d.name, gt)
             check_dokkai_lengths(d.name, gengo_prose, bi, origin=origin)
@@ -14262,7 +14337,15 @@ def check_tests():
                 check_fabricated_distractors(choukai.name, ct[ccut.start():])
                 check_choukai_kaisetsu_keys(d.name, ct, bi)
             blocks = [b.strip() for b in re.split(r"\n\s*\n", st) if b.strip()]
-            if origin == "generated":
+            if ck_origin == "composed":
+                skip(f"{d.name}: 聴解スクリプト.txt passes validate_script",
+                     "composed script mirrors the source sittings, which carry "
+                     "no 例 block — the official script PDFs do not print the "
+                     "practice items, so no transcript of one exists here. The "
+                     "例 AUDIO is present, inside the section preamble clip. "
+                     "This file is a record of the audio, not an input to "
+                     "edge-tts")
+            if choukai_authored:
                 try:
                     # The 質問1。/質問2。 rule is owned by
                     # `check_mondai5_question_markers()` here, not by this line:
@@ -14279,18 +14362,29 @@ def check_tests():
                     check("聴解スクリプト.txt passes validate_script", False, str(e).replace("\n", " ")[:300])
                 check_script_shape(st, ct, m, d.name)
                 check_example_premarks(ct, st, bi)
-            check_mondai5_question_markers(d.name, st, origin)
+            check_mondai5_question_markers(d.name, st, ck_arg)
             # Origin-agnostic on purpose: the founding measurement is that no
             # official sitting does this either, so an import that somehow did
             # would be a transcription error worth surfacing.
             check_mondai5_2_distinct_keys(d.name, ct, bi)
-            check_mondai5_prints_nothing(d.name, ct, origin, bi)
+            check_mondai5_prints_nothing(d.name, ct, ck_arg, bi)
             check_mondai5_enumeration(d.name, st, ct, bi)
-            check_voice_casting(st, m, origin, d.name)
+            check_voice_casting(st, m, ck_arg, d.name)
             # Register is a GENERATION failure mode: an imported official paper
             # is the reference these thresholds came from, and its script.md is
             # partly OCR, so measuring it here would flag the yardstick.
-            if origin == "generated":
+            if ck_origin == "composed":
+                # Say so out loud. These checks police what an AUTHOR or
+                # edge-tts produced — register, turn shape, section mix, key
+                # length, pacing ladders — and this paper's 聴解 is lifted
+                # official audio, the very corpus every one of those bands was
+                # measured against. A silently absent check is indistinguishable
+                # from one nobody ran (AGENTS.md §0).
+                skip(f"{d.name}: 聴解 authoring/register/pacing checks",
+                     "composed from official clips — these bands were measured "
+                     "ON this corpus, so running them here measures the "
+                     "yardstick (same exemption imported papers get)")
+            if choukai_authored:
                 check_script_register(d.name, st, m)
                 # G16 — section-level, i.e. what item-by-item review cannot see.
                 check_choukai_key_duplication(d.name, ct, st, m, bi)
@@ -14326,11 +14420,11 @@ def check_tests():
                 check_choukai_contractions(d.name, st, m)
                 check_choukai_key_paraphrase(d.name, ct, st, m, bi)
                 check_choukai_option_grounding(d.name, ct, st, m, bi)
-            check_spec_target_items(d, gt, st, bi)
+            check_spec_target_items(d, gt, st, bi, ck_origin)
             # Origin-agnostic: an import's 詳細解説 is written by the same pass, to
             # the same bands, in the same two languages as a generated paper's.
             check_kaisetsu_prose(d.name)
-            if origin == "generated":
+            if choukai_authored:
                 check_choukai_drawn_medium(d, st)
         else:
             check("聴解スクリプト.txt present", False, "canonical name required")
@@ -14338,7 +14432,9 @@ def check_tests():
         if (d / "聴解.mp3").is_file():
             check("聴解_チャプター.json accompanies the MP3", (d / "聴解_チャプター.json").is_file(),
                   "re-run make mp3 to regenerate chapter marks")
-            if origin == "generated":
+            if choukai_authored:
+                # The ladders this measures are edge-tts pacing knobs; composed
+                # audio carries the archive's own turn rhythm.
                 check_choukai_pause_distribution(d.name, d / "聴解.mp3")
         check_artifact_freshness(d)
         check_passage_boxes(d)

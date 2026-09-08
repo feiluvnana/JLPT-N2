@@ -17,10 +17,24 @@ wearing a randomness costume. Hence four mechanisms: **explicit pools**
 **Tested linguistic items are always the pool's, topics are always yours to
 write.** Grammar, vocabulary, kanji, idioms/keigo ALWAYS come from
 `pools.json`, calibrated against Shin Kanzen Master; the assigned
-`reading_topics`/`listening_scenarios` entry sets scene and content, and the
-author writes the passage/dialogue from it directly at N2 level (Part II) —
-no external source, no harvest, no blend ratio. Workflow placement:
-`jlpt-test-generation` (pass table).
+`reading_topics` entry sets scene and content, and the author writes the
+passage from it directly at N2 level (Part II) — no external source, no
+harvest, no blend ratio. Workflow placement: `jlpt-test-generation` (pass
+table).
+
+> **The two 聴解 pools are INERT since 2026-09-08.** `sample_items.py` still
+> draws `quick_response` and `listening_scenarios`, and `test_spec.json` still
+> records them, but **nothing consumes either any more**: a generated paper's
+> listening half is composed from official recordings, not authored
+> (`choukai-audio` Part 0). `check_spec_target_items` no longer requires the
+> drawn `quick_response` phrases to appear in 問題4, and
+> `answer_positions.聴解_問題N` prescribes nothing.
+>
+> They are left in the sampler on purpose rather than ripped out mid-rework —
+> the draw is harmless and several gate checks read the fields — but be aware
+> the ledger marks those entries used for a section that will never test them.
+> Removing them from the sampler is open follow-up work; do it as one change
+> that also drops the dead spec fields and their checks, not piecemeal.
 
 ---
 

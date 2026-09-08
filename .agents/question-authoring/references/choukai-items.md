@@ -1,5 +1,19 @@
 # 聴解 items — construction rules
 
+> **RETIRED AS INSTRUCTIONS, 2026-09-08. This file no longer tells anyone what
+> to write.** A generated paper's listening half is composed from official
+> recordings (`choukai-audio` Part 0) — there is no 聴解 authoring stage, no
+> セクション構成表, and `make check` skips every band below for a composed paper.
+>
+> Read it for two things instead:
+> 1. **Evidence about how official 聴解 items are built** — the quotas, decider
+>    types, question frames and distractor shapes here were all measured off the
+>    archive, and they explain what you are now lifting rather than writing.
+> 2. **Fidelity review of `tests/imported-*` papers**, which are still
+>    transcribed by hand and still have to be read against these shapes.
+>
+> If authored 聴解 is ever revived, this file governs it again unchanged.
+
 Section reference for the `question-authoring` skill. Read the core `SKILL.md`
 alongside this file — sniff test, item integrity (the 解説 verbatim-quote rule
 and the 即時応答 keigo-direction rule are #19–20 there). Script FILE format and
