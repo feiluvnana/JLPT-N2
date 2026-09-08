@@ -56,8 +56,10 @@ no distractors to design.
 - **Finite novelty.** Ten candidates per slot. `logs/choukai_draws.json` records
   every paper's draw and the composer spends the least-used clips first, but
   across a suite of 23 papers each official item is used two or three times.
-  Extending the bank means adding sources (Shin Kanzen / Soumatome CDs are
-  per-track already, but their transcripts are OCR and need hand-verification).
+  **The mixed pool that fixes this is designed but not built** — Shin Kanzen and
+  Soumatome, with exactly one paper left official-only. Track mappings, key
+  sources and the 「N番。」 problem are all worked out and measured in
+  `references/textbook_bank_plan.md`; read it before starting that work.
 - **No answer-position control.** Lifted options cannot be reordered — 問題3/4/5
   read them aloud — so `answer_positions.聴解_問題N` prescribes nothing for a
   composed paper and `make check` skips it. Balance is a SELECTION objective in
