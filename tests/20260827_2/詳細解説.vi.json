@@ -130,42 +130,42 @@
     ]
   },
   "11": {
-    "why_correct": "「過剰摂取」là cụm cố định, khớp「hấp thụ muối quá mức」.",
+    "why_correct": "「過保護」nghĩa là bảo bọc quá mức, khớp với việc cha mẹ không cho con quyết định gì.",
     "options_analysis": [
-      "Khớp: 過剰摂取＝hấp thụ quá mức.",
-      "余剰: dư thừa, không ghép với 摂取.",
-      "未剰 không tồn tại.",
-      "不剰 không tồn tại."
+      "[Đúng] Tiền tố 過〜 chỉ sự quá mức; 過保護 là từ cố định.",
+      "[Sai] 超〜 như 超満員, không có từ 超保護.",
+      "[Sai] 大〜 chỉ quy mô lớn, không có từ 大保護.",
+      "[Sai] 高〜 gắn với mức số lượng, không có từ 高保護."
     ],
     "points": [
-      "過剰《かじょう》: quá mức.",
-      "摂取《せっしゅ》: hấp thụ."
+      "過《か》〜: quá mức (過労, 過信).",
+      "保護《ほご》: che chở, chăm sóc."
     ]
   },
   "12": {
-    "why_correct": "「国外」khớp「chuyển cơ sở sản xuất ra nước ngoài」.",
+    "why_correct": "「国外へ輸出する」nghĩa là bán ra ngoài nước, phù hợp với nơi đến của linh kiện.",
     "options_analysis": [
-      "国産: hàng nội địa — sai nghĩa.",
-      "Khớp: 国外＝ngoài nước.",
-      "国内: ngược hướng với「chuyển đi」.",
-      "国立: không liên quan việc di dời."
+      "[Sai] 国内: không thể xuất khẩu vào trong nước.",
+      "[Đúng] 〜外 chỉ phạm vi bên ngoài, là nơi đến của 輸出.",
+      "[Sai] 国産: hàng làm trong nước, không chỉ nơi chốn.",
+      "[Sai] 国立: do nhà nước lập, không chỉ nơi chốn."
     ],
     "points": [
-      "国外《こくがい》: ngoài nước.",
-      "国内《こくない》: trong nước (trái nghĩa)."
+      "〜外《がい》: bên ngoài phạm vi (時間外, 対象外).",
+      "輸出《ゆしゅつ》: bán hàng ra nước ngoài."
     ]
   },
   "13": {
-    "why_correct": "「猫好き」khớp「nuôi hơn 10 con mèo」.",
+    "why_correct": "「大の猫好き」nghĩa là rất thích mèo, hợp với việc nuôi hơn mười con.",
     "options_analysis": [
-      "猫嫌い: ghét mèo — trái nghĩa.",
-      "猫自慢: khoe mèo — không tự nhiên.",
-      "猫離れ: hết thích mèo — trái nghĩa.",
-      "Khớp: 猫好き＝thích mèo."
+      "[Sai] 猫嫌い có thật nhưng mâu thuẫn với việc nuôi hơn mười con.",
+      "[Sai] 〜通 như 事情通, chỉ người rành nội tình.",
+      "[Sai] 〜家 như 愛猫家, gắn với từ hai chữ trở lên.",
+      "[Đúng] 〜好き là hậu tố chỉ sở thích của người."
     ],
     "points": [
-      "〜好《ず》き: hậu tố chỉ yêu thích.",
-      "〜嫌《ぎら》い: hậu tố chỉ ghét (trái nghĩa)."
+      "〜好《ず》き: người thích thứ đó (犬好き).",
+      "大《だい》の〜: mức độ rất lớn."
     ]
   },
   "14": {

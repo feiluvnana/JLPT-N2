@@ -130,42 +130,42 @@
     ]
   },
   "11": {
-    "why_correct": "\"0-0 bước vào ___\" cần từ chỉ giai đoạn tiếp theo: 後半 (hiệp hai).",
+    "why_correct": "「後半」là nửa sau trận đấu, hợp với việc 0-0 rồi bước sang giai đoạn tiếp.",
     "options_analysis": [
-      "[Đúng] 後半: hiệp hai, hợp lý khi \"bước vào\".",
-      "[Sai] 前半: hiệp một đã qua, không thể \"bước vào\" lại.",
-      "[Sai] 過半: \"quá nửa\" (số lượng), không phải giai đoạn đấu.",
-      "[Sai] 上半: dùng cho thời gian (上半期), không dùng cho hiệp đấu."
+      "[Đúng] Tiền tố 後〜 chỉ phần sau, hợp với 迎える.",
+      "[Sai] 前半 có thật, nhưng trận đấu bắt đầu từ hiệp một nên không bước vào lại.",
+      "[Sai] 終〜 như 終電/終盤, không có từ 終半.",
+      "[Sai] 初〜 như 初回/初日, không có từ 初半."
     ],
     "points": [
-      "後半《こうはん》/前半《ぜんはん》: hiệp hai/hiệp một của trận đấu",
-      "過半《かはん》: quá nửa, hơn 50%, nghĩa khác hẳn"
+      "後《こう》半: nửa sau của trận đấu hay kỳ hạn.",
+      "〜を迎《むか》える: bước vào giai đoạn mới."
     ]
   },
   "12": {
-    "why_correct": "\"Tiết kiệm chi phí, bán ___ hơn\" cần từ chỉ giá thấp: 低価格.",
+    "why_correct": "「低価格」là giá thấp, đúng với kết quả của việc tiết kiệm chi phí.",
     "options_analysis": [
-      "[Sai] 高価格: giá cao, mâu thuẫn tiết kiệm.",
-      "[Sai] 新価格: giá mới do thay đổi, không phải so sánh rẻ.",
-      "[Đúng] 低価格: giá thấp, đúng kết quả tiết kiệm.",
-      "[Sai] 同価格: giá ngang bằng, mâu thuẫn \"rẻ hơn\"."
+      "[Sai] 高価格 mâu thuẫn với vế tiết kiệm chi phí.",
+      "[Sai] 同価格 nghĩa là ngang giá, không hợp rẻ hơn cửa hàng khác.",
+      "[Đúng] Tiền tố 低〜 chỉ mức thấp; 低価格 khớp ngữ cảnh.",
+      "[Sai] 新価格 chỉ trục thời gian đổi giá, không dùng để so sánh."
     ],
     "points": [
-      "低価格《ていかかく》: giá thấp, đi cùng tiết kiệm chi phí",
-      "接頭辞《せっとうじ》 高/低/新/同 + 価格《かかく》 tạo nghĩa khác nhau"
+      "低《てい》〜: mức thấp (低学年, 低気圧).",
+      "価格《かかく》: giá của hàng hóa."
     ]
   },
   "13": {
-    "why_correct": "\"Có cô ấy bên cạnh, cảm thấy ___\" cần danh từ chỉ cảm giác: 安心感.",
+    "why_correct": "「安心感」là cảm giác yên tâm, hợp làm tân ngữ của 「〜を覚える」.",
     "options_analysis": [
-      "[Sai] 安心性: hậu tố 性 chỉ tính chất, không phải cảm giác.",
-      "[Đúng] 安心感: cảm giác an tâm, đúng động từ \"cảm thấy\".",
-      "[Sai] 安心化: hậu tố 化 chỉ quá trình biến đổi.",
-      "[Sai] 安心度: hậu tố 度 chỉ mức độ đo lường."
+      "[Sai] 〜性 chỉ tính chất (安全性), không phải cảm giác.",
+      "[Đúng] 〜感 là hậu tố chỉ cảm giác, hợp với 覚える.",
+      "[Sai] 〜化 chỉ sự biến đổi trạng thái (機械化).",
+      "[Sai] 〜度 chỉ mức độ đo được (満足度)."
     ],
     "points": [
-      "〜感: hậu tố tạo danh từ chỉ cảm giác (安心感《あんしんかん》, 満足感《まんぞくかん》)",
-      "〜性/〜化/〜度: hậu tố khác, chỉ tính chất/quá trình/mức độ"
+      "〜感《かん》: hậu tố tạo danh từ chỉ cảm giác.",
+      "〜を覚《おぼ》える: cảm thấy một cảm giác nào đó."
     ]
   },
   "14": {

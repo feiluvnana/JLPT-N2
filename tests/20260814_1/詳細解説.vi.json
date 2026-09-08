@@ -546,7 +546,7 @@
     ]
   },
   "43": {
-    "why_correct": "Thứ tự: 敗れてしまったとしても、(2)→夢を(3)→決して諦める(1)★→つもりはない(4); ★ phủ định ý chí trước つもりはない.",
+    "why_correct": "Thứ tự: 敗れてしまったとしても(2)→夢を(3)→決して諦める(1)★→つもりはない(4); ★ phủ định ý chí trước つもりはない.",
     "options_analysis": [
       "Đứng ở ★, ngay trước つもりはない, tạo cụm quyết không từ bỏ.",
       "Hô ứng với たとえ đầu câu, mở mệnh đề nhượng bộ.",
@@ -559,7 +559,7 @@
     ]
   },
   "44": {
-    "why_correct": "Thứ tự: 会話が通じる(3)→楽しさを(4)→知るにつれて、(2)★→もっと学びたいという(1); ★ hô ứng につれて = càng... càng.",
+    "why_correct": "Thứ tự: 会話が通じる(3)→楽しさを(4)→知るにつれて(2)★→もっと学びたいという(1); ★ hô ứng につれて = càng... càng.",
     "options_analysis": [
       "Bổ nghĩa cho 意欲 ở cuối câu, đứng sau ★.",
       "Đứng ở ★, tả càng biết được thì càng, nối cụm trước nó.",
@@ -572,7 +572,7 @@
     ]
   },
   "45": {
-    "why_correct": "Thứ tự: 季節の移り変わりを(2)→肌で感じつつ、(3)→近所の公園を(1)★→のんびりと歩く(4); ★ là tân ngữ của động từ đi bộ.",
+    "why_correct": "Thứ tự: 季節の移り変わりを(2)→肌で感じつつ(3)→近所の公園を(1)★→のんびりと歩く(4); ★ là tân ngữ của động từ đi bộ.",
     "options_analysis": [
       "Đứng ở ★, là tân ngữ trực tiếp của 歩く ngay sau nó.",
       "Là tân ngữ của 感じつつ, đứng đầu câu.",
@@ -585,7 +585,7 @@
     ]
   },
   "46": {
-    "why_correct": "Thứ tự: 厳しい状況において、(1)→地域社会全体で(4)→支えるための(3)★→連携体制の構築が(2); ★ bổ nghĩa mục đích.",
+    "why_correct": "Thứ tự: 厳しい状況において(1)→地域社会全体で(4)→支えるための(3)★→連携体制の構築が(2); ★ bổ nghĩa mục đích.",
     "options_analysis": [
       "Hô ứng với 進む đầu câu, mở mệnh đề hoàn cảnh.",
       "Là chủ ngữ của 求められている, đứng ngay sau ★.",
@@ -598,7 +598,7 @@
     ]
   },
   "47": {
-    "why_correct": "Thứ tự: 料理が美味しいばかりか、(3)→店内の雰囲気も(1)→とても落ち着いていて、(4)★→何度でも(2); ★ tả không gian yên tĩnh.",
+    "why_correct": "Thứ tự: 料理が美味しいばかりか(3)→店内の雰囲気も(1)→とても落ち着いていて(4)★→何度でも(2); ★ tả không gian yên tĩnh.",
     "options_analysis": [
       "Là chủ ngữ thứ hai, hô ứng với 〜ばかりか ở vế trước.",
       "Bổ nghĩa tần suất cho 通いたくなる, đứng trước động từ cuối.",
@@ -875,7 +875,7 @@
       "Ý thức người lái có giới hạn, đường dễ nhìn khiến vô thức tăng tốc.",
       "Bài không nói số lần giáo dục an toàn cho trẻ còn ít.",
       "Bài không nói biển báo phức tạp khó nắm tốc độ.",
-      "Bài không nói tài xế nắm giờ tuần tra để né tránh."
+      "Bài có nói về đường tắt, nhưng không nói tài xế nắm giờ tuần tra để né."
     ],
     "points": [
       "取《と》り締《し》まる: kiểm soát, xử phạt.",
@@ -897,16 +897,16 @@
     ]
   },
   "69": {
-    "why_correct": "Xã hội cần dựng sẵn đường không thể lái nguy hiểm, vì người ta vốn hay lơ đãng.",
+    "why_correct": "Xã hội phải dựng đường không thể lái nguy hiểm, vì người ta hay lơ đãng.",
     "options_analysis": [
-      "Bài không chủ trương tăng hình phạt hay siết kiểm soát.",
+      "Thêm biển, tăng phạt, siết kiểm soát: bài chê là chưa đủ.",
       "Bài không đặt giáo dục đạo đức trước biện pháp công trình.",
-      "Xã hội cần tạo môi trường an toàn thay vì trông cậy ý thức.",
+      "Xã hội cần tạo môi trường an toàn, không trông cậy ý thức.",
       "Bài không chủ trương cấm hoàn toàn xe lưu thông."
     ],
     "points": [
       "ゆだねる: phó thác toàn bộ cho phía kia.",
-      "取《と》りつける: thương lượng để có được sự đồng ý."
+      "取《と》りつける: thương lượng để được đồng ý."
     ]
   },
   "70": {
