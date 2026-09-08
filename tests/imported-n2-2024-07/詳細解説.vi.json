@@ -621,7 +621,8 @@
     "points": [
       "そんな〜: chỉ lại trạng thái câu trước vừa nêu.",
       "紅葉《こうよう》: lá cây chuyển màu mùa thu."
-    ]
+    ],
+    "passage_translation": "Dưới đây là đoạn văn một du học sinh viết để thuyết trình.\n\nCái lạ xảy ra với lá đỏ\n\nSalim Sophia\n\n　Tôi thích cảnh sắc mùa thu của Nhật Bản. Vào thu, lá bắt đầu đổi màu, những chiếc lá vốn xanh chuyển sang vàng, cam, đỏ, trông rất đẹp. Lá đỏ mùa thu là thứ cho tôi cảm nhận được sự đổi thay của bốn mùa ở Nhật.\n\n　（ 48 ） Thế nhưng hôm nọ trên tivi, tôi xem một bản tin nói rằng thời kỳ lá đỏ vào đỉnh điểm mỗi năm một muộn hơn. Nghe nói trong đó có cả nơi phải sang tháng 1 mới vào đỉnh điểm, tôi thấy giật mình. Nghe nói nguyên nhân lớn là nhiệt độ trung bình đang tăng do sự nóng lên toàn cầu. Tôi vẫn nghĩ hết hè, nhiệt độ hạ xuống thì lá nhất định sẽ bắt đầu đổi màu. （ 49 ）, không phải như vậy. Lá đỏ có một sự thay đổi nhiệt độ làm điều kiện.\n\n　Lá bắt đầu đổi màu là từ khi nhiệt độ thấp nhất trong ngày xuống dưới khoảng 8 độ. Dù đã vào thu, nếu nhiệt độ thấp nhất không hạ xuống đến một mức nhất định thì lá đỏ （ 50 ）. Sau đó, khi lạnh thêm nữa, hạ xuống 5〜6 độ, thì lá đỏ tiến rất nhanh. Ngoài ra, người ta nói nếu những ngày dưới 5 độ kéo dài thì sẽ ngắm được lá đỏ đẹp nhất.\n\n　Biết về cái lạ đang xảy ra với lá đỏ, tôi nghĩ rằng nếu cứ để sự nóng lên toàn cầu tiến thêm thì cũng có khả năng cảnh sắc mùa thu của Nhật Bản sẽ đổi hẳn. Có khi rồi cũng đến ngày không ngắm được lá đỏ nữa. Qua chuyện lá đỏ, tôi （ 51 ）mạnh hơn rằng sự nóng lên toàn cầu là một vấn đề ở ngay bên mình."
   },
   "49": {
     "why_correct": "Câu trước và câu sau trái ngược nhau, cần liên từ「しかし」.",
@@ -673,7 +674,8 @@
     "points": [
       "定義《ていぎ》づけ: việc xác định nghĩa của từ.",
       "大前提《だいぜんてい》: tiền đề căn bản."
-    ]
+    ],
+    "passage_translation": "　Lời của mình chỉ nằm trong đầu mình, còn lời của người kia chỉ nằm trong đầu người kia. Với những từ trừu tượng thì có thể nói rằng trường hợp hai bên dùng đúng cùng một nghĩa lại là ít hơn. Do đó, khi tranh luận thì việc định nghĩa (chú) từ ngữ trở nên quan trọng. Việc xác nhận xem người kia đang dùng từ đó với nghĩa nào, có dùng cùng nghĩa với mình hay không, là điều quan trọng. Đây là tiền đề lớn của việc trò chuyện một cách hợp lô-gích.\n\n(chú) 定義づけ: ở đây là việc quy định nghĩa."
   },
   "53": {
     "why_correct": "Thông báo: 2h-4h sáng 23/6「特急券予約がご利用いただけなくなります」.",
@@ -686,7 +688,8 @@
     "points": [
       "予約《よやく》システムを休止《きゅうし》する: tạm dừng đặt chỗ.",
       "運賃表《うんちんひょう》: bảng giá cước."
-    ]
+    ],
+    "passage_translation": "Dưới đây là thông báo một công ty đường sắt nọ đăng trên trang web.\n\nTrang đầu ＞ Thông báo ＞ Thông báo về việc tiến hành kiểm tra hệ thống định kỳ\n\nThông báo về việc tiến hành kiểm tra hệ thống định kỳ tháng 6\n\n　Cảm ơn quý khách vẫn luôn sử dụng Đường sắt Kitasaka.\n\n　Để nâng cao tính an toàn của hệ thống quản lý thông tin, công ty chúng tôi tiến hành kiểm tra hệ thống vào đêm thứ Bảy tuần thứ 4.\n\n　Công việc tháng này là từ 2 giờ đến 4 giờ sáng ngày 23 tháng 6 (thứ Bảy). Trong khoảng thời gian này, chúng tôi tạm ngừng hệ thống đặt vé. Xin quý khách lưu ý rằng việc đặt vé tàu tốc hành qua Internet sẽ không dùng được. Ngoài ra, bảng giờ tàu và bảng giá vé trên trang web thì vẫn xem được như thường.\n\n　Chúng tôi gây bất tiện cho quý khách, mong quý khách thông cảm cho.\n\nCông ty cổ phần Đường sắt Kitasaka"
   },
   "54": {
     "why_correct": "「卵を木の葉で...包んでから...落とす」「幼虫は...この巻いた葉を食べて成長」.",
@@ -699,7 +702,8 @@
     "points": [
       "習性《しゅうせい》: tập tính sinh học.",
       "孵《かえ》る: nở (từ trứng)."
-    ]
+    ],
+    "passage_translation": "　Đi trong rừng vào mùa lá non, ta thấy trên mặt đất có những vật nhỏ hình như cuốn bắp cải nhồi thịt (chú 1) rơi xuống. Chúng thường rơi rất nhiều ở một chỗ, trông rất bắt mắt. Đây là thứ mà loài bọ cánh cứng (chú 2) nhỏ tên Otoshibumi làm cho ấu trùng của chính nó. Con cái của loài bọ này có tập tính (chú 3) là trong vài phút, sau khi đẻ trứng thì gói trứng cẩn thận vào lá cây rồi thả xuống đất. Ấu trùng nở ra (chú 4) ở bên trong thì ăn cái lá cuốn này từ phía trong mà lớn lên. Với ấu trùng thì cái lá cuốn này vừa là chỗ trú, vừa là thức ăn.\n\n(chú 1) ロールキャベツ: món ăn gói thịt bằng bắp cải.\n(chú 2) 甲虫: một loại bọ.\n(chú 3) 習性: ở đây là tính chất đặc trưng.\n(chú 4) 孵った: ở đây là đã sinh ra từ trứng."
   },
   "55": {
     "why_correct": "「新色の見本も送付していただけないでしょうか」＝chỉ xin thêm mẫu 3 màu mới.",
@@ -712,7 +716,8 @@
     "points": [
       "同封《どうふう》する: gửi kèm trong thư.",
       "送付《そうふ》する: gửi đi (hàng hoá)."
-    ]
+    ],
+    "passage_translation": "Dưới đây là thư điện tử gửi đến một công ty nọ.\n\nCông ty cổ phần Koino\nPhòng Kinh doanh　Kính gửi anh Shimakawa Eiichi\n\n　Cảm ơn anh vẫn luôn giúp đỡ. Tôi là Ikenishi của Văn phòng phẩm JC.\n\n　Hôm qua 2 chiếc hàng mẫu \"Bấm giấy siêu nhẹ cx35\" đã đến. Tính năng và thiết kế đơn giản của nó được đánh giá cao trong công ty, và chúng tôi đang xem xét theo hướng thêm nó vào danh mục hàng mình bán.\n\n　Theo tờ ca-ta-lô mới nhất gửi kèm thì từ tháng sau sẽ có thêm 3 màu mới được bán ra, tổng cộng thành 5 màu; vậy anh có thể gửi cho chúng tôi cả hàng mẫu của các màu mới không? Nếu cần tiền thì chúng tôi sẽ thanh toán.\n\n　Khi việc bán hàng này được quyết định chính thức, trước hết chúng tôi dự định đặt mỗi màu 20 chiếc cho cả 5 màu.\n\n　Mong anh giúp đỡ.\n\nVăn phòng phẩm JC\nIkenishi Akiko　ikenishi_a@jcbungu.co.jp"
   },
   "56": {
     "why_correct": "「人生の選択肢はそれだけではない」「さまざまな生き方の世界が広がっている」.",
@@ -725,7 +730,8 @@
     "points": [
       "選択肢《せんたくし》: các lựa chọn.",
       "視点《してん》を変《か》える: thay đổi góc nhìn."
-    ]
+    ],
+    "passage_translation": "　Hẳn cũng có người thấy vui với những công việc chẳng mấy liên quan đến cạnh tranh hay thăng tiến, chẳng hạn công việc đỡ đần hay nuôi dưỡng (chú 1) một ai đó. Hẳn cũng có người làm việc ở mức vừa phải (chú 2) rồi lấy việc sống với thú vui của mình làm niềm vui. Cho dù ta đang ở giữa (chú 4) cái ván cạnh tranh khắc nghiệt (chú 3) là thi cử, xin việc hay thăng tiến, và cho dù có lúc ta thua ván ấy, thì những lựa chọn của đời ta cũng không chỉ có thế, mà cũng không có nghĩa là \"thế là hết\". Đổi điểm nhìn đi thì trong xã hội hiện đại đang trải ra đủ thứ thế giới của những lối sống khác nhau.\n\n(chú 1) 育む: nuôi dưỡng.\n(chú 2) そこそこに: ở mức vừa phải.\n(chú 3) 過酷な: cực kỳ khắc nghiệt.\n(chú 4) ただ中: giữa lúc, ngay trong."
   },
   "57": {
     "why_correct": "「その人の履歴から...関心を持っていると思われる情報が...流れる工夫」.",
@@ -738,7 +744,8 @@
     "points": [
       "履歴《りれき》: lịch sử xem, truy cập.",
       "技術革新《ぎじゅつかくしん》: đổi mới công nghệ."
-    ]
+    ],
+    "passage_translation": "　Hẳn hầu hết mọi người ngày nào cũng xem một lượng lớn thông tin và tin tức trên mạng (chú 2) qua điện thoại thông minh hay máy tính bảng (chú 1). Nhiều người dốc (chú 3) khá nhiều thời gian vào việc đọc hay xem cái lượng thông tin khổng lồ ấy, và ta thậm chí có cảm giác họ đang bị thông tin trên mạng đuổi theo. Kết quả là ta cũng cảm thấy như thời gian để nghĩ cho thấu cứ ít dần đi.\n\n　Ngoài ra, kết quả của việc một lượng lớn thông tin được thả lên mạng là những người chỉ tiếp xúc với thông tin thuận cho mình đang tăng lên. Đó là nhờ đổi mới kỹ thuật (chú 4), nhưng trên các mạng xã hội và tin tức mạng, người ta đã tính toán sao cho từ lịch sử (chú 5) của một người mà phán đoán rồi thả những thông tin, những tin tức được cho là người ấy quan tâm vào chỗ dễ thấy.\n\n　**Sự tính toán như thế** là rất tiện, và đúng là có mặt nhờ đó mà tiết kiệm được thời gian. （lược một đoạn）\n\n　Nhưng khi người ta chỉ xem những gì mình muốn xem, chỉ tiếp xúc với những thông tin mình tin, thì cách nghĩ bị đóng cứng lại, và những bước tiến hóa mới trở nên khó sinh ra. Ngoài ra, cả về mặt tư tưởng, những suy nghĩ có phần lệch lạc cũng dễ sinh ra hơn.\n\n　Nghĩ như thế thì ta hiểu rằng trong cái xã hội thông tin khổng lồ này, việc xử lý thông tin sao (chú 6) cho khéo là điều rất quan trọng. Ngoài ra, cũng cần xử lý một lượng lớn thông tin ở dạng không lệch lạc, chứ không phải rút ra ngay từ đầu chỉ một phần rồi nắm (chú 7) lấy nó.\n\n(chú 1) スマホやタブレット: các loại thiết bị điện tử nhỏ có chức năng của máy tính.\n(chú 2) SNSやネットニュース: ở đây là những thông tin và tin tức được trao đổi trên Internet.\n(chú 3) 費やす: dùng.\n(chú 4) 技術革新: sự tiến bộ của kỹ thuật.\n(chú 5) 履歴: ở đây là ghi chép về việc đã xem những thông tin nào trên Internet.\n(chú 6) いかに: như thế nào.\n(chú 7) 把握する: hiểu ra."
   },
   "58": {
     "why_correct": "「偏りがない形で、大量に処理すること」cần thiết để tránh「発想が固定化」.",
@@ -764,7 +771,8 @@
     "points": [
       "能率《のうりつ》: hiệu suất làm việc.",
       "基準《きじゅん》にする: lấy làm chuẩn."
-    ]
+    ],
+    "passage_translation": "　Việc học cũng vậy, công việc cũng vậy, hiệu suất của nó nhất định có sóng lên sóng xuống; mà nếu trông như không có thì cũng chỉ là sóng nhỏ. Nghĩa là con người không làm việc với một nhịp như nhau mãi giống cái máy, nên không thể tính kiểu 1 tiếng làm được 50 sản phẩm thì 10 tiếng làm được 500. Do đó, nếu lấy lúc não đang chạy êm nhất làm mốc thì hầu hết các lúc khác sẽ thành ra là kém.\n\n　Dù vậy, cũng không thể học hay làm việc hoàn toàn không có kế hoạch, nên ta vẫn cứ lập một cái lịch. Khi ấy, nếu lấy hiệu suất của lúc não chạy êm làm mốc mà lập lịch, thì có thể nói là tuyệt đối không bao giờ mọi việc tiến đúng theo cái lịch ấy. Mà cứ mỗi lần như vậy lại thất vọng về tài của mình thì ta sẽ thất vọng mãi. Trong tình trạng khó khăn và gấp gáp (chú 1) thì dù thế nào ta cũng lấy lúc não chạy hết cỡ (chú 2) làm mốc để xếp lịch, nên hầu hết là kết thúc ở dạng chưa trọn. Khi làm lịch, ta cần lấy hiệu suất của lúc não chạy ở mức trung bình làm mốc, chí ít là như vậy. Chứ có xong nhanh (chú 3) hơn cả lịch thì cũng chẳng ai khó xử.\n\n　Và thay vì cố chấp với cái lịch, ta hãy cảm cho ra càng nhiều càng tốt cái nhịp dao động của não, và dù hiệu suất kém cũng đừng buồn (chú 4), mà cứ trông đợi rằng nhất định sẽ có lúc nước lên (chú 5). Rồi vào lúc nước lên thì hiệu suất tăng đến mức chính mình cũng giật mình, nên khi ấy chỉ cần bù lại chỗ trễ một loạt là được.\n\n(chú 1) さし迫った: ở đây là không còn dư thời gian.\n(chú 2) フル回転する: ở đây là chạy nhiều nhất.\n(chú 3) はかどる: tiến triển suôn sẻ.\n(chú 4) 悲観する: thấy buồn.\n(chú 5) 上げ潮のとき: lúc mọi thứ đang lên."
   },
   "60": {
     "why_correct": "「必ず上げ潮のときがくることを期待すればいい」rồi「一気に遅れをとり戻せばいい」.",
@@ -790,7 +798,8 @@
     "points": [
       "被写体《ひしゃたい》: đối tượng được chụp.",
       "視点《してん》をずらす: dịch chuyển góc nhìn."
-    ]
+    ],
+    "passage_translation": "　Ngày hội thì không khí của thị trấn đổi hẳn (chú 1), và cái dáng phố phường (chú 2) ngày thường vắng lặng bỗng trở nên sống động. Cái dáng thị trấn như thế thì ta chụp thành \"thị trấn có ngày hội\". Còn nếu là hội tổ chức trong khuôn viên (chú 3) đền thần thì ta chụp thành phong cảnh \"đền thần\". Cứ thử dịch điểm nhìn ra vùng xung quanh một chút như thế thì ta gặp được những tấm ảnh không chỉ đơn thuần là ảnh ngày hội. Có tìm ra được ngày hội của riêng mình từ trong ngày hội hay không. Nếu chụp được tấm ảnh mà người xem phải nói rằng à, còn có cách nhìn ngày hội như thế này nữa, thì tôi cho rằng nó không còn là \"ảnh ngày hội\" mà thành **một cái có nội dung với tư cách một tấm ảnh**.\n\n（lược một đoạn）\n\n　Có người càm ràm (chú 4) rằng \"chụp bao nhiêu năm rồi mà mãi chẳng chụp được tấm nào hay\"; những người như thế là do không thoát ra được cái bố cục (chú 5) \"ảnh chụp giỏi\" mình đã vẽ ra trong đầu, nên chỉ bị bắt chụp những hình ảnh na ná mà ta đã trông quen đủ cả rồi.\n\n　Không có cái ngang ngạnh chiếm cho riêng mình, quyết biến cái đối tượng chụp (chú 6) mình đã nhắm thành của mình, thì đối tượng càng kích thích ta lại càng bị nơi ấy quay cho tít mù. Là hội thì bị chuyển động dữ dội, là cảnh tuyệt (chú 7) thì bị màu sắc nuốt mất, rồi thành ra như bị đối tượng bắt chụp.\n\n　Tấm ảnh mà ta bị đối tượng bắt chụp thì rốt cuộc chỉ là lời giải thích về nơi ấy. Ảnh với tư cách một sự biểu đạt thì là chụp tấm ảnh của riêng mình, và cái đó cũng là hư cấu; nên hãy luôn chụp cái \"tôi đã nhìn thế này\", \"tôi đã chụp thế này\".\n\n(chú 1) 一変する: đổi hẳn.\n(chú 2) 町並み: ở đây là dáng vẻ của thị trấn.\n(chú 3) 境内: ở đây là trong khuôn viên.\n(chú 4) ぼやく: nói ra chỗ bất mãn.\n(chú 5) 構図: cách dựng khuôn hình.\n(chú 6) 被写体: đối tượng được chụp vào ảnh.\n(chú 7) 絶景: cảnh sắc tuyệt vời."
   },
   "62": {
     "why_correct": "「私はこう見た」「私はこう撮った」を撮る＝chụp theo điều mình tự thấy.",
@@ -816,7 +825,8 @@
     "points": [
       "咀嚼《そしゃく》する: hiểu thấu, nhai kỹ vấn đề.",
       "応用《おうよう》がきく: ứng dụng linh hoạt."
-    ]
+    ],
+    "passage_translation": "　Việc gì cũng vậy, \"người làm được\" thì biết vận dụng. Ngay cả khi vào một quán ăn nhanh mà việc tiếp khách đã được đóng thành sổ tay hoàn toàn, thì vẫn cứ lộ ra chỗ khác nhau giữa các nhân viên. Lời báo trước khi khách tình cờ gọi phải món mất nhiều thời gian, cách ứng phó với câu hỏi về suất ăn theo phần — cứ chú ý mà quan sát một chút thì chỗ khác nhau về độ xoay của đầu và về sức diễn đạt hiện ra ở khắp nơi (chú 1).\n\n（lược một đoạn）\n\n　Còn những hiện trường công việc đòi phán đoán ở mức cao hơn thì sao? Công việc nào cũng có sổ tay hướng dẫn, hoặc là (chú 2) những chuẩn mực đại loại như sổ tay. Trong khuôn đó, \"người làm được\" thì nghiền cho ngấm (chú 3) những thứ kiểu sổ tay có trong từng công việc rồi ứng phó theo tình huống. Cái này chính là điều dẫn tới \"chỗ khác nhau về sức làm việc\".\n\n　Nói đơn giản thì \"người làm được\" tự mình vận dụng lấy mà chẳng cần ai bảo. Với chính người ấy thì đó là điều tốt, và trừ những thất bại do làm bừa (chú 4), tôi cho rằng nó cũng tác động theo hướng cộng thêm cho cả khách lẫn cho công ty, cho cửa hàng.\n\n　Nhưng đến khi người ấy chuyển sang vị trí dẫn dắt (chú 5) người khác, đến lượt phải đào tạo nhiều người, thì có lúc lại đụng phải một bức tường mà trước giờ không hề ý thức tới.\n\n　Là cái sự thật rằng có rất nhiều người mãi không làm được những việc mình vẫn làm một cách tự nhiên. Cái này thì đầu tuy hiểu, mà cảm giác thì mãi không bắt (chú 6) được. Vì thế việc chỉ dạy cấp dưới thành ra được làm trong \"cái thế giới của người đã thấy được những thứ vượt khỏi sổ tay\". Thế nhưng phía được chỉ dạy lại là dân của \"cái thế giới chưa thấy được\", nên việc họ không tiếp nhận được cho tốt là điều đương nhiên.\n\n(chú 1) 随所: khắp mọi chỗ.\n(chú 2) もしくは: hoặc là.\n(chú 3) 咀嚼する: hiểu cho thấu.\n(chú 4) 暴走: ở đây là làm mà không nghĩ đến tình hình xung quanh.\n(chú 5) 率いる: ở đây là chỉ dạy, dẫn dắt.\n(chú 6) キャッチする: tiếp nhận."
   },
   "64": {
     "why_correct": "「なかなかできない人がたくさんいる...なかなか感覚でキャッチできません」.",
@@ -842,7 +852,8 @@
     "points": [
       "生《う》まれつき: bẩm sinh.",
       "発想《はっそう》を転換《てんかん》する: đổi hướng suy nghĩ."
-    ]
+    ],
+    "passage_translation": "**A**\n　Khi lên kế hoạch cho một mặt hàng mới, có lúc mãi chẳng nảy ra được ý hay. Những lúc như thế mà đinh ninh rằng tại mình không có tài rồi mất tự tin thì không tốt. Ý tưởng không liên quan đến năng lực bẩm sinh; tùy nỗ lực mà ai cũng sinh ra được.\n\n　Ý tưởng thì hầu hết là sinh ra từ việc ghép các thông tin lại. Vì vậy, việc ngày thường vẫn thu thập thông tin là có hiệu quả. Nếu chỉ thu thập thông tin liên quan đến mặt hàng mình phụ trách thì rốt cuộc chỉ toàn những ý tưởng na ná nhau. Muốn mở rộng bề rộng của cách nghĩ thì nên nạp vào đầu cả thông tin ngoài những lĩnh vực liên quan. Nếu ngày thường vẫn mở rộng tầm nhìn mà tích trữ đủ thứ thông tin thì hẳn chắc chắn sẽ có ích cho ý tưởng.\n\n**B**\n　Muốn lên kế hoạch cho một mặt hàng mới thì cần những ý tưởng khác với trước giờ. Chỉ thu thập thông tin về những mặt hàng đang thịnh hành hiện nay thì hẳn không thắng được các công ty khác. Để sinh ra ý tưởng, tôi vẫn nghĩ theo hướng ngược với những gì người ta thường nghĩ. Nếu mặt hàng đang thịnh hành hiện nay là thứ dành cho người trẻ thì tôi nghĩ xem có làm cho người cao tuổi được không; còn nếu là thứ nhiều tính năng thì tôi nghĩ xem có bó lại thành một tính năng được không.\n\n　Có lẽ vì có cái ấn tượng rằng ý tưởng là thứ chỉ một số người có tài mới sinh ra được, nên tôi thấy nhiều người chẳng thử tìm hiểu cách sinh ra nó. Đừng lấy lý do mình không có tài rồi bỏ, mà cứ mạnh tay thử chuyển hướng cách nghĩ thì sẽ dẫn tới được những ý hay."
   },
   "66": {
     "why_correct": "A:「関連する分野以外の情報も」, B:「逆の発想をする」＝hai lời khuyên khác nhau.",
@@ -868,7 +879,8 @@
     "points": [
       "獲得《かくとく》する: giành được, có được.",
       "能動《のうどう》: chủ động, đối lập 受動《じゅどう》."
-    ]
+    ],
+    "passage_translation": "　Số người cho rằng đọc là một việc thụ động (chú 1) nhiều đến bất ngờ. （lược một đoạn）Đọc rồi nạp vào, viết rồi xuất ra. Không phải vậy — cả hai đều là xuất ra, đó là điều tôi vẫn hằng cho là đúng (chú 2).\n\n　Ta đọc những lời có ở đó. Thế là trong lòng ta trải ra một thứ nhiều hơn cả con chữ. Chẳng hạn trong những tác phẩm nước ngoài đọc hồi nhỏ, thường có những tên món ăn tôi chưa từng nghe. Nào là bánh nhân nho đen, nào là bánh quy gừng. Cái mình chưa từng ăn thì mình hết sức hình dung mà nếm. Nghĩa là ta chiếm lấy cái đầu lưỡi của nhân vật chính đang ăn món đó. ①**Hành vi này** không phải thụ động mà là chủ động (chú 3). Là một việc \"sáng tạo\". Hẳn số người có trải nghiệm lớn lên rồi ăn thật một món mà mình chỉ từng đọc trong sách, rồi nghĩ \"khác rồi\", cũng nhiều đến bất ngờ. Dĩ nhiên cái khác là sự hình dung của chúng ta, nhưng vẫn thường có chuyện món mình đã tạo ra trong đầu mình lại ngon hơn hẳn (chú 4).\n\n　Chính vì thế, với tôi thì không đọc sách là từ bỏ (chú 5) sự sáng tạo. Dĩ nhiên có ②**những cuốn sách nhạt**, có những cuốn sách không hợp mình. Nhưng ở chỗ đó, nếu ta nghĩ xem nó nhạt ở đâu và nhạt kiểu gì, nếu triển ra cách nào thì sẽ hay, nó không hợp với phần nào của mình — nghĩ như thế thì cuốn sách nhạt thành ra hay, còn cuốn sách không hợp thì ta có thể nghĩ rằng hãy chờ đến ngày nó thành hợp. Tôi thích kể cho người khác nội dung một cuốn sách nhạt hơn nhiều so với một cuốn sách hay. Hẳn việc nói ra nó nhạt ở đâu và nhạt kiểu gì là vì đúng chừng ấy mà còn chỗ (chú 6) cho sáng tạo.\n\n　Nấu ăn cũng vậy, vẽ tranh cũng vậy, hay cả trình tự việc nhà cũng vậy — đã biết đến niềm vui của việc tạo ra thì rất khó rời khỏi nó. Nếu bị hỏi (chú 7) cái thú của việc đọc là gì, tôi sẽ trả lời rằng đó là sự tự do của việc tạo ra.\n\n(chú 1) 受動的な: ở đây là chỉ tiếp nhận.\n(chú 2) 持論: cách nghĩ mình vẫn luôn giữ.\n(chú 3) 能動: tự mình tiến lên mà làm.\n(chú 4) 断然: hơn hẳn.\n(chú 5) 〜の放棄: việc bỏ ～ đi.\n(chú 6) 余地: ở đây là khả năng.\n(chú 7) 訊く: giống như 「聞く」."
   },
   "68": {
     "why_correct": "「そんなことを考えていると、つまらない本はおもしろくなる」.",
@@ -907,7 +919,8 @@
     "points": [
       "応募資格《おうぼしかく》: điều kiện dự thi.",
       "未発表《みはっぴょう》: chưa từng công bố."
-    ]
+    ],
+    "passage_translation": "Thành phố Haruguchi \"Cuộc thi phim ngắn\"\nHướng dẫn nhận tác phẩm phim ngắn\n\n　Chúng tôi nhận những phim ngắn giới thiệu nét hấp dẫn của thành phố Haruguchi. Tác phẩm được giải sẽ được công khai trên trang web của thành phố Haruguchi và được chúng tôi dùng cho các hoạt động truyền đi nét hấp dẫn của thành phố.\n\n1．Tác phẩm nhận\nXin quý vị dự thi ở một trong hai hạng mục ① hoặc ② dưới đây. Mỗi người chỉ dự thi được 1 tác phẩm, và chỉ nhận tác phẩm chưa từng công bố.\n① Hạng mục trà xanh　Tác phẩm dài từ 20 đến 30 giây, giới thiệu trà xanh của thành phố Haruguchi\n② Hạng mục du lịch　Tác phẩm dài từ 2 đến 5 phút, về lịch sử, văn hóa, thiên nhiên của thành phố Haruguchi\n\n2．Điều kiện dự thi　Chỉ cần là người từ học sinh trung học phổ thông trở lên thì ai cũng dự thi được.\n\n3．Cách tuyển chọn và giải thưởng\nViệc tuyển chọn do một hội đồng tuyển chọn thực hiện, với chủ tịch hội đồng là bà Hanayama Yoko, nhà làm phim quê ở thành phố Haruguchi. Về giải thưởng, chúng tôi tặng người đạt giải xuất sắc nhất (① ② mỗi hạng mục 1 người) phiếu mua hàng 3 vạn yên, người đạt giải xuất sắc (① ② mỗi hạng mục 2 người) phiếu mua hàng 1 vạn yên, và tặng quà lưu niệm cho toàn bộ người dự thi.\n\n4．Cách dự thi\nTrong khoảng từ ngày 15 tháng 4 (thứ Hai) đến ngày 10 tháng 5 (thứ Sáu), xin quý vị gửi những thông tin cần thiết từ trang dự thi trên trang web của Phòng Thông tin thành phố Haruguchi. Sau đó, xin gửi phim ngắn theo một trong hai cách （1）hoặc（2）dưới đây.\n（1）Trường hợp ghi vào DVD rồi gửi bưu điện\nXin ghi tác phẩm vào DVD rồi gửi bưu điện, phải đến trước ngày 17 tháng 5 (thứ Sáu). Ngoài ra, DVD đã nộp thì chúng tôi không trả lại.\n（2）Trường hợp gửi qua Internet\nTrong vòng 1 tuần sau khi tiếp nhận đơn dự thi, chúng tôi sẽ cho biết thông tin về trang dùng để gửi phim, nên xin quý vị gửi trước ngày 24 tháng 5 (thứ Sáu).\n\n5．Nơi dự thi và liên hệ\nPhòng Thông tin, Tòa thị chính thành phố Haruguchi (tầng 3 tòa thị chính)\n〒129-9988　Thành phố Haruguchi, phường Higashi khu 1 số 1　Điện thoại・FAX 032-451-6879\nTrang web http://haruguchi-jp.com/video-contest\n\n| Tên | Nghề nghiệp | Nội dung tác phẩm | Độ dài phim dự thi | Lịch công bố của phim dự thi |\n|---|---|---|---|---|\n| Anh/chị Yan | Học sinh trung học phổ thông | Nét hấp dẫn của thiên nhiên thành phố Haruguchi | 25 giây | Không có |\n| Anh/chị Muraki | Giảng viên trường luyện thi | Nét hấp dẫn của trà xanh thành phố Haruguchi | 28 giây | Không có |\n| Anh/chị Nagashima | Nhân viên công ty | Kiến trúc mang tính lịch sử của thành phố Haruguchi | 3 phút 45 giây | Có |\n| Anh/chị Harada | Học sinh trung học cơ sở | Văn hóa lễ hội của thành phố Haruguchi | 2 phút 15 giây | Không có |"
   },
   "71": {
     "why_correct": "Gửi thông tin trước 10/5, gửi video qua mạng trước 24/5.",
