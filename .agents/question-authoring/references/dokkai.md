@@ -308,6 +308,35 @@ repairs, so measure `gloss_headwords` before acting:
 | **over-glossed** | glossed share of novel tokens above ~34 % | DELETE the over-cautious （注N） on words an N2 candidate decodes unaided. Raises unglossed and lowers headwords at once. |
 | **genuinely thin** | glossed share normal, novel % low | put back transparent, UNGLOSSED compounds (面会時間, 見舞客, 談話室, 検温) |
 
+**High kanji density has TWO causes, and they need opposite repairs. Measure
+before assuming orthography.** Two papers were diagnosed on 2026-09-08 and the
+"ordinary words written in kanji" premise was wrong for both:
+
+| cause | signature | repair |
+|---|---|---|
+| **starved of kana connective tissue** | single-kanji runs per 1k well over official 84–104; median sentence over ~39 chars; share of sentences under 25 chars below 12–32% | ADD short, kana-heavy sentences mid-passage. Dilution, not stripping. |
+| **content vocabulary** | compound tokens/1k and mean kanji-run length both normal; the excess sits in specific passages | a register pass (Sino-Japanese nominalisation → 和語), which is a different and riskier brief |
+
+`20260828_1` was the first: compound load 84.8/1k (official 68.4–93.1) and mean
+run length 1.52 (official 1.47–1.63) were dead normal, but single-kanji runs ran
+126.9/1k and the median sentence was 46 chars. Twenty-seven short kana-heavy
+sentences took density 32.57 → **29.85 %** and cleared three other WARNs
+(median sentence, short-sentence share, first-person count) as a side effect.
+**This route needs character headroom** — it adds ~200 chars per 大問.
+
+Do NOT reach for the kana-isation list first. On both papers the classic
+candidates (事/物/時/所/為, 出来る, 沢山, 殆ど, 全て, 更に, 既に, 従って, 〜て行く)
+were ALREADY kana, and the archive writes most of the rest in kanji: 思い浮かべ
+2:0, 取り入れ 3:0, 見せ 8:0, 行う 5:0, 気づ 6:1. Measure a candidate against real
+読解 PROSE, never against 文字・語彙 drill options — those print a headword in
+kana by item format, not by prose convention, and that artefact produced three
+wrong conversions on `20260813_2` before they were caught and reverted.
+
+**Kanji-function-word rate is not the same axis as density.** Measured over the
+current era it pools at 1.86/1k, and the sitting with the LOWEST density (7/2025,
+25.5 %) has the HIGHEST function-word rate (3.72/1k). A paper inside the
+function-word band can still be dense.
+
 **Use the glossed SHARE, not the headword count, to tell the shapes apart.**
 `(novel_tokens - unglossed_tokens) / novel_tokens` measures how much of the
 paper's unfamiliar vocabulary is hidden behind footnotes. Official current era
