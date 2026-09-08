@@ -621,7 +621,8 @@
     "points": [
       "しかし: nhưng, tuy nhiên.",
       "経済《けいざい》安全《あんぜん》保障《ほしょう》: an ninh kinh tế."
-    ]
+    ],
+    "passage_translation": "　Chất bán dẫn đã được lắp vào cái nền của công nghiệp hiện đại: xe hơi, đồ điện gia dụng, thiết bị thông tin liên lạc. Việc cung ứng mà tắc lại là nhà máy dừng chạy, nên các nước đều đặt chất bán dẫn vào vị trí trung tâm của an ninh kinh tế (chú 1) và đang gấp gáp củng cố việc sản xuất trong nước.\n\n　（ 48 ）, cứ tăng nhà máy trong nước lên thì cái lo về cung ứng （ 49 ）. Việc chế tạo chất bán dẫn thì nhiều công đoạn nối nhau, từ thiết kế đến vật liệu, đến thiết bị chế tạo; và nếu chỉ một phần trong đó lệch về nước ngoài thì chỉ đổi chỗ đặt nhà máy vẫn còn nguyên rủi ro ấy. Mặt hàng càng tiến sâu vào việc thu nhỏ (chú 2) thì càng dễ phụ thuộc nặng vào một số ít nhà sản xuất thiết bị.\n\n　Có dùng tiền hỗ trợ để kéo nhà máy về, nhưng nếu việc đào tạo kỹ sư, cái chân đế (chú 3) của các ngành xung quanh, mạng lưới thu mua vật liệu và thiết bị vẫn cứ mỏng, thì đến lúc hữu sự ta không thay thế được.\n\n　Nghĩ như vậy thì tiêu điểm của chính sách bán dẫn trong an ninh kinh tế （ 50 ）. Người ta đòi rằng đừng chỉ đua nhau về số nhà máy, mà hãy nuôi lấy độ dày của toàn bộ chuỗi cung ứng (chú 4), gồm cả thiết kế ・ vật liệu ・ thiết bị ・ nhân lực. Cần nghĩ đến một cách bố trí không phụ thuộc quá nhiều vào một công đoạn nhất định.\n\n　Chỉ có điều, nếu lấy an ninh làm lý do mà bó việc giao thương lại quá mức thì cả sự giao lưu kỹ thuật cũng dừng, và ngược lại còn có nguy cơ làm mất sức sống của công nghiệp. Nếu nhìn sai phạm vi nào phải giữ và phạm vi nào phải mở, thì khoản đầu tư cất công ấy cũng （ 51 ）. Chính sách thì không thể thiếu cái nhìn dung hòa được cả sự ổn định của cung ứng lẫn sự cập nhật kỹ thuật.\n\n(chú 1) 経済安全保障: việc bảo đảm ổn định những vật tư và kỹ thuật quan trọng, giữ lấy cái nền của kinh tế.\n(chú 2) 微細化: việc làm mạch của chất bán dẫn nhỏ hơn để nâng tính năng.\n(chú 3) 裾野: bề rộng của các ngành liên quan xung quanh, đỡ lấy ngành trung tâm.\n(chú 4) サプライチェーン: một chuỗi các bước để hàng đến được tay người ta, từ thiết kế đến chế tạo, đến bán."
   },
   "49": {
     "why_correct": "Câu sau nói rủi ro vẫn còn dù đổi địa điểm, nên cần cách nói phủ định mạnh「はずがない」.",
@@ -673,7 +674,8 @@
     "points": [
       "時差《じさ》ぼけ: lệch múi giờ.",
       "体《からだ》の時計《とけい》: đồng hồ sinh học."
-    ]
+    ],
+    "passage_translation": "　Nghe nói người ngủ không đủ sáu tiếng chiếm chừng bốn phần mười. Nhiều người nghĩ rằng phần thiếu thì dồn vào ngày nghỉ mà ngủ là bù lại được.\n\n　Thế nhưng, những tuần mà ngày nghỉ ngủ dài thì lại thấy rõ là nhiều người trả lời rằng thứ Hai của họ trong người khó ở. Bởi giờ thức giấc ngày thường và ngày nghỉ mà lệch nhau nhiều thì cơ thể thành ra như bị lệch múi giờ, và độ sâu của giấc ngủ không còn đều.\n\n　Cái nết ngủ nướng sáng ngày nghỉ không trả lại quãng thời gian đã mất. Nó đang làm lệch cái đồng hồ trong cơ thể của tuần sau. Giấc ngủ trưa ngắn mà có tác dụng, chính là vì nó không phải làm xê dịch cái đồng hồ này."
   },
   "53": {
     "why_correct": "「混み合う七時半から八時半をさけると、空いている車両を選びやすくなります」cho thấy mong tránh giờ cao điểm.",
@@ -686,7 +688,8 @@
     "points": [
       "混《こ》み合《あ》う: đông đúc.",
       "配《くば》り: sự quan tâm."
-    ]
+    ],
+    "passage_translation": "Gửi quý vị đang sử dụng tàu điện ngầm thành phố\n\n　Để làm dịu sự chen chúc buổi sáng và buổi chiều, xin quý vị hợp tác bằng cách đi làm lệch giờ ra. Mức trung bình ở Tokyo là trên một trăm bốn mươi phần trăm, còn ở Osaka và Nagoya cũng đang tiếp diễn những giờ vượt một trăm.\n\n　Nếu quý vị tránh khoảng chen chúc từ bảy giờ rưỡi đến tám giờ rưỡi thì sẽ dễ chọn được toa còn trống. Cả quý vị có vé tháng, nếu dịch giờ bắt đầu ra ba mươi phút thì cũng có trường hợp thời gian chờ ngắn lại.\n\n【Thông báo】Tình hình chen chúc thì quý vị xem được ở bảng thông báo tại nhà ga và trên trang web chính thức. Cả cách để hành lý trong toa cũng xin quý vị để tâm giúp. Chúng tôi không có kế hoạch tăng chuyến, mà đang tiến hành việc dàn giờ sử dụng ra."
   },
   "54": {
     "why_correct": "「初年度は二部署に限り」và「まず二部署で試したい」cho thấy thử hai bộ phận rồi dựa ghi chép mở rộng.",
@@ -699,7 +702,8 @@
     "points": [
       "受《う》け入《い》れる: tiếp nhận.",
       "検討《けんとう》: xem xét."
-    ]
+    ],
+    "passage_translation": "Kính gửi trưởng phòng Yamada\n\n　Về việc trải nghiệm nơi làm việc mà anh đã trao đổi hôm trước, tôi đã tổng hợp ý kiến của từng bộ phận. Nội dung là học sinh trung học cơ sở trong hai ngày sẽ xem công việc của nhân viên ở khoảng cách gần.\n\n　Phòng Tổng vụ và Phòng Thông tin trả lời rằng hai ngày thì lo được vào những lúc rảnh giữa công việc. Còn Phòng Kinh doanh — nơi có nhiều khách đến — thì có nêu ra cả cái lo rằng nếu học sinh cả ngày cứ theo một người phụ trách thì công việc bị tắc lại.\n\n　Vì vậy, năm đầu tiên hay là ta chỉ giới hạn ở hai bộ phận và nhận hai học sinh, anh thấy thế nào? Người phụ trách thì thay nhau buổi sáng và buổi chiều; còn nếu ta ghi lại nội dung trải nghiệm và dáng vẻ của học sinh thì đó sẽ thành cứ liệu để quyết bề rộng của việc nhận học sinh năm sau.\n\n　Tôi nghĩ trước hết hãy thử với hai bộ phận. Mong anh xem xét cho.\n\nPhòng Tổng vụ　Nakamura"
   },
   "55": {
     "why_correct": "「覚えているのは、名所の名前ではなく、迷いこんだ路地のにおいばかりです」cho thấy ký ức đường lạc hơn danh lam.",
@@ -712,7 +716,8 @@
     "points": [
       "土地勘《とちかん》: sự am hiểu địa lý.",
       "路地《ろじ》: ngõ hẻm."
-    ]
+    ],
+    "passage_translation": "　Khi đi trong một thị trấn lạ, tôi vẫn giữ lệ gấp tấm bản đồ lại. Ở nơi mình không có cảm giác về đất (chú 1) thì cứ đi theo chỉ dẫn hẳn là nhanh hơn.\n\n　Dù vậy, những tấm bảng hiệu nhỏ hiện ra mỗi lần rẽ góc phố thì vừa nhìn màn hình vừa đi sẽ không lọt vào mắt. Lạc đường được bao nhiêu thì ký ức về thị trấn ấy đậm thêm bấy nhiêu.\n\n　Chỉ có điều, tôi không muốn khuyên ai đi mà phó cho dòng nước chảy (chú 2). Riêng giờ tàu về thì hãy định trước. Đã định xong cái điểm kết thì phần còn lại cứ để chân dẫn đi là được. Thứ tôi còn nhớ không phải là tên các danh thắng, mà chỉ là mùi của những con hẻm mình đã lạc vào.\n\n(chú 1) 土地勘: sự hiểu biết về địa lý và tình hình nơi đó.\n(chú 2) 行き当たりばったり: không lập kế hoạch mà phó cho dòng chảy tại chỗ."
   },
   "56": {
     "why_correct": "「得意な品目の生産を高めることと、蓄えや仕入れ先を散らすことを組み合わせたい」là đề xuất của tác giả.",
@@ -725,7 +730,8 @@
     "points": [
       "自給率《じきゅうりつ》: tỷ lệ tự cung tự cấp.",
       "仕入《しい》れ先《さき》: nguồn nhập hàng."
-    ]
+    ],
+    "passage_translation": "　Tỷ lệ tự cấp lương thực tính theo ca-lo thì thấp, ở quanh bốn phần mười; còn tính theo giá trị sản xuất thì dao động ở mức sáu phần mười. Những mặt hàng phải dựa vào nhập khẩu mà nhiều thì chuyện mất mùa ở nước ngoài hay sự lộn xộn trong vận chuyển sẽ dội ngay lên bàn ăn.\n\n　Nhưng cũng không thể nói dứt rằng chỉ tự lo trong nước là câu trả lời. Đất và người làm thì có hạn. Ta muốn kết hợp việc nâng sản xuất những mặt hàng mình giỏi với việc dàn nguồn dự trữ và nơi thu mua ra. Cả phía tiêu dùng cũng vậy: những chuyển động chọn hàng trong nước đúng mùa, giảm phần ăn còn thừa, sẽ thành sức đỡ lấy sản xuất trong nước.\n\n　Điều đáng lưu ý là hai con số ấy đang đo hai thứ khác nhau. Con số tính theo ca-lo thì bị việc nhập khẩu lương thực chính và dầu ăn chi phối, còn con số tính theo giá trị sản xuất thì phản ánh việc sản xuất những mặt hàng giá cao. Cùng một năm mà hai con số trông cách xa nhau, chính là vì thế."
   },
   "57": {
     "why_correct": "「一度そうして帰った人は、次に足を向けにくくなる」cho thấy lý do khó tiếp tục là bị từ chối vì sức khỏe.",
@@ -738,7 +744,8 @@
     "points": [
       "見送《みおく》り: bị hoãn lại lần đó.",
       "足《あし》を向《む》ける: hướng đến, ghé đến."
-    ]
+    ],
+    "passage_translation": "　Máu dùng để điều trị bệnh và thương tích thì đến nay vẫn dựa vào sự hiến từ con người. Nghe nói số người hợp tác hiến máu (chú 3) trong hai mươi năm nay đã giảm khoảng hai phần mười.\n\n　Lý do được nêu ra cho việc thế hệ trẻ rời đi là \"sự quan tâm nhạt bớt\". Cách giải thích rằng cái tâm muốn làm gì đó cho xã hội đã yếu đi thì hẳn là dễ hiểu.\n\n　Thế nhưng, nhìn vào ghi chép ở hiện trường thì chuyện không đơn giản như thế. Có không ít người đã đến tận quầy tiếp nhận mà hôm ấy không hợp tác được rồi về. Thiếu ngủ hôm trước, thuốc đang uống, quy định về cân nặng — việc bị hoãn (chú 4) vì tình trạng trong ngày thì chẳng lạ. Nghe nói người đã một lần về như thế thì lần sau khó bước chân tới. Không phải là họ không quan tâm, mà là họ mất đi cái cớ để tiếp tục.\n\n（lược một đoạn）\n\n　Điều dễ bị bỏ sót là tính chất của máu. Chế phẩm máu (chú 1) có thời hạn dùng ngắn, không để dồn lại được. Vì vậy thứ cần không phải là một đống hợp tác nhất thời, mà là một dòng chảy mảnh mà dài (chú 5) mỗi tháng. Việc sau một thảm họa lớn thì sự hợp tác dồn về, rồi vài tháng sau lại đến một đợt thiếu — cái sóng ấy cứ lặp lại, cũng chính vì thế.\n\n　Cũng có lời phê rằng thế hệ trẻ thiếu ý thức. Nhưng thực tế thì việc chuyện khi nào ・ ở đâu ・ bằng cách nào thì hợp tác được vẫn chưa đến được với họ mới là điều lớn hơn. Hiến thành phần (chú 2) thì mất thời gian, nhưng đổi lại là lặp lại được sau một khoảng ngắn. Những quy định như thế, nếu không được hướng dẫn thì chẳng có cách nào mà chọn.\n\n　Đúng ngày nhất định trong tuần thì xe đến gần trường học hay chỗ làm. Ngày hợp tác được lần tới thì được cho biết. Có một cơ chế như thế thì cái sóng đủ hay không đủ sẽ xử lý được như một vấn đề về lịch, chứ không phải về ý thức.\n\n(chú 1) 血液製剤: thuốc được làm từ máu người, dùng trong điều trị.\n(chú 2) 成分献血: cách chỉ lấy ra một phần thành phần của máu, còn lại trả về cơ thể.\n(chú 3) 献血: việc tự nguyện hiến máu để dùng cho điều trị.\n(chú 4) 見送り: ở đây là lần đó không làm mà chuyển sang lần sau.\n(chú 5) 細く長い流れ: việc tiếp diễn từng chút một."
   },
   "58": {
     "why_correct": "「いつ・どこで・どの方法なら協力できるのかが届いていない」là vấn đề chính, cần thông tin cụ thể.",
@@ -764,7 +771,8 @@
     "points": [
       "手数料《てすうりょう》: phí giao dịch.",
       "読《よ》み取《と》り機《き》: máy đọc thẻ."
-    ]
+    ],
+    "passage_translation": "　Việc chi trả không dùng tiền mặt đã lan rộng, thành ra chiếm chừng sáu phần mười toàn bộ các khoản chi trả. Nghe nói ngoài thẻ, việc trả bằng mã trên điện thoại thông minh cũng chiếm chừng một phần mười. Người dùng thì không phải mang ví, còn cửa hàng thì thanh toán được nhanh.\n\n　Thoạt nhìn thì trông như chính sự tiện lợi đang đẩy cho nó lan ra.\n\n　Thế nhưng những tình cảnh được nêu ra như ①**gánh nặng của cửa hàng nhỏ** thì không đơn giản. Phí thủ tục của việc chi trả, và độ dài của chu kỳ (chú 1) cho đến khi tiền bán hàng về, thì càng đè nặng lên những cửa hàng ít dư dả (chú 4) trong việc xoay vòng tiền (chú 2). Ngoài ra, nếu gom đủ cả mấy phương thức thì việc thao tác máy đọc (chú 3) và việc kiểm lại tiền bán hàng cũng thành rối rắm. Việc gom đủ mọi phương thức khách muốn không nhất thiết dẫn tới việc kinh doanh yên ổn của cửa hàng.\n\n　Vì vậy, thay vì chọn một trong hai là đưa vào hay không đưa vào, ta cần cái mắt chọn ra phương thức phù hợp với lớp khách (chú 5) và với giá hàng của cửa hàng mình. Thực tế thì những cửa hàng càng đông khách vào giờ nghỉ trưa lại càng có tỷ lệ cao trả lời rằng sau khi đưa vào thì hàng người chờ thanh toán ngắn lại, và họ nói tác dụng ấy lớn hơn cả phí thủ tục.\n\n　Ngược lại, ở những cửa hàng một ngày chỉ có vài lần thanh toán thì cái nặng của phí thủ tục lộ ra trước, và cái lợi của việc giữ tiền mặt cũng còn đó. Con số của cả xã hội có tăng lên thì cũng không có nghĩa là mọi cửa hàng đều có cùng một câu trả lời.\n\n(chú 1) 周期: khoảng cách cho đến khi tiền bán hàng được chuyển vào tài khoản cửa hàng.\n(chú 2) お金の回り: việc thu xếp cho khoản tiền cần để chi trả không bị đứt đoạn.\n(chú 3) 読み取り機: máy đọc và xử lý thông tin chi trả của thẻ v.v.\n(chú 4) 余裕: sự dư dả; trạng thái chưa bị dồn ép.\n(chú 5) 客層: khuynh hướng của lớp khách đến cửa hàng đó."
   },
   "60": {
     "why_correct": "「店の客層や品物の値に合う方法を選ぶ目」là kết luận, dẫn chứng cửa hàng đông khách trưa được lợi rõ.",
@@ -790,7 +798,8 @@
     "points": [
       "先《さき》のばし: trì hoãn, để sau.",
       "相続《そうぞく》: thừa kế."
-    ]
+    ],
+    "passage_translation": "　Những căn nhà không có người ở đã thành ra thấy rõ, ngay cả trong các khu dân cư. Nhà bỏ trống thì thường được giải thích rằng nó sinh ra vì người đã ít đi.\n\n　Thế nhưng khi đi trong thị trấn mà hỏi chuyện các chủ nhà thì ta gặp điều bất ngờ. Phần nhiều những căn nhà không được dùng không phải là những căn nhà đã không còn biết chủ là ai, mà là những căn nhà có chủ rành rành.\n\n　Phần nhiều trong số đó sinh ra sau việc thừa kế (chú 4). Con nhận lấy nhà của cha mẹ, nhưng lại sống ở xa và không có dự định tự mình vào ở. Bán thì phải dọn và phải sửa, cho thuê thì phải có những thỏa thuận chi li với người thuê. Cả hai đều mất công, mà lại thêm chuyện anh em trong nhà nhiều khi không thống nhất được ý.\n\n　Vì vậy họ nghĩ \"để xem tình hình thêm chút nữa đã\" mà đẩy việc quyết định ra sau. Cái dáng của những lần đẩy ra sau ấy chồng lên nhau chính là cảnh nhà bỏ trống hôm nay.\n\n（lược một đoạn）\n\n　Rắc rối là năm tháng bỏ mặc đó càng dài thì những con đường có thể chọn càng hẹp lại. Cũ đi thì cả người mua lẫn người thuê đều xa dần, mái và tường rào (chú 3) hỏng đi thì cái nguy hiểm cũng nhiều thêm. Nếu thị trấn hay thành phố phán định là nhà bỏ trống thuộc diện đặc biệt (chú 1) thì phần được giảm thuế tài sản cố định mất đi, và cũng có khi bị lệnh phải phá bỏ (chú 2).\n\n　Những căn nhà càng quyết sớm càng tìm được người dùng tiếp, không phải vì căn nhà mới. Mà là vì người quyết vẫn còn khỏe, và cả giấy tờ lẫn việc dọn dẹp đều làm xong được bằng tay người ấy. Tốc độ lan ra của nhà bỏ trống được định bởi số năm mà việc quyết định đã đứng lại, hơn là bởi độ cũ của căn nhà.\n\n(chú 1) 特定空家: căn nhà mà thị trấn hay thành phố phán định là nguy hiểm nếu cứ bỏ mặc.\n(chú 2) 取りこわし: việc phá nhà đi để trống đất.\n(chú 3) 塀: vách ngăn quây quanh nhà hay quanh đất.\n(chú 4) 相続: việc nhận lấy tài sản của người đã mất."
   },
   "62": {
     "why_correct": "「空き家の広がる速さは、家の古さより、決めることが止まっていた年数で決まります」là kết luận chính.",
@@ -816,7 +825,8 @@
     "points": [
       "レビュー: đánh giá, nhận xét.",
       "重視《じゅうし》する: coi trọng."
-    ]
+    ],
+    "passage_translation": "　Chỗ mua sắm đã không còn giới hạn ở cửa hàng thật, mà lan sang bán hàng qua mạng và giao dịch giữa các cá nhân. Cứ tìm thứ mình muốn là ta so được giá và tiếng tăm, và mua được cả từ người bán ở xa. Lựa chọn nhiều lên, nhưng mặt khác người mua lại thành ra thường phán đoán mà không cầm được món hàng trên tay. Vì vậy, ảnh, lời mô tả và những nhận xét của người dùng khác đang làm thay việc nhìn thấy vật thật.\n\n　Điều đáng lưu ý là thông tin càng nhiều thì phán đoán không hẳn càng chắc. Có tới mấy nghìn đánh giá cao thì cũng chẳng ích gì nếu chúng không viết về cái điểm mình coi trọng. Ngoài ra, cùng một mặt hàng nhưng tùy người bán mà tình trạng bảo quản và quy định trả hàng lại khác nhau. Chỉ so giá thì có khi bỏ sót chỗ khác nhau của cả giao dịch.\n\n　Tôi cho rằng vì hình thức mua sắm đã thay đổi, nên cái trình tự phán đoán mà người tiêu dùng cần cũng đã thay đổi. Nhưng điều đó không có nghĩa là nên nghi hết mọi thứ rồi dành thời gian dài mà điều tra. Chỉ cần chia ra: cái gì kiểm được sau khi hàng đã đến, và cái gì chỉ kiểm được trước khi trả tiền. Những điều kiện sau này không đổi được — thời hạn được trả hàng, cách liên lạc với người bán, tổng tiền thanh toán gồm cả phí vận chuyển — thì xem trước. Trên nền đó, còn về sở thích thì lấy đánh giá của người dùng làm tham khảo. Chia sẵn hai thứ này ra thì cùng một lượng thông tin mà cách đọc cũng đổi khác. Những điều kiện không xê dịch được như thời hạn trả hàng thì chỉ một dòng chữ thôi cũng thành cái quyết định; còn những điểm mà mỗi người cảm mỗi khác như màu sắc hay cảm giác dùng thì phải gom được nhiều tiếng nói mới thấy ra được khuynh hướng."
   },
   "64": {
     "why_correct": "Tác giả đề xuất xem trước điều kiện không đổi, rồi mới tham khảo đánh giá cho sở thích.",
@@ -842,7 +852,8 @@
     "points": [
       "手《て》ごたえ: cảm giác đạt được.",
       "望《のぞ》む: mong muốn."
-    ]
+    ],
+    "passage_translation": "**A**\n　Tham gia dọn dẹp ở địa phương thì đọng lại cái cảm giác chắc tay rằng \"mình đã làm được gì cho xã hội\". Chỉ có điều, cần cẩn thận với việc nói về ý nghĩa của nó mà lấy sự trưởng thành của người tham gia làm trung tâm.\n　Phía nhận thì có những điều họ thật sự muốn được giải quyết. Trước hết nên hỏi người ở địa phương xem họ cần gì, rồi sau đó kiểm lại xem mình có ích hay không. Dù là thiện ý, nếu ta quét cái chỗ không cần quét, hay làm cái việc lẽ ra phải giao cho người có chuyên môn, thì ngược lại thành ra gánh nặng.\n　Cái công đi xác nhận nguyện vọng thì không bỏ được. Nếu ta giữ lại tiếng nói của người ta ở trước và sau thì lần sau vẫn dùng được. Cái học của người tham gia là kết quả của việc đã đáp được nhu cầu của người kia, chứ không phải là cái đích ngay từ đầu.\n\n**B**\n　Tình nguyện thì hay bị coi là hoạt động một chiều đi giúp người đang khốn khó. Nhưng tôi cho rằng nó còn có giá trị như một chỗ để những người ngày thường chẳng gặp nhau cùng làm một việc và biết được kinh nghiệm của nhau.\n　Có ví dụ về những sinh viên giúp lễ hội ở địa phương, nghe các cụ già kể chuyện xưa, rồi năm sau bày ra một cuộc triển lãm. Việc lúc đầu chỉ là góp sức người, nhưng mối liên hệ tiếp diễn rồi một hoạt động mới sinh ra.\n　Dĩ nhiên, không được đòi ở người ta cái sự qua lại mà họ không muốn. Chỉ có điều, khi cậu sinh viên ấy đang chuẩn bị cho triển lãm, cậu đã kể về cái ngày đầu tiên mình đi nhổ cỏ. Hẳn cái ngày mình bị đếm như một suất sức người ấy, trong lòng cậu lại mang một ý nghĩa khác. Mối liên hệ tiếp diễn được sẽ thành sức đỡ lấy những vấn đề của địa phương trong dài lâu."
   },
   "66": {
     "why_correct": "A ưu tiên nhu cầu bên nhận, B coi trọng mối quan hệ duy trì lâu dài.",
@@ -868,7 +879,8 @@
     "points": [
       "押《お》し出《だ》される: bị đẩy ra.",
       "ものさし: thước đo, nghĩa bóng."
-    ]
+    ],
+    "passage_translation": "Hãy đọc đoạn văn sau và chọn một đáp án đúng nhất trong số 1・2・3・4 làm câu trả lời cho câu hỏi phía sau.\n\n　Ở nơi làm việc, hiệu suất (chú 5) được coi trọng, và việc làm xong nhiều việc trong thời gian ngắn thì dễ được đánh giá. Tài liệu họp cũng được sắp thành dạng thấy ngay kết luận, những lời giải thích dư ra thì bị cắt. Việc giảm những bước vô ích hẳn là cần. Cứ lặp lại cùng một việc kiểm tra nhiều lần thì mất đi thời gian để dồn cho công việc sinh ra cái mới.\n\n　Chỉ có điều, nếu đặt riêng hiệu suất lên trên hết thì những ý nảy ra còn chưa thành hình lại dễ bị gạt đi vì \"chậm\", vì \"mơ hồ\". Một kế hoạch mới thì ngay từ đầu không nằm gọn trong những bước đã sắp sẵn. Trong lúc thử rồi sửa, có khi chính những cuộc nói chuyện, những bản làm thử trông như đi đường vòng lại quyết định cái mạch chính sau này. Nếu cái thước hiệu suất chỉ đo thành quả ngắn hạn thì những đoạn đường như thế bị ①**đẩy ra ngoài phần được đánh giá**.\n\n　Cái sức sinh ra điều mới không phải chỉ sinh ra từ những tia sáng lóe lên hiếm hoi. Nó dễ lớn lên khi tri thức của những bộ phận khác nhau đụng vào nhau, và khi có chỗ trống (chú 4) để nghi lại những cái vẫn được coi là đương nhiên. Nếu chỉ nhìn chỗ trống ấy như \"tỷ lệ vận hành (chú 1) tụt xuống\" thì cái mầm bị ngắt. Ngược lại, nếu cho phép bao nhiêu cũng được cái thời gian không có đích thì lại không phân biệt được với sự lười. Thứ cần là: đừng đặt hiệu suất và sự sáng tạo đối lập nhau, mà định trước rằng đến chặng nào thì cái nào đi trước.\n\n（lược một đoạn）\n\n　Chẳng hạn, ở đầu một kế hoạch thì cho phép mở rộng ý ra (chú 2), còn sau khi phương châm đã chốt thì sắp các bước cho đều mà tăng tốc. Cả trong việc đánh giá, không chỉ đếm số việc đã làm xong, mà còn giữ lại ghi chép về những phương pháp mới đã thử. Nếu một bản làm thử không suôn sẻ mà ta không kết thúc nó như sự thiếu sức của người ấy, mà chia nhau như một cái học (chú 3), thì đỡ phải lặp lại cùng một đường vòng nhiều lần. Hiệu suất không phải là kẻ địch bóp chết sự sáng tạo, mà có thể thành công cụ để đưa cái quả của sáng tạo đến nơi. Chỉ có điều, dùng sai cách thì chỉ còn lại những việc dễ đo, và những công việc đào sâu suy nghĩ thì bị dồn ra sau.\n\n　Theo chỗ tôi thấy, những bộ phận chỉ cho phép mở rộng ý ra ở riêng đầu kế hoạch, rồi chốt các bước sau khi phương châm đã định, thì càng ít phải quay lại. Là việc chia ra theo từng chặng: với ai thì được đòi nhanh và với ai thì không, và định xem để chỗ trống để suy nghĩ ở đâu. Những nơi làm việc sinh ra giá trị dài lâu thì chia nhau ở chỗ đó.\n\n(chú 1) 稼働率: tỷ lệ thời gian mà người và thiết bị thật sự đang làm việc.\n(chú 2) 考えを広げる: đưa ý nảy ra thật rộng, đừng bó ngay vào một cái.\n(chú 3) 学び: những suy nghĩ và tin tức có ích, thu được qua trải nghiệm và tra cứu.\n(chú 4) 余白: ở đây là phần trống, chưa được định ra.\n(chú 5) 効率: bỏ ra bao nhiêu công thì ra được bao nhiêu thành quả."
   },
   "68": {
     "why_correct": "Bài viết coi hiệu suất là công cụ phục vụ sáng tạo, không phải kẻ thù của nó.",
@@ -907,7 +919,8 @@
     "points": [
       "対象《たいしょう》: đối tượng áp dụng.",
       "端末《たんまつ》: thiết bị đầu cuối."
-    ]
+    ],
+    "passage_translation": "　Chúng tôi giới thiệu nội dung dự án mô hình tiên tiến đang triển khai ở nhiều địa phương, cùng bản hướng dẫn tính khái toán chi phí ・ lượng phát thải khí các-bô-níc sau khi chuyển đổi. Đối tượng là người dân quan tâm đến việc giảm rác và những người liên quan đến tổ dân phố; mỗi buổi là trọn một buổi, và cần đăng ký trước.\n\n| Buổi | Nội dung ・ đối tượng | Ngày giờ | Hình thức ・ giá |\n|---|---|---|---|\n| A Khóa cơ bản về chế độ thu gom | Dành cho người mới. Giải thích các mặt hàng thuộc diện thu gom gộp và chỗ khác với việc phân loại như trước | 12/9 (T7) 10:00～11:30 | Trực tuyến ・ miễn phí |\n| B Thực hành tính toán chi phí và phát thải | Dành cho cán bộ tổ dân phố. Thực hành dùng bản hướng dẫn tính khái toán chi phí và khí các-bô-níc sau khi chuyển đổi | 16/9 (T4) 18:30～20:30 | Tại hội trường ・ 500 yên |\n| C Tham quan thực địa điểm tập kết | Tham quan công việc thu gom. Dành cho người đi bộ ngoài trời được chừng chín mươi phút. Mưa thì hủy | 20/9 (CN) 13:00～15:00 | Tập trung tại chỗ ・ miễn phí |\n| D Khóa về cách đem rác ra ở gia đình | Dành cho người mới. Học cách chia túi và mẹo giảm việc quên đem rác ra | 12/9 (T7) 14:00～16:00 | Tại hội trường ・ 300 yên |\n\nThời gian đăng ký: 20/8 ～ trước mỗi buổi 3 ngày. Số lượng: A ・ D mỗi buổi 40 người, B 20 người, C 15 người.\n\n**Học trực tuyến**: cần có thiết bị hiển thị được tài liệu.\n\n**Đối tượng**: B dành cho cán bộ tổ dân phố, và là người tham gia thực hành tại hội trường vào buổi tối ngày thường được.\n\n※ C thì trường hợp mưa sẽ hủy, và không có ngày dời lại. Khi hủy chúng tôi sẽ liên lạc với người đã đăng ký.\n\n※ Sau khi đăng ký thì không đổi buổi được. Ngay cả khi còn chỗ trống cũng không tham gia được trong ngày.\n\nVới người đã học, sau khi kết thúc chúng tôi sẽ phát tài liệu tóm lược."
   },
   "71": {
     "why_correct": "Buổi イ dành cán bộ, thực hành tính chi phí và CO2, tổ chức tối thứ Tư khớp ông Sato.",
@@ -1142,6 +1155,30 @@
       "はずの: đáng lẽ phải."
     ]
   },
+  "問4-10": {
+    "why_correct": "「めどが立つ」nghĩa đã có triển vọng rõ ràng, phù hợp khi được hỏi thời điểm hoàn thành.",
+    "options_analysis": [
+      "Sai, nhầm「立て込む」thành ý đường xá đông đúc.",
+      "Đúng, trả lời thời điểm dự kiến hoàn thành là phù hợp.",
+      "Sai, không trả lời thời điểm hoàn thành được hỏi."
+    ],
+    "points": [
+      "めどが立《た》つ: có triển vọng.",
+      "資料整理《しりょうせいり》: sắp xếp tài liệu."
+    ]
+  },
+  "問4-11": {
+    "why_correct": "Đáp lại lời nhờ giữ hộ hành lý, câu trả lời phù hợp là nhận lời một cách lịch sự.",
+    "options_analysis": [
+      "Sai, không phải lời đáp cho lời cảm ơn.",
+      "Sai, không liên quan đến lời nhờ vả vừa nêu.",
+      "Đúng, nhận lời giữ hành lý lịch sự là phù hợp."
+    ],
+    "points": [
+      "かしこまりました: vâng, tôi hiểu rồi.",
+      "預《あず》かる: giữ hộ."
+    ]
+  },
   "問4-2": {
     "why_correct": "「折り入って」nghĩa muốn nói chuyện nghiêm túc, nên câu trả lời phù hợp là đồng ý ngồi nghe.",
     "options_analysis": [
@@ -1236,30 +1273,6 @@
     "points": [
       "見《み》やすい: dễ nhìn.",
       "直《なお》す: sửa lại."
-    ]
-  },
-  "問4-10": {
-    "why_correct": "「めどが立つ」nghĩa đã có triển vọng rõ ràng, phù hợp khi được hỏi thời điểm hoàn thành.",
-    "options_analysis": [
-      "Sai, nhầm「立て込む」thành ý đường xá đông đúc.",
-      "Đúng, trả lời thời điểm dự kiến hoàn thành là phù hợp.",
-      "Sai, không trả lời thời điểm hoàn thành được hỏi."
-    ],
-    "points": [
-      "めどが立《た》つ: có triển vọng.",
-      "資料整理《しりょうせいり》: sắp xếp tài liệu."
-    ]
-  },
-  "問4-11": {
-    "why_correct": "Đáp lại lời nhờ giữ hộ hành lý, câu trả lời phù hợp là nhận lời một cách lịch sự.",
-    "options_analysis": [
-      "Sai, không phải lời đáp cho lời cảm ơn.",
-      "Sai, không liên quan đến lời nhờ vả vừa nêu.",
-      "Đúng, nhận lời giữ hành lý lịch sự là phù hợp."
-    ],
-    "points": [
-      "かしこまりました: vâng, tôi hiểu rồi.",
-      "預《あず》かる: giữ hộ."
     ]
   },
   "問5-1": {
