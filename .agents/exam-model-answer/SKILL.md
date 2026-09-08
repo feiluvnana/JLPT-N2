@@ -347,6 +347,32 @@ heading 「Bản dịch đoạn văn」.
 - It is the one vi field that may be long: the terseness bands cap explanation
   fields, and a passage translation is not one.
 
+**In the `vi` pane the box carries a 原文 / 訳 toggle, per group (2026-09-08).**
+The translation is what a Vietnamese reader wants by default, so `Bản dịch` is
+selected on load and the printed page is unchanged. But 読解 study means checking
+a claim against the Japanese the question actually asks about — and the page-wide
+language switch is the wrong instrument for that: flipping to `ja` to reread one
+sentence takes the Vietnamese explanation away with it. So the `vi` box ships
+BOTH texts and a two-button control picks which shows.
+
+- **The state is per box, not per page.** A reader checks the Japanese of ONE
+  passage without losing the translation on the other twelve, and nothing is
+  persisted — the next visit starts on the translation again.
+- **It reuses the language switch's mechanism one level down**: state is a data
+  attribute on the group (`.passage-vi[data-ptext]`), CSS hides the inactive
+  `.ptext-pane`, and `setPassageText()` writes that attribute and nothing else.
+  No JS substitutes text, so the control cannot get out of step with what is
+  rendered — the same reason `pane()` ships both languages as markup.
+- **A group with no translation renders the old single-pane box and no control**
+  — there is nothing to toggle to. The fallback still degrades rather than
+  blanks.
+- The four button/heading labels live in `build_model_answer.UI`, once per
+  language, like every other label.
+- **This is a render-side change only.** `passage_translation` keeps its name,
+  its place (first item of the group), and its semantics; `詳細解説.vi.json`
+  gains no field and the gate gains no check. A paper authored before
+  2026-09-08 gets the toggle by rebuilding, with no edit to its JSON.
+
 **The result page groups too** — `exam-app`'s `解答.html` shows each 読解 passage
 once above its questions, for the same reason.
 

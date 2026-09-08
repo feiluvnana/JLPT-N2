@@ -331,6 +331,62 @@ h1.title {
   padding-bottom: 0.3rem;
   border-bottom: 1px solid #e2e8f0;
 }
+
+/* --- 読解 passage: 原文 / 訳 toggle, per group (2026-09-08) ------------------
+   The VI pane ships BOTH the source passage and its translation, and a
+   two-button control on the box picks which one shows. Same mechanism as the
+   page-wide language switch, one level down: the state is a data attribute on
+   the group (`.passage-vi[data-ptext]`), CSS hides the other pane, and no JS
+   writes text — so the control cannot get out of step with what is rendered.
+   Per-box on purpose: a reader checks the Japanese of ONE passage without
+   losing the translation on the other twelve. A group with no translation
+   authored yet renders the old single-pane box and no control. */
+.passage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+.passage-head .passage-title {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.ptext-switch {
+  display: inline-flex;
+  background: #eef2f7;
+  border: 1px solid #dbe3ec;
+  border-radius: 9999px;
+  padding: 0.15rem;
+  gap: 0.1rem;
+  flex-shrink: 0;
+}
+.ptext-btn {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.22rem 0.7rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.ptext-btn:hover { color: var(--primary); }
+.passage-vi[data-ptext="src"] .ptext-pane[data-ptext="tr"],
+.passage-vi[data-ptext="tr"] .ptext-pane[data-ptext="src"] { display: none !important; }
+.passage-vi[data-ptext="src"] .ptext-btn[data-ptext="src"],
+.passage-vi[data-ptext="tr"] .ptext-btn[data-ptext="tr"] {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 1px 2px rgba(15,23,42,0.12);
+}
 .passage-box table {
   width: 100%;
   border-collapse: collapse;
@@ -529,6 +585,7 @@ footer {
 
 @media print {
   header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump { display: none !important; }
+  .ptext-switch { display: none !important; }
   .lang-switch { display: none !important; }
   body { background: #fff; color: #000; font-size: 10pt; }
   .q-card { page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }
@@ -4479,6 +4536,11 @@ function setLang(lang, persist) {
   if (persist) {
     try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
   }
+}
+
+function setPassageText(btn, mode) {
+  const box = btn.closest('.passage-vi');
+  if (box) box.dataset.ptext = mode;
 }
 
 (function initLang() {

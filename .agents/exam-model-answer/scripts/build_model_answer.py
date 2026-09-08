@@ -104,6 +104,8 @@ UI = {
         "search_placeholder": "問題番号・キーワード検索...",
         "passage_title": "本文 / 資料",
         "passage_tr_title": "本文の訳",
+        "passage_src_btn": "原文",
+        "passage_tr_btn": "訳",
         "script_title": "音声スクリプト",
         "play_btn": "音声再生",
         "audio_label": "聴解音声",
@@ -136,6 +138,8 @@ UI = {
         "search_placeholder": "Tìm theo số câu hoặc từ khoá...",
         "passage_title": "Đoạn văn / Tư liệu",
         "passage_tr_title": "Bản dịch đoạn văn",
+        "passage_src_btn": "Nguyên văn",
+        "passage_tr_btn": "Bản dịch",
         "script_title": "Lời thoại audio",
         "play_btn": "Phát audio",
         "audio_label": "Audio phần nghe",
@@ -745,6 +749,62 @@ h1.title {{
   padding-bottom: 0.3rem;
   border-bottom: 1px solid #e2e8f0;
 }}
+
+/* --- 読解 passage: 原文 / 訳 toggle, per group (2026-09-08) ------------------
+   The VI pane ships BOTH the source passage and its translation, and a
+   two-button control on the box picks which one shows. Same mechanism as the
+   page-wide language switch, one level down: the state is a data attribute on
+   the group (`.passage-vi[data-ptext]`), CSS hides the other pane, and no JS
+   writes text — so the control cannot get out of step with what is rendered.
+   Per-box on purpose: a reader checks the Japanese of ONE passage without
+   losing the translation on the other twelve. A group with no translation
+   authored yet renders the old single-pane box and no control. */
+.passage-head {{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #e2e8f0;
+}}
+.passage-head .passage-title {{
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}}
+.ptext-switch {{
+  display: inline-flex;
+  background: #eef2f7;
+  border: 1px solid #dbe3ec;
+  border-radius: 9999px;
+  padding: 0.15rem;
+  gap: 0.1rem;
+  flex-shrink: 0;
+}}
+.ptext-btn {{
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.22rem 0.7rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}}
+.ptext-btn:hover {{ color: var(--primary); }}
+.passage-vi[data-ptext="src"] .ptext-pane[data-ptext="tr"],
+.passage-vi[data-ptext="tr"] .ptext-pane[data-ptext="src"] {{ display: none !important; }}
+.passage-vi[data-ptext="src"] .ptext-btn[data-ptext="src"],
+.passage-vi[data-ptext="tr"] .ptext-btn[data-ptext="tr"] {{
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 1px 2px rgba(15,23,42,0.12);
+}}
 .passage-box table {{
   width: 100%;
   border-collapse: collapse;
@@ -943,6 +1003,7 @@ footer {{
 
 @media print {{
   header.app-header, .sticky-nav, .tab-group, .search-box, #sticky-audio, .script-audio-jump {{ display: none !important; }}
+  .ptext-switch {{ display: none !important; }}
   .lang-switch {{ display: none !important; }}
   body {{ background: #fff; color: #000; font-size: 10pt; }}
   .q-card {{ page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 1.2cm; }}
@@ -1014,6 +1075,11 @@ function setLang(lang, persist) {{
   if (persist) {{
     try {{ localStorage.setItem('kaisetsuLang', lang); }} catch (e) {{}}
   }}
+}}
+
+function setPassageText(btn, mode) {{
+  const box = btn.closest('.passage-vi');
+  if (box) box.dataset.ptext = mode;
 }}
 
 (function initLang() {{
@@ -1306,18 +1372,37 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
                 # the group's FIRST item — it is authored prose, not the exam
                 # wording 詳細解説.json owns, which is why it has its own field
                 # name and does not trip check_kaisetsu_languages' paste rule.
+                # The VI pane ships BOTH texts behind a per-group 原文/訳 toggle
+                # (2026-09-08): the translation is what a Vietnamese reader wants
+                # by default, but 読解 study means checking a claim against the
+                # Japanese the question actually asks about, and scrolling to the
+                # other language pane loses the explanation with it.
                 def _passage_pane(lg, _txt=passage_text, _q=q_num):
-                    if lg == "ja":
-                        return (f'<div class="passage-title">{UI[lg]["passage_title"]}</div>'
+                    src_html = (f'<div class="passage-title">{UI[lg]["passage_title"]}</div>'
                                 + format_passage_text(_txt))
+                    if lg == "ja":
+                        return src_html
                     tr = ((details.get(lg) or {}).get(str(_q)) or {}).get("passage_translation")
                     if not tr:
                         # No translation authored yet: show the source rather
-                        # than an empty box, so the pane never goes blank.
-                        return (f'<div class="passage-title">{UI[lg]["passage_title"]}</div>'
-                                + format_passage_text(_txt))
-                    return (f'<div class="passage-title">{UI[lg]["passage_tr_title"]}</div>'
-                            + format_passage_text(tr))
+                        # than an empty box, so the pane never goes blank — and
+                        # no toggle, because there is nothing to toggle to.
+                        return src_html
+                    def _btn(mode, label):
+                        return (f'<button type="button" class="ptext-btn" data-ptext="{mode}" '
+                                f'onclick="setPassageText(this, \'{mode}\')">{label}</button>')
+                    return (
+                        '<div class="passage-vi" data-ptext="tr">'
+                        '<div class="passage-head"><div class="passage-title">'
+                        f'<span class="ptext-pane" data-ptext="src">{UI[lg]["passage_title"]}</span>'
+                        f'<span class="ptext-pane" data-ptext="tr">{UI[lg]["passage_tr_title"]}</span>'
+                        '</div><div class="ptext-switch">'
+                        + _btn("src", UI[lg]["passage_src_btn"])
+                        + _btn("tr", UI[lg]["passage_tr_btn"])
+                        + '</div></div>'
+                        f'<div class="ptext-pane" data-ptext="src">{format_passage_text(_txt)}</div>'
+                        f'<div class="ptext-pane" data-ptext="tr">{format_passage_text(tr)}</div>'
+                        '</div>')
                 content_blocks.append(
                     f'<div class="passage-box passage-group" data-section="{sec_code}">'
                     + pane(langs, _passage_pane) + '</div>')
