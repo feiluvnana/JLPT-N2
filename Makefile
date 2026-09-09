@@ -4,7 +4,7 @@
        init-import extract-pdf extract-archive extract-keys extract-kanji-tables extract-shinkanzen-goi extract-shinkanzen-dokkai extract-shinkanzen \
        lint-draft lint verify-scramble scaffold-explanations irt \
        scaffold-sections matrix qa-eval autofix findings repair-plan choukai-bank \
-       textbook-bank number-calls
+       textbook-bank number-calls choukai-wear
 
 # Positional test-id argument: "make grade 1", "make sheet 2", "make sample 5".
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
@@ -65,6 +65,7 @@ help:
 	@echo "  make choukai-bank     Rebuild logs/choukai_bank.json (official sittings + textbook items)"
 	@echo "  make textbook-bank    Measure/validate the Shin Kanzen + Soumatome half of the bank"
 	@echo "  make number-calls     Re-harvest the 11 official 「N番。」 clips textbook items are given"
+	@echo "  make choukai-wear     Measure how hard the clip pool is mined (sets TEXTBOOK_SLOTS)"
 	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
 	@echo "  make model-answer 1   Build model answer & explanation for test 1 (模範解答.html)"
 	@echo "  make explanation 1    Alias for make model-answer"
@@ -162,6 +163,13 @@ textbook-bank:
 
 # The 11 official 「N番。」 spans a textbook clip is given, since textbook tracks
 # speak no number call. CHECK=1 re-harvests and diffs against the file on disk.
+# How many papers spend each clip, measured and projected, per 大問 and per
+# source. This is what `compose_choukai.TEXTBOOK_SLOTS` is set FROM: it exits
+# non-zero when a slot count projects more than WEAR_CEILING uses per textbook
+# clip, and the repair is to grow the pool, never to keep the number.
+choukai-wear:
+	python3 tools/choukai_wear.py
+
 number-calls:
 	python3 tools/harvest_number_calls.py $(if $(CHECK),--check,)
 

@@ -1,8 +1,13 @@
 # Mixed-pool 聴解 — Shin Kanzen and Soumatome in the clip bank
 
-Status: **built and shipping for 問題3 and 問題4** (2026-09-08). 問題1, 問題2 and
-問題5 are still official-only, for source reasons named in §6 — not because
-nobody got to them.
+Status: **built and shipping for 問題1, 問題2, 問題3 and 問題4** (2026-09-09).
+問題5 is the only 大問 still official-only, for the source reasons in §6.
+
+**Both books have now been read end to end.** Every one of Soumatome's 116 CD
+tracks and Shin Kanzen's 163 has been transcribed, measured, or excluded with
+the measurement that refused it, so this pool cannot grow further from these
+two sources. §6 is the list of what is left and why, and every entry in it
+carries a number.
 
 What is true on disk now:
 
@@ -10,9 +15,18 @@ What is true on disk now:
   `20260807_1`, named in `compose_choukai.OFFICIAL_ONLY_TESTS`. It is the
   control: the reference a listener can compare the mixed papers against;
 - **every other paper draws from a MIXED pool** — the ten imported official
-  sittings plus 26 textbook items, `TEXTBOOK_SLOTS` of each 大問's slots taken
-  from the textbook side. Each paper's mix is recorded in
-  `logs/choukai_draws.json` under `sources`.
+  sittings plus **58 textbook items** (問題1 ×14, 問題2 ×9, 問題3 ×13,
+  問題4 ×22), with `TEXTBOOK_SLOTS = {問題1: 2, 問題2: 1, 問題3: 2, 問題4: 3}`
+  taking **8 of a paper's 29 slots** from the textbook side. Each paper's mix is
+  recorded in `logs/choukai_draws.json` under `sources`;
+- **the slot counts are a measurement, not a preference.**
+  `tools/choukai_wear.py` (`make choukai-wear`) divides `slots × mixed papers`
+  by pool depth and exits non-zero above `WEAR_CEILING` = 4.0 uses per clip
+  across the suite. At the current depths: 問題1 3.29, 問題2 2.56, 問題3 3.54,
+  問題4 3.14, against 1.5–2.4 for an official clip. It is also what showed the
+  previous numbers were already over — 問題3 projected **5.75** and 問題4
+  **4.18** — which is why 問題4 went from 4 slots to 3 while three other 大問
+  went up.
 
 Everything below was measured, not assumed. Where something is still unknown it
 says so.
@@ -112,6 +126,30 @@ first track. Both are listed under `excluded` in
 both were found by the CHAR_RATE guard rather than by reading — which is the
 guard working as designed.
 
+**Two more instances turned up in 2026-09-09's sweep, so this is a rule.**
+`cd2/34` (第5章 問題II 1番) lays its 20.3 s option pause at **31 s** into the
+track where every other 問題2 track lays it at 8–14 s, and comes out at
+0.26 s/char; `cd2/39` (第5章 問題III 1番) comes out at 0.225 s/char, the ~15 s
+its transcript cannot explain being 問題III's own instruction. Four instances,
+all of them a section's 1番: **expect the FIRST track of any Soumatome section
+run to be refused, and read the refusal as the guard working.**
+
+### The 20 s option-reading pause is the gate on 問題2, and it identifies the type
+
+A 問題2 item's option-reading pause sits INSIDE the clip and the composer never
+re-times it, so it has to be measured per track before anything is banked.
+Sweeping every Soumatome track for one found exactly **15**: cd1/29, cd1/30,
+cd1/46, cd1/47, cd2/4, cd2/5, cd2/6, cd2/25, cd2/26, cd2/27, cd2/34, cd2/35,
+cd2/36, cd2/37, cd2/38 — all at **20.1–20.3 s**, against official's 20.22 s
+[20.19–20.81]. Nine are banked and six are `excluded` with their numbers.
+
+That measurement also settled a mis-identification. 第5章 問題III (cd2/39–42)
+had been taken for the ポイント理解 set; it lays only a **2.6 s** gap, so it is
+概要理解, and the real 問題2 set is 問題II — cd2/34–38. Reading the 問題冊子 page
+confirms it from the other side: 問題III's instruction is 「話の前に質問はありま
+せん。まず話を聞いてください。それから質問と選択肢を聞いて」 and the page prints
+no options at all, only the ① ② ③ ④ bubbles, exactly like this repo's 問題3.
+
 ---
 
 ## 3. Shin Kanzen — usable only via the book, never via the extract
@@ -158,14 +196,55 @@ that the 0.90 s run is keyed to track TYPE and not to the item.)
 
 There is no end tone; the file simply ends after the book's answer pause.
 
+### The practice chapters are drills, not items — with four exceptions
+
+`実力養成編` I–VI (CD1 all, CD2 1–44) is mostly two-option a/b discrimination
+drills and fill-in-the-blank exercises whose 答え is free text
+(「本棚を買う、コーヒーを買う」), not one of four printed options. Only each
+chapter's **確認問題** is exam-format. What that yields:
+
+- **II 即時応答 確認問題** — four items, all inside ONE track (CD1/25). Not
+  banked; see §6.3 for the measurement that refused the split.
+- **III 課題理解 確認問題** — three items, one per track (CD1/44–46). cd1/45 and
+  cd1/46 are banked; cd1/44 is a picture-legend item and is `excluded`.
+- **IV ポイント理解 確認問題** — CD1/67–69, unusable for the pause reason below.
+- **V/VI 概要理解・統合理解 確認問題** — not read: 問題3's pool is already at 13
+  and 問題5 is blocked on §6.2 regardless, so neither would change a slot count.
+
+### No Shin Kanzen track lays an option-reading pause, anywhere in the book
+
+**Measured over all 163 tracks on both CDs**, sweeping for any internal pause of
+8 s or more. The longest option-reading pause in the entire book is **10.1 s**:
+
+| where | pause |
+|---|---|
+| 模擬試験 問題2 (CD2 52–57), all six | 10.1 s |
+| IV ポイント理解 確認問題 (CD1 67–69) | 10.0–10.1 s |
+| IV ポイント理解 練習 (CD1 57–65) | 8.0–8.1 s |
+| official | **20.22 s [20.19–20.81]** |
+
+So the caveat this file used to carry about one track (Track52) is a property of
+the recordings, not a quirk of the mock paper, and **Shin Kanzen contributes no
+問題2 item at all**. The book itself states the exam's figure — 問題用紙 p.47:
+「実際の試験では、質問の後、話が始まるまで20秒ぐらい時間があります」 — so its own
+recordings are abridged relative to what it documents. Soumatome lays the full
+20.1–20.3 s and covers 問題2 on its own.
+
 ### Keys
 
 All read off the page, never from the OCR extract:
 
-- 問題1 = 3, 2, **?**, 2, 3 — 1番/2番 別冊 p.35, 4番/5番 p.39; **3番 (別冊 p.38) has not been read**
-- 問題2 4番–6番 = 2, 3, 4 (別冊 p.39, read here). **1番–3番 = 4, 3, 2 is carried
-  over from this file's earlier revision and was NOT re-read** — treat it as
-  unverified until someone opens 別冊 p.38
+- 問題1 = 3, 2, 2, **1**, 3 — 1番/2番 別冊 p.35, 3番/4番 p.36, 5番 p.37, all
+  re-read 2026-09-09. **Two corrections to this file's earlier revision**: 3番
+  was recorded as unread and is 2; 4番 was recorded as 2 and is **1**, which is
+  also what its script supports — the woman corrects 「フロントに荷物預けて」 to
+  「駅で預けたら？」 and the man answers 「じゃ、そうしよう」, so the answer is
+  駅で荷物を預けて、バスに乗る. (3番 is moot in either case: it and 1番 are
+  picture-legend items, §4.)
+- 問題2 = 4, 3, 2, 2, 3, 4 — 1番 別冊 p.37, 2番/3番 p.38, 4番–6番 p.39, all read
+  2026-09-09. The 1番–3番 row that was carried over unverified from an earlier
+  revision (4, 3, 2) is now **confirmed**. None of the six is bankable — the
+  pause reason above.
 - 問題3 = 4, 4, 4, 2, 1
 - 問題4 = 3, 3, 3, 2, 1, 3, 2, 3, 2, 1, 1, 3
 - 問題5 1番 = 3; 2番 質問1 = 1, 質問2 = 2
@@ -185,16 +264,27 @@ monologue for gist, so it would ship an off-type item into 問題3.
 | section | options are | what it needed | banked |
 |---|---|---|---|
 | 問題4 即時応答 | spoken | script + key only | **22 items** (Soumatome 10, Shin Kanzen 12) |
-| 問題3 概要理解 | spoken by BOTH books (and printed in the answer booklet too) | script + key + option text | **4 items** (Shin Kanzen) |
+| 問題3 概要理解 | spoken by BOTH books (and printed in Soumatome's answer booklet too) | script + key + option text | **13 items** (Shin Kanzen 4, Soumatome 9) |
+| 問題1 課題理解 | printed | script PDF **+ the main 問題冊子** for the option lists | **14 items** (Soumatome 9, Shin Kanzen 5) |
+| 問題2 ポイント理解 | printed | same, **plus a measured 20 s option-reading pause inside the clip** | **9 items** (Soumatome only — see §3) |
 | 問題5 統合理解 | Shin Kanzen PRINTS 1番's four choices instead of speaking them | see §6 | 0 |
-| 問題1 課題理解 | printed | script PDF **+ the main 問題冊子** for the option lists | 0 |
-| 問題2 ポイント理解 | printed | same, and Shin Kanzen's option pause is half official's | 0 |
 
-問題3 and 問題4 together are 16 of a paper's 29 slots, and the two 大問 whose
-options the audio speaks — which is exactly why they were cheap. Nothing about
-them needed a page of the 問題冊子.
+問題3 and 問題4 were the cheap two and were done first: they are 16 of a
+paper's 29 slots and the two 大問 whose options the audio speaks, so nothing
+about them needed a page of the 問題冊子.
 
----
+問題1 and 問題2 cost a 問題冊子 page per item and, for 問題2, one measurement per
+track. Two extra classes of exclusion turned up there and only there:
+
+- **picture-legend items.** `render_booklet` prints a flat 1–4 list, so an item
+  whose options are letter combinations over illustrations (`1 ア イ ウ エ`) or
+  which is answerable only against a printed form is unusable however good the
+  audio is. Four items went out this way: shinkanzen 模擬試験 問題1's 1番 and
+  3番, shinkanzen cd1/44, soumatome cd1/59.
+- **items short of the type.** `TYPE_BANDS` is deliberately wide, so it is not
+  the whole test: soumatome cd1/48 clears its 33 s floor at 38.0 s but its talk
+  is ~105 spoken characters against `check_consistency.P3_TALK_FLOOR` = 175 and
+  an official 概要理解 range of 158–397.
 
 ## 5. What exists now
 
@@ -205,6 +295,7 @@ them needed a page of the 問題冊子.
 | `tools/build_textbook_bank.py` | Resolving each (book, cd, track) to audio, measuring the body span, and REFUSING an item that fails a guard. `make textbook-bank` reports; it never writes |
 | `tools/build_choukai_bank.py` | Still the single writer of `logs/choukai_bank.json`, now `BANK_VERSION = 2` with both halves. `make choukai-bank` |
 | `tools/compose_choukai.py` | The source policy (`OFFICIAL_ONLY_TESTS`, `TEXTBOOK_SLOTS`), the number-call prepend, and `resolve()` — the one place a slot-free textbook record becomes a `問N-M`-keyed item |
+| `tools/choukai_wear.py` | Measured and projected wear per 大問 and per source — the number `TEXTBOOK_SLOTS` is set from, and it exits non-zero above `WEAR_CEILING`. `make choukai-wear` |
 
 ### Bank schema v2
 
@@ -240,34 +331,75 @@ sides and the two refusals sat at 0.36.
 
 ## 6. What remains, and the exact blocker for each
 
-1. **問題1 and 問題2** — their options are PRINTED, and neither answer booklet
-   prints 課題理解's or (for Shin Kanzen) ポイント理解's. The lists are in the main
-   問題冊子: `refs/Soumatome/nihongo-soumatome-n2-choukai.pdf` (99 MB, under the
-   read cap) and the front half of the Shin Kanzen PDF (over it — slice first).
-   Soumatome's answer booklet DOES print ポイント理解's options (別冊 pp.49–50,
-   cd2/39–42), so **four Soumatome 問題2 items are cheap and are the obvious next
-   step.**
-   One caveat that must not be skipped: a **Shin Kanzen 問題2 track lays only a
-   10.1 s option-reading pause** (measured on Track52) where official lays 20.2 s
-   and `choukai_segment.GAP_OPTION_READING` expects it. Banking one would give
-   the examinee half the reading time, inside a clip nothing re-times. Soumatome
-   lays 20.2 s (cd1/29) and has no such problem.
-2. **問題5** — two independent blockers. Shin Kanzen PRINTS 1番's four choices
-   where official and this repo's 問題5-1番 speak them, so a lifted 1番 leaves the
-   examinee with bubbles and no options. And neither book lays the **10 s 質問1
-   answer pause** that sits INSIDE an official 2番 between the two read-backs
-   (`SKILL.md` §「質問1。/質問2。 are not labels, they are the answer pause」).
-   Both need composer work — splitting a clip at its own 質問1 boundary and
-   inserting `GAP_AFTER_SHITSUMON1` — not just a transcript.
-3. **More 即時応答 and 概要理解.** Both books have exercise-chapter items beyond
-   the mock papers that were not read (Soumatome 第2章/第3章/第4章; Shin Kanzen's
-   practice chapters, CD1 and CD2 tracks 1–44). Every one is a straight extension
-   of `textbook_items.json` with no tooling change. Growing the pool is what
-   lets `TEXTBOOK_SLOTS` go up without re-mining the same 26 clips.
-4. **The cheaper win that is still NOT a substitute:** the 21 official sittings
-   in `refs/JLPT_N2_NEW/` that are not yet imported have **exact** `booklet.md`
-   (printed options) and `key.md` (keys) plus audio, and would take the official
-   pool from 10 to 31 candidates per slot with zero transcription. Their dialogue
-   transcript is OCR in 28 of 31 cases, which costs the 詳細解説 its quoted script
-   evidence but nothing else — and `hint_from_script` only needs approximate
-   LENGTHS, which OCR preserves even when it mangles characters.
+Both books are read. Nothing below is waiting on someone to open a page — each
+entry is waiting on a measurement, an ear, or a source outside these two books.
+
+### 6.1 問題2 cannot grow past 9, and Shin Kanzen cannot help
+
+Soumatome's 15 tracks with a 20 s option-reading pause are fully mined: 9
+banked, 6 `excluded` with numbers (cd2/6 at 54.2 s and cd2/26 at 55.0 s under
+問題2's 60 s floor and ~18 s under the shortest official ポイント理解 item;
+cd2/4 at 0.224 s/char and cd2/25 at 0.202 s/char against a 0.200 ceiling;
+cd2/34 with its section instruction bound in; cd2/27 on a source disagreement
+between 別冊 p.42's footnote and 問題冊子 p.62's printed option list). Shin
+Kanzen adds nothing: **not one of its 163 tracks lays more than 10.1 s** (§3).
+So 問題2 stays at 1 slot per paper (2.56 uses per clip).
+
+### 6.2 問題5 — two independent blockers, both still standing
+
+- Shin Kanzen PRINTS 1番's four choices where official and this repo SPEAK
+  them, so a lifted 1番 leaves the examinee with bubbles and no options.
+  Soumatome's 統合理解 items (cd1/50, cd1/51, cd2/50, cd2/51, cd2/52) print
+  theirs too.
+- Neither book lays the **10 s 質問1 answer pause** that sits INSIDE an official
+  2番 between the two read-backs (`SKILL.md` §「質問1。/質問2。 are not labels,
+  they are the answer pause」). Sweeping both CDs for an 8 s+ internal pause
+  found no 統合理解 track with one.
+
+The best candidate remains **soumatome cd2/52** (別冊 p.54, 質問1=3, 質問2=1, a
+genuine two-question 2番, 139.0 s). Using it means composer surgery — splitting
+the clip at its own 質問1 boundary and having the composer lay
+`GAP_AFTER_SHITSUMON1` between the halves — and it must be verified on the
+RENDERED MP3, not in the source. Not attempted.
+
+### 6.3 One bundled 即時応答 track, and it needs an ear
+
+Shin Kanzen CD1/25 holds all four items of 実力養成編II's 確認問題 (keys 3, 3,
+1, 2 off 別冊 p.7). It is the last unmined 即時応答 material in either book —
+Soumatome's two sets and Shin Kanzen's 模擬試験 12 are all banked, and every
+other 練習 in chapter II is a two-option drill.
+
+A splitter was written for it and **refused it**, correctly. The body carries
+**four** pauses of 2.5 s+ (3.20 s @34.9, 3.08 s @61.2, 3.30 s @84.8, 2.96 s
+@107.6) where three would split it into four, and two interleaved series run
+through it that no measurement here explains: 0.16 s blips each preceded by
+exactly 2.28 s (@22.9, @43.6, @71.1), and 0.90 s runs each preceded by ~3.1 s
+(@34.9, @61.2, @84.8, @107.6 — the last with only 1.6 s of file after it, and
+0.90 s is also the length of the fixed Shin Kanzen track-id word). Finishing it
+needs someone to LISTEN to the track and say where the four items start; a
+wrong boundary ships a clip that begins mid-sentence into every paper that
+draws it and no gate hears anything. The splitter was deleted rather than left
+in the tree unused; the measurement is in `textbook_items.json`'s `excluded`.
+Recovering these four would let 問題4 go back from 3 slots to 4 (26 items →
+3.54 uses).
+
+### 6.4 The only remaining source of novelty is outside these two books
+
+`refs/JLPT_N2_NEW/` holds 21 official sittings that are not imported. They
+carry **exact** `booklet.md` (printed options) and `key.md` plus audio, and
+would take the official pool from 10 to 31 candidates per slot with zero
+transcription of options or keys — which fixes novelty for 問題5 too, from the
+side no textbook can reach.
+
+**The cost is not zero and it is not the OCR.** Each sitting has to become a
+whole `tests/imported-<slug>/` paper before `build_choukai_bank.py` can read it
+(§5): it needs a complete `聴解スクリプト.txt`, and the 30 choukai entries of
+BOTH `詳細解説.json` and `詳細解説.vi.json`, hand-authored, before one clip is
+bankable — the 71 言語知識・読解 items on top of that. The dialogue transcript
+exists as Vision OCR at ~98% character accuracy in 28 of the 31 folders, which
+is enough for `hint_from_script`'s lengths but not for the 「」 quotes the
+詳細解説 is built on, so every quoted line needs checking against a page that is
+a 1-bit stencil bitmap. One sitting is a full pipeline run; 21 is not a session.
+Judged against Stages C–E in 2026-09-09's session and **declined in favour of
+finishing both books**, which was self-contained and doubled the mixed slot
+count. It remains the right next move, one sitting at a time.

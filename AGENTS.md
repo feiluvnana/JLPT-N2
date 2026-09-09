@@ -283,6 +283,7 @@ restate them here or in a skill; fix them there.
 | `make mp3 <id> SEED=n`    | `tools/compose_choukai.py` — composes the whole 聴解 half from banked clips (script, booklet, MP3, chapters, both 詳細解説 panes). Edge-TTS is retired | `choukai-audio` |
 | `make choukai-bank [CHECK=1]` | `tools/build_choukai_bank.py` → `logs/choukai_bank.json`; BOTH halves of the mixed pool — the ten imported sittings plus the textbook items | `choukai-audio` |
 | `make textbook-bank`      | `tools/build_textbook_bank.py` — report-only: what the Shin Kanzen / Soumatome half measures, and which declared items the duration/rate guards refuse | `choukai-audio` |
+| `make choukai-wear`       | `tools/choukai_wear.py` — how many papers spend each clip, measured and projected per 大問 and per source; the measurement `compose_choukai.TEXTBOOK_SLOTS` is set from, and it exits non-zero above the wear ceiling | `choukai-audio` |
 | `make number-calls [CHECK=1]` | `tools/harvest_number_calls.py` → `logs/choukai_number_calls.json` — the 11 official 「N番。」 spans a textbook clip is given | `choukai-audio` |
 | `make sheet <id>`         | `build_interactive.py` → `解答.html` | `exam-app` |
 | `make model-answer <id>`  | `build_model_answer.py` → `模範解答.html` | `exam-model-answer` |
