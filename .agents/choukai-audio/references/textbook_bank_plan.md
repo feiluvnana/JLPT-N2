@@ -3,11 +3,22 @@
 Status: **built and shipping for 問題1, 問題2, 問題3 and 問題4** (2026-09-09).
 問題5 is the only 大問 still official-only, for the source reasons in §6.
 
-**Both books have now been read end to end.** Every one of Soumatome's 116 CD
-tracks and Shin Kanzen's 163 has been transcribed, measured, or excluded with
-the measurement that refused it, so this pool cannot grow further from these
-two sources. §6 is the list of what is left and why, and every entry in it
-carries a number.
+**Both books have now been read end to end** — every page of both 別冊 and every
+one of Soumatome's 116 CD tracks and Shin Kanzen's 163 measured. 58 items are
+banked and 13 are `excluded` with the measurement that refused each.
+
+The pool is **not** exhausted, and it is worth being exact about why it stopped
+where it did. Roughly six more Soumatome 課題理解 items and two or three more
+概要理解 items are readable and of the right type (cd1/54, cd2/12, cd2/15,
+cd2/19, cd2/21, cd2/22, cd2/23 for 問題1; cd1/32, cd2/40 for 問題3). None of
+them would change anything, because **depth only matters at the step where it
+buys another slot**, and the next step in each 大問 is a long way off: at 3
+slots, 問題1 and 問題3 each need 18 items to stay under the wear ceiling, and
+問題2 needs 12 for even a second slot — which Soumatome cannot reach (§6.1) and
+Shin Kanzen cannot help with at all (§3). At 8 slots the four pools already sit
+at 2.56–3.54 uses per clip. Transcribing more without a slot to spend it on
+buys nothing a reader would hear. §6 lists what is genuinely blocked, and every
+entry carries a number.
 
 What is true on disk now:
 
@@ -324,8 +335,33 @@ band alone would have rejected. A refusal fails `make choukai-bank`; the repair
 is to fix the declaration or move the item to `excluded` **with the measurement
 that justifies it**.
 
-Admitted items measure 0.111–0.191 s/char, so the band has real headroom on both
-sides and the two refusals sat at 0.36.
+Admitted items measure 0.111–0.191 s/char and the refusals sit at 0.202, 0.224,
+0.225, 0.26 and 0.36 — the ceiling has real work to do and the nearest admitted
+item is 0.009 below it.
+
+### The band edges are populated on BOTH sides, which is the healthy reading
+
+`band_headroom()` names any admitted item within 10% of an edge, and
+`check_choukai_textbook_bands` WARNs on the list. At 58 items it names seven:
+soumatome cd1/45 (47.7 s) and cd1/60 (44.8 s) near 問題1's 40 s floor,
+cd1/47 (65.4 s) and cd2/5 (66.7 s) near 問題2's 60 s floor, and cd2/32 (0.190),
+cd1/30 (0.189) and shinkanzen cd2/63 (0.191) near CHAR_RATE's 0.200 ceiling.
+
+**That WARN is not a signal to widen anything, and here is the test that says
+so:** every edge it names has admitted items just inside it AND refused items
+just outside it — 54.2 s and 55.0 s below 問題2's floor, 0.202/0.224/0.225/0.26
+above the rate ceiling. A band with traffic on both sides is separating classes,
+which is its whole job. The WARN would be worth acting on in the other case: an
+edge with admitted items pressed against it and nothing ever refused past it,
+which means the edge is about to reject a correct declaration for no reason.
+Re-read the list that way rather than by counting entries.
+
+| 大問 | floor | admitted min | admitted max | ceiling |
+|---|---|---|---|---|
+| 問題1 | 40 | 44.8 | 84.4 | 140 |
+| 問題2 | 60 | 65.4 | 101.2 | 175 |
+| 問題3 | 33 | 51.0 | 96.8 | 135 |
+| 問題4 | 11 | 14.6 | 21.6 | 40 |
 
 ---
 

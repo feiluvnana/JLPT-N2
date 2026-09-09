@@ -124,12 +124,14 @@ measurement that justifies it** — never by widening a band.
   `logs/choukai_draws.json` records every paper's draw and the composer spends
   the least-used clips first; across the suite of 24 papers `make choukai-wear`
   measures 3.1–3.5 uses per textbook clip and 1.5–2.4 per official one.
-  **Both books are now fully read** — every one of Soumatome's 116 tracks and
-  Shin Kanzen's 163 has been transcribed, measured, or excluded with the
-  measurement that refused it, so the pool cannot grow further from these two
-  sources. `references/textbook_bank_plan.md` §6 lists what is left and the
-  blocker for each; the next source of novelty is the 21 official sittings in
-  `refs/JLPT_N2_NEW/` that are not yet imported (§6.4).
+  **Both books are now fully read** — every page of both 別冊 and all 279 CD
+  tracks measured, 58 items banked and 13 `excluded` with their numbers. A few
+  more Soumatome 課題理解/概要理解 items are still readable, but they would not
+  change a slot count: the next slot in 問題1 or 問題3 needs 18 items in that
+  pool and 問題2 cannot reach 12 at all, so **depth is no longer the binding
+  constraint — the sources are.** `references/textbook_bank_plan.md` §6 lists
+  what is genuinely blocked; the next real novelty is the 21 official sittings
+  in `refs/JLPT_N2_NEW/` that are not yet imported (§6.4).
 - **No answer-position control.** Lifted options cannot be reordered — 問題3/4/5
   read them aloud — so `answer_positions.聴解_問題N` prescribes nothing for a
   composed paper and `make check` skips it. Balance is a SELECTION objective in
