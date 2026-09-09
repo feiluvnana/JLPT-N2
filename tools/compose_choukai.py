@@ -84,18 +84,27 @@ AFTER_NUMBER_CALL = 2.7
 # a reference the textbook pool can be compared against by ear.
 OFFICIAL_ONLY_TESTS = {"20260807_1"}
 
-# Slots per 大問 that every OTHER paper fills from the textbook pool. Chosen
-# from what the pool can carry without over-mining it: 22 textbook 問題4 items
-# over 4 slots x 22 papers is ~4 uses each, against ~1.6 for an official 問題4
-# item, and 4 textbook 問題3 items over 1 slot x 22 papers is ~5.5. Raising a
-# number here re-mines the same few clips; grow the pool first
-# (.agents/choukai-audio/references/textbook_items.json).
+# Slots per 大問 that every OTHER paper fills from the textbook pool. Every
+# number here is set from `tools/choukai_wear.py`, not chosen: it divides
+# `slots x mixed papers` by the pool depth and holds the result under
+# `WEAR_CEILING` (4.0 uses per clip across the suite). Run it before changing a
+# number, and when it says OVER, grow the pool
+# (.agents/choukai-audio/references/textbook_items.json) rather than lowering a
+# slot count somewhere else to compensate.
 #
-# 問題1/問題2/問題5 are absent on purpose and it is a SOURCE limit, not a policy
-# one — their options are printed rather than spoken and the printed lists are
-# not in either answer booklet, and neither book lays the 10 s 質問1 pause an
-# official 問題5-2番 carries inside itself. See textbook_bank_plan.md §6.
-TEXTBOOK_SLOTS = {"問題3": 1, "問題4": 4}
+# 2026-09-09, at 14/9/13/22 items and 23 mixed papers: 問題1 3.29, 問題2 2.56,
+# 問題3 3.54, 問題4 3.14 — 8 of a paper's 29 slots, up from 5. 問題4 dropped from
+# 4 slots to 3 for the same reason the others went up: at 4 it projected 4.18,
+# over the ceiling, and both books' 即時応答 material is now fully mined except
+# one bundled track no measurement can safely split (textbook_bank_plan.md §6).
+# 問題2 stays at 1 slot because Soumatome is the only source for it: not one of
+# Shin Kanzen's 163 tracks lays more than a 10.1 s option-reading pause.
+#
+# 問題5 is absent and it is a SOURCE limit, not a policy one: Shin Kanzen PRINTS
+# 1番's four choices where this repo speaks them, and neither book lays the 10 s
+# 質問1 answer pause that sits INSIDE an official 2番 between the two read-backs.
+# Both need composer surgery, not a transcript. See textbook_bank_plan.md §6.
+TEXTBOOK_SLOTS = {"問題1": 2, "問題2": 1, "問題3": 2, "問題4": 3}
 
 SR = 48_000               # official recordings are 48 kHz
 LOUDNORM = "loudnorm=I=-15:TP=-1.0:LRA=11"

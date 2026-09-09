@@ -1965,6 +1965,746 @@
      "年中《ねんじゅう》: quanh năm, lúc nào cũng."
     ]
    }
+  },
+  {
+   "id": "soumatome:cd1-33",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 33,
+   "section": "問題3",
+   "answer": 2,
+   "source_page": "別冊 p.12 第2章-4 どんな内容ですか－概要理解－ 2番 (問題冊子 p.31)",
+   "script_lines": [
+    "男の人が話しています。",
+    "男:皆さんは、最近の車をどう思いますか。ぼくは、つまらないと思うんです。みんな、四角くなっちゃって…。人を運ぶもの、荷物を運ぶ道具になっちゃってる。確かにそれもそうなんですが、昔は、車にあこがれとか夢があったんですよね。かっこいいものだった、特に男にとっては。今の男の子は、車にあまり興味がないらしい。だから、スポーツカーも売れない。道具だから、できるだけたくさん、人や荷物が入ったほうがいい。だから、四角くなるわけで…。",
+    "男の人にとって、車はどういうものですか。",
+    "1、人や荷物を運ぶもの",
+    "2、かっこいいもの",
+    "3、四角いもの",
+    "4、興味がないもの"
+   ],
+   "kaisetsu_cell": "男「かっこいいものだった、特に男にとっては」＝自分にとっての車。1 ✗「道具になっちゃってる」と今の車を嘆く側の言葉。3 ✗「みんな、四角くなっちゃって…」＝つまらない理由。4 ✗ 興味がないのは「今の男の子」で、話し手ではない。",
+   "explanation": {
+    "why_correct": "話《はな》し手《て》は「かっこいいものだった、特に男にとっては」と自分《じぶん》の車観《しゃかん》を語《かた》る。",
+    "options_analysis": [
+     "「道具になっちゃってる」は今《いま》の車《くるま》を嘆《なげ》く言葉《ことば》。",
+     "自分《じぶん》にとって車《くるま》はあこがれで、かっこいいもの。",
+     "四角《しかく》いのは「つまらない」と感《かん》じる理由《りゆう》。",
+     "興味《きょうみ》がないのは「今の男の子」で、話《はな》し手《て》ではない。"
+    ],
+    "points": [
+     "あこがれ：強《つよ》く心《こころ》をひかれる気持《きも》ち。",
+     "〜わけで：理由《りゆう》を示《しめ》して結論《けつろん》を導《みちび》く。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Người nói kể xe từng là thứ \"ngầu\", nhất là với đàn ông, đó là ý nghĩa xe với chính anh.",
+    "options_analysis": [
+     "\"Thành ra chỉ là công cụ\" là điều anh đang than phiền.",
+     "Đúng: với anh, xe là mơ ước, là thứ ngầu.",
+     "Xe vuông vức là lý do anh thấy nhàm, không phải ý nghĩa.",
+     "Người không quan tâm là \"đám con trai bây giờ\", không phải anh."
+    ],
+    "points": [
+     "あこがれ: sự khao khát, niềm mơ ước.",
+     "〜わけで: nêu lý do rồi dẫn tới kết luận."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd1-49",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 49,
+   "section": "問題3",
+   "answer": 2,
+   "source_page": "別冊 p.19 第2章 まとめ問題 問題IV 2番 (問題冊子 p.37)",
+   "script_lines": [
+    "男の人と女の人が話しています。",
+    "男:珍しい、勉強してるの？",
+    "女:そう。通信教育。先週から始まった。私、保育士になろうと思って。",
+    "男:また通信教育？　前のはどうなったんだよ。ホームヘルパーとか言ってたのは。",
+    "女:あ、あれは、やめた。私、やっぱり子どものほうが好きだし…。",
+    "男:それはわかるよ。君は子どもの扱い方がうまいし、子どもにも好かれるし。でもねえ、通信教育はねえ、君のような人には向いてないと思うよ。学校へ行くほうがいいんじゃない？",
+    "男の人は、女の人のことをどう思っていますか。",
+    "1、保育士に向いていない",
+    "2、通信教育は続けられない",
+    "3、勉強しても保育士になれない",
+    "4、子ども好きだが、子どもには好かれない"
+   ],
+   "kaisetsu_cell": "男「通信教育はねえ、君のような人には向いてないと思うよ」＝また途中でやめると見ている。1 ✗「子どもの扱い方がうまい」と保育士向きだと認める。3 ✗ なれないとは言わず「学校へ行くほうがいいんじゃない？」。4 ✗「子どもにも好かれるし」。",
+   "explanation": {
+    "why_correct": "男《おとこ》は「通信教育はねえ、君のような人には向いてないと思うよ」と見《み》ている。",
+    "options_analysis": [
+     "「子どもの扱い方がうまい」と保育士《ほいくし》向《む》きだと認《みと》める。",
+     "通信《つうしん》教育《きょういく》は続《つづ》かないから学校《がっこう》を勧《すす》める。",
+     "なれないとは言《い》わず、学《まな》び方《かた》を変《か》えろと言《い》う。",
+     "「子どもにも好かれるし」と、好《す》かれる側《がわ》だと言《い》っている。"
+    ],
+    "points": [
+     "向《む》いていない：性格《せいかく》や適性《てきせい》に合《あ》わない。",
+     "扱《あつか》い方《かた》：人《ひと》や物《もの》への接《せっ》し方《かた》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Anh cho rằng học từ xa không phù hợp với người như cô, ý là cô sẽ lại bỏ giữa đường.",
+    "options_analysis": [
+     "Anh còn khen cô giỏi chăm trẻ, tức là phù hợp làm bảo mẫu.",
+     "Đúng: anh nghĩ cô không theo nổi hình thức học từ xa.",
+     "Anh không nói cô không làm được, chỉ khuyên đổi cách học.",
+     "Anh nói trẻ con cũng thích cô, ngược với lựa chọn này."
+    ],
+    "points": [
+     "向《む》いていない: không phù hợp với tính cách, tố chất.",
+     "扱《あつか》い方《かた》: cách đối xử, cách xử lý."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-7",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 7,
+   "section": "問題3",
+   "answer": 3,
+   "source_page": "別冊 p.33 第3章 まとめ問題 問題III 1番 (問題冊子 p.50)",
+   "script_lines": [
+    "留守番電話のメッセージを聞いています。",
+    "男:さくらネットの安田と申します。本日はお客様に、より速く、より安くインターネットをご利用いただける、お勧めのプランのご紹介でお電話さしあげました。ただ今、お得なキャッシュバックキャンペーンを行っております。また、改めてお電話させていただきます。失礼いたします。",
+    "男の人は、何のために電話しましたか。",
+    "1、注文の確認のため",
+    "2、社会的な運動のため",
+    "3、お勧めのプランの案内のため",
+    "4、商品発送の連絡のため"
+   ],
+   "kaisetsu_cell": "「お勧めのプランのご紹介でお電話さしあげました」が用件そのもの。1 ✗ 注文の話は出ない。2 ✗「キャンペーン」は販促で、社会運動ではない。4 ✗ 発送の連絡も述べられていない。",
+   "explanation": {
+    "why_correct": "「お勧めのプランのご紹介でお電話さしあげました」と用件《ようけん》を述《の》べている。",
+    "options_analysis": [
+     "注文《ちゅうもん》の話《はなし》はまったく出《で》てこない。",
+     "「キャンペーン」は販売《はんばい》の宣伝《せんでん》で、社会《しゃかい》運動《うんどう》ではない。",
+     "速《はや》く安《やす》く使《つか》えるプランの案内《あんない》が目的《もくてき》。",
+     "商品《しょうひん》の発送《はっそう》についても触《ふ》れていない。"
+    ],
+    "points": [
+     "さしあげる：「あげる」の謙譲語《けんじょうご》。",
+     "改《あらた》めて：日《ひ》を変《か》えてもう一度《いちど》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Người gọi nói rõ mục đích: gọi để giới thiệu gói dịch vụ internet đang được khuyến nghị.",
+    "options_analysis": [
+     "Chuyện đơn hàng không hề được nhắc tới.",
+     "\"Campaign\" ở đây là chương trình bán hàng, không phải phong trào xã hội.",
+     "Đúng: mục đích là giới thiệu gói nhanh hơn, rẻ hơn.",
+     "Cũng không có nội dung nào về việc giao hàng."
+    ],
+    "points": [
+     "さしあげる: dạng khiêm nhường của あげる.",
+     "改《あらた》めて: làm lại vào dịp khác."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-28",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 28,
+   "section": "問題3",
+   "answer": 3,
+   "source_page": "別冊 p.43 第4章 まとめ問題 問題III 1番 (問題冊子 p.62)",
+   "script_lines": [
+    "男の人が話しています。",
+    "男:うーん、あれは正直言って、邪魔ですね。列車が発車するとすぐに、「ご乗車ありがとうございます。ただ今より、お弁当、お飲み物をお持ちしまして、お席のほうまでお伺いいたします」なんて放送が入って…。それから、次から次へと、お菓子や、土産物、雑誌なんかを売りに来る…。こっちは、ゆっくり休みたいと思っていても、まったく本も落ち着いて読めないんだから。",
+    "男の人は、何について不満を言っていますか。",
+    "1、車内放送",
+    "2、駅の騒音",
+    "3、車内販売",
+    "4、駅の放送"
+   ],
+   "kaisetsu_cell": "「次から次へと、お菓子や、土産物、雑誌なんかを売りに来る」＝車内販売が不満の中身。1 ✗ 放送は売りに来る前ぶれとして引かれただけ。2 ✗ 4 ✗ 話は「列車が発車すると」以降の車内のことで、駅の話は出ない。",
+   "explanation": {
+    "why_correct": "「次から次へと、お菓子や、土産物、雑誌なんかを売りに来る」ことが不満《ふまん》の中身《なかみ》。",
+    "options_analysis": [
+     "放送《ほうそう》は売《う》りに来《く》る前《まえ》ぶれとして引《ひ》かれただけ。",
+     "話《はなし》は発車《はっしゃ》後《ご》の車内《しゃない》で、駅《えき》のことではない。",
+     "売《う》りに来《く》るせいで「本も落ち着いて読めない」と言《い》う。",
+     "駅《えき》の放送《ほうそう》についてはまったく触《ふ》れていない。"
+    ],
+    "points": [
+     "邪魔《じゃま》：妨《さまた》げになって迷惑《めいわく》なこと。",
+     "次《つぎ》から次《つぎ》へと：切《き》れ目《め》なく続《つづ》けて。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Điều anh bất bình là việc người bán liên tục tới bán bánh, quà và tạp chí trong toa tàu.",
+    "options_analysis": [
+     "Thông báo trên tàu chỉ được nhắc như dấu hiệu báo trước.",
+     "Câu chuyện diễn ra trong toa sau khi tàu chạy, không ở nhà ga.",
+     "Đúng: vì bị bán hàng liên tục nên anh \"không đọc sách nổi\".",
+     "Thông báo ở nhà ga không hề được nói đến."
+    ],
+    "points": [
+     "邪魔《じゃま》: gây cản trở, làm phiền.",
+     "次《つぎ》から次《つぎ》へと: liên tục, không dứt."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-29",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 29,
+   "section": "問題3",
+   "answer": 1,
+   "source_page": "別冊 p.43 第4章 まとめ問題 問題III 2番 (問題冊子 p.62)",
+   "script_lines": [
+    "日本語の先生たちが、ある学生の授業中の態度について話しています。",
+    "男:元気で熱心なのはいいんだけどねえ。",
+    "女:ええ、試験もよくできるし、宿題もきちんと出すんですけどね。",
+    "男:勉強したくてしょうがないんだね、きっと。",
+    "女:そうですねー。周りのことなんか、考えていられないんでしょうね。",
+    "男:1人だったらねー、問題ないんですけどね。",
+    "女:ええ、だれに質問しても先に答えてしまうのがねえ…。",
+    "男:「君の番じゃないからね」って言うと、「はい、わかりました」って、ニコニコ笑って…",
+    "女:そう、今度は1人でブツブツちょっと小さい声で、やっぱり声出して答えているんですものね。",
+    "男:他の学生にしてみりゃ、黙っててほしいだろうしねえ、うるさいって思うだろうし。",
+    "その学生の問題点は、どこにありますか。",
+    "1、先生の質問に全部答えてしまい、黙っていられない",
+    "2、質問してもニコニコ笑っているだけで、答えようとしない",
+    "3、試験結果はいいが、宿題をよく忘れる",
+    "4、となりの学生としゃべってばかりいて、授業に集中しない"
+   ],
+   "kaisetsu_cell": "女「だれに質問しても先に答えてしまうのがねえ」＋「今度は1人でブツブツちょっと小さい声で、やっぱり声出して答えている」＝黙っていられない。2 ✗ 笑うのは注意された直後で、答えないわけではない。3 ✗「宿題もきちんと出す」。4 ✗ となりの学生と話す場面はない。",
+   "explanation": {
+    "why_correct": "「だれに質問しても先に答えてしまう」、注意《ちゅうい》しても「やっぱり声出して答えている」。",
+    "options_analysis": [
+     "他《ほか》の学生《がくせい》の順番《じゅんばん》でも答《こた》えてしまう点《てん》。",
+     "ニコニコ笑《わら》うのは注意《ちゅうい》された直後《ちょくご》で、答《こた》えている。",
+     "宿題《しゅくだい》は「きちんと出すんですけどね」と褒《ほ》められている。",
+     "となりの学生《がくせい》と話《はな》す場面《ばめん》は出《で》てこない。"
+    ],
+    "points": [
+     "〜てしょうがない：抑《おさ》えられないほどそうだ。",
+     "ブツブツ：小《ちい》さな声《こえ》で独《ひと》り言《ごと》を言《い》う様子《ようす》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Cậu học sinh giành trả lời mọi câu hỏi, bị nhắc thì vẫn lẩm bẩm trả lời thành tiếng.",
+    "options_analysis": [
+     "Đúng: cậu trả lời cả khi đến lượt bạn khác, không im được.",
+     "Cậu cười ngay sau khi bị nhắc, chứ không phải không trả lời.",
+     "Bài tập cậu \"nộp đầy đủ\", chính giáo viên khen điều đó.",
+     "Không có cảnh cậu nói chuyện với bạn bên cạnh."
+    ],
+    "points": [
+     "〜てしょうがない: không kìm được, quá mức.",
+     "ブツブツ: lẩm bẩm một mình, nói tiếng nhỏ."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-41",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 41,
+   "section": "問題3",
+   "answer": 1,
+   "source_page": "別冊 p.50 第5章 総まとめ問題 問題III 3番 (問題冊子 p.68)",
+   "script_lines": [
+    "女の人が、ガンについて話しています。",
+    "女:昔は、ガンになったらイコール死んでしまう、というイメージが強かったので、本人にその病名を知らせないことも多かったようですが、今は、90%以上の人が、自分の本当の病名を知りたいと思っているそうですね。私も、本当の病名だけでなく、あとどれくらい生きられるのかということも知りたいですね。もし、あと半年しか生きられないとしたら、残された日々を無駄にしないようにしたいです。でも、家族がガンになったら、本当のことを伝えたほうがいいのかどうか、よくわかりません。私の母のような性格の人には、本当のことを伝えないほうがいいのかもしれません。もし、自分がガンであるということを知ったら、母は、ショックで何もできなくなってしまうと思います。",
+    "女の人は、ガンについてどう思っていますか。",
+    "1、自分がガンになったら、本当の病名を知りたい",
+    "2、自分がガンになったら、ショックで何もできなくなる",
+    "3、家族がガンになったら、毎日を無駄にしないで生きてほしい",
+    "4、家族がガンになったら、本当のことを伝える"
+   ],
+   "kaisetsu_cell": "女「本当の病名だけでなく、あとどれくらい生きられるのかということも知りたいですね」＝自分は知りたい側。2 ✗「ショックで何もできなくなってしまう」のは母。3 ✗「残された日々を無駄にしないように」は自分の話。4 ✗ 家族には「伝えたほうがいいのかどうか、よくわかりません」。",
+   "explanation": {
+    "why_correct": "自分《じぶん》については「本当の病名だけでなく…知りたいですね」と、はっきり言《い》う。",
+    "options_analysis": [
+     "余命《よめい》まで含《ふく》めて知《し》りたいと自《みずか》ら述《の》べている。",
+     "「ショックで何もできなくなってしまう」のは母《はは》についての予想《よそう》。",
+     "「残された日々を無駄にしないように」は自分《じぶん》の場合《ばあい》の話《はなし》。",
+     "家族《かぞく》には「伝えたほうがいいのかどうか、よくわかりません」。"
+    ],
+    "points": [
+     "イコール：等《ひと》しい、同《おな》じこと。",
+     "残《のこ》された日々《ひび》：これから先《さき》の限《かぎ》られた時間《じかん》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Về bản thân, cô nói rõ muốn biết cả tên bệnh thật lẫn còn sống được bao lâu.",
+    "options_analysis": [
+     "Đúng: cô tự nói muốn biết cả bệnh danh và thời gian còn lại.",
+     "\"Sốc đến không làm gì được\" là dự đoán về người mẹ.",
+     "\"Không để những ngày còn lại thành vô nghĩa\" là chuyện của chính cô.",
+     "Với người thân, cô nói \"không rõ có nên nói thật hay không\"."
+    ],
+    "points": [
+     "イコール: tương đương, đồng nghĩa với.",
+     "残《のこ》された日々《ひび》: quãng thời gian còn lại."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-42",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 42,
+   "section": "問題3",
+   "answer": 3,
+   "source_page": "別冊 p.50 第5章 総まとめ問題 問題III 4番 (問題冊子 p.68)",
+   "script_lines": [
+    "女の子とお父さんが、鳥について話しています。",
+    "女の子:わー、お父さん、見て見て！　あそこー！　すごいねー！　音符みたいだよー！",
+    "父親:ははは、電線に鳥がたくさん止まってるね。",
+    "女の子:朝も来るんだよー。昼もお庭の木に来てたよ。…あれ？　夜は…夜はどこで寝るの？",
+    "父親:どこだろうねー。どこだと思う？",
+    "女の子:ネコさんの来ないとこ？",
+    "父親:そうそう、夜起きてるネコさんやフクロウさん、タヌキさんに見つからないようなとこだね、きっと。見つかったら、捕まっちゃうからね。それに、強い風が当たらないとこかな。風が当たると、体が冷えて、寝られないからねー。",
+    "お父さんは女の子に、鳥の何について説明していますか。",
+    "1、見つけ方について",
+    "2、病気について",
+    "3、寝る場所について",
+    "4、えさの探し方について"
+   ],
+   "kaisetsu_cell": "女の子「夜はどこで寝るの？」→父親「見つからないようなとこだね」「強い風が当たらないとこかな」＝寝る場所の条件。1 ✗ 鳥を見つける話ではなく、鳥が見つかると「捕まっちゃう」。2 ✗ 病気の話はない。4 ✗ えさにも触れていない。",
+   "explanation": {
+    "why_correct": "「夜はどこで寝るの？」に答《こた》えて「見つからないようなとこ」「強い風が当たらないとこ」と説《と》く。",
+    "options_analysis": [
+     "見《み》つかると「捕まっちゃう」＝鳥《とり》を探《さが》す話《はなし》ではない。",
+     "病気《びょうき》についてはまったく話《はな》していない。",
+     "見《み》つかりにくさと風《かぜ》の当《あ》たらなさ＝寝《ね》る場所《ばしょ》の条件《じょうけん》。",
+     "えさの探《さが》し方《かた》にも触《ふ》れていない。"
+    ],
+    "points": [
+     "電線《でんせん》：電気《でんき》を送《おく》る線《せん》。",
+     "体《からだ》が冷《ひ》える：体温《たいおん》が下《さ》がって寒《さむ》くなる。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Trả lời câu \"ban đêm chim ngủ ở đâu\", bố giải thích nơi không bị phát hiện và không lộng gió.",
+    "options_analysis": [
+     "Bị phát hiện thì \"bị bắt\" — không phải chuyện tìm chim.",
+     "Chuyện bệnh tật hoàn toàn không được nói tới.",
+     "Đúng: khó bị phát hiện và tránh gió là điều kiện chỗ ngủ.",
+     "Cách tìm thức ăn cũng không hề được đề cập."
+    ],
+    "points": [
+     "電線《でんせん》: dây điện.",
+     "体《からだ》が冷《ひ》える: cơ thể bị lạnh đi."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-8",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 8,
+   "section": "問題3",
+   "answer": 4,
+   "source_page": "別冊 p.33 第3章 まとめ問題 問題III 2番 (問題冊子 p.50)",
+   "script_lines": [
+    "テレビで、医者がインタビューに答えています。",
+    "アナウンサー:先生は、あまり薬を出さないそうですね。",
+    "女:ええ、患者さんの中には、薬を出さないことを不満に思う人が多いですが、できるだけ薬に頼らないような治療を心がけています。もちろん、病気によっては、薬がなくてはならない場合もあり、また、使い方によっては、薬が効果的な場合も多くありますが、軽い風邪などの場合、栄養のある食事をし、暖かくしてよく寝ると、たいていの場合は、そのうちに治っています。注射をしたり、薬を飲んだりすると、かえって、治りが悪くなることもあります。病気は、自分の力で治すことが大切なんです。でも、このことを患者さんにわかってもらうのは、なかなか難しいんです。",
+    "患者にわかってもらうのが難しいのは、どういうことだと言っていますか。",
+    "1、風邪薬を効果的に使うこと",
+    "2、栄養のある食事を心がけること",
+    "3、必要な薬であるかを判断すること",
+    "4、薬に頼らないで病気を治すこと"
+   ],
+   "kaisetsu_cell": "医者「病気は、自分の力で治すことが大切なんです。でも、このことを患者さんにわかってもらうのは、なかなか難しいんです」＝直前の「このこと」が答え。1 ✗ 3 ✗ 薬の使い方は例外として挙げただけ。2 ✗ 食事は自力で治す方法の一つで、難しいと言われた内容ではない。",
+   "explanation": {
+    "why_correct": "「このこと」は直前《ちょくぜん》の「自分の力で治すことが大切なんです」を指《さ》している。",
+    "options_analysis": [
+     "薬《くすり》が効果的《こうかてき》な場合《ばあい》は例外《れいがい》として挙《あ》げただけ。",
+     "食事《しょくじ》は自力《じりき》で治《なお》す方法《ほうほう》の一例《いちれい》。",
+     "薬《くすり》の必要《ひつよう》・不要《ふよう》の判断《はんだん》は話題《わだい》の中心《ちゅうしん》ではない。",
+     "薬《くすり》に頼《たよ》らず治《なお》すという考《かんが》えが伝《つた》わりにくい。"
+    ],
+    "points": [
+     "心《こころ》がける：いつもそうしようと努《つと》める。",
+     "かえって：予想《よそう》と反対《はんたい》に。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "\"Điều này\" chỉ ngay câu trước: quan trọng là tự cơ thể mình chữa lành bệnh.",
+    "options_analysis": [
+     "Trường hợp thuốc có hiệu quả chỉ được nêu như ngoại lệ.",
+     "Ăn uống bổ dưỡng chỉ là một cách để tự khỏi bệnh.",
+     "Việc phán đoán thuốc cần hay không không phải trọng tâm.",
+     "Đúng: quan niệm chữa bệnh mà không dựa vào thuốc là điều khó truyền đạt."
+    ],
+    "points": [
+     "心《こころ》がける: luôn cố gắng làm theo hướng đó.",
+     "かえって: trái lại, ngược với dự đoán."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd1-64",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 64,
+   "section": "問題3",
+   "answer": 4,
+   "source_page": "別冊 p.28 第3章-4 意見や感想を聞こう 3番 (問題冊子 p.47)",
+   "script_lines": [
+    "地下鉄の駅で、男の人と女の人が話しています。",
+    "男:ここの駅って、深いよねー。エスカレーター何本も乗らないとここまで来られないし。",
+    "女:うん、新しい地下鉄はどんどん深くなってるよね。停電でエスカレーター止まっちゃったら、上まで行くの、大変だよね。",
+    "男:それも大変だけど、そんなことより、地下鉄に乗っているときに、この間のような地震が来たら…。ああ、考えるだけでぞっとするよ。",
+    "女:大丈夫よ。地下は地震に強いっていうから。ちゃんと安全対策も立ててるだろうし。そんなに心配なら、バスにしたら？",
+    "男:いや、バスは時間が読めないからダメだよ。",
+    "男の人は、地下鉄をどう思っていますか。",
+    "1、安全対策に問題がある",
+    "2、バスより速いから便利だ",
+    "3、エスカレーターに何本も乗るので時間がかかる",
+    "4、深いからこわい"
+   ],
+   "kaisetsu_cell": "男「ここの駅って、深いよねー」→「地震が来たら…。ああ、考えるだけでぞっとするよ」＝深さがこわい。1 ✗「安全対策も立ててるだろうし」は女の言葉。3 ✗ 時間ではなく深さを問題にしている。2 ✗ バスは「時間が読めないからダメ」で、速さの比較はしていない。",
+   "explanation": {
+    "why_correct": "男《おとこ》は駅《えき》の深《ふか》さを挙《あ》げ、地震《じしん》を思《おも》って「考えるだけでぞっとするよ」と言《い》う。",
+    "options_analysis": [
+     "「安全対策も立ててるだろうし」は女《おんな》の反論《はんろん》。",
+     "バスは「時間が読めないからダメ」で、速《はや》さの比較《ひかく》はない。",
+     "問題《もんだい》にしているのは時間《じかん》ではなく深《ふか》さ。",
+     "深《ふか》い駅《えき》で地震《じしん》に遭《あ》うことをこわがっている。"
+    ],
+    "points": [
+     "ぞっとする：恐《おそ》ろしくて体《からだ》が震《ふる》える。",
+     "時間《じかん》が読《よ》めない：どれだけかかるか予測《よそく》できない。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Anh nhắc ga quá sâu, rồi nghĩ tới động đất và nói \"chỉ nghĩ thôi đã rùng mình\".",
+    "options_analysis": [
+     "\"Chắc người ta cũng có phương án an toàn\" là lời cô phản bác.",
+     "Xe buýt bị gạt vì \"không đoán được thời gian\", không so về tốc độ.",
+     "Điều anh coi là vấn đề là độ sâu, không phải thời gian.",
+     "Đúng: anh sợ gặp động đất khi đang ở ga tàu sâu như thế."
+    ],
+    "points": [
+     "ぞっとする: rùng mình vì ghê sợ.",
+     "時間《じかん》が読《よ》めない: không đoán được mất bao lâu."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd1-56",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 56,
+   "section": "問題1",
+   "answer": 4,
+   "source_page": "別冊 p.23 第3章-2 会話を聞こう 1番 (問題冊子 p.43)",
+   "script_lines": [
+    "レストランで、店の人と女の人が話しています。店の人は、あとから何を持ってきますか。",
+    "男:お待たせいたしました。トマトとなすのスパゲッティと、オレンジジュースです。ご注文は、以上でよろしいでしょうか。",
+    "女:あのー、ピザが1つ、まだ来ていないんですが…。",
+    "男:あ、そうですか。…あのー、パスタ2種類とシーフードピザはご注文いただいて、お持ちしていますよね…。",
+    "女:ええ。あと、きのこのピザもお願いしたんですけど。",
+    "男:そうですか…申し訳ございません。すぐにお作りいたしますので、もう少々お待ちくださいませ。",
+    "女:時間があんまりないから、早くお願いします。それから、コーヒーのおかわり2つ、お願いします。",
+    "店の人は、あとから何を持ってきますか。"
+   ],
+   "printed_options": [
+    "シーフードピザ、パスタ、コーヒー",
+    "スパゲッティ、オレンジジュース",
+    "きのこのピザ、ジュース、コーヒー",
+    "きのこのピザ、コーヒー"
+   ],
+   "kaisetsu_cell": "女「あと、きのこのピザもお願いしたんですけど」＋「コーヒーのおかわり2つ、お願いします」＝この2つが未提供。1 ✗ 2 ✗「パスタ2種類とシーフードピザは…お持ちしていますよね」、スパゲッティとジュースも「お待たせいたしました」で提供済み。3 ✗ ジュースはもう出ている。",
+   "explanation": {
+    "why_correct": "未提供《みていきょう》は「きのこのピザ」と、あとから頼《たの》んだ「コーヒーのおかわり2つ」。",
+    "options_analysis": [
+     "シーフードピザとパスタは「お持ちしていますよね」と提供《ていきょう》済《ず》み。",
+     "スパゲッティとジュースは最初《さいしょ》に運《はこ》ばれている。",
+     "ジュースは「お待たせいたしました」で既《すで》に出《で》ている。",
+     "きのこのピザとコーヒーだけがこれから運《はこ》ばれる。"
+    ],
+    "points": [
+     "おかわり：同《おな》じ飲食物《いんしょくぶつ》をもう一度《いちど》もらうこと。",
+     "以上《いじょう》でよろしいでしょうか：注文《ちゅうもん》はこれで全部《ぜんぶ》か。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Chưa mang ra là pizza nấm và hai phần cà phê mà cô gọi thêm ở cuối.",
+    "options_analysis": [
+     "Pizza hải sản và pasta nhân viên khẳng định đã mang ra rồi.",
+     "Spaghetti và nước cam đã được mang lên từ đầu.",
+     "Nước ép đã có trên bàn ngay câu mở đầu.",
+     "Đúng: chỉ còn pizza nấm và cà phê là sắp mang tới."
+    ],
+    "points": [
+     "おかわり: gọi thêm phần thứ hai của cùng món.",
+     "以上《いじょう》でよろしいでしょうか: gọi vậy là đủ chưa?"
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd1-60",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 60,
+   "section": "問題1",
+   "answer": 1,
+   "source_page": "別冊 p.25 第3章-3 電話の会話やメッセージを聞こう 2番 (問題冊子 p.45)",
+   "script_lines": [
+    "留守番電話を聞いています。メッセージを聞いた人は、どうすればいいですか。",
+    "女:伊藤様の携帯電話でしょうか。ドコデモショップ駅前店の高橋です。先日お預かりしましたお客様の携帯電話の件ですが、お調べしましたところ、こちらの機種の部品は、もう取り扱いしていないため、修理ができないことがわかりました。機種変更など、ご相談を承りますので、ご都合のよろしいときに、お貸し出しました携帯電話をご持参の上、当店までおいでください。",
+    "メッセージを聞いた人は、どうすればいいですか。"
+   ],
+   "printed_options": [
+    "都合のいいときに店に行く",
+    "修理代を払いに店に行く",
+    "住所変更の手続きに店に行く",
+    "店から連絡があるのを待つ"
+   ],
+   "kaisetsu_cell": "「ご都合のよろしいときに、お貸し出しました携帯電話をご持参の上、当店までおいでください」が依頼。2 ✗「修理ができないことがわかりました」ので修理代は生じない。3 ✗ 相談は「機種変更など」で住所変更ではない。4 ✗ 連絡はこのメッセージで済んでいる。",
+   "explanation": {
+    "why_correct": "「ご都合のよろしいときに…当店までおいでください」と来店《らいてん》を頼《たの》まれている。",
+    "options_analysis": [
+     "都合《つごう》のよい日《ひ》に借《か》りた電話《でんわ》を持《も》って店《みせ》へ行《い》く。",
+     "「修理ができないことがわかりました」ので修理代《しゅうりだい》は出《で》ない。",
+     "相談《そうだん》は「機種変更など」で、住所《じゅうしょ》の話《はなし》ではない。",
+     "連絡《れんらく》はこの留守番《るすばん》メッセージで既《すで》に済《す》んでいる。"
+    ],
+    "points": [
+     "ご持参《じさん》の上《うえ》：持《も》ってきたうえで。",
+     "取《と》り扱《あつか》う：商品《しょうひん》として置《お》く、扱《あつか》う。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Tin nhắn nhờ khách mang máy cho mượn đến cửa hàng vào lúc nào thuận tiện.",
+    "options_analysis": [
+     "Đúng: hôm nào tiện thì mang máy mượn tới cửa hàng.",
+     "Máy không sửa được nên không phát sinh tiền sửa.",
+     "Nội dung tư vấn là đổi máy, không phải đổi địa chỉ.",
+     "Cửa hàng đã liên lạc rồi, chính là tin nhắn này."
+    ],
+    "points": [
+     "ご持参《じさん》の上《うえ》: sau khi mang theo.",
+     "取《と》り扱《あつか》う: có bán, có xử lý mặt hàng đó."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-2",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 2,
+   "section": "問題1",
+   "answer": 2,
+   "source_page": "別冊 p.29 第3章 まとめ問題 問題I 2番 (問題冊子 p.48)",
+   "script_lines": [
+    "電話で、男の人と女の人が話しています。男の人は、このあとまず何をしますか。",
+    "女:もしもし、インストラクターの山下です。",
+    "男:あ、山下先生、お世話になってます。",
+    "女:来月のプログラムなんですが…あれじゃ、だめなんです。休憩時間がないんですよ。だから、前と後のレッスンの調整が必要で…",
+    "男:それで、他のレッスンの先生との交渉が、必要だったんですよね。",
+    "女:ええ、だから、来月には間に合わないから、今月はそのままということで、お願いしたんです。でも、もう、プログラム印刷しちゃって、会員さんに配布されてますよね。",
+    "男:あー、すいません…。",
+    "女:それは、しかたがないから、とりあえず、貼り紙とかして訂正の案内をしてください。",
+    "男:申し訳ありません。了解しました。",
+    "男の人は、このあとまず何をしますか。"
+   ],
+   "printed_options": [
+    "プログラムを配る",
+    "訂正の貼り紙を作る",
+    "時間を調整する",
+    "プログラムを作り直す"
+   ],
+   "kaisetsu_cell": "女「とりあえず、貼り紙とかして訂正の案内をしてください」→男「了解しました」。1 ✗「もう、プログラム印刷しちゃって、会員さんに配布されてます」で済み。3 ✗ 調整は「来月には間に合わない」。4 ✗ 作り直しではなく「とりあえず」の訂正案内。",
+   "explanation": {
+    "why_correct": "「とりあえず、貼り紙とかして訂正の案内をしてください」に男《おとこ》が「了解しました」と応《おう》じる。",
+    "options_analysis": [
+     "配布《はいふ》は「会員さんに配布されてますよね」ともう終《お》わっている。",
+     "貼《は》り紙《がみ》での訂正《ていせい》案内《あんない》が「とりあえず」の指示《しじ》。",
+     "レッスンの調整《ちょうせい》は「来月には間に合わない」と見送《みおく》り。",
+     "作《つく》り直《なお》しではなく、印刷《いんさつ》済《ず》みのものを訂正《ていせい》する。"
+    ],
+    "points": [
+     "とりあえず：本格的《ほんかくてき》な対応《たいおう》の前《まえ》に、まず。",
+     "訂正《ていせい》：誤《あやま》りを正《ただ》しく直《なお》すこと。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Cô yêu cầu \"trước mắt cứ dán giấy thông báo đính chính\", và anh đáp đã hiểu.",
+    "options_analysis": [
+     "Chương trình đã in và phát cho hội viên rồi.",
+     "Đúng: làm giấy dán thông báo đính chính là chỉ thị trước mắt.",
+     "Việc điều chỉnh giờ lớp thì \"không kịp cho tháng sau\".",
+     "Không làm lại chương trình, chỉ đính chính bản đã in."
+    ],
+    "points": [
+     "とりあえず: trước mắt, tạm thời làm việc này đã.",
+     "訂正《ていせい》: đính chính, sửa cho đúng."
+    ]
+   }
+  },
+  {
+   "id": "soumatome:cd2-3",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 3,
+   "section": "問題1",
+   "answer": 3,
+   "source_page": "別冊 p.30 第3章 まとめ問題 問題I 3番 (問題冊子 p.48)",
+   "script_lines": [
+    "大学で、男の学生と女の学生が話しています。男の学生は、これから何をしなければなりませんか。",
+    "男:文化祭でライブハウスをやろうと思って、音楽室を借りてあるんだけど…。",
+    "女:あ、そう。マイクやアンプなんかは？",
+    "男:うん、それはね、バンドのメンバーが持ってくればいいから…。問題はね、ポスターを作らないといけないんだけど、みんなそういうの苦手で…。エミにお願いしたいんだけど、いい？　紙とかペンとか、用意するから。",
+    "女:それはいいけど、飲み物も出すんでしょ。コップとかの用意は？　あと、当日、手伝ってくれる人、頼んでんの？　最低3人は必要だと思うよ。私は、バイトで手伝えないからね。",
+    "男:えー、そうなの？　どうしよう…。",
+    "女:一番大事なことじゃない。すぐに手配しないと。",
+    "男の学生は、これから何をしなければなりませんか。"
+   ],
+   "printed_options": [
+    "部屋を借りる",
+    "ポスターの準備をする",
+    "当日、手伝ってくれる人を探す",
+    "マイクやアンプの用意をする"
+   ],
+   "kaisetsu_cell": "女「一番大事なことじゃない。すぐに手配しないと」＝「当日、手伝ってくれる人」の手配。1 ✗「音楽室を借りてあるんだけど」。2 ✗ ポスターは「エミにお願いしたい」と頼んだ。4 ✗「バンドのメンバーが持ってくればいいから」。",
+   "explanation": {
+    "why_correct": "手伝《てつだ》う人《ひと》について女《おんな》が「一番大事なことじゃない。すぐに手配しないと」と促《うなが》す。",
+    "options_analysis": [
+     "音楽室《おんがくしつ》は「借りてあるんだけど」と確保《かくほ》済《ず》み。",
+     "ポスターは「エミにお願いしたいんだけど」と依頼《いらい》した。",
+     "最低《さいてい》3人《さんにん》必要《ひつよう》で、まだだれにも頼《たの》んでいない。",
+     "マイクやアンプは「バンドのメンバーが持ってくればいい」。"
+    ],
+    "points": [
+     "手配《てはい》する：必要《ひつよう》な人《ひと》や物《もの》を準備《じゅんび》する。",
+     "苦手《にがて》：うまくできない、得意《とくい》でない。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Về người giúp hôm đó, cô nói \"đó mới là việc quan trọng nhất, phải lo ngay đi\".",
+    "options_analysis": [
+     "Phòng nhạc thì anh đã mượn được rồi.",
+     "Áp phích anh đã nhờ Emi làm giúp.",
+     "Đúng: cần ít nhất 3 người mà chưa nhờ được ai.",
+     "Mic và ampli thì thành viên band tự mang tới."
+    ],
+    "points": [
+     "手配《てはい》する: thu xếp người hoặc vật cần thiết.",
+     "苦手《にがて》: không giỏi, không thạo việc đó."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd1-45",
+   "book": "shinkanzen",
+   "cd": 1,
+   "track": 45,
+   "section": "問題1",
+   "answer": 2,
+   "source_page": "別冊 p.13 実力養成編III 課題理解 確認問題 (2) (問題用紙 p.46)",
+   "script_lines": [
+    "夕方、外で女の人と男の人が話しています。2人は晩ご飯をどうしますか。",
+    "女:あー、おなかすいた。今日はどこかで食べて帰ろうか。疲れたし……。",
+    "男:うーん、そうだなあ……。",
+    "女:週末ぐらい外食でもいいんじゃない？　カレーなんかどうかしら。何か辛いのが食べたいな。",
+    "男:カレーなら缶詰のカレーがあっただろう？　あれとサラダがあれば、店で食べたのと同じだよ。",
+    "女:たしかにあの缶詰は、味は抜群だよね。でも、今から帰って準備したくないなあ。じゃ、カレーやめて、ピザでもとる？　あ、そうだ。新しいピザのお店が近所にできてたよね。あそこ、行ってみる？",
+    "男:辛い物が食べたいんだろ？　サラダは野菜を切るだけだし、僕がやろうか。7時半からいい番組があるんだ。",
+    "女:ほんと？　お願いしていい？",
+    "2人は晩ご飯をどうしますか。"
+   ],
+   "printed_options": [
+    "店でカレーを食べる",
+    "家でカレーを食べる",
+    "店でピザを食べる",
+    "家でピザを食べる"
+   ],
+   "kaisetsu_cell": "男「サラダは野菜を切るだけだし、僕がやろうか」→女「お願いしていい？」で、缶詰のカレーを家で食べることに決まる。1 ✗「今から帰って準備したくないなあ」の後、男の提案に乗った。3 ✗ 4 ✗ ピザ案は男「辛い物が食べたいんだろ？」で戻された。",
+   "explanation": {
+    "why_correct": "男《おとこ》が「僕がやろうか」と申《もう》し出《で》て、女《おんな》が「お願いしていい？」と受《う》ける。",
+    "options_analysis": [
+     "外食《がいしょく》案《あん》は缶詰《かんづめ》のカレーで足《た》りると返《かえ》された。",
+     "缶詰《かんづめ》のカレーとサラダを家《いえ》で食《た》べることになる。",
+     "ピザ案《あん》は「辛い物が食べたいんだろ？」で取《と》り下《さ》げられた。",
+     "家《いえ》でもピザではなくカレーに決《き》まっている。"
+    ],
+    "points": [
+     "抜群《ばつぐん》：ほかよりずっとすぐれている。",
+     "外食《がいしょく》：家《いえ》の外《そと》の店《みせ》で食《た》べること。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Anh đề nghị mình làm salad, cô đồng ý nhờ, nên hai người ăn cà ri hộp ở nhà.",
+    "options_analysis": [
+     "Ý ăn ngoài bị gạt vì đã có cà ri hộp ở nhà.",
+     "Đúng: ăn cà ri hộp cùng salad ở nhà.",
+     "Ý gọi pizza bị rút lại vì cô muốn ăn món cay.",
+     "Ở nhà nhưng là cà ri, không phải pizza."
+    ],
+    "points": [
+     "抜群《ばつぐん》: xuất sắc hơn hẳn những cái khác.",
+     "外食《がいしょく》: ăn ở ngoài, ăn ngoài hàng."
+    ]
+   }
+  },
+  {
+   "id": "shinkanzen:cd1-46",
+   "book": "shinkanzen",
+   "cd": 1,
+   "track": 46,
+   "section": "問題1",
+   "answer": 1,
+   "source_page": "別冊 p.13 実力養成編III 課題理解 確認問題 (3) (問題用紙 p.46)",
+   "script_lines": [
+    "男の学生が大学の案内を見ながら先生と話しています。男の学生はこの後まず、どうしますか。",
+    "男:僕、芸術関係の学部を受けようと思ってるんですけど、東西大学の美術科と、さくら大学のアニメーション科と、情報デザイン科の、どこを受けるかまだ迷ってて……。",
+    "女:あら、3つとも全然違うわね。",
+    "男:はあ。先輩に会って話を聞いたら、この3つが面白そうだなと思ったんです。でも、やりたいことがいろいろあって、まだ1つに決められないんです。",
+    "女:そう。先輩の話も役に立つけど、自分の目で見てみると、違う感想を持つかもしれないわよ。オープンキャンパスには行ってみた？",
+    "男:いえ。",
+    "女:じゃ、オープンキャンパスに行って、実際にどんなことをやってるか、見てみればいいんじゃない？　ちゃんと資料を読んでから行くのよ。そうしないと、比べようがないからね。調べているうちに、やりたいことがはっきりしてくるかもしれないし。",
+    "男:はい、わかりました。あのー、資料って、インターネットで申し込めますか。",
+    "女:ええ、大丈夫よ。",
+    "男:はい、じゃ、調べてみます。ありがとうございました。",
+    "男の学生はこの後まず、どうしますか。"
+   ],
+   "printed_options": [
+    "資料を取り寄せる",
+    "先輩に会う",
+    "オープンキャンパスに行く",
+    "自分のやりたいことを考える"
+   ],
+   "kaisetsu_cell": "先生「ちゃんと資料を読んでから行くのよ」→男「資料って、インターネットで申し込めますか」＝まず資料の請求。2 ✗「先輩に会って話を聞いたら」で済んでいる。3 ✗ 資料を読んでから行く順。4 ✗「調べているうちに…はっきりしてくる」＝資料の後。",
+   "explanation": {
+    "why_correct": "「ちゃんと資料を読んでから行くのよ」を受《う》けて、男《おとこ》は資料《しりょう》の申《もう》し込《こ》みを尋《たず》ねる。",
+    "options_analysis": [
+     "先《さき》に資料《しりょう》を取《と》り寄《よ》せ、読《よ》んでから見学《けんがく》する。",
+     "先輩《せんぱい》には「会って話を聞いたら」ともう会《あ》っている。",
+     "オープンキャンパスは資料《しりょう》を読《よ》んだ後《あと》の順番《じゅんばん》。",
+     "やりたいことは「調べているうちに」はっきりしてくるとされる。"
+    ],
+    "points": [
+     "取《と》り寄《よ》せる：頼《たの》んで送《おく》ってもらう。",
+     "比《くら》べようがない：比《くら》べる手《て》がかりがない。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Cô giáo dặn phải đọc tài liệu trước khi đi, nên cậu hỏi ngay cách đăng ký nhận tài liệu.",
+    "options_analysis": [
+     "Đúng: xin tài liệu về đọc trước, rồi mới đi tham quan.",
+     "Cậu đã gặp và nghe khóa trên nói chuyện rồi.",
+     "Open campus là bước sau khi đã đọc tài liệu.",
+     "Điều muốn làm sẽ rõ dần \"trong lúc tìm hiểu\", tức là sau."
+    ],
+    "points": [
+     "取《と》り寄《よ》せる: đặt để người ta gửi tới.",
+     "比《くら》べようがない: không có cơ sở nào để so sánh."
+    ]
+   }
   }
  ],
  "excluded": [
@@ -2039,6 +2779,60 @@
    "section": "問題2",
    "source_page": "別冊 p.42 第4章 まとめ問題 問題II 1番 (問題冊子 p.61)",
    "reason": "Refused by CHAR_RATE at 0.202 s/char against a 0.200 ceiling — 66.3 s of body, 199 characters, a three-line radio traffic bulletin read in announcer register with no dialogue turns to absorb the span. One percent over is still over: the repair is a different item, never a wider band. Key 1, read off 別冊 p.42."
+  },
+  {
+   "id": "soumatome:cd1-48",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 48,
+   "section": "問題3",
+   "source_page": "別冊 p.19 第2章 まとめ問題 問題IV 1番 (問題冊子 p.37)",
+   "reason": "Right type (「2人は何について話していますか」, options spoken), far too short. Body span 38.0 s against a 43.7–115.0 s range for the official 概要理解 items in logs/choukai_bank.json, and its talk is two turns totalling ~105 spoken characters against `check_consistency.P3_TALK_FLOOR` = 175 and an official current-era range of 158–397. It clears TYPE_BANDS's 33 s floor, which is why the floor alone is not the test. Key 4, read off 別冊 p.19."
+  },
+  {
+   "id": "soumatome:cd2-39",
+   "book": "soumatome",
+   "cd": 2,
+   "track": 39,
+   "section": "問題3",
+   "source_page": "別冊 p.49 第5章 総まとめ問題 問題III 1番 (問題冊子 p.68)",
+   "reason": "Fourth case of the section's-1番 class (cd1/39, cd2/43, cd2/34), and the first one found in 概要理解: 103.9 s of body against 373 transcribed characters implies 0.225 s/char, outside CHAR_RATE's 0.060–0.200. 問題III's own instruction (「この問題は、全体としてどんな内容かを聞く問題です。話の前に質問はありません…」, ~90 characters) is bound into the track ahead of the item, which accounts for the ~15 s the transcript cannot explain. Transcript and key (4, 別冊 p.49) are correct. Rule of thumb from four instances: expect the FIRST track of any Soumatome section run to be refused, and read the refusal as the guard working."
+  },
+  {
+   "id": "shinkanzen:cd1-44",
+   "book": "shinkanzen",
+   "cd": 1,
+   "track": 44,
+   "section": "問題1",
+   "source_page": "別冊 p.12 実力養成編III 課題理解 確認問題 (1) (問題用紙 p.46)",
+   "reason": "Picture-legend item, the same class as 模擬試験 問題1's 1番 and 3番: 問題用紙 p.46 prints five illustrations labelled A〜E (燃やせるごみ / 段ボール / ペットボトル / カップラーメンの容器 / ビデオテープ) and the four options are letter combinations (1 C D, 2 D E, 3 B C D, 4 A B C). `compose_choukai.render_booklet` prints a flat 1–4 list with no legend, so the item would reach the examinee unanswerable. Key 1, read off 別冊 p.12."
+  },
+  {
+   "id": "soumatome:cd1-59",
+   "book": "soumatome",
+   "cd": 1,
+   "track": 59,
+   "section": "問題1",
+   "source_page": "別冊 p.25 第3章-3 電話の会話やメッセージを聞こう 1番 (問題冊子 p.45)",
+   "reason": "Same class as shinkanzen:cd1-44, by a table instead of pictures: the item is answerable only against the 不在連絡票 form 問題冊子 p.45 prints above the options (delivery date/slip number plus the automated menu 「希望なし→0 午前中→1 12〜15時→2 15〜18時→3 18〜21時→4」), and the four options are which button to press. The booklet has nowhere to put the form. Key 1, read off 別冊 p.25."
+  },
+  {
+   "id": "shinkanzen:問題2-practice",
+   "book": "shinkanzen",
+   "cd": 1,
+   "track": 0,
+   "section": "問題2",
+   "source_page": "実力養成編IV ポイント理解 (別冊 pp.14–18, 問題用紙 pp.47–61) and 模擬試験 問題2 (別冊 pp.37–39)",
+   "reason": "Shin Kanzen contributes NO 問題2 item, and it is a whole-book property rather than a mock-paper quirk. Every one of the 163 tracks on both CDs was swept for an internal pause of 8 s or more: the longest option-reading pause anywhere in the book is 10.1 s (模擬試験 問題2 = CD2 52–57 at 10.1 s each; 確認問題 = CD1 67–69 at 10.0–10.1 s; the 練習 tracks CD1 57–65 at 8.0–8.1 s). Official lays 20.22 s [20.19–20.81] and `choukai_segment.GAP_OPTION_READING` expects it; the pause is INSIDE the clip and the composer never re-times it, so any of these would hand the examinee half the time to read four printed options with no gate able to see it. The book itself says the exam gives ~20 s — 問題用紙 p.47: 「実際の試験では、質問の後、話が始まるまで20秒ぐらい時間があります」. Soumatome lays the full 20.1–20.3 s and covers 問題2 on its own."
+  },
+  {
+   "id": "shinkanzen:cd1-25",
+   "book": "shinkanzen",
+   "cd": 1,
+   "track": 25,
+   "section": "問題4",
+   "source_page": "別冊 p.7 実力養成編II 即時応答 確認問題 (1)–(4) (問題用紙 p.31)",
+   "reason": "FOUR exam-format 即時応答 items inside ONE track — the only bundled track found in either book, and the only unmined 即時応答 material left (Soumatome's two sets and Shin Kanzen's 模擬試験 12 are all banked, and every other 練習 in Shin Kanzen chapter II is a two-option a/b drill, not an exam item). Keys read off 別冊 p.7: (1) 3, (2) 3, (3) 1, (4) 2. A splitter was written for it and REFUSED it, correctly: the body carries FOUR pauses of 2.5 s+ (3.20 s @34.9, 3.08 s @61.2, 3.30 s @84.8, 2.96 s @107.6) where three would split it into four, so the track is not the shape the declaration claims. Two interleaved series run through it that no measurement here explains — 0.16 s blips each preceded by exactly 2.28 s (@22.9, @43.6, @71.1) and 0.90 s runs each preceded by ~3.1 s (@34.9, @61.2, @84.8, @107.6, the last with only 1.6 s of file after it) — and the 0.90 s length is the same as the fixed Shin Kanzen track-id word. Finishing this needs an EAR on the track, not another guess at where the boundaries are; a wrong split ships a clip that starts mid-sentence into every paper that draws it, and no gate hears anything."
   }
  ]
 }

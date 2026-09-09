@@ -975,16 +975,16 @@
   ]
  },
  "問1-5": {
-  "why_correct": "Nhân viên yêu cầu đặt đồ trong thùng lên bàn cho dễ lấy trước tiên.",
+  "why_correct": "Nhân viên nói thủ tục ở đây hết hạn ngày mai nên phải gấp, vậy việc đầu tiên là làm bài test trên web.",
   "options_analysis": [
-   "Đóng túi sẵn đã bị thay đổi, không còn áp dụng.",
-   "Đặt thùng carton dưới bàn nhân viên nói đã làm xong.",
-   "Nhân viên yêu cầu rõ đặt đồ trong thùng lên bàn cho dễ lấy.",
-   "Kiểm tra số lượng chỉ liên quan lúc phát đồ cho SV sau này."
+   "Đúng: thủ tục hạn ngày mai, nên làm placement test trên mạng trước.",
+   "Xin dấu của giáo viên hướng dẫn là thủ tục ở Takeoka, hạn thứ Hai tuần sau.",
+   "Việc kiểm tra chỉ làm sau khi đã đăng ký xong.",
+   "Thi viết cũng thuộc Takeoka, hạn còn xa hơn."
   ],
   "points": [
-   "取《と》りやすいように: để dễ lấy.",
-   "ボランティア: tình nguyện viên."
+   "認《みと》め印《いん》: con dấu xác nhận.",
+   "締《し》め切《き》り: hạn cuối nhận hồ sơ."
   ]
  },
  "問2-1": {
@@ -1001,29 +1001,29 @@
   ]
  },
  "問2-2": {
-  "why_correct": "「自分が仕事でどう力を発揮できるか、そこを知りたい」＝muốn tìm thế mạnh bản thân.",
+  "why_correct": "Khi bác sĩ hỏi về động tác duỗi ngang, cô đáp \"cái đó thì vẫn còn đau\".",
   "options_analysis": [
-   "Cô nói rõ chưa nghĩ đến việc lợi cho xin việc.",
-   "Lo lắng giao tiếp là mối bận tâm, không phải điều kỳ vọng.",
-   "“Hiểu đời sống công ty” là gợi ý của bạn nam, không phải của cô.",
-   "Đúng."
+   "Đúng: chỉ động tác duỗi tay ngang là vẫn còn đau.",
+   "Xoay tay ra sau thì \"vẫn hoàn toàn chưa được\".",
+   "Nếu làm từ từ thì cô đã nâng tay lên được rồi.",
+   "Bác sĩ nói không cần dán băng nữa."
   ],
   "points": [
-   "実習《じっしゅう》: nghĩa “thực tập”.",
-   "発揮《はっき》する: nghĩa “phát huy”."
+   "具合《ぐあい》: tình trạng (cơ thể, sự việc).",
+   "伸《の》ばす: duỗi thẳng, kéo dài ra."
   ]
  },
  "問2-3": {
-  "why_correct": "Vận động viên giải nghệ vì được mời làm huấn luyện viên điền kinh đại học.",
+  "why_correct": "「クラスメイトの意外な一面を知ることができた」「どんなことより印象に残ってる」→ điều ấn tượng nhất.",
   "options_analysis": [
-   "Đúng: được mời làm huấn luyện viên khiến anh giải nghệ sớm.",
-   "Anh đã vào cao học từ trước, không phải lý do giải nghệ.",
-   "'Còn đủ sức thi đấu' là điều khiến anh phân vân, không phải lý do quyết định.",
-   "Bài phỏng vấn không nói đến thể lực giảm sút."
+   "Thiên nhiên phong phú chỉ là một cảm nhận, không phải nhất.",
+   "Thu hoạch rau củ là sự thật nhưng không ấn tượng nhất.",
+   "Đúng: biết mặt bất ngờ của bạn cùng lớp là ấn tượng nhất.",
+   "Sự thú vị nông nghiệp bị nhượng bộ bằng 'もちろん'."
   ],
   "points": [
-   "指導者《しどうしゃ》: người chỉ đạo, huấn luyện viên.",
-   "引退《いんたい》: giải nghệ, nghỉ hưu."
+   "意外な一面: mặt bất ngờ.",
+   "印象に残る: để lại ấn tượng sâu."
   ]
  },
  "問2-4": {
@@ -1066,42 +1066,42 @@
   ]
  },
  "問3-1": {
-  "why_correct": "Bài xâu chuỗi sự thay đổi: từ gạo sang thịt và dầu, rồi cả cách ăn cũng khác xưa.",
+  "why_correct": "Ông nhận là người này quen hát và hát khá, nhưng chỉ dừng ở đó, không đọng lại gì.",
   "options_analysis": [
-   "Nói cả nội dung lẫn cách ăn đều 「昔とは大きく異なる」.",
-   "Không chỉ từ 1950 mà theo dòng thay đổi từ xưa tới nay.",
-   "Không đánh giá về dinh dưỡng.",
-   "Đồ ăn ngoại chỉ được nhắc như nguyên nhân của thay đổi."
+   "Ông nói rõ là không có gì đọng lại trong lòng.",
+   "Đúng: hát tốt nhưng không để lại ấn tượng.",
+   "Ông không chê giọng hát chỉ ở mức trung bình.",
+   "Ông thừa nhận là hát khá, không hề nói dở."
   ],
   "points": [
-   "食生活《しょくせいかつ》: sinh hoạt ăn uống.",
-   "〜に伴《ともな》って: kéo theo đó, cùng với đó."
+   "印象《いんしょう》に残《のこ》る: đọng lại ấn tượng.",
+   "発表会《はっぴょうかい》: buổi biểu diễn ở trường."
   ]
  },
  "問3-2": {
-  "why_correct": "Giới thiệu việc làm, nhà trống, trợ cấp cải tạo, thể nghiệm cuộc sống→ nói về hỗ trợ người muốn chuyển đến sống.",
+  "why_correct": "Trả lời câu \"ban đêm chim ngủ ở đâu\", bố giải thích nơi không bị phát hiện và không lộng gió.",
   "options_analysis": [
-   "Bài không đề cập sự thay đổi độ tuổi người di cư.",
-   "Đúng, nói về hỗ trợ người di cư.",
-   "Bài không nói về điều cần lưu ý khi di cư.",
-   "Bài không hướng dẫn cách xin trợ cấp cụ thể."
+   "Bị phát hiện thì \"bị bắt\" — không phải chuyện tìm chim.",
+   "Chuyện bệnh tật hoàn toàn không được nói tới.",
+   "Đúng: khó bị phát hiện và tránh gió là điều kiện chỗ ngủ.",
+   "Cách tìm thức ăn cũng không hề được đề cập."
   ],
   "points": [
-   "移住《いじゅう》: di cư",
-   "補助《ほじょ》: trợ cấp"
+   "電線《でんせん》: dây điện.",
+   "体《からだ》が冷《ひ》える: cơ thể bị lạnh đi."
   ]
  },
  "問3-3": {
-  "why_correct": "「子供たちが笑顔で駆け寄ってきて…元気をもらえてありがたい」→ toàn bài nói về niềm vui bán kẹo.",
+  "why_correct": "Nội dung là điều cần lưu ý khi nhắc con, gồm cả việc công nhận nỗ lực của con.",
   "options_analysis": [
-   "Đúng: toàn bài nói về niềm vui khi trẻ em ghé thăm cửa hàng.",
-   "Món kẹo xưa chỉ được nam MC giới thiệu, không phải chủ đề chính.",
-   "Bài không so sánh sự khác biệt giữa kẹo xưa và nay.",
-   "Bài không nói về bí quyết duy trì cửa hàng lâu dài."
+   "Bài nói không bàn về việc cùng nhau học tập.",
+   "Bài nói không chỉ bàn thời điểm khen, mà cách nhắc nhở nói chung.",
+   "Bài nói không bàn về mặt hại của việc mắng con.",
+   "Đúng: nội dung là điều cần lưu ý khi nhắc con, gồm công nhận nỗ lực."
   ],
   "points": [
-   "駆け寄る: chạy đến gần.",
-   "元気をもらう: được tiếp thêm năng lượng."
+   "肯定感《こうていかん》: cảm giác tự tin, được công nhận.",
+   "目《め》を向《む》けさせる: hướng sự chú ý đến."
   ]
  },
  "問3-4": {
@@ -1118,28 +1118,28 @@
   ]
  },
  "問3-5": {
-  "why_correct": "「田んぼの水に浮かぶ小型のロボット」「手間を減らすことができる」→ toàn bài nói về ứng dụng robot trồng lúa.",
+  "why_correct": "Về bản thân, cô nói rõ muốn biết cả tên bệnh thật lẫn còn sống được bao lâu.",
   "options_analysis": [
-   "Bài nói về lợi ích giảm công sức, không phải vấn đề của kỹ thuật.",
-   "Bài không nói về hương vị của gạo không dùng thuốc trừ sâu.",
-   "Bài không nói về độ khó khi chế tạo robot.",
-   "Đúng: toàn bài nói về việc ứng dụng robot nhỏ trong trồng lúa."
+   "Đúng: cô tự nói muốn biết cả bệnh danh và thời gian còn lại.",
+   "\"Sốc đến không làm gì được\" là dự đoán về người mẹ.",
+   "\"Không để những ngày còn lại thành vô nghĩa\" là chuyện của chính cô.",
+   "Với người thân, cô nói \"không rõ có nên nói thật hay không\"."
   ],
   "points": [
-   "雑草: cỏ dại.",
-   "手間を減らす: giảm bớt công sức."
+   "イコール: tương đương, đồng nghĩa với.",
+   "残《のこ》された日々《ひび》: quãng thời gian còn lại."
   ]
  },
  "問4-1": {
-  "why_correct": "「おかゆすら」nghĩa là ngay cả cháo cũng không ăn nổi → phản hồi hợp lý là hỏi 'không ăn được gì cả à?'.",
+  "why_correct": "「大学を卒業して以来だよね？」＝lâu rồi không gặp → đáp án 2.",
   "options_analysis": [
-   "Hiểu sai thành 'chỉ ăn được cháo', ngược ý câu gốc.",
-   "Đúng: xác nhận đúng ý 'không ăn được gì, kể cả cháo'.",
-   "Không hợp vì câu gốc nói về hôm qua, không phải lời khuyên chung."
+   "Ngược ý câu gốc (đang nói lâu không gặp).",
+   "久しぶりだね。元気？＝lâu rồi không gặp, phản hồi tự nhiên.",
+   "Nói hẹn gặp tương lai, không hợp vì đang nói việc gặp lại sau nhiều năm."
   ],
   "points": [
-   "〜すら: ngay cả... (trường hợp cực đoan nhất).",
-   "腹痛: đau bụng."
+   "〜以来《いらい》: kể từ khi ~.",
+   "久しぶり《ひさしぶり》: đã lâu không gặp/làm."
   ]
  },
  "問4-2": {
@@ -1179,15 +1179,15 @@
   ]
  },
  "問4-5": {
-  "why_correct": "「お変わりありませんか」là câu chào hỏi tình hình → đáp là vẫn như cũ.",
+  "why_correct": "Được khen thì đáp lại bằng cách khiêm tốn phủ nhận là tự nhiên nhất.",
   "options_analysis": [
-   "「ご苦労様」là lời ghi công, không đáp câu hỏi tình hình.",
-   "「ごめんください」dùng khi tới nhà ai hoặc lúc chia tay.",
-   "「相変わらず」= vẫn như trước, không gì thay đổi."
+   "Nói về việc sẽ thử làm, không phải đáp lời khen.",
+   "「大したことになった」= chuyện thành to, sai nghĩa.",
+   "Cách khiêm tốn quen dùng để gạt lời khen."
   ],
   "points": [
-   "ご無沙汰《ぶさた》: lâu không liên lạc.",
-   "相変《あいか》わらず: vẫn như cũ."
+   "それほどでもない: không đến mức như vậy.",
+   "えらい: giỏi, đáng khen."
   ]
  },
  "問4-6": {
@@ -1215,6 +1215,18 @@
   ]
  },
  "問4-8": {
+  "why_correct": "Câu hỏi về việc có đủ thời gian xem hết vườn thú, phản hồi tự nhiên là khẳng định đủ.",
+  "options_analysis": [
+   "Đúng, khẳng định một ngày là đủ.",
+   "Hiểu sai thành không cần quan tâm thời gian.",
+   "Hiểu ngược thành xem xong quá nhanh, không khớp câu hỏi."
+  ],
+  "points": [
+   "回り切る《まわりきる》: đi hết một vòng",
+   "動物園《どうぶつえん》: vườn thú"
+  ]
+ },
+ "問4-9": {
   "why_correct": "「笑わせないでくれよ」= nghe không thật → đáp rằng mình hoàn toàn nghiêm túc.",
   "options_analysis": [
    "「大真面目」= rất nghiêm túc, không phải nói đùa.",
@@ -1224,18 +1236,6 @@
   "points": [
    "大真面目《おおまじめ》: hoàn toàn nghiêm túc.",
    "笑《わら》わせないで: đừng nói chuyện vô lý."
-  ]
- },
- "問4-9": {
-  "why_correct": "Trả lời phù hợp với thông tin không giới hạn độ tuổi tham gia là hỏi lại để xác nhận.",
-  "options_analysis": [
-   "「年齢に制限があるんですね」hiểu ngược ý 'không phân biệt tuổi tác'.",
-   "Đúng: 「何歳でもいいんですか」= xác nhận lại việc không giới hạn độ tuổi, khớp thông tin nghe được.",
-   "「親子では出られないんですね」là suy đoán sai về thông tin chưa được nói đến."
-  ],
-  "points": [
-   "年齢《ねんれい》を問《と》わず: không phân biệt tuổi tác.",
-   "聞《き》き返《かえ》す: hỏi lại để xác nhận."
   ]
  },
  "問4-10": {
@@ -1251,15 +1251,15 @@
   ]
  },
  "問4-11": {
-  "why_correct": "Được khen thì đáp lại bằng cách khiêm tốn phủ nhận là tự nhiên nhất.",
+  "why_correct": "「お引き受けいたしかねます」nghĩa là từ chối nhận việc, phản hồi tự nhiên là hỏi lý do từ chối.",
   "options_analysis": [
-   "Nói về việc sẽ thử làm, không phải đáp lời khen.",
-   "「大したことになった」= chuyện thành to, sai nghĩa.",
-   "Cách khiêm tốn quen dùng để gạt lời khen."
+   "Hiểu sai thành đang chờ câu trả lời, trong khi đây đã là câu trả lời từ chối.",
+   "Hiểu ngược thành đã được nhận việc.",
+   "Đúng, hỏi lý do từ chối."
   ],
   "points": [
-   "それほどでもない: không đến mức như vậy.",
-   "えらい: giỏi, đáng khen."
+   "引き受ける《ひきうける》: nhận, đảm nhận",
+   "〜かねる: khó có thể làm (từ chối)"
   ]
  },
  "問5-1": {

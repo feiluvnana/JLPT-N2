@@ -187,13 +187,9 @@ def speech_runs(path: Path) -> tuple[list[list[float]], float]:
     return merged, envelope.size * frame_s
 
 
-def body_span(path: Path, max_header_runs: int
-              ) -> tuple[float, float, float, int, int]:
-    """(start, end, file duration, header runs dropped, tail runs dropped)."""
-    runs, duration = speech_runs(path)
-    if not runs:
-        raise Refused(f"{path.name}: no speech above the extended threshold")
-
+def _trim(runs: list[list[float]], duration: float, max_header_runs: int
+          ) -> tuple[int, int]:
+    """(first, last) run index of the item body, both ends stripped."""
     first = 0
     while first < len(runs) and first < max_header_runs:
         start, end = runs[first]
@@ -211,7 +207,16 @@ def body_span(path: Path, max_header_runs: int
             last -= 1
         else:
             break
+    return first, last
 
+
+def body_span(path: Path, max_header_runs: int
+              ) -> tuple[float, float, float, int, int]:
+    """(start, end, file duration, header runs dropped, tail runs dropped)."""
+    runs, duration = speech_runs(path)
+    if not runs:
+        raise Refused(f"{path.name}: no speech above the extended threshold")
+    first, last = _trim(runs, duration, max_header_runs)
     return (runs[first][0], runs[last][1], duration,
             first, len(runs) - 1 - last)
 
