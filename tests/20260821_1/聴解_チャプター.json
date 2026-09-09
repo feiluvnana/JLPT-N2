@@ -1,5 +1,5 @@
 {
- "duration": 2882.24,
+ "duration": 2829.94,
  "chapters": [
   {
    "label": "問題1",
@@ -7,138 +7,138 @@
   },
   {
    "label": "問題1 1番",
-   "start": 91.05
+   "start": 95.53
   },
   {
    "label": "問題1 2番",
-   "start": 191.39
+   "start": 176.37
   },
   {
    "label": "問題1 3番",
-   "start": 275.13
+   "start": 272.95
   },
   {
    "label": "問題1 4番",
-   "start": 400.65
+   "start": 361.23
   },
   {
    "label": "問題1 5番",
-   "start": 502.29
+   "start": 462.87
   },
   {
    "label": "問題2",
-   "start": 591.33
+   "start": 555.89
   },
   {
    "label": "問題2 1番",
-   "start": 745.41
+   "start": 697.39
   },
   {
    "label": "問題2 2番",
-   "start": 858.93
+   "start": 810.91
   },
   {
    "label": "問題2 3番",
-   "start": 985.15
+   "start": 937.13
   },
   {
    "label": "問題2 4番",
-   "start": 1087.95
+   "start": 1039.93
   },
   {
    "label": "問題2 5番",
-   "start": 1213.17
+   "start": 1165.15
   },
   {
    "label": "問題2 6番",
-   "start": 1316.35
+   "start": 1268.33
   },
   {
    "label": "問題3",
-   "start": 1422.51
+   "start": 1385.25
   },
   {
    "label": "問題3 1番",
-   "start": 1507.05
+   "start": 1469.79
   },
   {
    "label": "問題3 2番",
-   "start": 1599.01
+   "start": 1549.13
   },
   {
    "label": "問題3 3番",
-   "start": 1684.95
+   "start": 1631.03
   },
   {
    "label": "問題3 4番",
-   "start": 1778.49
+   "start": 1731.97
   },
   {
    "label": "問題3 5番",
-   "start": 1863.71
+   "start": 1817.19
   },
   {
    "label": "問題4",
-   "start": 1964.27
+   "start": 1917.75
   },
   {
    "label": "問題4 1番",
-   "start": 2114.17
+   "start": 2067.65
   },
   {
    "label": "問題4 2番",
-   "start": 2143.37
+   "start": 2094.83
   },
   {
    "label": "問題4 3番",
-   "start": 2170.55
+   "start": 2125.05
   },
   {
    "label": "問題4 4番",
-   "start": 2199.17
+   "start": 2156.07
   },
   {
    "label": "問題4 5番",
-   "start": 2235.63
+   "start": 2189.29
   },
   {
    "label": "問題4 6番",
-   "start": 2262.15
+   "start": 2215.81
   },
   {
    "label": "問題4 7番",
-   "start": 2295.37
+   "start": 2249.03
   },
   {
    "label": "問題4 8番",
-   "start": 2326.39
+   "start": 2280.05
   },
   {
    "label": "問題4 9番",
-   "start": 2357.33
+   "start": 2319.95
   },
   {
    "label": "問題4 10番",
-   "start": 2393.11
+   "start": 2349.99
   },
   {
    "label": "問題4 11番",
-   "start": 2426.29
+   "start": 2383.17
   },
   {
    "label": "問題5",
-   "start": 2463.47
+   "start": 2415.77
   },
   {
    "label": "問題5 1番",
-   "start": 2500.63
+   "start": 2446.73
   },
   {
    "label": "問題5 2番",
-   "start": 2655.53
+   "start": 2603.23
   }
  ],
  "source": "composed",
  "bank_version": 2,
- "script_sha": "79fdba386e17"
+ "script_sha": "2fb8622e57ef"
 }

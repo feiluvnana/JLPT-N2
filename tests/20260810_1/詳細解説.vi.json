@@ -923,16 +923,16 @@
   ]
  },
  "問1-1": {
-  "why_correct": "Thầy nói:「ハンさんの勉強の進め方やその工夫などについて紹介してほしい」— nhờ giới thiệu cách học và bí quyết học tập.",
+  "why_correct": "Anh nam nói muốn về bằng chuyến sớm nhất ngày mốt và nhờ \"cái đó làm trước\", nên việc đầu tiên là đổi vé.",
   "options_analysis": [
-   "[Sai] Sinh hoạt CLB không phải chủ đề được nhờ giới thiệu.",
-   "[Sai] Thầy nói việc làm thêm do sinh viên khác phụ trách.",
-   "[Đúng] Được nhờ giới thiệu cách học và bí quyết học tập.",
-   "[Sai] Xin việc chỉ hẹn bàn riêng, không phải chủ đề định hướng."
+   "Đúng: đổi vé sang chuyến shinkansen sớm nhất ngày mốt.",
+   "Việc tra giờ tàu cô đã làm rồi, tàu hết chỗ.",
+   "Địa điểm khách sạn không hề được nhắc tới.",
+   "Đặt khách sạn bị hoãn: \"cái đó để sau cũng được\"."
   ],
   "points": [
-   "工夫《くふう》: bí quyết, cách làm hay.",
-   "紹介《しょうかい》する: giới thiệu."
+   "朝一番《あさいちばん》: chuyến sớm nhất trong ngày.",
+   "先《さき》に: làm trước, ưu tiên hơn việc khác."
   ]
  },
  "問1-2": {
@@ -975,16 +975,16 @@
   ]
  },
  "問1-5": {
-  "why_correct": "Nhân viên nói thủ tục ở đây hết hạn ngày mai nên phải gấp, vậy việc đầu tiên là làm bài test trên web.",
+  "why_correct": "Hướng dẫn viên nói \"bây giờ cả nhóm cùng đi thăm bảo tàng mỹ thuật\", nên đó là việc kế tiếp.",
   "options_analysis": [
-   "Đúng: thủ tục hạn ngày mai, nên làm placement test trên mạng trước.",
-   "Xin dấu của giáo viên hướng dẫn là thủ tục ở Takeoka, hạn thứ Hai tuần sau.",
-   "Việc kiểm tra chỉ làm sau khi đã đăng ký xong.",
-   "Thi viết cũng thuộc Takeoka, hạn còn xa hơn."
+   "Nhà hàng là chuyện của giờ ăn tối 7h và ăn sáng 6h30.",
+   "Đúng: cả nhóm đi thăm bảo tàng mỹ thuật ngay bây giờ.",
+   "Mua sắm thuộc thời gian tự do \"sau đó\", không phải ngay.",
+   "Về phòng nghỉ cũng là lựa chọn của thời gian tự do sau."
   ],
   "points": [
-   "認《みと》め印《いん》: con dấu xác nhận.",
-   "締《し》め切《き》り: hạn cuối nhận hồ sơ."
+   "参《まい》る: dạng khiêm nhường của 行く.",
+   "くつろぐ: thư giãn, nghỉ ngơi thoải mái."
   ]
  },
  "問2-1": {
@@ -1001,29 +1001,29 @@
   ]
  },
  "問2-2": {
-  "why_correct": "Khi bác sĩ hỏi về động tác duỗi ngang, cô đáp \"cái đó thì vẫn còn đau\".",
+  "why_correct": "Nữ đề nghị:「もっと宣伝に力を入れたらどうですか？」, nam đồng ý:「そうだね、やってみよう」— quyết định làm trang web.",
   "options_analysis": [
-   "Đúng: chỉ động tác duỗi tay ngang là vẫn còn đau.",
-   "Xoay tay ra sau thì \"vẫn hoàn toàn chưa được\".",
-   "Nếu làm từ từ thì cô đã nâng tay lên được rồi.",
-   "Bác sĩ nói không cần dán băng nữa."
+   "[Sai] Giảm giá bị từ chối vì nguyên liệu đang tăng giá.",
+   "[Sai] Mở cửa sớm khó vì khó tìm người làm ca sớm.",
+   "[Đúng] Quyết định làm trang web để quảng bá.",
+   "[Sai] Kèm phiếu giảm giá từng thất bại, không tăng doanh số."
   ],
   "points": [
-   "具合《ぐあい》: tình trạng (cơ thể, sự việc).",
-   "伸《の》ばす: duỗi thẳng, kéo dài ra."
+   "宣伝《せんでん》: quảng bá.",
+   "売《う》り上《あ》げ: doanh số."
   ]
  },
  "問2-3": {
-  "why_correct": "「クラスメイトの意外な一面を知ることができた」「どんなことより印象に残ってる」→ điều ấn tượng nhất.",
+  "why_correct": "Cô nói cảm thấy công ty ít giao việc có trách nhiệm cho nữ, nên đã quyết định nghỉ.",
   "options_analysis": [
-   "Thiên nhiên phong phú chỉ là một cảm nhận, không phải nhất.",
-   "Thu hoạch rau củ là sự thật nhưng không ấn tượng nhất.",
-   "Đúng: biết mặt bất ngờ của bạn cùng lớp là ấn tượng nhất.",
-   "Sự thú vị nông nghiệp bị nhượng bộ bằng 'もちろん'."
+   "Chính cô phủ nhận: quan hệ đồng nghiệp không có vấn đề gì.",
+   "Đúng: cô thấy nữ giới ít được giao việc có trách nhiệm.",
+   "Kỹ năng là nguyện vọng về sau, không phải lý do nghỉ.",
+   "\"Không phân biệt nam nữ\" là nguyện vọng, không phải lý do."
   ],
   "points": [
-   "意外な一面: mặt bất ngờ.",
-   "印象に残る: để lại ấn tượng sâu."
+   "やりがい: cảm giác việc mình làm đáng giá.",
+   "待遇《たいぐう》: chế độ đối xử (lương, ngày nghỉ...)."
   ]
  },
  "問2-4": {
@@ -1066,19 +1066,6 @@
   ]
  },
  "問3-1": {
-  "why_correct": "Ông nhận là người này quen hát và hát khá, nhưng chỉ dừng ở đó, không đọng lại gì.",
-  "options_analysis": [
-   "Ông nói rõ là không có gì đọng lại trong lòng.",
-   "Đúng: hát tốt nhưng không để lại ấn tượng.",
-   "Ông không chê giọng hát chỉ ở mức trung bình.",
-   "Ông thừa nhận là hát khá, không hề nói dở."
-  ],
-  "points": [
-   "印象《いんしょう》に残《のこ》る: đọng lại ấn tượng.",
-   "発表会《はっぴょうかい》: buổi biểu diễn ở trường."
-  ]
- },
- "問3-2": {
   "why_correct": "Trả lời câu \"ban đêm chim ngủ ở đâu\", bố giải thích nơi không bị phát hiện và không lộng gió.",
   "options_analysis": [
    "Bị phát hiện thì \"bị bắt\" — không phải chuyện tìm chim.",
@@ -1091,17 +1078,30 @@
    "体《からだ》が冷《ひ》える: cơ thể bị lạnh đi."
   ]
  },
- "問3-3": {
-  "why_correct": "Nội dung là điều cần lưu ý khi nhắc con, gồm cả việc công nhận nỗ lực của con.",
+ "問3-2": {
+  "why_correct": "「何を表現したいかを意識して撮ることで全く違った写真になる」.",
   "options_analysis": [
-   "Bài nói không bàn về việc cùng nhau học tập.",
-   "Bài nói không chỉ bàn thời điểm khen, mà cách nhắc nhở nói chung.",
-   "Bài nói không bàn về mặt hại của việc mắng con.",
-   "Đúng: nội dung là điều cần lưu ý khi nhắc con, gồm công nhận nỗ lực."
+   "Ý thức muốn truyền tải gì quyết định bức ảnh.",
+   "Chỉ nhắc thoáng qua việc đi nhiều nơi.",
+   "Bài không nói về cảm xúc vui thích khi chụp.",
+   "Ông nói dù chụp vụng cũng không sao, kỹ thuật không trọng tâm."
   ],
   "points": [
-   "肯定感《こうていかん》: cảm giác tự tin, được công nhận.",
-   "目《め》を向《む》けさせる: hướng sự chú ý đến."
+   "尋《たず》ねる: hỏi (ai đó).",
+   "意識《いしき》する: có chủ đích khi làm gì."
+  ]
+ },
+ "問3-3": {
+  "why_correct": "「子供たちが笑顔で駆け寄ってきて…元気をもらえてありがたい」→ toàn bài nói về niềm vui bán kẹo.",
+  "options_analysis": [
+   "Đúng: toàn bài nói về niềm vui khi trẻ em ghé thăm cửa hàng.",
+   "Món kẹo xưa chỉ được nam MC giới thiệu, không phải chủ đề chính.",
+   "Bài không so sánh sự khác biệt giữa kẹo xưa và nay.",
+   "Bài không nói về bí quyết duy trì cửa hàng lâu dài."
+  ],
+  "points": [
+   "駆け寄る: chạy đến gần.",
+   "元気をもらう: được tiếp thêm năng lượng."
   ]
  },
  "問3-4": {
@@ -1118,16 +1118,16 @@
   ]
  },
  "問3-5": {
-  "why_correct": "Về bản thân, cô nói rõ muốn biết cả tên bệnh thật lẫn còn sống được bao lâu.",
+  "why_correct": "Cậu học sinh giành trả lời mọi câu hỏi, bị nhắc thì vẫn lẩm bẩm trả lời thành tiếng.",
   "options_analysis": [
-   "Đúng: cô tự nói muốn biết cả bệnh danh và thời gian còn lại.",
-   "\"Sốc đến không làm gì được\" là dự đoán về người mẹ.",
-   "\"Không để những ngày còn lại thành vô nghĩa\" là chuyện của chính cô.",
-   "Với người thân, cô nói \"không rõ có nên nói thật hay không\"."
+   "Đúng: cậu trả lời cả khi đến lượt bạn khác, không im được.",
+   "Cậu cười ngay sau khi bị nhắc, chứ không phải không trả lời.",
+   "Bài tập cậu \"nộp đầy đủ\", chính giáo viên khen điều đó.",
+   "Không có cảnh cậu nói chuyện với bạn bên cạnh."
   ],
   "points": [
-   "イコール: tương đương, đồng nghĩa với.",
-   "残《のこ》された日々《ひび》: quãng thời gian còn lại."
+   "〜てしょうがない: không kìm được, quá mức.",
+   "ブツブツ: lẩm bẩm một mình, nói tiếng nhỏ."
   ]
  },
  "問4-1": {
@@ -1155,30 +1155,18 @@
   ]
  },
  "問4-3": {
-  "why_correct": "Đây là lời phàn nàn gián tiếp rằng khó nghe rõ → xin lỗi và tỏ ý sẽ sửa là đúng.",
+  "why_correct": "「笑わせないでくれよ」= nghe không thật → đáp rằng mình hoàn toàn nghiêm túc.",
   "options_analysis": [
-   "Nhận lời nhắc, xin lỗi và tỏ ý sẽ sửa.",
-   "Hỏi lại về mức độ, không đáp việc nghe không rõ.",
-   "Là lời biện hộ rằng khác dự tính, không xử lý phàn nàn."
+   "「大真面目」= rất nghiêm túc, không phải nói đùa.",
+   "Hiểu 「笑わせないで」theo nghĩa mặt chữ, lệch ý.",
+   "Nói về sự thú vị, không đáp việc có thật lòng hay không."
   ],
   "points": [
-   "聞《き》き取《と》りにくい: khó nghe rõ.",
-   "〜んですが…: nói lửng để phàn nàn nhẹ."
+   "大真面目《おおまじめ》: hoàn toàn nghiêm túc.",
+   "笑《わら》わせないで: đừng nói chuyện vô lý."
   ]
  },
  "問4-4": {
-  "why_correct": "「負けるに決まってるよ」＝khẳng định chắc thua → đáp án 3.",
-  "options_analysis": [
-   "Hiểu ngược ý câu gốc (đang nói chắc thua).",
-   "Hiểu nhầm trận đấu đã kết thúc.",
-   "「やってみなきゃわからないでしょ」＝chưa thi đấu thì chưa biết."
-  ],
-  "points": [
-   "〜に決まっている: chắc chắn là ~.",
-   "やってみなきゃわからない: chưa thử chưa biết."
-  ]
- },
- "問4-5": {
   "why_correct": "Được khen thì đáp lại bằng cách khiêm tốn phủ nhận là tự nhiên nhất.",
   "options_analysis": [
    "Nói về việc sẽ thử làm, không phải đáp lời khen.",
@@ -1188,6 +1176,18 @@
   "points": [
    "それほどでもない: không đến mức như vậy.",
    "えらい: giỏi, đáng khen."
+  ]
+ },
+ "問4-5": {
+  "why_correct": "「やめるべきじゃなかったんじゃない？」＝lẽ ra không nên bỏ việc — đáp lại tự nhiên là thừa nhận hối tiếc「ちょっと後悔してるんだ」.",
+  "options_analysis": [
+   "[Đúng] Thừa nhận có chút hối tiếc, khớp ý câu hỏi.",
+   "[Sai]「もっと早くやめるべきだったってこと？」hiểu sai thành hỏi ngược lại.",
+   "[Sai]「やめてよかったよね」ngược nghĩa (nói bỏ việc là đúng)."
+  ],
+  "points": [
+   "〜べきじゃなかった: lẽ ra không nên.",
+   "後悔《こうかい》する: hối tiếc."
   ]
  },
  "問4-6": {
@@ -1215,27 +1215,27 @@
   ]
  },
  "問4-8": {
-  "why_correct": "Câu hỏi về việc có đủ thời gian xem hết vườn thú, phản hồi tự nhiên là khẳng định đủ.",
+  "why_correct": "「〜きり」nghĩa là từ đó không gặp lại → phản hồi hợp lý là ngạc nhiên xác nhận việc lâu không gặp.",
   "options_analysis": [
-   "Đúng, khẳng định một ngày là đủ.",
-   "Hiểu sai thành không cần quan tâm thời gian.",
-   "Hiểu ngược thành xem xong quá nhanh, không khớp câu hỏi."
+   "Đúng: ngạc nhiên và xác nhận đúng ý 'từ đó không gặp lại'.",
+   "Giả định đã làm hòa mâu thuẫn với việc chưa gặp lại từ đó.",
+   "Hiểu sai thành hay gặp nhau, ngược hoàn toàn ý câu gốc."
   ],
   "points": [
-   "回り切る《まわりきる》: đi hết một vòng",
-   "動物園《どうぶつえん》: vườn thú"
+   "〜きり: từ đó đến giờ không... nữa.",
+   "言い合いする: cãi nhau, tranh cãi."
   ]
  },
  "問4-9": {
-  "why_correct": "「笑わせないでくれよ」= nghe không thật → đáp rằng mình hoàn toàn nghiêm túc.",
+  "why_correct": "Trả lời phù hợp với thông tin không giới hạn độ tuổi tham gia là hỏi lại để xác nhận.",
   "options_analysis": [
-   "「大真面目」= rất nghiêm túc, không phải nói đùa.",
-   "Hiểu 「笑わせないで」theo nghĩa mặt chữ, lệch ý.",
-   "Nói về sự thú vị, không đáp việc có thật lòng hay không."
+   "「年齢に制限があるんですね」hiểu ngược ý 'không phân biệt tuổi tác'.",
+   "Đúng: 「何歳でもいいんですか」= xác nhận lại việc không giới hạn độ tuổi, khớp thông tin nghe được.",
+   "「親子では出られないんですね」là suy đoán sai về thông tin chưa được nói đến."
   ],
   "points": [
-   "大真面目《おおまじめ》: hoàn toàn nghiêm túc.",
-   "笑《わら》わせないで: đừng nói chuyện vô lý."
+   "年齢《ねんれい》を問《と》わず: không phân biệt tuổi tác.",
+   "聞《き》き返《かえ》す: hỏi lại để xác nhận."
   ]
  },
  "問4-10": {
@@ -1251,15 +1251,15 @@
   ]
  },
  "問4-11": {
-  "why_correct": "「お引き受けいたしかねます」nghĩa là từ chối nhận việc, phản hồi tự nhiên là hỏi lý do từ chối.",
+  "why_correct": "Đây là lời phàn nàn gián tiếp rằng khó nghe rõ → xin lỗi và tỏ ý sẽ sửa là đúng.",
   "options_analysis": [
-   "Hiểu sai thành đang chờ câu trả lời, trong khi đây đã là câu trả lời từ chối.",
-   "Hiểu ngược thành đã được nhận việc.",
-   "Đúng, hỏi lý do từ chối."
+   "Nhận lời nhắc, xin lỗi và tỏ ý sẽ sửa.",
+   "Hỏi lại về mức độ, không đáp việc nghe không rõ.",
+   "Là lời biện hộ rằng khác dự tính, không xử lý phàn nàn."
   ],
   "points": [
-   "引き受ける《ひきうける》: nhận, đảm nhận",
-   "〜かねる: khó có thể làm (từ chối)"
+   "聞《き》き取《と》りにくい: khó nghe rõ.",
+   "〜んですが…: nói lửng để phàn nàn nhẹ."
   ]
  },
  "問5-1": {

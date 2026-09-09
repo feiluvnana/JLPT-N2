@@ -381,22 +381,50 @@ between 別冊 p.42's footnote and 問題冊子 p.62's printed option list). Shi
 Kanzen adds nothing: **not one of its 163 tracks lays more than 10.1 s** (§3).
 So 問題2 stays at 1 slot per paper (2.56 uses per clip).
 
-### 6.2 問題5 — two independent blockers, both still standing
+### 6.2 問題5 — measured in detail 2026-09-09, and there is a path
 
-- Shin Kanzen PRINTS 1番's four choices where official and this repo SPEAK
-  them, so a lifted 1番 leaves the examinee with bubbles and no options.
-  Soumatome's 統合理解 items (cd1/50, cd1/51, cd2/50, cd2/51, cd2/52) print
-  theirs too.
-- Neither book lays the **10 s 質問1 answer pause** that sits INSIDE an official
-  2番 between the two read-backs (`SKILL.md` §「質問1。/質問2。 are not labels,
-  they are the answer pause」). Sweeping both CDs for an 8 s+ internal pause
-  found no 統合理解 track with one.
+**What the books do and do not speak.** Measured on soumatome cd2/52 (別冊 p.54,
+質問1=3, 質問2=1, a genuine two-question 2番, body 127.7 s):
 
-The best candidate remains **soumatome cd2/52** (別冊 p.54, 質問1=3, 質問2=1, a
-genuine two-question 2番, 139.0 s). Using it means composer surgery — splitting
-the clip at its own 質問1 boundary and having the composer lay
-`GAP_AFTER_SHITSUMON1` between the halves — and it must be verified on the
-RENDERED MP3, not in the source. Not attempted.
+- the **two 質問 questions ARE spoken** — 「質問1」+question at 115.1–121.0 s,
+  「質問2」+question at 124.3–130.0 s;
+- the **four options are NOT spoken at all.** The body ends at 130.0 s, right
+  after 質問2's question; the book prints the options in the 問題冊子 instead;
+- the gap between the two questions is **3.28 s**, where official lays
+  `GAP_AFTER_SHITSUMON1` = **10 s** [7.8–12.4].
+
+Both of this section's blockers therefore reduce to the same missing piece: the
+option read-back. Official reads the four choices after 質問1, leaves 10 s, then
+reads them again after 質問2, and neither book records any of that.
+
+**The path, and it is one piece of work rather than two.** If the composer
+supplies the read-backs itself — cut the clip at the end of 質問1's question,
+lay four synthesized choice lines with `GAP_BETWEEN_SPOKEN_CHOICES`, lay
+`GAP_AFTER_SHITSUMON1`, then the book's own 質問2 question, then the four lines
+again — then the 10 s pause is laid by construction and the printed-options
+blocker is gone with it. What it costs:
+
+- **re-introducing Edge-TTS into the composed path**, which Part 0 retired on
+  2026-09-08. The precedent for splicing is the harvested 「N番。」, but that is
+  a REAL official announcer; this would put a synthetic voice inside a real
+  item, and Part 3's own rule is one engine end to end because mixed voices
+  break every 「男の人は」 question. It is an ear-only judgment and no gate hears
+  it — someone has to listen and decide it is acceptable;
+- **pool depth, which is the harder constraint.** 問題5 has 2 slots, so one
+  textbook slot needs **6+ bankable items** to stay under the 4.0 ceiling
+  (1 slot × 23 papers ÷ 6 = 3.83). Candidates: soumatome cd1/38, cd1/50,
+  cd1/51, cd2/50, cd2/51, cd2/52 plus Shin Kanzen 模擬試験 CD2 78–80 and
+  chapter VI. Enough exists, but every one needs a transcript, a key off the
+  page, printed options off the 問題冊子, both explanation panes, and
+  verification on the RENDERED MP3;
+- **`check_mondai5_prints_nothing()` and the 問題5 house rule.** This repo
+  prints nothing under 問題5 by design (`jlpt-exam-structure` owns why), so the
+  synthesized read-back is what keeps that rule intact — printing the options
+  instead would be the other design, and it is a spec change, not a composer
+  change.
+
+Not attempted in 2026-09-09's session: it is a stage of its own, and shipping
+it half-done would put a clip with no option read-back into a live paper.
 
 ### 6.3 One bundled 即時応答 track, and it needs an ear
 

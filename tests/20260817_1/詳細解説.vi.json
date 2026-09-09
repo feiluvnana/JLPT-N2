@@ -936,29 +936,29 @@
   ]
  },
  "問1-2": {
-  "why_correct": "「生花の写真…位置がいくらか左によっている。少し真ん中に寄せてくれる？」→ đáp án 1.",
+  "why_correct": "Anh nam nói muốn về bằng chuyến sớm nhất ngày mốt và nhờ \"cái đó làm trước\", nên việc đầu tiên là đổi vé.",
   "options_analysis": [
-   "Cần dịch ảnh hoa về giữa vì đang lệch trái.",
-   "Chữ tiêu đề đã được khen, không cần sửa.",
-   "Vị trí ngày giờ được yêu cầu giữ nguyên.",
-   "Vị trí địa điểm không được nhắc là cần sửa."
+   "Đúng: đổi vé sang chuyến shinkansen sớm nhất ngày mốt.",
+   "Việc tra giờ tàu cô đã làm rồi, tàu hết chỗ.",
+   "Địa điểm khách sạn không hề được nhắc tới.",
+   "Đặt khách sạn bị hoãn: \"cái đó để sau cũng được\"."
   ],
   "points": [
-   "生花《いけばな》: nghệ thuật cắm hoa.",
-   "ポスター: áp phích, tờ quảng cáo."
+   "朝一番《あさいちばん》: chuyến sớm nhất trong ngày.",
+   "先《さき》に: làm trước, ưu tiên hơn việc khác."
   ]
  },
  "問1-3": {
-  "why_correct": "「店内の様子の撮影については...許可をいただいています」, giao cho nam chụp.",
+  "why_correct": "Nhân viên nói thủ tục ở đây hết hạn ngày mai nên phải gấp, vậy việc đầu tiên là làm bài test trên web.",
   "options_analysis": [
-   "Ảnh món ăn nổi tiếng SẼ được cửa hàng cung cấp sẵn.",
-   "Duy nhất loại ảnh cần chụp, không để khách lọt khung.",
-   "Ảnh đầu bếp「掲載不可」, không được phép đăng.",
-   "Ảnh lối vào ĐÃ chụp xong từ hôm trời đẹp."
+   "Đúng: thủ tục hạn ngày mai, nên làm placement test trên mạng trước.",
+   "Xin dấu của giáo viên hướng dẫn là thủ tục ở Takeoka, hạn thứ Hai tuần sau.",
+   "Việc kiểm tra chỉ làm sau khi đã đăng ký xong.",
+   "Thi viết cũng thuộc Takeoka, hạn còn xa hơn."
   ],
   "points": [
-   "写《うつ》り込《こ》む: bị lọt vào khung hình.",
-   "掲載《けいさい》: đăng tải (báo, tạp chí)."
+   "認《みと》め印《いん》: con dấu xác nhận.",
+   "締《し》め切《き》り: hạn cuối nhận hồ sơ."
   ]
  },
  "問1-4": {
@@ -988,29 +988,29 @@
   ]
  },
  "問2-1": {
-  "why_correct": "男「討論番組で司会している時の進行の仕方に感心させられるよ」→ khen khả năng dẫn dắt chương trình.",
+  "why_correct": "Lời khuyên MỚI của nữ là cố cười dù gượng ép, các việc khác đã làm từ trước.",
   "options_analysis": [
-   "Nam nói mình không xét đến điểm này, đó là ý của nữ.",
-   "Cũng là điểm nữ và mọi người đánh giá, không phải điều nam nhấn mạnh.",
-   "Đúng, đây là điểm nam khen nhất.",
-   "Nam nói cô phỏng vấn thể thao có lúc chưa tốt."
+   "Đúng, lời khuyên mới: cố giữ nét mặt tươi dù gượng ép.",
+   "Làm ghi chú là lời khuyên cũ, nam xác nhận đã có ích rồi.",
+   "Chào hỏi đầu buổi cũng là lời khuyên cũ đã làm tốt.",
+   "Luyện tập với bạn Nhật chỉ nhắc lại tiếp tục như trước."
   ],
   "points": [
-   "討論番組《とうろんばんぐみ》: chương trình tranh luận",
-   "進行《しんこう》: dẫn dắt"
+   "表情《ひょうじょう》: biểu cảm khuôn mặt.",
+   "面接《めんせつ》: phỏng vấn."
   ]
  },
  "問2-2": {
-  "why_correct": "「自分が仕事でどう力を発揮できるか、そこを知りたい」＝muốn tìm thế mạnh bản thân.",
+  "why_correct": "Ngày được chốt là mùng 8 chứ không phải mùng 4, còn giờ thì cô chọn \"đầu giờ chiều\".",
   "options_analysis": [
-   "Cô nói rõ chưa nghĩ đến việc lợi cho xin việc.",
-   "Lo lắng giao tiếp là mối bận tâm, không phải điều kỳ vọng.",
-   "“Hiểu đời sống công ty” là gợi ý của bạn nam, không phải của cô.",
-   "Đúng."
+   "Mùng 4 là do cô nghe nhầm, cả ngày lẫn giờ đều sai.",
+   "Cũng là mùng 4 nên ngày đã sai.",
+   "Khoảng 9 giờ là suất \"đầu giờ sáng\", không được chọn.",
+   "Đúng: mùng 8, \"đầu giờ chiều\" tức khoảng 1 giờ."
   ],
   "points": [
-   "実習《じっしゅう》: nghĩa “thực tập”.",
-   "発揮《はっき》する: nghĩa “phát huy”."
+   "午後一《ごごいち》: suất sớm nhất của buổi chiều.",
+   "何軒《なんげん》も: nhiều nhà, nhiều tiệm liền nhau."
   ]
  },
  "問2-3": {
@@ -1066,16 +1066,16 @@
   ]
  },
  "問3-1": {
-  "why_correct": "Nha sĩ liệt kê chức năng răng: tiêu hoá, phát âm, giữ thăng bằng.",
+  "why_correct": "Anh nhắc ga quá sâu, rồi nghĩ tới động đất và nói \"chỉ nghĩ thôi đã rùng mình\".",
   "options_analysis": [
-   "Bài không mô tả cấu trúc, hình dạng của răng.",
-   "Liệt kê hàng loạt vai trò của răng.",
-   "Bài không nói về phương pháp chăm sóc răng.",
-   "Bài không đề cập bệnh lý hay nguyên nhân bệnh răng."
+   "\"Chắc người ta cũng có phương án an toàn\" là lời cô phản bác.",
+   "Xe buýt bị gạt vì \"không đoán được thời gian\", không so về tốc độ.",
+   "Điều anh coi là vấn đề là độ sâu, không phải thời gian.",
+   "Đúng: anh sợ gặp động đất khi đang ở ga tàu sâu như thế."
   ],
   "points": [
-   "消化《しょうか》を助《たす》ける: hỗ trợ tiêu hoá.",
-   "姿勢《しせい》を保《たも》つ: giữ tư thế cơ thể."
+   "ぞっとする: rùng mình vì ghê sợ.",
+   "時間《じかん》が読《よ》めない: không đoán được mất bao lâu."
   ]
  },
  "問3-2": {
@@ -1092,16 +1092,16 @@
   ]
  },
  "問3-3": {
-  "why_correct": "Người nói kể ra cái hay của trượt băng nghệ thuật: thể hiện được mình, phục trang và nhạc đẹp.",
+  "why_correct": "「子供たちが笑顔で駆け寄ってきて…元気をもらえてありがたい」→ toàn bài nói về niềm vui bán kẹo.",
   "options_analysis": [
-   "Không nói lý do bắt đầu, chỉ nhắc lý do đã bỏ.",
-   "Nói về giới hạn của việc chỉ dựa vào tốc độ.",
-   "「人によって評価が変わる」chỉ là một phần của sức hút.",
-   "Nêu sự thỏa mãn, trang phục và nhạc đẹp."
+   "Đúng: toàn bài nói về niềm vui khi trẻ em ghé thăm cửa hàng.",
+   "Món kẹo xưa chỉ được nam MC giới thiệu, không phải chủ đề chính.",
+   "Bài không so sánh sự khác biệt giữa kẹo xưa và nay.",
+   "Bài không nói về bí quyết duy trì cửa hàng lâu dài."
   ],
   "points": [
-   "魅力《みりょく》: sức hấp dẫn.",
-   "限界《げんかい》を感《かん》じる: thấy đã tới hạn."
+   "駆け寄る: chạy đến gần.",
+   "元気をもらう: được tiếp thêm năng lượng."
   ]
  },
  "問3-4": {
@@ -1118,28 +1118,28 @@
   ]
  },
  "問3-5": {
-  "why_correct": "「社員全員に無駄をもっとなくす」＝mong mỗi nhân viên tự ý thức tiết kiệm điện.",
+  "why_correct": "Trả lời câu \"ban đêm chim ngủ ở đâu\", bố giải thích nơi không bị phát hiện và không lộng gió.",
   "options_analysis": [
-   "Đúng.",
-   "Đổi thiết bị tiết kiệm điện là việc đã làm rồi.",
-   "Điện mặt trời do nữ đề xuất, giám đốc chưa quyết định thực hiện.",
-   "Không có nội dung về việc dùng thiết bị lâu dài."
+   "Bị phát hiện thì \"bị bắt\" — không phải chuyện tìm chim.",
+   "Chuyện bệnh tật hoàn toàn không được nói tới.",
+   "Đúng: khó bị phát hiện và tránh gió là điều kiện chỗ ngủ.",
+   "Cách tìm thức ăn cũng không hề được đề cập."
   ],
   "points": [
-   "無駄《むだ》: nghĩa “sự lãng phí”.",
-   "節約《せつやく》する: nghĩa “tiết kiệm”."
+   "電線《でんせん》: dây điện.",
+   "体《からだ》が冷《ひ》える: cơ thể bị lạnh đi."
   ]
  },
  "問4-1": {
-  "why_correct": "Người kia hỏi liệu có kịp nộp báo cáo hạn thứ sáu không; đáp tự nhiên là phải thức trắng đêm mới xong.",
+  "why_correct": "Câu gốc than chưa nhớ hết được, phản hồi tự nhiên là đồng cảm việc nhiều khó nhớ hết.",
   "options_analysis": [
-   "[Sai] Nói rốt cuộc phải viết thì chưa trả lời được là kịp hay không.",
-   "[Sai] Nói về đề tài văn học Nhật, lệch hẳn khỏi câu hỏi.",
-   "[Đúng] Chỉ còn cách thức đêm — đáp đúng chuyện có kịp hay không."
+   "Khen đã nhớ hết, ngược với ý than phiền của câu gốc.",
+   "Hiểu nhầm thành không nhớ được cái nào, sai ý câu gốc.",
+   "Đúng, đồng cảm tự nhiên với việc nhiều khó nhớ hết."
   ],
   "points": [
-   "締切《しめきり》: hạn chót.",
-   "徹夜《てつや》する: thức trắng đêm."
+   "覚え切《おぼえき》れる: nhớ hết, nhớ trọn.",
+   "テスト: bài kiểm tra."
   ]
  },
  "問4-2": {
@@ -1155,15 +1155,15 @@
   ]
  },
  "問4-3": {
-  "why_correct": "「野菜が不足しがちなんだよね」＝hay thiếu rau — đáp lại tự nhiên là lời nhắc chú ý ăn rau「気をつけて野菜も食べないとね」.",
+  "why_correct": "Câu gốc thông báo khách đến thăm, phản hồi tự nhiên là hỏi thêm giờ đến.",
   "options_analysis": [
-   "[Sai]「野菜をとりたくないんだね」hiểu sai thành không muốn ăn rau.",
-   "[Sai]「野菜十分足りてていいね」ngược nghĩa với câu gốc (đang thiếu chứ không đủ).",
-   "[Đúng] Nhắc nhở chú ý ăn thêm rau, đúng ý than phiền thiếu rau."
+   "Hiểu sai thành mình phải đến trụ sở chính.",
+   "Đúng, hỏi thêm chi tiết giờ đến.",
+   "Hiểu sai thành việc cần gọi điện, không liên quan thông báo."
   ],
   "points": [
-   "不足《ふそく》しがち: hay bị thiếu.",
-   "気《き》をつける: chú ý."
+   "専務《せんむ》: giám đốc điều hành",
+   "お越しになる: kính ngữ của đến"
   ]
  },
  "問4-4": {
@@ -1191,51 +1191,51 @@
   ]
  },
  "問4-6": {
-  "why_correct": "「書くのはともかく会話ぐらいは」= muốn học hội thoại → đồng tình với hội thoại.",
+  "why_correct": "Người kia kể chuyện vất vả phải đi bộ về vì tàu gặp sự cố → đáp bằng lời thông cảm.",
   "options_analysis": [
-   "Khuyên luyện viết, phần vừa được gạt ra, lệch trọng tâm.",
-   "Đồng tình, ủng hộ ý muốn học hội thoại.",
-   "Nói hội thoại không cần học, trái ý người kia."
+   "Chỉ bình luận về khoảng cách, không nhắc tới sự vất vả.",
+   "「大したことにならなかった」dùng khi thiệt hại nhẹ.",
+   "「ひどい目にあう」thể hiện sự thông cảm với người kia."
   ],
   "points": [
-   "〜はともかくとして: cái đó thì để riêng, khoan bàn.",
-   "〜ぐらいは: ít nhất là cái đó."
+   "ひどい目《め》にあう: gặp chuyện khổ, bị một vố đau.",
+   "大《たい》したことはない: không đáng kể."
   ]
  },
  "問4-7": {
-  "why_correct": "Quên ví nên gây rắc rối = thầy đã trả tiền → xác nhận là được thầy mời.",
+  "why_correct": "「終わり次第」nghĩa là ngay sau khi nhập liệu xong → đáp bằng lời hứa xong là làm ngay.",
   "options_analysis": [
-   "「払わされた」thành ra chính người nói phải trả, sai.",
-   "Không có chuyện tìm kiếm; thứ bị quên là cái ví.",
-   "Xác nhận là thầy đã trả tiền, tức là được mời."
+   "Hiểu thành người kia đã làm xong hộ mình rồi.",
+   "Hiểu thành chỉ cần nhập nửa chừng, sai với「終わり次第」.",
+   "Đúng: xong việc nhập là in tài liệu ngay."
   ],
   "points": [
-   "ごちそうする: mời (trả tiền) ai ăn.",
-   "今日《きょう》に限《かぎ》って: đúng hôm nay lại..."
+   "〜次第《しだい》: ngay khi ... xong thì.",
+   "入力《にゅうりょく》: việc nhập dữ liệu."
   ]
  },
  "問4-8": {
-  "why_correct": "Được khen thì đáp lại bằng cách khiêm tốn phủ nhận là tự nhiên nhất.",
+  "why_correct": "Đây là lời đề nghị nghe hộ nội dung công việc → từ chối và hẹn quay lại là đúng.",
   "options_analysis": [
-   "Nói về việc sẽ thử làm, không phải đáp lời khen.",
-   "「大したことになった」= chuyện thành to, sai nghĩa.",
-   "Cách khiêm tốn quen dùng để gạt lời khen."
+   "Từ chối đề nghị, nói sẽ đến lại lần khác.",
+   "Là lời đánh giá món đồ hay ý kiến, không đáp đề nghị.",
+   "Là câu chào khi về trước, không trả lời câu hỏi."
   ],
   "points": [
-   "それほどでもない: không đến mức như vậy.",
-   "えらい: giỏi, đáng khen."
+   "出直《でなお》す: quay lại lần nữa vào dịp khác.",
+   "お伺《うかが》いする: dạng khiêm nhường của 聞く."
   ]
  },
  "問4-9": {
-  "why_correct": "Sinh viên báo tin cuối cùng mọi việc cũng ổn thỏa; thầy đáp lại bằng một lời mừng cho em.",
+  "why_correct": "「食べ応えあったね」＝phần ăn no nê, cần lời đồng tình.",
   "options_analysis": [
-   "[Sai] Nói đáng lo là hiểu ngược, vì việc đã xong xuôi rồi.",
-   "[Đúng] Chia vui: vậy thì tốt quá.",
-   "[Sai] Khuyên đừng bỏ cuộc, tức chưa nghe ra đó là tin vui."
+   "Đồng tình về phần ăn no nê.",
+   "Nói phần ăn KHÔNG ĐỦ no, trái ngược nghĩa gốc.",
+   "Nói phần ăn ÍT nhưng vừa đủ, trái ngược nghĩa gốc."
   ],
   "points": [
-   "なんとかなる: rồi cũng ổn thỏa.",
-   "就職《しゅうしょく》する: xin được việc làm."
+   "食《た》べ応《ごた》えがある: phần ăn no nê.",
+   "お腹《なか》いっぱい: no bụng."
   ]
  },
  "問4-10": {
@@ -1251,15 +1251,15 @@
   ]
  },
  "問4-11": {
-  "why_correct": "「休みさえあれば行くのに」nghĩa là vì không nghỉ được nên không đi được → đáp bằng đồng cảm.",
+  "why_correct": "「お引き受けいたしかねます」nghĩa là từ chối nhận việc, phản hồi tự nhiên là hỏi lý do từ chối.",
   "options_analysis": [
-   "Đúng: đồng tình rằng lúc này khó xin nghỉ.",
-   "Hiểu nhầm thành người kia sắp đi du lịch thật.",
-   "Người nói đã khen tour rẻ rồi, giá không phải vấn đề."
+   "Hiểu sai thành đang chờ câu trả lời, trong khi đây đã là câu trả lời từ chối.",
+   "Hiểu ngược thành đã được nhận việc.",
+   "Đúng, hỏi lý do từ chối."
   ],
   "points": [
-   "〜さえ〜ば: chỉ cần ... thì ...",
-   "〜のに: (tiếc là) vậy mà lại không được."
+   "引き受ける《ひきうける》: nhận, đảm nhận",
+   "〜かねる: khó có thể làm (từ chối)"
   ]
  },
  "問5-1": {

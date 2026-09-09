@@ -949,16 +949,16 @@
   ]
  },
  "問1-2": {
-  "why_correct": "Vì ngại đổi tàu nên chọn tàu tốc hành đi thẳng; ghế chỉ định lại chỉ còn toa hút thuốc.",
+  "why_correct": "Chưa mang ra là pizza nấm và hai phần cà phê mà cô gọi thêm ở cuối.",
   "options_analysis": [
-   "Shinkansen bị loại vì phải đổi tàu ở 北山.",
-   "Cũng là shinkansen, đã bị loại vì phải chuyển tàu.",
-   "Ghế chỉ định chỉ còn toa hút thuốc, khách từ chối.",
-   "Đúng: tàu tốc hành, ghế tự do."
+   "Pizza hải sản và pasta nhân viên khẳng định đã mang ra rồi.",
+   "Spaghetti và nước cam đã được mang lên từ đầu.",
+   "Nước ép đã có trên bàn ngay câu mở đầu.",
+   "Đúng: chỉ còn pizza nấm và cà phê là sắp mang tới."
   ],
   "points": [
-   "乗《の》り換《か》え: việc chuyển tàu.",
-   "自由席《じゆうせき》: ghế tự do, không chỉ định."
+   "おかわり: gọi thêm phần thứ hai của cùng món.",
+   "以上《いじょう》でよろしいでしょうか: gọi vậy là đủ chưa?"
   ]
  },
  "問1-3": {
@@ -988,42 +988,42 @@
   ]
  },
  "問1-5": {
-  "why_correct": "課長「動画は…もう少し簡潔にしてみてください」→ rút gọn video → đáp án 3.",
+  "why_correct": "Cô giáo dặn phải đọc tài liệu trước khi đi, nên cậu hỏi ngay cách đăng ký nhận tài liệu.",
   "options_analysis": [
-   "Chữ sách hướng dẫn đơn giản đã đủ lớn, không cần sửa.",
-   "Nội dung sách hướng dẫn đơn giản đã ổn, không cần cắt.",
-   "Cần làm video ngắn gọn, súc tích hơn.",
-   "Phụ đề đa ngôn ngữ đã phù hợp, không cần thêm."
+   "Đúng: xin tài liệu về đọc trước, rồi mới đi tham quan.",
+   "Cậu đã gặp và nghe khóa trên nói chuyện rồi.",
+   "Open campus là bước sau khi đã đọc tài liệu.",
+   "Điều muốn làm sẽ rõ dần \"trong lúc tìm hiểu\", tức là sau."
   ],
   "points": [
-   "簡易説明書《かんいせつめいしょ》: sách hướng dẫn tóm tắt.",
-   "取扱説明書《とりあつかいせつめいしょ》: sách hướng dẫn sử dụng chi tiết."
+   "取《と》り寄《よ》せる: đặt để người ta gửi tới.",
+   "比《くら》べようがない: không có cơ sở nào để so sánh."
   ]
  },
  "問2-1": {
-  "why_correct": "Lời khuyên MỚI của nữ là cố cười dù gượng ép, các việc khác đã làm từ trước.",
+  "why_correct": "「植物専門の本を作ってる出版社があって、そこに入りたいんだ」→ nữ sinh muốn vào NXB sách thực vật.",
   "options_analysis": [
-   "Đúng, lời khuyên mới: cố giữ nét mặt tươi dù gượng ép.",
-   "Làm ghi chú là lời khuyên cũ, nam xác nhận đã có ích rồi.",
-   "Chào hỏi đầu buổi cũng là lời khuyên cũ đã làm tốt.",
-   "Luyện tập với bạn Nhật chỉ nhắc lại tiếp tục như trước."
+   "Công ty thực phẩm là hướng đi của nam sinh.",
+   "Học tiếp cao học đã bị nữ sinh từ bỏ.",
+   "Công việc nghiên cứu bị phủ định trực tiếp bằng 'ううん'.",
+   "Đúng: nữ sinh muốn vào NXB chuyên sách về thực vật."
   ],
   "points": [
-   "表情《ひょうじょう》: biểu cảm khuôn mặt.",
-   "面接《めんせつ》: phỏng vấn."
+   "図鑑: sách tranh minh họa.",
+   "専門を生かす: phát huy chuyên ngành."
   ]
  },
  "問2-2": {
-  "why_correct": "課長「駐車場が…駐車場がある施設の方が参加者の数が増える」→ vấn đề là hội trường thiếu bãi đỗ xe.",
+  "why_correct": "「自分が仕事でどう力を発揮できるか、そこを知りたい」＝muốn tìm thế mạnh bản thân.",
   "options_analysis": [
-   "Đúng, đây là điểm bị chỉ ra là vấn đề.",
-   "Chi phí vượt dự toán được chấp nhận là hợp lý.",
-   "Đối tượng (trẻ nhỏ, phụ huynh) đã rõ ràng, không bị nêu là vấn đề.",
-   "An toàn là lý do hợp lý cho chi phí tăng, không bị phê bình."
+   "Cô nói rõ chưa nghĩ đến việc lợi cho xin việc.",
+   "Lo lắng giao tiếp là mối bận tâm, không phải điều kỳ vọng.",
+   "“Hiểu đời sống công ty” là gợi ý của bạn nam, không phải của cô.",
+   "Đúng."
   ],
   "points": [
-   "企画《きかく》: kế hoạch, dự án",
-   "見積もり《みつもり》: dự toán"
+   "実習《じっしゅう》: nghĩa “thực tập”.",
+   "発揮《はっき》する: nghĩa “phát huy”."
   ]
  },
  "問2-3": {
@@ -1040,16 +1040,16 @@
   ]
  },
  "問2-4": {
-  "why_correct": "「佐藤さんにはやっぱり僕と同じ方法がお勧めだね」＝mặc đồ đơn giản.",
+  "why_correct": "Anh nói số người \"không nghiêng bên nào\" chiếm gần một phần ba, đúng với lựa chọn 3.",
   "options_analysis": [
-   "Chỉ nói tạp chí 'có thể tham khảo' rồi chuyển ý khác.",
-   "Nữ từ chối vì trả lại đồ phiền phức.",
-   "Khuyên áp dụng cách của chính nam sinh.",
-   "Nữ ngần ngại với đồ cũ."
+   "\"Hơn một nửa\" là tỉ lệ dân cư đã trả lời khảo sát.",
+   "Bên tán thành chỉ nhiều hơn \"một chút\", chưa tới hai phần ba.",
+   "Đúng: người không nghiêng bên nào chiếm gần một phần ba.",
+   "Anh nói ngược lại: tán thành nhiều hơn phản đối."
   ],
   "points": [
-   "制服化《せいふくか》: mặc theo kiểu cố định mỗi ngày.",
-   "似合《にあ》う: hợp, phù hợp."
+   "上回《うわまわ》る: vượt quá một con số, một lượng.",
+   "引《ひ》き続《つづ》き: tiếp tục như từ trước tới nay."
   ]
  },
  "問2-5": {
@@ -1092,16 +1092,16 @@
   ]
  },
  "問3-2": {
-  "why_correct": "Người nói kể theo mốc thời gian＝lịch sử của mật ong như thực phẩm.",
+  "why_correct": "Anh nhắc ga quá sâu, rồi nghĩ tới động đất và nói \"chỉ nghĩ thôi đã rùng mình\".",
   "options_analysis": [
-   "Thần thoại chỉ nhắc thoáng qua, không phải nội dung kể chuyện chính.",
-   "Không có thông tin nào về dinh dưỡng.",
-   "Việc dễ lấy mật hơn chỉ là một chi tiết trong dòng lịch sử.",
-   "Đúng."
+   "\"Chắc người ta cũng có phương án an toàn\" là lời cô phản bác.",
+   "Xe buýt bị gạt vì \"không đoán được thời gian\", không so về tốc độ.",
+   "Điều anh coi là vấn đề là độ sâu, không phải thời gian.",
+   "Đúng: anh sợ gặp động đất khi đang ở ga tàu sâu như thế."
   ],
   "points": [
-   "普及《ふきゅう》する: nghĩa “phổ biến”.",
-   "書物《しょもつ》: nghĩa “sách vở”."
+   "ぞっとする: rùng mình vì ghê sợ.",
+   "時間《じかん》が読《よ》めない: không đoán được mất bao lâu."
   ]
  },
  "問3-3": {
@@ -1118,41 +1118,41 @@
   ]
  },
  "問3-4": {
-  "why_correct": "「改めてご寄付という形でご協力いただければ幸いです」— hiệu trưởng đề nghị cựu học sinh quyên góp cho trường mới.",
+  "why_correct": "「3つの要素で物語を展開させます」＝cách ông xây dựng cốt truyện phim của mình.",
   "options_analysis": [
-   "[Sai] Sự thay đổi xã hội chỉ là bối cảnh mở đầu, không phải nội dung chính.",
-   "[Sai] Bài không mô tả hình ảnh cụ thể của trường mới.",
-   "[Sai] Bài không nói về thành tích của cựu học sinh.",
-   "[Đúng] Kêu gọi quyên góp xây trường mới."
+   "Nghiên cứu nhiều phim khác chỉ là quá trình học hỏi trong quá khứ.",
+   "Đúng.",
+   "Điểm chung phim ăn khách không được nhắc, chỉ nói về tác phẩm của mình.",
+   "Không có nội dung về “thay đổi thái độ làm phim”."
   ],
   "points": [
-   "寄付《きふ》: quyên góp.",
-   "創立《そうりつ》: thành lập."
+   "構成《こうせい》: nghĩa “kết cấu”.",
+   "展開《てんかい》する: nghĩa “triển khai, phát triển”."
   ]
  },
  "問3-5": {
-  "why_correct": "Bài đặt câu hỏi vì sao chọn mail rồi kể ra các lý do: thiếu thời gian, khó nói, có trách nhiệm.",
+  "why_correct": "Người nói kể xe từng là thứ \"ngầu\", nhất là với đàn ông, đó là ý nghĩa xe với chính anh.",
   "options_analysis": [
-   "Cầu hôn chỉ là một ví dụ, không phải chủ đề.",
-   "Bài trả lời cho câu hỏi 「なぜメールのほうがいいのか」.",
-   "Không nói nhược điểm, chỉ nêu lý do của ưu điểm.",
-   "Không hướng dẫn cách viết, mà nói lý do dùng mail."
+   "\"Thành ra chỉ là công cụ\" là điều anh đang than phiền.",
+   "Đúng: với anh, xe là mơ ước, là thứ ngầu.",
+   "Xe vuông vức là lý do anh thấy nhàm, không phải ý nghĩa.",
+   "Người không quan tâm là \"đám con trai bây giờ\", không phải anh."
   ],
   "points": [
-   "手段《しゅだん》: phương tiện, cách thức.",
-   "積極的《せっきょくてき》: tích cực, chủ động."
+   "あこがれ: sự khao khát, niềm mơ ước.",
+   "〜わけで: nêu lý do rồi dẫn tới kết luận."
   ]
  },
  "問4-1": {
-  "why_correct": "Câu hỏi đồng thuận về điều hòa; đáp lại tự nhiên là xác nhận cùng quan điểm.",
+  "why_correct": "Câu gốc là lời nhờ vặn nhỏ tiếng một cách lịch sự → đáp bằng xin lỗi vì đã không để ý.",
   "options_analysis": [
-   "“Không có điều hòa cũng được à?” đi ngược nội dung câu hỏi.",
-   "“Sao lại không dùng?” giả định sai, câu gốc không hàm ý đó.",
-   "Đúng."
+   "Đúng: xin lỗi và nhận là mình đã không nhận ra.",
+   "Là câu nhờ ngược lại người kia, sai vai.",
+   "Là lời cảm ơn sau khi được giúp, không hợp lúc bị nhắc."
   ],
   "points": [
-   "熱帯夜《ねったいや》: nghĩa “đêm nóng khó ngủ”.",
-   "欠《か》かせない: nghĩa “không thể thiếu”."
+   "〜ていただけると助《たす》かる: nếu được ... thì tôi đỡ lắm.",
+   "気《き》がつく: nhận ra, để ý thấy."
   ]
  },
  "問4-2": {
@@ -1192,18 +1192,30 @@
   ]
  },
  "問4-5": {
-  "why_correct": "「もう少しで...遅れるところだった」＝suýt trễ nhưng thực tế đã kịp.",
+  "why_correct": "Câu gốc ngầm ý phần ăn ít nên ăn vội, phản hồi tự nhiên là đề nghị gọi thêm món.",
   "options_analysis": [
-   "Mừng vì đã kịp nộp.",
-   "Hiểu sai thành đã bị trễ thật sự.",
-   "Sắc thái tiếc nuối như đã không kịp, trái thực tế."
+   "Đúng, hiểu đúng ý phần ăn không đủ nên đề nghị gọi thêm.",
+   "Hiểu thành đã ăn no hài lòng, ngược ý câu gốc.",
+   "Hiểu ngược thành nhiều quá không ăn hết, trái ý câu gốc."
   ],
   "points": [
-   "〜ところだった: suýt nữa thì... (không xảy ra).",
-   "締《し》め切《き》り: hạn chót."
+   "コース料理《りょうり》: món ăn theo set.",
+   "追加《ついか》: thêm vào, bổ sung."
   ]
  },
  "問4-6": {
+  "why_correct": "「パンフレットに沿って話してください」＝nói theo đúng nội dung tờ rơi.",
+  "options_analysis": [
+   "Hiểu ngược nghĩa, yêu cầu gốc là phải nói THEO.",
+   "Xác nhận lại sẽ nói đúng như tờ rơi.",
+   "Nghĩa 'không liên quan đến tờ rơi', trái ngược yêu cầu."
+  ],
+  "points": [
+   "〜に沿《そ》って: theo đúng, men theo.",
+   "パンフレット: tờ rơi."
+  ]
+ },
+ "問4-7": {
   "why_correct": "Người nói đang phỏng đoán lý do lâu không thấy → nêu một lý do khác là đúng.",
   "options_analysis": [
    "Nói chưa từng gặp, nhưng chủ đề là dạo này không thấy.",
@@ -1215,40 +1227,28 @@
    "具合《ぐあい》が悪《わる》い: sức khỏe không tốt."
   ]
  },
- "問4-7": {
-  "why_correct": "Người nói truyền lại lời khen của trưởng phòng dành cho bài thuyết trình; đáp lại là ngạc nhiên vui.",
-  "options_analysis": [
-   "[Sai] Hiểu nhầm lời khen thành lời nhận xét khắt khe.",
-   "[Đúng] Ngạc nhiên và vui vì trưởng phòng đã khen mình.",
-   "[Sai] Hỏi chỗ nào còn mơ hồ, tức hiểu thành lời chê."
-  ],
-  "points": [
-   "大《たい》したもんだ: cừ thật, giỏi thật.",
-   "褒《ほ》める: khen ngợi."
-  ]
- },
  "問4-8": {
-  "why_correct": "「入院せずに済むそうです」＝nghe nói không cần nhập viện — đáp lại tự nhiên là xác nhận lại tin vui「入院しなくていいんですね」.",
+  "why_correct": "Trả lời phù hợp với thông báo sẽ họp sau khi về từ trụ sở chính là xác nhận lại thời điểm đó.",
   "options_analysis": [
-   "[Đúng] Xác nhận lại đúng tin: không cần nhập viện.",
-   "[Sai]「入院するんですか。大変ですね」ngược nghĩa (hiểu nhầm phải nhập viện).",
-   "[Sai]「入院するかどうかわからないですね」bỏ qua từ「済む」đã khẳng định rõ."
+   "「本社に行かれる前にやった方がいいんですね」hiểu ngược ý câu nói.",
+   "「今日はこちらには戻られないんですね」mâu thuẫn với ý 'ngay khi về'.",
+   "Đúng: 「午後戻られてからですね」= xác nhận lại thời điểm sau khi về từ trụ sở chính."
   ],
   "points": [
-   "〜ずに済《す》む: không cần phải làm mà vẫn ổn.",
-   "骨折《こっせつ》する: gãy xương."
+   "戻《もど》り次第《しだい》: ngay khi quay về.",
+   "打《う》ち合《あ》わせ: buổi họp bàn."
   ]
  },
  "問4-9": {
-  "why_correct": "Người kia kể chuyện vất vả phải đi bộ về vì tàu gặp sự cố → đáp bằng lời thông cảm.",
+  "why_correct": "Câu gốc đề xuất đặt ngày dự phòng phòng mưa, phản hồi tự nhiên là đồng tình chuẩn bị sẵn yên tâm hơn.",
   "options_analysis": [
-   "Chỉ bình luận về khoảng cách, không nhắc tới sự vất vả.",
-   "「大したことにならなかった」dùng khi thiệt hại nhẹ.",
-   "「ひどい目にあう」thể hiện sự thông cảm với người kia."
+   "Ngược hẳn đề xuất, cho là không cần nghĩ đến thời tiết.",
+   "Đúng, đồng tình chuẩn bị sẵn trước sẽ yên tâm hơn.",
+   "Đề nghị đợi mưa mới tính, ngược ý chuẩn bị trước."
   ],
   "points": [
-   "ひどい目《め》にあう: gặp chuyện khổ, bị một vố đau.",
-   "大《たい》したことはない: không đáng kể."
+   "予備日《よびび》: ngày dự phòng.",
+   "イベント: sự kiện."
   ]
  },
  "問4-10": {
