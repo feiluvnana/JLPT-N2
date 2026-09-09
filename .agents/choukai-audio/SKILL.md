@@ -1,6 +1,6 @@
 ---
 name: choukai-audio
-description: Single owner of the listening audio end to end. Since 2026-09-08 a generated paper's 聴解 is COMPOSED from real recordings — a MIXED pool of official sittings plus Shin Kanzen and Soumatome items (tools/build_choukai_bank.py + tools/build_textbook_bank.py + tools/compose_choukai.py), not synthesized — Edge-TTS is retired. Exactly one paper is official-only. Use whenever building, fixing or re-drawing a paper's listening half, whenever the clip bank needs rebuilding, whenever an official choukai MP3 needs segmenting or analysis ("learn from this audio"), and whenever pacing needs verification. Do not write ad-hoc TTS loops and do not call make_choukai_mp3.py — it is kept only as the pacing/register evidence the composer is measured against.
+description: Single owner of the listening audio end to end. Since 2026-09-08 a generated paper's 聴解 is COMPOSED from real recordings — a MIXED pool of official sittings plus hand-declared Shin Kanzen, Soumatome and 問題例集 items (tools/build_choukai_bank.py + tools/build_textbook_bank.py + tools/compose_choukai.py), not synthesized — Edge-TTS is retired. Exactly one paper is official-only. Use whenever building, fixing or re-drawing a paper's listening half, whenever the clip bank needs rebuilding, whenever an official choukai MP3 needs segmenting or analysis ("learn from this audio"), and whenever pacing needs verification. Do not write ad-hoc TTS loops and do not call make_choukai_mp3.py — it is kept only as the pacing/register evidence the composer is measured against.
 ---
 
 # Choukai Audio (compose → verify → calibrate)
@@ -29,11 +29,12 @@ no distractors to design.
 - `20260807_1` is composed from **official recordings only**. It is named in
   `compose_choukai.OFFICIAL_ONLY_TESTS` and it is a control, not an exemption:
   the reference a listener can compare every other paper against.
-- **Every other paper mixes** official clips with hand-transcribed Shin Kanzen
-  and Soumatome items — `TEXTBOOK_SLOTS` says how many slots per 大問
-  (currently 問題1 ×2, 問題2 ×1, 問題3 ×2, 問題4 ×3: 8 of a paper's 29). **問題5
-  is the only 大問 still official-only in every paper**, and for SOURCE reasons,
-  not policy ones (`references/textbook_bank_plan.md` §6).
+- **Every other paper mixes** official clips with hand-declared ones — Shin
+  Kanzen, Soumatome, and since 2026-09-09 the free 『問題例集』(2009) sample from
+  jlpt.jp (`references/textbook_bank_plan.md` §7). `TEXTBOOK_SLOTS` says how
+  many slots per 大問 (currently 問題1 ×2, 問題2 ×1, 問題3 ×2, 問題4 ×3: 8 of a
+  paper's 29). **問題5 is the only 大問 still official-only in every paper**, and
+  for SOURCE reasons, not policy ones (`textbook_bank_plan.md` §6).
 - **`TEXTBOOK_SLOTS` is set from a measurement, not chosen.** `make
   choukai-wear` divides `slots × mixed papers` by pool depth and exits non-zero
   above `WEAR_CEILING` (4.0 uses per clip across the suite) — run it before
@@ -50,7 +51,7 @@ no distractors to design.
 |---|---|
 | `tools/choukai_segment.py` | Finding item boundaries in an official MP3. The committed implementation of `references/official_pacing.md` §1's two-threshold envelope method |
 | `tools/build_choukai_bank.py` | `logs/choukai_bank.json` (`BANK_VERSION = 2`) — the OFFICIAL half, 290 items + 50 preambles, and the single writer of the whole file |
-| `tools/build_textbook_bank.py` | The TEXTBOOK half — resolving `.agents/choukai-audio/references/textbook_items.json` to CD tracks, measuring each body span, and refusing an item whose audio disagrees with its transcript. Also `band_headroom()`, which reports where each admitted item sits inside its 大問's band |
+| `tools/build_textbook_bank.py` | The SLOT-FREE half — resolving `.agents/choukai-audio/references/textbook_items.json` to audio (a CD track, or a `window` into one shared file for the 問題例集 sample), measuring each body span, and refusing an item whose audio disagrees with its transcript. Owns `rate_band_for()`: one CHAR_RATE band per recording style, because a textbook CD is pressed tighter than the exam. Also `band_headroom()`, which reports where each admitted item sits inside its 大問's band |
 | `tools/choukai_wear.py` | How hard the pool is mined, measured and projected — the number `TEXTBOOK_SLOTS` is set from (`make choukai-wear`) |
 | `tools/harvest_number_calls.py` | `logs/choukai_number_calls.json` — one clean official 「N番。」 per number 1–11, all from one sitting |
 | `tools/compose_choukai.py` | Drawing a paper, applying the source policy, prepending number calls, and laying the clips out with the pacing table's pauses |
@@ -63,9 +64,10 @@ no distractors to design.
    mean cutting inside speech. Keeping the slot puts every cut in a structural
    silence and keeps the announcer's own numbering correct. All 31 sittings run
    the same 5/6/5/11/2 shape, so each slot has one candidate per sitting.
-2. **Textbook draws are slot-FREE, and the composer speaks the number.** A
-   textbook track carries no number call at all, so those items are banked
-   body-only (`needs_number_call: true`, `slot: 0`) and the composer prepends a
+2. **Hand-declared draws are slot-FREE, and the composer speaks the number.** A
+   textbook track carries no number call at all, and a 問題例集 clip is cut to
+   start after its own, so those items are banked body-only
+   (`needs_number_call: true`, `slot: 0`) and the composer prepends a
    harvested official 「N番。」 plus `AFTER_NUMBER_CALL` = 2.7 s — the measured
    median pause an official item leaves after its own call. The chapter mark
    goes on the CALL, not the body. A slot-free clip must not land in two slots
@@ -119,16 +121,17 @@ measurement that justifies it** — never by widening a band.
   *audio* is present — it rides inside the section preamble clip, uncut — so
   the paper sounds complete while `聴解スクリプト.txt` has no 例 block. Every
   `tests/imported-*` sitting carries the same divergence.
-- **Finite novelty, now less finite.** Ten official candidates per slot plus 58
-  textbook items (問題1 ×14, 問題2 ×9, 問題3 ×13, 問題4 ×22).
+- **Finite novelty, now less finite.** Ten official candidates per slot plus 62
+  slot-free items (問題1 ×15, 問題2 ×10, 問題3 ×14, 問題4 ×23).
   `logs/choukai_draws.json` records every paper's draw and the composer spends
   the least-used clips first; across the suite of 24 papers `make choukai-wear`
-  measures 3.1–3.5 uses per textbook clip and 1.5–2.4 per official one.
-  **Both books are now fully read** — every page of both 別冊 and all 279 CD
-  tracks measured, 58 items banked and 13 `excluded` with their numbers. A few
-  more Soumatome 課題理解/概要理解 items are still readable, but they would not
-  change a slot count: the next slot in 問題1 or 問題3 needs 18 items in that
-  pool and 問題2 cannot reach 12 at all, so **depth is no longer the binding
+  projects 2.3–3.3 uses per slot-free clip and 1.5–2.4 per official one.
+  **Both books are fully read** — every page of both 別冊 and all 279 CD tracks
+  measured — and the 問題例集 sample added four more (2026-09-09), for 62 banked
+  and 16 `excluded` with their numbers. A few more Soumatome 課題理解/概要理解
+  items are still readable, but they would not change a slot count: the next
+  slot in 問題1 or 問題3 needs 18 items in that pool, 問題2 cannot reach 12 at
+  all, and 問題4 needs 24 and holds 23, so **depth is no longer the binding
   constraint — the sources are.** `references/textbook_bank_plan.md` §6 lists
   what is genuinely blocked; the next real novelty is the 21 official sittings
   in `refs/JLPT_N2_NEW/` that are not yet imported (§6.4).
@@ -567,7 +570,7 @@ shipped bare scripts — do not write new ones to it).
 
 ## Speaker labels
 
-Dialogue lines: `男:` `女:` `男1:` `男2:` `夫:` `妻:` `学生:` `先生:` `店員:`
+Dialogue lines: `男:` `女:` `男1:` `男2:` `女1:` `女2:` `夫:` `妻:` `学生:` `先生:` `店員:`
 `医者:` `部長:` `店長:` `専門家:` `レポーター:` `教室の人:` `職員:` `係員:`
 `担当者:` `講師:` `アナウンス:` `アナウンサー:` `教授:` `FP:`
 plus gendered role pairs:

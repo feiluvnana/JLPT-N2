@@ -480,11 +480,13 @@ def build_audio(index: dict, clips: dict, pres: dict, out_mp3: Path,
         if "path" in rec["audio"]:
             path = ROOT / rec["audio"]["path"]
             if not path.is_file():
-                book = "Soumatome" if rec["source"] == "soumatome" else "Shinkanzen"
+                book = {"soumatome": "Soumatome",
+                        "mondaireishuu": "External"}.get(rec["source"],
+                                                         "Shinkanzen")
                 sys.exit(
-                    f"missing textbook audio {rec['audio']['path']} for clip "
-                    f"{rec['id']}. The CDs are release assets, not git objects "
-                    f"(AGENTS.md §3) — restore with:\n"
+                    f"missing clip audio {rec['audio']['path']} for clip "
+                    f"{rec['id']}. The CDs and the 問題例集 MP3 are release "
+                    f"assets, not git objects (AGENTS.md §3) — restore with:\n"
                     f"  gh release download refs --pattern '{book}.zip' "
                     f"--dir /tmp && unzip -n /tmp/{book}.zip -d refs/")
             return path

@@ -82,6 +82,17 @@ SPEAKER_MAP = {
     "部長":   {"voice": MALE,   "rate": "-6%", "pitch": "-18Hz"},
     "店長":   {"voice": MALE,   "rate": "+0%", "pitch": "+10Hz"},
     "女":     {"voice": FEMALE, "rate": "+4%", "pitch": "+0Hz"},
+    # The female pair Part 2 already documents ("女1/女2 + 男") but the map did
+    # not carry — found 2026-09-09 banking a 問題例集 item whose two speakers are
+    # a mother and her daughter. An unmapped label does not error: it falls
+    # through to the narrator, and `check_choukai_reaction_rate` /
+    # `check_choukai_volume` / `check_mondai5_speakers` all parse turns by
+    # `label in SPEAKER_MAP`, so every turn of a two-female item would have been
+    # invisible to the register gates rather than wrong in the audio.
+    # ±20 Hz on the 210 Hz female base is 3.3 semitones apart, well over Part 2's
+    # 1.9 st target; the split is pitch only, never rate (rate moves difficulty).
+    "女1":    {"voice": FEMALE, "rate": "+4%", "pitch": "+20Hz"},
+    "女2":    {"voice": FEMALE, "rate": "+4%", "pitch": "-20Hz"},
     "妻":     {"voice": FEMALE, "rate": "+4%", "pitch": "+16Hz"},
     "店員":   {"voice": FEMALE, "rate": "+6%", "pitch": "+22Hz"},
     "先生":   {"voice": FEMALE, "rate": "+0%", "pitch": "-16Hz"},

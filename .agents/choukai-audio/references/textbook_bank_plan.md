@@ -1,24 +1,32 @@
-# Mixed-pool 聴解 — Shin Kanzen and Soumatome in the clip bank
+# Mixed-pool 聴解 — the slot-free half of the clip bank
 
 Status: **built and shipping for 問題1, 問題2, 問題3 and 問題4** (2026-09-09).
 問題5 is the only 大問 still official-only, for the source reasons in §6.
 
-**Both books have now been read end to end** — every page of both 別冊 and every
-one of Soumatome's 116 CD tracks and Shin Kanzen's 163 measured. 58 items are
-banked and 13 are `excluded` with the measurement that refused each.
+Three sources, not two. Shin Kanzen and Soumatome are the textbook half (§2, §3);
+**『新しい「日本語能力試験」問題例集』(2009) is a third**, added 2026-09-09 — free
+official JEES audio from jlpt.jp, one item per 大問, banked the same way (§7).
+**62 items are banked and 16 are `excluded`** with the measurement that refused
+each: 問題1 ×15, 問題2 ×10, 問題3 ×14, 問題4 ×23, by source soumatome 37,
+shinkanzen 21, mondaireishuu 4.
+
+Both books have now been read end to end — every page of both 別冊 and every
+one of Soumatome's 116 CD tracks and Shin Kanzen's 163 measured.
 
 The pool is **not** exhausted, and it is worth being exact about why it stopped
 where it did. Roughly six more Soumatome 課題理解 items and two or three more
 概要理解 items are readable and of the right type (cd1/54, cd2/12, cd2/15,
 cd2/19, cd2/21, cd2/22, cd2/23 for 問題1; cd1/32, cd2/40 for 問題3). None of
 them would change anything, because **depth only matters at the step where it
-buys another slot**, and the next step in each 大問 is a long way off: at 3
-slots, 問題1 and 問題3 each need 18 items to stay under the wear ceiling, and
-問題2 needs 12 for even a second slot — which Soumatome cannot reach (§6.1) and
-Shin Kanzen cannot help with at all (§3). At 8 slots the four pools already sit
-at 2.56–3.54 uses per clip. Transcribing more without a slot to spend it on
-buys nothing a reader would hear. §6 lists what is genuinely blocked, and every
-entry carries a number.
+buys another slot**, and the next step in each 大問 is still out of reach even
+after the 問題例集 items: at 3 slots, 問題1 and 問題3 each need 18 items to stay
+under the wear ceiling (they hold 15 and 14), 問題2 needs 12 for even a second
+slot and holds 10 (§6.1), and 問題4 needs 24 for a fourth and holds 23 — which
+would project **exactly 4.00** against a 4.0 ceiling, over it on the next paper
+composed. At 8 slots the four pools sit at 2.30–3.29 uses per clip, down from
+2.56–3.54 before the 問題例集 items. Transcribing more without a slot to spend
+it on buys nothing a reader would hear. §6 lists what is genuinely blocked, and
+every entry carries a number.
 
 What is true on disk now:
 
@@ -26,18 +34,21 @@ What is true on disk now:
   `20260807_1`, named in `compose_choukai.OFFICIAL_ONLY_TESTS`. It is the
   control: the reference a listener can compare the mixed papers against;
 - **every other paper draws from a MIXED pool** — the ten imported official
-  sittings plus **58 textbook items** (問題1 ×14, 問題2 ×9, 問題3 ×13,
-  問題4 ×22), with `TEXTBOOK_SLOTS = {問題1: 2, 問題2: 1, 問題3: 2, 問題4: 3}`
-  taking **8 of a paper's 29 slots** from the textbook side. Each paper's mix is
+  sittings plus **62 slot-free items** (問題1 ×15, 問題2 ×10, 問題3 ×14,
+  問題4 ×23), with `TEXTBOOK_SLOTS = {問題1: 2, 問題2: 1, 問題3: 2, 問題4: 3}`
+  taking **8 of a paper's 29 slots** from the slot-free side. Each paper's mix is
   recorded in `logs/choukai_draws.json` under `sources`;
 - **the slot counts are a measurement, not a preference.**
   `tools/choukai_wear.py` (`make choukai-wear`) divides `slots × mixed papers`
   by pool depth and exits non-zero above `WEAR_CEILING` = 4.0 uses per clip
-  across the suite. At the current depths: 問題1 3.29, 問題2 2.56, 問題3 3.54,
-  問題4 3.14, against 1.5–2.4 for an official clip. It is also what showed the
-  previous numbers were already over — 問題3 projected **5.75** and 問題4
+  across the suite. At the current depths: 問題1 3.07, 問題2 2.30, 問題3 3.29,
+  問題4 3.00, against 1.5–2.4 for an official clip. It is also what showed the
+  pre-2026-09-09 numbers were already over — 問題3 projected **5.75** and 問題4
   **4.18** — which is why 問題4 went from 4 slots to 3 while three other 大問
-  went up.
+  went up. **The slot counts did not move when the 問題例集 items landed**, and
+  that is the tool being used as intended rather than a disappointment: four
+  more clips buy depth (every 大問's wear fell) and no 大問 reached its next
+  threshold, so nothing was raised on a hope.
 
 Everything below was measured, not assumed. Where something is still unknown it
 says so.
@@ -274,10 +285,10 @@ monologue for gist, so it would ship an off-type item into 問題3.
 
 | section | options are | what it needed | banked |
 |---|---|---|---|
-| 問題4 即時応答 | spoken | script + key only | **22 items** (Soumatome 10, Shin Kanzen 12) |
-| 問題3 概要理解 | spoken by BOTH books (and printed in Soumatome's answer booklet too) | script + key + option text | **13 items** (Shin Kanzen 4, Soumatome 9) |
-| 問題1 課題理解 | printed | script PDF **+ the main 問題冊子** for the option lists | **14 items** (Soumatome 9, Shin Kanzen 5) |
-| 問題2 ポイント理解 | printed | same, **plus a measured 20 s option-reading pause inside the clip** | **9 items** (Soumatome only — see §3) |
+| 問題4 即時応答 | spoken | script + key only | **23 items** (Soumatome 10, Shin Kanzen 12, 問題例集 1) |
+| 問題3 概要理解 | spoken by BOTH books (and printed in Soumatome's answer booklet too) | script + key + option text | **14 items** (Shin Kanzen 4, Soumatome 9, 問題例集 1) |
+| 問題1 課題理解 | printed | script PDF **+ the main 問題冊子** for the option lists | **15 items** (Soumatome 9, Shin Kanzen 5, 問題例集 1) |
+| 問題2 ポイント理解 | printed | same, **plus a measured 20 s option-reading pause inside the clip** | **10 items** (Soumatome 9, 問題例集 1 — see §3) |
 | 問題5 統合理解 | Shin Kanzen PRINTS 1番's four choices instead of speaking them | see §6 | 0 |
 
 問題3 and 問題4 were the cheap two and were done first: they are 16 of a
@@ -303,7 +314,7 @@ track. Two extra classes of exclusion turned up there and only there:
 |---|---|
 | `tools/harvest_number_calls.py` | `logs/choukai_number_calls.json` — one clean 「N番。」 span per number 1–11, from one sitting. `make number-calls [CHECK=1]` |
 | `.agents/choukai-audio/references/textbook_items.json` | The hand transcriptions: script lines, key, page, and both explanation panes. Also an `excluded` list with the measurement that refused each entry |
-| `tools/build_textbook_bank.py` | Resolving each (book, cd, track) to audio, measuring the body span, and REFUSING an item that fails a guard. `make textbook-bank` reports; it never writes |
+| `tools/build_textbook_bank.py` | Resolving each item to audio — a `(cd, track)` for a textbook pressing, a `window` into one shared file for 問題例集 (§7) — measuring the body span, and REFUSING an item that fails a guard. `make textbook-bank` reports; it never writes |
 | `tools/build_choukai_bank.py` | Still the single writer of `logs/choukai_bank.json`, now `BANK_VERSION = 2` with both halves. `make choukai-bank` |
 | `tools/compose_choukai.py` | The source policy (`OFFICIAL_ONLY_TESTS`, `TEXTBOOK_SLOTS`), the number-call prepend, and `resolve()` — the one place a slot-free textbook record becomes a `問N-M`-keyed item |
 | `tools/choukai_wear.py` | Measured and projected wear per 大問 and per source — the number `TEXTBOOK_SLOTS` is set from, and it exits non-zero above `WEAR_CEILING`. `make choukai-wear` |
@@ -326,7 +337,10 @@ plausible audio. `build_textbook_bank.py` refuses an item unless
 
 1. its measured body span sits inside its 大問's `TYPE_BANDS`, and
 2. the span the transcript implies matches the span measured — expressed as an
-   implied speech rate inside `CHAR_RATE` (0.060–0.200 s/char).
+   implied speech rate inside its source's rate band: `CHAR_RATE`
+   (0.060–0.200 s/char) for a textbook pressing, `CHAR_RATE_OFFICIAL`
+   (0.080–0.360) for a clip cut from an official recording. **One band could not
+   do both**, and the measurement that says so is in §7.
 
 Both are **type-separation bands, not calibration figures** — the calibrated
 numbers live in `SKILL.md`'s pacing table. The second guard is the one that
@@ -370,7 +384,7 @@ Re-read the list that way rather than by counting entries.
 Both books are read. Nothing below is waiting on someone to open a page — each
 entry is waiting on a measurement, an ear, or a source outside these two books.
 
-### 6.1 問題2 cannot grow past 9, and Shin Kanzen cannot help
+### 6.1 問題2 cannot grow past 10, and Shin Kanzen cannot help
 
 Soumatome's 15 tracks with a 20 s option-reading pause are fully mined: 9
 banked, 6 `excluded` with numbers (cd2/6 at 54.2 s and cd2/26 at 55.0 s under
@@ -379,7 +393,9 @@ cd2/4 at 0.224 s/char and cd2/25 at 0.202 s/char against a 0.200 ceiling;
 cd2/34 with its section instruction bound in; cd2/27 on a source disagreement
 between 別冊 p.42's footnote and 問題冊子 p.62's printed option list). Shin
 Kanzen adds nothing: **not one of its 163 tracks lays more than 10.1 s** (§3).
-So 問題2 stays at 1 slot per paper (2.56 uses per clip).
+The 問題例集 contributes exactly one (§7), which lays 20.19 s at 11.9 s into the
+clip. So the pool is 10 against the 12 a second slot needs, and 問題2 stays at
+1 slot per paper (2.30 uses per clip, down from 2.56).
 
 ### 6.2 問題5 — measured in detail 2026-09-09, and there is a path
 
@@ -396,6 +412,15 @@ So 問題2 stays at 1 slot per paper (2.56 uses per clip).
 Both of this section's blockers therefore reduce to the same missing piece: the
 option read-back. Official reads the four choices after 質問1, leaves 10 s, then
 reads them again after 質問2, and neither book records any of that.
+
+**One item now exists that speaks its options, and it is still not enough.**
+`mondaireishuu:問5-1` (§7) is the only 問題5 item in any of the three sources
+whose four choices are SPOKEN, which is exactly the piece both books are missing.
+It is nevertheless in `excluded`: measured body span **86.2 s** against 問題5's
+105–250 s band, because it is the OLD 統合理解 shape — one 家族三人 discussion,
+ONE question, the choices read once — where a current 問題5 slot runs
+138.7–226.7 s in the official bank. It is evidence that the read-back problem is
+soluble from a source outside the two books, not an item.
 
 **The path, and it is one piece of work rather than two.** If the composer
 supplies the read-backs itself — cut the clip at the end of 質問1's question,
@@ -447,13 +472,22 @@ in the tree unused; the measurement is in `textbook_items.json`'s `excluded`.
 Recovering these four would let 問題4 go back from 3 slots to 4 (26 items →
 3.54 uses).
 
-### 6.4 The only remaining source of novelty is outside these two books
+### 6.4 The remaining source of novelty is outside all three
 
 `refs/JLPT_N2_NEW/` holds 21 official sittings that are not imported. They
 carry **exact** `booklet.md` (printed options) and `key.md` plus audio, and
 would take the official pool from 10 to 31 candidates per slot with zero
 transcription of options or keys — which fixes novelty for 問題5 too, from the
 side no textbook can reach.
+
+**Two of the 21 just got much cheaper.** `refs/External/` now holds the
+『日本語能力試験公式問題集』 第一集 and 第二集, whose N2 listening sets are re-releases
+of **7-2011** and **12-2016** — both already in the archive, so they add no clip
+(measured: 37.9 % and 40.7 % script-window overlap against a ~2 % background;
+`refs/External/README.md` §1). What they add is an EXACT text layer for two
+sittings the archive holds only as 1-bit stencil scans: a born-digital script for
+both, and for 12-2016 the printed 問題1/問題2 option lists and the full 正答表 as
+well. The paragraph below is about the OCR cost; for those two it is zero.
 
 **The cost is not zero and it is not the OCR.** Each sitting has to become a
 whole `tests/imported-<slug>/` paper before `build_choukai_bank.py` can read it
@@ -467,3 +501,109 @@ a 1-bit stencil bitmap. One sitting is a full pipeline run; 21 is not a session.
 Judged against Stages C–E in 2026-09-09's session and **declined in favour of
 finishing both books**, which was self-contained and doubled the mixed slot
 count. It remains the right next move, one sitting at a time.
+
+---
+
+## 7. 『新しい「日本語能力試験」問題例集』(2009) — a third source, and how it differs
+
+Added 2026-09-09. `refs/External/mondaireishuu_2009/` — free from
+<https://www.jlpt.jp/samples/sample09.html>, no account and no purchase.
+`refs/External/README.md` owns the provenance; this section owns what it
+contributes to the bank.
+
+### Why it is here and not with the official half
+
+These are official JEES recordings, but they are **not a sitting**: five items,
+no 例, no `tests/imported-*` folder for `build_choukai_bank.py` to reconcile
+audio against text. They are hand-declared — transcript, key, printed options,
+both explanation panes — which is this file's shape, not that one's. Banking
+them body-only also makes them **slot-FREE**, where an official record is locked
+to the slot it occupied; all five sit in slot 1 of their 大問, so keeping the
+slot would have wasted four of them.
+
+### One MP3, five items — so a declaration names a WINDOW, not a track
+
+`N2Sample.mp3` is 554 s and carries the whole sample sitting: opening, five 問題
+instructions, one item per 大問. (The script and booklet PDFs print TWO items per
+大問; the audio has the first of each. jlpt.jp says so on the page, and the file
+confirms it — five answer pauses, five 「N番。」 calls, every second accounted for.)
+
+So `build_textbook_bank.py` grew a second way to resolve audio: a `window`
+bracketing the item between the structural silences either side of it. The span
+is still **measured**, by snapping to the speech runs the window contains, and a
+window whose edge falls inside a speech run is REFUSED — that is the guard that
+replaces the track-number guard, and it is the one that matters here, because the
+file lays 14–19 s of section instruction beside every item.
+
+Structure, measured (`choukai_segment.measure`, extended threshold):
+
+| | instruction | 「1番。」 | item body | pause after |
+|---|---|---|---|---|
+| 問題1 | 0.0–29.4 | 32.60–33.54 | **36.16–94.38** | 12.20 s |
+| 問題2 | 106.6–137.7 | 137.66–138.60 | **141.22–237.18** | 12.18 s |
+| 問題3 | 249.4–277.9 | 277.86–278.82 | **281.54–352.14** | 5.22 s |
+| 問題4 | 357.4–384.7 | 384.72–385.68 | **388.40–410.96** | 5.44 s |
+| 問題5 | 416.4–454.0 | 454.02–454.98 | **457.70–543.90** | 5.50 s |
+
+The 5.2–5.5 s pauses are the sample's own, shorter than the exam's 8 s; the
+composer discards them and lays the pacing table's value, exactly as it does for
+a textbook clip.
+
+**問題2 carries its 20 s option-reading pause, and it was verified inside the cut
+clip**: 20.19 s at 11.90 s in, against official's 20.22 s [20.19–20.81] and the
+8–14 s position every good Soumatome track lays it at (§2). That is the
+measurement 問題2 is bottlenecked on and the one Shin Kanzen cannot supply at all.
+
+### What is banked, and what is not
+
+| item | section | span | rate | key | status |
+|---|---|---|---|---|---|
+| 問1-1 | 問題1 | 58.2 s | 0.162 | 3 | banked |
+| 問2-1 | 問題2 | 96.0 s | 0.177 | 2 | banked |
+| 問3-1 | 問題3 | 70.6 s | 0.197 | 4 | banked |
+| 問4-1 | 問題4 | 22.6 s | 0.235 | 3 | banked |
+| 問5-1 | 問題5 | 86.2 s | — | 4 | `excluded` — under the 105 s floor; old one-question 統合理解 shape (§6.2) |
+| 問1-2 … 問4-2 | — | — | — | — | `excluded` — no audio; 問1-2 is a picture-legend item besides |
+
+Keys read off `N2-seikai.pdf` p.155, printed options off `N2-mondai.pdf`
+pp.51–56, scripts off `N2-script.pdf` pp.156–160. All five PDFs are scans with
+no text layer, so every field was read from the page, never from an extract.
+
+### `CHAR_RATE` could not judge these, and the measurement says why
+
+`mondaireishuu:問4-1` was refused on the first build at **0.235 s/char** against
+`CHAR_RATE`'s 0.200 ceiling. The window was right and the transcript was right.
+Re-measuring the OFFICIAL bank with the same formula settled it:
+
+| | 問題1 | 問題2 | 問題3 | 問題4 | 問題5 |
+|---|---|---|---|---|---|
+| official median | 0.197 | 0.200 | 0.215 | **0.231** | 0.211 |
+| official range | 0.165–0.239 | 0.165–0.255 | 0.083–0.258 | 0.181–0.323 | 0.158–0.354 |
+| over CHAR_RATE's 0.200 | 22/50 | 30/60 | 43/50 | **94/110** | 14/20 |
+
+**94 of the official bank's own 110 問題4 items sit above the ceiling**, and our
+item at 0.235 is the official 問題4 MEDIAN. So `CHAR_RATE` is a fact about how
+Shin Kanzen and Soumatome press their CDs — tighter than the exam — not about
+Japanese speech. What official lays and `expected_gaps` does not model is the
+~1.1 s pause after each spoken 「N、」 (`choukai-audio` Part 3, deviation 3): the
+repo speaks a choice as one utterance, so the function never needed it.
+
+The repair was a **second band for a second recording style**, not a wider one:
+`CHAR_RATE_OFFICIAL` = (0.080, 0.360), the official envelope above rounded
+outward, selected per source by `rate_band_for()` — which
+`check_choukai_textbook_bands` imports rather than restating, so the gate and the
+builder cannot disagree about which band applies. It is wide, and it still guards
+what this guard is for: a window off by one structural silence swallows 14–19 s
+of instruction and lands far outside even this.
+
+### The one code-level side effect worth knowing
+
+問2-1's two speakers are a mother and her daughter, so the item needs a female
+PAIR. `SPEAKER_MAP` had `男1`/`男2` but no `女1`/`女2` — even though
+`choukai-audio` Part 2 has always documented 「女1/女2 + 男」 as a supported cast.
+The labels were added (±20 Hz on the 210 Hz female base, 3.3 semitones apart,
+pitch only). This is not about synthesis, which is retired:
+`check_choukai_reaction_rate`, `check_choukai_volume` and
+`check_mondai5_speakers` all parse turns by `label in SPEAKER_MAP`, so every turn
+of a two-female item would have been invisible to the register gates rather than
+wrong in the audio.

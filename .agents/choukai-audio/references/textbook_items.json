@@ -2716,6 +2716,206 @@
      "比《くら》べようがない: không có cơ sở nào để so sánh."
     ]
    }
+  },
+  {
+   "id": "mondaireishuu:問1-1",
+   "book": "mondaireishuu",
+   "window": [
+    35.0,
+    100.0
+   ],
+   "section": "問題1",
+   "answer": 3,
+   "source_page": "問題例集 N2 スクリプト p.156 問題1 1番 / 問題冊子 p.51 / 正解 p.155",
+   "script_lines": [
+    "授業で、男の先生が、話しています。学生は、授業を休んだとき、どのように宿題を確認しますか。",
+    "男:えーと、この授業を休むときは、必ず前の日までに連絡してください。",
+    "女:メールでもいいですか。",
+    "男:はい、いいですよ。あ、それから、休んだときは、私の研究室の前の掲示を見て、宿題を確認してください。友達に聞いたりしないで、自分で確かめてちゃんとやってきてくださいね。",
+    "女:はい。",
+    "男:それから、今日休んだ人、リンさんですね、リンさんは、このこと知りませんから、誰か伝えておいてくれますか。",
+    "女:あ、私、リンさんに伝えておきます。同じ寮ですから。",
+    "男:じゃ、お願いします。",
+    "学生は、授業を休んだとき、どのように宿題を確認しますか。"
+   ],
+   "printed_options": [
+    "先生にメールで聞く",
+    "友達にメールで聞く",
+    "研究室の前のけいじを見る",
+    "りょうの前のけいじを見る"
+   ],
+   "kaisetsu_cell": "男「私の研究室の前の掲示を見て、宿題を確認してください」＝宿題の確認は掲示で。1 ✗「メールでもいいですか」は休む連絡の話。2 ✗「友達に聞いたりしないで」と否定される。4 ✗ 寮はリンさんへの伝言の話で、掲示の場所ではない。",
+   "explanation": {
+    "why_correct": "先生《せんせい》は「私《わたし》の研究室《けんきゅうしつ》の前《まえ》の掲示《けいじ》を見《み》て、宿題《しゅくだい》を確認《かくにん》してください」と指示《しじ》する。",
+    "options_analysis": [
+     "メールは休《やす》む連絡《れんらく》の話《はなし》。確認《かくにん》方法《ほうほう》ではない。",
+     "「友達《ともだち》に聞《き》いたりしないで」と明《あき》らかに否定《ひてい》される。",
+     "研究室《けんきゅうしつ》前《まえ》の掲示《けいじ》で自分《じぶん》で確《たし》かめる。",
+     "寮《りょう》はリンさんへの伝言《でんごん》の話《はなし》で、掲示《けいじ》は出《で》ない。"
+    ],
+    "points": [
+     "掲示《けいじ》：知《し》らせを紙《かみ》に書《か》いて貼《は》り出《だ》すもの。",
+     "確《たし》かめる：自分《じぶん》で調《しら》べて確認《かくにん》する。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Thầy dặn: hãy xem bảng thông báo trước phòng nghiên cứu để kiểm tra bài tập.",
+    "options_analysis": [
+     "Mail chỉ là cách báo nghỉ, không phải cách kiểm tra bài tập.",
+     "Thầy nói rõ đừng hỏi bạn bè, nên phương án này bị loại.",
+     "Đúng: tự xem bảng thông báo trước phòng nghiên cứu.",
+     "Ký túc xá chỉ liên quan việc nhắn cho bạn Rin."
+    ],
+    "points": [
+     "掲示《けいじ》: bảng thông báo dán giấy.",
+     "確《たし》かめる: tự mình kiểm tra lại."
+    ]
+   }
+  },
+  {
+   "id": "mondaireishuu:問2-1",
+   "book": "mondaireishuu",
+   "window": [
+    140.0,
+    243.0
+   ],
+   "section": "問題2",
+   "answer": 2,
+   "source_page": "問題例集 N2 スクリプト p.157 問題2 1番 / 問題冊子 p.53 / 正解 p.155",
+   "script_lines": [
+    "母親と高校生の女の子が話しています。女の子はどうして学校へ行きたくないのですか。",
+    "女1:どうしたの？朝からためいきばっかり…。わかった、また誰かとけんかでもしたんでしょ？",
+    "女2:いやだ、お母さん、どうして知ってるの？でも、それはもういいの。きのうの夜、電話で仲直りしたんだもん。それより、見てよ、この前髪…。",
+    "女1:まぁ…また、思い切って短くしたわね。",
+    "女2:自分でやったら切りすぎちゃって…。こんなんじゃ、みんなに笑われちゃうよ。ねぇ、今日学校休んじゃだめ？",
+    "女1:何言ってるの。だめに決まってるでしょ。そんなこと言って、本当は今日の試験、受けたくないんでしょ。",
+    "女2:違うよ、もう。ちゃんと勉強したんだから。そんなことより…あ〜あ、鏡見るだけで頭痛くなりそう…。",
+    "女1:もう、気にしないの。ほら、さっさと準備しなさい。",
+    "女2:は〜い。",
+    "女の子はどうして学校へ行きたくないのですか。"
+   ],
+   "printed_options": [
+    "友達とけんかしたから",
+    "かみがたが気に入らないから",
+    "試験があるから",
+    "頭がいたいから"
+   ],
+   "kaisetsu_cell": "女2「自分でやったら切りすぎちゃって…こんなんじゃ、みんなに笑われちゃうよ」→前髪が理由。1 ✗「きのうの夜、電話で仲直りしたんだもん」＝もう解決済み。3 ✗「ちゃんと勉強したんだから」と本人が否定。4 ✗「頭痛くなりそう」は鏡を見た感想で、実際の頭痛ではない。",
+   "explanation": {
+    "why_correct": "女《おんな》の子《こ》は前髪《まえがみ》を「切《き》りすぎちゃって」「笑《わら》われちゃうよ」と言《い》う。",
+    "options_analysis": [
+     "けんかは「仲直《なかなお》りしたんだもん」ともう解決《かいけつ》済《ず》み。",
+     "髪型《かみがた》が気《き》に入《い》らず、人《ひと》に見《み》られたくない。",
+     "試験《しけん》は「ちゃんと勉強《べんきょう》した」と本人《ほんにん》が否定《ひてい》。",
+     "「頭《あたま》痛《いた》くなりそう」は鏡《かがみ》を見《み》た感想《かんそう》。"
+    ],
+    "points": [
+     "思《おも》い切《き》って：ためらわずに大胆《だいたん》に。",
+     "〜ちゃう：〜てしまう の縮約形《しゅくやくけい》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Cô bé tự cắt tóc mái, cắt ngắn quá và sợ bị bạn bè cười, nên không muốn đi học.",
+    "options_analysis": [
+     "Chuyện cãi nhau đã làm hòa qua điện thoại tối qua rồi.",
+     "Đúng: không ưng kiểu tóc mái mình vừa tự cắt.",
+     "Chính cô bé phủ nhận: đã học bài đàng hoàng rồi.",
+     "「Đau đầu」 chỉ là cảm giác khi soi gương, không phải bệnh."
+    ],
+    "points": [
+     "思《おも》い切《き》って: dứt khoát, mạnh dạn.",
+     "〜ちゃう: dạng rút gọn của 〜てしまう."
+    ]
+   }
+  },
+  {
+   "id": "mondaireishuu:問3-1",
+   "book": "mondaireishuu",
+   "window": [
+    280.0,
+    355.0
+   ],
+   "section": "問題3",
+   "answer": 4,
+   "source_page": "問題例集 N2 スクリプト p.158 問題3 1番 / 正解 p.155",
+   "script_lines": [
+    "テレビでアナウンサーが通信販売に関する調査の結果を話しています。",
+    "女:皆さん、通信販売を利用されたことがありますか。買い物をするときは店に行って、自分の目で確かめてからしか買わないと言っていた人も、最近この方法を利用するようになってきたそうです。１０代から８０代までの人に調査をしたところ、「忙しくて買いに行く時間がない」「お茶を飲みながらゆっくりと買い物ができる」「子どもを育てながら、働いているので、毎日の生活になくてはならない」など多くの意見が出されました。",
+    "通信販売の何についての調査ですか。",
+    "1、利用者数",
+    "2、買える品物の種類",
+    "3、利用方法",
+    "4、利用する理由"
+   ],
+   "kaisetsu_cell": "挙がった声は「忙しくて買いに行く時間がない」「ゆっくり買い物ができる」「毎日の生活になくてはならない」＝いずれも利用する理由。1 ✗ 人数の数字は一つも出ない。2 ✗ 品物の種類には触れない。3 ✗ 注文の仕方も説明されない。",
+   "explanation": {
+    "why_correct": "挙《あ》がった意見《いけん》は「時間《じかん》がない」「ゆっくりできる」など、すべて利用《りよう》の理由《りゆう》。",
+    "options_analysis": [
+     "利用者《りようしゃ》の人数《にんずう》を示《しめ》す数字《すうじ》は出《で》ない。",
+     "何《なに》が買《か》えるかという品物《しなもの》の話《はなし》はない。",
+     "注文《ちゅうもん》の仕方《しかた》も説明《せつめい》されない。",
+     "調査《ちょうさ》で集《あつ》まったのは利用《りよう》する理由《りゆう》。"
+    ],
+    "points": [
+     "通信販売《つうしんはんばい》：店《みせ》に行《い》かずに注文《ちゅうもん》する買《か》い物《もの》。",
+     "〜たところ：〜した結果《けっか》。調査《ちょうさ》の報告《ほうこく》に使《つか》う。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Các ý kiến thu được đều là lý do người ta mua hàng qua mạng: bận, thong thả, cần cho sinh hoạt.",
+    "options_analysis": [
+     "Không có con số nào về số lượng người sử dụng.",
+     "Không nhắc tới chủng loại hàng hóa mua được.",
+     "Cách đặt hàng cũng không được giải thích.",
+     "Đúng: khảo sát về lý do người ta sử dụng."
+    ],
+    "points": [
+     "通信販売《つうしんはんばい》: mua bán qua bưu điện/mạng.",
+     "〜たところ: sau khi làm ~ thì (dùng khi báo cáo kết quả)."
+    ]
+   }
+  },
+  {
+   "id": "mondaireishuu:問4-1",
+   "book": "mondaireishuu",
+   "window": [
+    387.0,
+    413.0
+   ],
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "問題例集 N2 スクリプト p.159 問題4 1番 / 正解 p.155",
+   "script_lines": [
+    "あれ、佐藤さんって、今日、お休みだったっけ？",
+    "1、ええ、とても楽しかったです。",
+    "2、はい、昨日休みでした。",
+    "3、あ、午後からの出勤だそうです。"
+   ],
+   "kaisetsu_cell": "「今日、お休みだったっけ？」＝今日の勤務の確認→「午後からの出勤だそうです」と今日の予定を答える3。1 ✗ 休みの感想で、質問に答えていない。2 ✗ 昨日のことで、聞かれているのは今日。",
+   "explanation": {
+    "why_correct": "「今日《きょう》、お休《やす》みだったっけ」は今日《きょう》の勤務《きんむ》の確認《かくにん》。今日《きょう》の予定《よてい》で答《こた》える。",
+    "options_analysis": [
+     "休《やす》みの感想《かんそう》で、いるかどうかの答《こた》えにならない。",
+     "昨日《きのう》のことで、聞《き》かれているのは今日《きょう》。",
+     "「午後《ごご》からの出勤《しゅっきん》」と今日《きょう》の状況《じょうきょう》を伝《つた》える。"
+    ],
+    "points": [
+     "〜っけ：うろ覚《おぼ》えのことを確《たし》かめる終助詞《しゅうじょし》。",
+     "出勤《しゅっきん》：仕事《しごと》に出《で》ること。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Câu hỏi xác nhận hôm nay anh Sato có nghỉ không, nên phải trả lời về lịch hôm nay.",
+    "options_analysis": [
+     "Là cảm tưởng về kỳ nghỉ, không trả lời câu hỏi.",
+     "Nói về hôm qua, trong khi người hỏi hỏi hôm nay.",
+     "Đúng: cho biết hôm nay anh ấy đi làm từ chiều."
+    ],
+    "points": [
+     "〜っけ: trợ từ cuối câu dùng khi nhớ mang máng, hỏi lại.",
+     "出勤《しゅっきん》: đi làm, có mặt ở chỗ làm."
+    ]
+   }
   }
  ],
  "excluded": [
@@ -2844,6 +3044,24 @@
    "section": "問題4",
    "source_page": "別冊 p.7 実力養成編II 即時応答 確認問題 (1)–(4) (問題用紙 p.31)",
    "reason": "FOUR exam-format 即時応答 items inside ONE track — the only bundled track found in either book, and the only unmined 即時応答 material left (Soumatome's two sets and Shin Kanzen's 模擬試験 12 are all banked, and every other 練習 in Shin Kanzen chapter II is a two-option a/b drill, not an exam item). Keys read off 別冊 p.7: (1) 3, (2) 3, (3) 1, (4) 2. A splitter was written for it and REFUSED it, correctly: the body carries FOUR pauses of 2.5 s+ (3.20 s @34.9, 3.08 s @61.2, 3.30 s @84.8, 2.96 s @107.6) where three would split it into four, so the track is not the shape the declaration claims. Two interleaved series run through it that no measurement here explains — 0.16 s blips each preceded by exactly 2.28 s (@22.9, @43.6, @71.1) and 0.90 s runs each preceded by ~3.1 s (@34.9, @61.2, @84.8, @107.6, the last with only 1.6 s of file after it) — and the 0.90 s length is the same as the fixed Shin Kanzen track-id word. Finishing this needs an EAR on the track, not another guess at where the boundaries are; a wrong split ships a clip that starts mid-sentence into every paper that draws it, and no gate hears anything."
+  },
+  {
+   "id": "mondaireishuu:問5-1",
+   "book": "mondaireishuu",
+   "window": [
+    456.0,
+    546.0
+   ],
+   "section": "問題5",
+   "source_page": "問題例集 N2 スクリプト pp.159-160 問題5 1番 / 正解 p.155 (答え 4)",
+   "reason": "Measured body span 86.2 s (457.70-543.90) against 問題5's 105-250 s band, so build_textbook_bank REFUSES it. Not a mis-read window — the item is the OLD 統合理解 shape: one 家族三人 discussion, ONE question, the four choices spoken ONCE. A current 問題5 slot runs 138.7-226.7 s in the official bank because 2番 asks 質問1 and 質問2 and reads the choices twice. Banking it would put a 86 s clip in a slot whose siblings are 60 % longer. Its transcript and key (4) are correct and it is the only 問題5 item in either book whose options are SPOKEN, which is the piece textbook_bank_plan.md 6.2 says is missing — keep it here as evidence, not as an item: 問題5 needs 6+ bankable items for one slot and this is one."
+  },
+  {
+   "id": "mondaireishuu:問1-2",
+   "book": "mondaireishuu",
+   "section": "問題1",
+   "source_page": "問題例集 N2 スクリプト pp.156-157 問題1 2番 / 問題冊子 p.52 (答え 2)",
+   "reason": "No audio. jlpt.jp publishes ONE item per 大問 in N2Sample.mp3 (554 s, verified: 5 answer pauses, 5 number calls, every second of the file accounted for) while the script and booklet PDFs print two. The same is true of 問2-2, 問3-2 and 問4-2, so the four second items of this source are text-only and unbankable. This one would be refused twice over anyway: its options are the picture-legend form (1 アイウ / 2 イウエ / 3 アイ / 4 ウエ) over an illustration, the class textbook_bank_plan.md 4 already excludes because render_booklet prints a flat 1-4 list."
   }
  ]
 }

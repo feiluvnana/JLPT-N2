@@ -65,7 +65,7 @@ not route around it silently.
   2. `jlpt-exam-structure`: Official JLPT exam format facts — section layouts, question counts, timing, booklet printing conventions, answer-key table format.
   3. `exam-blueprint`: WHAT each exam tests — random non-repeating pool sampling (`sample_items.py`), answer-position balance. Runs before any authoring.
   4. `question-authoring`: HOW to write N2-calibrated items — distractors, item integrity, per-section construction rules (`references/moji-goi.md`, `bunpou.md`, `dokkai.md`, `choukai-items.md`), and calibration against `refs/` (`references/official_calibration.md`).
-  5. `choukai-audio`: The listening audio end to end — **composed from real recordings** since 2026-09-08 (`tools/build_choukai_bank.py` builds the clip bank from the ten imported sittings plus `tools/build_textbook_bank.py`'s Shin Kanzen / Soumatome items, `tools/compose_choukai.py` draws and assembles a paper's whole 聴解 half), plus the pacing table those pauses come from and the method for measuring official audio. Exactly one paper is official-only; every other paper draws from the MIXED pool. Edge-TTS is retired.
+  5. `choukai-audio`: The listening audio end to end — **composed from real recordings** since 2026-09-08 (`tools/build_choukai_bank.py` builds the clip bank from the ten imported sittings plus `tools/build_textbook_bank.py`'s Shin Kanzen / Soumatome / 問題例集 items, `tools/compose_choukai.py` draws and assembles a paper's whole 聴解 half), plus the pacing table those pauses come from and the method for measuring official audio. Exactly one paper is official-only; every other paper draws from the MIXED pool. Edge-TTS is retired.
   6. `exam-app`: Rendering and running the exam — booklet HTML (`build_booklet.py`, no PDF), the merged answer sheet `解答.html` with in-page grading (`build_interactive.py`), the one server (`serve_sheet.py`), the static GitHub Pages build (`build_pages.py`), and CLI grading (`grade_answers.py`).
   7. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test). It also root-causes every finding back to the skill, script, or gate check that let it through, so the next test does not reproduce it.
   8. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
@@ -241,6 +241,16 @@ All calibration inputs must be looked up in `refs/`:
     directly to check a reading the OCR got wrong. **Same trust rules as every
     textbook extract: secondary evidence, never a count or a length.**
 
+- **Free official web material (`refs/External/`)** — fetched from jlpt.jp
+  2026-09-09, no account and no purchase. Three folders: the 公式問題集 第一集
+  (2012) and 第二集 (2018), which are **re-releases of sittings the archive
+  already holds** (7-2011 and 12-2016 — measured, `refs/External/README.md` §1)
+  and therefore add no listening clip, only an EXACT born-digital text layer for
+  two sittings the archive has as stencil scans; and the 問題例集 (2009), whose
+  five-item sample MP3 IS new material and contributes four banked clips
+  (`choukai-audio` / `textbook_bank_plan.md` §7). Zips to `External.zip` on the
+  `refs` release like every other top-level folder. Its README also records what
+  was searched and rejected, so the next agent does not re-run the search.
 - **Official Past Exam Archive (`refs/JLPT_N2_NEW/`) — 31 Sittings (Booklet PDF, Script PDF, Audio MP3)**:
   - **July 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 7-2023/14. N2 7-2023 (script).pdf`, Audio `refs/JLPT_N2_NEW/14. N2 7-2023/File nghe N2 7-2023.mp3`
   - **Dec 2023**: Booklet `refs/JLPT_N2_NEW/14. N2 12-2023/14.N2 12-2023.pdf`, Script `refs/JLPT_N2_NEW/14. N2 12-2023/14. script N2 12-2023.pdf`, Audio `refs/JLPT_N2_NEW/14. N2 12-2023/14. Nghe N2 T12-2023.mp3`

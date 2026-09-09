@@ -1,11 +1,31 @@
 #!/usr/bin/env python3
-"""Bank the hand-transcribed Shin Kanzen / Soumatome 聴解 items.
+"""Bank the hand-transcribed 聴解 items — Shin Kanzen, Soumatome, 問題例集.
 
 `build_choukai_bank.py` owns the official half of `logs/choukai_bank.json` —
-290 items cut out of the ten imported sittings. This owns the TEXTBOOK half:
+290 items cut out of the ten imported sittings. This owns the SLOT-FREE half:
 one record per item declared in
-`.agents/choukai-audio/references/textbook_items.json`, resolved to a CD track,
+`.agents/choukai-audio/references/textbook_items.json`, resolved to its audio,
 measured, duration-checked, and handed back for that file to append.
+
+Two ways an item resolves to audio
+----------------------------------
+* **A CD track** (`cd` + `track`) — Shin Kanzen and Soumatome press one item per
+  track, so the file IS the item and both ends are trimmed structurally.
+* **A window into a shared file** (`window`) — 『新しい「日本語能力試験」問題例集』
+  ships its whole N2 sample sitting as ONE MP3 (`refs/External/`), one item per
+  大問. A declaration names the bracket between the structural silences either
+  side of its item; the span is still MEASURED, by snapping to the speech runs
+  the window contains, and a window whose edge falls inside speech is REFUSED.
+  Same two guards afterwards, unchanged.
+
+Why 問題例集 items are banked here and not with the official half
+----------------------------------------------------------------
+They are official RECORDINGS, but they are not a sitting: 5 items, no 例, no
+`tests/imported-*` folder for `build_choukai_bank.py` to reconcile against. What
+they are is hand-declared — transcript, key, printed options, both explanation
+panes — which is exactly this file's shape. Banking them body-only also makes
+them slot-FREE, where an official record is locked to the slot it occupied; each
+of these sits in slot 1 of its 大問, so keeping the slot would waste four of them.
 
 Why textbook items are slot-free
 --------------------------------
@@ -111,6 +131,20 @@ BOOKS = {
         # 「N番。」: an item's own number would not be constant at 0.90 s.)
         "max_header_runs": 2,
     },
+    "mondaireishuu": {
+        "label": "新しい「日本語能力試験」問題例集 N2",
+        # One MP3 carries the whole sample sitting — opening, five 問題
+        # instructions, and ONE item per 大問 (jlpt.jp publishes it that way;
+        # the booklet and script PDFs print two items per 大問, the audio has
+        # the first of each). So a declaration names a `window` instead of a
+        # track, and `window_span` measures inside it.
+        "file": "refs/External/mondaireishuu_2009/N2Sample.mp3",
+        "windowed": True,
+        "zip": "External",
+        # An official JEES recording, not a textbook pressing — so it is judged
+        # against CHAR_RATE_OFFICIAL, the band measured off the official bank.
+        "official_pacing": True,
+    },
 }
 
 # --- body-span extraction ----------------------------------------------------
@@ -142,6 +176,32 @@ TYPE_BANDS = {
 # that is the right TYPE but the wrong ITEM, which the duration band cannot.
 CHAR_RATE = (0.060, 0.200)
 
+# ...and the same guard for a clip cut from an OFFICIAL recording, which needs
+# its own band because official pacing is looser than a textbook CD's.
+#
+# MEASURED, 2026-09-09, over all 290 official records in `logs/choukai_bank.json`
+# with this exact formula ((span - expected_gaps) / spoken chars):
+#
+#   問題1 n=50  0.165–0.239 (median 0.197)      問題4 n=110 0.181–0.323 (median 0.231)
+#   問題2 n=60  0.165–0.255 (median 0.200)      問題5 n=20  0.158–0.354 (median 0.211)
+#   問題3 n=50  0.083–0.258 (median 0.215)
+#
+# **94 of the 110 official 問題4 items sit ABOVE `CHAR_RATE`'s 0.200 ceiling.**
+# So the narrow band is not a fact about Japanese speech, it is a fact about how
+# Shin Kanzen and Soumatome press their CDs: tighter than the exam. Judging an
+# official clip by it refuses correct declarations — it refused
+# `mondaireishuu:問4-1` at 0.235 s/char, which is the official 問題4 MEDIAN.
+# What official lays and `expected_gaps` does not model is the ~1.1 s pause after
+# each spoken 「N、」 (choukai-audio Part 3, deviation 3); the repo speaks a choice
+# as one utterance, so the function never needed it.
+#
+# The band below is the official envelope above, rounded outward. It is wide, and
+# it still guards what this guard is for: the 問題例集 MP3 lays 14–19 s of section
+# instruction beside every item, so a window off by one structural silence moves
+# the rate far outside even this. Re-derive it by re-running the measurement over
+# the bank, never by retyping.
+CHAR_RATE_OFFICIAL = (0.080, 0.360)
+
 SPOKEN_CHOICE_RE = re.compile(r"^([1-4])、(.*)$")
 SPEAKER_LABEL_RE = re.compile(r"^[^:：]{1,6}[:：]")
 
@@ -157,6 +217,18 @@ EXPECTED_OPTIONS = {"問題1": 4, "問題2": 4, "問題3": 4, "問題4": 3, "問
 
 class Refused(Exception):
     """An item did not survive the guards, so it is not banked."""
+
+
+def rate_band_for(book: str) -> tuple[float, float]:
+    """The CHAR_RATE band this source's pacing is measured against.
+
+    One band per RECORDING STYLE, not per book: a textbook CD is pressed tighter
+    than the exam, so one band cannot judge both (see `CHAR_RATE_OFFICIAL`).
+    `check_choukai_textbook_bands` imports this rather than restating it, so the
+    gate and the builder can never disagree about which band applies.
+    """
+    return (CHAR_RATE_OFFICIAL if BOOKS.get(book, {}).get("official_pacing")
+            else CHAR_RATE)
 
 
 def track_path(book: str, cd: int, track: int) -> Path:
@@ -219,6 +291,39 @@ def body_span(path: Path, max_header_runs: int
     first, last = _trim(runs, duration, max_header_runs)
     return (runs[first][0], runs[last][1], duration,
             first, len(runs) - 1 - last)
+
+
+def window_span(path: Path, window: list[float]
+                ) -> tuple[float, float, float, int, int]:
+    """(start, end, answer pause, 0, 0) for an item inside a shared file.
+
+    The declared `window` is a BRACKET, not the span: it says which stretch of
+    the file holds this item, and the span is then measured by snapping to the
+    speech runs inside it — the same runs `body_span` trims a CD track down to,
+    so a declaration cannot quietly widen an item by rounding its edges outward.
+
+    A window edge that falls INSIDE a speech run is refused. That is the failure
+    this function exists to catch: the file holds five items and five section
+    instructions, and a bracket set a few seconds wide swallows the announcer
+    reading the next 大問's instruction — which the CHAR_RATE guard would then
+    see as an item speaking far more audio than its transcript accounts for, but
+    only after the clip had already been cut wrong.
+    """
+    runs, duration = speech_runs(path)
+    lo, hi = float(window[0]), float(window[1])
+    straddling = [f"{s:.2f}-{e:.2f}" for s, e in runs
+                  if (s < lo < e) or (s < hi < e)]
+    if straddling:
+        raise Refused(
+            f"window {lo:.1f}–{hi:.1f}s cuts through speech at "
+            f"{', '.join(straddling)} — a window brackets an item between two "
+            f"structural silences; move the edge into the pause")
+    inside = [r for r in runs if r[0] >= lo and r[1] <= hi]
+    if not inside:
+        raise Refused(f"window {lo:.1f}–{hi:.1f}s contains no speech")
+    start, end = inside[0][0], inside[-1][1]
+    following = next((s for s, _ in runs if s >= end), duration)
+    return start, end, following - end, 0, 0
 
 
 def derive_text(script_lines: list[str], section: str,
@@ -293,42 +398,57 @@ def spoken_shape(script_lines: list[str]) -> tuple[int, int, int]:
 
 def build_one(spec: dict) -> dict:
     """Measure and validate one declared item; return its bank record."""
-    book, cd, track = spec["book"], spec["cd"], spec["track"]
+    book = spec["book"]
     section = spec["section"]
     if book not in BOOKS:
         raise Refused(f"{spec['id']}: unknown book {book!r}")
     if section not in TYPE_BANDS:
         raise Refused(f"{spec['id']}: unknown section {section!r}")
+    windowed = BOOKS[book].get("windowed", False)
 
-    audio = track_path(book, cd, track)
+    if windowed:
+        audio = ROOT / BOOKS[book]["file"]
+        if "window" not in spec:
+            raise Refused(
+                f"{spec['id']}: {book} items resolve by `window`, not by track")
+    else:
+        audio = track_path(book, spec["cd"], spec["track"])
     if not audio.is_file():
+        zip_name = BOOKS[book].get(
+            "zip", "Soumatome" if book == "soumatome" else "Shinkanzen")
         raise Refused(
-            f"{spec['id']}: missing {audio.relative_to(ROOT)}. The textbook CDs "
-            f"are release assets, not git objects (AGENTS.md §3) — restore with:"
-            f"\n  gh release download refs --pattern "
-            f"'{'Soumatome' if book == 'soumatome' else 'Shinkanzen'}.zip' "
-            f"--dir /tmp && unzip -n /tmp/*.zip -d refs/")
+            f"{spec['id']}: missing {audio.relative_to(ROOT)}. The source audio "
+            f"is a release asset, not a git object (AGENTS.md §3) — restore "
+            f"with:\n  gh release download refs --pattern "
+            f"'{zip_name}.zip' --dir /tmp && unzip -n /tmp/*.zip -d refs/")
 
-    start, end, duration, n_head, n_tail = body_span(
-        audio, BOOKS[book]["max_header_runs"])
+    if windowed:
+        start, end, book_pause, n_head, n_tail = window_span(
+            audio, spec["window"])
+    else:
+        start, end, duration, n_head, n_tail = body_span(
+            audio, BOOKS[book]["max_header_runs"])
+        book_pause = duration - end
     span = end - start
 
     lo, hi = TYPE_BANDS[section]
     if not lo <= span <= hi:
         raise Refused(
             f"{spec['id']}: body span {span:.1f}s is outside {section}'s "
-            f"{lo:.0f}–{hi:.0f}s band — the track number is probably wrong "
-            f"({audio.name} runs {duration:.1f}s in total). Re-check "
+            f"{lo:.0f}–{hi:.0f}s band — the "
+            f"{'window' if windowed else 'track number'} is probably wrong "
+            f"({audio.name}, {start:.1f}–{end:.1f}s). Re-check "
             f"{spec.get('source_page', 'the page')}")
 
     chars, lines, choices = spoken_shape(spec["script_lines"])
     gaps = expected_gaps(section, 1, lines, choices)
     rate = (span - gaps) / max(chars, 1)
-    if not CHAR_RATE[0] <= rate <= CHAR_RATE[1]:
+    rate_band = rate_band_for(book)
+    if not rate_band[0] <= rate <= rate_band[1]:
         raise Refused(
             f"{spec['id']}: {span:.1f}s of audio against {chars} transcribed "
             f"characters implies {rate:.3f} s/char, outside the plausible "
-            f"{CHAR_RATE[0]}–{CHAR_RATE[1]} band — this track is the right "
+            f"{rate_band[0]}–{rate_band[1]} band — this clip is the right "
             f"length for a {section} item but does not say what the transcript "
             f"says. Re-check {spec.get('source_page', 'the page')}")
 
@@ -373,7 +493,7 @@ def build_one(spec: dict) -> dict:
             "end": round(end, 3),
             # The book's OWN built-in answer pause, reported and then discarded:
             # the composer lays the pacing table's value instead.
-            "answer_pause": round(duration - end, 3),
+            "answer_pause": round(book_pause, 3),
         },
         "script_lines": list(spec["script_lines"]),
         "answer": answer,
@@ -462,13 +582,16 @@ def band_headroom(records: list[dict]) -> tuple[list[str], list[str]]:
                              f"{BAND_EDGE_MARGIN:.0%} of {section}'s {hi:.0f}s "
                              f"ceiling")
             rate = rec["measured"]["rate"]
-            rwidth = CHAR_RATE[1] - CHAR_RATE[0]
-            if rate - CHAR_RATE[0] < rwidth * BAND_EDGE_MARGIN:
+            band_rate = rate_band_for(rec.get("source", ""))
+            name = ("CHAR_RATE_OFFICIAL" if band_rate is CHAR_RATE_OFFICIAL
+                    else "CHAR_RATE")
+            rwidth = band_rate[1] - band_rate[0]
+            if rate - band_rate[0] < rwidth * BAND_EDGE_MARGIN:
                 edges.append(f"{rec['id']} rate {rate:.3f} is within "
-                             f"{BAND_EDGE_MARGIN:.0%} of CHAR_RATE's floor")
-            if CHAR_RATE[1] - rate < rwidth * BAND_EDGE_MARGIN:
+                             f"{BAND_EDGE_MARGIN:.0%} of {name}'s floor")
+            if band_rate[1] - rate < rwidth * BAND_EDGE_MARGIN:
                 edges.append(f"{rec['id']} rate {rate:.3f} is within "
-                             f"{BAND_EDGE_MARGIN:.0%} of CHAR_RATE's ceiling")
+                             f"{BAND_EDGE_MARGIN:.0%} of {name}'s ceiling")
     return report, edges
 
 

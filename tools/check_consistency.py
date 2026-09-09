@@ -12079,9 +12079,14 @@ def check_choukai_textbook_bands():
         if band and span is not None and not band[0] <= span <= band[1]:
             out_of_band.append(f"{rec['id']} {span:.1f}s vs "
                                f"{band[0]:.0f}–{band[1]:.0f}s")
-        if rate is not None and not (textbook.CHAR_RATE[0] <= rate
-                                     <= textbook.CHAR_RATE[1]):
-            bad_rate.append(f"{rec['id']} {rate:.3f} s/char")
+        # One band per RECORDING STYLE — a textbook CD is pressed tighter than
+        # the exam, and 94 of the official bank's own 110 問題4 items sit above
+        # CHAR_RATE's 0.200 ceiling. `rate_band_for` is imported, not restated,
+        # so the gate cannot judge a clip by a band the builder did not use.
+        rate_band = textbook.rate_band_for(rec.get("source", ""))
+        if rate is not None and not rate_band[0] <= rate <= rate_band[1]:
+            bad_rate.append(f"{rec['id']} {rate:.3f} s/char vs "
+                            f"{rate_band[0]}–{rate_band[1]}")
         if rec["section"] in textbook.PRINTED_OPTION_SECTIONS:
             opts = rec.get("explanation_payload", {}).get("options") or []
             want = textbook.EXPECTED_OPTIONS[rec["section"]]
@@ -12101,7 +12106,8 @@ def check_choukai_textbook_bands():
           "track number; a banked item outside it means the bank predates the "
           "current band. Re-run `make choukai-bank`, and never widen a band to "
           "admit an item (build_textbook_bank.py)")
-    check("...and its implied speech rate inside CHAR_RATE", not bad_rate,
+    check("...and its implied speech rate inside its source's CHAR_RATE band",
+          not bad_rate,
           "; ".join(bad_rate) + " — re-run `make choukai-bank`")
     check("問題1/問題2 textbook items carry PRINTED options and speak none",
           not bad_options,
