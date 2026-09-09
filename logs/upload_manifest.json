@@ -169,6 +169,160 @@
     "sha256": "d18c7cad5140402e02d0df4e5d4b41f91c583ccb1653d7b5e5ecd6f2cb4c96d6",
     "size": 44793976
   },
+  "refs/External.zip": {
+    "fingerprint": "1c7785a454b35f09144ea66f05147a14276b807ef3fe73d1af5b894e84f472fa",
+    "member_bytes": 105481405,
+    "member_count": 29,
+    "members": {
+      "External/mondaireishuu_2009/N2-kaitou.pdf": {
+        "mtime_ns": 1788925324634011701,
+        "sha256": "8fa20cba4168044404f8c7ed2b8460e80255c0d2688beccf682ba07d5eaec549",
+        "size": 284537
+      },
+      "External/mondaireishuu_2009/N2-mondai.pdf": {
+        "mtime_ns": 1788925321256111773,
+        "sha256": "f7457d5b2fc9774fa80d9d2346f527cb6a65e85608244bc155911192fffc0369",
+        "size": 4130072
+      },
+      "External/mondaireishuu_2009/N2-script.pdf": {
+        "mtime_ns": 1788925323594021145,
+        "sha256": "e04038fb7f36e8d4f321e0bc64b01968f97c0b460b195a9025587aad8e830b38",
+        "size": 2196951
+      },
+      "External/mondaireishuu_2009/N2-seikai.pdf": {
+        "mtime_ns": 1788925325564929530,
+        "sha256": "f5d2a8ab6d5929514252c913a0297cd0b4e77e797da24cdd51c1251cdb4bf426",
+        "size": 41077
+      },
+      "External/mondaireishuu_2009/N2Sample.mp3": {
+        "mtime_ns": 1788925317640923514,
+        "sha256": "ae2234bcaa32ddcd5b1763f2ccc569dc32671444b4d14e8bbb02e6785bb26c20",
+        "size": 13304503
+      },
+      "External/official_workbook_2012/N2G.pdf": {
+        "mtime_ns": 1788925075960835440,
+        "sha256": "54e8adda3364c0aa3f9c015c932abeb0ad2511d7d98a4d60134befdfb932b213",
+        "size": 727434
+      },
+      "External/official_workbook_2012/N2L.pdf": {
+        "mtime_ns": 1788925086240066819,
+        "sha256": "d345ddbcf0445a19b851d64a55cedd1d3da49cbb2aab35eb08a36977b1ef27f4",
+        "size": 1538163
+      },
+      "External/official_workbook_2012/N2Q1.mp3": {
+        "mtime_ns": 1788925091858144384,
+        "sha256": "aa3d8c97204238fdf1118bafe320d3429a7f0f17911065ff6d59fce9b8baf983",
+        "size": 2775592
+      },
+      "External/official_workbook_2012/N2Q2.mp3": {
+        "mtime_ns": 1788925109311052444,
+        "sha256": "9f18c3551677c8fe9893f134221406effdae19c93b40bc553a89b40d0b5ea85d",
+        "size": 13010908
+      },
+      "External/official_workbook_2012/N2Q3.mp3": {
+        "mtime_ns": 1788925093192660694,
+        "sha256": "872e489fe21f7026ba2cef069f0dd63d2051004d863854fc5bc6bee023390fba",
+        "size": 3000804
+      },
+      "External/official_workbook_2012/N2Q4.mp3": {
+        "mtime_ns": 1788925094404948398,
+        "sha256": "9c5f2b6c7a0f384403778faa0ac28a02d0839740cfe64b99a3a7878e0dfbc8bb",
+        "size": 1978484
+      },
+      "External/official_workbook_2012/N2Q5.mp3": {
+        "mtime_ns": 1788925095938452409,
+        "sha256": "0005d04d2882e453ecef555268ee7538836a5a24dad135f513aa0f47c6ce757d",
+        "size": 2410344
+      },
+      "External/official_workbook_2012/N2R.pdf": {
+        "mtime_ns": 1788925077632714165,
+        "sha256": "c8a56a78a7996c426ffff0cf438162c1af1917a7d6927bce624c69c1e573e9fe",
+        "size": 1948518
+      },
+      "External/official_workbook_2012/N2V.pdf": {
+        "mtime_ns": 1788925074390357141,
+        "sha256": "7e037f5e7380bc0db46e4b064785da44b81604b77e63c5a2a93b083ee52f3855",
+        "size": 977950
+      },
+      "External/official_workbook_2012/N2answer.pdf": {
+        "mtime_ns": 1788925089574668166,
+        "sha256": "788125e58ad0f1a2e9e8ff5d1452247b9e5799c1ddf10ea55073150647c038a2",
+        "size": 159117
+      },
+      "External/official_workbook_2012/N2script.pdf": {
+        "mtime_ns": 1788925088706573798,
+        "sha256": "a095bad10bfd0128010ccca2a620886b2b27d65b0bc1c0598ccc0f8d8f11faab",
+        "size": 492578
+      },
+      "External/official_workbook_2012/N2sheet.pdf": {
+        "mtime_ns": 1788925090547768901,
+        "sha256": "6b583e2fa2e820bd954eb6e7b287b230f51c5ed959407ef9c4dd09e7ddadda1d",
+        "size": 706973
+      },
+      "External/official_workbook_2018/N2G.pdf": {
+        "mtime_ns": 1788925032521728493,
+        "sha256": "b48d6e9002c981ca3d4250db4d0961a97d53145402b5eca058c2eb6fe75185e6",
+        "size": 353945
+      },
+      "External/official_workbook_2018/N2L.pdf": {
+        "mtime_ns": 1788925035081680470,
+        "sha256": "d61edaadaae301d347cae040505016dd5057c2a3ac2a25b4b1aaa92070c2f3cb",
+        "size": 1470456
+      },
+      "External/official_workbook_2018/N2Q1.mp3": {
+        "mtime_ns": 1788925041797836686,
+        "sha256": "3e662657adf623743d0afbe70ab57b65c68a055195cf4076e90e3d45ac38a36e",
+        "size": 10273757
+      },
+      "External/official_workbook_2018/N2Q2.mp3": {
+        "mtime_ns": 1788925044166953350,
+        "sha256": "86b341e2d24c612b4cbf4db79a18a785e3bf4fdca15669d5013340dc67dbe83f",
+        "size": 13171490
+      },
+      "External/official_workbook_2018/N2Q3.mp3": {
+        "mtime_ns": 1788925047809776752,
+        "sha256": "4977afdb63cb8bed911b535086e0b9bd2f05a40db1fe965a06907d020ff9748b",
+        "size": 9780029
+      },
+      "External/official_workbook_2018/N2Q4.mp3": {
+        "mtime_ns": 1788925056972937525,
+        "sha256": "120c4f27949574f526b1f47c113eec70ed934d284504a6696cade4a6236334f0",
+        "size": 7793858
+      },
+      "External/official_workbook_2018/N2Q5.mp3": {
+        "mtime_ns": 1788925066024168053,
+        "sha256": "5a59e1e4197c93256d797aa82ffb66043bb0bc2de5c6bb3e53a82eef00a14ac5",
+        "size": 8351387
+      },
+      "External/official_workbook_2018/N2R.pdf": {
+        "mtime_ns": 1788925033907402436,
+        "sha256": "cae736f4da5baa87fedbc9457964d86ca90cbc1e3f6b3f2d7a405e3a33563f23",
+        "size": 821947
+      },
+      "External/official_workbook_2018/N2V.pdf": {
+        "mtime_ns": 1788925031690535621,
+        "sha256": "c16247e1e6dc3c8b06dc0caf0ea94b7201628c3032c18bb2cc2ac0b1e69f79d6",
+        "size": 1696324
+      },
+      "External/official_workbook_2018/N2answer.pdf": {
+        "mtime_ns": 1788925037142656163,
+        "sha256": "68265ccb1d63179c77809e4d89d787ccaea1bd083e02e1d6e780d2fb92b67cf8",
+        "size": 83510
+      },
+      "External/official_workbook_2018/N2script.pdf": {
+        "mtime_ns": 1788925036416358531,
+        "sha256": "d02cda591b7cbdd7aeac0cc98852bb3aabf0afbdf73feb67b7f1b3fd9fb3c280",
+        "size": 1071509
+      },
+      "External/official_workbook_2018/N2sheet.pdf": {
+        "mtime_ns": 1788925038505937207,
+        "sha256": "3224a0b2c5de7107bf1b84400d46f8ef10a76afb3f5ada293d36184d75656f16",
+        "size": 929188
+      }
+    },
+    "uploaded_fingerprint": "1c7785a454b35f09144ea66f05147a14276b807ef3fe73d1af5b894e84f472fa",
+    "uploaded_size": 105485987
+  },
   "refs/Hajimete.zip": {
     "fingerprint": "27c0635070d76fcdfb0749aa699649abac1e67ea888850cd665a19f7a278daa3",
     "member_bytes": 47557638,
