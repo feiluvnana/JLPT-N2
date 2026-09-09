@@ -12024,6 +12024,103 @@ def check_choukai_source_mix():
           f"control paper has moved")
 
 
+def check_choukai_textbook_bands():
+    """The textbook half's refusal bands, and the printed-options contract.
+
+    Two things nothing checked before 2026-09-09.
+
+    **The bands.** `build_textbook_bank.TYPE_BANDS` has an entry per 大問, but
+    only 問題3's and 問題4's had ever admitted or refused anything — the other
+    three were dead constants that read as enforced. 問題1 and 問題2 now draw,
+    so this line re-derives every banked textbook item's span and rate FROM THE
+    BANK and asserts each sits inside its own 大問's band, imported rather than
+    restated, and it prints the band-edge report `band_headroom` computes so a
+    band about to refuse a correct declaration is visible before it does.
+
+    **The printed-options contract.** 問題1 and 問題2 print their four options
+    and the audio never speaks them (`jlpt-exam-structure`'s "Printed in
+    booklet" column). A declaration that puts them in `script_lines` instead
+    would be counted as spoken characters — `compose_choukai.render_booklet`
+    would still print them, so the booklet would look right while the item's
+    implied speech rate was half its real one. The bank is checked from the
+    other end here: a 問題1/問題2 textbook record must carry exactly four
+    options and its `script` must contain no 「N、…」 choice line.
+    """
+    print("\n聴解 textbook bank (refusal bands, printed vs spoken options)")
+    bank_path = ROOT / "logs" / "choukai_bank.json"
+    if not bank_path.is_file():
+        check("logs/choukai_bank.json exists", False, "run `make choukai-bank`")
+        return
+    try:
+        textbook = load("tools/build_textbook_bank.py")
+    except Exception as exc:                              # pragma: no cover
+        check("build_textbook_bank.py imports", False, str(exc))
+        return
+
+    bank = json.loads(bank_path.read_text(encoding="utf-8"))
+    records = [r for r in bank["records"]
+               if r["kind"] == "item" and r.get("needs_number_call")]
+    if not records:
+        skip("every banked textbook item sits inside its 大問's TYPE_BANDS",
+             "the bank carries no textbook records")
+        return
+
+    missing = sorted({r["section"] for r in records} - set(textbook.TYPE_BANDS))
+    check("every banked textbook section has a TYPE_BANDS entry",
+          not missing,
+          f"{missing} have no band, so nothing refuses a mis-read track number "
+          f"for them — add one to build_textbook_bank.TYPE_BANDS")
+
+    out_of_band, bad_rate, bad_options = [], [], []
+    for rec in records:
+        band = textbook.TYPE_BANDS.get(rec["section"])
+        span = rec.get("measured", {}).get("span")
+        rate = rec.get("measured", {}).get("rate")
+        if band and span is not None and not band[0] <= span <= band[1]:
+            out_of_band.append(f"{rec['id']} {span:.1f}s vs "
+                               f"{band[0]:.0f}–{band[1]:.0f}s")
+        if rate is not None and not (textbook.CHAR_RATE[0] <= rate
+                                     <= textbook.CHAR_RATE[1]):
+            bad_rate.append(f"{rec['id']} {rate:.3f} s/char")
+        if rec["section"] in textbook.PRINTED_OPTION_SECTIONS:
+            opts = rec.get("explanation_payload", {}).get("options") or []
+            want = textbook.EXPECTED_OPTIONS[rec["section"]]
+            if len(opts) != want:
+                bad_options.append(f"{rec['id']} prints {len(opts)}, "
+                                   f"{rec['section']} takes {want}")
+            spoken = [ln for ln in rec.get("script_lines", [])
+                      if textbook.SPOKEN_CHOICE_RE.match(ln)]
+            if spoken:
+                bad_options.append(
+                    f"{rec['id']} has {len(spoken)} 「N、…」 line(s) in a "
+                    f"{rec['section']} script, whose options are PRINTED")
+
+    check(f"every banked textbook item's measured span sits inside its 大問's "
+          f"TYPE_BANDS ({len(records)} item(s))", not out_of_band,
+          "; ".join(out_of_band) + " — the band is what refuses a mis-read CD "
+          "track number; a banked item outside it means the bank predates the "
+          "current band. Re-run `make choukai-bank`, and never widen a band to "
+          "admit an item (build_textbook_bank.py)")
+    check("...and its implied speech rate inside CHAR_RATE", not bad_rate,
+          "; ".join(bad_rate) + " — re-run `make choukai-bank`")
+    check("問題1/問題2 textbook items carry PRINTED options and speak none",
+          not bad_options,
+          "; ".join(bad_options) + " — those two 大問 print their options and "
+          "the audio never says them, so a declaration puts them in "
+          "`printed_options`, never in `script_lines`. Left in the script they "
+          "are counted as spoken characters and the item's implied rate comes "
+          "out about half its real one, while the booklet still looks right")
+
+    report, edges = textbook.band_headroom(records)
+    for line in report:
+        print(f"      {line.strip()}")
+    warn("no banked item sits on a TYPE_BANDS or CHAR_RATE edge", not edges,
+         "; ".join(edges) + " — an item this close to an edge is evidence "
+         "about the BAND, not the item: either the next correct declaration "
+         "gets refused, or the band has stopped separating item types. Decide "
+         "which, and say so; do not widen the band to quiet this line")
+
+
 # ------------------------------------------------- 詳細解説: length and languages
 # THE TERSENESS BANDS. Measured across all 20 papers on 2026-08-25, before the
 # rule existed: why_correct averaged 101 chars (newest three papers 139/148/173),
@@ -14769,6 +14866,7 @@ def main():
         check_cross_test_listening_subjects()
         check_choukai_nondialogue_medium_rotation()
         check_choukai_source_mix()
+        check_choukai_textbook_bands()
         check_draw_provenance()
         check_pools_sha_replayability()
         check_invented_proper_nouns()

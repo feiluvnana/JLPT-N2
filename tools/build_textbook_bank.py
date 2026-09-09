@@ -16,6 +16,18 @@ fill ANY slot of their 大問; the composer prepends a harvested official call
 (`tools/harvest_number_calls.py`) plus the 2.7 s pause that follows one in
 official audio.
 
+Spoken options vs printed options
+---------------------------------
+問題3 and 問題4 SPEAK their four (three) options, so those arrive inside
+`script_lines` as `^[1-4]、` lines and are harvested out of them. 問題1 and
+問題2 PRINT theirs: the booklet shows the list and the audio never says it. A
+declaration for those two sections therefore carries a separate
+`printed_options` array, and putting them in `script_lines` instead is a defect
+this file refuses — `spoken_shape` counts every character there as SPOKEN, so
+four printed options would inflate an item's transcribed length against the
+audio it actually has and the CHAR_RATE guard would refuse every 問題1/2 item
+for a speech rate that looks about half what it is.
+
 The body span is measured, not declared
 ---------------------------------------
 Neither book's track is only the item. Both wrap it:
@@ -133,6 +145,15 @@ CHAR_RATE = (0.060, 0.200)
 SPOKEN_CHOICE_RE = re.compile(r"^([1-4])、(.*)$")
 SPEAKER_LABEL_RE = re.compile(r"^[^:：]{1,6}[:：]")
 
+# The 大問 whose options the booklet PRINTS and the audio never speaks
+# (`jlpt-exam-structure`'s "Printed in booklet" column owns the fact). Items in
+# these sections declare `printed_options` instead of carrying 「N、…」 lines in
+# `script_lines`; `derive_text` refuses either mistake in either direction.
+PRINTED_OPTION_SECTIONS = ("問題1", "問題2")
+
+# How many options each 大問 takes. 問題4 is the odd one at three.
+EXPECTED_OPTIONS = {"問題1": 4, "問題2": 4, "問題3": 4, "問題4": 3, "問題5": 4}
+
 
 class Refused(Exception):
     """An item did not survive the guards, so it is not banked."""
@@ -195,10 +216,26 @@ def body_span(path: Path, max_header_runs: int
             first, len(runs) - 1 - last)
 
 
-def derive_text(script_lines: list[str]) -> tuple[str, list[str], str]:
-    """(stem, printed/spoken options, script body) from the transcript lines."""
-    options = []
-    plain = []
+def derive_text(script_lines: list[str], section: str,
+                printed_options: list[str] | None = None
+                ) -> tuple[str, list[str], str]:
+    """(stem, options, script body) from the transcript lines.
+
+    Two shapes, because the exam has two (`jlpt-exam-structure`'s "Printed in
+    booklet" column):
+
+    * **問題3 / 問題4 — options SPOKEN.** They are `^[1-4]、` lines inside
+      `script_lines` and are harvested out of them, leaving the dialogue.
+    * **問題1 / 問題2 — options PRINTED.** The audio never says them, so they
+      arrive in `printed_options` and `script_lines` must contain no choice
+      line at all. The stem is the FIRST line only (marker + situation +
+      question, which is what the announcer reads up front) and the repeated
+      closing question stays in the script — the same split the official
+      問題1/問題2 records carry.
+    """
+    printed = section in PRINTED_OPTION_SECTIONS
+    options: list[str] = []
+    plain: list[str] = []
     for line in script_lines:
         choice = SPOKEN_CHOICE_RE.match(line)
         if choice:
@@ -207,6 +244,26 @@ def derive_text(script_lines: list[str]) -> tuple[str, list[str], str]:
             plain.append(line)
     if not plain:
         raise Refused("script_lines carry no non-choice line")
+
+    if printed:
+        if options:
+            raise Refused(
+                f"{section} PRINTS its options, so script_lines must carry no "
+                f"「N、…」 choice line — found {len(options)}. Move them to "
+                f"printed_options; left in the script they are counted as "
+                f"spoken characters and the CHAR_RATE guard refuses the item")
+        if not printed_options:
+            raise Refused(
+                f"{section} PRINTS its options and none are declared — add a "
+                f"`printed_options` array read off the 問題冊子 page")
+        # 問題1/2: the announcer reads situation+question, then the talk, then
+        # the question again. Only the first line is the stem.
+        return plain[0], list(printed_options), "\n".join(script_lines[1:])
+
+    if printed_options:
+        raise Refused(
+            f"{section} SPEAKS its options, so they belong in script_lines as "
+            f"「N、…」 lines, not in printed_options")
     # The stem is the situation line plus, when the item announces one, the
     # question read after the talk — the same two-part shape the official
     # records carry. A speaker-tagged line is dialogue, never the question.
@@ -217,7 +274,13 @@ def derive_text(script_lines: list[str]) -> tuple[str, list[str], str]:
 
 
 def spoken_shape(script_lines: list[str]) -> tuple[int, int, int]:
-    """(spoken chars, lines, spoken-choice lines) — `hint_from_script`'s shape."""
+    """(spoken chars, lines, spoken-choice lines) — `hint_from_script`'s shape.
+
+    It takes `script_lines` and NOTHING else on purpose: every character it
+    counts is a character the audio says. A 問題1/2 item's printed options live
+    in their own field and never reach here, which is what keeps the CHAR_RATE
+    guard comparing spoken text against spoken audio.
+    """
     spoken = [SPEAKER_LABEL_RE.sub("", line).strip() for line in script_lines]
     choices = sum(1 for line in script_lines if SPOKEN_CHOICE_RE.match(line))
     return sum(len(s) for s in spoken), len(spoken), choices
@@ -264,14 +327,17 @@ def build_one(spec: dict) -> dict:
             f"length for a {section} item but does not say what the transcript "
             f"says. Re-check {spec.get('source_page', 'the page')}")
 
-    stem, options, script = derive_text(spec["script_lines"])
-    expected_options = 3 if section == "問題4" else 4
+    stem, options, script = derive_text(
+        spec["script_lines"], section, spec.get("printed_options"))
+    expected_options = EXPECTED_OPTIONS[section]
     if len(options) != expected_options:
+        source = ("printed_options" if section in PRINTED_OPTION_SECTIONS
+                  else "spoken choice line(s)")
         raise Refused(
-            f"{spec['id']}: {len(options)} spoken choice line(s), "
+            f"{spec['id']}: {len(options)} {source}, "
             f"{section} takes {expected_options}")
     if len(set(options)) != len(options):
-        raise Refused(f"{spec['id']}: two spoken choices are identical")
+        raise Refused(f"{spec['id']}: two options are identical")
     answer = spec["answer"]
     if not 1 <= answer <= expected_options:
         raise Refused(
@@ -341,6 +407,66 @@ def build_records(verbose: bool = False) -> tuple[list[dict], list[str]]:
     return records, refusals
 
 
+# The margin below which an item is reported as sitting ON a band edge. Not a
+# refusal: an item this close to an edge is evidence about the BAND, not about
+# the item, and the two readings (a band about to refuse a correct declaration,
+# a band no longer separating types) both need a human.
+BAND_EDGE_MARGIN = 0.10
+
+
+def band_headroom(records: list[dict]) -> tuple[list[str], list[str]]:
+    """(per-section span/rate report, items sitting on a band edge).
+
+    `TYPE_BANDS` and `CHAR_RATE` were written when only 問題3 and 問題4 were
+    banked, so three of the five bands had never refused or admitted anything;
+    問題1 and 問題2 started drawing 2026-09-09. This is the pass that exercises
+    them: it prints, per 大問, the band, how many items are inside it and where
+    the extremes actually sit, and it names any item within
+    `BAND_EDGE_MARGIN` of a band edge — the case where the next correct
+    declaration gets refused, or where the band has stopped separating one item
+    type from another.
+    """
+    from collections import defaultdict
+    by_section: dict[str, list[dict]] = defaultdict(list)
+    for rec in records:
+        by_section[rec["section"]].append(rec)
+
+    report, edges = [], []
+    for section in TYPE_BANDS:
+        lo, hi = TYPE_BANDS[section]
+        group = by_section.get(section, [])
+        if not group:
+            report.append(f"  {section}  band {lo:5.0f}–{hi:5.0f}s   "
+                          f"(no items banked)")
+            continue
+        spans = [r["measured"]["span"] for r in group]
+        rates = [r["measured"]["rate"] for r in group]
+        report.append(
+            f"  {section}  band {lo:5.0f}–{hi:5.0f}s   n={len(group):2d}  "
+            f"spans {min(spans):6.1f}–{max(spans):6.1f}s  "
+            f"rates {min(rates):.3f}–{max(rates):.3f} s/char")
+        width = hi - lo
+        for rec in group:
+            span = rec["measured"]["span"]
+            if span - lo < width * BAND_EDGE_MARGIN:
+                edges.append(f"{rec['id']} span {span:.1f}s is within "
+                             f"{BAND_EDGE_MARGIN:.0%} of {section}'s {lo:.0f}s "
+                             f"floor")
+            if hi - span < width * BAND_EDGE_MARGIN:
+                edges.append(f"{rec['id']} span {span:.1f}s is within "
+                             f"{BAND_EDGE_MARGIN:.0%} of {section}'s {hi:.0f}s "
+                             f"ceiling")
+            rate = rec["measured"]["rate"]
+            rwidth = CHAR_RATE[1] - CHAR_RATE[0]
+            if rate - CHAR_RATE[0] < rwidth * BAND_EDGE_MARGIN:
+                edges.append(f"{rec['id']} rate {rate:.3f} is within "
+                             f"{BAND_EDGE_MARGIN:.0%} of CHAR_RATE's floor")
+            if CHAR_RATE[1] - rate < rwidth * BAND_EDGE_MARGIN:
+                edges.append(f"{rec['id']} rate {rate:.3f} is within "
+                             f"{BAND_EDGE_MARGIN:.0%} of CHAR_RATE's ceiling")
+    return report, edges
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--json", action="store_true",
@@ -358,6 +484,12 @@ def main(argv: list[str] | None = None) -> int:
     print(f"\n{len(records)} textbook item(s): "
           + ", ".join(f"{k} {v}" for k, v in sorted(by_section.items()))
           + "  |  " + ", ".join(f"{k} {v}" for k, v in sorted(by_book.items())))
+    report, edges = band_headroom(records)
+    print("\nTYPE_BANDS / CHAR_RATE headroom")
+    for line in report:
+        print(line)
+    for line in edges:
+        print(f"EDGE     {line}")
     for line in refusals:
         print(f"REFUSED  {line}")
     return 1 if refusals else 0
