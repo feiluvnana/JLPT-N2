@@ -241,6 +241,8 @@ def build_sitting(test_dir: Path) -> list[dict]:
                 )
 
             closing = seg.answers[section][slot - 1]
+            exp_block = {i: kaisetsu[i] for i in ids}
+            figure = figure_dependent(exp_block)
             records.append({
                 "id": f"{sitting}:{section}-{slot}",
                 "sitting": sitting,
@@ -254,6 +256,25 @@ def build_sitting(test_dir: Path) -> list[dict]:
                 "needs_number_call": False,
                 "section": section,
                 "slot": slot,
+                # A FIGURE ITEM CANNOT BE COMPOSED (2026-09-09,
+                # qa-report-20260909_1 F1). Official 問題1 occasionally prints a
+                # picture and asks which REGION of it to act on; its four
+                # printed options are then the bare digits 1-4, which mean
+                # nothing without the image. A composed paper carries no
+                # images (`build_booklet.py` renders no figure for a drawn
+                # clip), so such an item reaches the learner as
+                # 「1. 1 / 2. 2 / 3. 3 / 4. 4」 and is unanswerable — the
+                # automatic-fail class `exam-qa-review` calls an unanswerable
+                # item. `20260909_1` shipped one (`2022-12:問題1-2`, a poster
+                # layout) all the way to a blind solve, which caught it as the
+                # single mismatch in 101 items.
+                # Exactly TWO of the 402 banked records are figure items
+                # (`2021-12:問題1-5` seat selection, `2022-12:問題1-2` poster),
+                # so this excludes 0.5 % of the pool and no 大問 loses a slot.
+                # The record is KEPT and flagged rather than dropped, so the
+                # bank stays a faithful inventory of the corpus and the
+                # exclusion is countable.
+                "figure_dependent": figure,
                 "audio": {
                     "start": round(max(0.0, speech_lo - GUARD_S), 3),
                     "end": round(min(seg.duration, speech_hi + GUARD_S), 3),
@@ -263,7 +284,7 @@ def build_sitting(test_dir: Path) -> list[dict]:
                 },
                 "script": blocks[(section, slot)],
                 "answers": {i: keys[i] for i in ids},
-                "explanation": {i: kaisetsu[i] for i in ids},
+                "explanation": exp_block,
                 "explanation_vi": {i: kaisetsu_vi[i] for i in ids
                                    if i in kaisetsu_vi},
                 "kaisetsu_cell": {i: kaisetsu_cells[i] for i in ids
@@ -309,6 +330,31 @@ def build_sitting(test_dir: Path) -> list[dict]:
 
 
 # ---------------------------------------------------------------- CLI
+
+BARE_DIGIT_OPTION = re.compile(r"^[\s]*[1-4\uff11-\uff14][\s]*$")
+
+
+def figure_dependent(explanation: dict) -> bool:
+    """Do this item's printed options only make sense beside a picture?
+
+    An official 問題1 item occasionally prints a figure and asks which part of
+    it to act on; the four printed options are then the bare digits 1-4, which
+    label regions of that image and carry no meaning on their own. The imported
+    sitting embeds the picture (`tests/imported-*/聴解.md` carries it as a
+    base64 block); a COMPOSED paper has no figure to embed, so the item would
+    print as 「1. 1 / 2. 2 / 3. 3 / 4. 4」.
+
+    Detected from the printed options rather than from the stem's wording,
+    because the stem phrasings vary (「ポスターのどこを直しますか」,
+    「どの席にしますか」) while the digits-only option set is the invariant that
+    actually makes the item unrenderable.
+    """
+    for entry in (explanation or {}).values():
+        opts = (entry or {}).get("options") or []
+        if opts and all(BARE_DIGIT_OPTION.match(str(o)) for o in opts):
+            return True
+    return False
+
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])

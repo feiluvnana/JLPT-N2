@@ -59,6 +59,7 @@ import collections
 from difflib import SequenceMatcher
 import hashlib
 import importlib.util
+import functools
 import json
 import re
 import shutil
@@ -2366,9 +2367,19 @@ FINAL_SENTENCE_TEMPLATES = {
     # — and is now ×1 because 問題11(1)'s closing was rewritten off the skeleton
     # by that finding's own repair. So this entry FAILS nothing on disk and
     # needs no grandfather entry; it closes the hole going forward.
+    # WIDENED 2026-09-09 (qa-report-20260907_1-round2 NEW-2). The alternation
+    # was spelled with FULLY INFLECTED plain forms, so it matched the plain past
+    # and not the polite past: 20260907_1 問題11(3)'s 「…号ほど、読者からの返事は
+    # 多くなっていました。」 does not match, while the same sentence written
+    # 「多くなっていた。」 does. Since `dokkai.md` Axis 3 REQUIRES ≥3 です・ます
+    # passages per paper, the row went blind on exactly the passages the style
+    # rule mandates. Matching on STEMS covers both registers.
+    # CORPUS EFFECT MEASURED BEFORE WIDENING: 20260812_2 0→2, 20260828_1 0→2,
+    # 20260907_1 0→1, six others +1; nothing reaches 3, so at the shared cap of
+    # 2 **zero ids move** and no grandfather entry is needed.
     "A では/ほど B が多い（相関）": re.compile(
         r"(では|ほど)[^。]{0,25}"
-        r"(多い|少ない|大きく|小さく|高く|低く|増え|減り|開きが|なっていた)"),
+        r"(多|少な|大き|小さ|高|低|増え|減|開きが|なってい)"),
     # Added 2026-09-04 (qa-report-20260904_1 F2). THE CLEFT — 「〜のは、…だ」 —
     # the skeleton this dictionary had no name for, and the one that CROSSES
     # every shape label: a 反論応答, a 主張 and a 説明 closing can all be built
@@ -2410,6 +2421,36 @@ FINAL_SENTENCE_TEMPLATES = {
     # founding-case run is recorded in that constant's comment.
     "〜ていた のだ（後知れ）": re.compile(
         r"てい(た|ました)(のだ|のです|のである|のでした)。?\s*$"),
+    # Added 2026-09-09 (qa-report-20260907_1-round2 R2-F1). THE ABSENCE CLOSING
+    # — 「…ていない。」, the essay that ends by naming the one thing that is NOT
+    # there. It is the shape a 意外な観察 closing collapses onto once BOTH the
+    # 分裂文 and 後知れ rows above are cleared, and 20260907_1 is the fourth
+    # paper to show the repair-collateral class (20260812_1 F2→F3, 20260903_1
+    # F2, 20260904_1 round-2 F2/F3): round 1's F1 repair moved 問題10(5) and
+    # 問題11(4) onto this one skeleton AND one label (意外な観察), and every
+    # existing row read compliant.
+    # THIS ROW LANDS WITH A PER-TEMPLATE CAP OF 1, for the same reason 後知れ
+    # got one: it is a single pattern with a single rhetorical effect, so a
+    # second use is a rhyme and not a coincidence. Under the shared cap of 2 it
+    # would move ZERO ids and could not fire on the case it was written for —
+    # `check_mondai9_option_reuse`'s recorded mistake (R3-9).
+    # ANCHOR THE `$`: the unanchored form matches 〜ていない mid-sentence and put
+    # nine generated papers and one official sitting on the board
+    # (qa-report-20260907_1-round2 §3 R-1b records that error).
+    # FOUNDING-CASE RUN, on the revision the finding was written against
+    # (`言語知識・読解.md` = 24fa4608e0b2): `20260907_1` = 2 — 問題10(5)
+    # 「引き返す時刻は、どの店にも置いていない。」 + 問題11(4), then closing
+    # 「…とは、まだ一度も会えていない。」 => FIRES at cap 1, `ok` at the shared
+    # cap of 2. So the row catches the pair it was written from.
+    # CORPUS RUN as committed, 2026-09-09, over all 34 papers at this check's
+    # final-sentence scope: **zero ids move**. `20260907_1` measures 1, not 2 —
+    # 問題11(4) was re-closed onto 「…また来年の話になった。」 by that finding's own
+    # repair before the paper was committed, so the paper the rule was written
+    # from passes it ON MERIT rather than by exemption, exactly as 後知れ's cap
+    # did. `20260828_2` = 1 and `20260903_1` = 1 (legal at cap 1); the other 31
+    # generated papers = 0; ALL TEN OFFICIAL SITTINGS = 0, so the row needs no
+    # grandfathered id and fails no real sitting.
+    "〜ていない（不在の残り）": re.compile(r"てい(ない|ません)。?\s*$"),
 }
 FINAL_TEMPLATE_CAP = 2       # dokkai.md's own per-shape ceiling
 # Per-template overrides of that ceiling, for a skeleton narrow enough that TWO
@@ -2432,6 +2473,7 @@ FINAL_TEMPLATE_CAP = 2       # dokkai.md's own per-shape ceiling
 # passes it ON MERIT rather than by exemption.
 FINAL_TEMPLATE_CAPS = {
     "〜ていた のだ（後知れ）": 1,
+    "〜ていない（不在の残り）": 1,   # 2026-09-09, R2-F1 — see the row's comment
 }
 
 
@@ -2789,6 +2831,22 @@ def headline_theme_set(themes: dict) -> set[str]:
     return head | m5
 
 
+@functools.lru_cache(maxsize=1)
+def composed_choukai_tests() -> frozenset[str]:
+    """Test ids whose 聴解 half was COMPOSED from banked recordings.
+
+    Since 2026-09-08 a generated paper's listening half is drawn from real
+    sittings by `tools/compose_choukai.py` (`choukai-audio` Part 0); nobody here
+    chooses those items' subjects. `logs/choukai_draws.json` is the record of
+    which papers were composed and from which clips.
+    """
+    path = ROOT / "logs" / "choukai_draws.json"
+    if not path.is_file():
+        return frozenset()
+    rows = json.loads(path.read_text(encoding="utf-8")).get("history", [])
+    return frozenset(str(r.get("test_id")) for r in rows if r.get("test_id"))
+
+
 def check_topics_voice_axis():
     """Every paper's topics record declares the VOICE of each 読解 surface.
 
@@ -3027,9 +3085,33 @@ def check_theme_repeat_cross_test():
         pthemes, cthemes = prev.get("themes"), cur.get("themes")
         if not pthemes or not cthemes:
             continue  # check_topics_themes() already WARNs the missing map
-        overlap = sorted(headline_theme_set(pthemes) & headline_theme_set(cthemes))
+        # SPLIT BY REPAIRABILITY (2026-09-09). Rule 4's headline set includes
+        # 聴解問題5, and until the 2026-09-08 composition rework that surface
+        # had an authored scenario someone chose. It no longer does: the whole
+        # listening half is lifted from real sittings by `compose_choukai.py`,
+        # which draws least-used clips and knows nothing about themes. So when
+        # the ONLY surface carrying a repeated theme on THIS paper is 聴解問題5
+        # and this paper is composed, the finding names work nobody can do —
+        # the 読解 half has nothing to re-angle, and the only lever left is
+        # re-running `make mp3` on seed after seed until the tag changes, i.e.
+        # seed-shopping, which this repo forbids in the same breath elsewhere
+        # ("never re-seed until the gate goes green", check_surface_subjects).
+        # That half therefore WARNs, visibly, naming why; the 読解-headline half
+        # keeps its FAIL, because those surfaces ARE ours to re-angle.
+        # FOUNDING CASE: `20260909_1` shared ['住まい', '働き方', '旅行・観光']
+        # with `20260907_1` — 住まい (its 問題12) and 働き方 (its 問題14) were
+        # real, repairable defects and were re-authored; 旅行・観光 sat only on
+        # its composed 聴解問題5-2番 against the previous paper's 問題14, with no
+        # surface on this side to move.
+        overlap_all = headline_theme_set(pthemes) & headline_theme_set(cthemes)
+        cur_reading_head, _ = _headline_parts(cthemes)
+        fail_part = sorted(overlap_all & cur_reading_head)
+        warn_part = sorted(overlap_all - set(fail_part))
+        composed = cid in composed_choukai_tests()
+        if not composed:
+            fail_part, warn_part = sorted(overlap_all), []
         name = f"{cid}: no headline theme repeats {pid}'s (immediately previous, rule 4)"
-        detail = (f"{overlap} shared with {pid} — exam-blueprint 'The four theme "
+        detail = (f"{fail_part} shared with {pid} — exam-blueprint 'The four theme "
                   f"rules' rule 4 allows ZERO headline-theme repeat against the "
                   f"immediately-previous paper; re-draw one of the two surfaces "
                   f"carrying the shared theme (rule 4c: the cloze 問題9 is the "
@@ -3037,16 +3119,49 @@ def check_theme_repeat_cross_test():
                   f"no cooldown). Do NOT re-tag the theme to make the overlap "
                   f"disappear")
         if cid in HEADLINE_THEME_RULE4_GRANDFATHERED:
-            warn(name, not overlap, detail + GRANDFATHER_NOTE)
+            warn(name, not fail_part, detail + GRANDFATHER_NOTE)
         else:
-            check(name, not overlap, detail)
+            check(name, not fail_part, detail)
+        if warn_part:
+            warn(f"{cid}: 聴解問題5 repeats a headline theme of {pid} "
+                 f"(composed paper — not authored here)", False,
+                 f"{warn_part} — this paper's only surface carrying it is the "
+                 f"COMPOSED 聴解問題5, lifted from a real sitting by "
+                 f"`make mp3` (choukai-audio Part 0). Nobody here chose its "
+                 f"subject and the 読解 half has nothing to re-angle, so there "
+                 f"is no repair short of seed-shopping the whole listening "
+                 f"half — which this repo forbids. Read it as a draw audit "
+                 f"(jlpt-test-generation §'One topic, one surface': 聴解 rows "
+                 f"are a DRAW audit) and say so in the report")
 
     for back2, cur in zip(history, history[2:]):
         bid, cid = str(back2.get("test_id")), str(cur.get("test_id"))
         bthemes, cthemes = back2.get("themes"), cur.get("themes")
         if not bthemes or not cthemes:
             continue
-        overlap = sorted(headline_theme_set(bthemes) & headline_theme_set(cthemes))
+        # SAME REPAIRABILITY SPLIT as the one-paper-back branch above
+        # (2026-09-09). That branch was split the same day and this one was
+        # left behind, which made the two halves of ONE rule disagree: a
+        # composed 聴解問題5 theme still spent the two-back budget, so a paper
+        # could be told to "re-draw one of the repeated headline surfaces" when
+        # one of the two was a clip lifted from a real sitting. `20260909_1`
+        # is the case that exposed it — overlap ['交通', '消費・経済'] against
+        # `20260904_3`, of which 交通 is its 問題12 (ours, and inside the budget
+        # of one) while 消費・経済 is carried ONLY by its composed 聴解問題5-1番.
+        # Counting the 読解 side alone is what the budget was always about.
+        cur_reading_head, cur_m5 = _headline_parts(cthemes)
+        overlap_all = headline_theme_set(bthemes) & headline_theme_set(cthemes)
+        if cid in composed_choukai_tests():
+            counted = sorted(overlap_all & cur_reading_head)
+            uncounted = sorted(overlap_all - set(counted))
+        else:
+            counted, uncounted = sorted(overlap_all), []
+        overlap = counted
+        if uncounted:
+            print(f"  note  {cid}: two-back headline overlap {uncounted} sits "
+                  f"only on the COMPOSED 聴解問題5 — not counted against rule "
+                  f"4's budget of one, and not repairable here "
+                  f"(choukai-audio Part 0)")
         warn(f"{cid}: at most one headline theme repeats {bid}'s (two papers back, rule 4)",
              len(overlap) <= 1,
              f"{overlap} shared with {bid} — exam-blueprint rule 4 allows at "
@@ -5121,7 +5236,15 @@ def check_verbatim_keys(name: str, body: str, keys: dict[int, int],
         flat_opt = _flat(keyed_opt).rstrip("。")
         lcs_len = 0
         if flat_opt and flat:
-            match = SequenceMatcher(None, flat_opt, flat).find_longest_match(0, len(flat_opt), 0, len(flat))
+            # autojunk=False is LOAD-BEARING (qa-report-20260907_1-round2 S-1).
+            # difflib's autojunk heuristic discards any element occurring in
+            # >1 % of the SECOND sequence; `flat` is the whole 読解 half (~6 000
+            # chars), so the 25 commonest kana are junked and only rare-kanji
+            # runs could ever match. This check was therefore INERT on every
+            # paper on disk from the day it was written: on its founding case
+            # (20260907_1 item 55) it reported LCS=3 (「町内会」) where the true
+            # run is 22 (「市の知らせを待たず、町内会の判断で早めに開け」).
+            match = SequenceMatcher(None, flat_opt, flat, autojunk=False).find_longest_match(0, len(flat_opt), 0, len(flat))
             lcs_len = match.size
 
         is_long_key = (kl >= LONG_KEY_MIN and mean > 0 and kl >= LONG_KEY_RATIO * mean)
@@ -5853,9 +5976,38 @@ def check_cross_test_listening_subjects():
     history = [h for h in ledger_history() if str(h.get("test_id")) != "legacy"]
     for prev, cur in zip(history, history[1:]):
         pid, cid = str(prev.get("test_id")), str(cur.get("test_id"))
-        prev_scen = [pool_entry_text(e) for e in prev.get("items", {}).get("listening_scenarios") or []]
-        cur_scen = [pool_entry_text(e) for e in cur.get("items", {}).get("listening_scenarios") or []]
+        # STRINGLESS ENTRIES ARE DROPPED, NOT COMPARED (2026-09-09).
+        # Since the 2026-09-07 `AUTHORED_THEME_CATS` change a
+        # `listening_scenarios` entry is `{theme, origin, avoid}` with no
+        # `scenario` key, so `pool_entry_text()` returns "" for it — and
+        # `SequenceMatcher(None, "", "").ratio()` is **1.0**, i.e. a perfect
+        # match. The moment BOTH sides of a consecutive pair were authored-theme
+        # papers this check reported every 21x21 = 441 pair as a repeat:
+        # `20260907_1` -> `20260909_1` was the first such pair and FAILed on
+        # 441 phantom collisions, and `--reroll listening_scenarios` is a no-op
+        # against it because every entry is stringless by construction.
+        # The filter cannot hide a real repeat, and that is a PROOF rather than
+        # a sample: "" scores 0.0 against every non-empty string and 1.0 only
+        # against another "", so an empty entry's only possible contribution
+        # was a false positive, while a true positive needs two real strings,
+        # both of which survive the filter. Confirmed empirically too — over
+        # every consecutive ledger pair, the 22 pool-drawn pairs report exactly
+        # what they reported before (0 collisions each).
+        # There is nothing left for this check to measure at DRAW time —
+        # `exam-blueprint` Part II: "Errand identity for 聴解 ... is no longer
+        # checkable at draw time, because there is no pool `key` to compare. It
+        # is checked on what SHIPPED, in the `shapes` column of
+        # `logs/topics.json`." It stays live for the pool-drawn history on disk,
+        # and skips — visibly, naming the successor rule — where it is blind.
+        prev_scen = [t for t in (pool_entry_text(e) for e in prev.get("items", {}).get("listening_scenarios") or []) if t]
+        cur_scen = [t for t in (pool_entry_text(e) for e in cur.get("items", {}).get("listening_scenarios") or []) if t]
         if not prev_scen or not cur_scen:
+            skip(f"{cid}: no 聴解1/2/3/5 errand repeats {pid}'s (immediately previous)",
+                 "authored-theme scenarios carry no comparable subject string — "
+                 "errand identity is checked on what SHIPPED, in the `shapes` "
+                 "column of logs/topics.json, by the whole-paper topic pass "
+                 "(jlpt-test-generation §'One topic, one surface'; exam-blueprint "
+                 "Part II). A skip here is NOT a pass — read that column")
             continue
         collisions = []
         for cs in cur_scen:
@@ -5890,8 +6042,27 @@ def check_spec_blend(spec: dict):
         # sampler enforces at draw time, checked just below; comparing their
         # absent `topic` fields would report every one of them as a duplicate
         # of every other.
+        #
+        # SELECT BY SHAPE, NOT BY THE LITERAL `origin` STRING (2026-09-09).
+        # `exam-blueprint` §"Replacing a shipped subject" stamps a re-authored
+        # surface `origin: "reauthored"` in spec AND ledger, which is exactly
+        # what `check_draw_provenance()` special-cases a few hundred lines
+        # above — but this branch matched the string "authored" only, so
+        # re-stamping a THEME-ONLY entry moved it into `drawn`, where its
+        # absent `topic` was compared against the other re-stamped entry's
+        # absent `topic` and reported `repeated: [None]`. That is the very
+        # report this comment says must not happen, and it made the documented
+        # bookkeeping convention unusable on any theme-only spec.
+        # FOUND ON: `20260909_1`, whose 問題12 and 問題14 were re-authored off
+        # 住まい/働き方 for an `exam-blueprint` rule-4 breach against
+        # `20260907_1`. MEASURED over every generated spec on disk the day this
+        # landed: only papers sampled after the 2026-09-07 theme-only change
+        # carry `origin` on these entries at all, and no committed paper
+        # changes verdict — the line simply stops FAILing on a correctly
+        # recorded re-author.
         authored = [r for r in recs if isinstance(r, dict)
-                    and r.get("origin") == "authored"]
+                    and (r.get("origin") in ("authored", "reauthored")
+                         or (r.get("theme") and not r.get(key)))]
         drawn = [r for r in recs if r not in authored]
         if authored:
             themes = [r.get("theme") for r in authored]

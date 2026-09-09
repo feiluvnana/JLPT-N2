@@ -52,6 +52,16 @@ round is being written, not while findings are being applied. It writes
 handing off through disk. The split that survives every fallback is
 **authoring vs QA**.
 
+**One writer per test folder, at a time.** Nothing in the pipeline stops a
+second context from editing `tests/<id>/*.md` while a QA pass or a build is in
+flight, and the only symptom is a staleness FAIL that reads like an author's
+mistake. So: a QA pass **records the source shas it read** in its report header,
+and a build or repair that finds them moved **re-runs the pass** rather than
+rebuilding on top of it. (`20260907_1`'s `言語知識・読解.md` took three values
+inside one round-2 review; the gate FAILed on HTML predating its Markdown for
+three minutes and the finding had to be struck as self-cleared —
+qa-report-20260907_1-round2, the struck R2-F8.)
+
 ## Per-stage reading map
 
 Each subagent reads exactly these, from disk, at the start of its stage — never
@@ -247,6 +257,19 @@ the DRAWN topic string. Then read it:
   legitimately share a domain with a 聴解 item, because no one picked the 聴解
   item's domain. Only a shared *decisive detail* — a number or condition the
   reader could carry from one surface to the other — is still a finding.
+- **Give the table a rhetorical-MOVE column, and read it across both halves.**
+  A move shared between a 読解 surface and a 聴解 talk is invisible to every
+  rule in the repo: the 読解 closing-move cap is 読解-internal, the 聴解 errand
+  rule is 聴解-internal, and the subject clause above compares SUBJECTS, which
+  differ. `20260907_1` ran *the tool kept its promise; the real change was
+  elsewhere* twice — 問題10(1) (digitising the album delivered instant access and
+  deleted the viewing ritual) and 聴解問題3-1番 (the transcription tool did save
+  typing, but the real change was the meetings) — both tagged デジタル化, and
+  round 1 could see the echo without being able to file it
+  (qa-report-20260907_1-round2 NEW-1). **Cap: at most two surfaces on one move
+  across the two halves.** Not string-decidable, so no check backs this row.
+  **The 読解 side is always the one re-angled** — the 聴解 item is lifted from a
+  real sitting and nobody here chose its move.
 - **問題12 (A/B) gets its own cross-test column** — one topic per paper.
 - **A duplicated topic in the spec is a sampler defect**: `check_spec_blend`
   fails a repeated draw. `--reroll` the category; never hand-invent a substitute.

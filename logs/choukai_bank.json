@@ -23,6 +23,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 132.39,
     "end": 213.63,
@@ -83,6 +84,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 217.17,
     "end": 309.85,
@@ -143,6 +145,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 321.41,
     "end": 399.77,
@@ -203,6 +206,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 411.37,
     "end": 466.57,
@@ -263,6 +267,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 471.43,
     "end": 582.43,
@@ -323,6 +328,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 631.93,
     "end": 712.21,
@@ -383,6 +389,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 716.07,
     "end": 837.55,
@@ -443,6 +450,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 849.13,
     "end": 959.27,
@@ -503,6 +511,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 970.85,
     "end": 1084.07,
@@ -563,6 +572,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1095.65,
     "end": 1171.53,
@@ -623,6 +633,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1183.13,
     "end": 1259.53,
@@ -683,6 +694,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1377.03,
     "end": 1449.07,
@@ -743,6 +755,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1453.73,
     "end": 1549.63,
@@ -803,6 +816,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1557.17,
     "end": 1639.87,
@@ -863,6 +877,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1647.45,
     "end": 1729.33,
@@ -923,6 +938,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1736.89,
     "end": 1829.51,
@@ -983,6 +999,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1888.85,
     "end": 1912.79,
@@ -1039,6 +1056,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1917.41,
     "end": 1940.25,
@@ -1095,6 +1113,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1947.89,
     "end": 1970.91,
@@ -1151,6 +1170,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1975.49,
     "end": 2001.29,
@@ -1207,6 +1227,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2005.89,
     "end": 2034.09,
@@ -1263,6 +1284,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 2041.81,
     "end": 2070.45,
@@ -1319,6 +1341,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 2078.01,
     "end": 2105.47,
@@ -1375,6 +1398,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2113.17,
     "end": 2138.99,
@@ -1431,6 +1455,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2146.57,
     "end": 2172.43,
@@ -1487,6 +1512,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2177.05,
     "end": 2202.53,
@@ -1543,6 +1569,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2207.13,
     "end": 2235.41,
@@ -1599,6 +1626,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2269.57,
     "end": 2414.47,
@@ -1660,6 +1688,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2423.31,
     "end": 2599.04,
@@ -1895,6 +1924,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 15.53,
     "end": 112.45,
@@ -1955,6 +1985,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 124.17,
     "end": 178.53,
@@ -2015,6 +2046,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 182.39,
     "end": 295.91,
@@ -2075,6 +2107,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 307.63,
     "end": 401.17,
@@ -2135,6 +2168,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": true,
    "audio": {
     "start": 412.87,
     "end": 502.37,
@@ -2195,6 +2229,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 560.25,
     "end": 647.97,
@@ -2255,6 +2290,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 659.65,
     "end": 764.89,
@@ -2315,6 +2351,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 776.65,
     "end": 870.47,
@@ -2375,6 +2412,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 882.25,
     "end": 996.25,
@@ -2435,6 +2473,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1008.03,
     "end": 1085.05,
@@ -2495,6 +2534,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1096.71,
     "end": 1192.01,
@@ -2555,6 +2595,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1290.21,
     "end": 1397.09,
@@ -2615,6 +2656,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1401.93,
     "end": 1500.35,
@@ -2675,6 +2717,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1505.05,
     "end": 1590.59,
@@ -2735,6 +2778,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1598.41,
     "end": 1683.07,
@@ -2795,6 +2839,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1690.81,
     "end": 1789.09,
@@ -2855,6 +2900,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1803.85,
     "end": 1827.81,
@@ -2911,6 +2957,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1840.55,
     "end": 1869.35,
@@ -2967,6 +3014,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1874.13,
     "end": 1899.57,
@@ -3023,6 +3071,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1907.33,
     "end": 1935.29,
@@ -3079,6 +3128,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1943.09,
     "end": 1969.95,
@@ -3135,6 +3185,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1977.75,
     "end": 2004.61,
@@ -3191,6 +3242,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 2012.37,
     "end": 2040.31,
@@ -3247,6 +3299,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2048.21,
     "end": 2076.25,
@@ -3303,6 +3356,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2084.03,
     "end": 2109.33,
@@ -3359,6 +3413,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2117.05,
     "end": 2144.05,
@@ -3415,6 +3470,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2151.75,
     "end": 2176.35,
@@ -3471,6 +3527,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2247.91,
     "end": 2425.61,
@@ -3531,6 +3588,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2437.31,
     "end": 2602.92,
@@ -3766,6 +3824,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 93.71,
     "end": 146.19,
@@ -3826,6 +3885,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 157.93,
     "end": 232.07,
@@ -3886,6 +3946,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 243.81,
     "end": 327.57,
@@ -3946,6 +4007,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 339.29,
     "end": 437.31,
@@ -4006,6 +4068,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 449.01,
     "end": 527.89,
@@ -4066,6 +4129,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 558.15,
     "end": 700.23,
@@ -4126,6 +4190,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 711.97,
     "end": 807.47,
@@ -4186,6 +4251,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 819.17,
     "end": 924.93,
@@ -4246,6 +4312,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 936.69,
     "end": 1019.27,
@@ -4306,6 +4373,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1031.01,
     "end": 1166.65,
@@ -4366,6 +4434,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1178.33,
     "end": 1274.63,
@@ -4426,6 +4495,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1370.35,
     "end": 1454.31,
@@ -4486,6 +4556,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1462.01,
     "end": 1552.47,
@@ -4546,6 +4617,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1560.17,
     "end": 1649.21,
@@ -4606,6 +4678,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1656.93,
     "end": 1738.11,
@@ -4666,6 +4739,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1745.81,
     "end": 1857.31,
@@ -4726,6 +4800,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1900.13,
     "end": 1922.09,
@@ -4782,6 +4857,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1929.81,
     "end": 1958.75,
@@ -4838,6 +4914,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1966.69,
     "end": 1992.11,
@@ -4894,6 +4971,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1999.89,
     "end": 2025.57,
@@ -4950,6 +5028,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2033.29,
     "end": 2056.79,
@@ -5006,6 +5085,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 2064.53,
     "end": 2088.75,
@@ -5062,6 +5142,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 2096.49,
     "end": 2119.87,
@@ -5118,6 +5199,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2127.61,
     "end": 2155.37,
@@ -5174,6 +5256,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2163.09,
     "end": 2193.83,
@@ -5230,6 +5313,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2201.53,
     "end": 2227.49,
@@ -5286,6 +5370,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2235.17,
     "end": 2260.25,
@@ -5342,6 +5427,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2293.85,
     "end": 2432.57,
@@ -5402,6 +5488,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2440.21,
     "end": 2617.72,
@@ -5633,6 +5720,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 109.65,
     "end": 197.99,
@@ -5693,6 +5781,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": true,
    "audio": {
     "start": 209.53,
     "end": 280.73,
@@ -5753,6 +5842,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 292.57,
     "end": 386.05,
@@ -5813,6 +5903,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 391.05,
     "end": 474.97,
@@ -5873,6 +5964,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 486.81,
     "end": 579.19,
@@ -5933,6 +6025,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 648.01,
     "end": 743.65,
@@ -5993,6 +6086,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 755.45,
     "end": 851.67,
@@ -6053,6 +6147,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 863.49,
     "end": 978.41,
@@ -6113,6 +6208,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 990.17,
     "end": 1083.77,
@@ -6173,6 +6269,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1095.65,
     "end": 1217.01,
@@ -6233,6 +6330,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1228.79,
     "end": 1360.37,
@@ -6293,6 +6391,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1409.93,
     "end": 1453.65,
@@ -6353,6 +6452,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1458.33,
     "end": 1553.13,
@@ -6413,6 +6513,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1560.89,
     "end": 1652.95,
@@ -6473,6 +6574,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1660.85,
     "end": 1749.65,
@@ -6533,6 +6635,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1757.51,
     "end": 1847.21,
@@ -6593,6 +6696,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2004.15,
     "end": 2027.59,
@@ -6649,6 +6753,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2035.35,
     "end": 2061.11,
@@ -6705,6 +6810,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 2068.89,
     "end": 2096.97,
@@ -6761,6 +6867,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 2104.75,
     "end": 2132.11,
@@ -6817,6 +6924,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2139.93,
     "end": 2166.03,
@@ -6873,6 +6981,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 2173.81,
     "end": 2199.03,
@@ -6929,6 +7038,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 2204.27,
     "end": 2231.99,
@@ -6985,6 +7095,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2239.81,
     "end": 2268.37,
@@ -7041,6 +7152,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2276.11,
     "end": 2303.89,
@@ -7097,6 +7209,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2311.65,
     "end": 2336.83,
@@ -7153,6 +7266,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2344.69,
     "end": 2372.39,
@@ -7209,6 +7323,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2410.27,
     "end": 2551.67,
@@ -7269,6 +7384,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2559.45,
     "end": 2709.44,
@@ -7504,6 +7620,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 68.23,
     "end": 182.67,
@@ -7564,6 +7681,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 194.39,
     "end": 274.71,
@@ -7624,6 +7742,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 286.43,
     "end": 373.43,
@@ -7684,6 +7803,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 385.11,
     "end": 474.75,
@@ -7744,6 +7864,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 486.47,
     "end": 541.19,
@@ -7804,6 +7925,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 586.75,
     "end": 698.23,
@@ -7864,6 +7986,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 709.95,
     "end": 825.19,
@@ -7924,6 +8047,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 836.87,
     "end": 956.45,
@@ -7984,6 +8108,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 968.15,
     "end": 1083.25,
@@ -8044,6 +8169,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1094.91,
     "end": 1186.09,
@@ -8104,6 +8230,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1197.83,
     "end": 1296.35,
@@ -8164,6 +8291,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1392.05,
     "end": 1477.33,
@@ -8224,6 +8352,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1485.03,
     "end": 1562.19,
@@ -8284,6 +8413,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1569.91,
     "end": 1684.83,
@@ -8344,6 +8474,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1692.55,
     "end": 1773.15,
@@ -8404,6 +8535,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1780.87,
     "end": 1879.05,
@@ -8464,6 +8596,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1921.75,
     "end": 1944.19,
@@ -8520,6 +8653,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1951.95,
     "end": 1980.83,
@@ -8576,6 +8710,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1988.51,
     "end": 2013.79,
@@ -8632,6 +8767,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 2021.51,
     "end": 2048.93,
@@ -8688,6 +8824,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2056.67,
     "end": 2080.97,
@@ -8744,6 +8881,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 2088.71,
     "end": 2114.55,
@@ -8800,6 +8938,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 2122.27,
     "end": 2148.81,
@@ -8856,6 +8995,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2156.51,
     "end": 2184.49,
@@ -8912,6 +9052,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2192.23,
     "end": 2220.27,
@@ -8968,6 +9109,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2228.03,
     "end": 2254.17,
@@ -9024,6 +9166,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2261.87,
     "end": 2288.71,
@@ -9080,6 +9223,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2333.17,
     "end": 2479.67,
@@ -9140,6 +9284,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2487.59,
     "end": 2714.3,
@@ -9375,6 +9520,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 169.55,
     "end": 264.87,
@@ -9435,6 +9581,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 277.07,
     "end": 354.53,
@@ -9495,6 +9642,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 366.79,
     "end": 443.07,
@@ -9555,6 +9703,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 455.27,
     "end": 536.35,
@@ -9615,6 +9764,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 548.55,
     "end": 632.31,
@@ -9675,6 +9825,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 783.55,
     "end": 891.01,
@@ -9735,6 +9886,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 903.23,
     "end": 1006.39,
@@ -9795,6 +9947,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1018.77,
     "end": 1103.07,
@@ -9855,6 +10008,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1115.25,
     "end": 1223.21,
@@ -9915,6 +10069,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1235.43,
     "end": 1357.73,
@@ -9975,6 +10130,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1369.95,
     "end": 1466.67,
@@ -10035,6 +10191,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1659.37,
     "end": 1733.35,
@@ -10095,6 +10252,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1741.63,
     "end": 1837.31,
@@ -10155,6 +10313,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1845.65,
     "end": 1938.59,
@@ -10215,6 +10374,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1946.83,
     "end": 2031.37,
@@ -10275,6 +10435,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2039.61,
     "end": 2131.29,
@@ -10335,6 +10496,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2216.43,
     "end": 2237.85,
@@ -10391,6 +10553,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2246.11,
     "end": 2267.81,
@@ -10447,6 +10610,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 2276.13,
     "end": 2299.01,
@@ -10503,6 +10667,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 2307.21,
     "end": 2332.01,
@@ -10559,6 +10724,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2340.31,
     "end": 2363.69,
@@ -10615,6 +10781,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 2371.93,
     "end": 2394.07,
@@ -10671,6 +10838,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 2402.39,
     "end": 2425.41,
@@ -10727,6 +10895,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2433.65,
     "end": 2456.59,
@@ -10783,6 +10952,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2464.85,
     "end": 2489.71,
@@ -10839,6 +11009,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2497.95,
     "end": 2522.17,
@@ -10895,6 +11066,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2530.41,
     "end": 2554.41,
@@ -10951,6 +11123,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2589.25,
     "end": 2740.93,
@@ -11011,6 +11184,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2746.53,
     "end": 2936.12,
@@ -11246,6 +11420,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 176.91,
     "end": 258.53,
@@ -11306,6 +11481,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 270.51,
     "end": 342.25,
@@ -11366,6 +11542,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 354.29,
     "end": 434.17,
@@ -11426,6 +11603,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 446.01,
     "end": 523.19,
@@ -11486,6 +11664,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 535.13,
     "end": 616.15,
@@ -11546,6 +11725,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 766.83,
     "end": 874.99,
@@ -11606,6 +11786,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 886.81,
     "end": 1011.13,
@@ -11666,6 +11847,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1023.09,
     "end": 1129.17,
@@ -11726,6 +11908,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1141.01,
     "end": 1272.07,
@@ -11786,6 +11969,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1283.93,
     "end": 1385.25,
@@ -11846,6 +12030,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1397.11,
     "end": 1488.21,
@@ -11906,6 +12091,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1678.61,
     "end": 1737.59,
@@ -11966,6 +12152,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1745.61,
     "end": 1834.71,
@@ -12026,6 +12213,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1842.99,
     "end": 1928.43,
@@ -12086,6 +12274,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1936.31,
     "end": 2005.25,
@@ -12146,6 +12335,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2013.25,
     "end": 2086.65,
@@ -12206,6 +12396,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2171.21,
     "end": 2193.41,
@@ -12262,6 +12453,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2201.51,
     "end": 2223.73,
@@ -12318,6 +12510,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 2232.09,
     "end": 2254.17,
@@ -12374,6 +12567,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 2262.31,
     "end": 2284.73,
@@ -12430,6 +12624,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2292.85,
     "end": 2313.13,
@@ -12486,6 +12681,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 2321.21,
     "end": 2346.33,
@@ -12542,6 +12738,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 2354.41,
     "end": 2379.97,
@@ -12598,6 +12795,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2388.03,
     "end": 2412.49,
@@ -12654,6 +12852,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2420.67,
     "end": 2445.17,
@@ -12710,6 +12909,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2453.33,
     "end": 2477.59,
@@ -12766,6 +12966,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2485.73,
     "end": 2508.27,
@@ -12822,6 +13023,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2542.91,
     "end": 2699.49,
@@ -12882,6 +13084,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2704.69,
     "end": 2885.6,
@@ -13117,6 +13320,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 176.97,
     "end": 259.87,
@@ -13177,6 +13381,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 272.35,
     "end": 353.27,
@@ -13237,6 +13442,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 365.17,
     "end": 444.81,
@@ -13297,6 +13503,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 456.63,
     "end": 519.21,
@@ -13357,6 +13564,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 531.11,
     "end": 612.07,
@@ -13417,6 +13625,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 763.13,
     "end": 864.65,
@@ -13477,6 +13686,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 876.45,
     "end": 994.35,
@@ -13537,6 +13747,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1006.17,
     "end": 1096.97,
@@ -13597,6 +13808,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1108.75,
     "end": 1192.09,
@@ -13657,6 +13869,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1203.83,
     "end": 1290.09,
@@ -13717,6 +13930,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1301.95,
     "end": 1420.73,
@@ -13777,6 +13991,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1633.01,
     "end": 1696.47,
@@ -13837,6 +14052,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1704.47,
     "end": 1793.05,
@@ -13897,6 +14113,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1800.89,
     "end": 1901.91,
@@ -13957,6 +14174,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1909.65,
     "end": 1999.05,
@@ -14017,6 +14235,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2006.93,
     "end": 2101.41,
@@ -14077,6 +14296,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2185.89,
     "end": 2209.23,
@@ -14133,6 +14353,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2217.35,
     "end": 2241.77,
@@ -14189,6 +14410,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 2250.21,
     "end": 2275.31,
@@ -14245,6 +14467,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 2283.23,
     "end": 2308.45,
@@ -14301,6 +14524,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2316.49,
     "end": 2341.21,
@@ -14357,6 +14581,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 2349.45,
     "end": 2377.11,
@@ -14413,6 +14638,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 2384.95,
     "end": 2412.79,
@@ -14469,6 +14695,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2420.67,
     "end": 2447.47,
@@ -14525,6 +14752,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2455.85,
     "end": 2483.23,
@@ -14581,6 +14809,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2491.33,
     "end": 2517.91,
@@ -14637,6 +14866,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2526.05,
     "end": 2556.97,
@@ -14693,6 +14923,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2591.63,
     "end": 2767.91,
@@ -14753,6 +14984,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2772.67,
     "end": 2982.66,
@@ -14988,6 +15220,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 90.75,
     "end": 161.87,
@@ -15048,6 +15281,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 173.69,
     "end": 249.01,
@@ -15108,6 +15342,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 260.81,
     "end": 341.17,
@@ -15168,6 +15403,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 352.97,
     "end": 411.63,
@@ -15228,6 +15464,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 423.41,
     "end": 500.45,
@@ -15288,6 +15525,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 546.45,
     "end": 637.55,
@@ -15348,6 +15586,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 649.45,
     "end": 744.39,
@@ -15408,6 +15647,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 756.49,
     "end": 867.17,
@@ -15468,6 +15708,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 879.05,
     "end": 984.47,
@@ -15528,6 +15769,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 996.33,
     "end": 1103.85,
@@ -15588,6 +15830,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1115.73,
     "end": 1209.77,
@@ -15648,6 +15891,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1306.41,
     "end": 1379.11,
@@ -15708,6 +15952,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1386.81,
     "end": 1464.75,
@@ -15768,6 +16013,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1472.61,
     "end": 1566.89,
@@ -15828,6 +16074,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1574.73,
     "end": 1649.09,
@@ -15888,6 +16135,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1657.01,
     "end": 1749.57,
@@ -15948,6 +16196,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1792.49,
     "end": 1814.87,
@@ -16004,6 +16253,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1822.49,
     "end": 1846.41,
@@ -16060,6 +16310,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1854.25,
     "end": 1877.89,
@@ -16116,6 +16367,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1885.65,
     "end": 1909.47,
@@ -16172,6 +16424,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1917.29,
     "end": 1944.55,
@@ -16228,6 +16481,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1952.41,
     "end": 1979.65,
@@ -16284,6 +16538,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 1987.53,
     "end": 2013.03,
@@ -16340,6 +16595,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2020.77,
     "end": 2045.93,
@@ -16396,6 +16652,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2053.77,
     "end": 2080.57,
@@ -16452,6 +16709,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2088.49,
     "end": 2113.79,
@@ -16508,6 +16766,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2117.73,
     "end": 2145.15,
@@ -16564,6 +16823,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2179.41,
     "end": 2354.83,
@@ -16624,6 +16884,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2363.01,
     "end": 2530.2,
@@ -16859,6 +17120,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 188.65,
     "end": 276.81,
@@ -16919,6 +17181,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 288.49,
     "end": 365.19,
@@ -16979,6 +17242,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 376.89,
     "end": 461.37,
@@ -17039,6 +17303,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 473.05,
     "end": 530.19,
@@ -17099,6 +17364,7 @@
    "needs_number_call": false,
    "section": "問題1",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 533.91,
     "end": 643.33,
@@ -17159,6 +17425,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 808.59,
     "end": 914.79,
@@ -17219,6 +17486,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 926.47,
     "end": 1040.69,
@@ -17279,6 +17547,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1052.37,
     "end": 1143.99,
@@ -17339,6 +17608,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1155.71,
     "end": 1268.09,
@@ -17399,6 +17669,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 1279.77,
     "end": 1403.61,
@@ -17459,6 +17730,7 @@
    "needs_number_call": false,
    "section": "問題2",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 1415.29,
     "end": 1509.45,
@@ -17519,6 +17791,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 1713.33,
     "end": 1784.67,
@@ -17579,6 +17852,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 1792.43,
     "end": 1882.13,
@@ -17639,6 +17913,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 1890.09,
     "end": 1982.11,
@@ -17699,6 +17974,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 1989.85,
     "end": 2079.11,
@@ -17759,6 +18035,7 @@
    "needs_number_call": false,
    "section": "問題3",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2086.81,
     "end": 2201.81,
@@ -17819,6 +18096,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2296.05,
     "end": 2321.71,
@@ -17875,6 +18153,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2329.39,
     "end": 2356.07,
@@ -17931,6 +18210,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 3,
+   "figure_dependent": false,
    "audio": {
     "start": 2363.75,
     "end": 2390.47,
@@ -17987,6 +18267,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 4,
+   "figure_dependent": false,
    "audio": {
     "start": 2398.19,
     "end": 2426.65,
@@ -18043,6 +18324,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 5,
+   "figure_dependent": false,
    "audio": {
     "start": 2434.43,
     "end": 2461.71,
@@ -18099,6 +18381,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 6,
+   "figure_dependent": false,
    "audio": {
     "start": 2469.43,
     "end": 2495.49,
@@ -18155,6 +18438,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 7,
+   "figure_dependent": false,
    "audio": {
     "start": 2503.17,
     "end": 2531.07,
@@ -18211,6 +18495,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 8,
+   "figure_dependent": false,
    "audio": {
     "start": 2538.77,
     "end": 2570.67,
@@ -18267,6 +18552,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 9,
+   "figure_dependent": false,
    "audio": {
     "start": 2578.35,
     "end": 2607.01,
@@ -18323,6 +18609,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 10,
+   "figure_dependent": false,
    "audio": {
     "start": 2614.71,
     "end": 2643.37,
@@ -18379,6 +18666,7 @@
    "needs_number_call": false,
    "section": "問題4",
    "slot": 11,
+   "figure_dependent": false,
    "audio": {
     "start": 2651.09,
     "end": 2680.27,
@@ -18435,6 +18723,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 1,
+   "figure_dependent": false,
    "audio": {
     "start": 2718.15,
     "end": 2857.65,
@@ -18495,6 +18784,7 @@
    "needs_number_call": false,
    "section": "問題5",
    "slot": 2,
+   "figure_dependent": false,
    "audio": {
     "start": 2865.77,
     "end": 3082.84,
@@ -22771,7 +23061,7 @@
      "〜たところ: sau khi làm ~ thì (dùng khi báo cáo kết quả)."
     ]
    },
-   "kaisetsu_cell_text": "挙がった声は「忙しくて買いに行く時間がない」「ゆっくり買い物ができる」「毎日の生活になくてはならない」＝いずれも利用する理由。1 ✗ 人数の数字は一つも出ない。2 ✗ 品物の種類には触れない。3 ✗ 注文の仕方も説明されない。",
+   "kaisetsu_cell_text": "挙がった声は「忙しくて買いに行く時間がない」「ゆっくりと買い物ができる」「毎日の生活になくてはならない」＝いずれも利用する理由。1 ✗ 人数の数字は一つも出ない。2 ✗ 品物の種類には触れない。3 ✗ 注文の仕方も説明されない。",
    "measured": {
     "span": 70.6,
     "chars": 276,

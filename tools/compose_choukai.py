@@ -168,6 +168,25 @@ def usage_counts(draws: dict, exclude: str = "") -> Counter:
     return used
 
 
+def previous_slot_clips(draws: dict, exclude: str = "") -> dict[str, str]:
+    """The most recent paper's clip id PER SLOT — the ids this paper must avoid.
+
+    `jlpt-test-generation` §"One topic, one surface" asks the whole-paper pass to
+    confirm that no clip id repeats the previous paper in the same slot, and says
+    the composer already spends least-used clips first so the read is "a
+    verification, not a repair". It was not: least-used-first is a GLOBAL
+    objective and says nothing about slots, so when a slot's candidates are tied
+    at the same use count — the normal case — nothing stopped the rng handing the
+    same slot the same clip twice running. Measured over the draw history at the
+    time this was written: **18 of 24 consecutive transitions repeated at least
+    one same-slot clip** (qa-report-20260909_1 F4, which caught 問題4-6 =
+    `2023-12:問題4-6` two papers in a row). So the verification was reporting a
+    condition the machinery never established.
+    """
+    rows = [r for r in draws["history"] if r.get("test_id") != exclude]
+    return dict(rows[-1]["clips"]) if rows else {}
+
+
 def resolve(rec: dict, section: str, slot: int) -> dict:
     """One drawn record placed in one slot — the fields every renderer reads.
 
@@ -218,7 +237,8 @@ def key_spread(picked: list[dict]) -> float:
 
 
 def draw(bank: dict, seed: int, used: Counter, test_id: str,
-         attempts: int = 400) -> tuple[dict, dict]:
+         attempts: int = 400,
+         avoid_slot: dict[str, str] | None = None) -> tuple[dict, dict]:
     """Pick one record per slot and one preamble per section.
 
     Two objectives, in order: spend the least-used clips first (so the pool
@@ -237,13 +257,32 @@ def draw(bank: dict, seed: int, used: Counter, test_id: str,
     official: dict[tuple[str, int], list[dict]] = {}
     textbook: dict[str, list[dict]] = {}
     preambles: dict[str, list[dict]] = {}
+    skipped_figure: list[str] = []
     for rec in bank["records"]:
         if rec["kind"] != "item":
             preambles.setdefault(rec["section"], []).append(rec)
-        elif rec.get("needs_number_call"):
+            continue
+        # A FIGURE ITEM IS NOT DRAWABLE (2026-09-09, qa-report-20260909_1 F1).
+        # Its four printed options are the bare digits 1-4 labelling regions of
+        # a picture the composed booklet has no way to show, so drawing it
+        # prints 「1. 1 / 2. 2 / 3. 3 / 4. 4」 and hands the learner an
+        # unanswerable item — `exam-qa-review`'s automatic-fail class.
+        # `20260909_1` drew `2022-12:問題1-2` (a poster layout) and only the
+        # blind solve caught it. `build_choukai_bank.py` sets the flag; this is
+        # the enforcement. Two of 402 records carry it, so no 大問 runs short of
+        # candidates — and the exclusion is PRINTED, never silent, because a
+        # pool that quietly shrinks is how a wear ceiling drifts unnoticed.
+        if rec.get("figure_dependent"):
+            skipped_figure.append(rec["id"])
+            continue
+        if rec.get("needs_number_call"):
             textbook.setdefault(rec["section"], []).append(rec)
         else:
             official.setdefault((rec["section"], rec["slot"]), []).append(rec)
+    if skipped_figure:
+        print(f"  note: {len(skipped_figure)} figure item(s) excluded from the "
+              f"draw (options are picture regions, uncomposable): "
+              f"{', '.join(sorted(skipped_figure))}")
 
     for section, count in SECTIONS.items():
         for slot in range(1, count + 1):
@@ -259,9 +298,30 @@ def draw(bank: dict, seed: int, used: Counter, test_id: str,
             print(f"  note: {section} wanted {n} textbook slot(s), the bank "
                   f"has {len(textbook.get(section, []))} item(s)")
 
-    def freshest(pool: list[dict], exclude: set[str]) -> dict:
-        """Least-used first; among equals, the rng picks."""
+    avoid_slot = avoid_slot or {}
+    starved: list[str] = []
+
+    def freshest(pool: list[dict], exclude: set[str], slot_key: str = "") -> dict:
+        """Least-used first; among equals, the rng picks.
+
+        `slot_key` additionally bars the clip the PREVIOUS paper put in this
+        slot (see `previous_slot_clips`). Least-used-first is a global
+        objective, so without this a slot whose candidates are tied — the
+        normal case — could take the same clip two papers running. If barring
+        it would leave the slot with nothing, the bar is dropped for that slot
+        and the fact is PRINTED: a genuinely exhausted slot is a pool-growth
+        problem to report, not a reason to fail the build
+        (jlpt-test-generation: "If a repeat is unavoidable ... say so in the
+        report rather than re-drawing forever").
+        """
         avail = [r for r in pool if r["id"] not in exclude]
+        barred = avoid_slot.get(slot_key)
+        if barred:
+            narrowed = [r for r in avail if r["id"] != barred]
+            if narrowed:
+                avail = narrowed
+            elif slot_key not in starved:
+                starved.append(slot_key)
         fewest = min(used[r["id"]] for r in avail)
         return rng.choice([r for r in avail if used[r["id"]] == fewest])
 
@@ -273,11 +333,12 @@ def draw(bank: dict, seed: int, used: Counter, test_id: str,
             from_textbook = set(rng.sample(slots, wanted.get(section, 0)))
             spent: set[str] = set()
             for slot in slots:
+                slot_key = f"{section}-{slot}"
                 if slot in from_textbook:
-                    rec = freshest(textbook[section], spent)
+                    rec = freshest(textbook[section], spent, slot_key)
                     spent.add(rec["id"])
                 else:
-                    rec = freshest(official[(section, slot)], set())
+                    rec = freshest(official[(section, slot)], set(), slot_key)
                 picked.append((section, slot, rec))
         records = [r for _s, _n, r in picked]
         score = (sum(used[r["id"]] for r in records),
@@ -286,6 +347,9 @@ def draw(bank: dict, seed: int, used: Counter, test_id: str,
             best = (score, picked)
 
     _, picked = best
+    if starved:
+        print(f"  note: {len(starved)} slot(s) could not avoid the previous "
+              f"paper's clip (candidates exhausted): {', '.join(sorted(set(starved)))}")
     chosen_items = {f"{section}-{slot}": rec["id"] for section, slot, rec in picked}
     chosen_pre = {}
     for section in SECTIONS:
@@ -639,7 +703,8 @@ def main(argv: list[str] | None = None) -> int:
                      "leave the text describing audio that is not on disk; "
                      "pass --replay to re-render the existing draw")
         used = usage_counts(draws, exclude=args.test_id)
-        clips, pres = draw(bank, args.seed, used, args.test_id)
+        clips, pres = draw(bank, args.seed, used, args.test_id,
+                           avoid_slot=previous_slot_clips(draws, exclude=args.test_id))
 
     (test_dir / "聴解スクリプト.txt").write_text(
         render_script(index, clips, pres), encoding="utf-8")

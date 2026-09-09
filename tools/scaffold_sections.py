@@ -3,8 +3,15 @@
 Scaffold Section Authoring Templates from tests/<test_id>/test_spec.json.
 
 Generates pre-slotted Markdown section templates in tests/<test_id>/_sections/
-(問1-6.md, 問7-9.md, 問10-14.md, 聴解.md) with target items, prescribed answer positions,
-and closing move shapes already pre-populated.
+with target items and prescribed answer positions already pre-populated.
+
+WHAT IT ACTUALLY EMITS — two files: 問1-6_文字語彙.md and 問7-9_文法.md.
+It does NOT emit a 読解 template (the 問題10-14 author creates
+問10-14_読解.md itself, and its closing-move shapes are assigned by the
+orchestrator per jlpt-test-generation Stage 2, not by this script), and it does
+NOT emit a 聴解 one — since 2026-09-08 there is no 聴解 author at all, because
+`make mp3` composes the whole listening half from banked recordings
+(choukai-audio Part 0). The docstring claimed all four until 2026-09-09.
 
 Why this exists:
 Saves ~40% of Stage 2 LLM authoring tokens by removing the need for agents to generate
@@ -107,7 +114,7 @@ def scaffold_sections(test_dir: Path, overwrite: bool = False):
             lines.append(f"**{i}** リード文 ___ ___ ★ ___ 末尾文。（ターゲット文型「{it}」）")
             lines.append(f" 1. カード1  2. カード2  3. カード3  4. カード4\n")
 
-        lines.append("## 問題9 次の文章を読んで、文章全体の趣旨を踏まえて、52から55の中に入る最もよいものを、1・2・3・4から一つ選びなさい。\n")
+        lines.append("## 問題9 次の文章を読んで、文章全体の趣旨を踏まえて、48から51の中に入る最もよいものを、1・2・3・4から一つ選びなさい。\n")
         cloze_topic = spec.get("cloze_topic", {})
         c_top = cloze_topic.get("topic", "文章の文法テーマ") if isinstance(cloze_topic, dict) else cloze_topic
         lines.append(f"（問題9 長文: テーマ「{c_top}」約500-700字）\n")

@@ -542,6 +542,24 @@ binds only the **headline set** = 問題9 cloze, 問題12 A/B (one surface),
 4. **Cross-test: no theme headlines two consecutive papers, and across the
    previous two papers together at most ONE headline theme may repeat**
    (only against the paper-before-last, only once).
+   **The 聴解問題5 half of this is a WARN on a COMPOSED paper, not a FAIL**
+   (2026-09-09). Since the 2026-09-08 rework the listening half is lifted from
+   real sittings by `make mp3`, which draws least-used clips and knows nothing
+   about themes — so when the only surface carrying a repeated theme is this
+   paper's 聴解問題5, the finding names work nobody can do: the 読解 half has
+   nothing to re-angle, and the one remaining lever is re-running the composer
+   on seed after seed until the tag moves, i.e. seed-shopping, which this repo
+   forbids everywhere else. The 読解-headline half (問題9/12/13/14) keeps its
+   FAIL, because those surfaces ARE ours to re-angle.
+   `check_theme_repeat_cross_test()` splits the overlap on exactly that line,
+   in BOTH of its branches: one paper back the composed half WARNs instead of
+   FAILing, and two papers back it does not count against the budget of one
+   (it prints a `note` naming what was excluded, so the exclusion is never
+   silent). The two branches were split on the same day for the same reason —
+   if you touch one, touch the other.
+   Founding case: `20260909_1` shared 住まい (its 問題12) and 働き方 (its 問題14)
+   with `20260907_1` — both real and both re-authored — plus 旅行・観光, which
+   sat only on its composed 聴解問題5-2番 against the previous paper's 問題14.
 
 **Rule 5 — VOICE is the third axis, and it is a per-paper quota.** Subject
 (rules 1–4) and closing move (`dokkai.md`) govern *what* a surface is about and
