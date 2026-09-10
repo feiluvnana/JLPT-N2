@@ -1,6 +1,6 @@
 ---
 name: choukai-audio
-description: Single owner of the listening audio end to end. Since 2026-09-08 a generated paper's 聴解 is COMPOSED from real recordings — a MIXED pool of official sittings plus hand-declared Shin Kanzen, Soumatome and 問題例集 items (tools/build_choukai_bank.py + tools/build_textbook_bank.py + tools/compose_choukai.py), not synthesized — Edge-TTS is retired. Exactly one paper is official-only. Use whenever building, fixing or re-drawing a paper's listening half, whenever the clip bank needs rebuilding, whenever an official choukai MP3 needs segmenting or analysis ("learn from this audio"), and whenever pacing needs verification. Do not write ad-hoc TTS loops and do not call make_choukai_mp3.py — it is kept only as the pacing/register evidence the composer is measured against.
+description: Single owner of the listening audio end to end. Since 2026-09-08 a generated paper's 聴解 is COMPOSED from real recordings — a MIXED pool of official sittings plus hand-declared textbook and mock-exam items (Shin Kanzen, Soumatome, 問題例集, 完全模試) (tools/build_choukai_bank.py + tools/build_textbook_bank.py + tools/compose_choukai.py), not synthesized — Edge-TTS is retired. Exactly one paper is official-only. Use whenever building, fixing or re-drawing a paper's listening half, whenever the clip bank needs rebuilding, whenever an official choukai MP3 needs segmenting or analysis ("learn from this audio"), and whenever pacing needs verification. Do not write ad-hoc TTS loops and do not call make_choukai_mp3.py — it is kept only as the pacing/register evidence the composer is measured against.
 ---
 
 # Choukai Audio (compose → verify → calibrate)
@@ -30,10 +30,11 @@ no distractors to design.
   `compose_choukai.OFFICIAL_ONLY_TESTS` and it is a control, not an exemption:
   the reference a listener can compare every other paper against.
 - **Every other paper mixes** official clips with hand-declared ones — Shin
-  Kanzen, Soumatome, and since 2026-09-09 the free 『問題例集』(2009) sample from
-  jlpt.jp (`references/textbook_bank_plan.md` §7). `TEXTBOOK_SLOTS` says how
-  many slots per 大問 (currently 問題1 ×2, 問題2 ×1, 問題3 ×2, 問題4 ×3: 8 of a
-  paper's 29). **問題5 is the only 大問 still official-only in every paper**, and
+  Kanzen, Soumatome, the free 『問題例集』(2009) sample from jlpt.jp
+  (`references/textbook_bank_plan.md` §7), and since 2026-09-10 『完全模試 N2』
+  (Jリサーチ, three mock papers pressed to exam timing — §8).
+  `TEXTBOOK_SLOTS` says how many slots per 大問 (currently 問題1 ×2, 問題2 ×1,
+  問題3 ×2, 問題4 ×4: 9 of a paper's 29). **問題5 is the only 大問 still official-only in every paper**, and
   for SOURCE reasons, not policy ones (`textbook_bank_plan.md` §6).
 - **`TEXTBOOK_SLOTS` is set from a measurement, not chosen.** `make
   choukai-wear` divides `slots × mixed papers` by pool depth and exits non-zero
@@ -79,6 +80,54 @@ no distractors to design.
    and leaves the composed audio running a 12 s answer pause straight into the
    next 20 s pause with no speech between them.
 
+### Adding a NEW SOURCE — the five-point check comes BEFORE any transcription
+
+A source is a book, CD set or download that is not yet in
+`build_textbook_bank.BOOKS`. Transcribing is the expensive half and it is
+**wasted** if the recording fails point 5, so run all five first — each one is a
+measurement, not a judgement, and each is here because a rejected source failed
+exactly it (`references/textbook_bank_plan.md` §6, `refs/External/README.md` §6):
+
+| # | Check | How | Fails when |
+|---|---|---|---|
+| 1 | audio exists | `ffprobe` the tracks | free-audio-only sources pass; that is not the problem |
+| 2 | full script printed | open the 別冊/解答編 | most publishers keep it in the paid book — that is the usual blocker |
+| 3 | answer key printed | same page, read it off the PAGE never an OCR extract | — |
+| 4 | 問題1/問題2 option lists printed **as text** | the 問題冊子 page | **picture-legend options are unusable** — `render_booklet` prints a flat 1–4 list (§4) |
+| 5 | **exam timing in the recording** | sweep every track for an internal pause ≥ 8 s | a drill CD abridges the 20 s option-reading pause. Shin Kanzen's whole 163-track book maxes at 10.1 s and therefore contributes **zero** 問題2 items |
+
+Point 5 is the discriminator: **模試/実戦 books press to exam timing, 練習/ドリル
+books abridge it.** Sweep with `choukai_segment.measure` + `find_pauses`, not
+`silencedetect` (Part 4 step 2 owns why).
+
+Then, before declaring items:
+
+1. **Map the tracks by measuring, not by assuming.** Durations plus a
+   `find_pauses` shape identify each 大問: a ~20 s internal pause is 問題2, a run
+   of three ~3 s gaps before the answer pause is spoken options (問題3/4/5), a
+   ~30 s track with one 7–8 s tail pause is 即時応答. Confirm against the book's
+   own CD-track badges — those are authoritative per item.
+2. **Add a `BOOKS` entry**: `cd_dir`, `track_file`, `zip`, and
+   `max_header_runs` — how many spoken runs sit in front of the body (a track id,
+   a marker blip, or the announcer's own 「N番。」). Getting this wrong shifts every
+   body span.
+3. **Choose the rate band with the measurement in hand, never up front.** Declare
+   a first batch, run `make textbook-bank`, and read the implied s/char it
+   reports. A textbook pressing lands inside `CHAR_RATE` (0.060–0.200); a
+   recording pressed to exam timing lands in `CHAR_RATE_OFFICIAL` (0.080–0.360)
+   and needs `"official_pacing": True`. **A source whose correct declarations are
+   refused at 0.20–0.24 is telling you it is paced like the exam** — set the flag
+   with the numbers in the comment; never widen a band (§5).
+4. **Re-run `make choukai-wear` before touching `TEXTBOOK_SLOTS`.** Depth buys a
+   slot only at the threshold `slots × mixed papers ÷ pool ≤ 4.0`; if no 大問
+   crosses one, bank the items and leave the slots alone.
+5. **Upload the binaries** (`make upload-files`) and add the folder to
+   `AGENTS.md` §3 — `refs/` is gitignored, so an un-uploaded source exists on one
+   disk only.
+6. **Record it** as a numbered section of `references/textbook_bank_plan.md`
+   with the five-point result, the track map and every measurement, then update
+   the pool counts in this file's Part 0.
+
 ### Adding a textbook item — the guard is the point
 
 Declare it in `.agents/choukai-audio/references/textbook_items.json` (book, CD,
@@ -121,18 +170,22 @@ measurement that justifies it** — never by widening a band.
   *audio* is present — it rides inside the section preamble clip, uncut — so
   the paper sounds complete while `聴解スクリプト.txt` has no 例 block. Every
   `tests/imported-*` sitting carries the same divergence.
-- **Finite novelty, now less finite.** Ten official candidates per slot plus 62
-  slot-free items (問題1 ×15, 問題2 ×10, 問題3 ×14, 問題4 ×23).
+- **Finite novelty, now less finite.** Ten official candidates per slot plus 73
+  slot-free items (問題1 ×15, 問題2 ×10, 問題3 ×14, 問題4 ×34).
   `logs/choukai_draws.json` records every paper's draw and the composer spends
   the least-used clips first; across the suite of 24 papers `make choukai-wear`
-  projects 2.3–3.3 uses per slot-free clip and 1.5–2.4 per official one.
+  projects 2.4–3.4 uses per slot-free clip and 1.5–2.4 per official one.
   **Both books are fully read** — every page of both 別冊 and all 279 CD tracks
-  measured — and the 問題例集 sample added four more (2026-09-09), for 62 banked
-  and 16 `excluded` with their numbers. A few more Soumatome 課題理解/概要理解
-  items are still readable, but they would not change a slot count: the next
-  slot in 問題1 or 問題3 needs 18 items in that pool, 問題2 cannot reach 12 at
-  all, and 問題4 needs 24 and holds 23, so **depth is no longer the binding
-  constraint — the sources are.** `references/textbook_bank_plan.md` §6 lists
+  measured — and the 問題例集 sample added four more (2026-09-09), for 66 banked
+  and 16 `excluded` with their numbers. **`refs/KanzenMoshi/` reopened the
+  source side on 2026-09-10** (§8): its 第1回 即時応答 set took 問題4 from 23
+  items to 34 and bought back the fourth 問題4 slot that 2026-09-09 had to give
+  up, for 73 banked. Its other 76 items are transcribed one 大問 at a time — so
+  where this file used to read "depth is no longer the binding constraint, the
+  sources are", the binding constraint on 問題1/2/3 is now **transcription
+  time**, and the numbers to beat are: 問題1 and 問題3 need 18 for a third slot
+  (they hold 15 and 14), 問題2 needs 12 for a second (holds 10, and 完全模試 has
+  18 more that lay a real 20 s pause). `references/textbook_bank_plan.md` §6 lists
   what is genuinely blocked; the next real novelty is the 21 official sittings
   in `refs/JLPT_N2_NEW/` that are not yet imported (§6.4).
 - **No answer-position control.** Lifted options cannot be reordered — 問題3/4/5

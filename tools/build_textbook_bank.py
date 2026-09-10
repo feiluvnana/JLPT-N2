@@ -131,6 +131,36 @@ BOOKS = {
         # 「N番。」: an item's own number would not be constant at 0.90 s.)
         "max_header_runs": 2,
     },
+    "kanzenmoshi": {
+        "label": "ゼッタイ合格！日本語能力試験 完全模試 N2",
+        "cd_dir": {
+            1: "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1",
+            2: "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2",
+            3: "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3",
+        },
+        "track_file": "Track{track:02d}.mp3",
+        # One CD per mock paper, 43 tracks each, identical layout: 問題1 = 04–08,
+        # 問題2 = 11–16, 問題3 = 20–24, 問題4 = 27–37, 問題5 = 39/40/42. Every ITEM
+        # track opens with the announcer's own 「N番。」 — ~1.0 s of speech then a
+        # 2.7–2.9 s pause, the shape textbook_bank_plan.md §1 measured on official
+        # items — so one header run is dropped and the clip is banked body-only,
+        # slot-free like every other hand-declared source.
+        "max_header_runs": 1,
+        "zip": "KanzenMoshi",
+        # A mock paper pressed to EXAM timing, not a drill CD, so it is judged
+        # against CHAR_RATE_OFFICIAL like the 問題例集 clips. Four independent
+        # measurements say the pacing is official's, not a textbook's: the 18
+        # 問題2 items lay 19.3–20.1 s of option-reading pause (official 20.22
+        # [20.19–20.81]; no Shin Kanzen track exceeds 10.1 s), the announcer
+        # speaks 「N番。」 before every item, the spoken choices sit ~3 s apart,
+        # and the book's own answer pauses run 7.2–7.4 s against official's 8.
+        # The rates follow: 第1回's eleven 問題4 items measure 0.190–0.238 s/char
+        # against official 問題4's 0.181–0.323 (median 0.231) and Soumatome /
+        # Shin Kanzen 問題4's 0.111–0.196. Judging them by CHAR_RATE refused nine
+        # of eleven correct declarations — the same way it refused
+        # `mondaireishuu:問4-1` at the official median.
+        "official_pacing": True,
+    },
     "mondaireishuu": {
         "label": "新しい「日本語能力試験」問題例集 N2",
         # One MP3 carries the whole sample sitting — opening, five 問題

@@ -154,6 +154,12 @@ a third-party-authored mock.
 one stray `sample2017/mp3/N2Q2.mp3`). There is no 第三集. The braille page
 (`tenji.html`) carries no audio.
 
+**The English-side mirror is the same bytes, and that was measured** (re-checked
+2026-09-10). `jlpt.jp/e/samples/pdf/N2-script.pdf` and
+`jlpt.jp/e/samples/mp3/N2Sample.mp3` answer 200 with content-length **2196951**
+and **13304503** — identical to `jlpt.jp/samples/…` and to the two files in §4
+on disk. `/e/` is a language wrapper over the same sample set, not a second one.
+
 ## 6. What was rejected, and why
 
 Nothing below is in this folder; each was checked and turned down.
@@ -166,6 +172,14 @@ Nothing below is in this folder; each was checked and turned down.
 | japanesetest4you.com | 5-item listening sets, answer key, transcript PDF link | no audio on the page, no source attribution, and the options are **picture legends** — the class `textbook_bank_plan.md` §4 already excludes because `render_booklet` prints a flat 1–4 list |
 | jlptsensei.com / jlptsamurai.com "free practice test" | repackaged jlpt.jp files | duplicates of §2–§4 |
 | archive.org | textbook scans, YouTube lecture rips | pirated uploads of the same two publishers; nothing exam-format with audio **and** script |
+| jala.tools | N2 過去問 2000-12 .. 2025-07, audio + script + 解説, free behind a sign-in | redistribution of the same sittings `refs/JLPT_N2_NEW/` already holds (§5). The archive's own script PDFs are the authorised copy of that text; the cost §6.4 names is OCR, and lifting someone else's transcript is not the way to pay it |
+| nihonez.com | 22 "mock exams" with per-section scoring | a JS quiz UI — no downloadable audio, no script, no printed-option list, no stated source |
+| アルク『改訂版 合格できる日本語能力試験N2』 | free mp3 download | script and key are in the 別冊 (paid). Same shape as the Jリサーチ row |
+| スリーエー『新完全マスター聴解N2』音声DL page | free mp3 | the same recordings as `refs/Shinkanzen/` — already in the pool |
+
+Rows 7–10 were added by a **re-search on 2026-09-10**, run because the pool felt
+small; it turned up no source §1–§4 did not already cover, and the four
+publisher rows are the same shape as the Jリサーチ row above.
 
 The pattern is one constraint, not many: **audio is widely free, exam text is
 not.** A clip needs a transcript, a key, and — for 問題1/問題2 — a printed option

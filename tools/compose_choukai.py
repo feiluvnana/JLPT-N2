@@ -100,11 +100,20 @@ OFFICIAL_ONLY_TESTS = {"20260807_1"}
 # 問題2 stays at 1 slot because Soumatome is the only source for it: not one of
 # Shin Kanzen's 163 tracks lays more than a 10.1 s option-reading pause.
 #
+# 2026-09-10: 問題4 goes BACK to 4 slots. `refs/KanzenMoshi/` (完全模試 N2, three
+# mock papers pressed to exam timing) added its 第1回 即時応答 set, taking the pool
+# 23 -> 34, and `make choukai-wear` projects 4 slots x 24 mixed papers / 34 =
+# 2.82 against the 4.0 ceiling — where the 2026-09-09 cut projected 4.18 at 23
+# items and had to drop to 3. This is the threshold textbook_bank_plan.md §6.3
+# named ("24 items buys the fourth slot"), reached by a new source rather than by
+# splitting the bundled Shin Kanzen track. The other three 大問 do not move: their
+# KanzenMoshi items are not transcribed yet.
+#
 # 問題5 is absent and it is a SOURCE limit, not a policy one: Shin Kanzen PRINTS
 # 1番's four choices where this repo speaks them, and neither book lays the 10 s
 # 質問1 answer pause that sits INSIDE an official 2番 between the two read-backs.
 # Both need composer surgery, not a transcript. See textbook_bank_plan.md §6.
-TEXTBOOK_SLOTS = {"問題1": 2, "問題2": 1, "問題3": 2, "問題4": 3}
+TEXTBOOK_SLOTS = {"問題1": 2, "問題2": 1, "問題3": 2, "問題4": 4}
 
 SR = 48_000               # official recordings are 48 kHz
 LOUDNORM = "loudnorm=I=-15:TP=-1.0:LRA=11"

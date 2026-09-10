@@ -23194,6 +23194,677 @@
     "dropped_head_runs": 0,
     "dropped_tail_runs": 0
    }
+  },
+  {
+   "id": "kanzenmoshi:cd1-27",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 1番 (CD1 トラック27)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track27.mp3",
+    "start": 4.18,
+    "end": 24.08,
+    "answer_pause": 7.26
+   },
+   "script_lines": [
+    "あーあ、傘、持ってくればよかった。",
+    "1、じゃ、持っていこうか。",
+    "2、だから持って言ったじゃない。",
+    "3、何だ、持ってないの？"
+   ],
+   "answer": 3,
+   "explanation_payload": {
+    "why_correct": "「〜ばよかった」は後悔《こうかい》。傘《かさ》がない状況《じょうきょう》を受《う》けて確《たし》かめる返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "これから出発《しゅっぱつ》する場面《ばめん》の返事《へんじ》で、もう外《そと》にいる状況《じょうきょう》に合《あ》わない。",
+     "助言《じょげん》したのに聞《き》かなかった、と責《せ》める言《い》い方《かた》。相手《あいて》は助言《じょげん》を受《う》けていない。",
+     "「何《なん》だ」は軽《かる》い驚《おどろ》き。傘《かさ》がないと分《わ》かって返《かえ》す。"
+    ],
+    "points": [
+     "〜ばよかった：しなかったことを後悔《こうかい》する表現《ひょうげん》。"
+    ],
+    "stem": "あーあ、傘、持ってくればよかった。",
+    "options": [
+     "じゃ、持っていこうか。",
+     "だから持って言ったじゃない。",
+     "何だ、持ってないの？"
+    ],
+    "script": "あーあ、傘、持ってくればよかった。\n1、じゃ、持っていこうか。\n2、だから持って言ったじゃない。\n3、何だ、持ってないの？"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "「〜ばよかった」là tiếc nuối vì đã không làm → đáp lại bằng cách xác nhận là không mang theo.",
+    "options_analysis": [
+     "Câu đáp khi sắp ra khỏi nhà, không hợp với lúc đã ra ngoài.",
+     "Giọng trách «đã bảo rồi mà», nhưng người kia chưa hề khuyên.",
+     "「何だ」= ngạc nhiên nhẹ khi biết đối phương không mang ô."
+    ],
+    "points": [
+     "〜ばよかった: tiếc vì đã không làm."
+    ]
+   },
+   "kaisetsu_cell_text": "「持ってくればよかった」＝今は持っていない後悔→持っていないことを確かめる3。1 ✗「持っていこうか」→これから出かける場面の返事。2 ✗「持って言ったじゃない」→助言した側の言い方で、話がかみ合わない。",
+   "measured": {
+    "span": 19.9,
+    "chars": 58,
+    "lines": 4,
+    "rate": 0.2293,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-28",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 2番 (CD1 トラック28)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track28.mp3",
+    "start": 4.06,
+    "end": 22.76,
+    "answer_pause": 7.06
+   },
+   "script_lines": [
+    "ありがとうございます。お会計はご一緒で？",
+    "1、いえ、別々で。",
+    "2、いえ、ご一緒じゃなくて。",
+    "3、ええ、割り勘で。"
+   ],
+   "answer": 1,
+   "explanation_payload": {
+    "why_correct": "店員《てんいん》が支払《しはら》いをまとめるか聞《き》いている。「別々《べつべつ》で」が会計《かいけい》を分《わ》ける答《こた》え。",
+    "options_analysis": [
+     "会計《かいけい》を分《わ》けてほしいと簡潔《かんけつ》に伝《つた》える。",
+     "「ご一緒《いっしょ》」は相手《あいて》を立《た》てる言《い》い方《かた》で、自分《じぶん》たちには使《つか》わない。",
+     "割《わ》り勘《かん》は客同士《きゃくどうし》で等分《とうぶん》する話《はなし》。店《みせ》への答《こた》えにならない。"
+    ],
+    "points": [
+     "別々《べつべつ》で：会計《かいけい》を分《わ》けるときの決《き》まった言《い》い方《かた》。"
+    ],
+    "stem": "ありがとうございます。お会計はご一緒で？",
+    "options": [
+     "いえ、別々で。",
+     "いえ、ご一緒じゃなくて。",
+     "ええ、割り勘で。"
+    ],
+    "script": "ありがとうございます。お会計はご一緒で？\n1、いえ、別々で。\n2、いえ、ご一緒じゃなくて。\n3、ええ、割り勘で。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "Nhân viên hỏi có tính gộp không → 「別々で」= xin tính riêng.",
+    "options_analysis": [
+     "Nói ngắn gọn rằng muốn thanh toán riêng.",
+     "「ご一緒」là kính ngữ hướng về đối phương, không dùng cho phía mình.",
+     "割り勘 là chia đều tiền giữa khách với nhau, không trả lời được câu hỏi của nhân viên."
+    ],
+    "points": [
+     "割《わ》り勘《かん》: chia đều tiền theo đầu người."
+    ]
+   },
+   "kaisetsu_cell_text": "「お会計はご一緒で？」＝まとめて払うかの確認→「別々で」と答える1。2 ✗「ご一緒じゃなくて」→尊敬語を自分側に使っており不自然。3 ✗「割り勘」＝金額を等分する話で、会計を分ける話ではない。",
+   "measured": {
+    "span": 18.7,
+    "chars": 53,
+    "lines": 4,
+    "rate": 0.2283,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-29",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 3番 (CD1 トラック29)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track29.mp3",
+    "start": 4.1,
+    "end": 21.96,
+    "answer_pause": 7.34
+   },
+   "script_lines": [
+    "お弁当にお箸をお付けしますか。",
+    "1、はい、大丈夫です。",
+    "2、はい、お願いします。",
+    "3、はい、お付けしてください。"
+   ],
+   "answer": 2,
+   "explanation_payload": {
+    "why_correct": "店員《てんいん》の申《もう》し出《で》を受《う》けるので「お願《ねが》いします」。",
+    "options_analysis": [
+     "「大丈夫《だいじょうぶ》です」は断《ことわ》りに使《つか》う言《い》い方《かた》で、「はい」と食《く》い違《ちが》う。",
+     "申《もう》し出《で》を素直《すなお》に受《う》ける返事《へんじ》。",
+     "「お〜する」は謙譲語《けんじょうご》。相手《あいて》の行為《こうい》には使《つか》えない。"
+    ],
+    "points": [
+     "お〜します：自分《じぶん》の行為《こうい》をへりくだって言《い》う。"
+    ],
+    "stem": "お弁当にお箸をお付けしますか。",
+    "options": [
+     "はい、大丈夫です。",
+     "はい、お願いします。",
+     "はい、お付けしてください。"
+    ],
+    "script": "お弁当にお箸をお付けしますか。\n1、はい、大丈夫です。\n2、はい、お願いします。\n3、はい、お付けしてください。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "Nhân viên đề nghị kèm đũa → nhận lời bằng 「お願いします」.",
+    "options_analysis": [
+     "「大丈夫です」thường mang nghĩa từ chối, mâu thuẫn với 「はい」.",
+     "Câu nhận lời đề nghị một cách tự nhiên.",
+     "「お〜する」là khiêm nhường ngữ, không dùng cho hành động của đối phương."
+    ],
+    "points": [
+     "お〜する: khiêm nhường ngữ, chỉ dùng cho hành động của mình."
+    ]
+   },
+   "kaisetsu_cell_text": "「お箸をお付けしますか」＝店員の申し出→受ける2。1 ✗「大丈夫です」＝断りの意味になり「はい」と矛盾。3 ✗「お付けして」は謙譲語で、相手の行為には使えない。",
+   "measured": {
+    "span": 17.86,
+    "chars": 53,
+    "lines": 4,
+    "rate": 0.2125,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-30",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 4番 (CD1 トラック30)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track30.mp3",
+    "start": 4.02,
+    "end": 24.44,
+    "answer_pause": 7.32
+   },
+   "script_lines": [
+    "それは取っといてもいいんじゃない？",
+    "1、うん、取ってみよう。",
+    "2、えー、もう使わないんじゃない？",
+    "3、そうねえ、取ったほうがいいのかなあ。"
+   ],
+   "answer": 2,
+   "explanation_payload": {
+    "why_correct": "「取っとく」は捨《す》てずに残《のこ》すこと。使《つか》わないと言《い》って残《のこ》す案《あん》に反対《はんたい》している。",
+    "options_analysis": [
+     "「取ってみよう」は手《て》に取《と》る意味《いみ》で、保管《ほかん》の話《はなし》からずれる。",
+     "もう使《つか》わないと理由《りゆう》を挙《あ》げて、残《のこ》す提案《ていあん》に反対《はんたい》する。",
+     "提案《ていあん》をそのまま繰《く》り返《かえ》すだけで、返事《へんじ》になっていない。"
+    ],
+    "points": [
+     "取《と》っとく＝取《と》っておく：縮約形《しゅくやくけい》。捨《す》てずに残《のこ》す。"
+    ],
+    "stem": "それは取っといてもいいんじゃない？",
+    "options": [
+     "うん、取ってみよう。",
+     "えー、もう使わないんじゃない？",
+     "そうねえ、取ったほうがいいのかなあ。"
+    ],
+    "script": "それは取っといてもいいんじゃない？\n1、うん、取ってみよう。\n2、えー、もう使わないんじゃない？\n3、そうねえ、取ったほうがいいのかなあ。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "「取っとく」= giữ lại không vứt. Người đáp phản đối vì cho rằng không dùng nữa.",
+    "options_analysis": [
+     "「取ってみよう」nghĩa là cầm lấy/thử lấy, lệch khỏi chuyện cất giữ.",
+     "Đưa lý do «không dùng nữa» để phản đối việc giữ lại.",
+     "Chỉ lặp lại đề nghị, không thành câu đáp."
+    ],
+    "points": [
+     "取《と》っとく = 取っておく: dạng rút gọn, giữ lại."
+    ]
+   },
+   "kaisetsu_cell_text": "「取っといて」＝捨てずに残しておく提案→もう使わないと反対する2。1 ✗「取ってみよう」＝手に取る・応募するの意味にずれる。3 ✗ 提案に同意しており、会話が進まない同意の言い換え。",
+   "measured": {
+    "span": 20.42,
+    "chars": 66,
+    "lines": 4,
+    "rate": 0.2094,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-31",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 5番 (CD1 トラック31)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track31.mp3",
+    "start": 4.22,
+    "end": 26.48,
+    "answer_pause": 7.18
+   },
+   "script_lines": [
+    "もっと早く教えてくれてたらよかったのに。",
+    "1、すみません、これから教えます。",
+    "2、すみません、次から気をつけます。",
+    "3、すみません、ちょっと早かったですね。"
+   ],
+   "answer": 2,
+   "explanation_payload": {
+    "why_correct": "知《し》らせるのが遅《おそ》かったと責《せ》められている。これからは気《き》をつけると答《こた》えるのが自然《しぜん》。",
+    "options_analysis": [
+     "今《いま》から教《おし》えても遅《おそ》いという不満《ふまん》に応《こた》えていない。",
+     "遅《おく》れたことを認《みと》め、次《つぎ》からの改善《かいぜん》を約束《やくそく》する。",
+     "遅《おそ》かったと言《い》われているのに「早《はや》かった」と逆《ぎゃく》のことを言《い》っている。"
+    ],
+    "points": [
+     "〜たらよかったのに：そうしなかった相手《あいて》への不満《ふまん》。"
+    ],
+    "stem": "もっと早く教えてくれてたらよかったのに。",
+    "options": [
+     "すみません、これから教えます。",
+     "すみません、次から気をつけます。",
+     "すみません、ちょっと早かったですね。"
+    ],
+    "script": "もっと早く教えてくれてたらよかったのに。\n1、すみません、これから教えます。\n2、すみません、次から気をつけます。\n3、すみません、ちょっと早かったですね。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "Bị trách vì báo quá muộn → đáp bằng lời hứa lần sau sẽ chú ý.",
+    "options_analysis": [
+     "Bây giờ mới nói thì đã muộn, không đáp đúng lời trách.",
+     "Thừa nhận đã chậm và hứa sửa từ lần sau.",
+     "Bị chê là muộn mà lại nói «hơi sớm», ngược nghĩa."
+    ],
+    "points": [
+     "〜たらよかったのに: trách móc vì đối phương đã không làm."
+    ]
+   },
+   "kaisetsu_cell_text": "「〜たらよかったのに」＝遅かったことへの不満→今後を約束する2。1 ✗ 今から教えても遅い。3 ✗「早かった」は事実と反対。",
+   "measured": {
+    "span": 22.26,
+    "chars": 75,
+    "lines": 4,
+    "rate": 0.2088,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-32",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 6番 (CD1 トラック32)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track32.mp3",
+    "start": 4.02,
+    "end": 26.6,
+    "answer_pause": 7.62
+   },
+   "script_lines": [
+    "お客様、コートもこちらでお預かりしますが。",
+    "1、いえ、コートは結構です。",
+    "2、そうですか。じゃ、預かります。",
+    "3、ありがとう。でも、お預けは結構です。"
+   ],
+   "answer": 1,
+   "explanation_payload": {
+    "why_correct": "店《みせ》の申《もう》し出《で》を断《ことわ》る場面《ばめん》。「結構《けっこう》です」でていねいに断《ことわ》る。",
+    "options_analysis": [
+     "いらないとていねいに断《ことわ》る言《い》い方《かた》。",
+     "「預《あず》かる」は受《う》け取《と》る側《がわ》の動詞《どうし》。客《きゃく》は「預《あず》ける」。",
+     "「お預《あず》け」という言《い》い方《かた》をせず、敬語《けいご》の形《かたち》も崩《くず》れている。"
+    ],
+    "points": [
+     "預《あず》かる／預《あず》ける：受《う》け取《と》る側《がわ》と渡《わた》す側《がわ》で動詞《どうし》が違《ちが》う。"
+    ],
+    "stem": "お客様、コートもこちらでお預かりしますが。",
+    "options": [
+     "いえ、コートは結構です。",
+     "そうですか。じゃ、預かります。",
+     "ありがとう。でも、お預けは結構です。"
+    ],
+    "script": "お客様、コートもこちらでお預かりしますが。\n1、いえ、コートは結構です。\n2、そうですか。じゃ、預かります。\n3、ありがとう。でも、お預けは結構です。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "Từ chối lời đề nghị của nhân viên → 「結構です」là cách từ chối lịch sự.",
+    "options_analysis": [
+     "Từ chối lịch sự, nghĩa là không cần.",
+     "「預かる」là động từ của bên nhận giữ; khách phải nói 「預ける」.",
+     "「お預け」không phải cách nói tự nhiên, dạng kính ngữ cũng sai."
+    ],
+    "points": [
+     "預《あず》かる / 預《あず》ける: bên giữ và bên gửi dùng động từ khác nhau."
+    ]
+   },
+   "kaisetsu_cell_text": "店員の申し出を断る場面→「結構です」で断る1。2 ✗「預かります」は預かる側の動詞で、客の側は「預ける」。3 ✗「お預け」は名詞化が不自然で、敬語の形も誤り。",
+   "measured": {
+    "span": 22.58,
+    "chars": 72,
+    "lines": 4,
+    "rate": 0.2219,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-33",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 7番 (CD1 トラック33)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track33.mp3",
+    "start": 4.02,
+    "end": 22.4,
+    "answer_pause": 7.18
+   },
+   "script_lines": [
+    "田中さんに連絡とったほうがいいんじゃない？",
+    "1、ええ、それで結構です。",
+    "2、はい、とってみます。",
+    "3、いいえ、まだとっていません。"
+   ],
+   "answer": 2,
+   "explanation_payload": {
+    "why_correct": "連絡《れんらく》するよう勧《すす》められている。これからやると答《こた》える返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "相手《あいて》の案《あん》を認《みと》める言《い》い方《かた》で、助言《じょげん》への返事《へんじ》にならない。",
+     "勧《すす》めを受《う》け入《い》れ、これから連絡《れんらく》すると答《こた》える。",
+     "していないと状態《じょうたい》を述《の》べるだけで、勧《すす》めに応《こた》えていない。"
+    ],
+    "points": [
+     "〜たほうがいい：相手《あいて》に行動《こうどう》を勧《すす》める表現《ひょうげん》。"
+    ],
+    "stem": "田中さんに連絡とったほうがいいんじゃない？",
+    "options": [
+     "ええ、それで結構です。",
+     "はい、とってみます。",
+     "いいえ、まだとっていません。"
+    ],
+    "script": "田中さんに連絡とったほうがいいんじゃない？\n1、ええ、それで結構です。\n2、はい、とってみます。\n3、いいえ、まだとっていません。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "Được khuyên nên liên lạc → đáp rằng sẽ thử liên lạc.",
+    "options_analysis": [
+     "Là cách chấp thuận phương án của người khác, không đáp lời khuyên.",
+     "Tiếp nhận lời khuyên và nói sẽ liên lạc.",
+     "Chỉ nêu tình trạng hiện tại, không đáp lại lời khuyên."
+    ],
+    "points": [
+     "〜たほうがいい: khuyên đối phương nên làm gì."
+    ]
+   },
+   "kaisetsu_cell_text": "「〜たほうがいい」＝助言→これからする2。1 ✗「それで結構です」は相手の案を承認する言い方で、助言への返事にならない。3 ✗ 現在の状態を答えるだけで、助言に応じていない。",
+   "measured": {
+    "span": 18.38,
+    "chars": 62,
+    "lines": 4,
+    "rate": 0.19,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-34",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 8番 (CD1 トラック34)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track34.mp3",
+    "start": 4.2,
+    "end": 25.32,
+    "answer_pause": 7.38
+   },
+   "script_lines": [
+    "小林さん、今、手、空いてる？",
+    "1、ええ、急ぎのものは特に…。",
+    "2、いえ、まだあけてないんですが。",
+    "3、すみません、今、ちょっとあきなくて。"
+   ],
+   "answer": 1,
+   "explanation_payload": {
+    "why_correct": "「手《て》が空《あ》く」は時間《じかん》があること。急《いそ》ぎの用《よう》がないと伝《つた》える返事《へんじ》。",
+    "options_analysis": [
+     "急《いそ》ぎの仕事《しごと》はないと言《い》って、時間《じかん》があることを示《しめ》す。",
+     "物《もの》を「開《あ》ける」意味《いみ》に取《と》り違《ちが》えている。",
+     "「空《あ》く」を使《つか》った形《かたち》が誤《あやま》りで、日本語《にほんご》として成立《せいりつ》しない。"
+    ],
+    "points": [
+     "手《て》が空《あ》く：仕事《しごと》が一段落《いちだんらく》して時間《じかん》ができる。"
+    ],
+    "stem": "小林さん、今、手、空いてる？",
+    "options": [
+     "ええ、急ぎのものは特に…。",
+     "いえ、まだあけてないんですが。",
+     "すみません、今、ちょっとあきなくて。"
+    ],
+    "script": "小林さん、今、手、空いてる？\n1、ええ、急ぎのものは特に…。\n2、いえ、まだあけてないんですが。\n3、すみません、今、ちょっとあきなくて。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "「手が空く」= đang rảnh → đáp rằng không có việc gấp.",
+    "options_analysis": [
+     "Nói không có việc gấp, tức là đang rảnh.",
+     "Hiểu nhầm sang nghĩa «mở» một vật gì đó.",
+     "Cách chia 「空く」sai, không thành câu tiếng Nhật."
+    ],
+    "points": [
+     "手《て》が空《あ》く: xong việc, có thời gian rảnh."
+    ]
+   },
+   "kaisetsu_cell_text": "「手が空く」＝時間がある→急ぎの用がないと答える1。2 ✗「あけてない」は物を開ける意味に取り違えている。3 ✗「あきなくて」は自動詞の使い方が誤り。",
+   "measured": {
+    "span": 21.12,
+    "chars": 66,
+    "lines": 4,
+    "rate": 0.22,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-35",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 9番 (CD1 トラック35)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track35.mp3",
+    "start": 4.02,
+    "end": 27.84,
+    "answer_pause": 7.36
+   },
+   "script_lines": [
+    "さあ、どうぞ。今日のは、まずまずといったところかな。",
+    "1、そう？ すごくおいしそうだけど。",
+    "2、そう？ とてもまずそうには見えないけど。",
+    "3、そりゃそうだ。すごくおいしそうだもんね。"
+   ],
+   "answer": 1,
+   "explanation_payload": {
+    "why_correct": "「まずまず」はまあまあという控《ひか》えめな評価《ひょうか》。それを打《う》ち消《け》してほめ返《かえ》す。",
+    "options_analysis": [
+     "控《ひか》えめな言《い》い方《かた》を否定《ひてい》して、おいしそうだとほめる。",
+     "「まずい」と音《おと》が似《に》ているだけで、意味《いみ》を取《と》り違《ちが》えている。",
+     "謙遜《けんそん》に同意《どうい》しながらほめており、前後《ぜんご》が矛盾《むじゅん》する。"
+    ],
+    "points": [
+     "まずまず：期待《きたい》ほどではないが悪《わる》くない、という評価《ひょうか》。"
+    ],
+    "stem": "さあ、どうぞ。今日のは、まずまずといったところかな。",
+    "options": [
+     "そう？ すごくおいしそうだけど。",
+     "そう？ とてもまずそうには見えないけど。",
+     "そりゃそうだ。すごくおいしそうだもんね。"
+    ],
+    "script": "さあ、どうぞ。今日のは、まずまずといったところかな。\n1、そう？ すごくおいしそうだけど。\n2、そう？ とてもまずそうには見えないけど。\n3、そりゃそうだ。すごくおいしそうだもんね。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "「まずまず」= tạm ổn, là lời nói khiêm tốn → đáp lại bằng cách khen.",
+    "options_analysis": [
+     "Phủ nhận lời khiêm tốn và khen là trông rất ngon.",
+     "Nhầm với 「まずい」(dở) do gần âm.",
+     "Vừa đồng ý lời khiêm tốn vừa khen, tự mâu thuẫn."
+    ],
+    "points": [
+     "まずまず: không xuất sắc nhưng cũng không tệ."
+    ]
+   },
+   "kaisetsu_cell_text": "「まずまず」＝まあまあの出来という謙遜→ほめ返す1。2 ✗「まずい」と取り違えた音の引っかけ。3 ✗ 謙遜に同意しながらほめており、話がねじれる。",
+   "measured": {
+    "span": 23.82,
+    "chars": 88,
+    "lines": 4,
+    "rate": 0.1957,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-36",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 10番 (CD1 トラック36)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track36.mp3",
+    "start": 4.1,
+    "end": 23.9,
+    "answer_pause": 7.26
+   },
+   "script_lines": [
+    "さっき小田さんに会ったんだけど、足のけが、大したことないって。",
+    "1、そりゃ、よかった。",
+    "2、そりゃ、心配だね。",
+    "3、そりゃ、無理もないね。"
+   ],
+   "answer": 1,
+   "explanation_payload": {
+    "why_correct": "けがが軽《かる》いと分《わ》かった場面《ばめん》。安心《あんしん》を表《あらわ》す返事《へんじ》が合《あ》う。",
+    "options_analysis": [
+     "軽《かる》いと聞《き》いて安心《あんしん》したことを表《あらわ》す。",
+     "重《おも》いけがのときの反応《はんのう》で、話《はなし》と合《あ》わない。",
+     "「無理《むり》もない」は相手《あいて》の言動《げんどう》に納得《なっとく》する言《い》い方《かた》。"
+    ],
+    "points": [
+     "大《たい》したことない：程度《ていど》が軽《かる》い、問題《もんだい》ではない。"
+    ],
+    "stem": "さっき小田さんに会ったんだけど、足のけが、大したことないって。",
+    "options": [
+     "そりゃ、よかった。",
+     "そりゃ、心配だね。",
+     "そりゃ、無理もないね。"
+    ],
+    "script": "さっき小田さんに会ったんだけど、足のけが、大したことないって。\n1、そりゃ、よかった。\n2、そりゃ、心配だね。\n3、そりゃ、無理もないね。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "「大したことない」= vết thương nhẹ → đáp lại bằng sự yên tâm.",
+    "options_analysis": [
+     "Thể hiện yên tâm khi biết vết thương nhẹ.",
+     "Là phản ứng khi thương nặng, không khớp.",
+     "「無理もない」dùng khi thông cảm với hành động của ai đó, không hợp ở đây."
+    ],
+    "points": [
+     "大《たい》したことない: không nghiêm trọng."
+    ]
+   },
+   "kaisetsu_cell_text": "「大したことない」＝軽いけが→安心する1。2 ✗ 心配は重いけがのときの反応。3 ✗「無理もない」は相手の言動に納得する表現で、けがの程度の話に合わない。",
+   "measured": {
+    "span": 19.8,
+    "chars": 66,
+    "lines": 4,
+    "rate": 0.2,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
+  },
+  {
+   "id": "kanzenmoshi:cd1-37",
+   "source": "kanzenmoshi",
+   "source_page": "第1回 解答・解説 p.33-34 問題4 11番 (CD1 トラック37)",
+   "kind": "item",
+   "section": "問題4",
+   "slot": 0,
+   "needs_number_call": true,
+   "figure_dependent": false,
+   "audio": {
+    "path": "refs/KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track37.mp3",
+    "start": 4.12,
+    "end": 29.26,
+    "answer_pause": 7.2
+   },
+   "script_lines": [
+    "ないなあ、この辺にしまったはずなんだけど…。",
+    "1、また？ ちゃんと覚えててよ。",
+    "2、そう？ ちゃんと閉まるはずだよ。",
+    "3、そんなはずないよ。もっとちゃんと探して。"
+   ],
+   "answer": 1,
+   "explanation_payload": {
+    "why_correct": "しまった場所《ばしょ》を思《おも》い出《だ》せない相手《あいて》に、またかとあきれて返《かえ》している。",
+    "options_analysis": [
+     "置《お》き場所《ばしょ》を忘《わす》れたことを軽《かる》く責《せ》める返事《へんじ》。",
+     "「しまう」を「閉《し》まる」と取《と》り違《ちが》えた同音《どうおん》の引《ひ》っかけ。",
+     "相手《あいて》の記憶《きおく》を強《つよ》く否定《ひてい》しており、場面《ばめん》に合《あ》わない。"
+    ],
+    "points": [
+     "しまう：引《ひ》き出《だ》しなどに片《かた》づけて入《い》れる。"
+    ],
+    "stem": "ないなあ、この辺にしまったはずなんだけど…。",
+    "options": [
+     "また？ ちゃんと覚えててよ。",
+     "そう？ ちゃんと閉まるはずだよ。",
+     "そんなはずないよ。もっとちゃんと探して。"
+    ],
+    "script": "ないなあ、この辺にしまったはずなんだけど…。\n1、また？ ちゃんと覚えててよ。\n2、そう？ ちゃんと閉まるはずだよ。\n3、そんなはずないよ。もっとちゃんと探して。"
+   },
+   "explanation_vi_payload": {
+    "why_correct": "Người kia không nhớ đã cất ở đâu → đáp lại kiểu «lại nữa à, nhớ cho kỹ vào».",
+    "options_analysis": [
+     "Trách nhẹ vì hay quên chỗ cất đồ.",
+     "Nhầm 「しまう」(cất) với 「閉まる」(đóng), bẫy đồng âm.",
+     "Phủ nhận mạnh trí nhớ của đối phương, không hợp tình huống."
+    ],
+    "points": [
+     "しまう: cất vào ngăn kéo, hộp…"
+    ]
+   },
+   "kaisetsu_cell_text": "「しまった」＝片づけた場所が分からない→また忘れたのかとあきれる1。2 ✗「閉まる」と取り違えた同音の引っかけ。3 ✗「そんなはずない」は相手の記憶を否定しており、探せと続くのが不自然。",
+   "measured": {
+    "span": 25.14,
+    "chars": 78,
+    "lines": 4,
+    "rate": 0.2377,
+    "dropped_head_runs": 1,
+    "dropped_tail_runs": 0
+   }
   }
  ]
 }

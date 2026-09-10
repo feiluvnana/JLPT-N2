@@ -1,14 +1,17 @@
 # Mixed-pool 聴解 — the slot-free half of the clip bank
 
-Status: **built and shipping for 問題1, 問題2, 問題3 and 問題4** (2026-09-09).
+Status: **built and shipping for 問題1, 問題2, 問題3 and 問題4** (2026-09-10).
 問題5 is the only 大問 still official-only, for the source reasons in §6.
 
-Three sources, not two. Shin Kanzen and Soumatome are the textbook half (§2, §3);
-**『新しい「日本語能力試験」問題例集』(2009) is a third**, added 2026-09-09 — free
-official JEES audio from jlpt.jp, one item per 大問, banked the same way (§7).
-**62 items are banked and 16 are `excluded`** with the measurement that refused
-each: 問題1 ×15, 問題2 ×10, 問題3 ×14, 問題4 ×23, by source soumatome 37,
-shinkanzen 21, mondaireishuu 4.
+Four sources. Shin Kanzen and Soumatome are the textbook half (§2, §3);
+『新しい「日本語能力試験」問題例集』(2009) is a third, added 2026-09-09 — free
+official JEES audio from jlpt.jp, one item per 大問, banked the same way (§7);
+**『完全模試 N2』(Jリサーチ) is a fourth**, added 2026-09-10 — three mock papers
+pressed to exam timing, and the first source that clears all five acceptance
+checks on its own (§8).
+**73 items are banked and 16 are `excluded`** with the measurement that refused
+each: 問題1 ×15, 問題2 ×10, 問題3 ×14, 問題4 ×34, by source soumatome 37,
+shinkanzen 21, kanzenmoshi 11, mondaireishuu 4.
 
 Both books have now been read end to end — every page of both 別冊 and every
 one of Soumatome's 116 CD tracks and Shin Kanzen's 163 measured.
@@ -285,7 +288,7 @@ monologue for gist, so it would ship an off-type item into 問題3.
 
 | section | options are | what it needed | banked |
 |---|---|---|---|
-| 問題4 即時応答 | spoken | script + key only | **23 items** (Soumatome 10, Shin Kanzen 12, 問題例集 1) |
+| 問題4 即時応答 | spoken | script + key only | **34 items** (Soumatome 10, Shin Kanzen 12, 完全模試 11, 問題例集 1) |
 | 問題3 概要理解 | spoken by BOTH books (and printed in Soumatome's answer booklet too) | script + key + option text | **14 items** (Shin Kanzen 4, Soumatome 9, 問題例集 1) |
 | 問題1 課題理解 | printed | script PDF **+ the main 問題冊子** for the option lists | **15 items** (Soumatome 9, Shin Kanzen 5, 問題例集 1) |
 | 問題2 ポイント理解 | printed | same, **plus a measured 20 s option-reading pause inside the clip** | **10 items** (Soumatome 9, 問題例集 1 — see §3) |
@@ -469,8 +472,11 @@ needs someone to LISTEN to the track and say where the four items start; a
 wrong boundary ships a clip that begins mid-sentence into every paper that
 draws it and no gate hears anything. The splitter was deleted rather than left
 in the tree unused; the measurement is in `textbook_items.json`'s `excluded`.
-Recovering these four would let 問題4 go back from 3 slots to 4 (26 items →
-3.54 uses).
+
+**The fourth 問題4 slot is no longer waiting on this track** — `refs/KanzenMoshi/`
+supplied 11 items on 2026-09-10 and the slot went back to 4 at 2.82 projected
+uses (§8). Splitting CD1/25 is still worth doing: at 38 items a **fifth** slot
+projects 3.16, inside the ceiling.
 
 ### 6.4 The remaining source of novelty is outside all three
 
@@ -607,3 +613,90 @@ pitch only). This is not about synthesis, which is retired:
 `check_mondai5_speakers` all parse turns by `label in SPEAKER_MAP`, so every turn
 of a two-female item would have been invisible to the register gates rather than
 wrong in the audio.
+
+
+---
+
+## 8. 『完全模試 N2』(Jリサーチ, 2013) — the first source that clears all five checks
+
+Added 2026-09-10. `refs/KanzenMoshi/` — ISBN 978-4-86392-129-0, 3 audio CDs
+(43 tracks each, one CD per mock paper), `…-Mock Tests.pdf` (128 pp, the 問題冊子)
+and `…-Taisaku.pdf` (114 pp, 解答・解説). Both PDFs are scans with no text layer
+and both are over the 100 MB read cap, so slice with pypdf before reading.
+Purchased, like Shin Kanzen and Soumatome.
+
+### The five-point check (`SKILL.md` §"Adding a NEW SOURCE"), measured
+
+| # | Check | Result |
+|---|---|---|
+| 1 | audio | 3 CDs, paper-specific (no two tracks byte-identical across discs) |
+| 2 | full script | ✅ printed per item in `Taisaku.pdf`, **with the CD track number as a badge** — transcript and track map on the same line, which no other source gives |
+| 3 | key | ✅ 正答 per item, plus 他の選択肢 notes and a 言葉と表現 gloss usable for both explanation panes |
+| 4 | 問題1/2 options | ✅ **text lists, not picture legends** (問題冊子 pp.34, 36) |
+| 5 | exam timing | ✅ **all 18 問題2 items lay 19.3–20.1 s** of option-reading pause (official 20.22 [20.19–20.81], Soumatome 20.1–20.3, Shin Kanzen max 10.1) |
+
+Point 5's 19.3 s floor sits **0.9 s under official's band** and the composer never
+re-times it. Admitted as a knowing deviation: it is 4% short where Shin Kanzen's
+is 50% short, and the number is recorded here so the next reader judges it rather
+than rediscovers it.
+
+### Track map — identical on all three CDs
+
+| tracks | what |
+|---|---|
+| 01 / 02 / 09 / 17 / 25 / 38 / 41 | opening and the 問題1–5 instructions (41 is 問題5's 3番 lead-in) |
+| 03 / 10 / 19 / 26 | the 問題1/2/3/4 例 |
+| **04–08** | 問題1 ×5 |
+| **11–16** | 問題2 ×6 (each carrying its own 19.3–20.1 s option pause) |
+| **20–24** | 問題3 ×5 |
+| **27–37** | 問題4 ×11 |
+| **39 / 40 / 42** | 問題5: two single-question items with **SPOKEN** options, then the 質問1/質問2 item whose options the 問題冊子 prints |
+| 43 | closing |
+
+Item counts confirmed against the book's own 配点表 (解答・解説 p.87): 5/6/5/11/4,
+55 点 — so this paper scores **31** listening answers where a current official
+sitting scores 30, its 問題5 running three item blocks instead of two.
+
+**One track per paper is still unexplained**: Track18 (54.4 s), between 問題3's
+instruction and its 例. It touches no item — the 解説 badges make 例 = 19 and the
+items 20–24 — so it is a note, not a blocker. Resolve it by ear when 問題3 is
+transcribed.
+
+### Every item track speaks its own 「N番。」
+
+~1.0 s of speech then a 2.7–2.9 s pause, the shape §1 measured on official items.
+`max_header_runs: 1` drops it, so these clips are banked **body-only and
+slot-free** like every other hand-declared source, and the composer prepends a
+harvested official call.
+
+### `official_pacing: True`, and the measurement that decided it
+
+Declared against `CHAR_RATE` (0.060–0.200) first, as §5 prescribes, and **nine of
+the eleven correct declarations were refused** at 0.200–0.238 s/char. The spans
+were right (17.9–25.1 s inside 問題4's 11–40 s band, against official's 20.3–31.9),
+so the rate band was wrong for this source, exactly as it was for
+`mondaireishuu:問4-1`: 第1回's eleven items measure **0.190–0.238 s/char** against
+official 問題4's 0.181–0.323 (median 0.231) and Soumatome / Shin Kanzen 問題4's
+0.111–0.196. The repair is the flag, not a wider band — this CD is pressed to exam
+timing, and four independent measurements say so (the 20 s pause, the spoken
+「N番。」, ~3 s spoken-choice gaps, 7.2–7.4 s answer pauses against official's 8).
+
+### What is banked, and what remains
+
+**第1回 問題4 ×11 (CD1 tracks 27–37)**, keys off 解答・解説 pp.33–34. Pool 23 → 34,
+which bought back the fourth 問題4 slot (`TEXTBOOK_SLOTS` 問題4: 3 → 4, projected
+2.82 uses against the 4.0 ceiling).
+
+Untranscribed, in the order they pay off:
+
+| what | items | buys |
+|---|---|---|
+| 問題2 ×18 | the bottleneck §6.1 called unfixable — 10 → 28 | slots 1 → 4 |
+| 問題3 ×15 | 14 → 29 | slots 2 → 4 |
+| 問題1 ×15 | 15 → 30 | slots 2 → 4 |
+| 問題4 ×22 (第2回/第3回) | 34 → 56 | a 5th–9th slot |
+| 問題5 ×6 spoken-option items | 0 → 6, but only **3** measure inside the 105–250 s band (bodies ≈85, 84, 100, 125, 133, 158 s) | a first 問題5 slot needs 6 in band, so still short — the same short-統合理解 shape §6.2 measured on `mondaireishuu:問5-1` |
+| 問題5 ×3 質問1/質問2 items | options are PRINTED | blocked exactly as §6.2 describes |
+
+Nothing here is blocked on a source any more; it is blocked on transcription time,
+one 大問 at a time.

@@ -65,7 +65,7 @@ not route around it silently.
   2. `jlpt-exam-structure`: Official JLPT exam format facts — section layouts, question counts, timing, booklet printing conventions, answer-key table format.
   3. `exam-blueprint`: WHAT each exam tests — random non-repeating pool sampling (`sample_items.py`), answer-position balance. Runs before any authoring.
   4. `question-authoring`: HOW to write N2-calibrated items — distractors, item integrity, per-section construction rules (`references/moji-goi.md`, `bunpou.md`, `dokkai.md`, `choukai-items.md`), and calibration against `refs/` (`references/official_calibration.md`).
-  5. `choukai-audio`: The listening audio end to end — **composed from real recordings** since 2026-09-08 (`tools/build_choukai_bank.py` builds the clip bank from the ten imported sittings plus `tools/build_textbook_bank.py`'s Shin Kanzen / Soumatome / 問題例集 items, `tools/compose_choukai.py` draws and assembles a paper's whole 聴解 half), plus the pacing table those pauses come from and the method for measuring official audio. Exactly one paper is official-only; every other paper draws from the MIXED pool. Edge-TTS is retired.
+  5. `choukai-audio`: The listening audio end to end — **composed from real recordings** since 2026-09-08 (`tools/build_choukai_bank.py` builds the clip bank from the ten imported sittings plus `tools/build_textbook_bank.py`'s hand-declared textbook and mock-exam items (Shin Kanzen / Soumatome / 問題例集 / 完全模試), `tools/compose_choukai.py` draws and assembles a paper's whole 聴解 half), plus the pacing table those pauses come from and the method for measuring official audio. Exactly one paper is official-only; every other paper draws from the MIXED pool. Edge-TTS is retired.
   6. `exam-app`: Rendering and running the exam — booklet HTML (`build_booklet.py`, no PDF), the merged answer sheet `解答.html` with in-page grading (`build_interactive.py`), the one server (`serve_sheet.py`), the static GitHub Pages build (`build_pages.py`), and CLI grading (`grade_answers.py`).
   7. `exam-qa-review`: The adversarial content QA pass every generated test must survive AFTER `make check` is green and BEFORE it is served or committed — run it with fresh eyes (a context that did not author the test). It also root-causes every finding back to the skill, script, or gate check that let it through, so the next test does not reproduce it.
   8. `external-test-import`: Import an external exam (PDF booklet ± script PDF ± MP3) into `tests/imported-<slug>/` project format — **use instead of generation** when the source already exists outside the pool pipeline.
@@ -240,6 +240,20 @@ All calibration inputs must be looked up in `refs/`:
     other four books; 45 MB is under the 100 MB read cap, so a page can be opened
     directly to check a reading the OCR got wrong. **Same trust rules as every
     textbook extract: secondary evidence, never a count or a length.**
+
+- **Mock-exam book (`refs/KanzenMoshi/`) — 『ゼッタイ合格！日本語能力試験 完全模試 N2』**:
+  - Jリサーチ出版 2013, ISBN 978-4-86392-129-0. Three mock papers: 3 audio CDs
+    (43 tracks each, one per paper), `JLPT_N2_Kanzen_Moshi-Mock Tests.pdf`
+    (128 pp, 問題冊子) and `JLPT_N2_Kanzen_Moshi-Taisaku.pdf` (114 pp, 解答・解説
+    with the full listening script, keys and CD track badges).
+  - Added 2026-09-10 as the fourth 聴解 clip source. It is the first source that
+    clears all five acceptance checks unaided — its recordings are pressed to
+    **exam timing** (19.3–20.1 s 問題2 option-reading pause, spoken 「N番。」), so
+    `build_textbook_bank.rate_band_for()` judges it against `CHAR_RATE_OFFICIAL`.
+    Track map, measurements and what is still untranscribed:
+    `choukai-audio/references/textbook_bank_plan.md` §8.
+  - Both PDFs are scans with no text layer, like every other book here, and both
+    are over the **100 MB read cap** — slice with pypdf before reading.
 
 - **Free official web material (`refs/External/`)** — fetched from jlpt.jp
   2026-09-09, no account and no purchase. Three folders: the 公式問題集 第一集
