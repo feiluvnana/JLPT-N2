@@ -161,6 +161,21 @@ BOOKS = {
         # `mondaireishuu:問4-1` at the official median.
         "official_pacing": True,
     },
+    "mimikara": {
+        "label": "耳から覚える日本語能力試験 聴解トレーニング N2",
+        "cd_dir": {
+            1: "refs/MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1",
+            2: "refs/MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2",
+        },
+        # The rip names every track "NN NN.mp3" (track number twice).
+        "track_file": "{track:02d} {track:02d}.mp3",
+        # Two spoken header runs, the same shape Shin Kanzen presses: a fixed
+        # word then the item number (~1.3 s, pause, ~0.5 s, pause). Only the
+        # 実践問題 sets are one-item-per-track; the 練習 tracks bundle several
+        # items behind 10.3 s pauses and are not declarable (see §9).
+        "max_header_runs": 2,
+        "zip": "MimikaraOboeru",
+    },
     "mondaireishuu": {
         "label": "新しい「日本語能力試験」問題例集 N2",
         # One MP3 carries the whole sample sitting — opening, five 問題

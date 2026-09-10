@@ -3334,6 +3334,172 @@
      "しまう: cất vào ngăn kéo, hộp…"
     ]
    }
+  },
+  {
+   "id": "mimikara:cd2-14",
+   "book": "mimikara",
+   "cd": 2,
+   "track": 14,
+   "section": "問題3",
+   "answer": 3,
+   "source_page": "p.102 実践問題 第1回 問題3 3番 (CD2-14)、答え 別冊 p.15",
+   "script_lines": [
+    "テレビで、アナウンサーが電子書籍についての調査結果について話しています。",
+    "男:電子書籍、つまり紙の本ではなく、コンピューターや携帯電話、専用の端末などを使って読む本ですが、これについてのアンケート結果が今日発表されました。電子書籍で本を読んだことがあると答えた人からは「いつでもどこでも手軽に購入できるから」「場所をとらないから」「持ち運びに便利だから」「無料で読めるものも多いから」などの意見が出されました。従来の紙の本にこだわりを持っている人も少なくありませんが、電子書籍の手軽さが多くの人に評価されているようです。",
+    "電子書籍の何についての調査ですか。",
+    "1、電子書籍の利用者数。",
+    "2、電子書籍で読める本。",
+    "3、電子書籍を利用する理由。",
+    "4、電子書籍の利用方法。"
+   ],
+   "kaisetsu_cell": "挙げられた意見はどれも「〜から」と理由を述べたもの→利用する理由の調査。1 ✗「アンケート結果が今日発表されました」→人数には触れていない。2 ✗「無料で読めるものも多いから」→理由の一つで、どんな本かの話ではない。4 ✗「専用の端末などを使って読む」→冒頭の語の説明にすぎない。",
+   "explanation": {
+    "why_correct": "回答として並ぶのは「手軽に購入できるから」「場所をとらないから」など、すべて理由《りゆう》。調査《ちょうさ》の対象《たいしょう》は利用《りよう》する理由《りゆう》。",
+    "options_analysis": [
+     "人数《にんずう》を示《しめ》す数字《すうじ》は一つも出《で》てこない。",
+     "無料《むりょう》で読《よ》める本《ほん》は理由《りゆう》の一例《いちれい》で、本《ほん》の種類《しゅるい》の調査《ちょうさ》ではない。",
+     "並《なら》べられた意見《いけん》がすべて「〜から」の形《かたち》で、理由《りゆう》を集《あつ》めた調査《ちょうさ》だとわかる。",
+     "端末《たんまつ》の話《はなし》は電子書籍《でんししょせき》という語《ご》の説明《せつめい》部分《ぶぶん》。"
+    ],
+    "points": [
+     "従来《じゅうらい》：今《いま》まで続《つづ》いてきたやり方《かた》。",
+     "手軽《てがる》さ：簡単《かんたん》にできること。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Các ý kiến được nêu đều có dạng 「〜から」= lý do, nên khảo sát là về lý do sử dụng sách điện tử.",
+    "options_analysis": [
+     "Không có con số nào về số người dùng.",
+     "「Đọc miễn phí」chỉ là một lý do, không phải khảo sát về loại sách.",
+     "Toàn bộ ý kiến đều là lý do, nên đây là khảo sát lý do sử dụng.",
+     "Phần nói về thiết bị chỉ là giải thích từ 電子書籍."
+    ],
+    "points": [
+     "従来《じゅうらい》: từ trước tới nay.",
+     "手軽《てがる》さ: sự tiện lợi, dễ dàng."
+    ]
+   }
+  },
+  {
+   "id": "mimikara:cd2-15",
+   "book": "mimikara",
+   "cd": 2,
+   "track": 15,
+   "section": "問題3",
+   "answer": 3,
+   "source_page": "p.102-103 実践問題 第1回 問題3 4番 (CD2-15)、答え 別冊 p.15",
+   "script_lines": [
+    "講演会で、男の人が子どものほめ方について話しています。",
+    "男:子どものやる気を引き出すには、しかるのではなくほめることが大切だとよく言われます。しかし、ただほめればいいというものではありません。必ず子どもの行動に合わせて具体的に、タイミングよくほめることです。子どもが何もしていないときにほめたり、前にしたことをいつまでもほめ続けるのは、おだてていることになり、かえって逆効果になりかねません。また、漠然とほめるのではなく、子どものしたことを具体的に取り上げてほめるようにしましょう。大きなことをしたときだけではなく、小さなことでも子どもが自分から行動を起こしたときにさりげなくほめてあげると、子どもに自信が生まれ、自主的に行動するようになります。",
+    "男の人は、子どもをどんなふうにほめるのがいいと言っていますか。",
+    "1、子どもが前にしたことを忘れずにずっとほめるのがいい。",
+    "2、子どもがした大きなことをほめるのがいい。",
+    "3、子どもがしたことを具体的に取り上げてほめるのがいい。",
+    "4、子どもが何もしていないときもほめるのがいい。"
+   ],
+   "kaisetsu_cell": "「子どものしたことを具体的に取り上げてほめるようにしましょう」が主張。1 ✗「前にしたことをいつまでもほめ続けるのは…逆効果」→否定されている。2 ✗「大きなことをしたときだけではなく」→大きなことに限らないと述べる。4 ✗「何もしていないときにほめたり…おだてている」→否定されている。",
+   "explanation": {
+    "why_correct": "「漠然とほめるのではなく、子どものしたことを具体的に取り上げて」と、ほめ方《かた》を直接《ちょくせつ》述《の》べている。",
+    "options_analysis": [
+     "「いつまでもほめ続《つづ》けるのは…かえって逆効果《ぎゃくこうか》」と否定《ひてい》している。",
+     "「大《おお》きなことをしたときだけではなく」と、小《ちい》さなことも挙《あ》げている。",
+     "漠然《ばくぜん》とではなく具体的《ぐたいてき》に、が話《はなし》の中心《ちゅうしん》。",
+     "「何《なに》もしていないときにほめたり」も逆効果《ぎゃくこうか》の例《れい》として否定《ひてい》されている。"
+    ],
+    "points": [
+     "おだてる：必要《ひつよう》以上《いじょう》にほめて、いい気分《きぶん》にさせる。",
+     "逆効果《ぎゃくこうか》：期待《きたい》と反対《はんたい》の結果《けっか》。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "Người nói nêu thẳng cách khen: không khen chung chung mà nêu cụ thể việc trẻ đã làm.",
+    "options_analysis": [
+     "Khen mãi chuyện đã qua bị nói là phản tác dụng.",
+     "Bài nói nhấn mạnh «không chỉ việc lớn», nên đáp án này ngược ý.",
+     "Khen cụ thể việc trẻ làm chính là trọng tâm bài nói.",
+     "Khen khi trẻ không làm gì cũng bị phủ định."
+    ],
+    "points": [
+     "おだてる: khen quá mức để lấy lòng.",
+     "逆効果《ぎゃくこうか》: phản tác dụng."
+    ]
+   }
+  },
+  {
+   "id": "mimikara:cd2-17",
+   "book": "mimikara",
+   "cd": 2,
+   "track": 17,
+   "section": "問題4",
+   "answer": 2,
+   "source_page": "p.103 実践問題 第1回 問題4 1番 (CD2-17)、答え 別冊 p.15",
+   "script_lines": [
+    "すみません。こちらで待たせていただいてもかまいませんか。",
+    "1、はい、こちらをお持ちください。",
+    "2、ええ、どうぞ。",
+    "3、わかりました。ここで待ちます。"
+   ],
+   "kaisetsu_cell": "「待たせていただいてもかまいませんか」＝待つ許可を求める→許可する2。1 ✗「お持ちください」→「待つ」を「持つ」と取り違えた音の引っかけ。3 ✗ 許可を求められた側が承知する言い方になっており、立場が逆。",
+   "explanation": {
+    "why_correct": "「〜てもかまいませんか」は許可《きょか》を求《もと》める言《い》い方《かた》。許可《きょか》する「ええ、どうぞ」が合《あ》う。",
+    "options_analysis": [
+     "「待《ま》つ」を「持《も》つ」と取《と》り違《ちが》えた引《ひ》っかけ。",
+     "許可《きょか》を与《あた》える自然《しぜん》な返事《へんじ》。",
+     "許可《きょか》を求《もと》めた側《がわ》の言《い》い方《かた》で、立場《たちば》が逆《ぎゃく》。"
+    ],
+    "points": [
+     "〜させていただく：自分《じぶん》の行為《こうい》をへりくだって許可《きょか》を願《ねが》う。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "「〜てもかまいませんか」là xin phép → đáp lại bằng cách cho phép: 「ええ、どうぞ」.",
+    "options_analysis": [
+     "Nhầm 「待つ」(đợi) với 「持つ」(cầm), bẫy đồng âm.",
+     "Câu cho phép tự nhiên.",
+     "Là lời của bên đi xin phép, ngược vai."
+    ],
+    "points": [
+     "〜させていただく: khiêm nhường khi xin phép làm gì."
+    ]
+   }
+  },
+  {
+   "id": "mimikara:cd2-19",
+   "book": "mimikara",
+   "cd": 2,
+   "track": 19,
+   "section": "問題4",
+   "answer": 3,
+   "source_page": "p.103 実践問題 第1回 問題4 3番 (CD2-19)、答え 別冊 p.15",
+   "script_lines": [
+    "別にそれがいけないって言っているわけじゃないんだよ。",
+    "1、じゃあ、行けるの？",
+    "2、別々にしちゃいけないの？",
+    "3、じゃあ、どういうことなの？"
+   ],
+   "kaisetsu_cell": "「いけないと言っているわけじゃない」＝否定を打ち消しただけで真意が不明→真意を尋ねる3。1 ✗「いけない」を「行けない」と取り違えた音の引っかけ。2 ✗「別に」を「別々に」と取り違えている。",
+   "explanation": {
+    "why_correct": "「〜わけじゃない」で打《う》ち消《け》しただけなので、では何《なに》が言《い》いたいのかを聞《き》き返《かえ》すのが自然《しぜん》。",
+    "options_analysis": [
+     "「いけない」を「行《い》けない」と取《と》り違《ちが》えた引《ひ》っかけ。",
+     "副詞《ふくし》の「別《べつ》に」を「別々《べつべつ》に」と取《と》り違《ちが》えている。",
+     "否定《ひてい》を打《う》ち消《け》された側《がわ》が、真意《しんい》を尋《たず》ねている。"
+    ],
+    "points": [
+     "〜わけではない：全部《ぜんぶ》をそう決《き》めつけてはいない、と部分《ぶぶん》否定《ひてい》する。"
+    ]
+   },
+   "explanation_vi": {
+    "why_correct": "「〜わけじゃない」chỉ phủ định một phần, chưa nói ý thật → hỏi lại «vậy ý là sao».",
+    "options_analysis": [
+     "Nhầm 「いけない」với 「行けない」(không đi được).",
+     "Nhầm phó từ 「別に」với 「別々に」(riêng rẽ).",
+     "Hỏi lại ý thật sau khi đối phương phủ định một phần."
+    ],
+    "points": [
+     "〜わけではない: phủ định một phần, không phải hoàn toàn."
+    ]
+   }
   }
  ],
  "excluded": [
@@ -3480,6 +3646,15 @@
    "section": "問題1",
    "source_page": "問題例集 N2 スクリプト pp.156-157 問題1 2番 / 問題冊子 p.52 (答え 2)",
    "reason": "No audio. jlpt.jp publishes ONE item per 大問 in N2Sample.mp3 (554 s, verified: 5 answer pauses, 5 number calls, every second of the file accounted for) while the script and booklet PDFs print two. The same is true of 問2-2, 問3-2 and 問4-2, so the four second items of this source are text-only and unbankable. This one would be refused twice over anyway: its options are the picture-legend form (1 アイウ / 2 イウエ / 3 アイ / 4 ウエ) over an illustration, the class textbook_bank_plan.md 4 already excludes because render_booklet prints a flat 1-4 list."
+  },
+  {
+   "id": "mimikara:cd2-18",
+   "book": "mimikara",
+   "cd": 2,
+   "track": 18,
+   "section": "問題4",
+   "source_page": "p.103 実践問題 第1回 問題4 2番 (CD2-18)、答え 別冊 p.15",
+   "reason": "Declaration verified against the page (key 1 agrees with the book's own answer table, 別冊 p.15) and REFUSED anyway: 25.0 s of body against 75 transcribed characters is 0.246 s/char, over CHAR_RATE's 0.200 ceiling, where its four siblings on the same CD measure 0.145-0.199. The line is an enumeration - 「朝から会議の書類作り、荷物の発送、机の片づけと」 - and the reader pauses between the listed items, which `expected_gaps` does not model for 即時応答. Kept out rather than widening a band that separates types correctly for every other item in this book."
   }
  ]
 }

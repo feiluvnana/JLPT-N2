@@ -32,7 +32,9 @@ no distractors to design.
 - **Every other paper mixes** official clips with hand-declared ones — Shin
   Kanzen, Soumatome, the free 『問題例集』(2009) sample from jlpt.jp
   (`references/textbook_bank_plan.md` §7), and since 2026-09-10 『完全模試 N2』
-  (Jリサーチ, three mock papers pressed to exam timing — §8).
+  (Jリサーチ, three mock papers pressed to exam timing — §8) and
+  『耳から覚える 聴解トレーニング N2』 (§9, the second source that lays a real 20 s
+  option-reading pause).
   `TEXTBOOK_SLOTS` says how many slots per 大問 (currently 問題1 ×2, 問題2 ×1,
   問題3 ×2, 問題4 ×4: 9 of a paper's 29). **問題5 is the only 大問 still official-only in every paper**, and
   for SOURCE reasons, not policy ones (`textbook_bank_plan.md` §6).
@@ -170,8 +172,8 @@ measurement that justifies it** — never by widening a band.
   *audio* is present — it rides inside the section preamble clip, uncut — so
   the paper sounds complete while `聴解スクリプト.txt` has no 例 block. Every
   `tests/imported-*` sitting carries the same divergence.
-- **Finite novelty, now less finite.** Ten official candidates per slot plus 73
-  slot-free items (問題1 ×15, 問題2 ×10, 問題3 ×14, 問題4 ×34).
+- **Finite novelty, now less finite.** Ten official candidates per slot plus 77
+  slot-free items (問題1 ×15, 問題2 ×10, 問題3 ×16, 問題4 ×36).
   `logs/choukai_draws.json` records every paper's draw and the composer spends
   the least-used clips first; across the suite of 24 papers `make choukai-wear`
   projects 2.4–3.4 uses per slot-free clip and 1.5–2.4 per official one.

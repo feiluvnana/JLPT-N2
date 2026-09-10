@@ -255,6 +255,20 @@ All calibration inputs must be looked up in `refs/`:
   - Both PDFs are scans with no text layer, like every other book here, and both
     are over the **100 MB read cap** — slice with pypdf before reading.
 
+- **Three more 聴解 books (added 2026-09-10)** — audited in
+  `choukai-audio/references/textbook_bank_plan.md` §9, which owns the numbers:
+  - `refs/MimikaraOboeru/` 『耳から覚える 聴解トレーニング N2』 (2 CDs, 93 tracks) —
+    **accepted**; the second source in the repo that lays a real 20 s
+    option-reading pause (20.3–20.5 s ×10), so it is the way out of 問題2's
+    one-slot bottleneck.
+  - `refs/DrillAndDrill/` 『ドリル&ドリル N2 聴解・読解』 (3 CDs, 156 tracks) —
+    accepted for 問題1/3/4; **問題2 refused** at 15.1–15.3 s.
+  - `refs/ShikenNiDeru/` 『試験に出る N1/N2 聴解』 (3 CDs, 187 tracks) — accepted
+    for 問題1/3/4; no track in the book lays an option pause. It covers **both
+    N1 and N2** in separate sections and only the N2 half may be drawn.
+  - Each ships one whole-book PDF, scanned with a redistribution-site watermark
+    and no text layer; all three are over the 100 MB read cap — slice with pypdf.
+
 - **Free official web material (`refs/External/`)** — fetched from jlpt.jp
   2026-09-09, no account and no purchase. Three folders: the 公式問題集 第一集
   (2012) and 第二集 (2018), which are **re-releases of sittings the archive

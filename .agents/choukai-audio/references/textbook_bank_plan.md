@@ -9,9 +9,12 @@ official JEES audio from jlpt.jp, one item per 大問, banked the same way (§7)
 **『完全模試 N2』(Jリサーチ) is a fourth**, added 2026-09-10 — three mock papers
 pressed to exam timing, and the first source that clears all five acceptance
 checks on its own (§8).
-**73 items are banked and 16 are `excluded`** with the measurement that refused
-each: 問題1 ×15, 問題2 ×10, 問題3 ×14, 問題4 ×34, by source soumatome 37,
-shinkanzen 21, kanzenmoshi 11, mondaireishuu 4.
+Three more books arrived 2026-09-10 and were run through the five-point check
+(§9): 耳から覚える is **the second source in the repo that lays a real 20 s
+option-reading pause**, ドリル&ドリル lays only 15.2 s, and 試験に出る lays none.
+**77 items are banked and 17 are `excluded`** with the measurement that refused
+each: 問題1 ×15, 問題2 ×10, 問題3 ×16, 問題4 ×36, by source soumatome 37,
+shinkanzen 21, kanzenmoshi 11, mondaireishuu 4, mimikara 4.
 
 Both books have now been read end to end — every page of both 別冊 and every
 one of Soumatome's 116 CD tracks and Shin Kanzen's 163 measured.
@@ -700,3 +703,65 @@ Untranscribed, in the order they pay off:
 
 Nothing here is blocked on a source any more; it is blocked on transcription time,
 one 大問 at a time.
+
+
+---
+
+## 9. Three more books (2026-09-10) — one accepted, two accepted with limits
+
+Run through `SKILL.md` §"Adding a NEW SOURCE" before any transcription. All
+three print scripts, keys and text options, and all three PDFs are scans with a
+watermark from a redistribution site rather than a publisher's own file — same
+handling as every other book here, but the provenance is recorded rather than
+described as a purchase.
+
+| | 耳から覚える 聴解トレーニング N2 (`mimikara`) | ドリル&ドリル N2 聴解・読解 | 試験に出る N1/N2 聴解 |
+|---|---|---|---|
+| folder | `refs/MimikaraOboeru/` | `refs/DrillAndDrill/` | `refs/ShikenNiDeru/` |
+| tracks | 93 (2 CDs) | 156 (3 CDs) | 187 (3 CDs) |
+| script / key / text options | ✅ ✅ ✅ | ✅ ✅ ✅ | ✅ ✅ ✅ |
+| **option-reading pause** | **20.3–20.5 s ×10** | **15.1–15.3 s ×30** | **none, 0 of 187** |
+| bundled tracks (many items behind one track) | 12 | 0 | 0 |
+| verdict | **accepted**, and it is the 問題2 source | accepted for 問題1/3/4; **問題2 REFUSED** | accepted for 問題1/3/4; **no 問題2**. N1 and N2 sections are separate — take only N2 |
+
+### The 20 s measurement is the whole story again
+
+`耳から覚える` lays **20.3–20.5 s** against official's 20.22 [20.19–20.81] — the
+first source since Soumatome to sit inside the band, and its ten tracks are
+exactly the two 実践問題 sets' ポイント理解 items (CD2 07–10, 35–38) plus the
+ポイント理解 chapter's まとめの問題 pair (CD1 16–17). That is **10 more 問題2
+items**, against a pool of 10 that has been stuck at one slot since 2026-09-09
+(§6.1). Their printed option lists are not in the script section, so locating
+them is the first job of the next session.
+
+`ドリル&ドリル`'s 15.2 s is the interesting rejection: it is not abridged the way
+Shin Kanzen's 10.1 s is, but it is still **25 % under** the pause the composer
+never re-times, and there is now a source that lays the full one. Refused for
+問題2, kept for the other three 大問.
+
+`試験に出る` lays no option pause at all in any of its 187 tracks. Its 応用練習
+items and its two 模擬試験 (one N1, one N2) are still usable for 問題1/3/4 —
+**and its N1 half must never be drawn**, since nothing downstream re-checks
+level.
+
+### What is banked from it so far
+
+Four items from 実践問題 第1回 — 問題3 ×2 (CD2-14, CD2-15) and 問題4 ×2 (CD2-17,
+CD2-19) — keys off 別冊 p.15, whose answer table also cross-checks the three
+問題4 scripts read off p.103 (2, 1, 3 — all three agree). 問題3 goes 14 → 16
+(wear 3.43 → 3.00), 問題4 34 → 36 (2.67). No slot count moves: 問題3's third slot
+still needs 18.
+
+`mimikara:cd2-18` is `excluded` with its numbers — a **verified** declaration
+refused at 0.246 s/char where its four siblings sit at 0.145–0.199, because the
+line enumerates ("会議の書類作り、荷物の発送、机の片づけと") and the reader pauses
+between the listed items, which `expected_gaps` does not model. The band stays
+as it is; it separates types correctly for every other item in this book.
+
+### Only the 実践問題 sets are declarable
+
+The 練習 tracks bundle several items behind 10.3 s pauses (12 tracks), which is
+the §6.3 problem: splitting one needs an ear, and a wrong boundary ships a clip
+that starts mid-sentence. The exam-format material is the two 実践問題 sets —
+per set 課題理解 4, ポイント理解 4, 概要理解 4, 即時応答 8, 統合理解 3 — plus each
+chapter's まとめの問題 pair.
