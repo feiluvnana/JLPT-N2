@@ -118,7 +118,10 @@ UI = {
 # inert — none of those elements exists on this page.
 PRACTICE_CSS = """
 :root{--primary:#1e3a8a}
-#bar .lang-switch{flex:0 0 auto}
+/* The switch is exam-model-answer's control, styling and all (EXPLANATION_CSS);
+   all this page says is where it sits and which UI face it inherits — its
+   .lang-btn rules use font-family:inherit, and the booklet body font is 明朝. */
+#bar .lang-switch{flex:0 0 auto;font-family:var(--ui)}
 .pr-note{font-family:var(--ui);font-size:10pt;line-height:1.8;color:#334155;
   background:#f1f5f9;border:1px solid #cbd5e1;border-left:4px solid #2563eb;
   border-radius:0 8px 8px 0;padding:.9em 1.1em;margin:0 0 1.6em}

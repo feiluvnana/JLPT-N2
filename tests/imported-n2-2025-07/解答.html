@@ -141,7 +141,14 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   gap:.55em;
   flex:0 0 auto;
 }
-#bar button{
+/* The bar's own buttons — hence `:not(.lang-btn)`, here and in the mobile block
+   below. 練習.html drops exam-model-answer's segmented language control
+   (.lang-switch/.lang-btn, styled in build_model_answer.EXPLANATION_CSS) into
+   this bar, and an id-level rule here outranks every class rule that control
+   brings with it: the pill came out as two bar buttons. A control imported with
+   its own styling opts out, rather than having that styling restated here —
+   restating it is the copy that would drift. */
+#bar button:not(.lang-btn){
   font-size:10pt;
   font-weight:700;
   padding:.3em .85em;
@@ -159,7 +166,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   justify-content:center;
   transition:all .15s ease;
 }
-#bar button:hover{
+#bar button:not(.lang-btn):hover{
   background:rgba(255,255,255,0.2);
   border-color:rgba(255,255,255,0.35);
 }
@@ -410,7 +417,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   #bar-controls{
     gap:.4em;
   }
-  #bar button{
+  #bar button:not(.lang-btn){
     font-size:9.5pt;
     padding:.3em .7em;
     min-height:34px;

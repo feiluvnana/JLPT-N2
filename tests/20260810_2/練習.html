@@ -145,7 +145,14 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   gap:.55em;
   flex:0 0 auto;
 }
-#bar button{
+/* The bar's own buttons — hence `:not(.lang-btn)`, here and in the mobile block
+   below. 練習.html drops exam-model-answer's segmented language control
+   (.lang-switch/.lang-btn, styled in build_model_answer.EXPLANATION_CSS) into
+   this bar, and an id-level rule here outranks every class rule that control
+   brings with it: the pill came out as two bar buttons. A control imported with
+   its own styling opts out, rather than having that styling restated here —
+   restating it is the copy that would drift. */
+#bar button:not(.lang-btn){
   font-size:10pt;
   font-weight:700;
   padding:.3em .85em;
@@ -163,7 +170,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   justify-content:center;
   transition:all .15s ease;
 }
-#bar button:hover{
+#bar button:not(.lang-btn):hover{
   background:rgba(255,255,255,0.2);
   border-color:rgba(255,255,255,0.35);
 }
@@ -414,7 +421,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   #bar-controls{
     gap:.4em;
   }
-  #bar button{
+  #bar button:not(.lang-btn){
     font-size:9.5pt;
     padding:.3em .7em;
     min-height:34px;
@@ -494,7 +501,14 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   gap:.55em;
   flex:0 0 auto;
 }
-#bar button{
+/* The bar's own buttons — hence `:not(.lang-btn)`, here and in the mobile block
+   below. 練習.html drops exam-model-answer's segmented language control
+   (.lang-switch/.lang-btn, styled in build_model_answer.EXPLANATION_CSS) into
+   this bar, and an id-level rule here outranks every class rule that control
+   brings with it: the pill came out as two bar buttons. A control imported with
+   its own styling opts out, rather than having that styling restated here —
+   restating it is the copy that would drift. */
+#bar button:not(.lang-btn){
   font-size:10pt;
   font-weight:700;
   padding:.3em .85em;
@@ -512,7 +526,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   justify-content:center;
   transition:all .15s ease;
 }
-#bar button:hover{
+#bar button:not(.lang-btn):hover{
   background:rgba(255,255,255,0.2);
   border-color:rgba(255,255,255,0.35);
 }
@@ -763,7 +777,7 @@ strong { font-family: "YuGothic", "Yu Gothic", "Hiragino Sans", "Noto Sans JP", 
   #bar-controls{
     gap:.4em;
   }
-  #bar button{
+  #bar button:not(.lang-btn){
     font-size:9.5pt;
     padding:.3em .7em;
     min-height:34px;
@@ -1067,7 +1081,10 @@ body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
 .lang-btn.active { background: #fff; color: var(--primary); }
 
 :root{--primary:#1e3a8a}
-#bar .lang-switch{flex:0 0 auto}
+/* The switch is exam-model-answer's control, styling and all (EXPLANATION_CSS);
+   all this page says is where it sits and which UI face it inherits — its
+   .lang-btn rules use font-family:inherit, and the booklet body font is 明朝. */
+#bar .lang-switch{flex:0 0 auto;font-family:var(--ui)}
 .pr-note{font-family:var(--ui);font-size:10pt;line-height:1.8;color:#334155;
   background:#f1f5f9;border:1px solid #cbd5e1;border-left:4px solid #2563eb;
   border-radius:0 8px 8px 0;padding:.9em 1.1em;margin:0 0 1.6em}
