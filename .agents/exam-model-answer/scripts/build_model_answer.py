@@ -557,6 +557,98 @@ body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
 """
 
 
+# --- 読解 passage: 原文 / 訳 toggle, per group (2026-09-08) --------------------
+# The VI pane ships BOTH the source passage and its translation, and a two-button
+# control picks which one shows. Same mechanism as the page-wide language switch,
+# one level down: the state is a data attribute on the group
+# (`.passage-vi[data-ptext]`), CSS hides the other pane, and no JS writes text —
+# so the control cannot get out of step with what is rendered. Per-group on
+# purpose: a reader checks the Japanese of ONE passage without losing the
+# translation on the other twelve. A group with no translation authored yet
+# renders no control at all.
+#
+# Lifted out of HTML_TEMPLATE (2026-09-10) because exam-app's 練習.html offers
+# the same toggle over the same `passage_translation`, and a second copy of these
+# rules would drift from the markup the way every duplicated rule here has
+# (AGENTS.md §'one owner per rule'). Single-braced: injected through
+# HTML_TEMPLATE's {passage_toggle_css} placeholder, imported verbatim by
+# build_practice.py. `--font-sans`/`--primary` are read from whichever page hosts
+# it; both define them.
+PASSAGE_TOGGLE_CSS = """
+.passage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+.passage-head .passage-title {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.ptext-switch {
+  display: inline-flex;
+  background: #eef2f7;
+  border: 1px solid #dbe3ec;
+  border-radius: 9999px;
+  padding: 0.15rem;
+  gap: 0.1rem;
+  flex-shrink: 0;
+}
+.ptext-btn {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.22rem 0.7rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.ptext-btn:hover { color: var(--primary); }
+.passage-vi[data-ptext="src"] .ptext-pane[data-ptext="tr"],
+.passage-vi[data-ptext="tr"] .ptext-pane[data-ptext="src"] { display: none !important; }
+.passage-vi[data-ptext="src"] .ptext-btn[data-ptext="src"],
+.passage-vi[data-ptext="tr"] .ptext-btn[data-ptext="tr"] {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 1px 2px rgba(15,23,42,0.12);
+}
+"""
+
+# The whole behaviour of that control: one attribute write, no text substitution.
+# Shared with 練習.html for the same reason the CSS is.
+PASSAGE_TOGGLE_JS = """
+function setPassageText(btn, mode) {
+  const box = btn.closest('.passage-vi');
+  if (box) box.dataset.ptext = mode;
+}
+"""
+
+
+def ptext_switch_html(lg: str) -> str:
+    """The 原文 / 訳 segmented control for one language pane.
+
+    Both pages that offer the toggle build their buttons here, so the class
+    names, the `data-ptext` values and the handler name cannot drift apart from
+    PASSAGE_TOGGLE_CSS / PASSAGE_TOGGLE_JS above.
+    """
+    def btn(mode: str, label: str) -> str:
+        return (f'<button type="button" class="ptext-btn" data-ptext="{mode}" '
+                f'onclick="setPassageText(this, \'{mode}\')">{label}</button>')
+    return ('<div class="ptext-switch">'
+            + btn("src", UI[lg]["passage_src_btn"])
+            + btn("tr", UI[lg]["passage_tr_btn"])
+            + '</div>')
+
+
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="{html_lang}">
 <head>
@@ -891,61 +983,7 @@ h1.title {{
   border-bottom: 1px solid #e2e8f0;
 }}
 
-/* --- 読解 passage: 原文 / 訳 toggle, per group (2026-09-08) ------------------
-   The VI pane ships BOTH the source passage and its translation, and a
-   two-button control on the box picks which one shows. Same mechanism as the
-   page-wide language switch, one level down: the state is a data attribute on
-   the group (`.passage-vi[data-ptext]`), CSS hides the other pane, and no JS
-   writes text — so the control cannot get out of step with what is rendered.
-   Per-box on purpose: a reader checks the Japanese of ONE passage without
-   losing the translation on the other twelve. A group with no translation
-   authored yet renders the old single-pane box and no control. */
-.passage-head {{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.65rem;
-  padding-bottom: 0.3rem;
-  border-bottom: 1px solid #e2e8f0;
-}}
-.passage-head .passage-title {{
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}}
-.ptext-switch {{
-  display: inline-flex;
-  background: #eef2f7;
-  border: 1px solid #dbe3ec;
-  border-radius: 9999px;
-  padding: 0.15rem;
-  gap: 0.1rem;
-  flex-shrink: 0;
-}}
-.ptext-btn {{
-  border: none;
-  background: transparent;
-  color: #64748b;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.22rem 0.7rem;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}}
-.ptext-btn:hover {{ color: var(--primary); }}
-.passage-vi[data-ptext="src"] .ptext-pane[data-ptext="tr"],
-.passage-vi[data-ptext="tr"] .ptext-pane[data-ptext="src"] {{ display: none !important; }}
-.passage-vi[data-ptext="src"] .ptext-btn[data-ptext="src"],
-.passage-vi[data-ptext="tr"] .ptext-btn[data-ptext="tr"] {{
-  background: #fff;
-  color: var(--primary);
-  box-shadow: 0 1px 2px rgba(15,23,42,0.12);
-}}
+{passage_toggle_css}
 .passage-box table {{
   width: 100%;
   border-collapse: collapse;
@@ -1115,10 +1153,7 @@ function setLang(lang, persist) {{
   if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
 }}
 
-function setPassageText(btn, mode) {{
-  const box = btn.closest('.passage-vi');
-  if (box) box.dataset.ptext = mode;
-}}
+{passage_toggle_js}
 
 (function initLang() {{
   setLang(savedLang(LANGS), false);
@@ -1424,18 +1459,14 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
                         # than an empty box, so the pane never goes blank — and
                         # no toggle, because there is nothing to toggle to.
                         return src_html
-                    def _btn(mode, label):
-                        return (f'<button type="button" class="ptext-btn" data-ptext="{mode}" '
-                                f'onclick="setPassageText(this, \'{mode}\')">{label}</button>')
                     return (
                         '<div class="passage-vi" data-ptext="tr">'
                         '<div class="passage-head"><div class="passage-title">'
                         f'<span class="ptext-pane" data-ptext="src">{UI[lg]["passage_title"]}</span>'
                         f'<span class="ptext-pane" data-ptext="tr">{UI[lg]["passage_tr_title"]}</span>'
-                        '</div><div class="ptext-switch">'
-                        + _btn("src", UI[lg]["passage_src_btn"])
-                        + _btn("tr", UI[lg]["passage_tr_btn"])
-                        + '</div></div>'
+                        '</div>'
+                        + ptext_switch_html(lg)
+                        + '</div>'
                         f'<div class="ptext-pane" data-ptext="src">{format_passage_text(_txt)}</div>'
                         f'<div class="ptext-pane" data-ptext="tr">{format_passage_text(tr)}</div>'
                         '</div>')
@@ -1569,7 +1600,9 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
 
     rendered_html = HTML_TEMPLATE.format(
         explanation_css=EXPLANATION_CSS,
+        passage_toggle_css=PASSAGE_TOGGLE_CSS,
         lang_switch_js=LANG_SWITCH_JS,
+        passage_toggle_js=PASSAGE_TOGGLE_JS,
         test_id=test_id,
         html_lang=UI[default_lang]["html_lang"],
         doc_title=UI[default_lang]["doc_title"].format(test_id=test_id),

@@ -1080,7 +1080,57 @@ body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
 .lang-btn:hover { color: #fff; }
 .lang-btn.active { background: #fff; color: var(--primary); }
 
-:root{--primary:#1e3a8a}
+.passage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+.passage-head .passage-title {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.ptext-switch {
+  display: inline-flex;
+  background: #eef2f7;
+  border: 1px solid #dbe3ec;
+  border-radius: 9999px;
+  padding: 0.15rem;
+  gap: 0.1rem;
+  flex-shrink: 0;
+}
+.ptext-btn {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.22rem 0.7rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.ptext-btn:hover { color: var(--primary); }
+.passage-vi[data-ptext="src"] .ptext-pane[data-ptext="tr"],
+.passage-vi[data-ptext="tr"] .ptext-pane[data-ptext="src"] { display: none !important; }
+.passage-vi[data-ptext="src"] .ptext-btn[data-ptext="src"],
+.passage-vi[data-ptext="tr"] .ptext-btn[data-ptext="tr"] {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 1px 2px rgba(15,23,42,0.12);
+}
+
+/* --primary and --font-sans are what exam-model-answer's imported rules
+   (EXPLANATION_CSS, PASSAGE_TOGGLE_CSS) read for their accent colour and their
+   UI face; this page's own face is app_style's --ui. */
+:root{--primary:#1e3a8a;--font-sans:var(--ui)}
 /* The switch is exam-model-answer's control, styling and all (EXPLANATION_CSS);
    all this page says is where it sits and which UI face it inherits — its
    .lang-btn rules use font-family:inherit, and the booklet body font is 明朝. */
@@ -1121,8 +1171,16 @@ body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
   border:1px solid #e2e8f0;border-radius:8px;font-size:10pt;line-height:1.9}
 .pr-script .pr-script-label{font-size:9pt;font-weight:700;color:var(--muted);
   display:block;margin-bottom:.3em;letter-spacing:.02em}
+/* 読解 原文/訳: the control sits above the group's ruled box(es), right-aligned,
+   and the translation replaces them in place. The translation panel is NOT a
+   `.passage-box` — the booklet prints exactly 14 of those per paper and
+   `make check` counts them in this file — so it borrows the look and keeps its
+   own class. Vietnamese prose, so the UI face, not 明朝. */
+.pr-ptext{display:flex;justify-content:flex-end;margin:10px 0 -4px}
+.pr-tr{border:1px solid #999;background:#fafafa;margin:10px 0 16px;
+  padding:10px 16px;overflow-x:auto;font-family:var(--ui);line-height:1.95}
 @media print{
-  .pr-btn,.pr-verdict,.pr-note,#bar{display:none}
+  .pr-btn,.pr-verdict,.pr-note,#bar,.pr-ptext{display:none}
 }
 @media screen and (max-width:48em){
   .pr{margin-left:.2em}
@@ -1944,7 +2002,16 @@ B「そうだね。プレゼント（　）、今年は何にしようか。」<
 const ANS = {"1": 3, "2": 1, "3": 4, "4": 2, "5": 4, "6": 3, "7": 4, "8": 1, "9": 1, "10": 2, "11": 3, "12": 4, "13": 2, "14": 1, "15": 3, "16": 2, "17": 4, "18": 3, "19": 2, "20": 4, "21": 3, "22": 2, "23": 2, "24": 4, "25": 1, "26": 2, "27": 1, "28": 1, "29": 4, "30": 3, "31": 1, "32": 4, "33": 2, "34": 1, "35": 3, "36": 3, "37": 4, "38": 1, "39": 3, "40": 2, "41": 2, "42": 4, "43": 4, "44": 1, "45": 2, "46": 3, "47": 4, "48": 4, "49": 3, "50": 1, "51": 2, "52": 2, "53": 4, "54": 2, "55": 1, "56": 3, "57": 2, "58": 4, "59": 1, "60": 3, "61": 3, "62": 4, "63": 2, "64": 1, "65": 3, "66": 1, "67": 2, "68": 4, "69": 3, "70": 1, "71": 2, "問1-1": 2, "問1-2": 1, "問1-3": 1, "問1-4": 4, "問1-5": 3, "問2-1": 1, "問2-2": 4, "問2-3": 1, "問2-4": 2, "問2-5": 2, "問2-6": 3, "問3-1": 4, "問3-2": 4, "問3-3": 1, "問3-4": 3, "問3-5": 3, "問4-1": 3, "問4-2": 1, "問4-3": 2, "問4-4": 2, "問4-5": 2, "問4-6": 3, "問4-7": 3, "問4-8": 1, "問4-9": 1, "問4-10": 1, "問4-11": 3, "問5-1": 3, "問5-2-1": 1, "問5-2-2": 2}, LANGS = ["ja", "vi"], TOTAL = 101;
 const PR = {};
 
-function setLang(lang){ applyLang(lang, LANGS, true); }
+/* The 読解 訳 belongs to the Vietnamese edition — its control only exists in
+   that pane — so changing edition puts every passage back to 原文 rather than
+   leaving a group whose chosen pane the new edition does not render. */
+function setLang(lang){
+  applyLang(lang, LANGS, true);
+  resetPassageText();
+}
+function resetPassageText(){
+  document.querySelectorAll('.passage-vi').forEach(b => { b.dataset.ptext = 'src'; });
+}
 
 /* The reveal. Everything it changes is an attribute the CSS reads — the two
    button labels and both verdict chips ship as markup, one .lang-pane per
@@ -2022,6 +2089,11 @@ function savedLang(langs){
   let s = null;
   try { s = localStorage.getItem('kaisetsuLang'); } catch (e) {}
   return langs.includes(s) ? s : langs[0];
+}
+
+function setPassageText(btn, mode) {
+  const box = btn.closest('.passage-vi');
+  if (box) box.dataset.ptext = mode;
 }
 
 /* --------------------------------------------------- where am I in the paper

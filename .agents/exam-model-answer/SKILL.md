@@ -138,8 +138,14 @@ skill's own renderer — `explanation_box_html()`, `EXPLANATION_CSS`, plus
 `LANG_SWITCH_JS` and `LANG_STORE_KEY` for the two panes and the remembered
 language — never by formatting explanation prose itself.
 
-What that costs you: those four names are now an interface. Renaming one, or
-moving a rule out of `EXPLANATION_CSS` back into `HTML_TEMPLATE`, changes a page
+Since 2026-09-10 it imports the 読解 **原文 / 訳 toggle** the same way:
+`ptext_switch_html()`, `PASSAGE_TOGGLE_CSS` and `PASSAGE_TOGGLE_JS`, all three
+module-level here (the CSS and the handler were lifted OUT of `HTML_TEMPLATE`
+for exactly that reason) and rendered over the same `passage_translation`.
+
+What that costs you: those seven names are now an interface. Renaming one, or
+moving a rule out of `EXPLANATION_CSS`/`PASSAGE_TOGGLE_CSS` back into
+`HTML_TEMPLATE`, changes a page
 this skill does not own — so keep the box's markup and its styling together in
 those constants, and let `make check` (`check_practice_mode`) hold the other
 side to importing rather than copying. Everything else here is unchanged: the
@@ -384,7 +390,14 @@ BOTH texts and a two-button control picks which shows.
   — there is nothing to toggle to. The fallback still degrades rather than
   blanks.
 - The four button/heading labels live in `build_model_answer.UI`, once per
-  language, like every other label.
+  language, like every other label, and the two buttons are built by
+  `ptext_switch_html()` — the one place their classes, `data-ptext` values and
+  handler name are written.
+- **`練習.html` offers the same control** (2026-09-10), over the same field,
+  from the same three constants. Two things differ there and both are that
+  page's call, stated in `exam-app` §練習モード: it defaults to **原文**, because
+  the questions are still being solved; and it wraps the BOOKLET's ruled boxes
+  rather than one box of its own, so 問題12's two boxes sit under one toggle.
 - **This is a render-side change only.** `passage_translation` keeps its name,
   its place (first item of the group), and its semantics; `詳細解説.vi.json`
   gains no field and the gate gains no check. A paper authored before

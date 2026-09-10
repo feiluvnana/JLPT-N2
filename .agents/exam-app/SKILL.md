@@ -175,6 +175,7 @@ injectors, and it is deliberately NOT a sitting:
 | Clock | 105分 / 50分, auto-submits at 00:00 | none |
 | Score | 180 points, once, when 聴解 goes in | none — nothing is added up |
 | Model answer | after grading (or in `模範解答.html`) | one button per question, any time |
+| 読解 passage | Japanese only | 原文 / 訳 toggle per passage, in the VI edition |
 | Record kept | `ユーザー解答.json` + `採点結果.json` | **nothing** |
 
 - **The way in is a button under 言語知識・読解's 開始する button** (`gate()`),
@@ -190,6 +191,30 @@ injectors, and it is deliberately NOT a sitting:
   markup `模範解答.html` prints, in both languages behind the same
   `.lang-pane` mechanism and the same stored preference
   (`build_model_answer.LANG_STORE_KEY`). No explanation prose is formatted here.
+- **One 原文 / 訳 toggle per 読解 passage, in the Vietnamese edition only**
+  (2026-09-10). Studying a passage means reading it, and a learner who is
+  working the paper in Tiếng Việt should not have to open `模範解答.html` to see
+  what it says. So the control is exam-model-answer's own — `ptext_switch_html()`,
+  `PASSAGE_TOGGLE_CSS`, `PASSAGE_TOGGLE_JS`, over the `passage_translation` that
+  already lives on the first item of each group in `詳細解説.vi.json` (AGENTS.md
+  §2). One mechanism, one copy; nothing about the VI file changes. Four things
+  are this page's own and none of them may be re-decided quietly:
+  - **原文 is the default.** `模範解答.html` opens on the translation because its
+    answers are already out; here the questions are still live, and opening on
+    the 訳 would hand over the passage the item is asking about.
+  - **The toggle is VI-only, and the Japanese edition is untouched** — the
+    control and the translation pane are `.lang-pane[data-lang="vi"]`, the
+    booklet's own box is not wrapped in a pane at all. Switching edition resets
+    every passage to 原文 (`resetPassageText()`), so no group is ever left
+    showing a pane the current edition does not render.
+  - **The booklet's boxes are moved, never copied.** A paper prints exactly 14
+    `.passage-box` divs and `make check` (`check_passage_boxes`) counts them in
+    this file too, so the source appears once: the toggle wraps the box(es) and
+    the translation is a `.pr-tr` panel beside them. 問題12 is ONE 詳細解説 group
+    printed as TWO boxes, so its run — A's label, both boxes, B's label — sits
+    under one toggle and one translation.
+  - **A group with no translation gets no control** and no empty box; a paper
+    mid-pipeline renders exactly as before.
 - **The verdict is per item and appears with the answer**: opening a reveal
   compares your selection with the key and marks 正解/不正解 for that question
   alone. No total is computed anywhere on the page — 採点 belongs to the sitting,
@@ -198,7 +223,10 @@ injectors, and it is deliberately NOT a sitting:
   practice are gone on reload. A second answer store beside the sitting's is
   exactly the desync 「One store per build」 exists to prevent, and there is no
   score to keep. The only thing read back from the browser is the explanation
-  language.
+  language. **The 原文/訳 choice rides nothing and is stored nowhere** — it is
+  per passage and per visit, exactly as on `模範解答.html`. Persisting it would
+  mean a second key, and one that means nothing on the sitting's page; a reader
+  who wants the translation is one click from it.
 - The container id is `screen-exam`, reused on purpose: this IS the exam screen
   with the phase machine taken out, so the sheet's layout, bubbles, player
   chrome and 「聴解 ｜ 問題2」 read-out apply unchanged. `make check`

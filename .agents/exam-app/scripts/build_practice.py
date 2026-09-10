@@ -20,7 +20,10 @@ page, built from the same Markdown by the same injectors:
     Japanese or Vietnamese. The box is rendered by exam-model-answer's own
     `explanation_box_html()` out of 詳細解説.json / 詳細解説.vi.json — this
     script formats no explanation prose of its own, so the two study surfaces
-    (模範解答.html and this page) cannot disagree about an item.
+    (模範解答.html and this page) cannot disagree about an item;
+  * a 原文 / 訳 toggle over each 読解 passage, in the Vietnamese edition only —
+    exam-model-answer's own control (`ptext_switch_html`, `PASSAGE_TOGGLE_CSS`,
+    `PASSAGE_TOGGLE_JS`) over its own `passage_translation`.
 
 The way in is a button under 言語知識・読解's 開始する gate in `解答.html`
 (`build_interactive.gate()`): the choice between the two modes is made at the
@@ -35,6 +38,8 @@ how the test list and the sheet would start disagreeing about what you have
 answered (exam-app §"One store per build"). The one thing it reads from the
 browser is the language the reader last picked on 模範解答.html
 (`build_model_answer.LANG_STORE_KEY`), so the two study pages agree about that.
+The 原文/訳 choice is NOT stored either — it is per passage and per visit, the
+same as on 模範解答.html, because storing it would mean a second key.
 """
 import argparse
 import importlib.util
@@ -117,7 +122,10 @@ UI = {
 # EXTRA_CSS that belong to the clock, the gates and the result screen are simply
 # inert — none of those elements exists on this page.
 PRACTICE_CSS = """
-:root{--primary:#1e3a8a}
+/* --primary and --font-sans are what exam-model-answer's imported rules
+   (EXPLANATION_CSS, PASSAGE_TOGGLE_CSS) read for their accent colour and their
+   UI face; this page's own face is app_style's --ui. */
+:root{--primary:#1e3a8a;--font-sans:var(--ui)}
 /* The switch is exam-model-answer's control, styling and all (EXPLANATION_CSS);
    all this page says is where it sits and which UI face it inherits — its
    .lang-btn rules use font-family:inherit, and the booklet body font is 明朝. */
@@ -158,8 +166,16 @@ PRACTICE_CSS = """
   border:1px solid #e2e8f0;border-radius:8px;font-size:10pt;line-height:1.9}
 .pr-script .pr-script-label{font-size:9pt;font-weight:700;color:var(--muted);
   display:block;margin-bottom:.3em;letter-spacing:.02em}
+/* 読解 原文/訳: the control sits above the group's ruled box(es), right-aligned,
+   and the translation replaces them in place. The translation panel is NOT a
+   `.passage-box` — the booklet prints exactly 14 of those per paper and
+   `make check` counts them in this file — so it borrows the look and keeps its
+   own class. Vietnamese prose, so the UI face, not 明朝. */
+.pr-ptext{display:flex;justify-content:flex-end;margin:10px 0 -4px}
+.pr-tr{border:1px solid #999;background:#fafafa;margin:10px 0 16px;
+  padding:10px 16px;overflow-x:auto;font-family:var(--ui);line-height:1.95}
 @media print{
-  .pr-btn,.pr-verdict,.pr-note,#bar{display:none}
+  .pr-btn,.pr-verdict,.pr-note,#bar,.pr-ptext{display:none}
 }
 @media screen and (max-width:48em){
   .pr{margin-left:.2em}
@@ -171,7 +187,16 @@ PRACTICE_JS = """
 const ANS = %(answers)s, LANGS = %(langs)s, TOTAL = %(total)d;
 const PR = {};
 
-function setLang(lang){ applyLang(lang, LANGS, true); }
+/* The 読解 訳 belongs to the Vietnamese edition — its control only exists in
+   that pane — so changing edition puts every passage back to 原文 rather than
+   leaving a group whose chosen pane the new edition does not render. */
+function setLang(lang){
+  applyLang(lang, LANGS, true);
+  resetPassageText();
+}
+function resetPassageText(){
+  document.querySelectorAll('.passage-vi').forEach(b => { b.dataset.ptext = 'src'; });
+}
 
 /* The reveal. Everything it changes is an attribute the CSS reads — the two
    button labels and both verdict chips ship as markup, one .lang-pane per
@@ -326,6 +351,126 @@ def load_details(d: Path) -> dict:
     return out
 
 
+PASSAGE_OPEN = '<div class="passage-box">'
+
+
+def passage_box_spans(html: str) -> list[tuple[int, int]]:
+    """(start, end) of every ruled passage box in the rendered 読解 half.
+
+    `<div>`s nest inside a box (tables, furigana blocks, 注 lists), so the close
+    is found by counting, never by the next `</div>`.
+    """
+    spans, tag = [], re.compile(r"<div\b|</div>")
+    for m in re.finditer(re.escape(PASSAGE_OPEN), html):
+        i, depth = m.end(), 1
+        while depth:
+            nxt = tag.search(html, i)
+            if not nxt:
+                return spans          # unbalanced markup: leave the rest alone
+            depth += -1 if nxt.group(0) == "</div>" else 1
+            i = nxt.end()
+        spans.append((m.start(), i))
+    return spans
+
+
+def passage_group_leaders(ja: dict) -> dict[int, int]:
+    """{question number: the FIRST question of its 読解 passage group}.
+
+    The same grouping `模範解答.html` prints one box per: consecutive questions
+    whose 詳細解説.json `passage` is byte-identical are one group, and the group's
+    translation is authored on its first item (AGENTS.md §2). Grouped by TEXT
+    rather than by 大問 on purpose — 問題10's five passages share one 大問.
+    """
+    leaders: dict[int, int] = {}
+    prev, leader = None, None
+    for q in range(1, 72):
+        item = ja.get(str(q))
+        text = item.get("passage") if isinstance(item, dict) else None
+        if text:
+            if text != prev:
+                leader = q
+            leaders[q] = leader
+        prev = text
+    return leaders
+
+
+def inject_passage_translations(body: str, details: dict, langs: list) -> str:
+    """Wrap each 読解 passage group in exam-model-answer's 原文 / 訳 toggle.
+
+    The Vietnamese edition of 模範解答.html already ships both texts behind a
+    per-group control, and a 読解 learner wants the same thing while actually
+    working the paper. Same mechanism, one copy: the markup is
+    `ma.ptext_switch_html()`, the state is `.passage-vi[data-ptext]`, the CSS is
+    `ma.PASSAGE_TOGGLE_CSS` and the handler `ma.PASSAGE_TOGGLE_JS`. Three
+    differences from that page, all deliberate:
+
+      * **The default is 原文.** 模範解答.html is read after the answers are out,
+        so the translation is what a Vietnamese reader wants first; here the
+        questions are still being solved, and hiding the Japanese they ask about
+        would be handing over the passage rather than the answer to it.
+      * **The source is not duplicated into the Japanese pane.** That page
+        renders one `.passage-box` per group and can afford a pane each; this
+        one prints the BOOKLET's boxes — exactly 14 per paper, counted in this
+        file by `make check` (`check_passage_boxes`) — so the boxes stay put and
+        only the control and the translation panel are `.lang-pane[data-lang=vi]`.
+      * **A group's boxes are wrapped together.** 問題12 prints A and B as two
+        boxes but is ONE 詳細解説 group with one translation covering both, so
+        the toggle spans the run and the translation replaces both boxes.
+
+    A group with no `passage_translation` yet (a paper mid-pipeline) is left
+    exactly as the booklet rendered it: no control, no empty pane.
+    """
+    ja = details.get("ja")
+    if "vi" not in langs or not ja:
+        return body
+    vi = details.get("vi") or {}
+    leaders = passage_group_leaders(ja)
+    spans = passage_box_spans(body)
+    if not spans:
+        return body
+
+    # A box belongs to the group of the first question printed AFTER it.
+    runs: list[list] = []
+    for i, (_s, e) in enumerate(spans):
+        m = re.search(r'data-q="(\d+)"', body[e:])
+        lead = leaders.get(int(m.group(1))) if m else None
+        if runs and lead is not None and runs[-1][0] == lead:
+            runs[-1][1].append(i)
+        else:
+            runs.append([lead, [i]])
+
+    switch = ('<span class="lang-pane" data-lang="vi"><div class="pr-ptext">'
+              + ma.ptext_switch_html("vi") + '</div></span>')
+    out, cursor, seen = [], 0, set()
+    for lead, idxs in runs:
+        if lead is None or lead in seen:
+            continue
+        tr = ((vi.get(str(lead)) or {}).get("passage_translation") or "").strip()
+        if not tr:
+            continue
+        seen.add(lead)
+        start, end = spans[idxs[0]][0], spans[idxs[-1]][1]
+        if len(idxs) > 1:
+            # 問題12 prints its two texts as `A` / `B` label paragraphs OUTSIDE
+            # the ruled boxes. B's sits between the boxes and is swallowed by
+            # the run; A's sits just before it and would otherwise stay on
+            # screen labelling a translation that already carries both labels.
+            lbl = re.search(r"<p><strong>[^<]{1,3}</strong></p>\s*$", body[:start])
+            if lbl:
+                start = lbl.start()
+        out.append(body[cursor:start])
+        out.append(
+            f'<div class="passage-vi" data-ptext="src">{switch}'
+            f'<div class="ptext-pane" data-ptext="src">{body[start:end]}</div>'
+            f'<span class="lang-pane" data-lang="vi">'
+            f'<div class="ptext-pane" data-ptext="tr">'
+            f'<div class="pr-tr">{ma.format_passage_text(tr)}</div>'
+            f'</div></span></div>')
+        cursor = end
+    out.append(body[cursor:])
+    return "".join(out)
+
+
 def build(d: Path, out_dir: Path | None = None, storage: str = "server") -> Path:
     """Write one test's 練習.html. Returns the path written.
 
@@ -367,6 +512,7 @@ def build(d: Path, out_dir: Path | None = None, storage: str = "server") -> Path
                                    list(ckeys.keys()), bi.example_premarks(craw),
                                    after=after)
     gengo_body, choukai_body = bi.render_bodies(gmd, cmd)
+    gengo_body = inject_passage_translations(gengo_body, details, langs)
 
     dest = out_dir if out_dir is not None else d
     dest.mkdir(parents=True, exist_ok=True)
@@ -413,7 +559,8 @@ def build(d: Path, out_dir: Path | None = None, storage: str = "server") -> Path
     js = (PRACTICE_JS % {"answers": json.dumps(answers, ensure_ascii=False),
                          "langs": json.dumps(langs),
                          "total": n_all}
-          + ma.LANG_SWITCH_JS + bi.CHROME_JS + (bi.PLAYER_JS if player else ""))
+          + ma.LANG_SWITCH_JS + ma.PASSAGE_TOGGLE_JS
+          + bi.CHROME_JS + (bi.PLAYER_JS if player else ""))
 
     out.write_text(
         f'<!DOCTYPE html><html lang="{UI[langs[0]]["html_lang"]}">'
@@ -426,7 +573,8 @@ def build(d: Path, out_dir: Path | None = None, storage: str = "server") -> Path
         # exactly the drift `make check` (check_artifact_freshness) must catch.
         f'{bi.booklet.src_sha_comments([gengo_src, choukai_src, d / "聴解スクリプト.txt", d / "聴解_チャプター.json", d / "詳細解説.json", d / "詳細解説.vi.json"])}'
         f'<style>{bi.booklet.CSS}{bi.booklet.SCREEN_CSS}{bi.app_style.APP_CSS}'
-        f'{bi.EXTRA_CSS}{ma.EXPLANATION_CSS}{PRACTICE_CSS}</style></head>'
+        f'{bi.EXTRA_CSS}{ma.EXPLANATION_CSS}{ma.PASSAGE_TOGGLE_CSS}'
+        f'{PRACTICE_CSS}</style></head>'
         f'<body data-lang="{langs[0]}">{bar}{body}'
         f'<script>{js}</script></body></html>',
         encoding="utf-8")
