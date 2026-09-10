@@ -7430,6 +7430,86 @@ THEME_RECORD_GRANDFATHERED = {
 }
 
 
+# F5 (qa-report-20260909_1). `exam-qa-review` §"Automatic fails" has required a
+# THREE-field record on a re-authored draw since 2026-09-04 — `shipped_theme`,
+# `shipped_surface`, and a `note` that QUOTES the deciding line — and says in so
+# many words: "Do not 'resolve' this by dropping a field: the three-field record
+# is the authoring requirement and the gap is in what the gate can see."
+# `check_theme_record_agreement()` above reads only the note's PRESENCE, so the
+# other two were hand-checks. Measured 2026-09-09 over every generated paper on
+# disk: **53 of 53 `origin: "reauthored"` entries across 19 papers carry
+# `shipped_surface: null` or no such key — 100 %.** The field has never been
+# written by anyone, which is why the rule needed a check rather than another
+# reviewer noticing.
+# The 18 papers below predate the check and are exempt BY NAME, printing the
+# same measurement as a WARN; any id not listed FAILS. They are not retrofitted
+# for the reason the `claim` precedent below gives — the surface a retired
+# subject shipped as is recoverable from each paper's `note` prose, but writing
+# 53 fields after the fact from prose nobody can re-verify manufactures
+# machine-readable data out of a guess.
+SHIPPED_SURFACE_GRANDFATHERED = frozenset({
+    "20260810_2", "20260811_1", "20260812_1", "20260812_2", "20260813_1",
+    "20260813_2", "20260814_1", "20260817_1", "20260817_2", "20260817_3",
+    "20260818_1", "20260819_1", "20260821_1", "20260828_1", "20260828_2",
+    "20260903_1", "20260904_1", "20260904_3",
+})
+
+
+def check_reauthored_shipped_surface():
+    """Every `origin: "reauthored"` draw record names the surface it shipped as.
+
+    THE RULE: `exam-qa-review` §"Automatic fails", the theme-disagreement
+    bullet — a re-authored entry keeps its drawn string and drawn `theme`
+    untouched (`recency_map()` keys on the string) and ADDS `shipped_theme`,
+    `shipped_surface` and a quoting `note`, in `test_spec.json` AND the
+    identical `logs/ledger.json` entry.
+
+    WHY A CHECK: the skill named three fields and the gate read one, so two of
+    them were hand-checks in a pass that already has a hundred of them — and
+    the result is the cleanest possible measurement of what an unchecked rule is
+    worth. `shipped_surface` was written ZERO times in 53 opportunities across
+    19 papers before this check existed. `shipped_theme` and `note`, which the
+    other check does read, are present on all 53.
+
+    THE REPAIR: add `"shipped_surface": "<surface key>"` — the
+    `logs/topics.json` surface label, e.g. `問題12(A)` or `聴解問題2-3番` — to
+    the entry in BOTH files. It is the field a future `recency_map` join needs
+    and the one thing the prose note cannot be parsed for.
+    """
+    print("\nre-authored draw records name their shipped surface (F5)")
+    lmap = {str(e.get("test_id")): e for e in ledger_history()}
+    for d, spec in generated_specs():
+        tid = d.name
+        missing, total = [], 0
+        for where, items in (("test_spec.json", spec.get("items") or {}),
+                             ("logs/ledger.json",
+                              (lmap.get(tid) or {}).get("items") or {})):
+            for cat, recs in items.items():
+                if not isinstance(recs, list):
+                    continue
+                for i, e in enumerate(recs):
+                    if not isinstance(e, dict) or e.get("origin") != "reauthored":
+                        continue
+                    total += 1
+                    if not e.get("shipped_surface"):
+                        missing.append(f"{where} {cat}[{i}]")
+        name = (f"test {tid}: every re-authored draw record names its shipped "
+                f"surface ({total} re-authored entr{'y' if total == 1 else 'ies'})")
+        if not total:
+            continue
+        detail = (", ".join(missing) + " — `exam-qa-review` requires THREE "
+                  "fields on a re-authored record (`shipped_theme`, "
+                  "`shipped_surface`, a quoting `note`) and says explicitly not "
+                  "to resolve a gap by dropping one. Add the "
+                  "`logs/topics.json` surface label (e.g. `問題12(A)`) to the "
+                  "entry in BOTH files; keep the drawn string and drawn `theme` "
+                  "exactly as drawn")
+        if tid in SHIPPED_SURFACE_GRANDFATHERED:
+            warn(name, not missing, detail + GRANDFATHER_NOTE)
+        else:
+            check(name, not missing, detail)
+
+
 def check_theme_record_agreement():
     """A spec/ledger theme that disagrees with `logs/topics.json` must say why.
 
@@ -15029,6 +15109,7 @@ def main():
         check_ledger_draw_counts(load(".agents/exam-blueprint/scripts/sample_items.py"))
         check_ledger_spec_agreement()
         check_theme_record_agreement()
+        check_reauthored_shipped_surface()
         check_topics_claim_field()
         check_topics_shapes_field()
         check_harvest_hygiene()

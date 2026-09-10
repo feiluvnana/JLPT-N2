@@ -245,14 +245,27 @@ the DRAWN topic string. Then read it:
   it so a domain doesn't become a crutch one skip apart.
 - **聴解 rows are now a DRAW audit, not a topic audit.** The listening items are
   official and their subjects were never chosen by anyone here, so errand
-  identity, 問題5 decision structure, slot-theme adjacency and 問題14-vs-聴解
-  detail overlap are no longer authoring rules — nothing in the paper can be
+  identity, 問題5 decision structure and slot-theme adjacency
+  are no longer authoring rules — nothing in the paper can be
   re-angled to fix them. What replaces them, and what this pass must still do:
   read `logs/choukai_draws.json` and confirm **no clip id repeats the previous
-  paper in the same slot**. The composer already spends least-used clips first,
-  so this is a verification, not a repair. If a repeat is unavoidable (the slot's
-  ten candidates are exhausted), say so in the report rather than re-drawing
-  forever.
+  paper in the same slot**. This used to be justified by "the composer spends
+  least-used clips first, so it is a verification, not a repair" — that was
+  FALSE: least-used-first is a GLOBAL objective and says nothing about slots, so
+  a slot whose candidates were tied at the same use count (the normal case) could
+  take the same clip twice running, and **18 of 24 consecutive transitions did**
+  (qa-report-20260909_1 F4). `compose_choukai.py::previous_slot_clips()` now bars
+  it per slot, so the condition is finally established by the machinery and this
+  row really is a verification. If a slot's candidates are genuinely exhausted the
+  composer drops the bar and PRINTS which slot, so say so in the report rather
+  than re-drawing forever.
+  **A within-大問 name clash is penalised too** — two clips naming one person in
+  one 大問 was how `20260909_1` nearly shipped 「森君が遅刻なんて、ありえない」
+  beside 「森さんに限って、まさか試合に遅刻することはない」, adjacent slots, both
+  keyed 3. It is a PROXY for errand identity, which is not string-decidable: raw
+  script similarity scores that pair BELOW the officials' own within-大問 maximum,
+  and a hard name ban fires on a real sitting (2025-07 問題2-4/2-5 both name 山田).
+  So the read of the `shapes` column below is still the actual check.
 - **The 読解 half still owns every topic rule above**, and a 読解 passage may now
   legitimately share a domain with a 聴解 item, because no one picked the 聴解
   item's domain. Only a shared *decisive detail* — a number or condition the

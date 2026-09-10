@@ -216,11 +216,34 @@ def resolve(rec: dict, section: str, slot: int) -> dict:
     }
 
 
+# The most times one option may be the key inside a single 4-option 聴解 大問.
+# MEASURED over the ten sittings in `tests/imported-*`: 30 four-option sections
+# (問題1/2/3/5), and the modal key's count is 2 in 22 of them and 3 in the other
+# 8 — **never 4**. So 3 is the official ceiling, not a guess.
+SECTION_KEY_MODE_MAX = 3
+SECTION_SKEW_PENALTY = 100.0
+
+
 def key_spread(picked: list[dict]) -> float:
     """Chi-square-ish penalty for an uneven answer-position distribution.
 
     問題4 keys run 1–3 and every other section 1–4, so the two are scored
     separately; mixing them would make a perfectly flat paper look skewed.
+
+    PER-SECTION SKEW IS SCORED TOO (2026-09-09, qa-report-20260909_1-round2
+    R2-F3), because the pooled term above cannot see it. 問題1/2/3/5 were scored
+    as ONE 19-key bucket, so a paper could be near-perfect overall while an
+    individual 大問 keyed the same option four times of five — the key becomes
+    findable without listening. `20260909_1` shipped exactly that, TWICE in one
+    paper: 問題1 = 3,4,3,3,3 and 問題3 = 4,1,1,1,1, at a pooled spread of
+    5/5/5/4 whose penalty was ~0.16, i.e. essentially flat. Nothing else caught
+    it either: `check_answer_positions` skips 聴解 entirely on a composed paper,
+    because `answer_positions` describes an authored draw the composer does not
+    use. 8 of 25 papers on disk had a section at >=4; that one was the first
+    with two.
+    The penalty is a large constant per excess key rather than another
+    chi-square term, so that avoiding a monoculture always beats polishing an
+    already-legal distribution.
     """
     penalty = 0.0
     for section_group, n_opts in ((("問題4",), 3),
@@ -233,6 +256,74 @@ def key_spread(picked: list[dict]) -> float:
         expect = len(keys) / n_opts
         penalty += sum((counts.get(k, 0) - expect) ** 2
                        for k in range(1, n_opts + 1)) / expect
+
+    for section in ("問題1", "問題2", "問題3", "問題5"):
+        keys = [v for r in picked if r["section"] == section
+                for v in r["answers"].values()]
+        if len(keys) < 2:
+            continue
+        mode = Counter(keys).most_common(1)[0][1]
+        if mode > SECTION_KEY_MODE_MAX:
+            penalty += SECTION_SKEW_PENALTY * (mode - SECTION_KEY_MODE_MAX)
+    return penalty
+
+
+PERSON_NAME = re.compile(r"([一-龥ァ-ヶ]{1,4})(さん|君|くん|ちゃん|先生)")
+NAME_CLASH_PENALTY = 40.0
+# Words the regex above catches that are not names. 皆さん is "everyone" and
+# 「…子さん」 can be the tail of a longer name; both showed up as false
+# positives in the official calibration below.
+NAME_STOPWORDS = frozenset({"皆", "子", "何", "誰"})
+
+
+def _person_names(rec: dict) -> set[str]:
+    """Personal names spoken in this clip, for the within-大問 clash penalty."""
+    if rec.get("needs_number_call"):
+        text = "".join(rec.get("script_lines") or [])
+    else:
+        text = re.sub(r"^\s*\d+番。", "", rec.get("script") or "")
+    text = re.sub(r"《[^》]*》", "", text)
+    return {m.group(1) for m in PERSON_NAME.finditer(text)
+            if m.group(1) not in NAME_STOPWORDS}
+
+
+def name_clash(picked: list[dict]) -> float:
+    """Penalty for two clips in ONE 大問 talking about the same named person.
+
+    THE INCIDENT (qa-report-20260909_1-round2, the finding the repair round
+    raised): a re-composition put `2021-07:問題4-6` beside `2022-12:問題4-7` —
+    「約束の時間過ぎたのに、森君まだ来ないね。森君が遅刻なんて、ありえないよね。」 and
+    「森さんまだ来ないよ。森さんに限って、まさか試合に遅刻することはないよね。」 — adjacent
+    slots, one name, one errand, one implicature, and BOTH keyed 3. Two lifted
+    clips, so nothing could be re-angled; the only repair was another draw.
+
+    THIS IS A PROXY AND IT IS LABELLED AS ONE. The defect is errand identity,
+    which is **not string-decidable** — that is why `jlpt-test-generation`
+    §"One topic, one surface" makes it a human read of `logs/topics.json`'s
+    `shapes` column rather than a check. Two predicates were measured and
+    REFUTED before settling on this one:
+      * raw script similarity (`SequenceMatcher` on the normalised body) scores
+        the offending pair at **0.254**, BELOW the ten officials' own
+        within-大問 maximum of **0.310** (2022-07 問題4-4 × 4-6). A threshold
+        that catches our pair fails real sittings.
+      * a hard BAN on a shared name fires on an official sitting: 2025-07
+        問題2-4 × 問題2-5 both name 山田. (Two further regex hits, 皆 and 子, are
+        the false positives `NAME_STOPWORDS` removes — so the true official rate
+        is 1 pair in ~50 sitting-sections.)
+    Hence a PENALTY, not a constraint: the draw avoids a name clash whenever it
+    can and is never made infeasible by one, and a genuinely unavoidable clash
+    still ships rather than looping forever. It sits below
+    `SECTION_SKEW_PENALTY` because a monoculture key is the worse defect.
+    """
+    penalty = 0.0
+    by_section: dict[str, list[set[str]]] = {}
+    for r in picked:
+        by_section.setdefault(r["section"], []).append(_person_names(r["record"]))
+    for names in by_section.values():
+        for i in range(len(names)):
+            for j in range(i + 1, len(names)):
+                if names[i] & names[j]:
+                    penalty += NAME_CLASH_PENALTY
     return penalty
 
 
@@ -341,8 +432,9 @@ def draw(bank: dict, seed: int, used: Counter, test_id: str,
                     rec = freshest(official[(section, slot)], set(), slot_key)
                 picked.append((section, slot, rec))
         records = [r for _s, _n, r in picked]
+        resolved = [resolve(r, s, n) for s, n, r in picked]
         score = (sum(used[r["id"]] for r in records),
-                 key_spread([resolve(r, s, n) for s, n, r in picked]))
+                 key_spread(resolved) + name_clash(resolved))
         if best is None or score < best[0]:
             best = (score, picked)
 

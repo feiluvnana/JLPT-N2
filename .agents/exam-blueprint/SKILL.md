@@ -536,9 +536,24 @@ binds only the **headline set** = 問題9 cloze, 問題12 A/B (one surface),
    it; nothing said which reading was meant, and silence resolved it every time
    (`qa-report-20260903_1.md` handed item #3, `RC-B`).
 3. **Reading: ONE surface per theme — all thirteen 読解 surfaces differ.**
-   Listening caps at ≤5 scenarios per theme. 13 surfaces against 19 themes
-   that carry reading entries leaves 6 spare — "no repeat" is arithmetically
-   reachable, so a repeat is always a re-angle or re-draw, never a pool limit.
+   13 surfaces against 19 themes that carry reading entries leaves 6 spare —
+   "no repeat" is arithmetically reachable, so a repeat is always a re-angle or
+   re-draw, never a pool limit.
+   **Listening caps at ≤5 scenarios per theme IN THE DRAW, and that is the
+   whole of it** (clarified 2026-09-09, qa-report-20260909_1 S3). The sampler
+   enforces it in `draw_authored_themes` and `check_spec_blend` re-asserts it on
+   `test_spec.json`; both hold on every paper on disk. It does **not** govern
+   what a composed paper SHIPS, and reading it that way makes the rule look
+   universally broken: measured over all 25 rows of `logs/topics.json`, **23
+   exceed 5 on shipped 聴解 themes (8–11 typical), and 働き方 is the offending
+   value in 24 of the 25** — because 聴解問題4's eleven quick-response items are
+   workplace exchanges by FORMAT, and since 2026-09-08 those items are clips
+   lifted from real sittings whose subjects nobody here chose. A cap applied
+   there measures the archive and the exam's own register mix, not an author's
+   variety. **A composed paper's shipped listening themes are a DRAW audit**
+   (the same wording rule 4 uses): read them, report them, and do not re-angle
+   them — there is nothing to re-angle. If an AUTHORED listening half ever
+   returns, the ≤5 draw cap is already the rule for it.
 4. **Cross-test: no theme headlines two consecutive papers, and across the
    previous two papers together at most ONE headline theme may repeat**
    (only against the paper-before-last, only once).

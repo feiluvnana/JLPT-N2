@@ -63,8 +63,10 @@ defect through.
 - **Any single automatic-fail finding fails the WHOLE test** until fixed and
   re-reviewed. Automatic fails:
   - a second defensible answer; a keyed option the source does not state; an
-    unanswerable item or 例; a 解説 quote not in the source; a topic repeated
-    within the paper or from the previous test; broken Japanese anywhere;
+    unanswerable item or 例; a 解説 quote not in the source; an AUTHORED
+    topic repeated within the paper or from the previous test (§5 — a composed
+    聴解 item's domain is not an authored topic, and only a shared DECISIVE
+    DETAIL across the two halves is a finding); broken Japanese anywhere;
     narration contradicting the mapped voice; a spec/paper provenance
     mismatch;
   - **an off-level KEY** (N1-hard or N3/N4/N5-easy — `level_band_grammar.txt`
@@ -682,10 +684,30 @@ as "N1"/"N3", so a single source's label was never sufficient.
 
 Build the table from `jlpt-test-generation` §"One topic, one surface" — one
 row per surface incl. each 聴解 item, one column per test (this + two
-before). Fail on: any subject twice in this paper (any register); any
-subject repeating the previous test; two 聴解 items running the same errand;
-the 問題14 flyer sharing a decisive detail with a listening item; check
-問題12's A/B theme against the previous tests' 問題12 specifically.
+before). Fail on: any subject twice **among the AUTHORED surfaces** (the 13
+読解 rows incl. the 問題9 cloze and the 問題14 flyer), in any register; any
+authored subject repeating the previous test; check 問題12's A/B theme against
+the previous tests' 問題12 specifically.
+
+**Three clauses that used to sit in that list were retired by the OWNER on
+2026-09-08 and are no longer findings** — `jlpt-test-generation` §"One topic,
+one surface" is the owner, this file restates nothing (AGENTS.md §1, one owner
+per rule): *two 聴解 items running the same errand*, *問題14-vs-聴解 detail
+overlap*, and the 読解-vs-聴解 half of *any subject twice*. Since the rework
+the whole listening half is lifted from real sittings and **nobody here chose a
+聴解 item's subject**, so a 読解 passage may legitimately share a DOMAIN with a
+聴解 item; only a shared **decisive detail** — a number or condition a solver
+could carry from one surface to the other — is still a finding, and the repair
+is always on the 読解 side.
+**This paragraph exists because the stale wording produced a false automatic
+fail.** A round-2 pass on `20260909_1` filed 問題11(4) (an authored passage on
+who managed to walk home when the trains stopped) against 聴解問題4-6番 (a
+lifted one-line 即時応答, 「電車の事故で、昨日は会社から歩いて帰ったんだ。」) as
+"a topic repeated within the paper", reading this sentence literally. Adjudicated
+against the owner and **overturned**: the 読解 keys turn on having pre-decided a
+rest stop, the 聴解 key turns on choosing a sympathetic register, no number or
+condition crosses, and a solver gains nothing either way. Domain overlap, not a
+finding.
 
 **Also compare the headline-theme SET as a whole, not just 問題12** — build
 this test's 5-surface set (問題9/12/13/14, 聴解問題5's both items) and the

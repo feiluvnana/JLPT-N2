@@ -1481,7 +1481,8 @@
      "集合住宅で管理する人にペットは規約で禁止と告げられ、金魚はどうかと確かめる"
     ],
     "shipped_theme": "交通",
-    "note": "問題12(A/B) は 住まい（部屋のどこを明るくするか）で執筆・出荷されたが、20260907_1 の問題12 も 住まい を headline に置いており exam-blueprint 「The four theme rules」rule 4（直前の paper と headline theme の重複はゼロ）に触れた。同じ surface を 交通（踏切と線路をこえる歩道橋）で再執筆した。drawn theme は recency_map/check_draw_provenance のためそのまま残す (exam-blueprint §Replacing a shipped subject)。出荷された theme は shipped_theme、退いた subject は logs/topics.json の 差し替え前:問題12(A)/(B)。"
+    "note": "問題12(A/B) は 住まい（部屋のどこを明るくするか）で執筆・出荷されたが、20260907_1 の問題12 も 住まい を headline に置いており exam-blueprint 「The four theme rules」rule 4（直前の paper と headline theme の重複はゼロ）に触れた。同じ surface を 交通（踏切と線路をこえる歩道橋）で再執筆した。drawn theme は recency_map/check_draw_provenance のためそのまま残す (exam-blueprint §Replacing a shipped subject)。出荷された theme は shipped_theme、退いた subject は logs/topics.json の 差し替え前:問題12(A)/(B)。",
+    "shipped_surface": "問題12(A)"
    },
    {
     "theme": "人間関係",
@@ -1773,11 +1774,12 @@
      "担当者不在時の電話取次ぎ依頼"
     ],
     "shipped_theme": "スポーツ・余暇",
-    "note": "問題14 は 働き方（はたらく人のための夜間・休日相談まど口）で執筆・出荷されたが、20260907_1 の問題13 も 働き方 を headline に置いており exam-blueprint rule 4 に触れた。同じ surface を スポーツ・余暇（運動広場の夜間の個人開放）で再執筆した。drawn theme はそのまま残す (exam-blueprint §Replacing a shipped subject)。退いた subject は logs/topics.json の 差し替え前:問題14。"
+    "note": "問題14 は 働き方（はたらく人のための夜間・休日相談まど口）で執筆・出荷されたが、20260907_1 の問題13 も 働き方 を headline に置いており exam-blueprint rule 4 に触れた。同じ surface を スポーツ・余暇（運動広場の夜間の個人開放）で再執筆した。drawn theme はそのまま残す (exam-blueprint §Replacing a shipped subject)。退いた subject は logs/topics.json の 差し替え前:問題14。",
+    "shipped_surface": "問題14"
    },
    {
     "theme": "睡眠・健康",
-    "origin": "authored",
+    "origin": "reauthored",
     "avoid": [
      "睡眠時間と起床リズム",
      "成人の平均歩数の減少",
@@ -1806,7 +1808,10 @@
      "保健センターの四つの予防講座から、男の人はストレッチの教室を、女の人はプールの教室を、それぞれ自分の事情で選ぶ",
      "人間ドックの費用を組合が病院へ直接支払う形に改め、窓口では残りの分だけ払えばよくなるという健康保険組合のお知らせ",
      "人事部の説明会で、健康診断の数値に目を通すのは産業医と保健師だけで、人事部に届くのは受診の有無の一覧だけだと説明する"
-    ]
+    ],
+    "shipped_theme": "睡眠・健康",
+    "note": "問題11(2) は 睡眠・健康 で執筆・出荷されたが、shipped された subject（半年ぶんの記録を並べ、翌朝の体の重さを決めていたのは動いた量ではなく姿勢を変えた回数のほうだった）が、同じ paper の 問題10(3)（`配られた日のうちに休む日を決めていた家ほど、行事に出られた回数は多かった`）と 問題11(4)（`歩いて帰ると決めていた人のうち、途中で寄れる一か所を先に決めてあった人だけが、その日のうちに家にたどり着いていた`）と同一の rhetorical move（数えた→当然視されていた量では説明がつかない→分かれ目は事前の決めごとや構造条件→末尾を〜ていたで締める）を走らせており、jlpt-test-generation §`One topic, one surface` の `一つの move は両半分あわせて二面まで`に触れた。問題11(4) は 防災 で差し替え先がなく、問題10(3) は許容される二つの 条件提示 の一方なので、同じ theme・同じ closing move（意外な観察）のまま 問題11(2) だけを別の subject で再執筆した——厚い靴下をはいたまま寝ると足が冷え、寝る前だけはいて布団で脱ぐと朝まで温かいという逆転と、その原因（眠りに入る体は手足の先から熱を外へ渡すので、布で包むとその出口がふさがれる）。closing は「同じ一枚の靴下が、脱ぐか脱がないかで、熱の道を開く側にも、ふさぐ側にも回る。」で、〜ていた も分裂文も使わない。drawn theme は recency_map/check_draw_provenance のためそのまま残す (exam-blueprint §Replacing a shipped subject)。退いた subject は logs/topics.json の 差し替え前:問題11(2)。",
+    "shipped_surface": "問題11(2)"
    }
   ]
  },

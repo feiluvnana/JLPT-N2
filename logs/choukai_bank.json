@@ -19019,6 +19019,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/40.mp3",
     "start": 2.12,
@@ -19081,6 +19082,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/41.mp3",
     "start": 2.36,
@@ -19143,6 +19145,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/42.mp3",
     "start": 2.16,
@@ -19205,6 +19208,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/43.mp3",
     "start": 2.04,
@@ -19267,6 +19271,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/44.mp3",
     "start": 2.04,
@@ -19329,6 +19334,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/45.mp3",
     "start": 2.28,
@@ -19391,6 +19397,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/46.mp3",
     "start": 2.22,
@@ -19453,6 +19460,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/47.mp3",
     "start": 1.96,
@@ -19515,6 +19523,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/48.mp3",
     "start": 2.24,
@@ -19577,6 +19586,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/49.mp3",
     "start": 2.08,
@@ -19639,6 +19649,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track65.mp3",
     "start": 4.48,
@@ -19701,6 +19712,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track66.mp3",
     "start": 4.54,
@@ -19763,6 +19775,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track67.mp3",
     "start": 4.56,
@@ -19825,6 +19838,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track68.mp3",
     "start": 4.54,
@@ -19887,6 +19901,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track69.mp3",
     "start": 4.42,
@@ -19949,6 +19964,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track70.mp3",
     "start": 4.52,
@@ -20011,6 +20027,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track71.mp3",
     "start": 4.54,
@@ -20073,6 +20090,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track72.mp3",
     "start": 4.48,
@@ -20135,6 +20153,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track73.mp3",
     "start": 4.5,
@@ -20197,6 +20216,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track74.mp3",
     "start": 4.5,
@@ -20259,6 +20279,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track75.mp3",
     "start": 4.84,
@@ -20321,6 +20342,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track76.mp3",
     "start": 4.76,
@@ -20383,6 +20405,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track59.mp3",
     "start": 4.52,
@@ -20451,6 +20474,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track61.mp3",
     "start": 4.62,
@@ -20519,6 +20543,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track62.mp3",
     "start": 4.5,
@@ -20587,6 +20612,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track63.mp3",
     "start": 4.58,
@@ -20655,6 +20681,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/44.mp3",
     "start": 2.3,
@@ -20726,6 +20753,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/45.mp3",
     "start": 2.06,
@@ -20790,6 +20818,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/16.mp3",
     "start": 0.58,
@@ -20862,6 +20891,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/32.mp3",
     "start": 2.08,
@@ -20932,6 +20962,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/33.mp3",
     "start": 2.16,
@@ -21003,6 +21034,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track47.mp3",
     "start": 4.42,
@@ -21070,6 +21102,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track49.mp3",
     "start": 4.52,
@@ -21143,6 +21176,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD2/Track50.mp3",
     "start": 4.48,
@@ -21213,6 +21247,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/29.mp3",
     "start": 0.48,
@@ -21281,6 +21316,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/30.mp3",
     "start": 2.04,
@@ -21345,6 +21381,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/46.mp3",
     "start": 2.48,
@@ -21415,6 +21452,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/47.mp3",
     "start": 1.96,
@@ -21479,6 +21517,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/05.mp3",
     "start": 1.94,
@@ -21549,6 +21588,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/35.mp3",
     "start": 2.2,
@@ -21618,6 +21658,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/37.mp3",
     "start": 2.26,
@@ -21689,6 +21730,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/36.mp3",
     "start": 2.16,
@@ -21753,6 +21795,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/38.mp3",
     "start": 1.94,
@@ -21821,6 +21864,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/33.mp3",
     "start": 2.36,
@@ -21889,6 +21933,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/49.mp3",
     "start": 2.24,
@@ -21961,6 +22006,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/07.mp3",
     "start": 2.2,
@@ -22029,6 +22075,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/28.mp3",
     "start": 2.18,
@@ -22097,6 +22144,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/29.mp3",
     "start": 1.94,
@@ -22173,6 +22221,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/41.mp3",
     "start": 2.24,
@@ -22241,6 +22290,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/42.mp3",
     "start": 2.12,
@@ -22314,6 +22364,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/08.mp3",
     "start": 1.96,
@@ -22383,6 +22434,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/64.mp3",
     "start": 2.68,
@@ -22455,6 +22507,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/56.mp3",
     "start": 1.64,
@@ -22524,6 +22577,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ1/60.mp3",
     "start": 1.9,
@@ -22588,6 +22642,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/02.mp3",
     "start": 1.88,
@@ -22659,6 +22714,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Soumatome/Nihongo Sou Matome N2 - Choukai-CD/日本語総まとめＮ2-ＣＤ2/03.mp3",
     "start": 2.22,
@@ -22728,6 +22784,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track45.mp3",
     "start": 4.22,
@@ -22798,6 +22855,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/Shinkanzen/Shin_Kanzen_Masuta_N2-Choukai-CD/Shin_Kanzen_Masuta_N2-Choukai-AudioCD1/Track46.mp3",
     "start": 4.68,
@@ -22870,6 +22928,7 @@
    "section": "問題1",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/External/mondaireishuu_2009/N2Sample.mp3",
     "start": 36.16,
@@ -22940,6 +22999,7 @@
    "section": "問題2",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/External/mondaireishuu_2009/N2Sample.mp3",
     "start": 141.22,
@@ -23011,6 +23071,7 @@
    "section": "問題3",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/External/mondaireishuu_2009/N2Sample.mp3",
     "start": 281.54,
@@ -23079,6 +23140,7 @@
    "section": "問題4",
    "slot": 0,
    "needs_number_call": true,
+   "figure_dependent": false,
    "audio": {
     "path": "refs/External/mondaireishuu_2009/N2Sample.mp3",
     "start": 388.4,

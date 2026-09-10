@@ -396,6 +396,21 @@ def spoken_shape(script_lines: list[str]) -> tuple[int, int, int]:
     return sum(len(s) for s in spoken), len(spoken), choices
 
 
+BARE_DIGIT_OPTION = re.compile(r"^[\s]*[1-4\uff11-\uff14][\s]*$")
+
+
+def figure_dependent(options) -> bool:
+    """Are these printed options only meaningful beside a picture?
+
+    Same predicate as `build_choukai_bank.figure_dependent`, applied to a
+    textbook item's option list: a digits-only option set labels regions of a
+    figure and carries no meaning on its own. See the call site for why both
+    builders write the flag.
+    """
+    opts = list(options or [])
+    return bool(opts) and all(BARE_DIGIT_OPTION.match(str(o)) for o in opts)
+
+
 def build_one(spec: dict) -> dict:
     """Measure and validate one declared item; return its bank record."""
     book = spec["book"]
@@ -487,6 +502,16 @@ def build_one(spec: dict) -> dict:
         # preamble records use.
         "slot": 0,
         "needs_number_call": True,
+        # Written by BOTH bank builders on purpose (2026-09-09). The official
+        # builder added `figure_dependent` for qa-report-20260909_1 F1 (an
+        # item whose four printed options are picture regions cannot be
+        # composed, because the composed booklet embeds no image); the
+        # composer filters on the flag, so a record MISSING it is silently
+        # treated as drawable. No declared textbook item is a figure item
+        # today — every one carries real option text — but a flag written by
+        # one of two producers is a flag that goes stale the first time the
+        # other one grows a case (qa-report-20260909_1-round2 §8.2).
+        "figure_dependent": figure_dependent(options),
         "audio": {
             "path": str(audio.relative_to(ROOT)),
             "start": round(start, 3),
