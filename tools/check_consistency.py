@@ -300,6 +300,7 @@ def check_filename_contracts():
         ("test_spec.json", ".agents/exam-blueprint/scripts/sample_items.py"),
         ("import_meta.json", ".agents/external-test-import/scripts/init_imported_test.py"),
         ("模範解答.html", ".agents/exam-model-answer/scripts/build_model_answer.py"),
+        ("練習.html", ".agents/exam-app/scripts/build_practice.py"),
     ]
     for literal, script in contracts:
         src = (ROOT / script).read_text(encoding="utf-8")
@@ -478,6 +479,61 @@ def check_exam_time_limits():
           f"{stripped[:3]} — the 開始する gates, the one-way hand-off and the "
           "00:00 auto-submit are what make the clock an exam rather than a "
           "readout; a sheet without them grades an untimed paper")
+
+
+# ------------------------------------------------------- 練習モード (練習.html)
+def check_practice_mode():
+    """練習.html is the SAME paper as the sitting, and must stay unable to BE one.
+
+    Two modes of one exam: 解答.html runs it against a clock and grades it once;
+    練習.html lays all 101 items out flat with no clock, no grading and one model
+    answer per question (exam-app §"練習モード"). Three ways that arrangement can
+    rot, all of them silent, so all three are checked here:
+
+    1. **The gate's link goes dead.** The way into practice is a button under
+       言語知識・読解's 開始する gate, i.e. one page hard-coding the other's
+       filename. `make sheet` writes both pages, and PRACTICE_HREF == OUT_NAME is
+       what keeps the button pointing at the file that is actually written.
+    2. **Practice grows into a sitting.** A clock, a submit, a grader or an
+       answer store on this page would be a second, untimed way to produce a
+       score and a second place answers live — the exact desync
+       check_deployments exists to prevent for the two deployments. Practice
+       therefore carries NONE of that machinery, and the tokens are checked for
+       by name.
+    3. **A second explanation renderer.** The explanation box is
+       exam-model-answer's, imported (`explanation_box_html`, `EXPLANATION_CSS`)
+       rather than reimplemented — a copy here would drift from 詳細解説.json the
+       way every duplicated rule in this repo eventually has.
+    """
+    print("\n練習モード (練習.html — one paper, two modes)")
+    bi = load(".agents/exam-app/scripts/build_interactive.py")
+    bp = load(".agents/exam-app/scripts/build_practice.py")
+    check("the sitting's gate links at the filename build_practice writes",
+          bi.PRACTICE_HREF == bp.OUT_NAME,
+          f"gate links {bi.PRACTICE_HREF!r}, build_practice writes "
+          f"{bp.OUT_NAME!r} — one literal, two spellings, and the button 404s")
+
+    src = (AGENTS / "exam-app" / "scripts" / "build_practice.py").read_text(encoding="utf-8")
+    check("練習.html renders exam-model-answer's explanation box, not its own",
+          "explanation_box_html" in src and "EXPLANATION_CSS" in src,
+          "import the box from build_model_answer — a second renderer drifts "
+          "from 詳細解説.json (AGENTS.md §'one owner per rule')")
+    check("練習.html injects its radios through the sheet's own injectors",
+          "bi.inject_gengo" in src and "bi.inject_choukai" in src
+          and "bi.render_bodies" in src,
+          "the practice page must be the SAME paper — parsing it separately is "
+          "how the two modes would start printing different option counts")
+    check("`make sheet` writes both modes",
+          "build_practice.build(" in (AGENTS / "exam-app" / "scripts"
+                                      / "build_interactive.py").read_text(encoding="utf-8"),
+          "one command per paper: two would let the gate open a practice page "
+          "built from a superseded booklet")
+    mk = (ROOT / "Makefile").read_text(encoding="utf-8")
+    check("Makefile has `make practice`", "practice:" in mk)
+    doc = (AGENTS / "exam-app" / "SKILL.md").read_text(encoding="utf-8")
+    check("exam-app documents 練習モード",
+          "練習.html" in doc and "練習モード" in doc,
+          "the skill owns the whole app surface — document the second mode")
 
 
 def check_exam_audio_hosting():
@@ -14269,7 +14325,7 @@ def check_passage_boxes(d):
           "dialect build_booklet.box_passages() does not match (instruction "
           "placement, A/B labels) or a passage is missing; teach the boxer the "
           "dialect, never hand-edit the HTML (exam-app §Booklet rendering)")
-    for name in ("言語知識・読解.html", "解答.html"):
+    for name in ("言語知識・読解.html", "解答.html", "練習.html"):
         page = d / name
         if not page.is_file():
             continue
@@ -14344,10 +14400,18 @@ def check_artifact_freshness(d):
     # Markdown/script stamps could not see it, because none of those files
     # changed. Stamping the chapter JSON as a fourth source makes `make sheet`
     # mandatory after `make mp3`, which it always was in fact.
+    # 練習.html carries two sources 解答.html does not: it PRINTS the explanation
+    # sets, so an explanation rewritten after the page was built leaves the page
+    # teaching the old one — invisible to every other stamp, because neither
+    # Markdown moved. (`make model-answer` is the last stage of the pipeline, so
+    # this is the ordinary state of a paper mid-authoring: re-run `make practice`.)
     html_sources = {"言語知識・読解.html": ["言語知識・読解.md"],
                     "聴解.html": ["聴解.md"],
                     "解答.html": ["言語知識・読解.md", "聴解.md", "聴解スクリプト.txt",
-                                  "聴解_チャプター.json"]}
+                                  "聴解_チャプター.json"],
+                    "練習.html": ["言語知識・読解.md", "聴解.md", "聴解スクリプト.txt",
+                                  "聴解_チャプター.json", "詳細解説.json",
+                                  "詳細解説.vi.json"]}
     for html_name, srcs in html_sources.items():
         page = d / html_name
         if not page.is_file():
@@ -14481,6 +14545,11 @@ def check_banned_collocations(d, gt: str, ct: str, st: str, origin: str):
 
 
 # --------------------------------------------------------------- per-test checks
+# local_store.py owns the localStorage key schema; check_tests reads its prefix
+# to prove 練習.html carries no store at all (see check_practice_mode).
+LOCAL_STORE = load(".agents/exam-app/scripts/local_store.py")
+
+
 def check_tests():
     g = load(".agents/exam-app/scripts/grade_answers.py")
     m = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
@@ -14949,6 +15018,41 @@ def check_tests():
         q4 = {k: n for k, n in groups.items() if k.startswith("問4-") and n != 3}
         check("問題4 (即時応答) offers exactly 3 options", not q4, f"{q4}")
 
+        # 練習モード: the same paper flat, with one model answer per question
+        # and none of the sitting's machinery (check_practice_mode owns the
+        # code-level half of this contract; this is the built page).
+        practice = d / "練習.html"
+        if not practice.is_file():
+            check("練習.html present", False,
+                  f"run make sheet {d.name} — the sitting's 開始する gate links "
+                  f"to it, so the paper ships with a dead 練習モード button")
+            continue
+        phtml = practice.read_text(encoding="utf-8")
+        pgroups: dict[str, int] = {}
+        for hit in re.finditer(r'<input[^>]*type="radio"[^>]*name="q_([^"]+)"', phtml):
+            pgroups[hit.group(1)] = pgroups.get(hit.group(1), 0) + 1
+        check(f"練習.html carries the same {exp_total_keys} questions as the sheet",
+              sorted(pgroups) == sorted(groups),
+              f"{len(pgroups)} groups vs the sheet's {len(groups)} — both pages "
+              f"are built from the same Markdown by the same injectors, so a "
+              f"difference means one of them was not rebuilt (make sheet "
+              f"{d.name})")
+        reveals = len(re.findall(r'class="pr" data-q=', phtml))
+        check(f"練習.html reveals a model answer for all {exp_total_keys} questions",
+              reveals == exp_total_keys,
+              f"{reveals} reveal(s) — a question with no reveal has no key in "
+              f"the Markdown (build_practice prints which); fix the key table")
+        forbidden = [t for t in ("const LIMITS = {", "function startSection(",
+                                 "function submitAll(", "function computeResult(",
+                                 "採点結果.json", "/api/tests/", LOCAL_STORE.STORAGE_PREFIX)
+                     if t in phtml]
+        check("練習.html is not a sitting: no clock, no grader, no answer store",
+              not forbidden,
+              f"carries {forbidden} — 練習モード has no time limit and no score "
+              f"on purpose, and it keeps NO record: a second answer store beside "
+              f"ユーザー解答.json desyncs the test list from the sheet (exam-app "
+              f"§'One store per build')")
+
 
 # ------------------------------------------------- the two graders must agree
 JS_HARNESS = r"""
@@ -15089,6 +15193,7 @@ def main():
         check_grandfather_sets_are_live()
         check_deployments()
         check_exam_time_limits()
+        check_practice_mode()
         check_exam_audio_hosting()
         check_every_choukai_finding_declares_repair()
         check_remediation_state()

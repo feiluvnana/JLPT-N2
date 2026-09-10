@@ -211,7 +211,7 @@ explicitly justified.** Green is the floor, not a verdict on a paper's content.
 
 ```bash
 make serve            # ONE server for every test → http://127.0.0.1:8765 (no test id)
-make sheet 1          # rebuild tests/1/解答.html
+make sheet 1          # rebuild tests/1/解答.html + 練習.html (exam + practice mode)
 make booklet 1        # rebuild both booklet HTMLs
 make mp3 1            # re-synthesize tests/1/聴解.mp3
 make grade 1          # CLI grading → 採点結果.json
@@ -232,6 +232,12 @@ Opens the test list; pick a test, answer all 101 items with the 聴解 audio
 playing in-page, submit, and the result screen scores it out of 180 with
 per-section pass/fail. Answers land in `ユーザー解答.json`, the result in
 `採点結果.json`.
+
+Each test also opens in **練習モード** — the button under 開始する on the first
+screen. Same paper, all 101 questions on one page, no clock and no score, and a
+「解説を見る」 button per question that shows that item's model answer and
+explanation (Japanese or Vietnamese). Nothing is saved in practice mode; use the
+exam mode when you want the sitting on record.
 
 ### Generating a new mock exam
 

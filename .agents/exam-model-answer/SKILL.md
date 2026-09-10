@@ -129,6 +129,23 @@ with 「文脈に合いません」. A generic line is a *different* defect and 
 separately prohibited below. Two sentences of real evidence beat five of
 padding, and that is the whole point of the cap.
 
+## The explanation box has a second reader (2026-09-10)
+
+`模範解答.html` is no longer the only page that prints these explanations:
+exam-app's `練習.html` (練習モード) reveals ONE of them per question, on demand,
+while the reader is still solving the paper. It does that by importing this
+skill's own renderer — `explanation_box_html()`, `EXPLANATION_CSS`, plus
+`LANG_SWITCH_JS` and `LANG_STORE_KEY` for the two panes and the remembered
+language — never by formatting explanation prose itself.
+
+What that costs you: those four names are now an interface. Renaming one, or
+moving a rule out of `EXPLANATION_CSS` back into `HTML_TEMPLATE`, changes a page
+this skill does not own — so keep the box's markup and its styling together in
+those constants, and let `make check` (`check_practice_mode`) hold the other
+side to importing rather than copying. Everything else here is unchanged: the
+two sets are still authored per language, still capped by the bands below, and
+`詳細解説.json` is still the one copy of the exam's own wording.
+
 ## Purpose & Pedagogical Quality
 
 While `解答.html` is for taking the test and grading, `模範解答.html` is for

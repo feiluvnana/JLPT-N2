@@ -416,6 +416,147 @@ def parse_choukai_scripts(script_text: str):
     return blocks
 
 
+# Where the reader's language choice is remembered, and the generic half of the
+# switch that writes it. Both are shared with exam-app's 練習.html, which offers
+# the same two panes over the same explanation markup — one preference, so a
+# reader who picked Tiếng Việt on the practice page does not have to pick it
+# again on the model answer. Single-braced: injected through HTML_TEMPLATE's
+# {lang_switch_js} placeholder rather than living inside that .format() string.
+LANG_STORE_KEY = "kaisetsuLang"
+
+LANG_SWITCH_JS = """
+/* Flip the page to `lang`: `body[data-lang]` is what the CSS reads, so no JS
+   text substitution happens here and a label cannot go missing. Returns the
+   language actually applied (langs[0] when the argument is not on offer). */
+function applyLang(lang, langs, persist){
+  if (!langs.includes(lang)) lang = langs[0];
+  document.body.dataset.lang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist){ try { localStorage.setItem('%s', lang); } catch (e) {} }
+  return lang;
+}
+function savedLang(langs){
+  let s = null;
+  try { s = localStorage.getItem('%s'); } catch (e) {}
+  return langs.includes(s) ? s : langs[0];
+}
+""" % (LANG_STORE_KEY, LANG_STORE_KEY)
+
+
+# The explanation box, and the language switch that flips between its two
+# panes: the only part of this page's stylesheet a SECOND page renders.
+# exam-app's 練習.html (練習モード) reveals one explanation per question through
+# the same markup, built by the same explanation_box_html() below, so it imports
+# these rules rather than keeping a copy that would drift from the markup.
+# Single-braced on purpose — HTML_TEMPLATE is a .format() string and takes this
+# through its {explanation_css} placeholder.
+EXPLANATION_CSS = """
+/* Explanation Box */
+.explanation-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+  margin-top: 0.75rem;
+}
+.exp-heading {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+.exp-section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0.75rem 0 0.3rem;
+}
+.exp-content {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: #334155;
+}
+.exp-options-list {
+  list-style: none;
+  margin-top: 0.35rem;
+}
+.exp-options-list li {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.exp-options-list li:last-child {
+  border-bottom: none;
+}
+.opt-tag-correct {
+  display: inline-block;
+  color: #065f46;
+  background: #d1fae5;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-right: 0.35rem;
+}
+.opt-tag-wrong {
+  display: inline-block;
+  color: #991b1b;
+  background: #fee2e2;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-right: 0.35rem;
+}
+.vocab-pill {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  margin: 0.2rem 0.25rem 0.2rem 0;
+}
+
+/* --- language switching -----------------------------------------------------
+   ONE mechanism for the whole page: every bilingual string ships both panes and
+   `body[data-lang]` hides the other. No JS text substitution, so a label cannot
+   go missing when a new one is added — it is either in UI[lang] or it is not
+   rendered at all. A single-language page emits no .lang-pane wrappers. */
+.lang-pane { display: contents; }
+body[data-lang="ja"] .lang-pane[data-lang="vi"],
+body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
+
+.lang-switch {
+  display: inline-flex;
+  background: rgba(255,255,255,0.12);
+  border-radius: 9999px;
+  padding: 0.18rem;
+  gap: 0.15rem;
+}
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: #bfdbfe;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.28rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.lang-btn:hover { color: #fff; }
+.lang-btn.active { background: #fff; color: var(--primary); }
+"""
+
+
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="{html_lang}">
 <head>
@@ -857,74 +998,7 @@ h1.title {{
   background: #ddd6fe;
 }}
 
-/* Explanation Box */
-.explanation-box {{
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 1rem 1.15rem;
-  margin-top: 0.75rem;
-}}
-.exp-heading {{
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 0.5rem;
-}}
-.exp-section-title {{
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #1e3a8a;
-  margin: 0.75rem 0 0.3rem;
-}}
-.exp-content {{
-  font-size: 0.92rem;
-  line-height: 1.8;
-  color: #334155;
-}}
-.exp-options-list {{
-  list-style: none;
-  margin-top: 0.35rem;
-}}
-.exp-options-list li {{
-  padding: 0.35rem 0;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 0.9rem;
-  line-height: 1.7;
-}}
-.exp-options-list li:last-child {{
-  border-bottom: none;
-}}
-.opt-tag-correct {{
-  display: inline-block;
-  color: #065f46;
-  background: #d1fae5;
-  padding: 0.1rem 0.4rem;
-  border-radius: 3px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  margin-right: 0.35rem;
-}}
-.opt-tag-wrong {{
-  display: inline-block;
-  color: #991b1b;
-  background: #fee2e2;
-  padding: 0.1rem 0.4rem;
-  border-radius: 3px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  margin-right: 0.35rem;
-}}
-.vocab-pill {{
-  display: inline-block;
-  background: #e0f2fe;
-  color: #0369a1;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
-  margin: 0.2rem 0.25rem 0.2rem 0;
-}}
+{explanation_css}
 
 /* Sticky Audio Player */
 #sticky-audio {{
@@ -952,37 +1026,7 @@ h1.title {{
 }}
 
 .header-right {{ display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }}
-/* --- language switching -----------------------------------------------------
-   ONE mechanism for the whole page: every bilingual string ships both panes and
-   `body[data-lang]` hides the other. No JS text substitution, so a label cannot
-   go missing when a new one is added — it is either in UI[lang] or it is not
-   rendered at all. A single-language page emits no .lang-pane wrappers. */
-.lang-pane {{ display: contents; }}
-body[data-lang="ja"] .lang-pane[data-lang="vi"],
-body[data-lang="vi"] .lang-pane[data-lang="ja"] {{ display: none !important; }}
-
-.lang-switch {{
-  display: inline-flex;
-  background: rgba(255,255,255,0.12);
-  border-radius: 9999px;
-  padding: 0.18rem;
-  gap: 0.15rem;
-}}
-.lang-btn {{
-  border: none;
-  background: transparent;
-  color: #bfdbfe;
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.28rem 0.85rem;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}}
-.lang-btn:hover {{ color: #fff; }}
-.lang-btn.active {{ background: #fff; color: var(--primary); }}
+/* .lang-pane / .lang-switch / .lang-btn: see EXPLANATION_CSS above. */
 .trans-title {{
   font-size: 0.8rem;
   font-weight: 700;
@@ -1059,22 +1103,16 @@ footer {{
 const LANG_STRINGS = {lang_strings_json};
 const LANGS = {langs_json};
 
+{lang_switch_js}
+
 function setLang(lang, persist) {{
-  if (!LANGS.includes(lang)) lang = LANGS[0];
-  document.body.dataset.lang = lang;
-  document.documentElement.lang = lang;
+  lang = applyLang(lang, LANGS, persist);
   const s = LANG_STRINGS[lang] || {{}};
   document.title = s.doc_title || document.title;
   const search = document.getElementById('searchInput');
   if (search) search.placeholder = s.search_placeholder || '';
   const status = document.getElementById('audioStatus');
   if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
-  document.querySelectorAll('.lang-btn').forEach(b => {{
-    b.classList.toggle('active', b.dataset.lang === lang);
-  }});
-  if (persist) {{
-    try {{ localStorage.setItem('kaisetsuLang', lang); }} catch (e) {{}}
-  }}
 }}
 
 function setPassageText(btn, mode) {{
@@ -1083,9 +1121,7 @@ function setPassageText(btn, mode) {{
 }}
 
 (function initLang() {{
-  let saved = null;
-  try {{ saved = localStorage.getItem('kaisetsuLang'); }} catch (e) {{}}
-  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+  setLang(savedLang(LANGS), false);
 }})();
 
 function filterSection(sec, btn) {{
@@ -1532,6 +1568,8 @@ def build_model_answer(test_dir: Path, out_path: Path | None = None) -> Path:
                   for lg in langs}
 
     rendered_html = HTML_TEMPLATE.format(
+        explanation_css=EXPLANATION_CSS,
+        lang_switch_js=LANG_SWITCH_JS,
         test_id=test_id,
         html_lang=UI[default_lang]["html_lang"],
         doc_title=UI[default_lang]["doc_title"].format(test_id=test_id),

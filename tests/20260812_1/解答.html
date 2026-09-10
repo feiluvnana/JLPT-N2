@@ -462,6 +462,12 @@ html.is-result-mode #where{display:none!important}
 .gate .note{margin:0 0 1.6em;font-size:10pt;line-height:1.9;color:#475569;text-align:left}
 .gate .warn{color:#b91c1c;font-weight:700}
 .gate button{font-size:12pt;padding:.6em 2.4em}
+/* 練習モード, under the 開始する button of the first gate: a second way to open
+   the same paper, without the clock (build_practice.py). Separated by a rule so
+   it reads as an alternative to starting, not as a step in it. */
+.gate .gate-alt{margin:1.8em 0 0;padding-top:1.4em;border-top:1px solid #e2e8f0}
+.gate .alt-note{margin:0 0 .9em;font-size:9.5pt;line-height:1.8;color:#475569;
+  text-align:left}
 .qa{display:flex;flex-wrap:wrap;gap:.25em 1.1em;margin:.25em 0 .65em 1.2em}
 .qa label{display:inline-flex;align-items:center;gap:.32em;cursor:pointer;
   padding:.15em .6em;border:1px solid #cbd5e1;border-radius:9999px;font-size:10pt;
@@ -605,7 +611,7 @@ html.is-result-mode #where{display:none!important}
   .rs-detail-body{padding:.7em .85em;font-size:10pt}
   .section-title{font-size:13.5pt;padding:.4em .7em;margin:1.5em 0 .8em}
 }
-</style></head><body><div id="bar"><a class="back" href="/">← テスト一覧</a><b id="bar-title">テスト 20260812_1（受験）</b><span id="tabs"><button id="tab-gengo" type="button" data-label="言語知識・読解" onclick="goTab('gengo')">言語知識・読解</button><button id="tab-choukai" type="button" data-label="聴解" onclick="goTab('choukai')">聴解</button></span><span class="sub" id="where"></span><span class="grow"></span><span id="bar-controls"><span class="sub" id="clock">残り --:--</span> <span class="sub" id="done">解答済み 0 / 101</span> <button onclick="clearAll()">消去</button> <button onclick="finishGengo(false)" id="advance-btn" class="primary" disabled>聴解へ進む</button> <button onclick="submitAll(false)" id="grade-btn" class="primary" disabled>採点する</button></span></div><script>if(document.documentElement.classList.contains("is-result-mode")){document.getElementById("bar-title").textContent="テスト 20260812_1（採点結果）";}</script><div id="screen-exam"><div class="gate" id="gate-gengo" style="display:none"><h2>言語知識（文字・語彙・文法）・読解</h2><p class="lim">制限時間 <b>105分</b>／全71問</p><p class="note"><span class="warn">開始すると時計が動きます。</span>残り時間が0になった時点で、解答はそのまま自動的に提出されます。<br>提出したあとは、この部分に戻ることはできません。<br>時計はこのタブを見ている間だけ進み、ほかのタブや別のウィンドウに移ると止まります。</p><button class="ui-btn primary" onclick="startSection('gengo')">開始する</button></div><div id="section-gengo" style="display:none"><h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1><h1>【文字・語彙】</h1>
+</style></head><body><div id="bar"><a class="back" href="/">← テスト一覧</a><b id="bar-title">テスト 20260812_1（受験）</b><span id="tabs"><button id="tab-gengo" type="button" data-label="言語知識・読解" onclick="goTab('gengo')">言語知識・読解</button><button id="tab-choukai" type="button" data-label="聴解" onclick="goTab('choukai')">聴解</button></span><span class="sub" id="where"></span><span class="grow"></span><span id="bar-controls"><span class="sub" id="clock">残り --:--</span> <span class="sub" id="done">解答済み 0 / 101</span> <button onclick="clearAll()">消去</button> <button onclick="finishGengo(false)" id="advance-btn" class="primary" disabled>聴解へ進む</button> <button onclick="submitAll(false)" id="grade-btn" class="primary" disabled>採点する</button></span></div><script>if(document.documentElement.classList.contains("is-result-mode")){document.getElementById("bar-title").textContent="テスト 20260812_1（採点結果）";}</script><div id="screen-exam"><div class="gate" id="gate-gengo" style="display:none"><h2>言語知識（文字・語彙・文法）・読解</h2><p class="lim">制限時間 <b>105分</b>／全71問</p><p class="note"><span class="warn">開始すると時計が動きます。</span>残り時間が0になった時点で、解答はそのまま自動的に提出されます。<br>提出したあとは、この部分に戻ることはできません。<br>時計はこのタブを見ている間だけ進み、ほかのタブや別のウィンドウに移ると止まります。</p><button class="ui-btn primary" onclick="startSection('gengo')">開始する</button><div class="gate-alt"><p class="alt-note">じっくり復習したいときは<b>練習モード</b>へ。制限時間も採点もなく、全問が1ページに並び、設問ごとに模範解答・解説を開けます。</p><a class="ui-btn" href="練習.html">練習モードで解く（採点・制限時間なし）</a></div></div><div id="section-gengo" style="display:none"><h1 class="section-title">JLPT N2 言語知識（文字・語彙・文法）・読解</h1><h1>【文字・語彙】</h1>
 <h2>問題1</h2>
 <p>＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。</p>
 <p><strong>1</strong> 針金を<strong>折り曲げて</strong>、フックを作った。<br />
@@ -2320,6 +2326,32 @@ function initClock(){
   clockSync();
 }
 
+async function boot(){
+  fitPlayer();
+  initSpy();
+  window.addEventListener('resize', fitPlayer);
+  const isResult = location.search.indexOf('screen=result') !== -1;
+  if (isResult){
+    showScreen('result');
+    const saved = await STORE.loadResult();
+    if (saved) {
+      showResult(saved, '保存済みの採点結果です。', true);
+    } else {
+      await restore();
+      showScreen('exam');
+    }
+  } else {
+    await restore();
+  }
+  // After restore(), so the first paint is the resumed phase and not a fresh
+  // 105:00 that a slow load would leave on screen for a moment.
+  render();
+  initClock();
+}
+
+document.addEventListener('change', e=>{ if(e.target.type==='radio') refresh(); });
+window.addEventListener('DOMContentLoaded', boot);
+
 /* --------------------------------------------------- where am I in the paper
    The bar names the section and 大問 you are currently reading, from scroll
    position: the exam is one very long page, and 「問題7」 on screen 2 tells you
@@ -2362,32 +2394,6 @@ function fitPlayer(){
   const bar = document.getElementById('bar'), p = document.getElementById('player');
   if (bar && p && bar.offsetHeight) p.style.top = bar.offsetHeight + 'px';
 }
-
-async function boot(){
-  fitPlayer();
-  initSpy();
-  window.addEventListener('resize', fitPlayer);
-  const isResult = location.search.indexOf('screen=result') !== -1;
-  if (isResult){
-    showScreen('result');
-    const saved = await STORE.loadResult();
-    if (saved) {
-      showResult(saved, '保存済みの採点結果です。', true);
-    } else {
-      await restore();
-      showScreen('exam');
-    }
-  } else {
-    await restore();
-  }
-  // After restore(), so the first paint is the resumed phase and not a fresh
-  // 105:00 that a slow load would leave on screen for a moment.
-  render();
-  initClock();
-}
-
-document.addEventListener('change', e=>{ if(e.target.type==='radio') refresh(); });
-window.addEventListener('DOMContentLoaded', boot);
 
 const au = document.getElementById('au');
 function nudge(s){ au.currentTime = Math.max(0, au.currentTime + s); }

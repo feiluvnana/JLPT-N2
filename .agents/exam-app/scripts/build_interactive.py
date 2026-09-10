@@ -60,6 +60,12 @@ CHOUKAI_LIMIT_MIN = 50
 # Everything from here down is the answer key — never rendered.
 KEY_HEADING = re.compile(r"^#+\s*(解答|【?正解)", re.M)
 
+# 練習モード lives beside the sheet in the same folder, in BOTH deployments, so
+# the gate links to it relatively. Same literal as build_practice.OUT_NAME —
+# `make check` asserts the two agree rather than letting one page link at a
+# filename the other stopped writing.
+PRACTICE_HREF = "練習.html"
+
 # 言語知識: `**33** …` and 問題6's `**28 募集**`
 GENGO_Q = re.compile(r"^\*\*(\d{1,2})(\*\*|\s)")
 # 聴解 item headings: `**1番**`, `**質問1**`, `**例**`
@@ -126,6 +132,12 @@ html.is-result-mode #where{display:none!important}
 .gate .note{margin:0 0 1.6em;font-size:10pt;line-height:1.9;color:#475569;text-align:left}
 .gate .warn{color:#b91c1c;font-weight:700}
 .gate button{font-size:12pt;padding:.6em 2.4em}
+/* 練習モード, under the 開始する button of the first gate: a second way to open
+   the same paper, without the clock (build_practice.py). Separated by a rule so
+   it reads as an alternative to starting, not as a step in it. */
+.gate .gate-alt{margin:1.8em 0 0;padding-top:1.4em;border-top:1px solid #e2e8f0}
+.gate .alt-note{margin:0 0 .9em;font-size:9.5pt;line-height:1.8;color:#475569;
+  text-align:left}
 .qa{display:flex;flex-wrap:wrap;gap:.25em 1.1em;margin:.25em 0 .65em 1.2em}
 .qa label{display:inline-flex;align-items:center;gap:.32em;cursor:pointer;
   padding:.15em .6em;border:1px solid #cbd5e1;border-radius:9999px;font-size:10pt;
@@ -1298,6 +1310,41 @@ function initClock(){
   clockSync();
 }
 
+async function boot(){
+  fitPlayer();
+  initSpy();
+  window.addEventListener('resize', fitPlayer);
+  const isResult = location.search.indexOf('screen=result') !== -1;
+  if (isResult){
+    showScreen('result');
+    const saved = await STORE.loadResult();
+    if (saved) {
+      showResult(saved, '保存済みの採点結果です。', true);
+    } else {
+      await restore();
+      showScreen('exam');
+    }
+  } else {
+    await restore();
+  }
+  // After restore(), so the first paint is the resumed phase and not a fresh
+  // 105:00 that a slow load would leave on screen for a moment.
+  render();
+  initClock();
+}
+
+document.addEventListener('change', e=>{ if(e.target.type==='radio') refresh(); });
+window.addEventListener('DOMContentLoaded', boot);
+"""
+
+
+
+# The chrome BOTH solving pages carry: the bar's 「聴解 ｜ 問題2」 read-out and the
+# audio player's sticky offset. Kept out of SCRIPT (and out of its %-formatting)
+# because 練習.html has the same very long paper under the same bar and the same
+# player — build_practice.py concatenates this verbatim. Function declarations
+# hoist, so the order the two strings are joined in does not matter.
+CHROME_JS = """
 /* --------------------------------------------------- where am I in the paper
    The bar names the section and 大問 you are currently reading, from scroll
    position: the exam is one very long page, and 「問題7」 on screen 2 tells you
@@ -1340,32 +1387,6 @@ function fitPlayer(){
   const bar = document.getElementById('bar'), p = document.getElementById('player');
   if (bar && p && bar.offsetHeight) p.style.top = bar.offsetHeight + 'px';
 }
-
-async function boot(){
-  fitPlayer();
-  initSpy();
-  window.addEventListener('resize', fitPlayer);
-  const isResult = location.search.indexOf('screen=result') !== -1;
-  if (isResult){
-    showScreen('result');
-    const saved = await STORE.loadResult();
-    if (saved) {
-      showResult(saved, '保存済みの採点結果です。', true);
-    } else {
-      await restore();
-      showScreen('exam');
-    }
-  } else {
-    await restore();
-  }
-  // After restore(), so the first paint is the resumed phase and not a fresh
-  // 105:00 that a slow load would leave on screen for a moment.
-  render();
-  initClock();
-}
-
-document.addEventListener('change', e=>{ if(e.target.type==='radio') refresh(); });
-window.addEventListener('DOMContentLoaded', boot);
 """
 
 
@@ -1403,13 +1424,22 @@ def example_row(width: int, marked) -> str:
     return f'<div class="qa ex"><span class="qid">例</span>{cells}</div>'
 
 
-def radios(qid: str, width: int, label: str = "") -> str:
+def radios(qid: str, width: int, label: str = "", after=None) -> str:
+    """One question's bubble row, plus whatever the caller hangs off it.
+
+    `after(qid)` is markup the CALLER owns, appended right after the row:
+    練習.html (build_practice.py) puts each question's 解説 reveal there. Both
+    pages therefore inject their radios through this one function and through
+    inject_gengo/inject_choukai below, so they cannot disagree about which items
+    got a group — the practice page is the same paper, laid out flat.
+    """
     cells = "".join(
         f'<label><input type="radio" name="q_{qid}" value="{i}">'
         f'<span>{i}</span></label>'
         for i in range(1, width + 1))
     tag = f'<span class="qid">{label}</span>' if label else ""
-    return f'<div class="qa">{tag}{cells}</div>'
+    extra = after(qid) if after else ""
+    return f'<div class="qa">{tag}{cells}</div>{extra}'
 
 
 def mp3_duration_ms(d: Path) -> int | None:
@@ -1469,10 +1499,24 @@ def gate(sec: str, title: str, limit_ms: int, count: int) -> str:
     Without it, opening a test to look at it would start the exam — and this
     clock submits the paper on its own at 00:00, so 'started by accident' is a
     lost sitting rather than a stray number.
+
+    The FIRST gate carries the way out of the sitting altogether: 練習モード
+    (練習.html — build_practice.py), the same paper with no clock, no grading and
+    the model answer one click away per question. It belongs here because this
+    is the moment the choice is actually made — a reader who wants to study
+    rather than sit the paper must not have to start the clock to find that out.
+    `make sheet` writes both pages, so the link is never dead.
     """
     extra = ("音声は最初から最後まで一続きで流れます。イヤホンなどの準備ができてから"
              "開始してください。" if sec == "choukai" else
              "提出したあとは、この部分に戻ることはできません。")
+    practice = ("" if sec != "gengo" else
+                f'<div class="gate-alt">'
+                f'<p class="alt-note">じっくり復習したいときは<b>練習モード</b>へ。'
+                f'制限時間も採点もなく、全問が1ページに並び、'
+                f'設問ごとに模範解答・解説を開けます。</p>'
+                f'<a class="ui-btn" href="{PRACTICE_HREF}">'
+                f'練習モードで解く（採点・制限時間なし）</a></div>')
     return (f'<div class="gate" id="gate-{sec}" style="display:none">'
             f'<h2>{title}</h2>'
             f'<p class="lim">制限時間 <b>{limit_ms // 60_000}分</b>／全{count}問</p>'
@@ -1482,7 +1526,8 @@ def gate(sec: str, title: str, limit_ms: int, count: int) -> str:
             f'時計はこのタブを見ている間だけ進み、ほかのタブや別のウィンドウに移ると'
             f'止まります。</p>'
             f'<button class="ui-btn primary" onclick="startSection(\'{sec}\')">'
-            f'開始する</button></div>')
+            f'開始する</button>'
+            f'{practice}</div>')
 
 
 def strip_key(md: str, src: Path) -> str:
@@ -1495,15 +1540,18 @@ def strip_key(md: str, src: Path) -> str:
     return md
 
 
-def inject_gengo(md: str):
-    """Radios after each question's option block. Returns (md, question ids)."""
+def inject_gengo(md: str, after=None):
+    """Radios after each question's option block. Returns (md, question ids).
+
+    `after` is passed straight to radios() — see there.
+    """
     out, ids = [], []
     cur, width = None, 0
 
     def flush():
         nonlocal cur, width
         if cur and width:
-            out.append(radios(cur, width))
+            out.append(radios(cur, width, after=after))
             ids.append(cur)
         cur, width = None, 0
 
@@ -1521,7 +1569,7 @@ def inject_gengo(md: str):
             inline = option_run(line[m_q.end():])   # 問題9's all-on-one-line stem
             if inline:
                 out.append(line)
-                out.append(radios(qid, inline))
+                out.append(radios(qid, inline, after=after))
                 ids.append(qid)
                 continue
             cur, width = qid, 0
@@ -1538,8 +1586,10 @@ def inject_gengo(md: str):
     return "\n".join(out), ids
 
 
-def inject_choukai(md: str, keys: list, premarks: dict | None = None):
+def inject_choukai(md: str, keys: list, premarks: dict | None = None, after=None):
     """聴解 has printed options and bare bubble rows. Inject radios.
+
+    `after` is passed straight to radios() — see there.
 
     The 例 of each 問題 gets a STATIC row with its answer already marked instead
     of radios — it is a demonstration, not a scored item.
@@ -1565,7 +1615,7 @@ def inject_choukai(md: str, keys: list, premarks: dict | None = None):
             if ex:
                 out.append(example_row(width, premarks.get(ex)))
             elif cur:
-                out.append(radios(cur, width))
+                out.append(radios(cur, width, after=after))
                 used.append(cur)
         cur, width, ex = None, 0, None
 
@@ -1605,7 +1655,7 @@ def inject_choukai(md: str, keys: list, premarks: dict | None = None):
                      if item.startswith("質問") and section == "5"
                      else key_for(item))
                 if k:
-                    parts.append(f"**{item}** " + radios(k, w))
+                    parts.append(f"**{item}** " + radios(k, w, after=after))
                     used.append(k)
                 elif item == "例":
                     parts.append(example_row(w, premarks.get(section)))
@@ -1750,6 +1800,28 @@ def grading_data(gam, gids: list, ckeys: dict, combined_keys: dict,
 LIST_HREF = {"server": "/", "local": "../../index.html"}
 
 
+def render_bodies(gengo_md: str, choukai_md: str) -> tuple[str, str]:
+    """The two halves of the paper as HTML, through the booklet's render chain.
+
+    Both solving pages go through here — 解答.html below and 練習.html
+    (build_practice.py) — so the ruled passage boxes, the U+3000 option widening
+    and the 聴解 auto-furigana cannot come out differently on one of them. The
+    Markdown handed in has already had its radios injected and its key
+    truncated away.
+    """
+    gengo_md = booklet.box_passages(gengo_md)
+    gengo_md = "\n".join(booklet.widen(l) for l in gengo_md.splitlines())
+    choukai_md = booklet.add_choukai_furigana(choukai_md)
+    choukai_md = "\n".join(booklet.widen(l) for l in choukai_md.splitlines())
+
+    gengo_body = booklet.mark_furigana_blocks(booklet.fit_ruby(
+        markdown.markdown(gengo_md, extensions=["tables", "nl2br"])))
+    gengo_body = booklet.box_passages_html(gengo_body)
+    choukai_body = booklet.mark_furigana_blocks(booklet.fit_ruby(
+        markdown.markdown(choukai_md, extensions=["tables", "nl2br"])))
+    return gengo_body, choukai_body
+
+
 def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
                     out_path: Path, gdata: dict, player: str = "",
                     sources=(), storage: str = "server"):
@@ -1760,14 +1832,7 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
     # sitting's 問題5 can yield a different 聴解 total.
     n_gengo = sum(1 for k in keys if str(k).isdigit())
     n_choukai = len(keys) - n_gengo
-    gengo_md = booklet.box_passages(gengo_md)
-    gengo_md = "\n".join(booklet.widen(l) for l in gengo_md.splitlines())
-    choukai_md = booklet.add_choukai_furigana(choukai_md)
-    choukai_md = "\n".join(booklet.widen(l) for l in choukai_md.splitlines())
-
-    gengo_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(gengo_md, extensions=["tables", "nl2br"])))
-    gengo_body = booklet.box_passages_html(gengo_body)
-    choukai_body = booklet.mark_furigana_blocks(booklet.fit_ruby(markdown.markdown(choukai_md, extensions=["tables", "nl2br"])))
+    gengo_body, choukai_body = render_bodies(gengo_md, choukai_md)
 
     if storage not in LIST_HREF:
         raise ValueError(f"unknown storage backend: {storage}")
@@ -1819,6 +1884,7 @@ def render_combined(gengo_md: str, choukai_md: str, testid: str, keys: list,
     js = SCRIPT % {"keys": json.dumps(keys, ensure_ascii=False), "testid": testid,
                    "storage": storage,
                    "list_href": json.dumps(list_href, ensure_ascii=False), **gdata}
+    js += CHROME_JS
     # The localStorage backend is a shared snippet, included only where it is the
     # live one — a server build must not even be able to write a second copy.
     if storage == "local":
@@ -1968,6 +2034,13 @@ def build(d: Path, storage: str = "server", out_dir: Path | None = None) -> Path
     render_combined(gmd, cmd, testid, all_keys, out, gdata, player=player_html(d),
                     sources=[gengo_src, choukai_src, script_src,
                              d / "聴解_チャプター.json"], storage=storage)
+
+    # Both modes of the same paper are written by one command, so the 練習モード
+    # button on the gate above cannot open a page built from a superseded
+    # booklet. Imported here rather than at module scope: build_practice imports
+    # THIS module for the injectors it shares.
+    import build_practice
+    build_practice.build(d, out_dir=out_dir, storage=storage)
 
     has_mp3 = (d / "聴解.mp3").is_file()
     chap = d / "聴解_チャプター.json"

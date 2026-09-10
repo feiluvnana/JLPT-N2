@@ -1,6 +1,6 @@
 ---
 name: exam-app
-description: Single owner of rendering and running the exam. Owns the whole app surface — Markdown sources → booklet HTML with A4 print geometry and furigana helpers (NO PDF, ever), the MERGED problem+answer sheet 解答.html with radio bubbles, an embedded 聴解 audio player and in-page 180-point grading, the ONE local server and test list, the static GitHub Pages build that keeps answers in localStorage, and CLI grading (scaled 0–180 scores, pass/fail evaluation, 採点結果.json) via grade_answers.py. Use whenever generating/regenerating/fixing exam booklets or formatting (answers squashed on one line, cramped spacing, furigana misaligned, tables splitting across pages); whenever the user wants to take/answer/solve a test on screen, mentions the answer sheet, マークシート, 解答用紙, the test list, playing the listening audio while answering, or publishing/hosting the exam on GitHub Pages; and whenever the user asks to grade, score, check answers, 採点, 答え合わせ, or analyze exam results.
+description: Single owner of rendering and running the exam. Owns the whole app surface — Markdown sources → booklet HTML with A4 print geometry and furigana helpers (NO PDF, ever), the MERGED problem+answer sheet 解答.html with radio bubbles, an embedded 聴解 audio player and in-page 180-point grading, the untimed 練習.html (練習モード) that lays the same paper out flat with a per-question model answer, the ONE local server and test list, the static GitHub Pages build that keeps answers in localStorage, and CLI grading (scaled 0–180 scores, pass/fail evaluation, 採点結果.json) via grade_answers.py. Use whenever generating/regenerating/fixing exam booklets or formatting (answers squashed on one line, cramped spacing, furigana misaligned, tables splitting across pages); whenever the user wants to take/answer/solve a test on screen, mentions the answer sheet, マークシート, 解答用紙, 練習モード / practice mode, the test list, playing the listening audio while answering, or publishing/hosting the exam on GitHub Pages; and whenever the user asks to grade, score, check answers, 採点, 答え合わせ, or analyze exam results.
 ---
 
 # Exam App (冊子レンダリング・解答用紙・サーバー・採点)
@@ -12,6 +12,7 @@ server, the static Pages twin, and grading — all in `.agents/exam-app/scripts/
 | - | - |
 | `build_booklet.py` | Markdown → booklet HTML (`言語知識・読解.html`, `聴解.html`); shared CSS and ruby/furigana helpers |
 | `build_interactive.py` | Markdown → `解答.html`, the merged sheet with in-page grading; also the `--keyless` QA render |
+| `build_practice.py` | Markdown → `練習.html`, 練習モード: the same paper flat, no clock, no grading, one model answer per question |
 | `serve_sheet.py` | the ONE local server: test list, exam, results, saved into `tests/<id>/` |
 | `build_pages.py` | the static GitHub Pages build into `_site/` |
 | `grade_answers.py` | CLI grading twin: scaled scores, pass/fail, `採点結果.json` |
@@ -36,12 +37,19 @@ server, the static Pages twin, and grading — all in `.agents/exam-app/scripts/
   known difference, not a bug.
 - `build_pages.py` calls `build_interactive.build()` rather than copying
   `解答.html`, which would ship a sheet POSTing to a nonexistent API.
+- `build_practice.py` imports the sheet's own `strip_key()`,
+  `inject_gengo()`/`inject_choukai()` (through their `after=` hook),
+  `render_bodies()`, `player_html()`, `PLAYER_JS` and `CHROME_JS`, and
+  exam-model-answer's `explanation_box_html()`/`EXPLANATION_CSS`/
+  `LANG_SWITCH_JS`. It formats no exam text and no explanation prose of its own
+  — 練習モード is the same paper and the same explanations, laid out differently.
 
 ## Execution
 
 ```bash
 python3 .agents/exam-app/scripts/build_booklet.py tests/<id>/言語知識・読解.md tests/<id>/聴解.md   # make booklet <id>
-python3 .agents/exam-app/scripts/build_interactive.py tests/<id>                                    # make sheet <id>
+python3 .agents/exam-app/scripts/build_interactive.py tests/<id>                                    # make sheet <id> — writes BOTH 解答.html and 練習.html
+python3 .agents/exam-app/scripts/build_practice.py tests/<id>                                       # make practice <id> (練習.html alone)
 python3 .agents/exam-app/scripts/serve_sheet.py                                                      # make serve (--port 8765, --no-open; NO test id)
 python3 .agents/exam-app/scripts/build_pages.py                                                       # make pages (then make preview-pages)
 python3 .agents/exam-app/scripts/build_interactive.py tests/<id> --keyless                           # make keyless <id> -> qa/<id>/keyless.md
@@ -133,6 +141,8 @@ its base; Cmd-P to preview pagination.
 deliverable: answer **inside the booklet**, press 「採点する」, the 180-point
 result appears immediately. `make serve` (no test id) covers every test; the
 same screens ship as a static Pages site — only where answers are kept differs.
+The paper's other mode, 練習.html, is its own page and not one of these three —
+see 練習モード below.
 
 | # | Screen | Where it lives | What it does |
 | - | ------ | -------------- | ------------ |
@@ -152,6 +162,49 @@ file. Rebuild audio and the sheet seeks to the previous build's offsets while
 the Markdown stays byte-identical — the chapter JSON is stamped as a
 **fourth source** of `解答.html`, and `make check` fails a sheet older than
 its chapters.
+
+## 練習モード — `練習.html`, the paper's other mode
+
+The sitting above is one way to use a paper; studying it is the other, and they
+want opposite pages. `練習.html` is built from the same Markdown by the same
+injectors, and it is deliberately NOT a sitting:
+
+| | `解答.html` (試験モード) | `練習.html` (練習モード) |
+| - | - | - |
+| What is on screen | one section at a time, behind a 開始する gate | all 101 items, both sections, from the start |
+| Clock | 105分 / 50分, auto-submits at 00:00 | none |
+| Score | 180 points, once, when 聴解 goes in | none — nothing is added up |
+| Model answer | after grading (or in `模範解答.html`) | one button per question, any time |
+| Record kept | `ユーザー解答.json` + `採点結果.json` | **nothing** |
+
+- **The way in is a button under 言語知識・読解's 開始する button** (`gate()`),
+  because that is the moment the choice is actually made — finding the practice
+  page must not cost you the start of a sitting. `make sheet` writes BOTH pages,
+  so the link cannot point at a practice page built from a superseded booklet;
+  `make practice <id>` rebuilds just the practice page, which is what you want
+  after `詳細解説.json` changes (its one source `解答.html` does not have, and a
+  stamped one — `make check` fails a practice page older than its explanations).
+- **One 解説 reveal per question**, injected right after that question's bubble
+  row through `radios(after=…)`. Opening it shows 正解: N, the 聴解 script for a
+  listening item, and exam-model-answer's own `.explanation-box` — the same
+  markup `模範解答.html` prints, in both languages behind the same
+  `.lang-pane` mechanism and the same stored preference
+  (`build_model_answer.LANG_STORE_KEY`). No explanation prose is formatted here.
+- **The verdict is per item and appears with the answer**: opening a reveal
+  compares your selection with the key and marks 正解/不正解 for that question
+  alone. No total is computed anywhere on the page — 採点 belongs to the sitting,
+  and a practice page that scored you would be a second, untimed grader.
+- **Nothing is stored.** No POST, no localStorage, no download: marks made in
+  practice are gone on reload. A second answer store beside the sitting's is
+  exactly the desync 「One store per build」 exists to prevent, and there is no
+  score to keep. The only thing read back from the browser is the explanation
+  language.
+- The container id is `screen-exam`, reused on purpose: this IS the exam screen
+  with the phase machine taken out, so the sheet's layout, bubbles, player
+  chrome and 「聴解 ｜ 問題2」 read-out apply unchanged. `make check`
+  (`check_practice_mode`, plus the per-test half) asserts the link resolves, the
+  two pages carry the same 101 questions, every question has a reveal, and the
+  page carries no clock, grader or store.
 
 ## Grading — press 「採点する」 (in-page: the normal path)
 

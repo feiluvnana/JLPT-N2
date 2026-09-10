@@ -290,7 +290,7 @@ desynchronize the explanations from the exam.
 | Script shape | `choukai-audio` |
 | Booklet HTML | `exam-app` / `make booklet <id>` |
 | TTS MP3 (if no external audio) | `choukai-audio` / `make mp3 <id>` |
-| Answer sheet | `exam-app` / `make sheet <id>` |
+| Answer sheet + practice page | `exam-app` / `make sheet <id>` (writes 解答.html and 練習.html) |
 | Gate | `make check` |
 | Content check | Step 2 above — not `exam-qa-review` |
 | Model Answer (Final) | `exam-model-answer` / `make model-answer <id>` |

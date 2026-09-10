@@ -1,6 +1,6 @@
 # Makefile for JLPT N2 Mock Exam Pipeline
 
-.PHONY: help check check-tests goi-profile dokkai-profile choukai-profile grade sheet model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
+.PHONY: help check check-tests goi-profile dokkai-profile choukai-profile grade sheet practice model-answer explanation keyless serve pages preview-pages booklet mp3 sample \
        init-import extract-pdf extract-archive extract-keys extract-kanji-tables extract-shinkanzen-goi extract-shinkanzen-dokkai extract-shinkanzen \
        lint-draft lint verify-scramble scaffold-explanations irt \
        scaffold-sections matrix qa-eval autofix findings repair-plan choukai-bank \
@@ -10,7 +10,7 @@
 # Equivalent: "make grade TEST=1". `serve` is deliberately NOT here: one server
 # covers every test, so it takes no id. `pages` builds every test by default;
 # "make pages 1" (or TEST=1) narrows it to one.
-TARGET_CMDS := grade sheet model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt scaffold-sections matrix qa-eval autofix repair-plan upload-files
+TARGET_CMDS := grade sheet practice model-answer explanation keyless booklet mp3 pages sample lint-draft lint verify-scramble scaffold-explanations irt scaffold-sections matrix qa-eval autofix repair-plan upload-files
 FIRST_GOAL   := $(firstword $(MAKECMDGOALS))
 
 ifneq ($(filter $(FIRST_GOAL),$(TARGET_CMDS)),)
@@ -66,7 +66,8 @@ help:
 	@echo "  make textbook-bank    Measure/validate the Shin Kanzen + Soumatome half of the bank"
 	@echo "  make number-calls     Re-harvest the 11 official 「N番。」 clips textbook items are given"
 	@echo "  make choukai-wear     Measure how hard the clip pool is mined (sets TEXTBOOK_SLOTS)"
-	@echo "  make sheet 1          Build interactive answer sheet for test 1 (解答.html)"
+	@echo "  make sheet 1          Build BOTH modes of test 1: 解答.html (exam) + 練習.html (practice)"
+	@echo "  make practice 1       Rebuild only the practice page for test 1 (練習.html)"
 	@echo "  make model-answer 1   Build model answer & explanation for test 1 (模範解答.html)"
 	@echo "  make explanation 1    Alias for make model-answer"
 	@echo "  make scaffold-explanations 1 Scaffold explanation JSON template directly from markdown"
@@ -173,8 +174,17 @@ choukai-wear:
 number-calls:
 	python3 tools/harvest_number_calls.py $(if $(CHECK),--check,)
 
+# Writes BOTH modes of the paper: 解答.html (the timed, graded sitting) and
+# 練習.html (練習モード — no clock, no grading, per-question model answers). One
+# command on purpose: the sitting's 開始する gate links to the practice page, and
+# two commands would let that link open a page built from a superseded booklet.
 sheet:
 	python3 .agents/exam-app/scripts/build_interactive.py tests/$(TEST)
+
+# Just the practice page — for re-rendering after 詳細解説.json changes, which is
+# the one source it has that 解答.html does not.
+practice:
+	python3 .agents/exam-app/scripts/build_practice.py tests/$(TEST)
 
 model-answer:
 	python3 .agents/exam-model-answer/scripts/build_model_answer.py tests/$(TEST)
