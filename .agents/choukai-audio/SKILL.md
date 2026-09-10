@@ -47,6 +47,15 @@ no distractors to design.
   1.0–2.4 for an official one.
 - Each paper's mix is recorded in `logs/choukai_draws.json` under `sources`, so
   it is readable without re-deriving it from the bank.
+- **A fixed seed does not fix the draw across composer changes.** `avoid_slot`,
+  the figure exclusion and the wear counts all run inside the per-slot choice,
+  so any change to them re-draws the whole half at the same seed. After ANY
+  `make mp3` re-run, diff `logs/choukai_draws.json` against the previous row and
+  **report the number of slots that moved** — never assert that one slot moved
+  because only one was intended to. (`20260909_1`'s round-1 dispositions said
+  "re-composed on the SAME seed; only 問題1-2 moved"; 25 of 29 slots had moved,
+  and every downstream reader inherited the false claim —
+  qa-report-20260909_1-round2 R2-S1.)
 
 ### The five files that own this
 
@@ -59,7 +68,7 @@ no distractors to design.
 | `tools/harvest_number_calls.py` | `logs/choukai_number_calls.json` — one clean official 「N番。」 per number 1–11, all from one sitting |
 | `tools/compose_choukai.py` | Drawing a paper, applying the source policy, prepending number calls, and laying the clips out with the pacing table's pauses |
 
-### Three rules that are not style choices
+### Four rules that are not style choices
 
 1. **Official draws are slot-preserving.** Item *k* of 問題N may only be drawn
    from item *k* of 問題N in some sitting. Official reads 「N番。」 continuously
@@ -74,13 +83,51 @@ no distractors to design.
    harvested official 「N番。」 plus `AFTER_NUMBER_CALL` = 2.7 s — the measured
    median pause an official item leaves after its own call. The chapter mark
    goes on the CALL, not the body. A slot-free clip must not land in two slots
-   of one paper; the draw excludes what it has already spent.
+   of one paper; the draw excludes what it has already spent — **and it must
+   not land in ANY slot of the paper before it** (2026-09-10): the per-slot bar
+   is exact for an official draw, which is slot-preserving, and blind to a
+   slot-free one, which the composer may place a slot over. 14 of the 25
+   consecutive transitions on record repeated a slot-free clip that way before
+   `freshest()` took the whole previous paper as a bar.
 3. **問題2's items contain their own option-reading pause.** A 問題2 item is
    「N番。」+situation+question → ~20 s to read the printed options → the talk →
    the question again. The 20 s pause is INSIDE the item, not between items.
    Cutting from the pause's end instead drops the announcer's question entirely
    and leaves the composed audio running a 12 s answer pause straight into the
    next 20 s pause with no speech between them.
+4. **Every freshness bar compares clip IDS, so two DIFFERENT clips can still be
+   one item.** Added 2026-09-10 (qa-report-20260910_1 F3/F4) after two of them
+   shipped in one paper. Three mechanisms cover the gap, and which one applies
+   is decided by MEASUREMENT, never by taste:
+   - **Content-decidable → a threshold.** A 問題3 item's four spoken options
+     name the four candidate subjects of the talk, so an option SET that
+     repeats the previous paper's is the same item however different the
+     recording is. Kanji/katakana-token Jaccard against every 問題3 option set
+     of the previous paper: official runs **median 0.067, max 0.200** over its
+     nine consecutive transitions (n=45 items); `20260910_1` 問題3-3番 scored
+     **0.571** against `20260909_1` 問題3-3番 — same slot, same 調査報告
+     template, the same four categories, the same key (「〜を利用する理由」).
+     `compose_choukai.OPTION_SET_REUSE_MAX` = **0.30** bars it in the draw and
+     `check_choukai_option_set_reuse` FAILs it in `make check`. Change the two
+     together; six pre-bar papers at 1.00 are grandfathered BY NAME there.
+   - **Not content-decidable → a penalty, never a ban.** Two clips sharing a
+     personal name is the errand-identity proxy, and both mechanical forms of
+     it are refuted: a cross-paper name BAN fires on the archive (**5 of 9**
+     consecutive official transitions share a surname inside one 大問,
+     including 小野 in 問題4 of 2024-12 *and* 2025-07, on different errands),
+     and content similarity does not separate the offending pair either
+     (**0.231** token-Jaccard against an official consecutive-sitting max of
+     **0.250**, n=99). So `name_clash()` now reaches the previous paper's
+     per-大問 name sets at the same `NAME_CLASH_PENALTY` and stays a penalty: it
+     re-orders the draw (measured: 20 of 29 slots at one seed) and never makes
+     it infeasible. **A shared surname on a different errand is therefore not a
+     defect** — do not "repair" one.
+   - **Neither → name the pair.** `MUTUALLY_EXCLUSIVE_CLIPS` is the exact list
+     of clip pairs a review read side by side and judged one item; being exact
+     is what licenses a hard bar, within one paper **and** across consecutive
+     papers. Scoping the original repair to one paper only RELOCATED the
+     collision into the next paper — add the pair here rather than widening a
+     proxy.
 
 ### Adding a NEW SOURCE — the five-point check comes BEFORE any transcription
 

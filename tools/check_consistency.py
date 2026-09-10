@@ -518,6 +518,18 @@ def check_practice_mode():
           "explanation_box_html" in src and "EXPLANATION_CSS" in src,
           "import the box from build_model_answer — a second renderer drifts "
           "from 詳細解説.json (AGENTS.md §'one owner per rule')")
+    ma = load(".agents/exam-model-answer/scripts/build_model_answer.py")
+    check("練習.html reuses exam-model-answer's 原文/訳 control, not its own",
+          all(n in src for n in ("ptext_switch_html", "PASSAGE_TOGGLE_CSS",
+                                 "PASSAGE_TOGGLE_JS"))
+          and all(hasattr(ma, n) for n in ("ptext_switch_html",
+                                           "PASSAGE_TOGGLE_CSS",
+                                           "PASSAGE_TOGGLE_JS")),
+          "both study pages toggle a 読解 passage between 原文 and 訳 over the "
+          "same `passage_translation`; the control's markup, CSS and handler "
+          "are exam-model-answer's and are IMPORTED — a second copy here would "
+          "drift from the markup exactly as a second explanation renderer "
+          "would (exam-app §練習モード, exam-model-answer §'second reader')")
     check("練習.html injects its radios through the sheet's own injectors",
           "bi.inject_gengo" in src and "bi.inject_choukai" in src
           and "bi.render_bodies" in src,
@@ -668,6 +680,13 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     # a `logs/topics.json` surface record that has to move with it. Handing the
     # word to a distractor would be a cell edit and is explicitly NOT the repair.
     "choukai_key_exclusive_token":    ("<section re-author>", "authoring"),
+    # F4 (qa-report-20260910_1): a 問題3 item repeating the previous paper's
+    # option SET is not editable — both option lists are lifted from real
+    # recordings and 聴解.md is a `make mp3` output. The only repair is another
+    # draw, and the composer bars the clip itself
+    # (compose_choukai.OPTION_SET_REUSE_MAX), so re-running `make mp3` with a
+    # fresh RNG seed is both the repair and the proof.
+    "choukai_option_set_reuse":       ("<composed re-draw>",  "deterministic"),
     "choukai_probe_carousel":         ("<section re-author>", "authoring"),
     "choukai_q3_talk_band":           ("<section re-author>", "authoring"),
     "choukai_q4_stimulus_register":   ("<section re-author>", "authoring"),
@@ -770,6 +789,15 @@ REPAIR_TIER = {
     "聴解スクリプト.txt": "B",
     "<section re-author>": "C",
     "聴解.mp3": "R",          # rebuild only: `make mp3` + `make sheet`, no content change
+    # A COMPOSED paper has no authored 聴解, so its tier-C repair is not a
+    # re-author — it is another draw (`make mp3 <id> SEED=<rng>`). It ranks C
+    # for the same reason a section re-author does: the blast radius is the
+    # whole 聴解 half. A fixed seed does NOT hold the draw across composer
+    # changes (choukai-audio Part 0), so a re-draw moves many slots — measured
+    # on `20260910_1`, 19 of 29 at the same seed — and every downstream
+    # artifact (script, booklet, MP3, chapters, both 詳細解説 panes,
+    # logs/choukai_draws.json, logs/topics.json's 聴解 rows) moves with it.
+    "<composed re-draw>": "C",
     # 読解 artifacts (REPORT-DOKKAI.md §5.0). Tier B here drags more than tier B
     # in 聴解: a passage edit re-opens every item anchored on that passage —
     # span identity, 解説 quotes, overlap direction, key rank.
@@ -1541,8 +1569,99 @@ def check_grammar_p8_targets(gt: str, opts: dict[int, list[str]], test_id: str):
          "never leave spec/ledger recording a construction the paper does not test")
 
 
+# A speaker turn is a LABEL immediately followed by a quotation whose close is
+# the end of the line or the next turn: 「父「…」　母「…」」. An embedded
+# quotation is never one — it is followed by a particle or a verb
+# (「…」と言った, 「母の日」だったので, 「ABCチーズ」は, 漢字の「鰆」と書く), and
+# splitting one across lines would cut a sentence in half. The distinction is
+# the whole check: a looser "the stem line contains 「" detector over-counts
+# this corpus 4 → 9 papers, all five extra hits being embedded quotations.
+M8_TURN = re.compile(r"([^\s　「」（）()、。！？]{1,6})「([^」]*)」")
+# `（会社で）`/`(電話で)`/`（インタビューで）` — the setting label bunpou.md puts
+# alone on the stem's first line.
+M8_SETTING_LABEL = re.compile(r"^[（(][^）)\n]{1,12}[）)]")
+
+# Papers already on disk when check_mondai8_dialogue_layout() landed
+# (2026-09-10, qa-report-20260910_1-round2 F3). Grandfathered BY NAME, never by
+# loosening the predicate — each was verified against its own source page and
+# each is a TRANSCRIPTION-fidelity defect for `external-test-import` to repair
+# in its own pass, not a layout choice this repo made:
+#   imported-n2-2021-12 問題8-46 — official prints `(電話で)` on its own line,
+#     then `A「…」`, then `B「…」` (refs/JLPT_N2_NEW/12. N2 12-2021/booklet.md).
+#   imported-n2-2023-12 問題8-46 — official prints `(インタビューで)` on its own
+#     line (refs/JLPT_N2_NEW/14. N2 12-2023/booklet.md).
+#   imported-n2-2024-12 問題8-44 — official prints 娘「…」 and 母「…」 on two
+#     lines (refs/JLPT_N2_NEW/15. N2 12-2024/booklet.md).
+# Delete an id from this set when that paper's stem is re-split; never add a
+# generated paper to it.
+M8_DIALOGUE_LAYOUT_GRANDFATHERED = {
+    "imported-n2-2021-12",
+    "imported-n2-2023-12",
+    "imported-n2-2024-12",
+}
+
+
+def _m8_collapsed_turns(first_line: str) -> list[str]:
+    """Speaker turns printed on the stem's own `**N**` line."""
+    turns = []
+    for m in M8_TURN.finditer(first_line):
+        rest = first_line[m.end():].lstrip(" 　")
+        if rest == "" or M8_TURN.match(rest):
+            turns.append(f"{m.group(1)}「…」")
+    return turns
+
+
+def check_mondai8_dialogue_layout(test_id: str, stems: dict[int, str]):
+    """問題8 dialogue/setting stems print the label and each turn on its OWN line.
+
+    THE RULE (`question-authoring/references/bunpou.md` §"Dialogue/setting
+    Markdown layout", which 問題7 and 問題8 share): (1) `（会社で）` alone on the
+    stem's first line after `**N**`; (2) each speaker turn on its own following
+    line; (3) the option row still on ONE line under the turns. *"Collapsing to
+    `**40** （会社で）A「…」B「…」` is forbidden — reads as a drill line."*
+
+    Official does not collapse: 12/2024 問題8-44 prints 娘「…」 and 母「…」 on two
+    lines, 12/2021 問題8-46 prints `(電話で)` / `A「…」` / `B「…」` on three, and
+    12/2023 問題8-46 puts `(インタビューで)` alone above its monologue.
+
+    Why this check exists (2026-09-10, qa-report-20260910_1-round2 F3): the rule
+    was written, and the gate REWARDED breaking it. `check_scramble_stars()` read
+    only the stem's first line, so on the mandated layout that line is bare
+    「（家で）」 — 0 blanks, no ★ — and the check FAILed; on the forbidden collapsed
+    line it found 4 blanks with ★ third and PASSed. An author who obeyed the owner
+    could not get to green. `20260910_1` shipped 45 and 47 collapsed for exactly
+    that reason, and the same paper's 問題7-33/39 are split, so one paper
+    contradicted itself between 大問. Widening the capture removed the punishment;
+    this line supplies the rule.
+    """
+    if test_id in M8_DIALOGUE_LAYOUT_GRANDFATHERED:
+        return skip(f"{test_id}: 問題8 dialogue stems split label and turns "
+                    "onto their own lines", "[pre-rule paper]")
+    bad = []
+    for q in sorted(stems):
+        first = stems[q].split("\n")[0].strip()
+        turns = _m8_collapsed_turns(first)
+        if len(turns) >= 2:
+            bad.append(f"{q}: {' '.join(turns)} on the 「**{q}**」 line")
+            continue
+        lab = M8_SETTING_LABEL.match(first)
+        if lab:
+            rest = first[lab.end():].lstrip(" 　")
+            if rest.startswith("「") or _m8_collapsed_turns(rest):
+                bad.append(f"{q}: 「{lab.group(0)}」 shares its line with "
+                           f"「{rest[:12]}…」")
+    check(f"{test_id}: 問題8 dialogue stems split label and turns onto their "
+          "own lines", not bad,
+          "; ".join(bad) + " — bunpou.md §\"Dialogue/setting Markdown layout\" "
+          "forbids `**45** （家で）父「…」　母「…」`: put the label alone on the "
+          "first line, each speaker turn on its own line, the option row on one "
+          "line under them. Official 12/2024 問題8-44 prints the two turns on "
+          "two lines. An embedded quotation (「…」と言った) is NOT a turn and "
+          "must not be split")
+
+
 def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str]],
-                         origin: str = "generated"):
+                         origin: str = "generated", test_id: str = ""):
     """問題8: the key must name the option that lands on ★ (the 3rd blank).
 
     Both facts are checkable from the Markdown alone: the stem must offer four
@@ -1563,11 +1682,29 @@ def check_scramble_stars(gt: str, keys: dict[int, int], opts: dict[int, list[str
     just without dictating where the sitting put its star. Same reason the
     4-slot count is only advisory here: 7/2024's item 46 prints 「＿＿ ＿＿ ★ 、
     ＿＿」, a run the source's own 読点 splits.
+
+    THE STEM IS A SPAN, NOT A LINE (2026-09-10, qa-report-20260910_1-round2 F3).
+    Until today this read only the FIRST line after `**N**`, and a 問題8 stem
+    is routinely several lines: `bunpou.md` §"Dialogue/setting Markdown layout"
+    MANDATES `（家で）` alone on the first line with each speaker turn on its
+    own line below, exactly as official 12/2024 問題8-44 prints it. On that
+    mandated layout the first line is just 「（家で）」 — 0 blanks, no ★ — so
+    the check FAILed the required form and PASSed the forbidden collapsed one
+    (`**45** （家で）父「…」　母「…」＿＿ ＿＿ ★ ＿＿`). The gate was therefore
+    not blind but WRONG, and it shaped eight papers on disk into the layout its
+    own owner forbids. The capture now runs from `**N**` to whichever comes
+    first of the option row, the next stem, the next `##` heading, or EOF —
+    the same multi-line span `build_booklet.py` renders as one question, and
+    the same way `check_carrier_lengths()` has always read 問題7.
     """
     imported = origin == "imported"
     m8 = re.search(r"^##\s*問題8\b.*?(?=^##\s*問題9\b)", gt, re.M | re.S)
     m8_text = m8.group(0) if m8 else ""
-    stems = {int(n): s for n, s in re.findall(r"^\*\*(\d+)\*\*\s*(.+)$", m8_text, re.M)}
+    stems = {int(n): s for n, s in re.findall(
+        r"^\*\*(\d+)\*\*[ \t]*(.*?)(?=^[ \t]*[1-4]\.[ \t]|^\*\*\d+\*\*|^##|\Z)",
+        m8_text, re.M | re.S)}
+    if test_id:
+        check_mondai8_dialogue_layout(test_id, stems)
     q_list = sorted(stems.keys()) if stems else list(range(43, 48))
     bad_stem, star_at = [], {}
     for q in q_list:
@@ -2725,6 +2862,106 @@ CLOSING_REFRAME_GRANDFATHERED = {
     # recorded honestly, at closing scope.
     "20260817_2": 4,
 }
+
+
+# F2-b (qa-report-20260910_1). The two `not-A-but-B` checks above read a MARKER
+# FAMILY in the passage prose, and the monoculture they were meant to catch does
+# not need a marker: `20260910_1` ran the same rhetorical MOVE — 〈通説または自分の
+# 想定した原因 X が述べられる → ところが／しかし／外れた → 実は Y〉 — on 6 of its 13
+# surfaces while `check_dokkai_closing_reframe` printed 2 matched and
+# `check_dokkai_closing_reframe_scope` printed 0 of 13, because six of the eight
+# instances perform the reframe with no override phrase at all.
+#
+# What IS decidable is the skeleton's two ENDS: a belief attributed to someone
+# (「〜と言われてきた」「〜だろうと思っていた」) and a denial pivot that turns on it
+# (「ところが」「見当は外れた」). A surface carrying BOTH is running the skeleton.
+# This is a proxy and stays one — `jlpt-test-generation` §"One topic, one
+# surface" still requires the MOVE column be read by hand, because a surface can
+# run the skeleton with neither end marked.
+#
+# FOUNDING-CASE RUN (§6.5), by this predicate over all 36 papers on disk the day
+# it landed (2026-09-10): official `imported-n2-*` **0–3** (n=10, max
+# `imported-n2-2025-07`); generated 20260807_1..20260909_1 **0–4** (n=25). WARN
+# above 3 therefore fires on **no official sitting** and re-classifies exactly
+# **one** shipped paper — `20260817_2` at 4 (問題11(2)/(3)/(4)+問題13), a WARN and
+# not a FAIL. Both figures are what round 1 predicted for it.
+#
+# THE ONE CLAUSE THIS RUN COULD NOT TEST, stated rather than glossed: the check
+# landed AFTER `20260910_1`'s round-1 F2 repair, so its founding text no longer
+# exists on disk and "fires on its own founding case" is corroborated only by
+# round 2's hand re-derivation (6 pre-repair, 3 post on the separate-surface
+# scale). This predicate reads that repaired paper at **1** with 問題12 A/B folded
+# — narrower than round 2's hand read, which is the point of the caveat above:
+# it sees only the marker-bearing half of the skeleton. Do not read a low number
+# here as a verdict on the MOVE column.
+BELIEF_ATTRIBUTION = re.compile(
+    r"と(?:は)?(?:長く)?言われ|と思われ|と思っていた|と思っており|と考えられ"
+    r"|だと説明され|片づけられがち|そう信じ|思い込|だろうと思|のが自然である"
+    r"|ずっと思って|と教わ|とされてき")
+DENIAL_PIVOT = re.compile(
+    r"ところが|しかし|だが、|けれども|見当は外れ|ではありませんでした"
+    r"|ではなかった|には無理がある|計算が合わなく")
+BELIEF_DENIAL_WARN = 3      # official band is 0–3 (n=10): 3 is inside it
+BELIEF_DENIAL_FAIL = 4      # 20260817_2 sits at 4 and must WARN, not FAIL
+
+
+def check_dokkai_belief_denial_monotony(test_id: str, body: str, bi):
+    """Cap the 〈通説 X → 否認 → 実は Y〉 skeleton across the 13 読解 surfaces.
+
+    THE RULE: `jlpt-test-generation` §"One topic, one surface" caps one
+    rhetorical MOVE at two surfaces, and its MOVE bullet names this skeleton by
+    name. `dokkai.md`'s closing-shape cap cannot see it — the skeleton is a
+    whole-surface argument, not a closing — and the two reframe checks above
+    cannot either, because they need an override marker this move does not use.
+
+    WHAT IT COUNTS: surfaces whose prose carries BOTH a belief attribution and a
+    denial pivot. Both ends, not either: a bare 「しかし」 is ordinary prose and
+    fires on every paper, and a belief attribution with nothing turning on it is
+    just reported opinion.
+
+    THE REPAIR is the SURFACE, never the marker. Re-angle the extra surfaces
+    onto a different move (a mechanism explained, a report of what was counted,
+    a first-person before/after, an answer to an objection) — deleting the
+    「ところが」 while keeping the argument is the dodge this check's two
+    predecessors were widened to catch. `20260910_1` re-angled five surfaces
+    and went 6 → 3 with no key, option or answer position moved.
+
+    Green is not proof: this is the marker-bearing half of the move. Read the
+    MOVE column down the SKELETON by hand, as the owner requires.
+    """
+    hits: dict[str, str] = {}
+    read = 0
+    for lab, prose in dokkai_closing_scopes(body, bi):
+        if not prose.strip():
+            continue
+        read += 1
+        b = BELIEF_ATTRIBUTION.search(prose)
+        d = DENIAL_PIVOT.search(prose)
+        if b and d:
+            hits[lab] = f"「{b.group(0)}」+「{d.group(0)}」"
+    # 問題12(A)+(B) are ONE surface for this cap — the A/B pair shares its move
+    # by format, so counting them twice spends the whole quota on one 大問
+    # (the owner's own wording in the MOVE bullet).
+    counted = {("問題12" if lab.startswith("問題12") else lab) for lab in hits}
+    n = len(counted)
+    name = (f"{test_id}: at most {BELIEF_DENIAL_WARN} 読解 surfaces run the "
+            f"〈通説→否認→実は〉 skeleton ({n} of {read} surfaces; 問題12 A/B "
+            f"counted once)")
+    detail = (f"{sorted(hits)} — "
+              + "; ".join(f"{k} {v}" for k, v in sorted(hits.items()))
+              + f" — official runs 0–3 of 13 (n=10 imports). Re-angle the extra "
+                f"surfaces onto a different rhetorical move; do NOT delete the "
+                f"「ところが」 and keep the argument, which is the dodge "
+                f"`check_dokkai_closing_reframe` exists to catch. This is a "
+                f"PROXY for the marker-bearing half — read the MOVE column down "
+                f"the SKELETON by hand too (jlpt-test-generation §'One topic, "
+                f"one surface'; qa-report-20260910_1 F2-b)")
+    if not read:
+        return skip(name, "no 読解 surfaces parsed")
+    if n > BELIEF_DENIAL_FAIL:
+        check(name, False, detail)
+    else:
+        warn(name, n <= BELIEF_DENIAL_WARN, detail)
 
 
 def check_dokkai_closing_reframe_scope(test_id: str, body: str, bi):
@@ -14150,6 +14387,142 @@ def check_choukai_nondialogue_medium_rotation():
                   slug="choukai_nondialogue_rotation", test_id=cid)
 
 
+# The most kanji/katakana-token overlap one 問題3 item's spoken option set may
+# have with ANY 問題3 option set in the immediately previous paper. MEASURED,
+# not chosen — see the founding run in `check_choukai_option_set_reuse`.
+CHOUKAI_OPTION_SET_REUSE_MAX = 0.30
+CHOUKAI_OPTION_TOKEN_RE = re.compile(r"[一-鿿]{2,}|[ァ-ヶー]{2,}")
+
+# Pre-rule papers. Every id here repeated its 1-back's 問題3 option set at
+# **1.00** — i.e. the previous paper's own clip, drawn again — and every one of
+# them predates the id bars that now prevent that: `previous_slot_clips()`
+# (per-slot, 2026-09-09) and `freshest()`'s whole-previous-paper bar for
+# slot-free clips (2026-09-10). They are grandfathered BY NAME rather than
+# repaired because the repair is a re-draw of a shipped paper, and the
+# machinery that produced them can no longer produce them:
+#   20260811_1 (1.00 vs 20260810_2)   20260814_1 (1.00 vs 20260813_2)
+#   20260821_1 (1.00 vs 20260819_1)   20260828_1 (1.00 vs 20260827_2)
+#   20260903_1 (1.00 vs 20260828_2)   20260904_1 (1.00 vs 20260903_1)
+# `20260910_1` — the FOUNDING case at 0.571, and the only one that is not an
+# id repeat — is deliberately NOT here: it was re-drawn on 2026-09-10 and
+# passes on merit.
+CHOUKAI_OPTION_SET_REUSE_GRANDFATHERED = {
+    "20260811_1", "20260814_1", "20260821_1", "20260828_1", "20260903_1",
+    "20260904_1",
+}
+
+
+def choukai_p3_spoken_option_sets(st: str, m) -> dict[str, set[str]]:
+    """{item label -> kanji/katakana tokens of its four spoken 問題3 options}."""
+    out: dict[str, set[str]] = {}
+    for lines in choukai_item_blocks(choukai_span(st, 3), m, True):
+        ch = spoken_choices(lines, 4)
+        if len(ch) == 4:
+            out[choukai_item_label(lines[0])] = set(
+                CHOUKAI_OPTION_TOKEN_RE.findall("\n".join(ch.values())))
+    return out
+
+
+def check_choukai_option_set_reuse():
+    """No 問題3 item may re-run the previous paper's option SET (F4).
+
+    THE RULE: 問題3's four options are read aloud and name the four candidate
+    subjects of the talk. Two papers whose option sets are the same four
+    categories — with the same one keyed — are one item, however different the
+    two recordings are. A candidate who sat yesterday's paper marks it without
+    listening.
+
+    THE INCIDENT (2026-09-10, qa-report-20260910_1 F4): `20260910_1` 問題3-3番
+    (「1 電子書籍の利用者数 / 2 電子書籍で読める本 / 3 電子書籍を利用する理由 /
+    4 電子書籍の利用方法」, key 3) against `20260909_1` 問題3-3番 (「1 利用者数 /
+    2 買える品物の種類 / 3 利用方法 / 4 利用する理由」, key 4) — same slot, same
+    調査報告 template, the same four categories, and the SAME KEY content
+    (「〜を利用する理由」). Two different clips from two different sources, so
+    every freshness bar the composer has was satisfied: they all compare clip
+    IDS. `make check` was green, 0 same-slot repeats, 0 any-slot repeats.
+
+    WHY THIS ONE IS DECIDABLE AND F3'S NAME CLASH IS NOT. F3's 森 pair scores
+    0.231 token-Jaccard against an official consecutive-sitting maximum of
+    0.250, so no content threshold separates it — it needs the exact pair list
+    in `compose_choukai.MUTUALLY_EXCLUSIVE_CLIPS`. This one separates cleanly.
+    FOUNDING RUN, all 36 papers on disk plus the 10 official sittings, each
+    item scored against every 問題3 option set of the paper before it:
+
+      * official (the ten imported sittings, 9 transitions, n=45 items):
+        median **0.067**, max **0.200** — 2025-07 → 2025-12 問題3-1番.
+      * generated (25 transitions, n=125): median 0.000, and 6 papers at
+        **1.00** — all of them pre-bar id repeats, grandfathered by name above.
+      * `20260910_1` 問題3-3番: **0.571**, 2.9x the official ceiling and the
+        only non-1.00 breach on disk.
+
+    So 0.30 fires on the founding case, clears every official pair with
+    margin, and re-classifies no paper the id bars have not already fixed.
+
+    THE REPAIR is a re-draw (`make mp3 <id> SEED=<rng>`) — never a hand-edit of
+    `聴解.md`, which is a `make mp3` output. The bank holds 79 問題3 clips, 10
+    of them never drawn, so the slot cannot starve. `compose_choukai.py` mirrors
+    this predicate as a draw CONSTRAINT (`OPTION_SET_REUSE_MAX`) so the composer
+    avoids what this line would fail; change the two thresholds together.
+    """
+    print("\n問題3 option-set reuse across consecutive papers "
+          "(qa-report-20260910_1 F4)")
+    tests = ROOT / "tests"
+    if not tests.is_dir():
+        return skip("問題3 option-set reuse", "no tests/ on disk")
+    m = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
+    # Two sequences, because "the previous paper" means the previous paper a
+    # candidate could have sat: generated papers run in id order, and the ten
+    # imports are the official sittings in their own chronological order (they
+    # are also the corpus the 0.30 threshold was measured on, so running them
+    # here keeps the yardstick visible instead of assumed).
+    seqs: dict[str, list[tuple[str, dict[str, set[str]]]]] = {
+        "generated": [], "official sittings": []}
+    for d in sorted(p for p in tests.iterdir() if p.is_dir()):
+        st_path = d / "聴解スクリプト.txt"
+        if not st_path.is_file():
+            continue
+        sets = choukai_p3_spoken_option_sets(
+            st_path.read_text(encoding="utf-8"), m)
+        if sets:
+            seqs["official sittings" if ORIGIN.is_imported(d.name)
+                 else "generated"].append((d.name, sets))
+    if not any(seqs.values()):
+        return skip("問題3 option-set reuse", "no 問題3 spoken option list parsed")
+    for label, seq in seqs.items():
+        for (pid, prev), (cid, cur) in zip(seq, seq[1:]):
+            worst: list[str] = []
+            top = 0.0
+            for slot, toks in sorted(cur.items()):
+                for pslot, ptoks in sorted(prev.items()):
+                    both = toks | ptoks
+                    j = len(toks & ptoks) / len(both) if both else 0.0
+                    top = max(top, j)
+                    if j > CHOUKAI_OPTION_SET_REUSE_MAX:
+                        worst.append(f"問題3-{slot} vs {pid} 問題3-{pslot} "
+                                     f"= {j:.3f}")
+            name = (f"{cid}: no 問題3 option set repeats {pid}'s "
+                    f"({label}, worst {top:.3f}, ceiling "
+                    f"{CHOUKAI_OPTION_SET_REUSE_MAX:.2f})")
+            detail = ("; ".join(worst) + " — kanji/katakana-token Jaccard of "
+                      "the four SPOKEN options against every 問題3 option set "
+                      "in the immediately previous paper. Official runs a "
+                      "median of 0.067 and never exceeds 0.200 over its nine "
+                      "consecutive transitions, so an item at this level is "
+                      "the previous paper's item in new wording and is "
+                      "answerable from recall. Re-draw the slot — "
+                      "`make mp3 <id> SEED=<rng>` with a fresh RNG seed; the "
+                      "composer bars it too (compose_choukai."
+                      "OPTION_SET_REUSE_MAX). NEVER hand-edit 聴解.md or "
+                      "聴解スクリプト.txt: both are make mp3 outputs "
+                      "(choukai-audio Part 0)")
+            if cid in CHOUKAI_OPTION_SET_REUSE_GRANDFATHERED:
+                warn(name, not worst, detail + GRANDFATHER_NOTE,
+                     slug="choukai_option_set_reuse", test_id=cid)
+            else:
+                check(name, not worst, detail,
+                      slug="choukai_option_set_reuse", test_id=cid)
+
+
 CLASS_ADDRESSED_RE = re.compile(r"(方|かた|様|皆様|みなさま)は[、,]?\s*[^。]{0,20}"
                                 r"(窓口|受付|カウンター|会場|入口|入り口)へ")
 
@@ -14548,6 +14921,9 @@ def check_banned_collocations(d, gt: str, ct: str, st: str, origin: str):
 # local_store.py owns the localStorage key schema; check_tests reads its prefix
 # to prove 練習.html carries no store at all (see check_practice_mode).
 LOCAL_STORE = load(".agents/exam-app/scripts/local_store.py")
+# ...and exam-model-answer owns the ONE preference 練習.html is allowed to read
+# back (the explanation language); the built page is checked against it below.
+MODEL_ANSWER = load(".agents/exam-model-answer/scripts/build_model_answer.py")
 
 
 def check_tests():
@@ -14696,7 +15072,7 @@ def check_tests():
               "; ".join(f"{q}: {v}" for q, v in sorted(dupes.items())))
         wrong_n = {q: len(v) for q, v in opts.items() if len(v) != 4}
         check("every gengo question parses to exactly 4 options", not wrong_n, f"{wrong_n}")
-        check_scramble_stars(gt, keys, opts, origin)
+        check_scramble_stars(gt, keys, opts, origin, d.name)
         check_grammar_stem_lengths(gt, bi, d.name, origin)
         # Official papers include short particle strips; the drill-length defect
         # is a generation failure mode — do not fail imported transcriptions.
@@ -14759,6 +15135,7 @@ def check_tests():
             check_dokkai_rhetorical_monotony(d.name, gengo_prose)
             check_dokkai_closing_reframe(d.name, gengo_prose, bi)
             check_dokkai_closing_reframe_scope(d.name, gengo_prose, bi)
+            check_dokkai_belief_denial_monotony(d.name, gengo_prose, bi)
             check_dokkai_final_sentence_templates(d.name, gengo_prose, bi)
             check_dokkai_abs_quantifiers(d.name, opts)
             check_dokkai_option_length_balance(d.name, opts)
@@ -15046,6 +15423,16 @@ def check_tests():
                                  "function submitAll(", "function computeResult(",
                                  "採点結果.json", "/api/tests/", LOCAL_STORE.STORAGE_PREFIX)
                      if t in phtml]
+        # The 原文/訳 toggle (2026-09-10) is per passage and per visit. If it
+        # ever grows a memory it must ride LANG_STORE_KEY, not a second key —
+        # 練習モード reads back exactly one thing from the browser.
+        store_keys = set(re.findall(r"localStorage\.(?:get|set)Item\('([^']*)'",
+                                    phtml))
+        check("練習.html reads back only the explanation language",
+              store_keys <= {MODEL_ANSWER.LANG_STORE_KEY},
+              f"also touches {sorted(store_keys - {MODEL_ANSWER.LANG_STORE_KEY})} "
+              f"— 練習モード keeps NO record; the one preference it shares with "
+              f"模範解答.html is the language (exam-app §練習モード)")
         check("練習.html is not a sitting: no clock, no grader, no answer store",
               not forbidden,
               f"carries {forbidden} — 練習モード has no time limit and no score "
@@ -15228,6 +15615,7 @@ def main():
         check_choukai_kimochi_repeat()
         check_cross_test_listening_subjects()
         check_choukai_nondialogue_medium_rotation()
+        check_choukai_option_set_reuse()
         check_choukai_source_mix()
         check_choukai_textbook_bands()
         check_draw_provenance()

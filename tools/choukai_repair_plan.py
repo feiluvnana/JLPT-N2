@@ -46,6 +46,7 @@ ARTIFACT_TITLE = {
     "passage prose":       ("B", "Tier B — 読解 passage prose (re-opens every item anchored on that passage)"),
     "<section re-author>": ("C", "Tier C — 聴解 section re-authoring (C1 items / C2 whole section, by axis count)"),
     "<surface re-author>": ("C", "Tier C — 読解 surface re-authoring (subject or voice changes)"),
+    "<composed re-draw>":  ("C", "Tier C — 聴解 re-draw (`make mp3 <id> SEED=<rng>`; nothing is authored on a composed paper)"),
     "聴解.mp3":            ("R", "Rebuild only — `make mp3` + `make sheet`, no content change"),
 }
 
@@ -53,7 +54,7 @@ ARTIFACT_TITLE = {
 # inside a tier so the rebuild batching stays adjacent to what forces it.
 ARTIFACT_ORDER = ["聴解.md", "stem/option/key-cell", "聴解スクリプト.txt",
                   "passage prose", "<section re-author>", "<surface re-author>",
-                  "聴解.mp3"]
+                  "<composed re-draw>", "聴解.mp3"]
 
 # Which rebuild an artifact forces. A 読解 repair never needs `make mp3`; a
 # script edit always does, or the MP3 on disk stops speaking the script on disk
@@ -61,6 +62,9 @@ ARTIFACT_ORDER = ["聴解.md", "stem/option/key-cell", "聴解スクリプト.tx
 REBUILD_CMD = {
     "聴解スクリプト.txt":  "make mp3 {tid} && make sheet {tid}",
     "聴解.mp3":            "make mp3 {tid} && make sheet {tid}",
+    # A re-draw needs a FRESH seed only when the corrected constraints do not
+    # move the draw on their own; the composer prints what it barred either way.
+    "<composed re-draw>":  "make mp3 {tid} SEED=<rng> && make booklet {tid} && make sheet {tid}",
     "聴解.md":             "make booklet {tid} && make sheet {tid}",
     "stem/option/key-cell": "make booklet {tid} && make sheet {tid}",
     "passage prose":       "make booklet {tid} && make sheet {tid}",
@@ -89,6 +93,7 @@ OWNER_DOC = {
     "choukai_voice_balance": "choukai-audio SKILL.md Part 2 §Casting",
     "choukai_pause_distribution": "choukai-audio SKILL.md Part 3 §Verify the pause DISTRIBUTION",
     "choukai_opening_frame": "choukai-audio SKILL.md §Banned formulas (opening move)",
+    "choukai_option_set_reuse": "choukai-audio SKILL.md Part 0 §'Four rules that are not style choices' rule 4",
     "choukai_section_mix": "choukai-items.md §'Section item mix'",
     "dokkai_banned_stems": "dokkai.md §'Banned retrieval shapes'",
     "dokkai_q14_stem_target": "dokkai.md §問題14",

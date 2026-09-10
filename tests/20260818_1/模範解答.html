@@ -332,15 +332,7 @@ h1.title {
   border-bottom: 1px solid #e2e8f0;
 }
 
-/* --- 読解 passage: 原文 / 訳 toggle, per group (2026-09-08) ------------------
-   The VI pane ships BOTH the source passage and its translation, and a
-   two-button control on the box picks which one shows. Same mechanism as the
-   page-wide language switch, one level down: the state is a data attribute on
-   the group (`.passage-vi[data-ptext]`), CSS hides the other pane, and no JS
-   writes text — so the control cannot get out of step with what is rendered.
-   Per-box on purpose: a reader checks the Japanese of ONE passage without
-   losing the translation on the other twelve. A group with no translation
-   authored yet renders the old single-pane box and no control. */
+
 .passage-head {
   display: flex;
   align-items: center;
@@ -387,6 +379,7 @@ h1.title {
   color: var(--primary);
   box-shadow: 0 1px 2px rgba(15,23,42,0.12);
 }
+
 .passage-box table {
   width: 100%;
   border-collapse: collapse;
@@ -438,6 +431,7 @@ h1.title {
 .script-audio-jump:hover {
   background: #ddd6fe;
 }
+
 
 /* Explanation Box */
 .explanation-box {
@@ -508,32 +502,6 @@ h1.title {
   margin: 0.2rem 0.25rem 0.2rem 0;
 }
 
-/* Sticky Audio Player */
-#sticky-audio {
-  position: sticky;
-  top: 3.5rem;
-  z-index: 95;
-  background: #1e293b;
-  color: #fff;
-  padding: 0.55rem 0.9rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-}
-#sticky-audio audio {
-  flex: 1;
-  height: 30px;
-}
-.audio-status {
-  font-size: 0.8rem;
-  color: #94a3b8;
-  white-space: nowrap;
-}
-
-.header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 /* --- language switching -----------------------------------------------------
    ONE mechanism for the whole page: every bilingual string ships both panes and
    `body[data-lang]` hides the other. No JS text substitution, so a label cannot
@@ -565,6 +533,35 @@ body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
 }
 .lang-btn:hover { color: #fff; }
 .lang-btn.active { background: #fff; color: var(--primary); }
+
+
+/* Sticky Audio Player */
+#sticky-audio {
+  position: sticky;
+  top: 3.5rem;
+  z-index: 95;
+  background: #1e293b;
+  color: #fff;
+  padding: 0.55rem 0.9rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+#sticky-audio audio {
+  flex: 1;
+  height: 30px;
+}
+.audio-status {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* .lang-pane / .lang-switch / .lang-btn: see EXPLANATION_CSS above. */
 .trans-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -4149,12 +4146,12 @@ footer {
           <div class="q-body">
             <div class="script-box">
               <div class="passage-title"><span class="lang-pane" data-lang="ja">音声スクリプト</span><span class="lang-pane" data-lang="vi">Lời thoại audio</span></div>
-              あーあ、傘、持ってくればよかった。<br>1、じゃ、持っていこうか。<br>2、だから持って言ったじゃない。<br>3、何だ、持ってないの？
+              あーあ、傘、持ってくればよかった。<br>1、じゃ、持っていこうか。<br>2、だから持つって言ったじゃない。<br>3、何だ、持ってないの？
               
             </div>
             <div class="q-stem">あーあ、傘、持ってくればよかった。</div>
             <div class="options-grid">
-              <div class="opt-item"><span class="opt-num">1</span><span>じゃ、持っていこうか。</span></div><div class="opt-item"><span class="opt-num">2</span><span>だから持って言ったじゃない。</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>何だ、持ってないの？</span></div>
+              <div class="opt-item"><span class="opt-num">1</span><span>じゃ、持っていこうか。</span></div><div class="opt-item"><span class="opt-num">2</span><span>だから持つって言ったじゃない。</span></div><div class="opt-item is-correct"><span class="opt-num">3</span><span>何だ、持ってないの？</span></div>
             </div>
             <span class="lang-pane" data-lang="ja"><div class="explanation-box">
                   <div class="exp-heading">詳細解説</div>
@@ -4162,7 +4159,7 @@ footer {
                   <div class="exp-content">「〜ばよかった」は<ruby>後悔<rt>こうかい</rt></ruby>。<ruby>傘<rt>かさ</rt></ruby>がない<ruby>状況<rt>じょうきょう</rt></ruby>を<ruby>受<rt>う</rt></ruby>けて<ruby>確<rt>たし</rt></ruby>かめる<ruby>返事<rt>へんじ</rt></ruby>が<ruby>合<rt>あ</rt></ruby>う。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
-                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> これから<ruby>出発<rt>しゅっぱつ</rt></ruby>する<ruby>場面<rt>ばめん</rt></ruby>の<ruby>返事<rt>へんじ</rt></ruby>で、もう<ruby>外<rt>そと</rt></ruby>にいる<ruby>状況<rt>じょうきょう</rt></ruby>に<ruby>合<rt>あ</rt></ruby>わない。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>助言<rt>じょげん</rt></ruby>したのに<ruby>聞<rt>き</rt></ruby>かなかった、と<ruby>責<rt>せ</rt></ruby>める<ruby>言<rt>い</rt></ruby>い<ruby>方<rt>かた</rt></ruby>。<ruby>相手<rt>あいて</rt></ruby>は<ruby>助言<rt>じょげん</rt></ruby>を<ruby>受<rt>う</rt></ruby>けていない。</li><li><strong>3.</strong> <span class="opt-tag-correct">[正解]</span> 「<ruby>何<rt>なん</rt></ruby>だ」は<ruby>軽<rt>かる</rt></ruby>い<ruby>驚<rt>おどろ</rt></ruby>き。<ruby>傘<rt>かさ</rt></ruby>がないと<ruby>分<rt>わ</rt></ruby>かって<ruby>返<rt>かえ</rt></ruby>す。</li>
+                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> これから<ruby>出発<rt>しゅっぱつ</rt></ruby>する<ruby>場面<rt>ばめん</rt></ruby>の<ruby>返事<rt>へんじ</rt></ruby>で、もう<ruby>外<rt>そと</rt></ruby>にいる<ruby>状況<rt>じょうきょう</rt></ruby>に<ruby>合<rt>あ</rt></ruby>わない。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> <ruby>前<rt>まえ</rt></ruby>に<ruby>持<rt>も</rt></ruby>つと<ruby>言<rt>い</rt></ruby>った、と<ruby>過去<rt>かこ</rt></ruby>のやりとりを<ruby>持<rt>も</rt></ruby>ち<ruby>出<rt>だ</rt></ruby>して<ruby>責<rt>せ</rt></ruby>める<ruby>言<rt>い</rt></ruby>い<ruby>方<rt>かた</rt></ruby>。そう<ruby>言<rt>い</rt></ruby>った<ruby>場面<rt>ばめん</rt></ruby>がない。</li><li><strong>3.</strong> <span class="opt-tag-correct">[正解]</span> 「<ruby>何<rt>なん</rt></ruby>だ」は<ruby>軽<rt>かる</rt></ruby>い<ruby>驚<rt>おどろ</rt></ruby>き。<ruby>傘<rt>かさ</rt></ruby>がないと<ruby>分<rt>わ</rt></ruby>かって<ruby>返<rt>かえ</rt></ruby>す。</li>
                   </ul>
                   <div class="exp-section-title">【重要表現・リスニングポイント】</div><div><span class="vocab-pill">〜ばよかった：しなかったことを<ruby>後悔<rt>こうかい</rt></ruby>する<ruby>表現<rt>ひょうげん</rt></ruby>。</span><span class="vocab-pill"><ruby>何<rt>なん</rt></ruby>だ：<ruby>予想<rt>よそう</rt></ruby>と<ruby>違<rt>ちが</rt></ruby>ったときの<ruby>軽<rt>かる</rt></ruby>い<ruby>驚<rt>おどろ</rt></ruby>き。</span></div>
                 </div></span><span class="lang-pane" data-lang="vi"><div class="explanation-box">
@@ -4171,7 +4168,7 @@ footer {
                   <div class="exp-content">「〜ばよかった」là tiếc nuối vì đã không làm → đáp lại bằng cách xác nhận là không mang theo.</div>
                   <div class="exp-section-title">【Phân tích từng lựa chọn】</div>
                   <ul class="exp-options-list">
-                    <li><strong>1.</strong> <span class="opt-tag-wrong">[Sai]</span> Câu đáp khi sắp ra khỏi nhà, không hợp với lúc đã ra ngoài.</li><li><strong>2.</strong> <span class="opt-tag-wrong">[Sai]</span> Giọng trách «đã bảo rồi mà», nhưng người kia chưa hề khuyên.</li><li><strong>3.</strong> <span class="opt-tag-correct">[Đúng]</span> 「何だ」= ngạc nhiên nhẹ khi biết đối phương không mang ô.</li>
+                    <li><strong>1.</strong> <span class="opt-tag-wrong">[Sai]</span> Câu đáp khi sắp ra khỏi nhà, không hợp với lúc đã ra ngoài.</li><li><strong>2.</strong> <span class="opt-tag-wrong">[Sai]</span> Trách móc bằng cách viện lại lời «sẽ mang theo» nói trước đó; ở đây không có lời ấy.</li><li><strong>3.</strong> <span class="opt-tag-correct">[Đúng]</span> 「何だ」= ngạc nhiên nhẹ khi biết đối phương không mang ô.</li>
                   </ul>
                   <div class="exp-section-title">【Mẫu câu・Điểm nghe cần nhớ】</div><div><span class="vocab-pill">〜ばよかった: tiếc vì đã không làm.</span><span class="vocab-pill">何だ: ngạc nhiên nhẹ khi biết sự thật khác dự đoán.</span></div>
                 </div></span>
@@ -4520,33 +4517,46 @@ footer {
 const LANG_STRINGS = {"ja": {"doc_title": "テスト 20260818_1（模範解答・詳細解説）", "search_placeholder": "問題番号・キーワード検索...", "audio_ready": "準備完了", "audio_playing": "再生中: "}, "vi": {"doc_title": "Đề 20260818_1（Đáp án mẫu・Giải thích chi tiết）", "search_placeholder": "Tìm theo số câu hoặc từ khoá...", "audio_ready": "Sẵn sàng", "audio_playing": "Đang phát: "}};
 const LANGS = ["ja", "vi"];
 
-function setLang(lang, persist) {
-  if (!LANGS.includes(lang)) lang = LANGS[0];
+
+/* Flip the page to `lang`: `body[data-lang]` is what the CSS reads, so no JS
+   text substitution happens here and a label cannot go missing. Returns the
+   language actually applied (langs[0] when the argument is not on offer). */
+function applyLang(lang, langs, persist){
+  if (!langs.includes(lang)) lang = langs[0];
   document.body.dataset.lang = lang;
   document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist){ try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {} }
+  return lang;
+}
+function savedLang(langs){
+  let s = null;
+  try { s = localStorage.getItem('kaisetsuLang'); } catch (e) {}
+  return langs.includes(s) ? s : langs[0];
+}
+
+
+function setLang(lang, persist) {
+  lang = applyLang(lang, LANGS, persist);
   const s = LANG_STRINGS[lang] || {};
   document.title = s.doc_title || document.title;
   const search = document.getElementById('searchInput');
   if (search) search.placeholder = s.search_placeholder || '';
   const status = document.getElementById('audioStatus');
   if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === lang);
-  });
-  if (persist) {
-    try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
-  }
 }
+
 
 function setPassageText(btn, mode) {
   const box = btn.closest('.passage-vi');
   if (box) box.dataset.ptext = mode;
 }
 
+
 (function initLang() {
-  let saved = null;
-  try { saved = localStorage.getItem('kaisetsuLang'); } catch (e) {}
-  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+  setLang(savedLang(LANGS), false);
 })();
 
 function filterSection(sec, btn) {

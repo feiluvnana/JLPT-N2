@@ -595,8 +595,18 @@ as "N1"/"N3", so a single source's label was never sufficient.
 >
 > **What replaces it — four checks, all cheap:**
 > 1. `logs/choukai_draws.json`: no clip id repeats the PREVIOUS paper in the
->    same slot. The composer spends least-used clips first, so this is a
->    verification; if a slot's ten candidates are exhausted, say so.
+>    same slot, **and no slot-free (textbook) clip repeats it in ANY slot** —
+>    those are banked `slot: 0` and land wherever the 大問's textbook slots
+>    fall, so a per-slot bar never bound them (14 of 25 consecutive transitions
+>    repeated one a slot over; `20260910_1` drew two of `20260909_1`'s,
+>    2026-09-10). The composer bars the previous paper's clip per slot AND its
+>    whole draw for the slot-free half, and prints a note if that would starve a
+>    slot; verify both bars held (they cover item
+>    slots only, not section preambles) and report any starvation note. Before
+>    the bar existed, least-used-first was a GLOBAL objective that said nothing
+>    about slots, and 18 of 24 consecutive transitions repeated a clip in place
+>    (qa-report-20260909_1-round2 F4) — so this is a verification only because
+>    the machinery now establishes it.
 > 2. The audio round-trips: `python3 tools/choukai_segment.py tests/<id>/聴解.mp3`
 >    must recover 5/6/5/11/2 against the composed script. That is the one test
 >    that proves the MP3 on disk is the paper the booklet describes.
@@ -605,6 +615,27 @@ as "N1"/"N3", so a single source's label was never sufficient.
 > 4. Keys come from the source sittings, so a 聴解 mis-key means the BANK is
 >    wrong, not the paper: fix `logs/choukai_bank.json`'s source and re-compose,
 >    never hand-edit `聴解.md`.
+> 5. The shipped 聴解 key balance IS in scope, even though the items are not
+>    authored here — the composer picked the combination. Tally each section's
+>    keys and compare the section's MODAL key against the 31-sitting archive
+>    band, measured from `refs/JLPT_N2_NEW/answer_keys.json` (tracked; no binary
+>    needed): **問題1 2–4, 問題2 2–4, 問題3 2–4, 問題4 4–7 (median 5),
+>    問題5 1–3**. 問題4 has three options over eleven items, so a mode of 4 is
+>    its arithmetic FLOOR — never apply a four-option ceiling to it. This is the
+>    聴解 counterpart of the 71-item `answer_positions` check, which
+>    `check_answer_positions` skips wholesale for a composed paper.
+>
+>    (This row shipped wrong on 2026-09-10 and was corrected the same day by
+>    qa-report-20260910_1 S1. As first written it said "no section may key the
+>    same option more than 3 times", from a 10-sitting corpus — arithmetically
+>    unsatisfiable for 問題4, and too tight for the four-option sections, which
+>    reach 4 over the full 31 sittings. A rule a paper cannot satisfy produces a
+>    false automatic fail, which is the same defect class as the stale
+>    読解-vs-聴解 wording §5 already records.)
+>
+> **If the listening half was re-composed since the last review, checks 1–5
+> must be re-run in full** — a previous round's verification is evidence about
+> clips that may no longer be drawn.
 >
 > The rest of this section still governs **imported** papers' fidelity review
 > and any paper whose 聴解 predates the rework.
@@ -784,8 +815,11 @@ which is decidable on a fixed 13-final denominator; the marker rate is not.
    Extend this to `listening_scenarios` — map every 聴解 item's narration to a
    drawn scenario; an authored item matching no drawn entry (while another
    drawn entry went unused) is an unrecorded substitution.
-2. **Answer Positions Compliance:** all 101 positions match `answer_positions`
-   exactly.
+2. **Answer Positions Compliance:** all **71** 言語知識・読解 positions match
+   `answer_positions` exactly. On a composed paper the 30 聴解 positions are
+   exempt — the source sittings set those keys and options cannot be reordered
+   (`check_answer_positions`'s `skip_choukai`); verify the composer's balance
+   objective instead by tallying the keys (§4 check 5).
 3. **Topic Match & Copyright Non-Reproduction:** every 読解 passage/聴解
    scenario written from its OWN assigned entry, not a substituted one; any
    invented flavor detail reads as the author's own N2-simplified invention

@@ -249,7 +249,14 @@ the DRAWN topic string. Then read it:
   are no longer authoring rules — nothing in the paper can be
   re-angled to fix them. What replaces them, and what this pass must still do:
   read `logs/choukai_draws.json` and confirm **no clip id repeats the previous
-  paper in the same slot**. This used to be justified by "the composer spends
+  paper — in the same slot, and for a slot-free (textbook) clip in ANY slot**.
+  The second half was added 2026-09-10: an official clip is slot-preserving so
+  it can only come back where it left, but a hand-declared one is banked
+  `slot: 0` and the composer places it wherever the 大問's textbook slots fall,
+  so a per-slot bar never bound it. 14 of 25 consecutive transitions repeated a
+  clip a slot over, and `20260910_1` drew two of `20260909_1`'s. Both bars now
+  live in `compose_choukai.py::freshest()`, so this row is a verification.
+  This used to be justified by "the composer spends
   least-used clips first, so it is a verification, not a repair" — that was
   FALSE: least-used-first is a GLOBAL objective and says nothing about slots, so
   a slot whose candidates were tied at the same use count (the normal case) could
@@ -283,6 +290,21 @@ the DRAWN topic string. Then read it:
   across the two halves.** Not string-decidable, so no check backs this row.
   **The 読解 side is always the one re-angled** — the 聴解 item is lifted from a
   real sitting and nobody here chose its move.
+
+  **Read the MOVE column down the SKELETON before the label**, exactly as §5
+  requires of the closing column. The recurring skeleton is
+  **〈通説または自分の想定した原因 X が述べられる → ところが／しかし／外れた／
+  ではなかった → 実は Y〉**; every surface that runs it counts as ONE move however
+  differently the two ends are worded (前提の更新・部分最適の反転・予想外の受益者・
+  常識の反転 are all this skeleton). **A label spread does not license a skeleton
+  pile-up** — a fine label granularity makes any monoculture read as "one over
+  the cap", which is how it went unfiled three papers running (`20260904_3` 8,
+  `20260907_1` 7, `20260910_1` 7 on the passage proxy, against an official band
+  of 0–3). **問題12(A)+(B) count as ONE surface for this cap** — the A/B pair
+  shares its move by format, and counting them as two consumes the whole quota
+  on one 大問. `check_dokkai_belief_denial_monotony()` measures the marker-bearing
+  half of this and WARNs above 3; the unmarked reframes it cannot see are why
+  the column is still read by hand (qa-report-20260910_1 F2-a/F2-b).
 - **問題12 (A/B) gets its own cross-test column** — one topic per paper.
 - **A duplicated topic in the spec is a sampler defect**: `check_spec_blend`
   fails a repeated draw. `--reroll` the category; never hand-invent a substitute.

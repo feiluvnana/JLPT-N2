@@ -112,6 +112,20 @@ forbidden — reads as a drill line. The sheet builder keeps its question
 context across those stem lines, so radios still attach — don't "fix" a
 sheet by flattening the dialogue (`exam-app`).
 
+**問題8 shares this layout, and until 2026-09-10 the gate PUNISHED it.**
+`check_scramble_stars()` read only the stem's FIRST line, so on the mandated
+layout that line is bare 「（家で）」 — 0 blanks, no ★ — and the check FAILed,
+while the forbidden collapsed line PASSed. An author who obeyed this section
+could not reach green, and eight papers were shaped by that (qa-report-
+20260910_1-round2 F3). The capture is now a multi-line span, and
+`check_mondai8_dialogue_layout()` supplies the rule the gate was missing:
+it FAILs a 問題8 stem whose `**N**` line carries two speaker turns, or a
+setting label sharing its line with a turn. **An embedded quotation is not a
+turn** (「…」と言った, 「母の日」だったので, a quoted title 「ABCチーズ」は) —
+never split one; the check does not fire on them, and three imported papers
+whose collapsed stems are transcription-fidelity defects are grandfathered by
+name inside it.
+
 ## 問題8 (文の組み立て) — length is mostly in the OPTIONS
 
 Measured on `refs/JLPT_N2_NEW/` + the official 2018 sample + July 2025:

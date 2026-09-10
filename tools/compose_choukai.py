@@ -200,9 +200,29 @@ def previous_slot_clips(draws: dict, exclude: str = "") -> dict[str, str]:
     one same-slot clip** (qa-report-20260909_1 F4, which caught 問題4-6 =
     `2023-12:問題4-6` two papers in a row). So the verification was reporting a
     condition the machinery never established.
+
+    "The most recent paper" means the previous paper BY TEST ID, not the last row
+    appended. `logs/choukai_draws.json`'s history is append-ordered by when a
+    paper was last COMPOSED, so re-drawing an older paper moves it to the end —
+    and on 2026-09-10 three of them were (`20260810_2`, `20260811_1`,
+    `20260818_1`, commit 04562fd). The next paper composed after that,
+    `20260910_1`, was therefore handed `20260818_1`'s slots to avoid while
+    `20260909_1`'s — the paper actually before it — were not barred at all, and
+    it drew `2021-07:問題2-1` into 問題2-1 two papers running with no starvation
+    note, which is the exact condition this function exists to establish
+    (found by the whole-paper draw audit, stage 3 of `20260910_1`). Ids are
+    `YYYYMMDD_n`, so the greatest id below this paper's is the previous paper;
+    fall back to append order when this paper is the earliest id on record.
+
+    The caller reads this map two ways: per slot for an official draw, and as
+    ONE set for a slot-free one, which can come back a slot over (`freshest`).
     """
     rows = [r for r in draws["history"] if r.get("test_id") != exclude]
-    return dict(rows[-1]["clips"]) if rows else {}
+    if not rows:
+        return {}
+    earlier = [r for r in rows if str(r.get("test_id", "")) < exclude]
+    row = max(earlier, key=lambda r: str(r["test_id"])) if earlier else rows[-1]
+    return dict(row["clips"])
 
 
 def resolve(rec: dict, section: str, slot: int) -> dict:
@@ -305,7 +325,8 @@ def _person_names(rec: dict) -> set[str]:
             if m.group(1) not in NAME_STOPWORDS}
 
 
-def name_clash(picked: list[dict]) -> float:
+def name_clash(picked: list[dict],
+               previous: dict[str, set[str]] | None = None) -> float:
     """Penalty for two clips in ONE 大問 talking about the same named person.
 
     THE INCIDENT (qa-report-20260909_1-round2, the finding the repair round
@@ -332,17 +353,110 @@ def name_clash(picked: list[dict]) -> float:
     can and is never made infeasible by one, and a genuinely unavoidable clash
     still ships rather than looping forever. It sits below
     `SECTION_SKEW_PENALTY` because a monoculture key is the worse defect.
+
+    IT NOW REACHES ACROSS THE PAPER BOUNDARY (2026-09-10,
+    qa-report-20260910_1 F3), because scoping it to one paper RELOCATED the
+    collision instead of removing it. The incident above was repaired by this
+    penalty and the two clips duly stopped sharing a paper — they landed in
+    CONSECUTIVE papers instead (`2022-12:問題4-7` in `20260909_1` 問題4-7番,
+    `2021-07:問題4-6` in `20260910_1` 問題4-6番, one paper later, both keyed 3),
+    where nothing looks: every freshness bar in `freshest()` compares clip IDS,
+    and these are two different ids from two different sittings. `previous` is
+    the previous paper's per-大問 name sets (resolved by the same
+    greatest-id-below rule `previous_slot_clips()` uses) and a clip whose names
+    meet them scores the same `NAME_CLASH_PENALTY`.
+
+    STILL A PENALTY ACROSS PAPERS, for a measured reason: over the ten imported
+    sittings in chronological order, **5 of 9 consecutive transitions share a
+    surname inside one 大問** — including 小野 in 問題4 of BOTH 2024-12 and
+    2025-07, on entirely different errands (送別会の返事 / 受験校の相談). Official
+    reuses names freely, so a cross-paper BAN would fire on real sittings. The
+    same round refuted content-similarity gating a second time: the offending
+    pair scores **0.231** kanji/katakana-token Jaccard over prompt+replies
+    against an official consecutive-sitting maximum of **0.250** (n=99), the
+    same verdict the `SequenceMatcher` run above reached within one paper. The
+    exact cases a proxy cannot reach are named in `MUTUALLY_EXCLUSIVE_CLIPS`.
     """
     penalty = 0.0
     by_section: dict[str, list[set[str]]] = {}
     for r in picked:
         by_section.setdefault(r["section"], []).append(_person_names(r["record"]))
-    for names in by_section.values():
+    for section, names in by_section.items():
         for i in range(len(names)):
             for j in range(i + 1, len(names)):
                 if names[i] & names[j]:
                     penalty += NAME_CLASH_PENALTY
+        prior = (previous or {}).get(section) or set()
+        if prior:
+            penalty += NAME_CLASH_PENALTY * sum(1 for n in names if n & prior)
     return penalty
+
+
+# Clip pairs that may not share a paper AND may not sit in consecutive papers.
+# This is the exact list, not a proxy: every entry is a pair a review actually
+# read side by side and judged one item, and both mechanical proxies that could
+# have caught it were measured and refuted (see `name_clash`). Exact means zero
+# false positives, which is what licenses a hard BAR here where the name
+# similarity above only gets a penalty.
+#
+# `2021-07:問題4-6` × `2022-12:問題4-7` (2026-09-10, qa-report-20260910_1 F3):
+#   「約束の時間過ぎたのに、森君まだ来ないね。森君が遅刻なんて、ありえないよね。」 and
+#   「森さんまだ来ないよ。森さんに限って、まさか試合に遅刻することはないよね。」 — one
+#   surname, one errand (waiting for someone who has not arrived), one
+#   implicature (「その人に限って遅刻はありえない」), one key (3). They shipped in
+#   one paper first and then, after the within-paper penalty, in consecutive
+#   papers. Barred in both directions now.
+MUTUALLY_EXCLUSIVE_CLIPS: frozenset[frozenset[str]] = frozenset({
+    frozenset({"2021-07:問題4-6", "2022-12:問題4-7"}),
+})
+
+
+def mutex_partners(ids) -> frozenset[str]:
+    """Every clip barred by `MUTUALLY_EXCLUSIVE_CLIPS` because `ids` are spent."""
+    out: set[str] = set()
+    for pair in MUTUALLY_EXCLUSIVE_CLIPS:
+        for cid in ids:
+            if cid in pair:
+                out |= set(pair) - {cid}
+    return frozenset(out)
+
+
+# The most kanji/katakana-token overlap a 問題3 item's spoken option set may
+# have with ANY 問題3 option set in the immediately previous paper. MEASURED
+# (2026-09-10, qa-report-20260910_1 F4): over the ten imported sittings in
+# chronological order — 45 items, each scored against all five sets of the
+# sitting before it — the median is 0.067 and the maximum 0.200. `20260910_1`
+# 問題3-3番 scored **0.571** against `20260909_1` 問題3-3番: same slot, same
+# 場面/question template, the same four option categories, and the same key
+# (「〜を利用する理由」), so a candidate who sat the previous paper marks it
+# without listening. 0.30 clears every official pair with margin.
+#
+# This constant is the COMPOSER's copy of `check_consistency.py`'s
+# `check_choukai_option_set_reuse` threshold: the gate reports the defect after
+# the MP3 is built and uploaded, so the draw has to avoid what the gate would
+# fail. Change both together.
+OPTION_SET_REUSE_MAX = 0.30
+
+OPTION_TOKEN_RE = re.compile(r"[一-鿿]{2,}|[ァ-ヶー]{2,}")
+SPOKEN_OPTION_RE = re.compile(r"^[1-4]、")
+
+
+def spoken_option_tokens(rec: dict) -> frozenset[str]:
+    """Kanji/katakana content tokens of one clip's SPOKEN option list.
+
+    Reads the transcript rather than the explanation payload, because official
+    and textbook records store their options differently and the 「N、」 lines
+    are the one shape both carry.
+    """
+    lines = (rec["script_lines"] if rec.get("needs_number_call")
+             else (rec.get("script") or "").splitlines())
+    body = "\n".join(SPOKEN_OPTION_RE.sub("", ln.strip())
+                     for ln in lines if SPOKEN_OPTION_RE.match(ln.strip()))
+    return frozenset(OPTION_TOKEN_RE.findall(body))
+
+
+def option_set_jaccard(a: frozenset[str], b: frozenset[str]) -> float:
+    return len(a & b) / len(a | b) if a and b else 0.0
 
 
 def draw(bank: dict, seed: int, used: Counter, test_id: str,
@@ -408,25 +522,98 @@ def draw(bank: dict, seed: int, used: Counter, test_id: str,
                   f"has {len(textbook.get(section, []))} item(s)")
 
     avoid_slot = avoid_slot or {}
+    # Every clip the previous paper spent, in ANY slot. An OFFICIAL draw is
+    # slot-preserving, so for it this set adds nothing the per-slot bar did not
+    # already carry; a SLOT-FREE (textbook) clip can land in any slot of its
+    # 大問, so the per-slot bar cannot bind it at all — see `freshest`.
+    previous_paper = frozenset(v for v in avoid_slot.values() if v)
     starved: list[str] = []
 
-    def freshest(pool: list[dict], exclude: set[str], slot_key: str = "") -> dict:
+    index = by_id(bank)
+    # The previous paper's names, per 大問 — `name_clash`'s cross-paper half
+    # (qa-report-20260910_1 F3). A PENALTY, so this never narrows the pool.
+    previous_names: dict[str, set[str]] = {}
+    for slot_key, cid in avoid_slot.items():
+        rec = index.get(cid)
+        if rec:
+            previous_names.setdefault(slot_key.rsplit("-", 1)[0], set()).update(
+                _person_names(rec))
+
+    # Hard bars, applied to every slot. Both are cross-paper: the id-based
+    # freshness bars only ever see "the same clip twice", and these are the two
+    # ways a DIFFERENT clip repeats the previous paper's item.
+    #  1. the named mutual-exclusion partners of anything the previous paper
+    #     spent (exact, zero false positives — see MUTUALLY_EXCLUSIVE_CLIPS);
+    #  2. any 問題3 clip whose spoken option set overlaps a 問題3 option set of
+    #     the previous paper above OPTION_SET_REUSE_MAX — the composer's mirror
+    #     of `check_choukai_option_set_reuse`, so the draw avoids what the gate
+    #     would FAIL rather than the gate reporting it after the MP3 is built.
+    cross_paper_bar = set(mutex_partners(previous_paper))
+    previous_p3 = [spoken_option_tokens(index[cid])
+                   for key, cid in avoid_slot.items()
+                   if key.startswith("問題3-") and cid in index]
+    reused_options: list[str] = []
+    if previous_p3:
+        for rec in (*textbook.get("問題3", []),
+                    *(r for (sec, _s), pool in official.items() if sec == "問題3"
+                      for r in pool)):
+            if rec["id"] in previous_paper:
+                continue          # the id bars already hold this one
+            toks = spoken_option_tokens(rec)
+            worst = max((option_set_jaccard(toks, p) for p in previous_p3),
+                        default=0.0)
+            if worst > OPTION_SET_REUSE_MAX:
+                cross_paper_bar.add(rec["id"])
+                reused_options.append(f"{rec['id']} ({worst:.2f})")
+    if reused_options:
+        print(f"  note: {len(reused_options)} 問題3 clip(s) barred — spoken "
+              f"option set repeats the previous paper's above "
+              f"{OPTION_SET_REUSE_MAX:.2f}: {', '.join(sorted(reused_options))}")
+    cross_paper_bar = frozenset(cross_paper_bar)
+
+    def freshest(pool: list[dict], exclude: set[str], slot_key: str = "",
+                 bar: frozenset[str] = frozenset()) -> dict:
         """Least-used first; among equals, the rng picks.
 
-        `slot_key` additionally bars the clip the PREVIOUS paper put in this
-        slot (see `previous_slot_clips`). Least-used-first is a global
-        objective, so without this a slot whose candidates are tied — the
-        normal case — could take the same clip two papers running. If barring
-        it would leave the slot with nothing, the bar is dropped for that slot
-        and the fact is PRINTED: a genuinely exhausted slot is a pool-growth
-        problem to report, not a reason to fail the build
+        `slot_key` bars the clip the PREVIOUS paper put in THIS slot (see
+        `previous_slot_clips`). Least-used-first is a global objective, so
+        without that a slot whose candidates are tied — the normal case —
+        could take the same clip two papers running.
+
+        `bar` additionally refuses a whole SET of ids, and it is what the
+        slot-free half needs. The per-slot bar assumes a clip can only come
+        back in the slot it left, which is true of an official draw (item *k*
+        of 問題N is only ever drawn from item *k* of 問題N) and FALSE of a
+        hand-declared one: those are banked `slot: 0` and the composer places
+        them wherever the 大問's textbook slots fall. So the previous paper's
+        textbook clip could — and did — come back one slot over with every bar
+        satisfied. Measured over the 25 consecutive transitions on record when
+        this was written: **14 of them repeat at least one clip in a DIFFERENT
+        slot**, all slot-free, and `20260910_1` drew two of `20260909_1`'s
+        (`mondaireishuu:問2-1` 問題2-2 → 問題2-1 and `mondaireishuu:問3-1`
+        問題3-3 → 問題3-1), i.e. a candidate who sat both papers heard the same
+        two recordings again one paper later. A freshly banked clip is the
+        worst case by construction, because least-used-first reaches for the
+        0-use item first and it is still among the least-used the next day.
+        Found by the whole-paper draw audit, stage 3 of `20260910_1`; the same
+        class as qa-report-20260909_1 F4, one layer further out.
+
+        `bar` also carries `cross_paper_bar`, which every slot gets: the
+        mutual-exclusion partners of the previous paper's clips and the 問題3
+        clips whose option set repeats the previous paper's
+        (qa-report-20260910_1 F3/F4). Those two are the ways a DIFFERENT clip
+        id still hands the candidate the previous paper's item.
+
+        If barring would leave the slot with nothing, the bar is dropped for
+        that slot and the fact is PRINTED: a genuinely exhausted slot is a
+        pool-growth problem to report, not a reason to fail the build
         (jlpt-test-generation: "If a repeat is unavoidable ... say so in the
         report rather than re-drawing forever").
         """
         avail = [r for r in pool if r["id"] not in exclude]
-        barred = avoid_slot.get(slot_key)
+        barred = {b for b in (avoid_slot.get(slot_key), *bar) if b}
         if barred:
-            narrowed = [r for r in avail if r["id"] != barred]
+            narrowed = [r for r in avail if r["id"] not in barred]
             if narrowed:
                 avail = narrowed
             elif slot_key not in starved:
@@ -443,16 +630,22 @@ def draw(bank: dict, seed: int, used: Counter, test_id: str,
             spent: set[str] = set()
             for slot in slots:
                 slot_key = f"{section}-{slot}"
+                # ...plus the partners of what THIS paper has already spent, so
+                # a mutually-exclusive pair cannot share a paper either.
+                bar = cross_paper_bar | mutex_partners(
+                    r["id"] for _s, _n, r in picked)
                 if slot in from_textbook:
-                    rec = freshest(textbook[section], spent, slot_key)
+                    rec = freshest(textbook[section], spent, slot_key,
+                                   bar | previous_paper)
                     spent.add(rec["id"])
                 else:
-                    rec = freshest(official[(section, slot)], set(), slot_key)
+                    rec = freshest(official[(section, slot)], set(), slot_key,
+                                   bar)
                 picked.append((section, slot, rec))
         records = [r for _s, _n, r in picked]
         resolved = [resolve(r, s, n) for s, n, r in picked]
         score = (sum(used[r["id"]] for r in records),
-                 key_spread(resolved) + name_clash(resolved))
+                 key_spread(resolved) + name_clash(resolved, previous_names))
         if best is None or score < best[0]:
             best = (score, picked)
 
