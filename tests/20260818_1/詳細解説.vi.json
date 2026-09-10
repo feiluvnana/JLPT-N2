@@ -936,32 +936,45 @@
   ]
  },
  "問1-1": {
-  "why_correct": "Giáo viên nói buổi học này SV tự đến thư viện tìm hiểu lịch sử khu phố.",
+  "why_correct": "「それが終わったら…登録してくれる？」→ đăng ký dữ liệu là việc tiếp theo.",
   "options_analysis": [
-   "Chủ đề khu phố đã quyết định từ tuần trước, không phải việc hôm nay.",
-   "Nghe người bán hàng kể chuyện là nội dung buổi học lần sau.",
-   "Thảo luận lớp cũng diễn ra buổi sau, sau khi nghe chuyện.",
-   "Giáo viên nói rõ hôm nay đến thư viện tìm hiểu lịch sử khu phố."
+   "Kiểm tra trang sách là việc của anh Kato.",
+   "Đúng: đăng ký dữ liệu là việc ngay sau khi kiểm tra xong.",
+   "Dán bìa sách là việc nam nhân viên tự nhận làm.",
+   "Chọn sách sự kiện có hạn tuần sau, chưa cần làm ngay."
   ],
   "points": [
-   "各自《かくじ》: mỗi người tự.",
-   "図書館《としょかん》: thư viện."
+   "登録する: đăng ký, nhập vào hệ thống.",
+   "Chú ý mốc「それが終わったら」để xác định thứ tự."
   ]
  },
  "問1-2": {
-  "why_correct": "Cô nói:「ネギの畑の雑草を抜く作業やってもらえますか？収穫は明日機械でする」— việc đầu tiên là nhổ cỏ dại, thu hoạch để đến mai làm.",
+  "why_correct": "Vì ngại đổi tàu nên chọn tàu tốc hành đi thẳng; ghế chỉ định lại chỉ còn toa hút thuốc.",
   "options_analysis": [
-   "[Sai] Thu hoạch hành là việc của NGÀY MAI, không phải việc đầu tiên.",
-   "[Đúng] Việc đầu tiên là nhổ cỏ dại ở ruộng hành.",
-   "[Sai] Gieo hạt rau chân vịt là việc SAU KHI nhổ cỏ xong.",
-   "[Sai] Cày đất cô nói「済んでる」(đã xong) rồi."
+   "Shinkansen bị loại vì phải đổi tàu ở 北山.",
+   "Cũng là shinkansen, đã bị loại vì phải chuyển tàu.",
+   "Ghế chỉ định chỉ còn toa hút thuốc, khách từ chối.",
+   "Đúng: tàu tốc hành, ghế tự do."
   ],
   "points": [
-   "雑草《ざっそう》を抜《ぬ》く: nhổ cỏ dại.",
-   "収穫《しゅうかく》する: thu hoạch."
+   "乗《の》り換《か》え: việc chuyển tàu.",
+   "自由席《じゆうせき》: ghế tự do, không chỉ định."
   ]
  },
  "問1-3": {
+  "why_correct": "Hướng dẫn viên nói \"bây giờ cả nhóm cùng đi thăm bảo tàng mỹ thuật\", nên đó là việc kế tiếp.",
+  "options_analysis": [
+   "Nhà hàng là chuyện của giờ ăn tối 7h và ăn sáng 6h30.",
+   "Đúng: cả nhóm đi thăm bảo tàng mỹ thuật ngay bây giờ.",
+   "Mua sắm thuộc thời gian tự do \"sau đó\", không phải ngay.",
+   "Về phòng nghỉ cũng là lựa chọn của thời gian tự do sau."
+  ],
+  "points": [
+   "参《まい》る: dạng khiêm nhường của 行く.",
+   "くつろぐ: thư giãn, nghỉ ngơi thoải mái."
+  ]
+ },
+ "問1-4": {
   "why_correct": "Về người giúp hôm đó, cô nói \"đó mới là việc quan trọng nhất, phải lo ngay đi\".",
   "options_analysis": [
    "Phòng nhạc thì anh đã mượn được rồi.",
@@ -974,30 +987,17 @@
    "苦手《にがて》: không giỏi, không thạo việc đó."
   ]
  },
- "問1-4": {
-  "why_correct": "Tiền bối khuyên trước hết xem tài liệu tổng hợp hoạt động môi trường.",
-  "options_analysis": [
-   "Làm nghệ thuật chỉ là ví dụ hoạt động, không phải việc ngay.",
-   "Tiền bối nói rõ trước hết hãy xem tài liệu tổng hợp.",
-   "Tham gia sự kiện là bước tiếp theo, nếu thấy hứng thú.",
-   "Giới thiệu bạn nghiên cứu liên quan là chuyện tương lai xa hơn."
-  ],
-  "points": [
-   "文献《ぶんけん》: tài liệu tham khảo.",
-   "環境問題《かんきょうもんだい》: vấn đề môi trường."
-  ]
- },
  "問1-5": {
-  "why_correct": "Hướng dẫn viên nói \"bây giờ cả nhóm cùng đi thăm bảo tàng mỹ thuật\", nên đó là việc kế tiếp.",
+  "why_correct": "Nhân viên yêu cầu đặt đồ trong thùng lên bàn cho dễ lấy trước tiên.",
   "options_analysis": [
-   "Nhà hàng là chuyện của giờ ăn tối 7h và ăn sáng 6h30.",
-   "Đúng: cả nhóm đi thăm bảo tàng mỹ thuật ngay bây giờ.",
-   "Mua sắm thuộc thời gian tự do \"sau đó\", không phải ngay.",
-   "Về phòng nghỉ cũng là lựa chọn của thời gian tự do sau."
+   "Đóng túi sẵn đã bị thay đổi, không còn áp dụng.",
+   "Đặt thùng carton dưới bàn nhân viên nói đã làm xong.",
+   "Nhân viên yêu cầu rõ đặt đồ trong thùng lên bàn cho dễ lấy.",
+   "Kiểm tra số lượng chỉ liên quan lúc phát đồ cho SV sau này."
   ],
   "points": [
-   "参《まい》る: dạng khiêm nhường của 行く.",
-   "くつろぐ: thư giãn, nghỉ ngơi thoải mái."
+   "取《と》りやすいように: để dễ lấy.",
+   "ボランティア: tình nguyện viên."
   ]
  },
  "問2-1": {
@@ -1014,16 +1014,17 @@
   ]
  },
  "問2-2": {
-  "why_correct": "Anh nói số người \"không nghiêng bên nào\" chiếm gần một phần ba, đúng với lựa chọn 3.",
+  "why_correct": "Cô nói 「本音で話せた」và 「ここなら長く働ける」→ cảm thấy dễ làm việc là yếu tố quyết định.",
   "options_analysis": [
-   "\"Hơn một nửa\" là tỉ lệ dân cư đã trả lời khảo sát.",
-   "Bên tán thành chỉ nhiều hơn \"một chút\", chưa tới hai phần ba.",
-   "Đúng: người không nghiêng bên nào chiếm gần một phần ba.",
-   "Anh nói ngược lại: tán thành nhiều hơn phản đối."
+   "Phỏng vấn nói được thật lòng, thấy có thể gắn bó lâu dài.",
+   "Cùng thời điểm cô còn có offer từ công ty khác.",
+   "Ngành cô vốn thích là thực phẩm, không phải công ty này.",
+   "Nội dung kinh doanh chỉ là ý kể thêm với 「も」."
   ],
   "points": [
-   "上回《うわまわ》る: vượt quá một con số, một lượng.",
-   "引《ひ》き続《つづ》き: tiếp tục như từ trước tới nay."
+   "本音《ほんね》: suy nghĩ thật.",
+   "ピンと来《く》る: thấy «đúng cái này».",
+   "決《き》め手《て》: yếu tố quyết định."
   ]
  },
  "問2-3": {
@@ -1053,16 +1054,16 @@
   ]
  },
  "問2-5": {
-  "why_correct": "「思い切ってスピードを上げて、それが効いた」＝dứt khoát tăng tốc chặng cuối là lý do thắng.",
+  "why_correct": "Cậu ấy tự nói: dù sao cũng phải đến mượn chìa khóa hội trường.",
   "options_analysis": [
-   "Đúng.",
-   "“Dẫn đầu sớm hơn” là điều tiếc nuối chưa làm được, không phải lý do thắng.",
-   "Cô không nói giảm tốc, chỉ nói không tự tin vì gió mạnh, vẫn bám nhóm dẫn đầu.",
-   "Dẫn đầu sớm là mục tiêu lần sau, chưa xảy ra ở trận này."
+   "Vốn đã có việc mượn chìa khóa nên tiện thể ghé.",
+   "Micro cài áo mới ở mức «đi hỏi xem có mượn được không».",
+   "Kiểm tra mạng là việc làm tại hội trường.",
+   "Trang web là thứ bạn nữ bảo để cô ấy tra, không phải lý do đến văn phòng."
   ],
   "points": [
-   "思《おも》い切《き》って: nghĩa “dứt khoát”.",
-   "効《き》く: nghĩa “có hiệu quả”."
+   "どうせ: dù thế nào thì cũng.",
+   "ピンマイク: micro cài áo."
   ]
  },
  "問2-6": {
@@ -1092,67 +1093,68 @@
   ]
  },
  "問3-2": {
-  "why_correct": "Nửa đầu bị cắt ví dụ nên hụt hẫng, nửa sau trao đổi sôi nổi nên hài lòng.",
+  "why_correct": "Cô ấy nhờ 「ちょっと見ておいていただけませんか」= xem giúp xem chiếc ô có ở đó không.",
   "options_analysis": [
-   "Không phải cả hai nửa hài lòng — nửa đầu có phần không hài lòng.",
-   "Không phải cả hai nửa hụt hẫng — nửa sau được nói là hài lòng.",
-   "Ngược thực tế: nửa đầu mới hụt hẫng, nửa sau mới hài lòng.",
-   "Đúng: nửa đầu bị cắt nên hụt hẫng, nửa sau sôi nổi nên hài lòng."
+   "Không nhờ mang tới, mà nhờ kiểm tra trước.",
+   "Chính cô cũng chỉ đoán «có thể đã để quên», chưa biết có hay không.",
+   "Nhờ xem giúp = nhờ kiểm tra xem có hay không.",
+   "Nội dung nhờ là về chiếc ô, không phải tình trạng ghế sofa."
   ],
   "points": [
-   "削《けず》られる: bị cắt bớt.",
-   "甲斐《かい》があった: xứng đáng, có giá trị."
+   "置《お》きっぱなし: để nguyên đó.",
+   "ひょっとしたら: có thể là, biết đâu."
   ]
  },
  "問3-3": {
-  "why_correct": "Người gọi nói rõ mục đích: gọi để giới thiệu gói dịch vụ internet đang được khuyến nghị.",
+  "why_correct": "Thông báo về buổi đọc truyện lúc 14h hôm nay → nội dung là giới thiệu sự kiện trong ngày.",
   "options_analysis": [
-   "Chuyện đơn hàng không hề được nhắc tới.",
-   "\"Campaign\" ở đây là chương trình bán hàng, không phải phong trào xã hội.",
-   "Đúng: mục đích là giới thiệu gói nhanh hơn, rẻ hơn.",
-   "Cũng không có nội dung nào về việc giao hàng."
+   "Đây là trung tâm cộng đồng, không phải hướng dẫn dùng thư viện.",
+   "「2階談話室」chỉ là nơi tổ chức.",
+   "Chỉ mời tham gia, không nói về thủ tục nhập hội.",
+   "Toàn bộ là giới thiệu sự kiện hôm nay và mời tham dự."
   ],
   "points": [
-   "さしあげる: dạng khiêm nhường của あげる.",
-   "改《あらた》めて: làm lại vào dịp khác."
+   "催《もよお》し物《もの》: sự kiện, hoạt động.",
+   "なお: ngoài ra, nói thêm.",
+   "席《せき》に限《かぎ》りがある: số chỗ có hạn."
   ]
  },
  "問3-4": {
-  "why_correct": "Anh cho rằng học từ xa không phù hợp với người như cô, ý là cô sẽ lại bỏ giữa đường.",
+  "why_correct": "Các ý kiến được nêu đều có dạng 「〜から」= lý do, nên khảo sát là về lý do sử dụng sách điện tử.",
   "options_analysis": [
-   "Anh còn khen cô giỏi chăm trẻ, tức là phù hợp làm bảo mẫu.",
-   "Đúng: anh nghĩ cô không theo nổi hình thức học từ xa.",
-   "Anh không nói cô không làm được, chỉ khuyên đổi cách học.",
-   "Anh nói trẻ con cũng thích cô, ngược với lựa chọn này."
+   "Không có con số nào về số người dùng.",
+   "「Đọc miễn phí」chỉ là một lý do, không phải khảo sát về loại sách.",
+   "Toàn bộ ý kiến đều là lý do, nên đây là khảo sát lý do sử dụng.",
+   "Phần nói về thiết bị chỉ là giải thích từ 電子書籍."
   ],
   "points": [
-   "向《む》いていない: không phù hợp với tính cách, tố chất.",
-   "扱《あつか》い方《かた》: cách đối xử, cách xử lý."
+   "従来《じゅうらい》: từ trước tới nay.",
+   "手軽《てがる》さ: sự tiện lợi, dễ dàng."
   ]
  },
  "問3-5": {
-  "why_correct": "「社員全員に無駄をもっとなくす」＝mong mỗi nhân viên tự ý thức tiết kiệm điện.",
+  "why_correct": "「鳴きあうことで…コミュニケーションをとっている」「連続して鳴く場合は、食料の場所を仲間に知らせている」— tiếng kêu quạ mang nhiều ý nghĩa giao tiếp.",
   "options_analysis": [
-   "Đúng.",
-   "Đổi thiết bị tiết kiệm điện là việc đã làm rồi.",
-   "Điện mặt trời do nữ đề xuất, giám đốc chưa quyết định thực hiện.",
-   "Không có nội dung về việc dùng thiết bị lâu dài."
+   "[Sai] Sự khác biệt kiểu kêu theo loài không phải trọng tâm.",
+   "[Sai] Thiệt hại và biện pháp đối phó không được nhắc đến.",
+   "[Sai] Cơ chế phát ra tiếng kêu không được giải thích.",
+   "[Đúng] Tiếng kêu quạ mang nhiều ý nghĩa giao tiếp."
   ],
   "points": [
-   "無駄《むだ》: nghĩa “sự lãng phí”.",
-   "節約《せつやく》する: nghĩa “tiết kiệm”."
+   "鳴《な》きあう: cùng kêu, gọi nhau.",
+   "仲間《なかま》: đồng loại, bạn cùng đàn."
   ]
  },
  "問4-1": {
-  "why_correct": "「無理に決まってるよ」＝khẳng định không thể, cần lời động viên.",
+  "why_correct": "「色はともかく使いやすいのよね」＝màu tạm gác qua, nhưng dễ dùng — đáp lại tự nhiên nhất là phản hồi về điểm màu sắc「そう？色も悪くないと思うけどね」.",
   "options_analysis": [
-   "Động viên phản bác thái độ bi quan.",
-   "Hiểu ngược nghĩa, người nói đang than khó.",
-   "Khen làm dễ dàng, trái ngược với 'không thể làm'."
+   "[Sai]「完璧ってわけだね」hiểu nhầm thành khen hoàn hảo, không đúng ý câu nói.",
+   "[Đúng] Phản hồi đúng về màu sắc, điều người nói vừa nhắc đến.",
+   "[Sai]「君が好きな色だよね」không liên quan đến ý câu gốc."
   ],
   "points": [
-   "〜に決《き》まってる: chắc chắn là...",
-   "励《はげ》ます: động viên, khích lệ."
+   "〜はともかく: tạm gác…qua một bên.",
+   "使《つか》いやすい: dễ sử dụng."
   ]
  },
  "問4-2": {
@@ -1168,75 +1170,75 @@
   ]
  },
  "問4-3": {
-  "why_correct": "Người nói ước gì bài kiểm tra dời sang tuần sau — điều không thành sự thật; đáp lại là chắc không dời được.",
+  "why_correct": "「プレゼンを聞いたら文句のつけようがなかったよ」＝định từ chối nhưng hết chê được → đáp án 1.",
   "options_analysis": [
-   "[Sai] Hiểu nhầm thành một thông báo có thật về việc đổi ngày.",
-   "[Đúng] Đáp rằng chắc chắn sẽ không dời sang tuần sau.",
-   "[Sai] Nói may quá đã dời rồi, trái với thực tế trong câu."
+   "じゃあ、受けることにしたの？＝hỏi xác nhận đã đổi ý nhận lời.",
+   "Hiểu nhầm 文句 thành lời phàn nàn với người nghe.",
+   "Ngược nghĩa, vì bài thuyết trình khiến KHÔNG còn lý do từ chối."
   ],
   "points": [
-   "〜たらいいのに: giá mà… thì tốt.",
-   "覚《おぼ》える: học thuộc, ghi nhớ."
+   "文句のつけようがない: không có gì để chê.",
+   "断る《ことわる》: từ chối."
   ]
  },
  "問4-4": {
-  "why_correct": "「負けるに決まってるよ」＝khẳng định chắc thua → đáp án 3.",
+  "why_correct": "「〜ばよかった」là tiếc nuối vì đã không làm → đáp lại bằng cách xác nhận là không mang theo.",
   "options_analysis": [
-   "Hiểu ngược ý câu gốc (đang nói chắc thua).",
-   "Hiểu nhầm trận đấu đã kết thúc.",
-   "「やってみなきゃわからないでしょ」＝chưa thi đấu thì chưa biết."
+   "Câu đáp khi sắp ra khỏi nhà, không hợp với lúc đã ra ngoài.",
+   "Giọng trách «đã bảo rồi mà», nhưng người kia chưa hề khuyên.",
+   "「何だ」= ngạc nhiên nhẹ khi biết đối phương không mang ô."
   ],
   "points": [
-   "〜に決まっている: chắc chắn là ~.",
-   "やってみなきゃわからない: chưa thử chưa biết."
+   "〜ばよかった: tiếc vì đã không làm.",
+   "何だ: ngạc nhiên nhẹ khi biết sự thật khác dự đoán."
   ]
  },
  "問4-5": {
-  "why_correct": "Đây là lời nhờ giữ hành lý → nhận lời rồi hỏi giờ đến lấy là đúng.",
+  "why_correct": "「買い替えるほかない」＝chỉ còn cách mua mới; đáp lại là xác nhận không sửa được.",
   "options_analysis": [
-   "Là lời của bên đi nhờ, không phải bên được nhờ.",
-   "Nhận lời rồi xác nhận giờ khách quay lại lấy.",
-   "Là đề nghị sẽ liên lạc, không đáp việc giữ hành lý."
+   "Đúng.",
+   "“Sửa được à, tốt quá” ngược nghĩa với thông báo phải mua mới.",
+   "“Chưa biết có sửa được không” mâu thuẫn với câu đã khẳng định chắc chắn."
   ],
   "points": [
-   "預《あず》かる: nhận giữ hộ đồ của người khác.",
-   "〜といて = 〜ておいて: dạng rút gọn khẩu ngữ."
+   "〜ほかない: nghĩa “không còn cách nào khác”.",
+   "修理《しゅうり》: nghĩa “sửa chữa”."
   ]
  },
  "問4-6": {
-  "why_correct": "Câu hỏi là mang đi có được không → đáp rằng đã được người ta bảo mang đi.",
+  "why_correct": "「手が空く」= đang rảnh → đáp rằng không có việc gấp.",
   "options_analysis": [
-   "Là lời đánh giá món đồ, không đáp được hay không.",
-   "Là báo cáo đã mang đi rồi, không khớp với đồ trước mắt.",
-   "Nói đã được bảo mang đi, tức là có phép."
+   "Nói không có việc gấp, tức là đang rảnh.",
+   "Hiểu nhầm sang nghĩa «mở» một vật gì đó.",
+   "Cách chia 「空く」sai, không thành câu tiếng Nhật."
   ],
   "points": [
-   "持《も》ってっちゃう = 持って行ってしまう: dạng rút gọn.",
-   "〜って言《い》われた: được ai đó bảo thế."
+   "手《て》が空《あ》く: xong việc, có thời gian rảnh.",
+   "急《いそ》ぎ: việc gấp, cần làm ngay."
   ]
  },
  "問4-7": {
-  "why_correct": "Trả lời phù hợp câu hỏi lo lắng về hạn chót là lời quyết tâm hoàn thành kịp.",
+  "why_correct": "「上司に意見を言いやすかったらいいのに」＝ước gì dễ nói ý kiến với sếp — nghĩa là hiện tại KHÓ nói, đáp lại đúng là「上司に思ったことが言えない環境なの？」.",
   "options_analysis": [
-   "Đúng: 「とにかく間に合わせるよ」= quyết tâm hoàn thành kịp hạn.",
-   "「それは心配だね」là cảm nhận như người ngoài cuộc, không hợp làm lời đáp.",
-   "「期限のばしてもらえたの？」là phản ứng với tin chưa hề được nói."
+   "[Sai]「上司にいろんなことが話せていいね」ngược nghĩa (nói hiện đang dễ nói).",
+   "[Đúng] Hỏi lại đúng ý: môi trường khó nói ý kiến với sếp.",
+   "[Sai]「上司が意見をよく聞いてくれるんだ」ngược nghĩa (nói sếp hay lắng nghe)."
   ],
   "points": [
-   "締《し》め切《き》り: hạn chót.",
-   "何《なん》とかなる: sẽ ổn thôi, sẽ xoay xở được."
+   "〜たらいいのに: ước gì (điều chưa có).",
+   "環境《かんきょう》: môi trường."
   ]
  },
  "問4-8": {
-  "why_correct": "「夕立が来たら、途中で中止にせざるをえませんね」＝nếu mưa thì buộc phải dừng → đáp án 1.",
+  "why_correct": "「私がやらざるを得なくなって」＝buộc phải làm, cần lời cảm thông.",
   "options_analysis": [
-   "「続行できないですもんね」＝đồng tình sẽ không thể tiếp tục.",
-   "Ngược nghĩa với ý 'buộc phải dừng'.",
-   "Hiểu nhầm là đã bị hủy, câu gốc chỉ giả định 'nếu mưa đến'."
+   "Hiểu ngược nghĩa, câu gốc nói là PHẢI làm.",
+   "Hiểu sai cảm xúc, người nói đang than phiền.",
+   "Cảm thông với tình huống bất đắc dĩ."
   ],
   "points": [
-   "〜せざるを得ない: buộc phải ~.",
-   "夕立《ゆうだち》: mưa rào chiều."
+   "〜ざるを得《え》ない: buộc phải...",
+   "仕方《しかた》ない: đành chịu."
   ]
  },
  "問4-9": {
@@ -1252,40 +1254,40 @@
   ]
  },
  "問4-10": {
-  "why_correct": "Người kia mang hàng mẫu đến → bên xem đáp bằng khiêm nhường 「拝見しました」.",
+  "why_correct": "「取っとく」= giữ lại không vứt. Người đáp phản đối vì cho rằng không dùng nữa.",
   "options_analysis": [
-   "「拝見する」là dạng khiêm nhường của 見る, dùng cho mình.",
-   "「ご覧くださる」là tôn kính ngữ cho hành động của người kia.",
-   "「お見えになる」là tôn kính ngữ của 来る, không dùng cho vật."
+   "「取ってみよう」nghĩa là cầm lấy/thử lấy, lệch khỏi chuyện cất giữ.",
+   "Đưa lý do «không dùng nữa» để phản đối việc giữ lại.",
+   "Chỉ lặp lại đề nghị, không thành câu đáp."
   ],
   "points": [
-   "拝見《はいけん》する: xem (khiêm nhường).",
-   "お見《み》えになる: đến (tôn kính)."
+   "取《と》っとく = 取っておく: dạng rút gọn, giữ lại.",
+   "〜んじゃない？: cách nói đề nghị hoặc xác nhận nhẹ nhàng."
   ]
  },
  "問4-11": {
-  "why_correct": "「迷った挙句」＝phân vân đắn đo nhiều, cần lời đồng cảm.",
+  "why_correct": "Được khuyên nên liên lạc → đáp rằng sẽ thử liên lạc.",
   "options_analysis": [
-   "Đồng cảm với việc phân vân nhiều.",
-   "Nói quyết định NHANH, trái ngược 'đắn đo nhiều'.",
-   "Nói mức phân vân NHẸ, nhẹ hơn nhiều so với 挙句."
+   "Là cách chấp thuận phương án của người khác, không đáp lời khuyên.",
+   "Tiếp nhận lời khuyên và nói sẽ liên lạc.",
+   "Chỉ nêu tình trạng hiện tại, không đáp lại lời khuyên."
   ],
   "points": [
-   "〜た挙句《あげく》: sau khi đắn đo kéo dài...",
-   "悩《なや》む: băn khoăn, trăn trở."
+   "〜たほうがいい: khuyên đối phương nên làm gì.",
+   "連絡《れんらく》を取《と》る: liên lạc được với ai đó."
   ]
  },
  "問5-1": {
-  "why_correct": "Bồn hoa bị bác bỏ, nhóm chọn「ベンチをもっと明るい色にして花の絵も描いたら」.",
+  "why_correct": "Trưởng nhóm chốt thử phương án phát phiếu giảm giá cho khách chủ động rời bàn sớm.",
   "options_analysis": [
-   "Bị bác bỏ: rác nhiều nhất quanh ghế, khó làm bồn hoa đó.",
-   "Sơn ghế sáng màu, vẽ hoa lên, phương án được chọn.",
-   "Bị bác bỏ: đã có sẵn vài biển báo rồi.",
-   "Bị bác bỏ: lo gánh nặng cho tình nguyện viên tăng."
+   "Dùng khu sự kiện bị gạt vì đã có lịch sử dụng định kỳ.",
+   "Nhắc khách rời bàn bị bác vì như đuổi khách, và không đủ nhân viên.",
+   "Đúng.",
+   "Tăng ghế bị hoãn, chờ xem kết quả phương án kia rồi mới xét."
   ],
   "points": [
-   "花壇《かだん》: bồn hoa.",
-   "手入《てい》れされている: được chăm sóc cẩn thận."
+   "割引《わりびき》券《けん》: nghĩa “phiếu giảm giá”.",
+   "混雑《こんざつ》: nghĩa “sự đông đúc”."
   ]
  },
  "問5-2-1": {
