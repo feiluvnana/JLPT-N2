@@ -35,8 +35,8 @@ no distractors to design.
   (Jリサーチ, three mock papers pressed to exam timing — §8) and
   『耳から覚える 聴解トレーニング N2』 (§9, the second source that lays a real 20 s
   option-reading pause).
-  `TEXTBOOK_SLOTS` says how many slots per 大問 (currently 問題1 ×2, 問題2 ×1,
-  問題3 ×2, 問題4 ×4: 9 of a paper's 29). **問題5 is the only 大問 still official-only in every paper**, and
+  `TEXTBOOK_SLOTS` says how many slots per 大問 (currently 問題1 ×2, 問題2 ×2,
+  問題3 ×3, 問題4 ×4: 11 of a paper's 29). **問題5 is the only 大問 still official-only in every paper**, and
   for SOURCE reasons, not policy ones (`textbook_bank_plan.md` §6).
 - **`TEXTBOOK_SLOTS` is set from a measurement, not chosen.** `make
   choukai-wear` divides `slots × mixed papers` by pool depth and exits non-zero
@@ -172,8 +172,8 @@ measurement that justifies it** — never by widening a band.
   *audio* is present — it rides inside the section preamble clip, uncut — so
   the paper sounds complete while `聴解スクリプト.txt` has no 例 block. Every
   `tests/imported-*` sitting carries the same divergence.
-- **Finite novelty, now less finite.** Ten official candidates per slot plus 77
-  slot-free items (問題1 ×15, 問題2 ×10, 問題3 ×16, 問題4 ×36).
+- **Finite novelty, now less finite.** Ten official candidates per slot plus 85
+  slot-free items (問題1 ×15, 問題2 ×15, 問題3 ×19, 問題4 ×36).
   `logs/choukai_draws.json` records every paper's draw and the composer spends
   the least-used clips first; across the suite of 24 papers `make choukai-wear`
   projects 2.4–3.4 uses per slot-free clip and 1.5–2.4 per official one.
@@ -186,8 +186,10 @@ measurement that justifies it** — never by widening a band.
   where this file used to read "depth is no longer the binding constraint, the
   sources are", the binding constraint on 問題1/2/3 is now **transcription
   time**, and the numbers to beat are: 問題1 and 問題3 need 18 for a third slot
-  (they hold 15 and 14), 問題2 needs 12 for a second (holds 10, and 完全模試 has
-  18 more that lay a real 20 s pause). `references/textbook_bank_plan.md` §6 lists
+  (問題1 holds 15; 問題3 reached its third slot on 2026-09-10 and needs 24 for a
+  fourth, holding 19), and 問題2 — stuck at one slot since the pool began —
+  **reached two on 2026-09-10** and needs 18 for a third (it holds 15, with 13
+  more transcribable items across 完全模試 and 耳から覚える). `references/textbook_bank_plan.md` §6 lists
   what is genuinely blocked; the next real novelty is the 21 official sittings
   in `refs/JLPT_N2_NEW/` that are not yet imported (§6.4).
 - **No answer-position control.** Lifted options cannot be reordered — 問題3/4/5

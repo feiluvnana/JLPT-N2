@@ -12,9 +12,12 @@ checks on its own (§8).
 Three more books arrived 2026-09-10 and were run through the five-point check
 (§9): 耳から覚える is **the second source in the repo that lays a real 20 s
 option-reading pause**, ドリル&ドリル lays only 15.2 s, and 試験に出る lays none.
-**77 items are banked and 17 are `excluded`** with the measurement that refused
-each: 問題1 ×15, 問題2 ×10, 問題3 ×16, 問題4 ×36, by source soumatome 37,
-shinkanzen 21, kanzenmoshi 11, mondaireishuu 4, mimikara 4.
+**85 items are banked and 17 are `excluded`** with the measurement that refused
+each: 問題1 ×15, 問題2 ×15, 問題3 ×19, 問題4 ×36, by source soumatome 37,
+kanzenmoshi 19, shinkanzen 21, mondaireishuu 4, mimikara 4. On 2026-09-10
+`TEXTBOOK_SLOTS` went to **{問題1: 2, 問題2: 2, 問題3: 3, 問題4: 4} — 11 of a
+paper's 29 slots**, from 8 the day before: 問題2 moved for the first time ever
+(§6.1) and 問題3 took a third slot.
 
 Both books have now been read end to end — every page of both 別冊 and every
 one of Soumatome's 116 CD tracks and Shin Kanzen's 163 measured.
@@ -292,9 +295,9 @@ monologue for gist, so it would ship an off-type item into 問題3.
 | section | options are | what it needed | banked |
 |---|---|---|---|
 | 問題4 即時応答 | spoken | script + key only | **34 items** (Soumatome 10, Shin Kanzen 12, 完全模試 11, 問題例集 1) |
-| 問題3 概要理解 | spoken by BOTH books (and printed in Soumatome's answer booklet too) | script + key + option text | **14 items** (Shin Kanzen 4, Soumatome 9, 問題例集 1) |
+| 問題3 概要理解 | spoken by BOTH books (and printed in Soumatome's answer booklet too) | script + key + option text | **19 items** (Soumatome 9, Shin Kanzen 4, 完全模試 3, 耳から覚える 2, 問題例集 1) |
 | 問題1 課題理解 | printed | script PDF **+ the main 問題冊子** for the option lists | **15 items** (Soumatome 9, Shin Kanzen 5, 問題例集 1) |
-| 問題2 ポイント理解 | printed | same, **plus a measured 20 s option-reading pause inside the clip** | **10 items** (Soumatome 9, 問題例集 1 — see §3) |
+| 問題2 ポイント理解 | printed | same, **plus a measured 20 s option-reading pause inside the clip** | **15 items** (Soumatome 9, 完全模試 5, 問題例集 1 — see §3, §8) |
 | 問題5 統合理解 | Shin Kanzen PRINTS 1番's four choices instead of speaking them | see §6 | 0 |
 
 問題3 and 問題4 were the cheap two and were done first: they are 16 of a
@@ -390,7 +393,20 @@ Re-read the list that way rather than by counting entries.
 Both books are read. Nothing below is waiting on someone to open a page — each
 entry is waiting on a measurement, an ear, or a source outside these two books.
 
-### 6.1 問題2 cannot grow past 10, and Shin Kanzen cannot help
+### 6.1 問題2 grew past 10 after all — SUPERSEDED 2026-09-10
+
+**This section's finding held for the sources on disk when it was written, and
+is now wrong about the conclusion, which is worth keeping visible.** It said
+問題2 was stuck at 10 items and one slot because Soumatome was the only source
+laying a full option-reading pause. Two later sources lay one too: 完全模試 at
+19.3–20.1 s (§8) and 耳から覚える at 20.3–20.5 s (§9). Five 完全模試 items are
+banked, the pool is **15**, and `TEXTBOOK_SLOTS["問題2"]` is **2** at 3.20
+projected uses. 13 more are transcribable (13 from 完全模試, 10 from 耳から覚える,
+minus the five done), so a third slot at 18 items is reachable.
+
+The paragraph below is the original measurement, unchanged, because the
+Soumatome and Shin Kanzen halves of it are still true and still the reason no
+Shin Kanzen 問題2 item will ever exist.
 
 Soumatome's 15 tracks with a 20 s option-reading pause are fully mined: 9
 banked, 6 `excluded` with numbers (cd2/6 at 54.2 s and cd2/26 at 55.0 s under
@@ -689,6 +705,22 @@ timing, and four independent measurements say so (the 20 s pause, the spoken
 **第1回 問題4 ×11 (CD1 tracks 27–37)**, keys off 解答・解説 pp.33–34. Pool 23 → 34,
 which bought back the fourth 問題4 slot (`TEXTBOOK_SLOTS` 問題4: 3 → 4, projected
 2.82 uses against the 4.0 ceiling).
+
+**第1回 問題2 ×5 (CD1 tracks 12–16)** — 2番–6番, added 2026-09-10. Scripts and keys
+off 解答・解説 pp.29–31, printed option lists off 問題冊子 pp.35–38, and the two
+sides cross-check: 2番's key 2 (筋肉をつけるため) is what the script's
+「健康診断で筋肉を増やしたほうがいい」 supports, 3番's key 1 what 「切らしちゃって」
+supports, 6番's key 1 what 「どうせ会場の鍵を借りるのに行かなきゃなんない」 supports.
+Spans 81.4–117.8 s, rates 0.163–0.195. **This is the pool's oldest bottleneck
+breaking**: 問題2 10 → 15 and its first second slot (§6.1). 1番 is not banked —
+its script begins on p.28, which was not read.
+
+**第1回 問題3 ×3 (CD1 tracks 20, 21, 23)** — 1番, 2番, 4番, keys off 解答・解説
+pp.31–32, options spoken so no 問題冊子 page was needed. 問題3 16 → 19 and a third
+slot (3.79 projected). **3番 (CD1-22) is deliberately not declared**: two of its
+lines could not be read off the scan with certainty, and a transcript this repo
+quotes in 解説 has to be exact — it is worth one more page read next session,
+not a guess.
 
 Untranscribed, in the order they pay off:
 

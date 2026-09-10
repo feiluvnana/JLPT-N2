@@ -97,8 +97,17 @@ OFFICIAL_ONLY_TESTS = {"20260807_1"}
 # 4 slots to 3 for the same reason the others went up: at 4 it projected 4.18,
 # over the ceiling, and both books' 即時応答 material is now fully mined except
 # one bundled track no measurement can safely split (textbook_bank_plan.md §6).
-# 問題2 stays at 1 slot because Soumatome is the only source for it: not one of
-# Shin Kanzen's 163 tracks lays more than a 10.1 s option-reading pause.
+# 2026-09-10: 問題3 goes to 3 slots as well — 完全模試's 第1回 概要理解 set took the
+# pool 16 -> 19 and `make choukai-wear` projects 3 x 24 / 19 = 3.79, inside the
+# ceiling; a fourth slot needs 24. 問題1 stays at 2: it holds 15 and a third slot
+# needs 18.
+#
+# 2026-09-10: 問題2 goes to 2 slots, the first time it has moved. It sat at 1
+# because Soumatome was the ONLY source that lays the full option-reading pause
+# (Shin Kanzen's 163 tracks max out at 10.1 s), and 10 items could not reach the
+# 12 a second slot needs (textbook_bank_plan.md §6.1). 完全模試's 第1回 set added
+# five at 19.3-20.1 s, so the pool is 15 and `make choukai-wear` projects
+# 2 x 24 / 15 = 3.20 against the 4.0 ceiling. A third slot needs 18.
 #
 # 2026-09-10: 問題4 goes BACK to 4 slots. `refs/KanzenMoshi/` (完全模試 N2, three
 # mock papers pressed to exam timing) added its 第1回 即時応答 set, taking the pool
@@ -113,7 +122,7 @@ OFFICIAL_ONLY_TESTS = {"20260807_1"}
 # 1番's four choices where this repo speaks them, and neither book lays the 10 s
 # 質問1 answer pause that sits INSIDE an official 2番 between the two read-backs.
 # Both need composer surgery, not a transcript. See textbook_bank_plan.md §6.
-TEXTBOOK_SLOTS = {"問題1": 2, "問題2": 1, "問題3": 2, "問題4": 4}
+TEXTBOOK_SLOTS = {"問題1": 2, "問題2": 2, "問題3": 3, "問題4": 4}
 
 SR = 48_000               # official recordings are 48 kHz
 LOUDNORM = "loudnorm=I=-15:TP=-1.0:LRA=11"

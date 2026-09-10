@@ -174,6 +174,800 @@
     "sha256": "d18c7cad5140402e02d0df4e5d4b41f91c583ccb1653d7b5e5ecd6f2cb4c96d6",
     "size": 44793976
   },
+  "refs/DrillAndDrill.zip": {
+    "fingerprint": "972a31aa93cdd1ca711fd71069d21a26b5c603c547cc3fffa282e704b4fcf1d3",
+    "member_bytes": 360590453,
+    "member_count": 157,
+    "members": {
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track01.MP3": {
+        "mtime_ns": 1789015434140384931,
+        "sha256": "32fc65dcc0dc10e7a843b39db1f0215736eab147569f5e641d69aeba60f126f7",
+        "size": 450241
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track02.MP3": {
+        "mtime_ns": 1789015434141330481,
+        "sha256": "bde041a30ee694a6b081c205f5be8f5abb946f57957add946a1b4ee8d6ae2b34",
+        "size": 461761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track03.MP3": {
+        "mtime_ns": 1789015434142810243,
+        "sha256": "940586eea0428b1c04d85d15e2503e200d55f09de8a56e8cb44f3498bfc11b50",
+        "size": 1531681
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track04.MP3": {
+        "mtime_ns": 1789015434144410214,
+        "sha256": "aee0f3389731f1ae77ec8520b7ecc782a114106de93c172674452fd1f711a2c2",
+        "size": 1882081
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track05.MP3": {
+        "mtime_ns": 1789015434148067662,
+        "sha256": "8cbaaa65a364160ededf6a8ca51b95f55ecc8ce91a1d7a1a0f79735f185d43b2",
+        "size": 1766401
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track06.MP3": {
+        "mtime_ns": 1789015434150791851,
+        "sha256": "b8d697f511dea5d2c7a69cd8aa42e2eddc2870ff2f30bf63f982447a6304464e",
+        "size": 1813921
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track07.MP3": {
+        "mtime_ns": 1789015434154567257,
+        "sha256": "d71c6d7d51ede6a3eaaa502d3b8af06c5a1739a81e715ea88873781ec3b186b5",
+        "size": 1430401
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track08.MP3": {
+        "mtime_ns": 1789015434156542149,
+        "sha256": "b6221f46ca77ef51f0838896ef36499d9393b5f1bb60e97fa114e7e8d2accf7a",
+        "size": 1997281
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track09.MP3": {
+        "mtime_ns": 1789015434160483973,
+        "sha256": "488234c008f2678ac5310a4eaebd7dbcefc9a8313e5eaafd2fd96b31b158adb1",
+        "size": 2102881
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track10.MP3": {
+        "mtime_ns": 1789015434163123578,
+        "sha256": "de64719d48cc4e12f78fbd3a528c1e69484140047a4252d147ff8ae0d95f297a",
+        "size": 1442881
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track11.MP3": {
+        "mtime_ns": 1789015434165696683,
+        "sha256": "257e5a8a01f033352f79fad0d4ea13d04d9444a3b8ee7cc8d8dd1e58be67f609",
+        "size": 1548961
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track12.MP3": {
+        "mtime_ns": 1789015434168561540,
+        "sha256": "8afbb43a3e041c9fb4bab7462dd2065e9750b17ae523f092ddb825f78a276860",
+        "size": 2126881
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track13.MP3": {
+        "mtime_ns": 1789015434171363147,
+        "sha256": "65a72ff00bf7a9eb7f2babb53dc6496a49bf334d21b8e031abbb464cc3267a2c",
+        "size": 1797601
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track14.MP3": {
+        "mtime_ns": 1789015434175474181,
+        "sha256": "a04fd5c3452a3b831e07b50bd1cb01feeef17e430a7afd78e8119d0c0e33b8cd",
+        "size": 2454241
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track15.MP3": {
+        "mtime_ns": 1789015434179382380,
+        "sha256": "934ca219b2d5de06e9a788a240b5955a1c76cfcf6937195b54c5fb6f8e2f3b05",
+        "size": 1647841
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track16.MP3": {
+        "mtime_ns": 1789015434180982227,
+        "sha256": "ffe54b50c484cb06bc452b569b47a9421d498a1623be43db733bb1ce86aee944",
+        "size": 1813441
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track17.MP3": {
+        "mtime_ns": 1789015434185123886,
+        "sha256": "d433edc0cc8744dca0c8daa296a26cd090b6af4aa4f3a3737b5f5e09579749be",
+        "size": 2728801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track18.MP3": {
+        "mtime_ns": 1789015434187945577,
+        "sha256": "490373ef3fe4cf06396b5e90b62ecb5474113a1d7384ac270d7d5f242fc1a1ab",
+        "size": 1946881
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track19.MP3": {
+        "mtime_ns": 1789015434191808734,
+        "sha256": "1325f77cff1db42bb46e9f885a08f927868781e2c60008404f2a6662b42b0a8f",
+        "size": 1774561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track20.MP3": {
+        "mtime_ns": 1789015434193336830,
+        "sha256": "d8a48d5b8f999e469afdbb349df8f684387a797fe7b487a22b09ca4236ec0984",
+        "size": 1898401
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track21.MP3": {
+        "mtime_ns": 1789015434197439697,
+        "sha256": "536e991c60ac4cedddd351c86a342fc8e7ccae30197baef8c65fe32125673751",
+        "size": 2362561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track22.MP3": {
+        "mtime_ns": 1789015434201468522,
+        "sha256": "36b46a5b3d699b109cf2c8dbe8f80654e7f2c7c560496ee4728ed0d5480a2474",
+        "size": 2101441
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track23.MP3": {
+        "mtime_ns": 1789015434204304629,
+        "sha256": "925d59f62ba2ab45427b7d995cf81287a6fb2ba635134cad035fc4a109441789",
+        "size": 1646401
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track24.MP3": {
+        "mtime_ns": 1789015434207160861,
+        "sha256": "29be18e267471c8ec3747c4bf2978d77ee68a209c61097630eef3cd8ec26c10a",
+        "size": 1884001
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track25.MP3": {
+        "mtime_ns": 1789015434211213603,
+        "sha256": "11543abfa9005f26113d82fd704736537332e8be5ee758dfd4c7a45c007e9e19",
+        "size": 2023201
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track26.MP3": {
+        "mtime_ns": 1789015434212822617,
+        "sha256": "75b191027f2acb9cae0fd3b4bac78789984ada6f1a1bc8cd979f3390b8ba3ee3",
+        "size": 1793761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track27.MP3": {
+        "mtime_ns": 1789015434217052069,
+        "sha256": "b144396daf462c3bc742c22fcfa4f706cf06e6628105bf4928091e337be3a3c5",
+        "size": 2532001
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track28.MP3": {
+        "mtime_ns": 1789015434220990185,
+        "sha256": "661628dd10dba3b1dfd4d0d52b1d6571d8782c1bc570d7a4001b2be3d960367d",
+        "size": 1939201
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track29.MP3": {
+        "mtime_ns": 1789015434222727574,
+        "sha256": "f5a96cb7b1bc8fa775e34d6e95cac8c65aa43d2bc7410b40ba7604a8f3fdac58",
+        "size": 2203201
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track30.MP3": {
+        "mtime_ns": 1789015434228035952,
+        "sha256": "723b52bc7e5ae8527cc963d32cc0c2f5c0ab0745c9e881d01b0de7ae5d07caf2",
+        "size": 2520481
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track31.MP3": {
+        "mtime_ns": 1789015434230989976,
+        "sha256": "a98bc2d56053814c07e373d2f8bdd134302982a1898b134fddf03034f2337f9e",
+        "size": 1983361
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track32.MP3": {
+        "mtime_ns": 1789015434235085969,
+        "sha256": "e301f328e0e671783459de3e5ece654bcc6a3575502fd0843bede876f1cce208",
+        "size": 2059681
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track33.MP3": {
+        "mtime_ns": 1789015434235998226,
+        "sha256": "cbe392b96da70458e2e780387351f28dcab4fe13043b021b523de5a687845a52",
+        "size": 578401
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track34.MP3": {
+        "mtime_ns": 1789015434238550998,
+        "sha256": "efa3fe683458c71f0a0a595fd4e58e1d1a6512482adc39b2a1610fb066260962",
+        "size": 1626241
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track35.MP3": {
+        "mtime_ns": 1789015434241335062,
+        "sha256": "96cd2be4c2075ec1eacd89b717e639d3632c0c192d3ca7ec984177f8ba5e20b7",
+        "size": 1908001
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track36.MP3": {
+        "mtime_ns": 1789015434245306304,
+        "sha256": "a034b6f92e5f5d02d36239c1ac57505fd9f1d3a27cb23ddecccd3c6a87aa6f20",
+        "size": 2065921
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track37.MP3": {
+        "mtime_ns": 1789015434246781774,
+        "sha256": "58473cd7bb6f6ffb6b75d09a5cc843c9fc385e573dc87321b5646bae8daef1b0",
+        "size": 1970881
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track38.MP3": {
+        "mtime_ns": 1789015434250789224,
+        "sha256": "9cdabb123c5d9f79491096bd7fd5a6152b25a9e904102248250cecf7c2fb63b8",
+        "size": 1980961
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track39.MP3": {
+        "mtime_ns": 1789015434256364104,
+        "sha256": "7e492dc2c36d608f5c217f7f0179343aefcc26604246c8942ab2a12d90ddee83",
+        "size": 1622401
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track40.MP3": {
+        "mtime_ns": 1789015434260250928,
+        "sha256": "1d56cdf6e2806a65b62fc9aefe7bc6fe2783266b375786282f9384f09fdb9b17",
+        "size": 1841281
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track41.MP3": {
+        "mtime_ns": 1789015434261855275,
+        "sha256": "7a69460b8b25d5499fa63164da1fc628b6e81d01b15d7c72bc945ab77b5dda68",
+        "size": 1789441
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track42.MP3": {
+        "mtime_ns": 1789015434265676723,
+        "sha256": "a3ed878ddec20d98e8567afdf8faf57bf387cf16ee0111ee26f6d4742f8b335e",
+        "size": 1992001
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track43.MP3": {
+        "mtime_ns": 1789015434268701248,
+        "sha256": "21d381ccc50345d866cedfcfc8c0f67c6717914c79f5331d1af6477a5a3b2fbe",
+        "size": 2212321
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track44.MP3": {
+        "mtime_ns": 1789015434272672865,
+        "sha256": "ea8447707dd833dc412223dee027b5eab466bb7be313696ab1b31edf2e8d47da",
+        "size": 2172001
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD1/Track45.MP3": {
+        "mtime_ns": 1789015434274484921,
+        "sha256": "8ad677e72e8c446b1d31036beddf240b603bdc1f3b742af8839370e8ccff15f0",
+        "size": 2167201
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track01.MP3": {
+        "mtime_ns": 1789015434003831378,
+        "sha256": "ea0c315f288b11ff6577bc0641c6fef2c09f346df1f72b06b7c0ae2828580719",
+        "size": 2060161
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track02.MP3": {
+        "mtime_ns": 1789015434006889696,
+        "sha256": "c04bfba2bd99a6a9eb0104349bd932a9af80332644612715418b59c0f554701e",
+        "size": 2099041
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track03.MP3": {
+        "mtime_ns": 1789015434010830978,
+        "sha256": "8bb692eb9896130db0e34fca95b59542880b5b0b20f9456fff124927312165cf",
+        "size": 1827361
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track04.MP3": {
+        "mtime_ns": 1789015434012467783,
+        "sha256": "af4f9ee6b13f954412aae0614f201f2af05adabfe6cf44dd544883273745d79e",
+        "size": 1650241
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track05.MP3": {
+        "mtime_ns": 1789015434016194898,
+        "sha256": "7895ccde186fd273e58fd97f0cbda1558cd53402c0168972410b434af63a09e1",
+        "size": 1645441
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track06.MP3": {
+        "mtime_ns": 1789015434018917670,
+        "sha256": "0adab747264f5f27fb0ce16c9a3cccf61cdcbcb605cee00ecb0f7b5b8970d048",
+        "size": 2110081
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track07.MP3": {
+        "mtime_ns": 1789015434021958446,
+        "sha256": "dc32beef3dd6ab6d0d979200d0354d0f1d8a3070646ccf18b1d0256a86180cf3",
+        "size": 2297281
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track08.MP3": {
+        "mtime_ns": 1789015434026145522,
+        "sha256": "fbb230880a52984d1952b8cd4cb36fb4f905b3d520a3ea0505278539c6ca7b93",
+        "size": 2178721
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track09.MP3": {
+        "mtime_ns": 1789015434028953129,
+        "sha256": "fd9526024eaae8552c406513be81418f9fbe44cca84221b5caed97d5ad78ca0e",
+        "size": 2117761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track10.MP3": {
+        "mtime_ns": 1789015434033162497,
+        "sha256": "a78cca690eb6794709c0111db3ebcae0ecaa5c150dec93198d29a7bb19ae8792",
+        "size": 2189281
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track11.MP3": {
+        "mtime_ns": 1789015434036076313,
+        "sha256": "e2e341eb5eaf9208d07ad7fc624ccd15874f860e7821e29d50310dcb68109a62",
+        "size": 2384641
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track12.MP3": {
+        "mtime_ns": 1789015434039889470,
+        "sha256": "36c9786145b2e163bbde0f89c66e75c282540ba9c1c5203756b4cd590df0fb39",
+        "size": 1996801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track13.MP3": {
+        "mtime_ns": 1789015434041580276,
+        "sha256": "ef2b201bfea0b9731da70cdaae99c85e017576b2c781a54b2bdeca46b88d794f",
+        "size": 2221441
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track14.MP3": {
+        "mtime_ns": 1789015434046303440,
+        "sha256": "e2b58a80ef95c66af4ed368355928898f1748844110aee10b3066e4854ac8a01",
+        "size": 1540801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track15.MP3": {
+        "mtime_ns": 1789015434047924953,
+        "sha256": "52354336c4e4d009e2ecf2bc323301a252540bcbdd8567c16dbe90f17c2a7df5",
+        "size": 1885921
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track16.MP3": {
+        "mtime_ns": 1789015434051624401,
+        "sha256": "3e134db6a9805d03e1e083b6f881417df7494d4518a11dbd95e2698e455ad730",
+        "size": 1711201
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track17.MP3": {
+        "mtime_ns": 1789015434053213456,
+        "sha256": "c746d2d8d8b213b7aa6a1d0ece08c6c341ec8e7515e5834c5cacbe4b81d79000",
+        "size": 1915681
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track18.MP3": {
+        "mtime_ns": 1789015434056817069,
+        "sha256": "595e18c0b0e285736efafe9b836dcd9cebd4cff59735817931435113b76f675d",
+        "size": 1542241
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track19.MP3": {
+        "mtime_ns": 1789015434058879961,
+        "sha256": "6a728cdb309c1f8e3d472937e8b215d18f9476904863425bc9ebdba0e03277b8",
+        "size": 526561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track20.MP3": {
+        "mtime_ns": 1789015434060864644,
+        "sha256": "80e0a7127b0843f31bc14a35957d9434630781e4274e069873daf78224514abc",
+        "size": 2116801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track21.MP3": {
+        "mtime_ns": 1789015434064613051,
+        "sha256": "f056146cca6c0467df7de907407a9d28dbf7bb0539b1ae8e5c877b2fedc7974e",
+        "size": 1748641
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track22.MP3": {
+        "mtime_ns": 1789015434067561117,
+        "sha256": "b7f9d64feabdee967d8003d929fc5b88dacf79d6beee71a7fa02ca63d3eaedfa",
+        "size": 2197441
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track23.MP3": {
+        "mtime_ns": 1789015434071310106,
+        "sha256": "d9b913e1bbbb68d7789eece24e2cb80e528433db7182648e325bfdad2ae111cd",
+        "size": 2056801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track24.MP3": {
+        "mtime_ns": 1789015434072979578,
+        "sha256": "29b4620f87fbd59acedf4e4c5abd70894826187b81b432fe9427e843a13669be",
+        "size": 2170561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track25.MP3": {
+        "mtime_ns": 1789015434077597992,
+        "sha256": "a4273dc4a936e5ae057196203a89f594e48cffec6bc82790320bc8211e7f9e40",
+        "size": 1456801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track26.MP3": {
+        "mtime_ns": 1789015434079218964,
+        "sha256": "202ce9b177a42f2f73072006bbf5c365355a13b5a334a68a41dde23b9415a0dd",
+        "size": 1921441
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track27.MP3": {
+        "mtime_ns": 1789015434082984287,
+        "sha256": "60e2791c7c946c8fd99512ab8ed3dfaf97b72f7cb7d4bf95de8c520a6ea37b5d",
+        "size": 1640641
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track28.MP3": {
+        "mtime_ns": 1789015434084638050,
+        "sha256": "451487a6b4f06443f06f11fa8d7dd400f6ae7c9cd6bdd9a4d5bf877bbfd46689",
+        "size": 1606081
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track29.MP3": {
+        "mtime_ns": 1789015434088378832,
+        "sha256": "53de6faeac104af6f995b3c3866b1a2c9ad3c21ca02df568aba73d6909f16992",
+        "size": 1999681
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track30.MP3": {
+        "mtime_ns": 1789015434089968512,
+        "sha256": "f33d0f33be7469d13917bebcd95c3d17f92afdb6782d8e8a5d063ff6760a6ffd",
+        "size": 1999201
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track31.MP3": {
+        "mtime_ns": 1789015434094699259,
+        "sha256": "8ac632ea5db4afba60ae32cf7432dff2ce96cec950d234e8d7dd60dc90e01e21",
+        "size": 1821601
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track32.MP3": {
+        "mtime_ns": 1789015434096417982,
+        "sha256": "ce761d7d406c74b4460bdd4f4ac4ba8c6053b6b9d35702247d64ea2ba0f0e78d",
+        "size": 2177281
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track33.MP3": {
+        "mtime_ns": 1789015434100580892,
+        "sha256": "3c2a59453fdd9000369af80eb5b704884263cac640368752d88768205c7a2e4d",
+        "size": 2859841
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track34.MP3": {
+        "mtime_ns": 1789015434104360340,
+        "sha256": "e98d880394902c16f30805111ca1c2b253596f7734e36642e42db0e593d52b55",
+        "size": 1788961
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track35.MP3": {
+        "mtime_ns": 1789015434107095321,
+        "sha256": "36f5721369186f6c3e81ae74e95cddfb4c257f84899d7c36687da27a03cef1d0",
+        "size": 2078881
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track36.MP3": {
+        "mtime_ns": 1789015434110146096,
+        "sha256": "2a33983c7227ad0354c42f28e639bb3973175818e4fd42fbfb60b2f75bc9d00f",
+        "size": 2393761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track37.MP3": {
+        "mtime_ns": 1789015434113978253,
+        "sha256": "9c17e1b92062a8b75b21b14155d7713910d4d8d4e7db169640049732823dd0cf",
+        "size": 1664641
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track38.MP3": {
+        "mtime_ns": 1789015434116596025,
+        "sha256": "4d3c137e0b96caca41302d3f177d57387d34c6285fe8dc81622f86394a0ef028",
+        "size": 1569601
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track39.MP3": {
+        "mtime_ns": 1789015434119258297,
+        "sha256": "c3471fd318e47059d92aa191612f183e8260fe80043015e2efaf006d00ccc5e0",
+        "size": 1772161
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track40.MP3": {
+        "mtime_ns": 1789015434122162779,
+        "sha256": "1db3248658a1d0ea502330e6d6e2e0be318b2e4af4518756797f96186cf47a79",
+        "size": 2169121
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track41.MP3": {
+        "mtime_ns": 1789015434128085704,
+        "sha256": "fdaa87fd3a53e23cb8be539e525e6b9a634e29e26080ea2a1453c2ded16e8d87",
+        "size": 1685761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track42.MP3": {
+        "mtime_ns": 1789015434129579924,
+        "sha256": "20d33898428025e80991c00c03c3eea147824de42ce4b81866d9a169c25d4708",
+        "size": 1784641
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD2/Track43.MP3": {
+        "mtime_ns": 1789015434133430873,
+        "sha256": "629461d003d2448cfef9dce3d7dadfe1a73ce55df4eb3d8860d1df3f9f012b07",
+        "size": 2038561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track01.MP3": {
+        "mtime_ns": 1789015433839564929,
+        "sha256": "73d9a2a83a74278b1524ddd103f819ebef8d802f9b9edc1c922c5515bd0ceeb8",
+        "size": 1933921
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track02.MP3": {
+        "mtime_ns": 1789015433841841947,
+        "sha256": "d13b3532407ee9996ce6b3cbbdfb2d185cfff80cb415abd8eef40ff7fc2a8a42",
+        "size": 1959841
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track03.MP3": {
+        "mtime_ns": 1789015433846554653,
+        "sha256": "60e0a9a845a79482be624330095db69c3f3969913c8ad9849999d6775dca50f1",
+        "size": 2393761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track04.MP3": {
+        "mtime_ns": 1789015433852819456,
+        "sha256": "8d9e9b4b13d93c7df766b4285395713d9857e67315f72550b310063ce8924783",
+        "size": 2092801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track05.MP3": {
+        "mtime_ns": 1789015433855114100,
+        "sha256": "85848dacbebfab8169a55c83cc7f609f353dc75421d50cea4d501c283db5e5ce",
+        "size": 1811041
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track06.MP3": {
+        "mtime_ns": 1789015433858984423,
+        "sha256": "b49d771a4fcdd1b8905c0c3755d84dedfc40642c5827ab307c0347630a58d4d1",
+        "size": 1750081
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track07.MP3": {
+        "mtime_ns": 1789015433860090058,
+        "sha256": "6c766b4e91bcb7bba01df65583ea2a0611e8b06f579df2ad67c9f5e5a72018ab",
+        "size": 543361
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track08.MP3": {
+        "mtime_ns": 1789015433863120583,
+        "sha256": "991dfd0d4f60eaf8bc81029817064b12feaa6c2efafdf2994e9de5552c851584",
+        "size": 543841
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track09.MP3": {
+        "mtime_ns": 1789015433864237259,
+        "sha256": "3db48dc567abfb8bb2a939d001280cee11d0a58fc38da8362f4421e1a61befe4",
+        "size": 517441
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track10.MP3": {
+        "mtime_ns": 1789015433865143766,
+        "sha256": "71dcf93f16a0857d0c5e92242b3bf1f053cc45e841235e53e971e7dcc332438a",
+        "size": 483841
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track11.MP3": {
+        "mtime_ns": 1789015433866051357,
+        "sha256": "7ee120c02a87ed49591cac8cf62106280ba0045431b431692984246815d354cf",
+        "size": 506401
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track12.MP3": {
+        "mtime_ns": 1789015433866983948,
+        "sha256": "2b04acb44c0b26200557ed99c4d15bebe35fe9c74ccd9eae47fc3f18229bb885",
+        "size": 508801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track13.MP3": {
+        "mtime_ns": 1789015433870077599,
+        "sha256": "13bdb867f7e90fedc588a1e9bb8ef00226d42f0c6be6cd53238cba26ac3b011a",
+        "size": 557281
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track14.MP3": {
+        "mtime_ns": 1789015433870994815,
+        "sha256": "0562f338e93c88d9489eaa8370818cef3d3df499418be008dfe681992a020e85",
+        "size": 461761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track15.MP3": {
+        "mtime_ns": 1789015433871998407,
+        "sha256": "289fcb5ddb7c0bb1a71fa797e69c78c52842f59f61a780e32e93c5daa97479ca",
+        "size": 533761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track16.MP3": {
+        "mtime_ns": 1789015433872892622,
+        "sha256": "0f9eb144a0735257c472fd5ebf8615efa1cd00cd0bb4ccc7dc18d7bd6b50a7d8",
+        "size": 523681
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track17.MP3": {
+        "mtime_ns": 1789015433873850922,
+        "sha256": "7e69b3a2c086efbf50ea8e5cfaba0b82ad0ed7d2e1a0959d0146c39537ff5cfd",
+        "size": 584641
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track18.MP3": {
+        "mtime_ns": 1789015433875936773,
+        "sha256": "1327518b2813a28cc126b189b357f2bb984f48529e83810b787ff6e49d2a2f1b",
+        "size": 523681
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track19.MP3": {
+        "mtime_ns": 1789015433876883322,
+        "sha256": "3b1eb41a2761409cb731555fd445eca62ea5ead371f43dd68008e5dfafba65b2",
+        "size": 562561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track20.MP3": {
+        "mtime_ns": 1789015433877898664,
+        "sha256": "70076ffb04413eea142a979f232ffa30e1e67aaae7435de358beba6901f65718",
+        "size": 583201
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track21.MP3": {
+        "mtime_ns": 1789015433879807388,
+        "sha256": "81759761341646fe5fd6f0844cbab4e7b195305c5ecfbfdd69b20e1b48ed064e",
+        "size": 501601
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track22.MP3": {
+        "mtime_ns": 1789015433880702104,
+        "sha256": "294e18354c3e1ef90ec3d1c05b0bb2341117467195c0b6ef530eec3b462db73c",
+        "size": 502561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track23.MP3": {
+        "mtime_ns": 1789015433881647904,
+        "sha256": "4e2cc1d24399bfd41157dab892934235ecfe85bef51d29db1b7500902aa3ceda",
+        "size": 555841
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track24.MP3": {
+        "mtime_ns": 1789015433883519378,
+        "sha256": "04711692c2b3245465c2d0ab572892c5d307333067d0d0fce908a67fa665bf50",
+        "size": 518881
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track25.MP3": {
+        "mtime_ns": 1789015433884407968,
+        "sha256": "003c4bf7e982ce0c897082139a8a882b3d4806e6563a62e48f900f7d15af2e4a",
+        "size": 512161
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track26.MP3": {
+        "mtime_ns": 1789015433885418977,
+        "sha256": "d522916ca05d353cf3b9d413bde117aa94650fe4d4e69ba80b68a324d1bcbff6",
+        "size": 586561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track27.MP3": {
+        "mtime_ns": 1789015433888426502,
+        "sha256": "42da7f248d5ef60e9a63fa3cfaca5e7180d311fdb7634bcb54fd58cc7017bc60",
+        "size": 516481
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track28.MP3": {
+        "mtime_ns": 1789015433889458385,
+        "sha256": "455017b99912f4313e754ad48c152be0e212ae241109e25ba9805a915e747aa4",
+        "size": 599521
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track29.MP3": {
+        "mtime_ns": 1789015433890702271,
+        "sha256": "fbbbd71cd4be7b19f9a1e25257751da7befe34301a90d4359da99ef65673c86c",
+        "size": 622081
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track30.MP3": {
+        "mtime_ns": 1789015433891730946,
+        "sha256": "1f278c755a2b9d7a50ea897c9f2058a92f60c5fd79651f9e552b59287e97bc27",
+        "size": 634561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track31.MP3": {
+        "mtime_ns": 1789015433892879622,
+        "sha256": "ffcdac9adfd09c5155ddc7b78d90993d3f000a442ea72beaaf7bec8d97b34f73",
+        "size": 618241
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track32.MP3": {
+        "mtime_ns": 1789015433896066190,
+        "sha256": "d09a5b966f2ca819166ca016f0fd21387a07b05eda2b6a3d3fb0ac583ac64e5c",
+        "size": 444001
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track33.MP3": {
+        "mtime_ns": 1789015433897084574,
+        "sha256": "e76d91c35327e928141ebe6e8928d711c798e55358fd139c09baa77a4aaeb532",
+        "size": 608641
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track34.MP3": {
+        "mtime_ns": 1789015433898189625,
+        "sha256": "8507875a9dfab33a5c9c79c9f23e289b3a64b1a82a4cc8e3d76fee850269df71",
+        "size": 489601
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track35.MP3": {
+        "mtime_ns": 1789015433899125174,
+        "sha256": "51135a1858ef5fd73bd7eaed5dcecdadb7906b90bc150983991590d654a9d460",
+        "size": 584161
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track36.MP3": {
+        "mtime_ns": 1789015433899943764,
+        "sha256": "9ccee987c63aeb61946c71949a7202bc58dcd504a4e8a3ccb79131cf76838e26",
+        "size": 444961
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track37.MP3": {
+        "mtime_ns": 1789015433901917572,
+        "sha256": "bcd2b822fe9fcf3b0d1ac50906f8a6f4045b6db86aef8df40696e1e6605d108f",
+        "size": 476161
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track38.MP3": {
+        "mtime_ns": 1789015433902955248,
+        "sha256": "3d6b053ca32d639c7b778c2172d5ab2c1857d21aa30725e268f96769b4a73ab4",
+        "size": 617761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track39.MP3": {
+        "mtime_ns": 1789015433903936131,
+        "sha256": "f13bb699b073bcb43b6d3c97811b58ed0460c6fd9857943ef226dd7c2dad050f",
+        "size": 583681
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track40.MP3": {
+        "mtime_ns": 1789015433905770104,
+        "sha256": "123b483682e6abc90106898a6ff91e71b727061c813b42907378861f7d2bf9d4",
+        "size": 555841
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track41.MP3": {
+        "mtime_ns": 1789015433906770321,
+        "sha256": "1bafaafc07f0d195d801373732940d14a6c3d20813cb68c3ff32c09b94fc2b19",
+        "size": 509761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track42.MP3": {
+        "mtime_ns": 1789015433907714370,
+        "sha256": "4f38d834f99cf8049e0137fd16d43171283d01e745e4d0f75a1dcd5edc386c61",
+        "size": 561601
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track43.MP3": {
+        "mtime_ns": 1789015433909599720,
+        "sha256": "8fd5395e84068676ab978e0d6f21f020834cbcc28b29e2ef101a74abf030d64c",
+        "size": 466081
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track44.MP3": {
+        "mtime_ns": 1789015433910595561,
+        "sha256": "8e6654b165849d7eb52f4403c13248613232c2913fe955d326208b0d97b7b398",
+        "size": 533281
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track45.MP3": {
+        "mtime_ns": 1789015433911770654,
+        "sha256": "731f3d9fd0011be052695df3540d48b3b16da8452b50f88671afdb464f5930d0",
+        "size": 711841
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track46.MP3": {
+        "mtime_ns": 1789015433914958014,
+        "sha256": "86ecedbbb516cd529d07bb2621e5410f0505ef9af51c0a8fb591bac82020d95c",
+        "size": 614401
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track47.MP3": {
+        "mtime_ns": 1789015433915876647,
+        "sha256": "941daf2f6d803485ce0b1c2035a56166605c45165d1597c8a2d66766796584fe",
+        "size": 523681
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track48.MP3": {
+        "mtime_ns": 1789015433916810154,
+        "sha256": "44a03fb6b38623e9efd9a9586cbfbaac254bc747b5d73909adb5fb3ac045cf9a",
+        "size": 535681
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track49.MP3": {
+        "mtime_ns": 1789015433917673953,
+        "sha256": "13418755b16dd9653eddf590ba6a6ddd2b107aab61ff85041ccf36ab0dd24146",
+        "size": 512161
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track50.MP3": {
+        "mtime_ns": 1789015433918621045,
+        "sha256": "dc9077d26cd5951b659674e8366291cb37d2e72bf0ebadaf657788199a9a0be2",
+        "size": 586561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track51.MP3": {
+        "mtime_ns": 1789015433920514852,
+        "sha256": "564d3610cd9052ee669c8180727bf88dfd0ca95d493886bba434991615f89fd1",
+        "size": 508801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track52.MP3": {
+        "mtime_ns": 1789015433921560027,
+        "sha256": "4b6143a2fb93034ebd6895f35c57235ffafdb66ffd8b22cfb30290e3f66f68f0",
+        "size": 572641
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track53.MP3": {
+        "mtime_ns": 1789015433922596202,
+        "sha256": "0fc9935916ac40c1ac2a89978ded09ae50c8c2cc2dcf3238c2f2360207dffd66",
+        "size": 577441
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track54.MP3": {
+        "mtime_ns": 1789015433926572694,
+        "sha256": "ff9ff59c5fa5b94bf0ebe40a6b80001281522a60992368803bbfb6e6d0cffd9e",
+        "size": 2290081
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track55.MP3": {
+        "mtime_ns": 1789015433928252416,
+        "sha256": "1f331682fd7a8c8bc637253c20e0644e67c6c798497889ff6b698e600f5868c8",
+        "size": 1906081
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track56.MP3": {
+        "mtime_ns": 1789015433932628869,
+        "sha256": "b8f4cccaaa75bc9913cf560e54b75d577bb9fae45d2ae832f9ca24989a762605",
+        "size": 2977921
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track57.MP3": {
+        "mtime_ns": 1789015433936473526,
+        "sha256": "0ab3d1b2c1e7ed102dc032180b1c7d40449adeb52e3b7c32957acd54777b4913",
+        "size": 1844161
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track58.MP3": {
+        "mtime_ns": 1789015433939700220,
+        "sha256": "cd63b52d45674853d1b89a634b6be8d378299fea82740ef419fdce05833a94c6",
+        "size": 2632801
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track59.MP3": {
+        "mtime_ns": 1789015433943916880,
+        "sha256": "c4ad9e1bf11137e555ac8630c61e897f7f29a0a8f1782a7a8b6e76aaf4f96609",
+        "size": 2662561
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track60.MP3": {
+        "mtime_ns": 1789015433947935163,
+        "sha256": "63d3ad3886bab00e0b276597f89cbd6812f53daa6cc745651fac5215f83443e7",
+        "size": 2421601
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track61.MP3": {
+        "mtime_ns": 1789015433952042947,
+        "sha256": "6130d76a987e49accbb0a05f2a8a49502c130c7eb5c7f95e425b394dcfa288ab",
+        "size": 2370241
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track62.MP3": {
+        "mtime_ns": 1789015433953997297,
+        "sha256": "0a1ba89ab6124dede7942bf3daa6773efd4419683318737b77d6f06986e69edc",
+        "size": 2484481
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track63.MP3": {
+        "mtime_ns": 1789015433959189382,
+        "sha256": "1a5c2ce2bb4a9f7a0445c05cfc1740c3455c3563818ad7869544f105e0e999bf",
+        "size": 2601601
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track64.MP3": {
+        "mtime_ns": 1789015433962499618,
+        "sha256": "65c5c7f099fb071c2b950cd14ddf77d0383304779cb92cc6851d9ab8b09f4651",
+        "size": 2717281
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track65.MP3": {
+        "mtime_ns": 1789015433969113631,
+        "sha256": "f08fae5307359fb2465ce71839d52e7f2e697824505bee549866e4652a89a20c",
+        "size": 2513761
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track66.MP3": {
+        "mtime_ns": 1789015433973161540,
+        "sha256": "087657508f77ad0bf39b1491b6c03df0322b901e7031eac1c54f39798f99a01d",
+        "size": 2354881
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track67.MP3": {
+        "mtime_ns": 1789015433976222065,
+        "sha256": "e720e1c30aac0d07bac0b85f73770805f4eed2ca3f231b6eefe190cfa7ec02d0",
+        "size": 2437921
+      },
+      "DrillAndDrill/Choukai+Dokkai/Drill_and_Drill_N2-Choukai-Dokkai-AudioCD3/Track68.MP3": {
+        "mtime_ns": 1789015433980612518,
+        "sha256": "5b9d42d6bceb02cf59874a9cca7d6e04e4b4533b56899db5dd1710c4f70cc9c3",
+        "size": 3310561
+      },
+      "DrillAndDrill/Choukai+Dokkai/[studyjapanese.net]_Drill_and_Drill_N2-Choukai-Dokkai.pdf": {
+        "mtime_ns": 1789015434371019141,
+        "sha256": "25581982730bda68aecf61cf42617184774cffce2e9bf29797799348304387d6",
+        "size": 119288537
+      }
+    },
+    "uploaded_fingerprint": "972a31aa93cdd1ca711fd71069d21a26b5c603c547cc3fffa282e704b4fcf1d3",
+    "uploaded_size": 360628475
+  },
   "refs/External.zip": {
     "fingerprint": "1c7785a454b35f09144ea66f05147a14276b807ef3fe73d1af5b894e84f472fa",
     "member_bytes": 105481405,
@@ -820,6 +1614,2098 @@
     },
     "uploaded_fingerprint": "eed78f1cf33a2b7e1c64c00ecc7a7a35631c3d7cc07814aafb97ee31714c7ba9",
     "uploaded_size": 1312896261
+  },
+  "refs/KanzenMoshi.zip": {
+    "fingerprint": "e21882a891c731723b8e5cc666c9e43a1b273bc28876e1c2a10eefa659ebcb05",
+    "member_bytes": 743918836,
+    "member_count": 131,
+    "members": {
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track01.mp3": {
+        "mtime_ns": 1789012867517830586,
+        "sha256": "3affa534d5c86abaa217493c32c23e90643250c31380b701dd02a74c218e1f0d",
+        "size": 1160882
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track02.mp3": {
+        "mtime_ns": 1789012867529723246,
+        "sha256": "d3605adb98d162f5f93889c22280f4f0c86765ad11e171a1264eb30837f4a2e5",
+        "size": 1379266
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track03.mp3": {
+        "mtime_ns": 1789012867543717169,
+        "sha256": "4e794b1268dc4d7e73707ce26f1365fad9945f529c40025f32cf8bb29e9b0f02",
+        "size": 3882841
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track04.mp3": {
+        "mtime_ns": 1789012867555699621,
+        "sha256": "6d2ce9768b533e3af081227f4d11ea67718f6138d26b38e1d1bf0a6ee6137d4b",
+        "size": 3407413
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track05.mp3": {
+        "mtime_ns": 1789012867560671028,
+        "sha256": "8b66151cac49a62bdbc76fa6e6a005e33dc154312c7b3ef8ba388bab5c62679d",
+        "size": 3439804
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track06.mp3": {
+        "mtime_ns": 1789012867565716686,
+        "sha256": "e708e5192ab52ba3f87f78709cf540b74b9e011d9c3ae5ab4181412affb06f66",
+        "size": 3671772
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track07.mp3": {
+        "mtime_ns": 1789012867571952809,
+        "sha256": "a07df09a349551ece15cbf5fb22424116e6744617bef4cb592a4f6100082e1ad",
+        "size": 4649796
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track08.mp3": {
+        "mtime_ns": 1789012867577944139,
+        "sha256": "43625652df1672a166d296bde9fe8b1737ad53b945ea12fe1c3e4eb6da64a2e4",
+        "size": 3321731
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track09.mp3": {
+        "mtime_ns": 1789012867582260792,
+        "sha256": "9f800751edef5e368e7339b65a73fc4cac221cba08921bcdccc6e10f7e25c66d",
+        "size": 1826482
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track10.mp3": {
+        "mtime_ns": 1789012867584928601,
+        "sha256": "2555f51ca08a57bedea857012bef9529abc096f70edc380f045d7cac6433ed86",
+        "size": 4558890
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track11.mp3": {
+        "mtime_ns": 1789012867593195696,
+        "sha256": "d9172b3139608cd633185ca0fb46a2bc50f716ab6ca4e03e642a06b0329e9e16",
+        "size": 4851462
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track12.mp3": {
+        "mtime_ns": 1789012867595355918,
+        "sha256": "ea009eb897daa42ceb45c7a04562ceafc041b42c3fda76b85c7f4b832ece87fc",
+        "size": 4479478
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track13.mp3": {
+        "mtime_ns": 1789012867603774555,
+        "sha256": "63b039c17eb8b906c826fb7965e5205ff087238f9d6c9013f5c180c3bae8464a",
+        "size": 3876572
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track14.mp3": {
+        "mtime_ns": 1789012867606973576,
+        "sha256": "514400eb814c1882e817f5b8c1456b2685a2058b2227507f05e9402bfd1bd264",
+        "size": 5356147
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track15.mp3": {
+        "mtime_ns": 1789012867614287331,
+        "sha256": "8dbcfa13276a52c060f6dcd489ae958eedad65c43af1dd14d8d0001042c7a996",
+        "size": 4938188
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track16.mp3": {
+        "mtime_ns": 1789012867621070625,
+        "sha256": "903457a3206a72b782309f31ee1a4ca4caf2fea22807484f1c4d2fd8b19de8c8",
+        "size": 4122123
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track17.mp3": {
+        "mtime_ns": 1789012867626726370,
+        "sha256": "43b63b899e24636c1b20528170292b8ca6b2ec65170bd607b0ad05de082c8469",
+        "size": 1622727
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track18.mp3": {
+        "mtime_ns": 1789012867629093385,
+        "sha256": "bd75132be4055aaea9baa67a91e220dedb4ab99d0c892358614484b0cd803328",
+        "size": 2174433
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track19.mp3": {
+        "mtime_ns": 1789012867630955855,
+        "sha256": "02b9bc06e818d2b17868bca341bc09429a3dbe41bd327231f20a7d0cd16fdfec",
+        "size": 4224523
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track20.mp3": {
+        "mtime_ns": 1789012867647723546,
+        "sha256": "fc519e66293e1f102d4f322ed8ee5e3f9957172a41db85444f485e611f18a4f4",
+        "size": 3586090
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track21.mp3": {
+        "mtime_ns": 1789012867652130824,
+        "sha256": "ecd22138b44298c9b37ca17ad4e3142e26573f07b4e2d423c9073548d3d6de49",
+        "size": 4313339
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track22.mp3": {
+        "mtime_ns": 1789012867658589158,
+        "sha256": "a3c0a9c7cd9cfdbb35eddc7a36405e36ba228dbd54082514d64ed3e08d3f4a2e",
+        "size": 4194221
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track23.mp3": {
+        "mtime_ns": 1789012867663268521,
+        "sha256": "768891b5b734ee1ff6f8ffe1813f895e71e96b950d6a09cee237b1b7ce0b5cb9",
+        "size": 3733421
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track24.mp3": {
+        "mtime_ns": 1789012867669027642,
+        "sha256": "869f451060b4fc074c791e9de16ce6f7fba42223c13579ffc0af2e4a7a01e554",
+        "size": 3485780
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track25.mp3": {
+        "mtime_ns": 1789012867672904000,
+        "sha256": "3423e99be349e35f41d59127e0d9c8e3ae11846716a083ff2440df368c3a7e33",
+        "size": 1663478
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track26.mp3": {
+        "mtime_ns": 1789012867674536302,
+        "sha256": "b9223ed097c3cad831b337ec2b22b90fb767395be5484559ae34552669ce3af8",
+        "size": 1782596
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track27.mp3": {
+        "mtime_ns": 1789012867679353374,
+        "sha256": "306b781b065251627e61c012871d0a67a4f9297c067b826058d59bd101c9da03",
+        "size": 1253878
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track28.mp3": {
+        "mtime_ns": 1789012867680820092,
+        "sha256": "fb229c63265ef2dfee9efba05d593b231776c1d0ee14d078c97b50aac3a5b650",
+        "size": 1193274
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track29.mp3": {
+        "mtime_ns": 1789012867682215518,
+        "sha256": "ce11438774e735033f88d5919f61444928f5e8e8435f86e678d5bffe436c4a65",
+        "size": 1172376
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track30.mp3": {
+        "mtime_ns": 1789012867685837041,
+        "sha256": "6c0a9619c450e3d610be6e8b6543f954b343452c4ee26f501f839caa4301b932",
+        "size": 1270596
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track31.mp3": {
+        "mtime_ns": 1789012867687415177,
+        "sha256": "a5d7f5ade4999d5bf0edfcd380be7bfd6c848113947b92b4c6171546e1ee8b5a",
+        "size": 1346874
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track32.mp3": {
+        "mtime_ns": 1789012867691309285,
+        "sha256": "d3a95f97935e0f1124b1797d6e3cd600b850b8966199dcd77d41ba130b25842d",
+        "size": 1368817
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track33.mp3": {
+        "mtime_ns": 1789012867692794711,
+        "sha256": "0af7aa6835051457cbdeb7ed8225ffa915014f70423c07e7c5608d95eb4aba9d",
+        "size": 1183870
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track34.mp3": {
+        "mtime_ns": 1789012867695341394,
+        "sha256": "4a2dfcbd37de70f77120547ec77c7807a7794aea1fbf88b24dce984b37b092e7",
+        "size": 1308213
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track35.mp3": {
+        "mtime_ns": 1789012867696874237,
+        "sha256": "c9251dbe97cd071ce37fb00676eb1ca792370000f7c6f1f7291acf558886632d",
+        "size": 1408523
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track36.mp3": {
+        "mtime_ns": 1789012867700497010,
+        "sha256": "ed62060b9b8df0285b10a6090eb970ea70bc7bc3bb4a5a1e142216258497761e",
+        "size": 1246564
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track37.mp3": {
+        "mtime_ns": 1789012867702008895,
+        "sha256": "459a9816a5ba844fa0dc4cb32d9cbca55351068beb5209d75ef66c1bf7a4351f",
+        "size": 1458678
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track38.mp3": {
+        "mtime_ns": 1789012867706131297,
+        "sha256": "76e57a40286108a7be00b8cad752ca1725acad9b92e32d3c6d8a1954992333c9",
+        "size": 2302956
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track39.mp3": {
+        "mtime_ns": 1789012867709645486,
+        "sha256": "a8f1f19802866f569e880940f095ea638adc6fba9727db4113edc6f2e982cf47",
+        "size": 3719837
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track40.mp3": {
+        "mtime_ns": 1789012867712198794,
+        "sha256": "1ead7c9b5b66afc0bc93fecc3dd9248d36c11f19fda6002705e13475acbe6bcb",
+        "size": 4342596
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track41.mp3": {
+        "mtime_ns": 1789012867717966081,
+        "sha256": "dab65071244f88f4e8288089c3aa42dbf50d451670178cd92415c08c75aa812d",
+        "size": 1253878
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track42.mp3": {
+        "mtime_ns": 1789012867721413728,
+        "sha256": "620b15294638826fe9d80dc7b5497a913e347c8848e5e45a75bc889bedc8d479",
+        "size": 6022792
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD1/Track43.mp3": {
+        "mtime_ns": 1789012867727829978,
+        "sha256": "e46eacc06e2b49c0c44ad7a21762b06765bdbc803834f4a8e91347e8e9f8f7a6",
+        "size": 493192
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track01.mp3": {
+        "mtime_ns": 1789012868194976564,
+        "sha256": "bd5052d4c6b4bc0d1f7b44d7c674e538582c5e0dd7781d76eb9bf1bd072967ef",
+        "size": 1157747
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track02.mp3": {
+        "mtime_ns": 1789012868196762742,
+        "sha256": "840662bb683ddcff99bee870950e04f137670e44b7d8dde52be6c585594889d0",
+        "size": 1379266
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track03.mp3": {
+        "mtime_ns": 1789012868202627447,
+        "sha256": "144752d0fab0c8e1387fbdb42285b6a4f5f1cd6856765cc2881b47b451ba4bc3",
+        "size": 3882841
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track04.mp3": {
+        "mtime_ns": 1789012868208326275,
+        "sha256": "7b3a1867fcfdc4794dd6ead7a09249306053f3a479f9d934d83779eaf82910bf",
+        "size": 4061519
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track05.mp3": {
+        "mtime_ns": 1789012868214439189,
+        "sha256": "9d55f33a32c20cba71e8c9008398319329c5a062c6ce153772714d685ccce50c",
+        "size": 4786678
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track06.mp3": {
+        "mtime_ns": 1789012868219865557,
+        "sha256": "991e8a67c0b7fb169b2d94e8c7077862eb8f6b6af9913331730c2a60d371f99c",
+        "size": 3376066
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track07.mp3": {
+        "mtime_ns": 1789012868226698601,
+        "sha256": "677334540892837f31033c15be076aa4055388b5296131bc98ac510ad2ecb38b",
+        "size": 3510858
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track08.mp3": {
+        "mtime_ns": 1789012868232511972,
+        "sha256": "8f579d68a31fd1d62bb628d6c6229a3da344f1e44549bf75a7bc592741866dec",
+        "size": 3070956
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track09.mp3": {
+        "mtime_ns": 1789012868236506456,
+        "sha256": "15cf22c6eb0cf7bd885f35069e66a0b245869550eff1580cbdc70bce7eef2e82",
+        "size": 1826482
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track10.mp3": {
+        "mtime_ns": 1789012868239170515,
+        "sha256": "9cc84fb76b46503a04aa0f854a0d0778d5a564fd0f2adcef518ef8e4fa2185f4",
+        "size": 4558890
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track11.mp3": {
+        "mtime_ns": 1789012868247067607,
+        "sha256": "eba2d58565dec36eb67be0f3290534fff076b5afc5d7b988e9749bcc7942efc6",
+        "size": 4346776
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track12.mp3": {
+        "mtime_ns": 1789012868253100646,
+        "sha256": "09b68f32efc5d3c68dcaad6b629442b0a0de445cef4630be8dbe61aa0e795a03",
+        "size": 4659200
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track13.mp3": {
+        "mtime_ns": 1789012868261644993,
+        "sha256": "9b666359db89c6b5ed79eac27eb503abbd189f9ca0806669641d0b65e716e48f",
+        "size": 5106417
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track14.mp3": {
+        "mtime_ns": 1789012868268807664,
+        "sha256": "12cc88be857d8ac28ec73714cc39c644e80406644b2cc9885f1c8130375483da",
+        "size": 4789813
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track15.mp3": {
+        "mtime_ns": 1789012868274714827,
+        "sha256": "75ad4ed5dc826ab48bdfeb4b43ce69a5e97a8b201ca34d23219de4f30c7c5d08",
+        "size": 4022858
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track16.mp3": {
+        "mtime_ns": 1789012868282645711,
+        "sha256": "33d692701b7cc8136cbed4226654e9792fe46fcb9496baba5eee2296e675ca9a",
+        "size": 6133551
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track17.mp3": {
+        "mtime_ns": 1789012868288913960,
+        "sha256": "2d076854ad9ba2632ff8d5b3104b61dcbd6e4289de440114371f9ca8e135a4db",
+        "size": 1672882
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track18.mp3": {
+        "mtime_ns": 1789012868294308869,
+        "sha256": "aee5d8e45fc6c9c4e7fec11e71a850e04ca3ec549f1e656599b7d7af0c9c336c",
+        "size": 2174433
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track19.mp3": {
+        "mtime_ns": 1789012868298044435,
+        "sha256": "0f5481568371995f2fa043aea5882375fa59651d885fecd7446e6ea4e404bcf2",
+        "size": 4225568
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track20.mp3": {
+        "mtime_ns": 1789012868305214981,
+        "sha256": "02d9a87d7860eca1d4926d252e1b8c37dab2439d8a7d905dcf27fca379b3fb39",
+        "size": 4477388
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track21.mp3": {
+        "mtime_ns": 1789012868311087519,
+        "sha256": "4c8863fc2f28fcfbdee126a9ad413391764d39c95cea03bb7948365619d4c7bf",
+        "size": 4494107
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track22.mp3": {
+        "mtime_ns": 1789012868318186898,
+        "sha256": "76d17c522f38af4fe14d28e3ab24c466673b8d85458ad4276a4b1e94267d1b99",
+        "size": 4253780
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track23.mp3": {
+        "mtime_ns": 1789012868324226437,
+        "sha256": "5ab306410c28d970a93f61e6da6943c7a61acd794a5a7d686e5ce0461762403a",
+        "size": 4841013
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track24.mp3": {
+        "mtime_ns": 1789012868330057641,
+        "sha256": "10a286dc397a228656161c47f58d101dcfa42237eeb6a84179e33886c9dafd9e",
+        "size": 4023902
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track25.mp3": {
+        "mtime_ns": 1789012868335066256,
+        "sha256": "bed8fee1543061137ca4db2eb83fedccb9d98083db953900869504d3fa9d6a8b",
+        "size": 1663478
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track26.mp3": {
+        "mtime_ns": 1789012868336643141,
+        "sha256": "c464d3a3a962eb8cf7109979aea5fc94159f832a907baca4c2415a6552c1b945",
+        "size": 1784686
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track27.mp3": {
+        "mtime_ns": 1789012868340414374,
+        "sha256": "3c3d3379a6f933a195203f59c878c0064baff4fb43f408a7a1158358d9a8b216",
+        "size": 1341649
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track28.mp3": {
+        "mtime_ns": 1789012868342537596,
+        "sha256": "c436f94aa1dc601ba738d682b1c3636480f885fbf9733467945cdb91876b698d",
+        "size": 1399119
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track29.mp3": {
+        "mtime_ns": 1789012868346236787,
+        "sha256": "8d3c55e800eeb9487eb2268bf08ab5693c9d72bb25502d4174d2a2df8149f053",
+        "size": 1417927
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track30.mp3": {
+        "mtime_ns": 1789012868347880714,
+        "sha256": "04db44b620d055e9d7ab00581d1bc7ada74ec54419cf9e79a76b5a6c5e9d1816",
+        "size": 1383445
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track31.mp3": {
+        "mtime_ns": 1789012868351530696,
+        "sha256": "9fa841420e423ef538fb41d718e948374f8541c032a2a3e20ce89f76f6fa6f61",
+        "size": 1309258
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track32.mp3": {
+        "mtime_ns": 1789012868352910163,
+        "sha256": "672f33ac9f2dd1b09e0510bdbbfb0f340050da30219a753956956e1ea3e38cb1",
+        "size": 1320751
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track33.mp3": {
+        "mtime_ns": 1789012868356567228,
+        "sha256": "ed95071db5517d52e096ab96ded0e9cbb7151256a954a2d3feeb2a417073d0b0",
+        "size": 1251788
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track34.mp3": {
+        "mtime_ns": 1789012868358138738,
+        "sha256": "61c395fc389c8632c0b2419bffa0ec86f541e0f81bae089f09d33bb7c80bbac5",
+        "size": 1557943
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track35.mp3": {
+        "mtime_ns": 1789012868360760296,
+        "sha256": "a6b0d17a405732e8f2db55523732c53e1858d9a517a75ffe67b0c88ef6ddeb3b",
+        "size": 1249698
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track36.mp3": {
+        "mtime_ns": 1789012868365696828,
+        "sha256": "a9e11b90d362c24ffd2206e1a205a168fa8b18d82f386d29426f64e776ecafda",
+        "size": 1329111
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track37.mp3": {
+        "mtime_ns": 1789012868367235796,
+        "sha256": "417b38a7ab4d745ba73023cb4b3485ce16ee1ca38704ddabc65dd99080254694",
+        "size": 1332245
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track38.mp3": {
+        "mtime_ns": 1789012868371553866,
+        "sha256": "64244c4b43968dfa1efdb22975e4fd2227ceab7bebd36d6b02ee57159e8a4b0b",
+        "size": 2302956
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track39.mp3": {
+        "mtime_ns": 1789012868376201271,
+        "sha256": "56e04bc21b978134bb270dcca527d282daad9132c6aebc5350a833ac999f69df",
+        "size": 3628931
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track40.mp3": {
+        "mtime_ns": 1789012868385986625,
+        "sha256": "e981c88e579acbf7f21a80ff8214ef493279b4f963b3fbae9c6e95bcd95f2358",
+        "size": 5287184
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track41.mp3": {
+        "mtime_ns": 1789012868391096825,
+        "sha256": "4e9275d3a404f35e63f6511a297209e19be643813b8d715418a3f5133f975d6e",
+        "size": 1254923
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track42.mp3": {
+        "mtime_ns": 1789012868395644396,
+        "sha256": "470953da688b4f62f5484b0064e4cb76aad99994c207b747176c9e8f52eb933f",
+        "size": 6982009
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD2/Track43.mp3": {
+        "mtime_ns": 1789012868401935145,
+        "sha256": "402dd8bdbb2275795f39762cbf1e4963e923879f644eec922c835acb16dec283",
+        "size": 493192
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track01.mp3": {
+        "mtime_ns": 1789012867735527319,
+        "sha256": "7bbe69095e0204ab8c6ce4a1bee9d938e1ac7875557e6d89f7ac2611e64bb352",
+        "size": 1165062
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track02.mp3": {
+        "mtime_ns": 1789012867737810209,
+        "sha256": "d3605adb98d162f5f93889c22280f4f0c86765ad11e171a1264eb30837f4a2e5",
+        "size": 1379266
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track03.mp3": {
+        "mtime_ns": 1789012867742376655,
+        "sha256": "fe2b4e95a6bb7c0331a43bd3f99da27849f79cdc4701d354e2e50a92ddc1d0e3",
+        "size": 3883886
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track04.mp3": {
+        "mtime_ns": 1789012867747437562,
+        "sha256": "e0181ed9124e4cc620e8001c4300778222b37bc7d8fd178f609e2b414d87f407",
+        "size": 3354123
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track05.mp3": {
+        "mtime_ns": 1789012867752168926,
+        "sha256": "439640cdd44b08ac53284cc85f3c8d360388a5884bd49ffed82ac369552ba85a",
+        "size": 3894335
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track06.mp3": {
+        "mtime_ns": 1789012867757849713,
+        "sha256": "e144c0959490bf86cbb00e8d70163c358eaa23f65ed812907983ea4fec221b18",
+        "size": 3094988
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track07.mp3": {
+        "mtime_ns": 1789012867762722535,
+        "sha256": "1766bb5711fce0b379ba58186080c446a9c6bda880427bdad706f5e2f62e31b7",
+        "size": 3204702
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track08.mp3": {
+        "mtime_ns": 1789012867767938861,
+        "sha256": "2d099174b56f32278e85ae1ba6700638f34ec225700f95cd8beb1553a5b9cb38",
+        "size": 3308147
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track09.mp3": {
+        "mtime_ns": 1789012867771929761,
+        "sha256": "b6f065c47ffa1ba8bd298fff2ee0de73afd1dd6cd3652f719527e09fb39072e3",
+        "size": 1826482
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track10.mp3": {
+        "mtime_ns": 1789012867774438194,
+        "sha256": "a194219da6296576ec5b973e45d06f0e7e358b425e73164d71aa0466337eed47",
+        "size": 4559935
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track11.mp3": {
+        "mtime_ns": 1789012867782106368,
+        "sha256": "f4f77f60546552a17e9cc380f3950383041cc814e772981c665009c1c6e8661a",
+        "size": 4274678
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track12.mp3": {
+        "mtime_ns": 1789012867789650709,
+        "sha256": "5c288c0b59b06885def0079f6a3fee9859931f5323675cbe091bf7ca34b64a67",
+        "size": 4330058
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track13.mp3": {
+        "mtime_ns": 1789012867798010262,
+        "sha256": "b7f48a9600b1d27b6337f123aae6631eac47ffbd6b3d5df1849b6ffac6757bba",
+        "size": 4778319
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track14.mp3": {
+        "mtime_ns": 1789012867806985987,
+        "sha256": "e696f226b4fce3d5a12b73e6614db8e2db5157b932119f008e84281ee394cba2",
+        "size": 5398988
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track15.mp3": {
+        "mtime_ns": 1789012867816470923,
+        "sha256": "b03a51d02bac20c7ed2d71f9da195d21de57dc66dcc886e323d32c31c796c48c",
+        "size": 4979984
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track16.mp3": {
+        "mtime_ns": 1789012867825934984,
+        "sha256": "9eb9e08eac38847929c1f5965d9166ebcaa40e96c493e23662b474ca8cd67e7c",
+        "size": 4249600
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track17.mp3": {
+        "mtime_ns": 1789012867831048058,
+        "sha256": "3cf42257356977ff827d45bad2a1c6641034040f8f13d0cb31e4c002034221c3",
+        "size": 1622727
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track18.mp3": {
+        "mtime_ns": 1789012867832915237,
+        "sha256": "6039c777e8731094a0cf1ecda5a3bd90a1ea927fa999b7c50932c4eb9cdbc36e",
+        "size": 2174433
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track19.mp3": {
+        "mtime_ns": 1789012867838810316,
+        "sha256": "52a51a0e9be2c008a704476d7e396004cd8a1ddbc8b795ad5e045bdd7a021a58",
+        "size": 4225568
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track20.mp3": {
+        "mtime_ns": 1789012867844505811,
+        "sha256": "a882d19619240eafad103ec7036b0d152aa76a821b2ede10a77a5beabe08ad29",
+        "size": 4206760
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track21.mp3": {
+        "mtime_ns": 1789012867851392897,
+        "sha256": "65f5965d1b4c4c4fa54c78b2465f55a38deeb73dadfe3ba3b81f871ddd7c6ab9",
+        "size": 3512947
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track22.mp3": {
+        "mtime_ns": 1789012867856047135,
+        "sha256": "9d68c3bb2536a208046cdaffb50d10ab1d494388f17a0cc8a01cbbdbb433a480",
+        "size": 3716702
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track23.mp3": {
+        "mtime_ns": 1789012867862566177,
+        "sha256": "6cc950f7ed7d4ed0d31e25377bb43d18488093bc98ee1ee7814446776acf4599",
+        "size": 4262139
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track24.mp3": {
+        "mtime_ns": 1789012867867367208,
+        "sha256": "119f7b9f5208f2890371ffb4445a76e88a1c41a2162c58c09d93559e90e73521",
+        "size": 4323788
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track25.mp3": {
+        "mtime_ns": 1789012867873605915,
+        "sha256": "48cc17ff5592a09da475d42584a381594e03d2579e929c6ba9126fa9c39f5983",
+        "size": 1663478
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track26.mp3": {
+        "mtime_ns": 1789012867879347160,
+        "sha256": "3786a0204c06a71c7e4864d4321b45a6afae91644ab99bbcb57ee00e8c40bc5a",
+        "size": 1784686
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track27.mp3": {
+        "mtime_ns": 1789012867882240387,
+        "sha256": "31ff51457b6c0548cce3de64429d102d2a147b4dcd985eec84452317cdb6b789",
+        "size": 1552719
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track28.mp3": {
+        "mtime_ns": 1789012867885107114,
+        "sha256": "ca050fc47a8f160e245bf44e6b8083b62dac12078d7736540a49c1b7b1f9cb8f",
+        "size": 1359413
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track29.mp3": {
+        "mtime_ns": 1789012867887878965,
+        "sha256": "fa25f2ea9d0f363adae2125ce03af9a804faf016ad009fe58f3d2cd428d091cb",
+        "size": 1566302
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track30.mp3": {
+        "mtime_ns": 1789012867890603357,
+        "sha256": "d52ed8442269b3c283eca67aa188e50d539b66a1df2426b8bc1b76e88db497b5",
+        "size": 1348964
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track31.mp3": {
+        "mtime_ns": 1789012867893320000,
+        "sha256": "4cb3a31bfa4b1c4abc3c40c98fc8281306c592a5f8415d6a62bfdd58c3caf1e7",
+        "size": 1427331
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track32.mp3": {
+        "mtime_ns": 1789012867896046976,
+        "sha256": "ca4a23ccda5b653db91d2ccde190c43b02def49002eb06d2fbf1e8ed74ca01c5",
+        "size": 1239249
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track33.mp3": {
+        "mtime_ns": 1789012867897847237,
+        "sha256": "c837287c5e25e672bc64d7fa1d36b35716d4a0c957774532f8eb485cfdc24264",
+        "size": 1361502
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track34.mp3": {
+        "mtime_ns": 1789012867903103271,
+        "sha256": "6de346128a1d3c458fde44d70a2381e30123e3d50c6d652569921de87470c33b",
+        "size": 1455543
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track35.mp3": {
+        "mtime_ns": 1789012867904696156,
+        "sha256": "fe1ef1eda6d8792a133bcbe1fff5d152dc730001e999db21bbcf4d9f805faad4",
+        "size": 1241339
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track36.mp3": {
+        "mtime_ns": 1789012867908339805,
+        "sha256": "dc2049d6cc396bbc593697b8f418a0726be5ab1d3893803df968025f50233c7d",
+        "size": 1177600
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track37.mp3": {
+        "mtime_ns": 1789012867909886315,
+        "sha256": "3e02c6ba6469f07a370af83694fcbcb17eb82d4c50d2aa0442a49fa0ff8549d7",
+        "size": 1277911
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track38.mp3": {
+        "mtime_ns": 1789012867912884667,
+        "sha256": "ca93d3dd70fb253558bb37c906445c7e8d98f61d5c313bc44dad69f5efd010b0",
+        "size": 2302956
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track39.mp3": {
+        "mtime_ns": 1789012867917612073,
+        "sha256": "0f175f562f088d3cb9a860339548ee25833c5e3d4c5cfc9aec52d72bcd483a37",
+        "size": 5616327
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track40.mp3": {
+        "mtime_ns": 1789012867929315856,
+        "sha256": "0e0421da5f567ae00c2976cfc9a55da44c3a128ea76731f58d4f102c4a27697a",
+        "size": 6598531
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track41.mp3": {
+        "mtime_ns": 1789012867936409444,
+        "sha256": "bfad2045bb34bf385aa40d7c7a564c81464e9bb7fc893ba1c53c031d78249948",
+        "size": 1254923
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track42.mp3": {
+        "mtime_ns": 1789012867940760347,
+        "sha256": "44cf8b91c797de737214706e33012f6738cb3b729f81806f251d6e67e404cbd3",
+        "size": 6279837
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-AudioCD3/Track43.mp3": {
+        "mtime_ns": 1789012867949617779,
+        "sha256": "91fd69c3c47d0c77b8d4df4c832e6b23c7ed58c2232c864612e58ded0f84d8b9",
+        "size": 493192
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-Mock Tests.pdf": {
+        "mtime_ns": 1789012867500447641,
+        "sha256": "c862985f35a266f0e78bc789ff546edaa7f5ef1bcae9a60372d9547551dda76b",
+        "size": 118841061
+      },
+      "KanzenMoshi/JLPT_N2_Kanzen_Moshi-Taisaku.pdf": {
+        "mtime_ns": 1789012868180582846,
+        "sha256": "00c34fc37396fec2c4b916496530c264f5e00856570d4b179e84cfdbb97f4816",
+        "size": 247174702
+      }
+    },
+    "uploaded_fingerprint": "e21882a891c731723b8e5cc666c9e43a1b273bc28876e1c2a10eefa659ebcb05",
+    "uploaded_size": 743942670
+  },
+  "refs/MimikaraOboeru.zip": {
+    "fingerprint": "73a438f907447a83330f8d0704135f137043704a4033cd7de5f397ef6ee2cb65",
+    "member_bytes": 211298724,
+    "member_count": 94,
+    "members": {
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/01 01.mp3": {
+        "mtime_ns": 1789015343054849300,
+        "sha256": "149c3823fec08fe191411090eecc0ce47fa2fbf403dcea29212c47b3170ecf9e",
+        "size": 138389
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/02 02.mp3": {
+        "mtime_ns": 1789015343067380655,
+        "sha256": "4a1b95e68a42249132bc4bbaac40100c1da7ef1071a953cd477cf8efcbeebe1f",
+        "size": 3091494
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/03 03.mp3": {
+        "mtime_ns": 1789015343078072160,
+        "sha256": "c7499a29ddf53ca23921c6b8737fbbf380f207bd781787e8e64b3259a210d7fc",
+        "size": 1960078
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/04 04.mp3": {
+        "mtime_ns": 1789015343080971351,
+        "sha256": "4b2fb0b42aa3bf296f150649aa8eb5886484cf14eb1276f1e4afd691c647972b",
+        "size": 1236591
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/05 05.mp3": {
+        "mtime_ns": 1789015343084524381,
+        "sha256": "0ee00b1c03916494a3f11093720589b28a86bb21bb87fdae27b03f95fbba5bf1",
+        "size": 908911
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/06 06.mp3": {
+        "mtime_ns": 1789015343086316937,
+        "sha256": "6e336fa9e996a8138277110f77298d65e71875fa80ccd5984e5db21c6a63151d",
+        "size": 1713900
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/07 07.mp3": {
+        "mtime_ns": 1789015343089117919,
+        "sha256": "f2147db96241026efef9582debef469de2e79f2623f5286898bebea41de22527",
+        "size": 1586005
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/08 08.mp3": {
+        "mtime_ns": 1789015343091997193,
+        "sha256": "5f32c8248d0e21e809d03007b5137b86fbd88923d95ce2a8e98984767f6d9ebb",
+        "size": 1806269
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/09 09.mp3": {
+        "mtime_ns": 1789015343095493347,
+        "sha256": "52503ca97afc031bc961815fea5a79f83b96c5481b70e762b3076c912a49457d",
+        "size": 3208104
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/10 10.mp3": {
+        "mtime_ns": 1789015343100749516,
+        "sha256": "fc11a4080c8720c46acfbc548b7a10441fbb3e328dd73f827001459e10d32903",
+        "size": 1939182
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/11 11.mp3": {
+        "mtime_ns": 1789015343102309070,
+        "sha256": "0e48531a339ec7324bc27ba54ecead925285245a323ca81c21cee4b35fd594eb",
+        "size": 1470650
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/12 12.mp3": {
+        "mtime_ns": 1789015343105786808,
+        "sha256": "f0f0223c1dce25866f395bdc6dce50a1e980383f552c3db4b7d7b54e8064a0c8",
+        "size": 1017582
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/13 13.mp3": {
+        "mtime_ns": 1789015343107492863,
+        "sha256": "3460b53a1b2a8703517b352c726754aa4ef5c387a2f5e275f4de757f7b760aeb",
+        "size": 1388730
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/14 14.mp3": {
+        "mtime_ns": 1789015343110551889,
+        "sha256": "e77040770de4f0a8cbea1601c53b705be39becf1d3aa237d1fcf1fe420a04393",
+        "size": 2454526
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/15 15.mp3": {
+        "mtime_ns": 1789015343113624081,
+        "sha256": "4c8649fadbecdc4d3237cf456a11ec31f132ec0516ffe698b3b6debc2add6c82",
+        "size": 2457869
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/16 16.mp3": {
+        "mtime_ns": 1789015343117574406,
+        "sha256": "34d5dda2abe18231f73e7e596512aa1beef04d97f90f6a40071a93b84d1c627a",
+        "size": 2103858
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/17 17.mp3": {
+        "mtime_ns": 1789015343121784982,
+        "sha256": "7bce54e64e29fcc3dc52b8643e327914aa6339b4c3eaed61cf4881a3801c6c93",
+        "size": 2186614
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/18 18.mp3": {
+        "mtime_ns": 1789015343124001709,
+        "sha256": "6b116e3fc42b3290b2f7b165a1a141a31a4f6cd0c5dcc9a9caf752401c3eccaf",
+        "size": 3229004
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/19 19.mp3": {
+        "mtime_ns": 1789015343129004001,
+        "sha256": "1a22b70c4e2aa66000a0b41b8e23fdd8e31ddcacc7f25dfcd147943da1c6421f",
+        "size": 1616518
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/20 20.mp3": {
+        "mtime_ns": 1789015343131680356,
+        "sha256": "5e83139ab5115d1ab8e701cae61ebd394fc6409aef884ebe070ef593ce563f65",
+        "size": 1300123
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/21 21.mp3": {
+        "mtime_ns": 1789015343133336120,
+        "sha256": "4f796d2c0e98e95147605efbadaec1d0dafc3fa046d59e260f1c8dd9dac63761",
+        "size": 1488622
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/22 22.mp3": {
+        "mtime_ns": 1789015343137231194,
+        "sha256": "b7bf6fb59ff402e7b658a59f2745591d5970caec495ed430970dfb8168d738fb",
+        "size": 1777014
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/23 23.mp3": {
+        "mtime_ns": 1789015343139810632,
+        "sha256": "6bdab3537dfcd3cb9b2931f879d7c4426638065775c8e849238e520d1f4c3d09",
+        "size": 2260175
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/24 24.mp3": {
+        "mtime_ns": 1789015343144677214,
+        "sha256": "94452cebc2e2d2c2d98c5f8b043a369bddd244147cabaa8546f1cf5d488b9ffe",
+        "size": 2096753
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/25 25.mp3": {
+        "mtime_ns": 1789015343147856491,
+        "sha256": "7e298a38dba24dcf3ecf9f57043b336d1b16184376c8adf459a8da5a37a7d630",
+        "size": 2032387
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/26 26.mp3": {
+        "mtime_ns": 1789015343151542647,
+        "sha256": "5a353dcec6af52a727695c7df46b64b90f0a788a96a1e5e9e24c792dc2a2f3b1",
+        "size": 1204410
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/27 27.mp3": {
+        "mtime_ns": 1789015343153154743,
+        "sha256": "34e83f2e5075a0a7a59fddb19f58edce9b11ca5298c088dd406c549b2fcef376",
+        "size": 1348188
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/28 28.mp3": {
+        "mtime_ns": 1789015343157044776,
+        "sha256": "5c2d7ea8758fe82f4410e2c7d604ecdb73fcd5f8abcb0bf7f0cc3550c03e861a",
+        "size": 1223218
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/29 29.mp3": {
+        "mtime_ns": 1789015343159984883,
+        "sha256": "9d6d7bf4a3ae4dbd087ec9fdafd1ea7a79e17b3083ccc56287385722449fbbc7",
+        "size": 2219633
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/30 30.mp3": {
+        "mtime_ns": 1789015343166242644,
+        "sha256": "4abf1ed2d89219bcadf0aae11d63ad73e3f07cfb2330f2205b73aee5efeaae7b",
+        "size": 1361980
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/31 31.mp3": {
+        "mtime_ns": 1789015343167832657,
+        "sha256": "623bbe59484f837f3126b36e5a0e7302310fa44e5870991a28437103408d2611",
+        "size": 1219456
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/32 32.mp3": {
+        "mtime_ns": 1789015343170798765,
+        "sha256": "02f7f3ce1a212fcff4f769126dc0f331bdc03d2cbcde92d781a4c4dc229f8d4e",
+        "size": 1721425
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/33 33.mp3": {
+        "mtime_ns": 1789015343172858157,
+        "sha256": "f0c0d390b2165c50efd4f679340da540b37ffde071ec6b254e7be1fe0f38ff40",
+        "size": 1297615
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/34 34.mp3": {
+        "mtime_ns": 1789015343176848440,
+        "sha256": "8d605a269bf767c5d01b93e526a574c45847aa06aa3b638933365d037143a4fc",
+        "size": 1492384
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/35 35.mp3": {
+        "mtime_ns": 1789015343180929016,
+        "sha256": "2e91f023cae34217bbcbea1eb1a7dce62dfef23fbdb58a40cc338232662a594c",
+        "size": 2376367
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/36 36.mp3": {
+        "mtime_ns": 1789015343184027500,
+        "sha256": "30018bc764f7217d2264a13578260ed6da932020cd8fb6a125f6bbcf913ada5e",
+        "size": 2355052
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD1/37 37.mp3": {
+        "mtime_ns": 1789015343188319494,
+        "sha256": "721cbb9daea9a9ee809fbb4033e08ebaf82e815916194c03aa87c31b420eb8e4",
+        "size": 2372188
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/01 01.mp3": {
+        "mtime_ns": 1789015342843999380,
+        "sha256": "0415c85e7fec2290c8cbd00b7a49ff358c8e6a5af44ad125e05366fd63695092",
+        "size": 416151
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/02 02.mp3": {
+        "mtime_ns": 1789015342853963088,
+        "sha256": "d77c98682da512fe0365c279b576efcee893e26b664b39bec0f2d3ad640720f7",
+        "size": 1579749
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/03 03.mp3": {
+        "mtime_ns": 1789015342856278690,
+        "sha256": "4af8d1f4fd78da64990ac6d4b8fc83fc0390964fd032a822d622f4ea303cec50",
+        "size": 1492396
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/04 04.mp3": {
+        "mtime_ns": 1789015342860543309,
+        "sha256": "959e532363c31549465ce3e186d4fa41a4292a9695dc7ea60badf4d86616c073",
+        "size": 1808373
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/05 05.mp3": {
+        "mtime_ns": 1789015342862644410,
+        "sha256": "0038c309bc16bdbdfb9c319c5eb4c4288eb11aa909a76df1c63eab19eeaeb255",
+        "size": 1474006
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/06 06.mp3": {
+        "mtime_ns": 1789015342865955312,
+        "sha256": "3f57b1c988a6e3a4bb71a2c5be09576dc0210e65f8422a4b9ba2933a9bb2001e",
+        "size": 457947
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/07 07.mp3": {
+        "mtime_ns": 1789015342868306124,
+        "sha256": "e1143208614656b46c0a31d55442d169fe91a2c02565753a62a7016671bbed68",
+        "size": 1707227
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/08 08.mp3": {
+        "mtime_ns": 1789015342871426400,
+        "sha256": "07057eccee6b3dd946fa28ad6e861adc7a21d0d17a1cd9257c6b44dc08946c90",
+        "size": 1738156
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/09 09.mp3": {
+        "mtime_ns": 1789015342874348424,
+        "sha256": "09c0483b22e56be1e0e41eadedefcec6d45ad1cd1b39153f7798dd15ef1e98af",
+        "size": 1524997
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/10 10.mp3": {
+        "mtime_ns": 1789015342877278032,
+        "sha256": "941b96de2a4fa8a94e44b5d45a6052904f38cbdb95ed92c9bf2cfc2326b1d0f0",
+        "size": 1383728
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/11 11.mp3": {
+        "mtime_ns": 1789015342879539592,
+        "sha256": "8c7592c81e8ea7e1b091b7e7000250c009e05bbd51910ae18da7c545c066ad94",
+        "size": 567036
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/12 12.mp3": {
+        "mtime_ns": 1789015342881279648,
+        "sha256": "c20faaf4fdbf309193695402b6037eba216b33da4594065cf4d75654768a294e",
+        "size": 1255833
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/13 13.mp3": {
+        "mtime_ns": 1789015342884244673,
+        "sha256": "86e1cca659372189039fe456adb05e5297d618d1417452663e655ae4b74dc49f",
+        "size": 1746935
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/14 14.mp3": {
+        "mtime_ns": 1789015342885878395,
+        "sha256": "a6cf0da1e1af168bb1688aa21feb051fb74c758969c98cd581c5db1bfe6f15cd",
+        "size": 1185198
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/15 15.mp3": {
+        "mtime_ns": 1789015342892556492,
+        "sha256": "dbcdcc227933591111e0abde012f835a8d677e8ea59ebecdb7ba75cfded488c6",
+        "size": 1871069
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/16 16.mp3": {
+        "mtime_ns": 1789015342894755344,
+        "sha256": "3130e74312b136285a51b02bd3c0853876d193a83310faed15584b5ffd0aebf2",
+        "size": 414063
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/17 17.mp3": {
+        "mtime_ns": 1789015342895874770,
+        "sha256": "486daeba6e4b2eaaa73d8dbcf9d54b959a6bfea104f861818457ec01527852f7",
+        "size": 493475
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/18 18.mp3": {
+        "mtime_ns": 1789015342897085321,
+        "sha256": "1d9ec03d6f45b32c1495d9979f7c92dbb7d1d2daa5af3b715d4194805004b775",
+        "size": 564110
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/19 19.mp3": {
+        "mtime_ns": 1789015342899204714,
+        "sha256": "6de549542c0a26dcebd0bbf48c23fbb1a5eefe4868dd0251e7594bb3b7c42a2e",
+        "size": 472995
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/20 20.mp3": {
+        "mtime_ns": 1789015342900369765,
+        "sha256": "9e8c7a726bab0b178ad761d43099b078ef4a74e8beb929007e33f9ac9277a021",
+        "size": 482190
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/21 21.mp3": {
+        "mtime_ns": 1789015342901458191,
+        "sha256": "6b7e7b7a56820c2bc3a2d192ea7bc4ac0263bfdc1dfc334654b091adf6a5220a",
+        "size": 528584
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/22 22.mp3": {
+        "mtime_ns": 1789015342903586125,
+        "sha256": "80e13383c442ca70313a3acafcea7f34b98f2897c16e0dca7c689e00b7cccea9",
+        "size": 513119
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/23 23.mp3": {
+        "mtime_ns": 1789015342904720301,
+        "sha256": "7ef1afc1e8ecad12b4ad8b6ddb140150a850279bed6a478baf3cb7bc2cc10318",
+        "size": 508940
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/24 24.mp3": {
+        "mtime_ns": 1789015342905759394,
+        "sha256": "01bd25f5c368edecc09f551b1f59873cf7f35f07c8ff61aaef81379647bdcea6",
+        "size": 473413
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/25 25.mp3": {
+        "mtime_ns": 1789015342907500658,
+        "sha256": "4104e9e5ebd468a962d98efc0b97d96e8a863413075e6140e5013419a48755bd",
+        "size": 218458
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/26 26.mp3": {
+        "mtime_ns": 1789015342909746552,
+        "sha256": "6f1c1f421fedb009fe6e98cfc48b7bc7434860305df73b453070f278fad02ae5",
+        "size": 2510964
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/27 27.mp3": {
+        "mtime_ns": 1789015342913863253,
+        "sha256": "3586929166096ea8303363b0583de010570a0a7a8e1bd30ea959be7f56cb8b78",
+        "size": 1759892
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/28 28.mp3": {
+        "mtime_ns": 1789015342915935812,
+        "sha256": "f97c5df4f8dbdb5f7838fda7c0295a5ef3d97d1fff508f0c0910fb16160e4cd6",
+        "size": 2497172
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/29 29.mp3": {
+        "mtime_ns": 1789015342920326806,
+        "sha256": "70301e175098f84e3c37915eaa0362f5ebeaa10a0eaf2841a54b15ef0ac70a04",
+        "size": 422422
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/30 30.mp3": {
+        "mtime_ns": 1789015342922072863,
+        "sha256": "7bf4ccabc521a2cb6ae7ff966eb28d2efabfdb13578409f04e7e285c473a86cc",
+        "size": 1323124
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/31 31.mp3": {
+        "mtime_ns": 1789015342923853836,
+        "sha256": "c9db2df99dbca6b14d2f6a02df4829e5d31e94a5ab035ef37253c06258f2915a",
+        "size": 1690510
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/32 32.mp3": {
+        "mtime_ns": 1789015342927928203,
+        "sha256": "7da72d05b27cff0001d391779804af261a16eb3924a883a06d6fbc4d7b6522a3",
+        "size": 1607754
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/33 33.mp3": {
+        "mtime_ns": 1789015342930627225,
+        "sha256": "65983dff4b329bc2ad15e812441f5bb0f06f5e005230368b13c63284ab48dc20",
+        "size": 1451856
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/34 34.mp3": {
+        "mtime_ns": 1789015342931718234,
+        "sha256": "491f81acc66af99b30c3acdc593a9b7cec1bb14e7ec170e648a7128a1646408e",
+        "size": 457113
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/35 35.mp3": {
+        "mtime_ns": 1789015342933512624,
+        "sha256": "45d95337617a6c33483f7c71f6e5818f3e7b50bfab427f7fe548f55b229d7db1",
+        "size": 1980992
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/36 36.mp3": {
+        "mtime_ns": 1789015342937483074,
+        "sha256": "45da828495f702f452412db6626b5b35ee2914b9274ebcb12a12fcdf55213058",
+        "size": 1764489
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/37 37.mp3": {
+        "mtime_ns": 1789015342940386723,
+        "sha256": "5838cd20ecf8e3093a9eac2697829c73f9b2f243dfc449ee303a142a57d26da2",
+        "size": 1489054
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/38 38.mp3": {
+        "mtime_ns": 1789015342943334664,
+        "sha256": "261f4f784e2c4163a91a9b7306e17d5b4d5617e3a6cdb67e3251bc4d6e73780a",
+        "size": 1598977
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/39 39.mp3": {
+        "mtime_ns": 1789015342945616767,
+        "sha256": "881a1fb91575ea7a1b7479de9c536ff319bd9241f7c2beaa38440a900ca01cb1",
+        "size": 558677
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/40 40.mp3": {
+        "mtime_ns": 1789015342947336365,
+        "sha256": "a4cb9082c5beac7a19203b373217e81100c8270d443d2722a503af6b3ad327b4",
+        "size": 1634922
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/41 41.mp3": {
+        "mtime_ns": 1789015342951009228,
+        "sha256": "29c55898b391f1080b8bac94c4173cf792c8a6293fb1f52c226cee16a37dbd85",
+        "size": 1288852
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/42 42.mp3": {
+        "mtime_ns": 1789015342952822743,
+        "sha256": "8b232d0b19b4c994d2d5fe4f818c3080dc97821c964f531066f6744364f58d0c",
+        "size": 1763235
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/43 43.mp3": {
+        "mtime_ns": 1789015342956586691,
+        "sha256": "0ad8989b2704fdc55931773b929801d2eac6b39d50806349ad896c4cb80d99d8",
+        "size": 1259594
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/44 44.mp3": {
+        "mtime_ns": 1789015342957580366,
+        "sha256": "21adac112921319a0aa3d777590153659707da7edfb061be26d4e61099bce069",
+        "size": 410301
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/45 45.mp3": {
+        "mtime_ns": 1789015342958525749,
+        "sha256": "c5e5968ef14dae1c1739b6165ef6d6e4fe823bb54498f1b5233bca1731e974c4",
+        "size": 471741
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/46 46.mp3": {
+        "mtime_ns": 1789015342960653600,
+        "sha256": "55edae227b76b7074a8bd9c3a9ddcd0d03d710fd86d505c3288991318740cb42",
+        "size": 464218
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/47 47.mp3": {
+        "mtime_ns": 1789015342961799485,
+        "sha256": "5f666c2ce1125c4d115bd3e32b65e14fd5694a336b40455a15e2dd1129fca30f",
+        "size": 539033
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/48 48.mp3": {
+        "mtime_ns": 1789015342962752493,
+        "sha256": "f4d64405053151fc1dda44a1a8fe1e04cbd27f9db40575b39e5bae6f08b73eae",
+        "size": 462546
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/49 49.mp3": {
+        "mtime_ns": 1789015342963719459,
+        "sha256": "802e61afc9457bed392ebf2da9a947824ac7a6069ad1293b902124761f874d8f",
+        "size": 485116
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/50 50.mp3": {
+        "mtime_ns": 1789015342965909644,
+        "sha256": "f5c8d094e624d45e27ed9e778450b1cba4d087c7fc00cf280f964f45174ba84f",
+        "size": 526912
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/51 51.mp3": {
+        "mtime_ns": 1789015342966966319,
+        "sha256": "6c8ae74e09aeb8430c1fc9622ace1060307b1d96c2913c560bf6594422f676f2",
+        "size": 535689
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/52 52.mp3": {
+        "mtime_ns": 1789015342968006411,
+        "sha256": "a5eb36ca80a2285510708afbc5ed1a2f0fa712b0a7ea96b30aeff185d6d63798",
+        "size": 494729
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/53 53.mp3": {
+        "mtime_ns": 1789015342969795010,
+        "sha256": "196d90ebef7869324c4711ecc0b3f6acbfcd225122d2cc9430a91d492901abbe",
+        "size": 238938
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/54 54.mp3": {
+        "mtime_ns": 1789015342971631525,
+        "sha256": "704cf0c4b053bf951ef03f4efb251626d35cc00af76cce63f7cfe44b26960ac0",
+        "size": 2077541
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/55 55.mp3": {
+        "mtime_ns": 1789015342975864643,
+        "sha256": "b07c1ad31147aee422d7e016260815b5d58386deaae35a6563f519f29395d6d4",
+        "size": 2235947
+      },
+      "MimikaraOboeru/Choukai/Mimi_Kara_Oboeru_N2-Choukai-AudioCD2/56 56.mp3": {
+        "mtime_ns": 1789015342979392256,
+        "sha256": "c9909ca2fc8d768865ba86322f4072a69908e3fa79c63356f2c05a801412163f",
+        "size": 2862468
+      },
+      "MimikaraOboeru/Choukai/[studyjapanese.net]_Mimi_Kara_Oboeru_N2-Choukai.pdf": {
+        "mtime_ns": 1789015343044964843,
+        "sha256": "f2714d880f0819ff24ec32d05046a50d28ad1e354768ba95e0c2fb7f3809a471",
+        "size": 80894534
+      }
+    },
+    "uploaded_fingerprint": "73a438f907447a83330f8d0704135f137043704a4033cd7de5f397ef6ee2cb65",
+    "uploaded_size": 211318872
+  },
+  "refs/ShikenNiDeru.zip": {
+    "fingerprint": "4bdbb1e190578b28bb267ed10980637295e565b5f8105084608eb77b44d13433",
+    "member_bytes": 382892621,
+    "member_count": 188,
+    "members": {
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track01.mp3": {
+        "mtime_ns": 1789015470073184580,
+        "sha256": "cdcf4e9a91b212cf10ab8da97cee21e260b0648bb8a8dcbece75969a88bd94b7",
+        "size": 294188
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track02.mp3": {
+        "mtime_ns": 1789015470080255097,
+        "sha256": "0e88f80914ad411abd9a3bcf771c4062a7d400fe41045cb6396d906b8bd264a1",
+        "size": 1696647
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track03.mp3": {
+        "mtime_ns": 1789015470083895419,
+        "sha256": "5056b14b6cce877d6ea0bc737aad239b63d3bfe7d3808bf41bfee19561ba309a",
+        "size": 1064692
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track04.mp3": {
+        "mtime_ns": 1789015470085522974,
+        "sha256": "9542d547fe5a3beafe9d3f64c2f74b0e026fbabd1a1da8d3680a21dd05303b89",
+        "size": 1254028
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track05.mp3": {
+        "mtime_ns": 1789015470088742001,
+        "sha256": "3c783b19b21952757c48539e54d66919ac0c2efdb04c61c8507235f500a6a01b",
+        "size": 889149
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track06.mp3": {
+        "mtime_ns": 1789015470090638225,
+        "sha256": "eed23cf506fdd8b838b253ac9b9cab87900d5b3486e7cc5a3720495b337a8622",
+        "size": 1509195
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track07.mp3": {
+        "mtime_ns": 1789015470093624417,
+        "sha256": "d3fdbb74370a2b776b1a7c600af8a027290d6ef7c101a9b28cd15ee44bc60dfb",
+        "size": 2124218
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track08.mp3": {
+        "mtime_ns": 1789015470096177896,
+        "sha256": "ac416a24df5e29d4aeda645bc491d1ccc1368b25a97d3d73a18af5948730bfe9",
+        "size": 1071589
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track09.mp3": {
+        "mtime_ns": 1789015470100287180,
+        "sha256": "de4bf0353dd7d07aeb7db0a92f35ac8c3e2d764d8545d6573d3856fa0f14e7bb",
+        "size": 1548690
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track10.mp3": {
+        "mtime_ns": 1789015470102856077,
+        "sha256": "cb2e44c3db4414254e56f1833dd55c90219a1b62169d7be9a7bf28288efee8e0",
+        "size": 847768
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track11.mp3": {
+        "mtime_ns": 1789015470104894094,
+        "sha256": "2faae6bd07c227249bab12e11cde9cbfffee5e01cc4bf83e9fda599109a29887",
+        "size": 1072219
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track12.mp3": {
+        "mtime_ns": 1789015470109599424,
+        "sha256": "2a2275cfc82edb3ecf7b7eb2c59a0f7697afcabafa829105a6b42afe66cedcf6",
+        "size": 1454025
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track13.mp3": {
+        "mtime_ns": 1789015470113720584,
+        "sha256": "b99443820e949a1780f70b17f09b52eba0e6edd0e5ee973828973d7fc966ac9a",
+        "size": 1030839
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track14.mp3": {
+        "mtime_ns": 1789015470116431856,
+        "sha256": "3ff389e79e3468d5f501a94f1e12a37e0d10fc30bab71c887f25c10240edf4d1",
+        "size": 926766
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track15.mp3": {
+        "mtime_ns": 1789015470117787909,
+        "sha256": "c2843d5e7f3ef82cf9f2a8689a2287e43f41dc610615062462a904f350c901cc",
+        "size": 735550
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track16.mp3": {
+        "mtime_ns": 1789015470120117054,
+        "sha256": "08fa4beb9e3528089a8752e25c57594924bb7fefe820c18501422786a2c7d9e1",
+        "size": 1040247
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track17.mp3": {
+        "mtime_ns": 1789015470122732325,
+        "sha256": "61c987c3ea35a69fdfa73d00c0f94aed9fa87ca42e25277a47bb43a05e53b251",
+        "size": 1652768
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track18.mp3": {
+        "mtime_ns": 1789015470126321814,
+        "sha256": "9b3d94a61c0319100da7f2b1784d3ef2a8b6b1c42928db28571b2e57996546ba",
+        "size": 1119238
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track19.mp3": {
+        "mtime_ns": 1789015470128266163,
+        "sha256": "d996dd03a785fd5b3c0b66138b319dfdcdfaebd618587973fe3e41467514e1b8",
+        "size": 1181931
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track20.mp3": {
+        "mtime_ns": 1789015470131562316,
+        "sha256": "7b02e3aae1fd4f2bc70e8836269433f026e6efa76da4644f87f8b76514294373",
+        "size": 746837
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track21.mp3": {
+        "mtime_ns": 1789015470134617508,
+        "sha256": "e05826929084952d7d9463760ee61c229954e87a6f4e9730bb15eb5ace0f9a34",
+        "size": 1153093
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track22.mp3": {
+        "mtime_ns": 1789015470136623233,
+        "sha256": "38c318dd45864e86c7e9aecf627aa83e07414417d32dd623a035b6550961cd5b",
+        "size": 2334251
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track23.mp3": {
+        "mtime_ns": 1789015470140319555,
+        "sha256": "7716c43114bd2886662a27fd546b03581bcfab5074663d7d99c75738274f36d0",
+        "size": 1125511
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track24.mp3": {
+        "mtime_ns": 1789015470143197537,
+        "sha256": "35b3a75703fa759a89a69efb1d69148271403ab4cf6d021f61ee7394be374624",
+        "size": 1245254
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track25.mp3": {
+        "mtime_ns": 1789015470144369255,
+        "sha256": "f56b8b5076245173d1db2e7bba29260f3f12028503ef1b5cbac8e75417c6999c",
+        "size": 850283
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track26.mp3": {
+        "mtime_ns": 1789015470147851534,
+        "sha256": "7e0a20a7066faae550df84d18c13865f279d491208d385912e5cf9f07bd7b86a",
+        "size": 1119238
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track27.mp3": {
+        "mtime_ns": 1789015470150512473,
+        "sha256": "de7e03449fe51e2fe2475cbfad510d6b32c97beac74dd4b5a69e81946df70d33",
+        "size": 2485336
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track28.mp3": {
+        "mtime_ns": 1789015470154244921,
+        "sha256": "8e3a4cbfdd806fad9de5d6b48afb4892fb9aa0f4043bc0d4a182ecea4dafc888",
+        "size": 1146825
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track29.mp3": {
+        "mtime_ns": 1789015470156171770,
+        "sha256": "9f1b6e666f1d31e0ea20e577bb514da163209842857637457b808c4b50d1b5d0",
+        "size": 1721100
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track30.mp3": {
+        "mtime_ns": 1789015470159402089,
+        "sha256": "db500b2dcd31a58ed78876de3a9f7efb1d2e49f97502310ce64df3c8ce891f23",
+        "size": 778184
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track31.mp3": {
+        "mtime_ns": 1789015470160813184,
+        "sha256": "8658b315baaf7755ae62bcf1351ec7184f52f60aabcdfb0012c0177b16d53b8d",
+        "size": 992598
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track32.mp3": {
+        "mtime_ns": 1789015470162650074,
+        "sha256": "73a1ca0dac207940000b44113c85e9da1a66ea129a50740bb5cf249f18754fe0",
+        "size": 1378164
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track33.mp3": {
+        "mtime_ns": 1789015470166361688,
+        "sha256": "2ad0e6fff18409e4887a1f2f66c42695197eef79a3e86524adf0365059dd79bb",
+        "size": 1298543
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track34.mp3": {
+        "mtime_ns": 1789015470167475281,
+        "sha256": "e21fa46ae01f3e81ff54017ea1c7e46a654babb0d7868fd314e9fc092ad20c5f",
+        "size": 727402
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track35.mp3": {
+        "mtime_ns": 1789015470169676799,
+        "sha256": "dcba384acf9fc4ae792f0d5dc1bb438caeaa059805e681d022c8ac30c00c3605",
+        "size": 1056542
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track36.mp3": {
+        "mtime_ns": 1789015470170928768,
+        "sha256": "5ab296631e5bc9d18db49c4a45fffba21a89dd2558cf9e1433490b5ed7a132b2",
+        "size": 1056547
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track37.mp3": {
+        "mtime_ns": 1789015470174960302,
+        "sha256": "6f8cebf9b1666ed708143c638a22f6439e2b9e8d4da4e5561a71476c1b69d51f",
+        "size": 2287851
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track38.mp3": {
+        "mtime_ns": 1789015470176416355,
+        "sha256": "81407238ff02552f0e9cd4498855331dcceea75734864eb2534c28f8a900e7bd",
+        "size": 1244627
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track39.mp3": {
+        "mtime_ns": 1789015470180128553,
+        "sha256": "4ffe7898e8e3e92da1e386019c90f4471fe91b31b58edf7882cf3aa53f957a65",
+        "size": 1332397
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track40.mp3": {
+        "mtime_ns": 1789015470181657899,
+        "sha256": "0b974a4d818e9d0a6a9e82ec24ab0c885d924e6d8dd1825a1cbfcb4bf7247833",
+        "size": 1449005
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track41.mp3": {
+        "mtime_ns": 1789015470185429097,
+        "sha256": "a601c706e1bd5be34412a7b894758ad22257cd3d8cb55e7341b01a3034887f1b",
+        "size": 2022031
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track42.mp3": {
+        "mtime_ns": 1789015470187111319,
+        "sha256": "9db4cbdb0a86de98da3e636cd07ddaae4e6ebb467e50916c16b2080814a4c671",
+        "size": 1541795
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track43.mp3": {
+        "mtime_ns": 1789015470190816808,
+        "sha256": "d69bfba7d2f86982d6d16315eb8017093a7f674f873a1e18a907503c20988053",
+        "size": 1460295
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track44.mp3": {
+        "mtime_ns": 1789015470192397197,
+        "sha256": "a89cb17b66a321936fd5099cbab721aba0d7d5d205e911c5cad500c02cde327a",
+        "size": 1751196
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track45.mp3": {
+        "mtime_ns": 1789015470195951226,
+        "sha256": "95babfec6894fe507f574b2aa58ed14e57aeb2e9a79a6b1eacce46a69c5612db",
+        "size": 1634583
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track46.mp3": {
+        "mtime_ns": 1789015470197646657,
+        "sha256": "3a37f8c688453fe043a6a358becaa97b544da1606c8dacaf070c8fab534ae0c1",
+        "size": 1445873
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track47.mp3": {
+        "mtime_ns": 1789015470201268312,
+        "sha256": "656dccb360952b2f9c3f6043cafb560f537528cc69bcb2a51f290c25c3459710",
+        "size": 1642103
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track48.mp3": {
+        "mtime_ns": 1789015470203861250,
+        "sha256": "e680e1eb69fe8e3ed674848799e4f57cca0a719031c6d915727acf95317f0189",
+        "size": 1562481
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track49.mp3": {
+        "mtime_ns": 1789015470206573023,
+        "sha256": "9d777a0117c773d77500ded6badf556d22f875913a8425abbdf14aba09235416",
+        "size": 1921091
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track50.mp3": {
+        "mtime_ns": 1789015470210198720,
+        "sha256": "2f6cc579f25de363137124acbddf06f3d1b243186af1ef52a6a0e9838978d2b7",
+        "size": 1447753
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track51.mp3": {
+        "mtime_ns": 1789015470211710191,
+        "sha256": "af7125fec2a940c10e7da248c1bec0215a6e1d4c58e8cfcbb50c320c32ba2658",
+        "size": 1433962
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track52.mp3": {
+        "mtime_ns": 1789015470217714616,
+        "sha256": "f0653e72d113f6a222011037d00a027b662e6b7ffa65d4c954d8f63a83534d35",
+        "size": 2504775
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track53.mp3": {
+        "mtime_ns": 1789015470220413346,
+        "sha256": "2cdee59c201b9515fc1844f9519d7aa807f3fe50d1511842823618a27b208bfd",
+        "size": 1621413
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track54.mp3": {
+        "mtime_ns": 1789015470223046285,
+        "sha256": "7bb79d3ea4623e784cdc4665c635aad0ca6dbaeeb5c609b3ce616293b2b1eef4",
+        "size": 1675957
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track55.mp3": {
+        "mtime_ns": 1789015470225665557,
+        "sha256": "1b0c61f83ad39af38153c24d26f281f33eae57cdad6575b3a23b631907a6ac61",
+        "size": 1726112
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track56.mp3": {
+        "mtime_ns": 1789015470229708299,
+        "sha256": "82f27841384d5b200bf1659bdb83dbc754401b9c0fa60ce89e3e4108844a932b",
+        "size": 2788150
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track57.mp3": {
+        "mtime_ns": 1789015470232553156,
+        "sha256": "5500f661061e2a3e1adb2ba170a07db156d90c45432a8f73c7fd339eb1b14e46",
+        "size": 2136130
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track58.mp3": {
+        "mtime_ns": 1789015470235254178,
+        "sha256": "7db93cfd8dd1768d1228f9ee91c56cd9e3a84dbb3de8e933978bc85aa1ea0213",
+        "size": 1553707
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track59.mp3": {
+        "mtime_ns": 1789015470239052460,
+        "sha256": "bf41cbedceecaa95148a924e8a3e1314996bae3608fc91772fcdee9b5348fbf1",
+        "size": 2031431
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track60.mp3": {
+        "mtime_ns": 1789015470240513597,
+        "sha256": "b528a1d6431378b91b9192d97e2c67b0286a11d8c5a5f1553125d8fe0d86fa33",
+        "size": 1603238
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track61.mp3": {
+        "mtime_ns": 1789015470244212628,
+        "sha256": "b69ccd99b4fcfa2f6b96b18d8a62e7a918cf3d107d39db39322ee0b1f41ff8dd",
+        "size": 2030809
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track62.mp3": {
+        "mtime_ns": 1789015470248031201,
+        "sha256": "97a5fb9a1cb723f93b55d368764cd994ab77b744af1951fdd5b3db5de547b6a1",
+        "size": 1610762
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track63.mp3": {
+        "mtime_ns": 1789015470249489546,
+        "sha256": "dbfb34511b83b72faf1067538ea13f94aefbec14eea01108c87781fe988d7df8",
+        "size": 1670946
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track64.mp3": {
+        "mtime_ns": 1789015470253148577,
+        "sha256": "55b68b5e14f39656240900edd576a82d3d0c8fc0816408c27b01b8b31be622f1",
+        "size": 1957452
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track65.mp3": {
+        "mtime_ns": 1789015470254700173,
+        "sha256": "93f7d00bae5e822783d208233531dc7225cf410b9f5a432821621fd84b182118",
+        "size": 1857141
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track66.mp3": {
+        "mtime_ns": 1789015470258250119,
+        "sha256": "266e7db187c46cdb377c98b1d8b960070118e1640be48220741f89084eedced5",
+        "size": 1538658
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track67.mp3": {
+        "mtime_ns": 1789015470260510180,
+        "sha256": "9be0c88145dcbeda8725cff32d9e2505de7ba94c33d098ed2f6a03701a5f117a",
+        "size": 1005130
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD1/Track68.mp3": {
+        "mtime_ns": 1789015470261883566,
+        "sha256": "c1b08b2a28f0ee2bf2766344b97c4557bbff116e736e87f4e9d1951888c0893c",
+        "size": 1191964
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track01.mp3": {
+        "mtime_ns": 1789015470268909541,
+        "sha256": "0770c36641672069f392515e5fc265f1139082bce5c63feafc171202282f7603",
+        "size": 2988769
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track02.mp3": {
+        "mtime_ns": 1789015470273085618,
+        "sha256": "506735a17be4f412f7f7e5e15847b8e96768874d48c0c76be0c7823ec1b76634",
+        "size": 2317943
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track03.mp3": {
+        "mtime_ns": 1789015470274829466,
+        "sha256": "07c8a4084ee11c7aacf52ceaf6001e2ffadcab8657c7436e66cc7603e7aa447f",
+        "size": 2228923
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track04.mp3": {
+        "mtime_ns": 1789015470279952550,
+        "sha256": "1cb5543eb63a3ebfe45830824d0d779c9e18d7a14d9d2955e06fe30635ef0289",
+        "size": 2895980
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track05.mp3": {
+        "mtime_ns": 1789015470282797449,
+        "sha256": "ee7975f4bbd314244476c6c5bf12515faa96a75f9fdbdddee7bf9621dab0a72d",
+        "size": 2111051
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track06.mp3": {
+        "mtime_ns": 1789015470286932900,
+        "sha256": "5ab4935ef55224974df9b715e5d7b964f4a7070452f5d23846a2a47d3bd40b09",
+        "size": 2435810
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track07.mp3": {
+        "mtime_ns": 1789015470291017600,
+        "sha256": "75f61014d0d93c8c613c0be94b6ec20fbb6256975df4fe9a0f1b8c7539c685fd",
+        "size": 2398192
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track08.mp3": {
+        "mtime_ns": 1789015470292534821,
+        "sha256": "d26b656dceedbf9b24ddaa5655611ff258b137dc9601fe1d1cdd5ad3cbe9a729",
+        "size": 2142402
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track09.mp3": {
+        "mtime_ns": 1789015470297487821,
+        "sha256": "03937568fa4fd35c07e95cc49ee517ca358ace1bec54c1fd5e6d8bcb4f41e616",
+        "size": 2418253
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track10.mp3": {
+        "mtime_ns": 1789015470299219835,
+        "sha256": "8d994de78c12442d20f1148c18e78c0672c2b271775f826d6018f30e8ed1acc6",
+        "size": 2408222
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track11.mp3": {
+        "mtime_ns": 1789015470304075084,
+        "sha256": "f40f91e0de53a2b8bad821946ce1ff935b46e1dfe2ffc55e5f31035ce4542a41",
+        "size": 2093499
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track12.mp3": {
+        "mtime_ns": 1789015470305806015,
+        "sha256": "80e02cf7ef4ff39954e2c64cd3359f1c9ae343b3c16be6825e36dfd63a1041c7",
+        "size": 2381890
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track13.mp3": {
+        "mtime_ns": 1789015470310911724,
+        "sha256": "e3d0b8db72b1d5e6b52a2f66a8b5bede155ae61c66fe1a4778dbe3c5e57214b4",
+        "size": 2314185
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track14.mp3": {
+        "mtime_ns": 1789015470312548405,
+        "sha256": "b27517459c0835249227da5040518b47d4a7d9daa7c51a261d4c9fa2310bc58b",
+        "size": 2195060
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track15.mp3": {
+        "mtime_ns": 1789015470317641280,
+        "sha256": "86144b424b7b688da1a1ac9aca6d0adc4e481afabf7da24b3d274197265e0d61",
+        "size": 2584390
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track16.mp3": {
+        "mtime_ns": 1789015470320178885,
+        "sha256": "240cbe815b030948bc41140251a551c4c4c6389b07ba4f627d97a65d9131f9ec",
+        "size": 1306692
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track17.mp3": {
+        "mtime_ns": 1789015470321185976,
+        "sha256": "cfa530d9211ddbb6724f0ce5c9f98a8a4f5260cb17d4d9c209c05828445ddecb",
+        "size": 791976
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track18.mp3": {
+        "mtime_ns": 1789015470324508254,
+        "sha256": "b9c324d446c916687ffd9182fff70ea963179f862a2e0a0fe52d9d6a5c7304b0",
+        "size": 862822
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track19.mp3": {
+        "mtime_ns": 1789015470325632805,
+        "sha256": "f4f7c476322d0aafb1a35b1e825d0da0ad8682f727f45822c633bca6f0296f5d",
+        "size": 771282
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track20.mp3": {
+        "mtime_ns": 1789015470326723397,
+        "sha256": "d7e99402a26d83ed68492f08e916feb387a238175fd56f7d753a5a3c106aca78",
+        "size": 818936
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track21.mp3": {
+        "mtime_ns": 1789015470328918582,
+        "sha256": "907bd249bb6f384be40018cf21771c08c31344bf2ed281ce6123d073276cd879",
+        "size": 863447
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track22.mp3": {
+        "mtime_ns": 1789015470330187051,
+        "sha256": "e5212a96a1dc74e8515520247299f76102c6362f8ed81418a3db884d848acf51",
+        "size": 777553
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track23.mp3": {
+        "mtime_ns": 1789015470332348736,
+        "sha256": "b0b64ca8ee75b4bd52f9582324ed6a4954fb4a1b1f65ba55172d174d1338d4f2",
+        "size": 733671
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track24.mp3": {
+        "mtime_ns": 1789015470333507287,
+        "sha256": "f13677e01626a31306d9982bef17e74358d929de420deb6b73c57b29352e221f",
+        "size": 853417
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track25.mp3": {
+        "mtime_ns": 1789015470335729472,
+        "sha256": "936a5b0177ad8d21e54ea478a751477542b67ac8bf80d0574a52788c58f12fe7",
+        "size": 838372
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track26.mp3": {
+        "mtime_ns": 1789015470336985483,
+        "sha256": "05f2ad2332b6921d700fb744804138f3b97e1eaf1e5b0bd24f2afddc5f1263f7",
+        "size": 984449
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track27.mp3": {
+        "mtime_ns": 1789015470339176834,
+        "sha256": "62d82b0f5a10b60cc86afb41dc3fce58b5ad1ebd7302cc4c378daa4ceef27177",
+        "size": 759378
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track28.mp3": {
+        "mtime_ns": 1789015470340219135,
+        "sha256": "6b10f36345a5d8a31adc9ac4d37b349fdf5a50e0eb651708d32dcb812c55c83d",
+        "size": 759377
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track29.mp3": {
+        "mtime_ns": 1789015470343646997,
+        "sha256": "f864cb9b3acfedd4318d0891cd68df1e05ce6881509d76f722a3f382f8c5896b",
+        "size": 804515
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track30.mp3": {
+        "mtime_ns": 1789015470344711547,
+        "sha256": "afe01f563b48dd2ba309f10a72ca58e1176d16c06abb16b346982af10fa6d931",
+        "size": 786961
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track31.mp3": {
+        "mtime_ns": 1789015470345750014,
+        "sha256": "85a542bae5d4f7d8d493719ab3a5d85bbd6cd4ee1ed75b21767b1c0dc977c570",
+        "size": 849025
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track32.mp3": {
+        "mtime_ns": 1789015470347917032,
+        "sha256": "bf5eb3e1842918515cf33d84ffce8a3ab192a07d509f058da4e0616611ddacc0",
+        "size": 760630
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track33.mp3": {
+        "mtime_ns": 1789015470349123334,
+        "sha256": "631a74c213ada2fa86fc13877b96fdb767e93ec02d12c8a0b0f939d70c1d4f2b",
+        "size": 812036
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track34.mp3": {
+        "mtime_ns": 1789015470351377561,
+        "sha256": "12d2fa9ce1bd2e0cb04c4e04998669828a73128900edbb674989b19338eb695d",
+        "size": 782574
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track35.mp3": {
+        "mtime_ns": 1789015470352537696,
+        "sha256": "dadb2bbc13a2aa45e2b98c2bcb41421ed1a7ed412f7299795da489536d2af225",
+        "size": 867213
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track36.mp3": {
+        "mtime_ns": 1789015470355585179,
+        "sha256": "bd8f2b7d2cf523ba91a227e338d18d2952e9d1a755de9a971144e6161e2cc159",
+        "size": 3095976
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track37.mp3": {
+        "mtime_ns": 1789015470360029550,
+        "sha256": "2644f83cc7c1f21fce60c5fff365d8c27f05c88cbe23e2c29b6d4d89d830d2c2",
+        "size": 3043313
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track38.mp3": {
+        "mtime_ns": 1789015470366840689,
+        "sha256": "779fde351c94545e8cdbb1898b85c799c3e030bc562bf51c51b7ef1838830e10",
+        "size": 2669660
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track39.mp3": {
+        "mtime_ns": 1789015470371186434,
+        "sha256": "be1a94665e52a338b80dd6358e882f36c27f2463e448cb12c588264499e58bc4",
+        "size": 2635176
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track40.mp3": {
+        "mtime_ns": 1789015470375326635,
+        "sha256": "5337e4cb05bb033350c7f62f607a5a6e4f4bf38d5300ed2350f858c0608b0dd2",
+        "size": 2189424
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track41.mp3": {
+        "mtime_ns": 1789015470378633871,
+        "sha256": "6a3b48a6d34666b4ac81938eee22af55f4daaf308863179193069ff7049dfef4",
+        "size": 2324838
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track42.mp3": {
+        "mtime_ns": 1789015470381691980,
+        "sha256": "846cc254286eec38d80ef5f97992f478284348ddca84838ba8131b2bb9792438",
+        "size": 2832665
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track43.mp3": {
+        "mtime_ns": 1789015470387349610,
+        "sha256": "34e1bbc4d8f4b68f8dd28b4c6cdf5c54f60e647a989e6067b9451e3c7ffa0b44",
+        "size": 2690977
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track44.mp3": {
+        "mtime_ns": 1789015470390608595,
+        "sha256": "a24dd4d3873935492b2cc156825d9244bbcd496c94b6921642edf7029f846a0e",
+        "size": 2713540
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track45.mp3": {
+        "mtime_ns": 1789015470395312843,
+        "sha256": "a0077e696ac41563f75790a98e30c380a2dbb7ae4fe6c260bca25cedfc132ce1",
+        "size": 3573703
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track46.mp3": {
+        "mtime_ns": 1789015470401103558,
+        "sha256": "6a2b6763798dccc359ae0611bf0f21e867c1e65571e4c917133f50779a7e80e4",
+        "size": 2498505
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track47.mp3": {
+        "mtime_ns": 1789015470404504211,
+        "sha256": "f88445ba3d932831cb5511dc4eae150061fcf4389a047069a963f21c1cb23fc4",
+        "size": 3361798
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track48.mp3": {
+        "mtime_ns": 1789015470411020224,
+        "sha256": "634abe2b1279ed0bc616b570f97799c70f0b208aab81f5e107691c2b54b75ff0",
+        "size": 3681536
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track49.mp3": {
+        "mtime_ns": 1789015470415495261,
+        "sha256": "e84fb6abfbda7f8d8555c0f83cf5cbab7da0fbc753511d9b69b2f1469d69a0d7",
+        "size": 2796926
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track50.mp3": {
+        "mtime_ns": 1789015470418902873,
+        "sha256": "634ad0525316013f4b3d34987cb049167d0e1024f15189af5606103b49893525",
+        "size": 3351139
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track51.mp3": {
+        "mtime_ns": 1789015470424662004,
+        "sha256": "b71d2ed327ac4dd42b070ca6a26a951d544357d6eb226fabef136787733ae1d0",
+        "size": 3515391
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track52.mp3": {
+        "mtime_ns": 1789015470428676204,
+        "sha256": "2000af33b92e7567c23c48b351ed540aeda3b2ad5d063daa1db50dfca717e0cf",
+        "size": 2008241
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track53.mp3": {
+        "mtime_ns": 1789015470432633112,
+        "sha256": "5cc8908f84c07a2012421250c3ed0726f66ade594309027333c70590274c8fdb",
+        "size": 1521735
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track54.mp3": {
+        "mtime_ns": 1789015470433990415,
+        "sha256": "6e19a28ec20775851590ff8e4280e6d5b40b88d5bff57231f824d9e53278024d",
+        "size": 1369386
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track55.mp3": {
+        "mtime_ns": 1789015470437656278,
+        "sha256": "6bb40f79a51d1c3ceb95e84614c18c47a9f4bfdc6f3b1f6f3c2dee8cb236f260",
+        "size": 1548061
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD2/Track56.mp3": {
+        "mtime_ns": 1789015470439054040,
+        "sha256": "a0e5be5ed407dd424089862a8fa5100a8a94585911bb9be7d8460278669195c6",
+        "size": 1781284
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track01.mp3": {
+        "mtime_ns": 1789015470445827013,
+        "sha256": "0c403b62b7a6ed16f748e1d7a27c7bb8e2137a99f68f3d334b85fd28ec9e067a",
+        "size": 2069051
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track02.mp3": {
+        "mtime_ns": 1789015470447468444,
+        "sha256": "2c4bcdc886fd902ee2fec1244c080e5cc30da60730bec4c3e8b0780769d4f875",
+        "size": 2043342
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track03.mp3": {
+        "mtime_ns": 1789015470451547602,
+        "sha256": "5f4eeb8e0e3b03a3856caa8eced5f8e896b9e2d9b12c617cd08b194b3360fe25",
+        "size": 2176254
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track04.mp3": {
+        "mtime_ns": 1789015470454478044,
+        "sha256": "def8f099b2e96f14546ea89cd9e59945a3b8ea4b8ca7cb1ed5873ee698ab3d61",
+        "size": 1894137
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track05.mp3": {
+        "mtime_ns": 1789015470458814913,
+        "sha256": "265b445347d1143a2a4bbba90da405d094e34920b48a82cfd7d20238d1fcb444",
+        "size": 2432047
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track06.mp3": {
+        "mtime_ns": 1789015470462984239,
+        "sha256": "0c9db4e0e8ac393e4f2adb17d773d1221224401f617e8be8e09122d439451842",
+        "size": 2370608
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track07.mp3": {
+        "mtime_ns": 1789015470466288017,
+        "sha256": "14788ccca3697673879753f29921bca52f980072fbfda9ef5122e7d9f5683ae8",
+        "size": 2694734
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track08.mp3": {
+        "mtime_ns": 1789015470470763554,
+        "sha256": "b65100d48a83a448b3a484873acbe6549879bff7d3c1ec4716e55641a954c51b",
+        "size": 2250868
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track09.mp3": {
+        "mtime_ns": 1789015470474928005,
+        "sha256": "8e739588f1a37f49cf5e02371275c0a015f17855e80b88e488cf09b5d20308fa",
+        "size": 2079083
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track10.mp3": {
+        "mtime_ns": 1789015470476564185,
+        "sha256": "96c8efdd023c468bdb61934971ebd71398e5bf1ecdbc35c2e11a6eb408fb4883",
+        "size": 1981906
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track11.mp3": {
+        "mtime_ns": 1789015470480771137,
+        "sha256": "125a1bcf2c9b84e8f78a4ceb8c0c47d78dfd2f654396da7bd4a01d9cf7fb6fb5",
+        "size": 2495370
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track12.mp3": {
+        "mtime_ns": 1789015470484713753,
+        "sha256": "2f0392fda753a8e1fe699f75f14d04de074d920cabf389549fb9fde76cbf4da7",
+        "size": 1387570
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track13.mp3": {
+        "mtime_ns": 1789015470485858805,
+        "sha256": "f1882883c04ce019f0b371af27b1668252119cdc33e35831483c2d1d52c34e44",
+        "size": 891032
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track14.mp3": {
+        "mtime_ns": 1789015470488019698,
+        "sha256": "0ec6455143d669626c126903374bb27fd3f36e1cd518c3c54d4d6c9b044c6687",
+        "size": 813292
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track15.mp3": {
+        "mtime_ns": 1789015470489132332,
+        "sha256": "5451692f669d86f25cfd1def3de72c1e1bfe2c1d21fb7801b3187318080ca17d",
+        "size": 823942
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track16.mp3": {
+        "mtime_ns": 1789015470491315058,
+        "sha256": "1f7b066d3a31b0e9e9abe73f36369d8190f83d40d14305ac6dc97a2c79e48cde",
+        "size": 842127
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track17.mp3": {
+        "mtime_ns": 1789015470492465443,
+        "sha256": "e42cb880e66254036578dccaa90a499d3327b800be33780883a52b4c25313a8f",
+        "size": 895421
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track18.mp3": {
+        "mtime_ns": 1789015470495912971,
+        "sha256": "01b8d0e1372e573db14dfcbf556042297c7331bbd7c5cf059540bed0559aecad",
+        "size": 782573
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track19.mp3": {
+        "mtime_ns": 1789015470497040606,
+        "sha256": "0ddc9f191a5863e971071f113f6422414e0115199a5f9448a0949e4000060559",
+        "size": 751849
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track20.mp3": {
+        "mtime_ns": 1789015470498141323,
+        "sha256": "0c5b96e260c0caa794fc1a708032b9de0d2461e5dd26c625afdf048232de3cb9",
+        "size": 775048
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track21.mp3": {
+        "mtime_ns": 1789015470499229791,
+        "sha256": "ec9621b23980bcfecf4ada81de154738d165aefd9c285a588fb6121910f12f61",
+        "size": 817054
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track22.mp3": {
+        "mtime_ns": 1789015470502694403,
+        "sha256": "88483daa2788f5a9f7d66826126df6430550c3fc7ba65d2ea0418c3a4b90b826",
+        "size": 739939
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track23.mp3": {
+        "mtime_ns": 1789015470503772120,
+        "sha256": "d83d5ad98ce65aeacf30faa1394e45d00b1bdcfc6de4d2b5d2908541449d89cd",
+        "size": 740565
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track24.mp3": {
+        "mtime_ns": 1789015470505985972,
+        "sha256": "dcb8c96d2a078af26b2bbacdb207a210b57236ccebfa7edf1c1c5c3e1997d6ee",
+        "size": 3746108
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track25.mp3": {
+        "mtime_ns": 1789015470511567727,
+        "sha256": "fd07a8e51e8882feafae39b54b5a8b22a643212c3c305a7515145e225f497680",
+        "size": 2619504
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track26.mp3": {
+        "mtime_ns": 1789015470524891421,
+        "sha256": "bdbf3cde551f9d4e5b7b06c2cb940f316afe0317b913f67cc80bcb7601782e7e",
+        "size": 2849590
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track27.mp3": {
+        "mtime_ns": 1789015470529390417,
+        "sha256": "3ede8779448b6a9ac7ae2c579e7679c8432e7cde5a88d64e640d4bd4d318b3b2",
+        "size": 3084064
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track28.mp3": {
+        "mtime_ns": 1789015470533592202,
+        "sha256": "34b5180149791a79566437bf45480fb8c0ebbe2c501f4dbddd2356dc1c43c023",
+        "size": 2506027
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track29.mp3": {
+        "mtime_ns": 1789015470536395267,
+        "sha256": "34e45760959d5c1e2f2193ca2578b578e4a61b2a8a34f6a8979cc15a3d589f6f",
+        "size": 1773138
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track30.mp3": {
+        "mtime_ns": 1789015470540476050,
+        "sha256": "ebf523591a0a3a4b249eaf582b58d1199bf2314a5689cbc527e50fa03580d67d",
+        "size": 2361198
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track31.mp3": {
+        "mtime_ns": 1789015470543271407,
+        "sha256": "b98742723310afbade83ccf087754d3672fcbd5ae76258dfde6d7f7b056a085d",
+        "size": 1763732
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track32.mp3": {
+        "mtime_ns": 1789015470545981763,
+        "sha256": "95feb4a105caf3a618abaa0e2a052441d45623bd3feb96a9d5b3232840201f03",
+        "size": 1578780
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track33.mp3": {
+        "mtime_ns": 1789015470548668535,
+        "sha256": "3635c69ac3be554c6be5de7886f04694389f8cf63d4a9cea0eb827a49d5767a2",
+        "size": 1608250
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track34.mp3": {
+        "mtime_ns": 1789015470552785820,
+        "sha256": "90991d68a8a1c57306b459a45c99379067204bdaaa5e3b3f8ae9c5d506992ec7",
+        "size": 2701634
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track35.mp3": {
+        "mtime_ns": 1789015470555821303,
+        "sha256": "6e36fea752ab1e38d733beff76f78a390455e4164b5c9df52372c7b1301ecdb9",
+        "size": 2490981
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track36.mp3": {
+        "mtime_ns": 1789015470559857295,
+        "sha256": "2cdfa75df6fb3c3cdd3576f8dd94da265799d8dc9ce0288dfe69a42e2ec00d27",
+        "size": 2173123
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track37.mp3": {
+        "mtime_ns": 1789015470562574026,
+        "sha256": "40d170e325e6feaf93413c68092b6d9a804470676abb2e1d7e490e0f6b920085",
+        "size": 1831440
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track38.mp3": {
+        "mtime_ns": 1789015470565579384,
+        "sha256": "e9ffa81a471c8104002d5e63b76ec69718c8c9365bfc868ff7cbac7877d5bb7a",
+        "size": 2195066
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track39.mp3": {
+        "mtime_ns": 1789015470569432166,
+        "sha256": "526c8ddd83f1bd1abc2d1ab2273ae45d64ad8d0ddc65d6b2f0a988268dc13489",
+        "size": 1811383
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track40.mp3": {
+        "mtime_ns": 1789015470571643768,
+        "sha256": "203f90c2f2437a9982413901cdbb7fe4b7e50565b4c352685954894df7ccfeb4",
+        "size": 2605086
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track41.mp3": {
+        "mtime_ns": 1789015470577145397,
+        "sha256": "17ebc29df7088814d7c37ad19bae9f2a7c1b7ab369668a3ff822c4174ecaad02",
+        "size": 3222613
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track42.mp3": {
+        "mtime_ns": 1789015470581646476,
+        "sha256": "558f267e3cefe6397be71cde10762380602361ad1304a7d2c51ee5bff82928b1",
+        "size": 2558055
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track43.mp3": {
+        "mtime_ns": 1789015470584810294,
+        "sha256": "6e38a6f3f06c0a10c7c9bd22a72192767bca0979a990917c74b1e770f43676c8",
+        "size": 2417629
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track44.mp3": {
+        "mtime_ns": 1789015470585866512,
+        "sha256": "669552c02a6096eb078cda3d2ca7212478c91a0e57cd97595d8fe3626da166f9",
+        "size": 2314185
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track45.mp3": {
+        "mtime_ns": 1789015470586957479,
+        "sha256": "9173181b086171e101ef0dfe7a5522020acfe035117d05a12a83c99311d37f9b",
+        "size": 2348664
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track46.mp3": {
+        "mtime_ns": 1789015470588177614,
+        "sha256": "719c000c787e446276b4b386721e089b6baf0149551303e86b0d1accafbe2e8f",
+        "size": 2790657
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track47.mp3": {
+        "mtime_ns": 1789015470589786419,
+        "sha256": "64cb3b4ccd53a861d3f142a179dd656f5f871ae16f6a29a02e28395578dc1cc8",
+        "size": 2687216
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track48.mp3": {
+        "mtime_ns": 1789015470590736969,
+        "sha256": "25b9e6f6985311a90da52a89e5d670666db838872a63b388aa23e4553524b94c",
+        "size": 1470947
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track49.mp3": {
+        "mtime_ns": 1789015470596747727,
+        "sha256": "d62cab2fa729f1a65655f183f30f102e0c24f1c374c9789e6301b42adf18992c",
+        "size": 761884
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track50.mp3": {
+        "mtime_ns": 1789015470600145339,
+        "sha256": "25261c4483e19acc34097dc10ecc1367ee3c6e8a34980df52b1b47ef5cb05815",
+        "size": 832724
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track51.mp3": {
+        "mtime_ns": 1789015470601374849,
+        "sha256": "f6262188db61f3437e9f17fe77f89d42fbdcf4544b5625a91f6730af9e5ff5f7",
+        "size": 844633
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track52.mp3": {
+        "mtime_ns": 1789015470602524317,
+        "sha256": "96623e0b09dc8ef9d4e3fd9909912dc88a0077986973d518b0fb5e8a621e9052",
+        "size": 793228
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track53.mp3": {
+        "mtime_ns": 1789015470604791252,
+        "sha256": "24d535b3b8a527283d6fe00dbcdcc3f2d918510f21700f36c258f6f32e805eac",
+        "size": 756243
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track54.mp3": {
+        "mtime_ns": 1789015470606005637,
+        "sha256": "8e4c25b6e99689ac9df217d9c39c7a4dcb88ed66b31b4696b430678564b06b27",
+        "size": 819559
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track55.mp3": {
+        "mtime_ns": 1789015470607206606,
+        "sha256": "4481f1aa175ac2be305be55de2c2af2e238c94d0d231b04c42efec151e63e5a9",
+        "size": 810158
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track56.mp3": {
+        "mtime_ns": 1789015470610806219,
+        "sha256": "31707ee4d46ce8b4a76ff93083ba04a9057ca83917559f9ece1737bf2f7adc64",
+        "size": 977548
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track57.mp3": {
+        "mtime_ns": 1789015470612077604,
+        "sha256": "7f4f83a72f2a461637d7564aecc8f7f6d86970fc234022e88edba505491d0945",
+        "size": 879745
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track58.mp3": {
+        "mtime_ns": 1789015470613260531,
+        "sha256": "6da4a50af9c447aca78d30bca022fc95730e6d02583b9eb771349c6277c5a0ed",
+        "size": 835861
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track59.mp3": {
+        "mtime_ns": 1789015470616681601,
+        "sha256": "be354d1938e0117f22b4c82bb63582cf2428f3dc062616ba21a1f1f323c0bbb6",
+        "size": 739937
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track60.mp3": {
+        "mtime_ns": 1789015470617882028,
+        "sha256": "ced8972885a44e65f8c2ad790823ca23c6e076e57baa1b43014bcb73e4ebf922",
+        "size": 791350
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track61.mp3": {
+        "mtime_ns": 1789015470619202205,
+        "sha256": "f728320158f3d5daccbe7a6d57696f2d6544f194815ea309589446c568f66ba2",
+        "size": 791348
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track62.mp3": {
+        "mtime_ns": 1789015470620727177,
+        "sha256": "64b1961ed7c40280b8c8d1ee926e4f9c1c77e2c477c7c591013d548aeca41fa0",
+        "size": 3643294
+      },
+      "ShikenNiDeru/Choukai/Shiken_ni_Deru_N1_N2-Choukai-AudioCD3/Track63.mp3": {
+        "mtime_ns": 1789015470625285881,
+        "sha256": "263d3628ba0a3b0281debbb747a528512c3a05098579ce1561c0dd6be8b1870c",
+        "size": 2694738
+      },
+      "ShikenNiDeru/Choukai/[studyjapanese.net]_Shiken_ni_Deru_N1_N2-Choukai.pdf": {
+        "mtime_ns": 1789015470063350331,
+        "sha256": "f35eedeb6ab54e976bffec441765dc8cf99d539adb60bf3ddb1ce9899c8c98f6",
+        "size": 65351047
+      }
+    },
+    "uploaded_fingerprint": "4bdbb1e190578b28bb267ed10980637295e565b5f8105084608eb77b44d13433",
+    "uploaded_size": 382933257
   },
   "refs/Shinkanzen.zip": {
     "fingerprint": "4e2178a14f5a6d7a53daf35033b45b030eabb4b04a43879c2a940e79cd42bfb0",
