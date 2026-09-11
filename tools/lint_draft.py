@@ -331,9 +331,19 @@ def lint_choukai_script(script_text: str, report: LintReport, fix: bool = False)
         script_text = autofix_split_turns(script_text, report)
         script_text = autofix_voice_margin(script_text, report)
 
-    # 1. Opening & level check
-    if "N2" in script_text:
-        report.error("CHOUKAI-TTS", "Script contains 'N2' — TTS spelling must be 'Nに', never 'N2'.")
+    # 1. Opening & level check.
+    # This rule was INVERTED until 2026-09-11: it errored on `N2` and demanded
+    # the edge-tts workaround spelling `Nに`, which transliterated only the
+    # digit and left the `N`, giving the non-sentence 「Nにの聴解試験」 in 37 of
+    # 37 papers (qa-report-20260911_1-round2 NEW-1). Edge-TTS is retired
+    # (choukai-audio Part 0) and the canonical opening is now 「N2聴解。これから、
+    # N2の聴解試験を始めます。…」, so the lint enforces THAT spelling instead.
+    # WARN, not error, for the same reason `check_choukai_script_latin()` ships
+    # WARN: 26 generated papers still carry the old line by deliberate deferral
+    # (qa/root-cause-dispositions-20260911-round2.md), and a lint that errors on
+    # the whole fleet trains the reader to scroll past it.
+    if "Nに" in script_text:
+        report.warn("CHOUKAI-TTS", "Script contains 'Nに' — the level is spelled 'N2'; 'Nに' is the retired edge-tts workaround (choukai-audio §'The opening announcement').")
 
     # 2. Reveal in scored items
     lines = script_text.splitlines()
@@ -468,10 +478,21 @@ def lint_gengo_dokkai(gengo_text: str, report: LintReport, fix: bool = False) ->
             if "★" not in stem:
                 report.error("BUNPOU-問8", f"Question {qn} stem missing '★' star blank: {stem.strip()[:40]}")
 
-    # Check Dokkai numbered markers pairing
-    markers_in_text = set(re.findall(r"[①②③④⑤]", gengo_text))
+    # Check Dokkai numbered markers pairing.
+    #
+    # Scan the BOOKLET BODY only, never the 解答と解説 key table. A 解説 cell
+    # legitimately numbers the senses of a word — 20260911_1's 問題6-28 explains
+    # 暗い as 「①光が少ない ②気持ちや見通しが沈んでいる ③ある方面をよく知らない」 —
+    # and those are not passage markers waiting for a stem to reference them.
+    # Scanning the whole file reported ②③ as unreferenced on a compliant paper
+    # (qa-report-20260911_1-round2 NEW-3). The boundary here is the one
+    # check_consistency.py and the sheet builder use: everything above the first
+    # 解答 heading. A WARN that fires on a correct paper trains the reader to
+    # scroll past the ones that do not.
+    body_only = re.split(r"^#+[ \t]*解答", gengo_text, maxsplit=1, flags=re.M)[0]
+    markers_in_text = set(re.findall(r"[①②③④⑤]", body_only))
     for marker in sorted(markers_in_text):
-        if not re.search(rf"\*\*\d+\*\*.*?[（(]?{marker}[）)]?", gengo_text):
+        if not re.search(rf"\*\*\d+\*\*.*?[（(]?{marker}[）)]?", body_only):
             report.warn("DOKKAI-MARKER", f"Marker {marker} appears in passage but is not referenced in question stems.")
 
     # Check （注N） pairing

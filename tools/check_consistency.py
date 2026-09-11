@@ -3234,6 +3234,221 @@ def check_topics_themes():
               f"spine and must not double up (exam-blueprint rule 1)")
 
 
+# F1(b) (qa-report-20260911_1), `GATE-BLIND`, applied 2026-09-11. The theme
+# column is checked for internal agreement — `check_theme_record_agreement()`
+# compares `test_spec.json` against `logs/topics.json`, and the three rules above
+# compare `themes` against itself — and NOTHING compares either record against
+# the surface that shipped. Agreeing records are the CHEAPER escape: leave the
+# drawn tag in both files, write the passage about something else, and every
+# theme line prints green. `20260911_1` 問題14 is the founding case: spec and
+# topics both record 科学・技術; the shipped flyer is a repair workshop whose
+# purpose sentence reads 「使えなくなった物をすぐに手ばなさず、もう少し使っていただく
+# ための集まりです。」 — 環境, which was 20260910_1's 問題13 headline theme, i.e.
+# the rule-4 repeat the un-moved tag concealed. Stage 3's own `notes` say so:
+# 「環境 を採らなかったのは…rule 4 の二紙連続重複になるから」.
+#
+# WHAT THIS CAN AND CANNOT DECIDE. A theme is not string-decidable — that is why
+# `exam-qa-review` §5 carries the human half of this row as an automatic fail.
+# What IS decidable is the floor: a surface written ON a theme uses at least one
+# of that theme's ordinary words. So this WARNs when a headline surface's prose
+# contains NOT ONE token of its recorded theme's vocabulary. Zero is the
+# threshold on purpose; one hit proves nothing about aboutness and this line does
+# not claim it does.
+#
+# THE VOCABULARY IS A GATE-SIDE MAP, not a widening of `THEMES`. `level_data.py`
+# owns the closed theme list; this table owns one representative-token set per
+# value, and `check_headline_theme_token_coverage()` below asserts the two cannot
+# drift (every THEMES value has a row, every row is a THEMES value).
+#
+# FOUNDING-CASE RUN (§6.5), 2026-09-11, over all 27 generated papers on disk
+# × their four 読解 headline surfaces (問題9 cloze, 問題12 A+B, 問題13, 問題14):
+#
+#     20260911_1 問題14 科学・技術   FIRES  <- the founding case. 0 of 12 tokens;
+#                                   the flyer prints neither 科学 nor 技術 nor
+#                                   研究 nor 実験, and 「小さな電気の道具」 is a
+#                                   category of object being brought in.
+#     20260910_1 問題13 環境         silent <- the required negative: 給水/水 all
+#                                   through the passage.
+#
+# and four other papers move, every one of them re-read by hand and every one the
+# same class (the recorded tag is not the tag the prose supports):
+#
+#     20260812_2 問題13 環境         地域猫 — 住民/苦情/不妊手術, no 環境 word
+#     20260821_1 問題13 科学・技術   朝に走る習慣 — a habit-formation essay
+#     20260828_1 問題13 文化・伝統   敬語と距離 — a 人間関係 essay
+#     20260904_3 問題12 科学・技術   ことばの覚え方 — a 子育て・家族 essay
+#
+# WARN, not FAIL, for two reasons that are not "it reds other papers": a theme
+# can be carried by words this table does not list (a 環境 passage about 猫 is
+# not thereby mis-tagged), and the four above are pre-rule papers whose repair is
+# a re-tag in `logs/topics.json`, which is another paper's deliverable. The
+# verdict on a live paper is `exam-qa-review` §5's, and that half is a FAIL.
+HEADLINE_READING_SURFACES = ("問題9", "問題12", "問題13", "問題14")
+
+THEME_TOKENS = {
+    "睡眠・健康": ("睡眠", "眠", "寝", "健康", "体調", "疲れ", "休養", "ストレス",
+                "運動"),
+    "医療・福祉": ("医療", "医師", "医者", "病院", "医院", "患者", "看護", "介護",
+                "福祉", "薬", "治療", "診察", "診療", "検査", "手術", "接種",
+                "保険", "車いす", "車椅子", "障害", "リハビリ", "健診", "補聴器",
+                "症状", "けが", "高齢"),
+    "食": ("食", "料理", "味", "野菜", "食材", "調理", "台所", "献立", "鍋", "飲"),
+    "環境": ("環境", "ごみ", "ゴミ", "資源", "リサイクル", "再生", "省エネ", "自然",
+           "温暖化", "節水", "給水", "水", "廃棄", "エコ", "緑", "森", "汚れ"),
+    "防災": ("防災", "災害", "地震", "台風", "津波", "洪水", "避難", "水防", "備え",
+           "非常", "被害", "消防"),
+    "交通": ("交通", "道路", "信号", "電車", "バス", "駅", "歩行", "横断", "自転車",
+           "運転", "車", "渋滞", "道"),
+    "住まい": ("住", "家", "部屋", "住宅", "間取り", "戸", "引っ越", "建物", "台所",
+            "居間", "庭"),
+    "働き方": ("働", "仕事", "職場", "勤務", "会社", "社員", "労働", "残業", "業務",
+            "就職", "職", "上司"),
+    "教育": ("教育", "学校", "学習", "授業", "学生", "生徒", "教師", "先生", "勉強",
+           "学ぶ", "講座", "教室", "教え"),
+    "子育て・家族": ("子ども", "子供", "育児", "家族", "親", "保育", "子育て",
+                 "赤ちゃん", "兄", "姉", "母", "父"),
+    "地域活性化": ("地域", "町", "市", "村", "商店街", "住民", "まち", "地元", "交流",
+               "自治", "公民館", "地区"),
+    "デジタル化": ("デジタル", "パソコン", "インターネット", "ネット", "アプリ",
+               "スマート", "電子", "オンライン", "画面", "端末", "ソフト"),
+    "消費・経済": ("買", "値段", "価格", "消費", "経済", "売", "店", "商品", "費用",
+               "支払", "円", "料金", "客"),
+    "文化・伝統": ("文化", "伝統", "祭", "芸", "昔", "職人", "歴史", "和", "古く",
+               "習慣"),
+    "スポーツ・余暇": ("スポーツ", "試合", "選手", "練習", "趣味", "余暇", "審判",
+                 "大会", "競技", "運動", "チーム"),
+    "人間関係": ("人間関係", "友人", "友達", "相手", "付き合", "同僚", "仲", "会話",
+             "挨拶", "気持ち", "話し"),
+    "行政・手続き": ("手続", "申請", "役所", "市役所", "窓口", "届", "書類", "制度",
+                "受付", "申込", "お申し込み", "証明"),
+    "メディア・情報": ("新聞", "記事", "情報", "放送", "テレビ", "番組", "報道", "記者",
+                 "広告", "伝え", "掲載", "紙面", "読者"),
+    "旅行・観光": ("旅行", "観光", "旅", "宿", "名所", "訪れ", "客", "案内", "土産",
+               "見学", "ツアー"),
+    "科学・技術": ("科学", "技術", "研究", "実験", "機械", "装置", "測定", "開発",
+               "工学", "データ", "実証", "分析"),
+}
+
+
+def check_headline_theme_token_coverage():
+    """`THEME_TOKENS` covers `level_data.THEMES` exactly — no more, no less.
+
+    THE RULE: `level_data.py` owns the closed theme vocabulary (AGENTS.md §4,
+    "a measured number has one owner"); this gate-side table owns one
+    representative-token row per value. A theme with no row makes
+    `check_headline_theme_lexical_support()` SILENT on every surface that
+    carries it, which is the coverage-silence shape S6 was raised about
+    (qa-report-20260904_1-round2) — a confident line over a fraction of the
+    corpus. A row with no theme is a typo nothing else would catch.
+
+    THE REPAIR: add the missing row here, or delete the stale one. Never delete
+    a `THEMES` value to make this green — that is an edit of the taxonomy.
+    """
+    lv = load(".agents/exam-blueprint/scripts/level_data.py")
+    missing = sorted(set(lv.THEMES) - set(THEME_TOKENS))
+    extra = sorted(set(THEME_TOKENS) - set(lv.THEMES))
+    check("THEME_TOKENS carries one representative-word row per THEMES value",
+          not missing and not extra,
+          f"themes with no token row: {missing}; token rows naming no theme: "
+          f"{extra} — a theme with no row silences "
+          f"check_headline_theme_lexical_support() on every surface tagged with "
+          f"it. Add the row here (level_data.py owns the theme list itself)")
+
+
+def check_headline_theme_lexical_support():
+    """A headline surface's prose uses at least one word of its recorded theme.
+
+    THE INCIDENT (F1, qa-report-20260911_1): `20260911_1` 問題14 is recorded
+    科学・技術 in `test_spec.json` AND in `logs/topics.json` — the two agree, so
+    `check_theme_record_agreement()` is green — and the shipped flyer is a
+    repair workshop for worn-out belongings, i.e. 環境, which was the previous
+    paper's 問題13 headline theme. An un-moved tag concealed a rule-4
+    two-papers-running headline repeat, and stage 3's own `notes` record that as
+    the reason the tag was not moved.
+
+    THE RULE: records describe the shipped surface. Spec and topics agreeing with
+    EACH OTHER is not evidence that either describes the paper — it is the same
+    defect wearing the other face, and `exam-qa-review` §5 makes it an automatic
+    fail. This line is the string-decidable floor under that judgement: a surface
+    written on a theme uses at least one of that theme's ordinary words, and zero
+    is the only threshold a token list can honestly assert.
+
+    THE REPAIR when this fires: re-tag the surface in BOTH `test_spec.json` and
+    `logs/topics.json` from the shipped text and then re-run the rule-1/rule-3/
+    rule-4 theme comparisons against the honest tag — which is where the concealed
+    repeat surfaces — or re-author the surface onto the tag it was drawn with
+    (`--reroll-one reading_topics:<index>` if the drawn theme is the problem).
+    Do NOT widen `THEME_TOKENS` to clear a live paper: the token list is the
+    theme's vocabulary, not this paper's.
+
+    Its scope is the four 読解 headline surfaces (問題9 cloze, 問題12 A+B as one,
+    問題13, 問題14). 聴解問題5 is the fifth headline surface and is out of scope by
+    construction — since 2026-09-08 nobody here chooses its subject
+    (`composed_choukai_tests()`).
+
+    FOUNDING-CASE RUN and the four other papers it moves: see the comment block
+    above `HEADLINE_READING_SURFACES`. WARN, for the reasons stated there.
+    """
+    print("\nheadline theme lexical support (the record describes the surface)")
+    path = ROOT / "logs" / "topics.json"
+    if not path.is_file():
+        return skip("headline theme lexical support", "no topics.json on disk")
+    bi = load(".agents/exam-app/scripts/build_interactive.py")
+    rows = json.loads(path.read_text(encoding="utf-8")).get("history", [])
+    for row in rows:
+        tid = str(row.get("test_id"))
+        if ORIGIN.is_imported(tid):
+            continue
+        themes = row.get("themes") or {}
+        md = ROOT / "tests" / tid / "言語知識・読解.md"
+        if not themes or not md.is_file():
+            continue
+        gt = md.read_text(encoding="utf-8")
+        cut = bi.KEY_HEADING.search(gt)
+        body = gt[: cut.start()] if cut else gt
+        for surf in HEADLINE_READING_SURFACES:
+            theme = themes.get(surf) or themes.get(surf + "(A)")
+            toks = THEME_TOKENS.get(theme or "")
+            if not toks:
+                continue            # coverage is check_headline_theme_token_coverage's
+            prose = headline_surface_prose(body, bi, surf)
+            if not prose.strip():
+                continue
+            warn(f"{tid} {surf}: the shipped prose uses a 「{theme}」 word",
+                 any(t in prose for t in toks),
+                 f"not one of the {len(toks)} representative words of 「{theme}」 "
+                 f"occurs anywhere in this surface's prose, so the record and "
+                 f"the paper may agree with each other while describing "
+                 f"different things — the F1 shape (qa-report-20260911_1): a tag "
+                 f"left un-moved because moving it would have exposed a rule-4 "
+                 f"headline repeat. Re-tag the surface in test_spec.json AND "
+                 f"logs/topics.json from the shipped text, then re-run the theme "
+                 f"rules against the honest tag; or re-author the surface onto "
+                 f"the drawn theme. Do NOT widen THEME_TOKENS to clear a live "
+                 f"paper (exam-qa-review §5 'Automatic fails')",
+                 test_id=tid)
+
+
+def headline_surface_prose(body: str, bi, surf: str) -> str:
+    """One headline surface's running text, instruction boilerplate stripped.
+
+    問題12–14 go through the same `passage_prose`/`dokkai_section` splitter every
+    other 読解 check reads, so a number measured here and a number measured there
+    cannot disagree. 問題9 is not a 読解 大問 and has no entry there: its cloze
+    passage is the region between the 大問 heading and the first `**48**` option
+    block, which is exactly how `key_blank_tail()` scopes it.
+    """
+    if surf == "問題9":
+        m = re.search(r"^##\s*問題9\b.*?(?=^##\s*問題10\b|\Z)", body, re.M | re.S)
+        if not m:
+            return ""
+        sec = re.sub(r"^##.*$", "", m.group(0), flags=re.M)
+        return strip_instruction_lines(
+            re.split(r"^\*\*48\*\*", sec, maxsplit=1, flags=re.M)[0])
+    n = int(surf.removeprefix("問題"))
+    return strip_instruction_lines(passage_prose(dokkai_section(body, n), bi))
+
+
 # F7 (qa-report-20260904_2). `themes` comes from a closed vocabulary AND the
 # gate says so ("themes come from the closed THEMES vocabulary"); `closing_moves`
 # had neither, so an author who can invent a label can always spread the column
@@ -5279,6 +5494,117 @@ def key_blank_tail(body: str, q: int) -> str | None:
 # frame lines and are already grandfathered; `20260903_1` is deliberately NOT
 # here — it is the paper the rule was written for, and its two findings are open
 # content repairs.)
+# F2 (qa-report-20260911_1), `GATE-BLIND`, applied 2026-09-11 — the THIRD paper
+# of this class, so it is systemic, not an accident.
+#
+# THE HOLE. The FRAME predicate above measures the keyed form's CORE, and
+# `key_form_core()` refuses to strip below KEY_FRAME_CORE_MIN because 「わけ」 and
+# 「はず」 are ordinary nouns. That floor is right for the general case and wrong
+# for the one place the whole option is a verb plus a 文末モーダル: 問題9's
+# [文末モーダル] blank. `20260911_1` 問題9-49 keys 「集まるわけだ」, whose core is
+# 「集まるわけ」 — a string the paper can only contain once — while 問題11(3) prints
+# 「百メートルのあいだ、片方の腕ばかりを使うわけです。」, the SAME 〈X ばかり…V-る＋
+# わけだ〉 frame, one occurrence, so the count branch printed 1 ≤ 1 and the frame
+# branch looked for the wrong string. The rule `exam-qa-review` §3 states —
+# "never in the same syntactic frame" — was satisfied by nobody.
+#
+# THE PREDICATE. When a 問題9 key ENDS in one of a closed list of 文末モーダル,
+# the modal itself (not the whole option) is the form under test, so ONE 文末
+# occurrence of that modal anywhere in 問題10–14 prose is a hit. Two scoping
+# decisions carry the weight:
+#
+#   1. **連体 use stays excluded**, by the same `key_frame_class()` every other
+#      frame comparison uses — 「はずの種が」 and 「わけではない理由を」 are not hits.
+#   2. **A NOMINAL modal needs a real copula.** 「わけ」「はず」「こと」「のも当然」 are
+#      noun cores, and a （注N） gloss line ends 「…暗くなること」 with no copula at
+#      all; `key_frame_class` reads an empty tail as 文末, so without this the
+#      line fires on the apparatus. Measured: it is what separated the two
+#      20260907_1 hits below from a gloss-line false positive. The PREDICATIVE
+#      modals (〜に違いない, 〜とは限らない) are already predicates and need none.
+#
+# FOUNDING-CASE RUN (§6.5), 2026-09-11. The report named three cases and all
+# three fire:
+#
+#     20260911_1  問題9-49 keyed 「集まるわけだ」 -> modal 「わけ」;
+#                 問題11(3) 「…片方の腕ばかりを使うわけです。」  HIT
+#                 (run against the QA-reviewed revision, sha1[:12] 9eeef16bc5e5,
+#                 snapshotted before the concurrent 読解 repair)
+#     20260817_3  問題9-51 reconstructed pre-repair key 「そうとは限らない」
+#                 (the shipped paper keys 「本末転倒だ」 now — §6.5's rule on an
+#                 incident that predates the paper on disk);
+#                 問題11(4) 「…正確に判断できるようになるとは限らない。」  HIT
+#     20260903_1  問題9-51 keyed 「のも当然だろう」 -> modal 「のも当然」;
+#                 問題12(A) 「…見直しが進んでいるのも当然だろう。」  HIT.
+#                 The prose was repaired before the paper's FIRST commit, so the
+#                 sentence exists in no revision and was reconstructed from
+#                 qa-report-20260903_1 F1 and the predicate run on it directly.
+#
+# CORPUS RUN, all 27 generated papers on disk. One other paper moves, both of its
+# hits re-read by hand:
+#
+#     20260907_1  問題9-49 「味が変わってくるわけだ」 vs 問題10 「…みじめで長続き
+#                 しない、というわけである。」 — real, the same 文末 わけだ frame.
+#                 問題9-50 「道理にかなったことである」 vs 問題11 「…思ったより
+#                 少ないということである。」 — real but weaker: 「ということである」 is
+#                 a quotative summary, not the 「〜ことだ」 advice modal the blank
+#                 tests.
+#
+# WARN, and the reason is that second hit plus one rule: a FAIL line that reds a
+# committed paper is itself a defect (`make check` validates every test on disk),
+# and the repair for 20260907_1 is a prose edit in another paper's deliverable.
+# It is a SEPARATE line from the FAIL above, not a widening of it, so the
+# existing check re-classifies nothing. Promote it to FAIL when 20260907_1's two
+# sentences are reworded — and do NOT grandfather 20260907_1 by id instead: the
+# hits are real and naming an id here would hide them.
+P9_MODAL_KEY_FORMS = {
+    "わけだ": "わけ", "はずだ": "はず", "ことだ": "こと", "のも当然だ": "のも当然",
+    "に違いない": "に違いない", "とは限らない": "とは限らない",
+}
+P9_MODAL_PREDICATIVE = ("に違いない", "とは限らない")
+
+
+def strip_copula_tail(s: str) -> str:
+    """`s` with every trailing copula/modal link removed (のも当然だろう→のも当然).
+
+    `key_form_core()` strips at most ONE tail and refuses to go below
+    KEY_FRAME_CORE_MIN; both are right for it and wrong here, where the answer
+    wanted is the bare modal. Loops because 「だろう」 is one tail but 「のだ」+「ろう」
+    is two.
+    """
+    changed = True
+    while changed:
+        changed = False
+        for t in KEY_FRAME_TAILS + ("ろう",):
+            if s.endswith(t) and len(s) > len(t):
+                s, changed = s[: -len(t)], True
+                break
+    return s
+
+
+def p9_modal_core(keyed: str) -> str | None:
+    """The 文末モーダル a 問題9 key ends in, reduced to what prose would show."""
+    s = strip_copula_tail(normalize_option(keyed).lstrip("〜～"))
+    for core in sorted(set(P9_MODAL_KEY_FORMS.values()), key=len, reverse=True):
+        if s.endswith(core):
+            return core
+    return None
+
+
+def p9_modal_frame_hit(core: str, lines: list[str]) -> str | None:
+    """The first 文末 occurrence of `core` in `lines`, quoted, or None."""
+    for ln in lines:
+        for om in re.finditer(re.escape(core), ln):
+            tail = ln[om.end():]
+            cm = KEY_FRAME_TAIL_RE.match(tail)
+            copula, rest = tail[: cm.end()], tail[cm.end():]
+            if rest and rest[0] not in KEY_FRAME_SENTENCE_END:
+                continue            # 連体/連用 — not the frame the blank keys
+            if not copula and core not in P9_MODAL_PREDICATIVE:
+                continue            # a bare noun ending a （注N） gloss line
+            return ln[max(0, om.start() - 18):om.end() + len(copula) + 2]
+    return None
+
+
 KEY_FRAME_GRANDFATHERED = {
     "20260817_1",   # 問題7-35 keyed 「といえば」 連用; 問題10 prose 「議会といえば、」
     "20260819_1",   # 問題8 target 「〜のは…からだ」 reproduced whole in 問題10(1)
@@ -5506,6 +5832,34 @@ def check_key_grammar_exposure(test_id: str, gt: str, keys: dict[int, int],
               "count. A 連体 use of a 文末 key is NOT a hit — that is what the "
               "frame classes are for "
               "(exam-qa-review §3 'One grammar point, one KEY per paper')")
+    # F2 (qa-report-20260911_1): the 問題9 [文末モーダル] blank, where the whole
+    # option is a verb plus the modal and the CORE the frame branch measures is
+    # therefore a string the paper can contain only once. One 文末 occurrence of
+    # the MODAL is the breach. See P9_MODAL_KEY_FORMS above for the incident, the
+    # three founding cases and why this is a separate WARN line.
+    modal_hits = []
+    for q in P9_BLANKS:
+        row, k = opts.get(q) or [], keys.get(q)
+        if not row or not k or k > len(row):
+            continue
+        core = p9_modal_core(row[k - 1])
+        if not core:
+            continue
+        if (quote := p9_modal_frame_hit(core, frame_lines)):
+            modal_hits.append(f"問{q}「{normalize_option(row[k - 1])}」 → 文末モーダル"
+                              f"「{core}」 in 読解: 「…{quote}…」")
+    warn(f"{test_id}: no 問題9 文末モーダル key is also a 文末モーダル in the "
+         f"問題10-14 prose",
+         not modal_hits,
+         "; ".join(modal_hits) + " — the blank tests this modal and the reading "
+         "half uses it in the same 文末 frame, so the candidate meets the answer "
+         "as running text a few pages later. ONE occurrence is enough here: the "
+         "form under test is the modal, not the verb in front of it, and the "
+         "count branch sees only the whole option string. Reword the 読解 "
+         "sentence (「…わけです。」 → 「…ことになります。」, 「…のも当然だろう。」 → "
+         "「…のはうなずける。」) or re-key the blank; a 連体 use (「はずの種が」) is "
+         "NOT a hit (exam-qa-review §3 'One grammar point, one KEY per paper')",
+         test_id=test_id)
     if test_id in KEY_EXPOSURE_GRANDFATHERED | KEY_FRAME_GRANDFATHERED:
         return warn(name, not hits, detail + GRANDFATHER_NOTE)
     check(name, not hits, detail)
@@ -6037,6 +6391,63 @@ def check_explanation_quotes(name: str, key_section: str, source: str,
     warn(f"{name}: {what} quotes trace to the passage/script", not missing,
          f"not found in the source: {missing} — quote by copy-paste; if the "
          f"line really is not there, the ITEM is wrong, not the explanation")
+
+
+MONDAI9_BLOCK = re.compile(r"^##\s*問題9\b.*?(?=^##\s*問題10\b|\Z)", re.M | re.S)
+MONDAI9_KEY_ROW = re.compile(r"^\s*\|\s*(4[89]|5[01])\s*\|")
+
+
+def check_mondai9_explanation_quotes(name: str, body: str, bunpou_rows: str):
+    """Every 「…」 in a 問題9 解説 cell must occur in the 問題9 cloze block.
+
+    THE RULE: the 問題9 cloze has a passage, and its four 解説 cells cite it the
+    same way a 読解 cell cites 問題10–14 — 「本文…とある」. A cell that quotes a
+    line the cloze does not contain is the same defect `check_explanation_quotes`
+    has WARNed on since the start; the only difference is which 大問 it sits in.
+
+    THE INCIDENT (`20260911_1`, 問題9-51, 2026-09-11): the QA pass's F3 re-angled
+    the cloze off the 〈想定 → 実は〉 skeleton, which required deleting its
+    attribution sentence 「始めたころは、捨てる物を減らすための工夫のつもりだった」.
+    Item 51's 解説 went on quoting that sentence as the reason distractor 1 is
+    wrong, and `make check` was green — the caller cuts the 解説 scan at the
+    `## 読解` heading (「Only the 読解 key table quotes running text」) and builds
+    its source from `range(10, 15)`, so the 問題9 rows, which live in the `## 文法`
+    table, had never been read against anything. Both halves of the blind spot
+    are needed to reach the cell: it is in the wrong key table AND its passage is
+    outside the source string.
+
+    THE REPAIR: re-derive the cell from the SHIPPED cloze, by copy-paste. If the
+    line really is not there, the item — not the explanation — is what the
+    re-angling broke, and it is re-authored, never quoted back into existence.
+
+    SCOPE, both halves measured on this paper. The source is the whole 問題9
+    BLOCK, not `passage_prose` of it: a cloze 解説 quotes its own options by
+    design (「集まるものではない」 and the other three at 問題9-49), and a
+    passage-only source turns every one of those into a false positive. The key
+    side is rows 48–51 alone, not the whole `## 文法` table: 問題7/8 cells gloss
+    grammar with invented example sentences in 「」 (「泣くやら笑うやら」,
+    「新人にしてはうまい」), which are not quotes of anything — scanning the whole
+    table against the cloze adds 42 such spans on `20260911_1` alone and drowns
+    the line.
+
+    WARN, not FAIL, for the same reason the sister 解説 line is: a 解説 may put
+    its own wording in 「」, so this cannot be decided by matching alone.
+    FOUNDING-CASE RUN over all 37 papers carrying a cloze (2026-09-11): 13 report
+    0 — including the founding paper after its repair, while its pre-repair cell
+    flags — and 24 report 1–10 spans, nearly all of them cells that print a
+    distractor's MEANING as a gloss inside 「」 (`20260827_2` 問題9-51
+    「実行不可能な理論」) or a grammar pattern (「〜と言っても過言ではない」), which
+    is the same defect one step milder. SEVEN of the 24 are committed imported
+    papers, which cannot be re-authored at all, so a FAIL here would red the
+    archive.
+    """
+    m9 = MONDAI9_BLOCK.search(body)
+    if not m9:
+        return skip(f"{name}: 問題9 解説 quotes trace to the passage/script",
+                    "no 問題9 cloze block in this paper's 言語知識・読解.md")
+    rows = "\n".join(ln for ln in bunpou_rows.splitlines()
+                     if MONDAI9_KEY_ROW.match(ln))
+    check_explanation_quotes(name, rows, m9.group(0), what="問題9 解説")
 
 
 # F7 (qa-report-20260904_1). The セクション構成表's OWN 引用規約 says 「表のセルと
@@ -7163,6 +7574,96 @@ def check_p8_form_family(d, spec: dict, sample, pools: dict):
             "twice however differently the two entries are labelled. Repair with "
             "`--reroll-one grammar_p8:<index>`, never by hand-substituting the "
             "form (exam-blueprint §'Mutually exclusive form families')")
+
+
+def check_p7_form_family(d, spec: dict, sample, pools: dict):
+    """One 問題7 may not draw two entries of one mutually-exclusive form family.
+
+    THE HOLE (F4, qa-report-20260911_1, `GATE-BLIND` + `RULE-MISSING`): the
+    family predicate above is named `check_p8_form_family` and it means it — it
+    reads `grammar_p8` and nothing else. 問題7 draws **12** entries to 問題8's 5,
+    i.e. the larger half of the paper's grammar, and no gate had ever compared
+    two of them for family identity. The rule itself was never 問題8-only:
+    `question-authoring` Item integrity #15 says "one grammar point, one KEY per
+    paper", and a 12-item 大問 that keys one point twice tests 11 distinctions,
+    not 12.
+
+    THE INCIDENT: `20260911_1` keyed 問題7-31 on 〜からには and 問題7-39 on 〜以上は.
+    Every N2 grammar book presents the two together as the 確定条件＋当然の帰結
+    pair, and each stem accepts the other key verbatim — 「代表を引き受けた以上は、
+    最後まで責任を持ってやり遂げたい」 and 「署名したからには、条件を変えることは
+    できない」 are both perfectly natural. Neither option set contains the other
+    form, so it is not a double-answer item; it is one distinction asked twice.
+
+    THE REPAIR when this fires: `--reroll-one grammar_p7:<index>`, never a hand
+    substitution — the drawn item is what the ledger records. With the family
+    now declared in `pools.json`, `form_family_tokens()` feeds the sampler's
+    `taken_tokens()`, so the pair is refused at draw time and this line is the
+    backstop that says the spec was edited after the draw.
+
+    FOUNDING-CASE RUN (§6.5), 2026-09-11, with the 確定条件 family
+    (`〜からには`/`〜以上は`/`〜上は` — NOT `〜上(で)`, which is the "after doing"
+    point) added to `grammar_form_families`. Over all 27 generated specs on disk:
+
+        20260911_1  FIRES  確定条件: ['〜からには', '〜以上は']   <- the founding pair
+        20260827_1  FIRES  確定条件: ['〜からには', '〜以上は']   <- the SAME pair,
+                    shipped 2026-08-27 as 問題7-40 「一度引き受けた（）、最後まで
+                    責任を持ってやり遂げるつもりだ。」 and 問題7-42 「規則で決まって
+                    いる（）、従うしかない。」 — read by hand, the same defect, and
+                    the reason F4 is systemic rather than a one-paper slip
+        the other 25 papers are clean.
+
+    WARN, not FAIL, and NOT by grandfathering 20260827_1: its pair is real, an id
+    on a list would hide it, and a FAIL line that reds a committed paper is
+    itself a defect (`make check` validates every test on disk). The repair for
+    20260827_1 is a re-draw of another paper's blueprint. Promote this to FAIL
+    when that lands.
+
+    COVERAGE, the S6 rule (qa-report-20260904_1-round2): a verdict off a fraction
+    of the draw is not evidence about the draw, so this line `skip`s at zero
+    tagged draws and WARNs below `P8_FAMILY_COVERAGE_MIN` — the same floor, the
+    same repair (`pools.json`, listed by `check_pool_grammar_form_families()`),
+    and the same prohibition on lowering it to go green.
+    """
+    fams = sample.build_family_index(pools)
+    name = f"{d.name}: 問題7 draws at most one entry per form family"
+    if not fams:
+        return skip(name, "pools.json carries no `grammar_form_families` map")
+    drawn = [pool_entry_text(x)
+             for x in (spec.get("items") or {}).get("grammar_p7") or []]
+    seen: dict[str, list[str]] = {}
+    for t in drawn:
+        if (f := fams.get(t)):
+            seen.setdefault(f, []).append(t)
+    total = sum(len(v) for v in seen.values())
+    name = f"{name} ({total} of {len(drawn)} draws family-tagged)"
+    if not drawn:
+        return skip(name, "the spec drew no grammar_p7 entries")
+    if total == 0:
+        return skip(name, "no drawn grammar_p7 entry carries a "
+                          "`grammar_form_families` tag, so there is nothing to "
+                          "compare — the repair is in pools.json, and "
+                          "`check_pool_grammar_form_families` lists the "
+                          "candidate pairs")
+    coverage = total / len(drawn)
+    warn(f"{d.name}: the 問題7 form-family check compares most of the draw "
+         f"({total}/{len(drawn)} = {coverage:.0%} family-tagged)",
+         coverage >= P8_FAMILY_COVERAGE_MIN,
+         f"{len(drawn) - total} of {len(drawn)} drawn 問題7 entries carry NO "
+         f"`grammar_form_families` tag, so the line below is SILENT about them "
+         f"— it is not evidence that this paper draws no duplicate form, only "
+         f"that the {total} tagged draw(s) do not collide. Never lower "
+         f"{P8_FAMILY_COVERAGE_MIN:.0%} to make this green; the repair is in "
+         f"pools.json (qa-report-20260904_1-round2 S6)")
+    over = {f: v for f, v in seen.items() if len(v) > 1}
+    warn(name, not over,
+         "; ".join(f"family 「{f}」: {v}" for f, v in over.items())
+         + " — these are one grammar point, so 問題7's 12 items test only 11 "
+           "distinctions and each stem accepts the other item's key verbatim. "
+           "Repair with `--reroll-one grammar_p7:<index>`, never by "
+           "hand-substituting the form (exam-blueprint §'Mutually exclusive "
+           "form families'; F4, qa-report-20260911_1)",
+         test_id=d.name)
 
 
 def check_grammar_cross_category_rotation(d, spec: dict, sample, pools: dict):
@@ -8504,6 +9005,7 @@ def check_rotation_inputs():
         check_spec_pool_kanji_reading(d, spec)
         check_grammar_cross_category_rotation(d, spec, sample, pools)
         check_p8_form_family(d, spec, sample, pools)
+        check_p7_form_family(d, spec, sample, pools)
         check_mondai1_reading_type_mix(d, spec, sample)
         kr = (spec.get("items") or {}).get("kanji_reading") or []
         trap_items += len(kr)
@@ -12671,6 +13173,209 @@ def check_choukai_textbook_bands():
          "which, and say so; do not widen the band to quiet this line")
 
 
+# A single kanji, not itself preceded by a kanji, run straight into って言 — see
+# check_textbook_script_grammaticality() for the founding case and the measured
+# false-positive rate this shape (and not the looser `[kanji]って言`) was chosen
+# from. Owner of the predicate; the check imports nothing else for it.
+TEXTBOOK_TE_QUOTATIVE_RE = re.compile(r"(?<![\u4e00-\u9fff])[\u4e00-\u9fff]って\s*言")
+
+
+def check_textbook_script_grammaticality():
+    """A hand-declared clip's TEXT is typed off a scan and nothing reads it back.
+
+    Why this line exists (2026-09-10, qa-report-20260910_1-round2 F1, applied
+    2026-09-11): `build_textbook_bank.py` guards a declaration's DURATION and
+    its CHAR RATE; `check_choukai_*` compares the composed script against the
+    MP3's segmentation. Neither reads the Japanese. So
+    `kanzenmoshi:cd1-27` was banked as 「だから持って言ったじゃない。」 for the
+    recording's 「だから持つって言ったじゃない。」 — one wrong character, declared
+    once, shipped into two papers' scripts, booklet 解説 cells, both 詳細解説
+    panes and the model answer, with every gate green.
+
+    THE PREDICATE, and its limits, measured rather than asserted. A quotative
+    「って」 attaches to a plain form, so in correct text the character before it
+    is the tail of a word: 「教室って言っても」「来週って言ってた」. A `〜て` gerund
+    mis-typed for it leaves a BARE kanji stem against って: 「持って言った」. So
+    this fires on a single kanji, not itself preceded by a kanji, followed by
+    って言. Founding-case run over the whole bank (2026-09-11): it fires on the
+    pre-repair `kanzenmoshi:cd1-27` line and on nothing else — 0 hits across
+    the 85 declared items and 0 across 82,193 characters of official script,
+    where the looser `[kanji]って言` fires 4 times, all legitimate nouns.
+
+    It is a WARN, not a FAIL, because a single-kanji NOUN plus a quotative って
+    (「今って言われても」) is grammatical and would fire. That is the whole rule
+    this line can carry: the real check on a hand-typed transcription is
+    reading it back against the page it was typed from (`choukai-audio` Part 0,
+    which is why a declaration records `source_page`), and `exam-qa-review` §4
+    check 6, which reads every non-official clip's script on a composed paper.
+    """
+    print("\n聴解 textbook bank (hand-typed script text)")
+    decl = ROOT / ".agents/choukai-audio/references/textbook_items.json"
+    if not decl.is_file():
+        check("textbook_items.json exists", False, f"missing {decl}")
+        return
+    items = json.loads(decl.read_text(encoding="utf-8")).get("items", [])
+    if not items:
+        skip("every hand-declared script line reads as Japanese",
+             "no textbook items are declared")
+        return
+    suspect = []
+    for it in items:
+        lines = list(it.get("script_lines") or []) + list(it.get("printed_options") or [])
+        for ln in lines:
+            if not isinstance(ln, str):
+                continue
+            for m in TEXTBOOK_TE_QUOTATIVE_RE.finditer(ln):
+                suspect.append(f"{it.get('id')} 「{ln[max(0, m.start() - 10):m.end() + 8]}」")
+    warn(f"every hand-declared script line reads as Japanese "
+         f"({len(items)} declared item(s))", not suspect,
+         "; ".join(suspect) + " — a bare kanji stem against って言 is the "
+         "signature of a 〜て gerund typed where the recording says a quotative "
+         "って (「持って言った」 for 「持つって言った」, kanzenmoshi:cd1-27). Play the "
+         "track and read the line back against the page named in its "
+         "`source_page`; a single-kanji NOUN plus a quotative って is a "
+         "legitimate hit — say so in the report rather than editing the line")
+
+
+# A run of Latin letters/digits inside otherwise-Japanese narration. Deliberately
+# anchored on a LETTER, so a bare 「1、」 option number or a 「20代」 never matches;
+# the run then absorbs trailing digits so `N2` is one token rather than `N` plus
+# a stray 2 — which is the whole distinction this check turns on.
+SCRIPT_LATIN_RUN = re.compile(r"[A-Za-z][A-Za-z0-9]*")
+
+
+# The ONE Latin run this repo authors rather than transcribes: the level name in
+# the opening announcement (`jlpt-exam-structure` §"Announcer / 例 mechanics",
+# `choukai-audio` §"The opening announcement"). It is hard-coded HERE, and that
+# is the property that makes this check work at all — see the circularity note
+# in `check_choukai_script_latin`. Changing it is a deliberate act with two doc
+# owners to update; it must never be widened to silence a firing paper.
+SCRIPT_TEMPLATE_LATIN = frozenset({"N2"})
+
+
+def bank_latin_runs(bank: dict) -> set[str]:
+    """Every Latin run a bank record's TRANSCRIBED source text carries.
+
+    ITEM records only — `script` for an official clip, `script_lines` and
+    `printed_options` for a hand-declared one. Those are transcriptions of a
+    recording, so a Latin run in one is a real proper noun somebody said (`IT`
+    in 山川IT専門学校, `Web` in Webデザイン, `OB`).
+
+    Two exclusions, both load-bearing:
+
+    * **Explanation payloads.** `explanation_vi` is written in Vietnamese and
+      would admit every Latin string in the repo; a Japanese 解説 legitimately
+      writes grammar placeholders like 「Nにしては」, which would admit the very
+      `N` this check exists to catch.
+    * **Preamble records** (`text`, `opening`). Those are the announcer
+      template — the repo-authored half, which is what is being checked. Taking
+      the allow-set from them would make the check assert only that a paper
+      agrees with the bank it was composed from, which it does by construction.
+      Measured: excluding them costs nothing, because no preamble `text` field
+      carries a Latin run at all.
+    """
+    runs: set[str] = set()
+    for r in bank.get("records", []):
+        if r.get("kind") != "item":
+            continue
+        parts: list[str] = []
+        if isinstance(r.get("script"), str):
+            parts.append(r["script"])
+        for field in ("script_lines", "printed_options"):
+            parts += [t for t in (r.get(field) or []) if isinstance(t, str)]
+        for p in parts:
+            runs.update(SCRIPT_LATIN_RUN.findall(p))
+    return runs
+
+
+def check_choukai_script_latin():
+    """A Latin run in 聴解スクリプト.txt that no bank record's source text carries.
+
+    WHY (2026-09-11, qa-report-20260911_1-round2 NEW-1). Every
+    `聴解スクリプト.txt` on disk opened 「**Nに**聴解。これから、**Nに**の聴解
+    試験を始めます。」 — `N2` with only the digit transliterated into kana,
+    leaving a non-sentence no announcer would say. **37 of 37 papers** carried
+    it, for as long as the repo has existed, through every QA round.
+
+    Nothing could have caught it by comparison, and that is the point: the
+    official script PDFs **do not print the opening announcement at all** (all
+    31 `refs/JLPT_N2_NEW/*/script.md` begin at 問題1), so unlike every other
+    line in the file it has no archive to be checked against. Its only
+    authority was two skill docs, and they both carried the typo — which is
+    exactly how one typo reached every paper.
+
+    THE PREDICATE, and why this shape. Official N2 narration is Japanese with a
+    handful of source-borne Latin proper nouns in it. Those arrive from a bank
+    ITEM record, because an item's text is a transcription of a recording. Set
+    against that, a composed paper's script has exactly ONE Latin run the repo
+    authors rather than transcribes — the level name in the opening
+    announcement — and it is named in `SCRIPT_TEMPLATE_LATIN`. So the allow-set
+    is `bank_latin_runs()` ∪ `SCRIPT_TEMPLATE_LATIN`, and anything else in a
+    paper's script is text nobody in a recording said and no doc registered.
+
+    **THE CIRCULARITY THIS AVOIDS, and it is the reason the check is shaped
+    this way rather than the obvious way.** The first draft derived the whole
+    allow-set from the bank, preamble records included. Its founding-case run
+    against the pre-repair fleet fired on **0 of 37 papers**: the bank's
+    `opening` fields are harvested from the imported papers' own
+    `聴解スクリプト.txt`, so the typo was in the allow-set and licensed itself.
+    A check whose reference is derived from the artifact it checks can only
+    ever assert that the artifact agrees with itself. Hard-coding the one
+    repo-authored token is what breaks that loop — it cannot be satisfied by
+    editing a script or rebuilding the bank, only by an edit here, next to the
+    two doc owners named above.
+
+    **WARN, not FAIL** (`qa/root-cause-dispositions-20260911-round2.md`). 26
+    generated papers still carry the old line by a deliberate, reasoned
+    deferral — re-rendering them is re-filed as its own task — and a gate line
+    that reds the whole fleet is the §6.5 defect class that teaches people to
+    scroll past it. **Do not weaken the predicate to make the fleet green**;
+    the fire-count IS the deferred task's progress meter and goes to zero when
+    it is done.
+
+    FOUNDING-CASE RUN (2026-09-11), replayed against the pre-repair fleet
+    (pre-repair bank + pre-repair scripts, reconstructed in memory): it fires
+    on **37 of 37 papers**, on the token `N` and nothing else — the `N` of
+    「Nに聴解」. `IT` and `Web` (both `2022-12:問題2-3`) and `OB`
+    (`kanzenmoshi:cd1-15`) PASS as item-borne, which is the required negative
+    control: the check separates a real proper noun from the typo rather than
+    just banning Latin. After the 10 imported papers and `20260911_1` were
+    corrected it fires on exactly the **26 deferred papers**.
+    """
+    print("\n聴解スクリプト (Latin runs vs the bank's source text)")
+    bank_path = ROOT / "logs" / "choukai_bank.json"
+    if not bank_path.is_file():
+        check("logs/choukai_bank.json exists", False, "run `make choukai-bank`")
+        return
+    allowed = (bank_latin_runs(json.loads(bank_path.read_text(encoding="utf-8")))
+               | set(SCRIPT_TEMPLATE_LATIN))
+    scripts = sorted((ROOT / "tests").glob("*/聴解スクリプト.txt"))
+    if not scripts:
+        skip("every Latin run in 聴解スクリプト.txt is source-borne",
+             "no 聴解スクリプト.txt on disk")
+        return
+    hits = []
+    for path in scripts:
+        bad = sorted({m for m in SCRIPT_LATIN_RUN.findall(
+            path.read_text(encoding="utf-8")) if m not in allowed})
+        if bad:
+            hits.append(f"{path.parent.name} [{', '.join(bad)}]")
+    warn(f"every Latin run in 聴解スクリプト.txt is carried by a bank record "
+         f"({len(scripts)} paper(s), allow-set {sorted(allowed)})", not hits,
+         "; ".join(hits) + " — a Latin run no bank record carries did not come "
+         "from a recording; it is repo-authored template text, the one part of "
+         "the script that cannot be checked against the archive (the official "
+         "script PDFs print no preamble). Founding case: 「Nに聴解」, `N2` with "
+         "only the digit kana-ised, in 37 of 37 papers "
+         "(qa-report-20260911_1-round2 NEW-1). The repair is upstream — the "
+         "canonical string in `jlpt-exam-structure` §'Announcer / 例 mechanics' "
+         "and `choukai-audio` §'The opening announcement', then the imported "
+         "papers' line 1, then `make choukai-bank`, then `--replay --no-audio` "
+         "per drawing paper. WARN because 26 generated papers are a DEFERRED "
+         "re-render (qa/root-cause-dispositions-20260911-round2.md); this count "
+         "is that task's progress meter — do not weaken the predicate to clear it")
+
+
 # ------------------------------------------------- 詳細解説: length and languages
 # THE TERSENESS BANDS. Measured across all 20 papers on 2026-08-25, before the
 # rule existed: why_correct averaged 101 chars (newest three papers 139/148/173),
@@ -14746,23 +15451,38 @@ def check_artifact_freshness(d):
             # 例 answer pause) were wrong in the code for the whole life of the
             # eight papers, and fixing them leaves every MP3 stale with nothing
             # else to show it — the constants are not in the script bytes.
-            mk = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
             if data.get("source") == "composed":
                 # The speech is archive audio and the pauses come from the
                 # pacing TABLE via tools/compose_choukai.py; there are no
                 # edge-tts constants in the timeline to hash. script_sha above
                 # still applies and still ran.
+                #
+                # F6 (2026-09-11), `GATE-WRONG`. This branch used to `return`,
+                # and the pacing assertion is not the last thing in this
+                # function — the HTML-vs-Markdown comparison below is. So the
+                # exemption from ONE audio assertion silently took the whole
+                # freshness check with it, for EVERY generated paper, from the
+                # 2026-09-08 composition rework onward. Re-derived before the
+                # repair: of the 37 papers on disk, the 10 `imported-*` were the
+                # only ones that reached `built HTML matches the Markdown it
+                # stamps`; all 27 generated papers exited here. It was noticed
+                # because the line still fires for imports. The exemption is
+                # real and narrow — a composed timeline has no synthesis
+                # constants — and a composed paper's HTML is built from Markdown
+                # by `build_booklet.py`/`build_interactive.py` exactly like any
+                # other paper's, so `skip` the one assertion and fall through.
                 skip(f"{d.name}: 聴解.mp3 was built with today's pacing",
                      "composed from official clips (no synthesis constants)")
-                return
-            want_p, got_p = mk.pacing_sha(), data.get("pacing_sha")
-            p_name = f"{d.name}: 聴解.mp3 was built with today's pacing (pacing_sha {want_p})"
-            p_ok = (got_p == want_p)
-            p_detail = f"聴解_チャプター.json records {got_p!r} — run `make mp3 {d.name}`; the audio is timed by superseded constants (choukai-audio Part 3 §script_sha)"
-            if d.name in PACING_SHA_GRANDFATHERED:
-                warn(p_name, p_ok, p_detail + GRANDFATHER_NOTE)
             else:
-                check(p_name, p_ok, p_detail)
+                mk = load(".agents/choukai-audio/scripts/make_choukai_mp3.py")
+                want_p, got_p = mk.pacing_sha(), data.get("pacing_sha")
+                p_name = f"{d.name}: 聴解.mp3 was built with today's pacing (pacing_sha {want_p})"
+                p_ok = (got_p == want_p)
+                p_detail = f"聴解_チャプター.json records {got_p!r} — run `make mp3 {d.name}`; the audio is timed by superseded constants (choukai-audio Part 3 §script_sha)"
+                if d.name in PACING_SHA_GRANDFATHERED:
+                    warn(p_name, p_ok, p_detail + GRANDFATHER_NOTE)
+                else:
+                    check(p_name, p_ok, p_detail)
 
     # HTML: WARN on a missing stamp (no built HTML carries one yet — the rebuild
     # belongs to the paper-repair pass), FAIL when a stamp is present and stale.
@@ -15154,8 +15874,13 @@ def check_tests():
         check_dokkai_key_rank_spread(d.name, keys, opts, origin=origin)
         check_dokkai_overlap_direction(d.name, gt, origin=origin)
 
-        # Only the 読解 key table quotes running text; the 文字・語彙 and 文法
-        # tables put grammar glosses in 「」 by design, which is not a quote.
+        # Only the 読解 key table quotes RUNNING TEXT wholesale; the 文字・語彙
+        # and 文法 tables put grammar glosses in 「」 by design, which is not a
+        # quote. The one exception inside 文法 is 問題9 — it has a passage, and
+        # its four cells cite it exactly like a 読解 cell. That exception went
+        # unread until `20260911_1` 問題9-51 shipped a quote of a sentence the QA
+        # repair had deleted; `check_mondai9_explanation_quotes` below covers it,
+        # with the narrower source and row scope its docstring measures.
         gcut = bi.KEY_HEADING.search(gt)
         dokkai = re.search(r"^##\s*読解\s*$(.*)", gt[gcut.start():] if gcut else "",
                            re.M | re.S)
@@ -15168,6 +15893,9 @@ def check_tests():
             check_fabricated_distractors(gengo.name, gt[gcut.start():])
         bunpou = re.search(r"^##\s*文法\s*$(.*?)(?=^##\s|\Z)",
                            gt[gcut.start():] if gcut else "", re.M | re.S)
+        if bunpou:
+            check_mondai9_explanation_quotes(gengo.name, gengo_prose,
+                                             bunpou.group(1))
         if origin == "generated":
             idx = next((i for i, (n, _) in enumerate(p9_history)
                         if n == d.name), None)
@@ -15609,6 +16337,8 @@ def main():
         check_legacy_item_repeats(SAMPLE_ITEMS)
         check_topics_voice_axis()
         check_topics_themes()
+        check_headline_theme_token_coverage()
+        check_headline_theme_lexical_support()
         check_topics_closing_moves_vocabulary()
         check_theme_repeat_cross_test()
         check_slot_theme_repeat()
@@ -15618,6 +16348,8 @@ def main():
         check_choukai_option_set_reuse()
         check_choukai_source_mix()
         check_choukai_textbook_bands()
+        check_textbook_script_grammaticality()
+        check_choukai_script_latin()
         check_draw_provenance()
         check_pools_sha_replayability()
         check_invented_proper_nouns()

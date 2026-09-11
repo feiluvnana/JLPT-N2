@@ -233,9 +233,18 @@ choices spoken, 3s between them). Three rules follow:
 
 ## Announcer / 例 mechanics (script + booklet must both honor these)
 
-- Opens (spoken): 「Nに聴解。これから、Nにの聴解試験を始めます。問題用紙にメモを
-  とってもかまいません。」 — spell the level `Nに`, never `N2`, so TTS doesn't
-  read the digit as English "two" (`choukai-audio` owns TTS spelling). Printed titles may still say `N2`.
+- Opens (spoken): 「N2聴解。これから、N2の聴解試験を始めます。問題用紙にメモを
+  とってもかまいません。」 — write the level `N2`, exactly as the booklet prints
+  it. **This string has no archive authority**: the official script PDFs do not
+  print the opening announcement at all (all 31 `refs/JLPT_N2_NEW/*/script.md`
+  begin at 問題1), so this line and `choukai-audio`'s copy of it are the ONLY
+  place it is written down — which is how one typo reached 37 of 37 papers.
+  Until 2026-09-11 it read 「**Nに**聴解。これから、**Nに**の聴解試験を始めます。」:
+  a TTS workaround (Edge-TTS read the digit `2` as English "two") that
+  transliterated only the `2` and left a non-sentence no announcer would say.
+  **Edge-TTS is retired** (`choukai-audio` Part 0 — the audio is cut from real
+  recordings), so the workaround has no reason left and the string is the
+  spoken text as-is. Founding case: `qa-report-20260911_1-round2` NEW-1.
 - Each of 問題1-4: instruction → 「では、練習しましょう。」 → 例 item →
   「最もよいものは◯番です。解答用紙の問題◯の例のところを見てください。
   最もよいものは◯番ですから、答えはこのように書きます。では、始めます。」

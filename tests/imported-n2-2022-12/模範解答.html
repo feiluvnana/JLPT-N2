@@ -332,15 +332,7 @@ h1.title {
   border-bottom: 1px solid #e2e8f0;
 }
 
-/* --- 読解 passage: 原文 / 訳 toggle, per group (2026-09-08) ------------------
-   The VI pane ships BOTH the source passage and its translation, and a
-   two-button control on the box picks which one shows. Same mechanism as the
-   page-wide language switch, one level down: the state is a data attribute on
-   the group (`.passage-vi[data-ptext]`), CSS hides the other pane, and no JS
-   writes text — so the control cannot get out of step with what is rendered.
-   Per-box on purpose: a reader checks the Japanese of ONE passage without
-   losing the translation on the other twelve. A group with no translation
-   authored yet renders the old single-pane box and no control. */
+
 .passage-head {
   display: flex;
   align-items: center;
@@ -387,6 +379,7 @@ h1.title {
   color: var(--primary);
   box-shadow: 0 1px 2px rgba(15,23,42,0.12);
 }
+
 .passage-box table {
   width: 100%;
   border-collapse: collapse;
@@ -438,6 +431,7 @@ h1.title {
 .script-audio-jump:hover {
   background: #ddd6fe;
 }
+
 
 /* Explanation Box */
 .explanation-box {
@@ -508,32 +502,6 @@ h1.title {
   margin: 0.2rem 0.25rem 0.2rem 0;
 }
 
-/* Sticky Audio Player */
-#sticky-audio {
-  position: sticky;
-  top: 3.5rem;
-  z-index: 95;
-  background: #1e293b;
-  color: #fff;
-  padding: 0.55rem 0.9rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-}
-#sticky-audio audio {
-  flex: 1;
-  height: 30px;
-}
-.audio-status {
-  font-size: 0.8rem;
-  color: #94a3b8;
-  white-space: nowrap;
-}
-
-.header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 /* --- language switching -----------------------------------------------------
    ONE mechanism for the whole page: every bilingual string ships both panes and
    `body[data-lang]` hides the other. No JS text substitution, so a label cannot
@@ -565,6 +533,35 @@ body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
 }
 .lang-btn:hover { color: #fff; }
 .lang-btn.active { background: #fff; color: var(--primary); }
+
+
+/* Sticky Audio Player */
+#sticky-audio {
+  position: sticky;
+  top: 3.5rem;
+  z-index: 95;
+  background: #1e293b;
+  color: #fff;
+  padding: 0.55rem 0.9rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+#sticky-audio audio {
+  flex: 1;
+  height: 30px;
+}
+.audio-status {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* .lang-pane / .lang-switch / .lang-btn: see EXPLANATION_CSS above. */
 .trans-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -3493,7 +3490,7 @@ footer {
           <div class="q-body">
             <div class="script-box">
               <div class="passage-title"><span class="lang-pane" data-lang="ja">音声スクリプト</span><span class="lang-pane" data-lang="vi">Lời thoại audio</span></div>
-              男:ああ、いい映画だったね。<br>女:うん、音楽も映像も、評判通り印象的だった。<br>男:本当、音楽が流れるタイミングもよくて、途中で何度も泣きそうになったよ。それに、夕日が沈む海の映像、綺麗だったなあ。<br>女:うん、綺麗だったね。私、前に原作の小説を読んだけど、最後はあまり希望が持てない感じで終わるんだ。映画は主人公の明るい未来を予感させるような終わり方になっていて、そこが最高だったなあ。<br>男:なるほどね。それに主役の男の子、とても新人とは思えない技力だったよ。<br>女:うん、彼は、これから人気が出るだろうね。<br>女の人は、この映画の何が一番良かったと言っていますか。
+              男:ああ、いい映画だったね。<br>女:うん、音楽も映像も、評判通り印象的だった。<br>男:本当、音楽が流れるタイミングもよくて、途中で何度も泣きそうになったよ。それに、夕日が沈む海の映像、綺麗だったなあ。<br>女:うん、綺麗だったね。私、前に原作の小説を読んだけど、最後はあまり希望が持てない感じで終わるんだ。映画は主人公の明るい未来を予感させるような終わり方になっていて、そこが最高だったなあ。<br>男:なるほどね。それに主役の男の子、とても新人とは思えない演技力だったよ。<br>女:うん、彼は、これから人気が出るだろうね。<br>女の人は、この映画の何が一番良かったと言っていますか。
               
             </div>
             <div class="q-stem"><ruby>男<rt>おとこ</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>と<ruby>女<rt>おんな</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>が<ruby>今<rt>いま</rt></ruby><ruby>見<rt>み</rt></ruby>た<ruby>映画<rt>えいが</rt></ruby>について<ruby>話<rt>はな</rt></ruby>しています。<ruby>女<rt>おんな</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>はこの<ruby>映画<rt>えいが</rt></ruby>の<ruby>何<rt>なに</rt></ruby>が<ruby>一番<rt>いちばん</rt></ruby><ruby>良<rt>よ</rt></ruby>かったと<ruby>言<rt>い</rt></ruby>っていますか。</div>
@@ -3506,7 +3503,7 @@ footer {
                   <div class="exp-content">女「映画は主人公の明るい未来を予感させる終わり方…そこが最高だった」に一致。</div>
                   <div class="exp-section-title">【各選択肢の解説】</div>
                   <ul class="exp-options-list">
-                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> 音楽への言及は男の発言「音楽が流れるタイミングもよくて」による。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> 海の映像への言及も男の発言「夕日が沈む海の映像、綺麗だったなあ」による。</li><li><strong>3.</strong> <span class="opt-tag-correct">[正解]</span> 「明るい未来を予感させる終わり方が最高だった」に一致。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> 主役の演技力への言及は男の発言「新人とは思えない技力だった」による。</li>
+                    <li><strong>1.</strong> <span class="opt-tag-wrong">[不正解]</span> 音楽への言及は男の発言「音楽が流れるタイミングもよくて」による。</li><li><strong>2.</strong> <span class="opt-tag-wrong">[不正解]</span> 海の映像への言及も男の発言「夕日が沈む海の映像、綺麗だったなあ」による。</li><li><strong>3.</strong> <span class="opt-tag-correct">[正解]</span> 「明るい未来を予感させる終わり方が最高だった」に一致。</li><li><strong>4.</strong> <span class="opt-tag-wrong">[不正解]</span> 主役の演技力への言及は男の発言「新人とは思えない演技力だった」による。</li>
                   </ul>
                   <div class="exp-section-title">【重要表現・リスニングポイント】</div><div><span class="vocab-pill">質問の主語（女の人）の発言だけを聞き取る。</span><span class="vocab-pill">男女それぞれの発言を混同しない。</span></div>
                 </div></span><span class="lang-pane" data-lang="vi"><div class="explanation-box">
@@ -3821,7 +3818,7 @@ footer {
           <div class="q-body">
             <div class="script-box">
               <div class="passage-title"><span class="lang-pane" data-lang="ja">音声スクリプト</span><span class="lang-pane" data-lang="vi">Lời thoại audio</span></div>
-              テレビでレポーターが話しています。<br>男:車に商品を積み込んで、地域を回る移動スーパー、ここ、北村屋の移動スーパーは自治体の補助金を得て、週に二回、食用品や日用品などを、高齢者の自宅を一軒一軒回って、販売しています。そして、お客様の表情や話し方から、高齢者の体調に変化がないか、確認しているんだそうです。様子がおかしいなど、気になることがあったときは、自治体に連絡することになっています。これにより、自治体が高齢者一人一人の状況を知り、健康を守ることができるそうです。<br>レポーターは、北村屋の移動スーパーの何について話していますか。
+              テレビでレポーターが話しています。<br>男:車に商品を積み込んで、地域を回る移動スーパー、ここ、北村屋の移動スーパーは自治体の補助金を得て、週に二回、食料品や日用品などを、高齢者の自宅を一軒一軒回って、販売しています。そして、お客様の表情や話し方から、高齢者の体調に変化がないか、確認しているんだそうです。様子がおかしいなど、気になることがあったときは、自治体に連絡することになっています。これにより、自治体が高齢者一人一人の状況を知り、健康を守ることができるそうです。<br>レポーターは、北村屋の移動スーパーの何について話していますか。
               
             </div>
             <div class="q-stem">テレビでレポーターが<ruby>話<rt>はな</rt></ruby>しています。レポーターは、<ruby>北村屋<rt>きたむらや</rt></ruby>の<ruby>移動<rt>いどう</rt></ruby>スーパーの<ruby>何<rt>なに</rt></ruby>について<ruby>話<rt>はな</rt></ruby>していますか。</div>
@@ -4520,33 +4517,46 @@ footer {
 const LANG_STRINGS = {"ja": {"doc_title": "テスト imported-n2-2022-12（模範解答・詳細解説）", "search_placeholder": "問題番号・キーワード検索...", "audio_ready": "準備完了", "audio_playing": "再生中: "}, "vi": {"doc_title": "Đề imported-n2-2022-12（Đáp án mẫu・Giải thích chi tiết）", "search_placeholder": "Tìm theo số câu hoặc từ khoá...", "audio_ready": "Sẵn sàng", "audio_playing": "Đang phát: "}};
 const LANGS = ["ja", "vi"];
 
-function setLang(lang, persist) {
-  if (!LANGS.includes(lang)) lang = LANGS[0];
+
+/* Flip the page to `lang`: `body[data-lang]` is what the CSS reads, so no JS
+   text substitution happens here and a label cannot go missing. Returns the
+   language actually applied (langs[0] when the argument is not on offer). */
+function applyLang(lang, langs, persist){
+  if (!langs.includes(lang)) lang = langs[0];
   document.body.dataset.lang = lang;
   document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist){ try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {} }
+  return lang;
+}
+function savedLang(langs){
+  let s = null;
+  try { s = localStorage.getItem('kaisetsuLang'); } catch (e) {}
+  return langs.includes(s) ? s : langs[0];
+}
+
+
+function setLang(lang, persist) {
+  lang = applyLang(lang, LANGS, persist);
   const s = LANG_STRINGS[lang] || {};
   document.title = s.doc_title || document.title;
   const search = document.getElementById('searchInput');
   if (search) search.placeholder = s.search_placeholder || '';
   const status = document.getElementById('audioStatus');
   if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === lang);
-  });
-  if (persist) {
-    try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
-  }
 }
+
 
 function setPassageText(btn, mode) {
   const box = btn.closest('.passage-vi');
   if (box) box.dataset.ptext = mode;
 }
 
+
 (function initLang() {
-  let saved = null;
-  try { saved = localStorage.getItem('kaisetsuLang'); } catch (e) {}
-  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+  setLang(savedLang(LANGS), false);
 })();
 
 function filterSection(sec, btn) {

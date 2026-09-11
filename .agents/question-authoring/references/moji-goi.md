@@ -85,6 +85,16 @@ Check every 問題1–6 key against Shinkanzen N2-Goi/N2-Kanji and Soumatome N2
 judgment call, and a re-drawn key's band goes into the QA report by name with the
 book and page that confirmed it.
 
+**`refs/`'s `*_reference.md` and `vocab_reference.md` are OCR, not an index:
+when you cite a word's presence as band evidence, open the hit lines, confirm
+each is the headword and not a fragment, and quote one in the report — a band
+claim resting on a grep total with no line read is not a measurement.** Absence
+is not evidence of absence, and by exactly the same token presence is not
+evidence of presence. Founding case: `qa-report-20260911_1-round2` NEW-2 —
+問題4-19's 恩 was attested "Soumatome ×2, Hajimete ×8, official ×3" and every
+hit turned out to be OCR noise (感恩的／意恩／志恩／目恩品／買い恩), with 恩
+appearing 0 times in all 31 official booklets.
+
 ---
 
 # Part 1 — 問題1 (漢字読み)

@@ -375,6 +375,19 @@ key alone might survive a lookup. **This is a judgment call, not a lookup
 verdict** — `openjlpt` mislabeled ordinary N2 vocabulary (把握, 審査, 依頼…)
 as "N1"/"N3", so a single source's label was never sufficient.
 
+**`refs/`'s `*_reference.md` and `vocab_reference.md` are OCR, not an index:
+when you cite a word's presence as band evidence, open the hit lines, confirm
+each is the headword and not a fragment, and quote one in the report — a band
+claim resting on a grep total with no line read is not a measurement.** Absence
+is not evidence of absence, and by exactly the same token presence is not
+evidence of presence. Founding case: `qa-report-20260911_1-round2` NEW-2 —
+round 1 cleared 問題4-19's option-set WARN by attesting 恩 as "Soumatome ×2,
+Hajimete ×8, official ×3", and re-measuring found **every one of those hits was
+OCR noise** (感恩的／意恩／志恩／目恩品／買い恩), with 恩 appearing 0 times in all
+31 official booklets. The item was sound on judgement and did not move; the
+evidence was the defect. Third instance of the class (REPORT-GOI §F10, round
+1's own §S1, this).
+
 ### 3. Mechanical reads
 
 - **文字・語彙 stems — two counts, thirty seconds, and no gate can see them on
@@ -593,7 +606,7 @@ as "N1"/"N3", so a single source's label was never sufficient.
 > items and these bands were measured against the very corpus they came from.
 > There is no セクション構成表 and one must not be written.
 >
-> **What replaces it — four checks, all cheap:**
+> **What replaces it — six checks, all cheap:**
 > 1. `logs/choukai_draws.json`: no clip id repeats the PREVIOUS paper in the
 >    same slot, **and no slot-free (textbook) clip repeats it in ANY slot** —
 >    those are banked `slot: 0` and land wherever the 大問's textbook slots
@@ -633,7 +646,77 @@ as "N1"/"N3", so a single source's label was never sufficient.
 >    false automatic fail, which is the same defect class as the stale
 >    読解-vs-聴解 wording §5 already records.)
 >
-> **If the listening half was re-composed since the last review, checks 1–5
+> 6. **Read EVERY clip this paper drew — all 29, official half included — as
+>    Japanese.** The scope was "hand-declared clips only" until 2026-09-11, on
+>    the stated premise that "the official half is machine-extracted from a
+>    sitting" and therefore safe. **That premise is false and the row is
+>    corrected here: the official half is OCR off a SCANNED script PDF, not a
+>    transcription of the audio.** It is not self-verifying, nothing downstream
+>    reads it, and 425 bank records ride on it. Two defect classes, and check 6
+>    covers both:
+>
+>    - **mis-read ink** — the OCR lost a character the page prints correctly.
+>      Founding case: `2022-12:問題2-1` banked 「とても新人とは思えない技力だったよ」.
+>      「技力」 is not a word, the page prints 演技力, and the item's own printed
+>      option 4 reads 「主役の男の子の演技力」 — the booklet contradicted the script
+>      inside one item and no gate compares them.
+>    - **faithfully-transcribed BAD ink** — the OCR is right and the page itself
+>      is wrong. Founding case: `2022-12:問題3-3` banked 「週に二回、食用品や日用品
+>      などを」. This was filed as an OCR loss and it is not: the repair context
+>      opened the source page at **400 dpi** and the ink prints 食用品. It is a
+>      typo in the reprint. Corrected anyway under `external-test-import`
+>      §Step 2.3 (blatant mis-set kanji) and reversible; the key moves either way.
+>      **Do not resolve a suspected script defect by re-running the extractor** —
+>      it will faithfully reproduce the page. Open the page.
+>
+>    Neither is visible to any machine: the bank builder guards duration and char
+>    rate, `check_choukai_*` compares the script to the composed MP3's
+>    segmentation, and none of them reads the Japanese. The script is not an
+>    internal artifact either — `練習.html` and `模範解答.html` PRINT it, so a bad
+>    line ships to the candidate.
+>
+>    The hand-declared half is still the denser half and still gets the same
+>    read: `kanzenmoshi:cd1-27` was banked as 「だから持って言ったじゃない。」 for the
+>    recording's 「だから持つって言ったじゃない。」 — one character, declared once,
+>    shipped into two papers with every gate green (qa-report-20260910_1-round2
+>    F1). `check_textbook_script_grammaticality()` WARNs on that one signature
+>    and only that one. `logs/choukai_draws.json` names each drawn clip's source,
+>    and a declaration's `source_page` names the page it was typed from.
+>
+>    **The cheapest lever, and it is specific to 問題1/2:** those items print
+>    their options in the booklet, so the options are a second witness to the same
+>    audio. Read each printed option against that item's script lines and flag a
+>    content word that appears in the option and never in the script — that is
+>    exactly how 「演技力」 surfaced. It does not generalise: 問題3 prints nothing,
+>    and 問題4/5 options are read aloud rather than printed.
+>
+>    **The section preambles and the opening announcement are drawn clips too,
+>    and they are the ONLY script text with no archive to check against.** Read
+>    them with the items. Everything else in the file was transcribed from a
+>    page or a recording, so a second witness exists; the announcer's template —
+>    the opening 「N2聴解。これから、N2の聴解試験を始めます。…」 and each 問題N's
+>    instruction — is **not printed in the official script PDFs at all** (all 31
+>    `refs/JLPT_N2_NEW/*/script.md` begin at 問題1). It is written down in
+>    exactly two places, `jlpt-exam-structure` §"Announcer / 例 mechanics" and
+>    `choukai-audio` §"The opening announcement", and a repo-authored typo in it
+>    is corroborated by nothing and survives indefinitely. **Founding case:**
+>    every paper opened 「**Nに**聴解。これから、**Nに**の聴解試験を始めます。」
+>    — `N2` with only the digit transliterated into kana, leaving a non-sentence
+>    no announcer would say — in **37 of 37 papers**, through every QA round the
+>    repo has run (`qa-report-20260911_1-round2` NEW-1, 2026-09-11).
+>    `check_choukai_script_latin()` now WARNs on a Latin run in a paper's script
+>    that no bank ITEM record carries, which is the machine half of this row;
+>    it cannot see a typo written in kana, so reading the preamble is still
+>    yours. Note that the preamble does NOT reach the candidate — it appears in
+>    no `練習.html`, `聴解.html` or `詳細解説.json` — so a finding here is
+>    non-blocking unless it does.
+>
+>    **A repair here is upstream, in `tests/imported-<sitting>/聴解スクリプト.txt`,
+>    then `make choukai-bank`, then re-compose every paper holding that clip** —
+>    never a hand edit of the drawing paper's `聴解.md` or 聴解スクリプト.txt, which
+>    would put the bank and the paper permanently out of sync.
+>
+> **If the listening half was re-composed since the last review, checks 1–6
 > must be re-run in full** — a previous round's verification is evidence about
 > clips that may no longer be drawn.
 >

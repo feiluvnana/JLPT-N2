@@ -222,6 +222,80 @@ template appears three times. Every not-A-but-B family member counts as one
 shape: 「AではなくB」「AというよりB」「AよりもB」「AだけではなくB」
 「Aわけではない」 are the same move in five surfaces of grammar.
 
+### The rhetorical-MOVE allocation table — filled in before any prose exists
+
+**Why this exists.** The whole-passage MOVE cap is written in
+`jlpt-test-generation` §"One topic, one surface" and has now gone unenforced on
+four papers running — `20260904_3` 8, `20260907_1` 7, `20260910_1` 7 and
+`20260911_1` **10 of 10** essay surfaces on one skeleton (qa-report-20260911_1
+F3, `RULE-UNENFORCEABLE`, unfiled all four times). The rule is not wrong and it
+is not unread. It fails because it states a CAP and nothing else: a cap can only
+be checked once thirteen passages exist, and §6.5's priority (2) says a rule
+verifiable only after the fact is the rule that gets skipped. The closing column
+above solved exactly this problem in exactly this way — decide the column first,
+write the prose second. This is that procedure for the MOVE.
+
+**Do it as the FIRST 読解 step**, in the same sitting and the same table as the
+thirteen-row closing column: add a **MOVE** column beside
+`surface | theme | shape label | final-sentence template`, fill all thirteen
+rows, and reject the plan — before a word of prose exists — if any row below is
+over its cap.
+
+| MOVE | what the passage does | cap |
+|---|---|---|
+| **〈想定→実は〉** | an attributed assumption or 通説 X is stated, denied (ところが／しかし／外れた／ではなかった), and 実は Y replaces it | **2** — 3 is the ceiling, never the target |
+| 機構の説明 | how a thing works, or how two things differ; no assumption is denied anywhere in the passage | ≤3 |
+| 数えたことの報告 | someone counted something and reports what the count showed; any surprise is the reader's, not the narrator's | ≤3 |
+| 一人称の前後比較 | the narrator describes a before and an after of their own PRACTICE; no third party's belief is quoted and nothing is corrected | ≤3 |
+| 反論への応答 | a named objection is taken seriously and answered on its own terms; it is not set up to be knocked down | ≤3 |
+| （実用文） | 問題10's email/notice/案内 members and 問題14 — no authorial voice, no move | — |
+
+**The cap is 2; the band it sits inside is measured, not chosen.** Official
+sittings re-measured by hand against this exact three-beat rubric (attributed
+assumption + explicit denial + 実は Y), essay surfaces only, 問題12 A+B as one
+surface: **N2 7/2025 3 of 9, N2 12/2025 4 of 9, N2 12/2024 4 of 9** —
+conservative; counting BORDERLINE surfaces as well gives 6, 6 and 8 of 9.
+`qa-report-20260911_1` §"F3 の根拠 — 公式を同一ルーブリックで実測" owns those
+three numbers and the sittings they came from; do not restate them from here
+without it. Official never reaches 5 of 9 and never falls to 0, so **the
+skeleton is a legitimate N2 move and the monoculture is the defect.** Plan 2,
+accept 3, treat 4 as a rewrite even though one sitting reached it — you are not
+measuring a paper, you are allocating one, and the allocator has no sampling
+error to spend.
+
+This is a DIFFERENT measurement from the `0–3 of 13` the gate prints.
+`check_dokkai_belief_denial_monotony()` counts marker-bearing surfaces over all
+13 (n=10 imports); the band above is a hand read of the move itself over the 9
+essay surfaces. Neither number is the other's, and neither contradicts the other
+— `20260911_1` printed **1** on the gate and ran the move in **10 of 10**.
+
+**The four alternatives are not synonyms for the same passage.** Each gives the
+reader a different thing to do, and whether a surface has actually left
+〈想定→実は〉 has a mechanical test: **delete the denial sentence.** If the
+passage still says what it came to say, it was never on the skeleton; if it
+collapses, you re-worded the skeleton rather than leaving it. The four re-skins,
+in the order they actually happen:
+
+- 機構の説明 that opens 「〜と思われがちだが」 is 〈想定→実は〉 with a mechanism
+  attached.
+- 数えたことの報告 whose count is introduced as contradicting an expectation is
+  〈想定→実は〉 with a number attached.
+- 一人称の前後比較 whose "before" is the narrator's mistaken BELIEF rather than
+  the narrator's PRACTICE is 〈想定→実は〉 in the first person. This is the most
+  common re-skin by a distance: nine of `20260911_1`'s ten essay surfaces carried
+  an explicit attribution marker, most of them first-person
+  (「つもりだった」「長く思っていた。ところが」「思っておりました。ところが」).
+- 反論への応答 whose objection exists only to be rejected is a strawman — i.e.
+  〈想定→実は〉 with the assumption attributed to an opponent.
+
+**A label spread does not license a skeleton pile-up.** `20260911_1` spread its
+closings across 説明・主張・意外な観察・条件提示・反論応答, passed the ≤2-per-shape
+cap, passed the gate's marker count at 1, and still ran one skeleton in every
+essay surface it had. The closing column cannot see this axis — a closing is a
+sentence and this is a whole passage — and the gate sees the marker-bearing half
+by its own docstring's admission. This table is what stands in for both, and no
+script fills it in for you.
+
 If a closing explicitly REJECTS a stated single-factor view
 (「〜という見方には無理がある」, 「〜だけでは…」) before its conclusion,
 classify it as 主張 regardless of whether it uses the literal marker

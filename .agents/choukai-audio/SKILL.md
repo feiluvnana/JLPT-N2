@@ -289,17 +289,37 @@ owns the exact announcer lines): opening → per-section instruction →
 「では、練習しましょう。」→ 例 → 「最もよいものは◯番です。…では、始めます。」→
 items → … → 「これで、聴解試験を終わります。」 (問題5: 「この問題には練習はありません。」)
 
-### TTS spelling: level is `Nに`, never `N2`
+### The opening announcement: the level is `N2` (corrected 2026-09-11)
 
-Edge-TTS reads digit `2` as English "two", so `聴解スクリプト.txt` spells the
-level **`Nに`**:
+`聴解スクリプト.txt` opens with exactly this line — one of only two places in
+the repo where it is written down (`jlpt-exam-structure` §"Announcer / 例
+mechanics" is the other, and owns the format fact):
 
 ```
-Nに聴解。これから、Nにの聴解試験を始めます。問題用紙にメモをとってもかまいません。
+N2聴解。これから、N2の聴解試験を始めます。問題用紙にメモをとってもかまいません。
 ```
 
-(Booklet HTML may still say `N2` — that is print, not TTS.)
-`validate_script()`'s `OPENING` substring is `これから、Nにの聴解試験を始めます`.
+**Why this needed a correction, and why nothing caught it.** Until 2026-09-11
+the string read 「**Nに**聴解。これから、**Nに**の聴解試験を始めます。」 — a
+TTS workaround from the edge-tts era, where the digit `2` was read aloud as
+English "two". The workaround transliterated only the `2` and left the `N`, so
+the line was a non-sentence; **Edge-TTS is retired** (Part 0) and the audio is
+now cut from real recordings, so the workaround had no reason left either.
+The official script PDFs **do not print this preamble at all** — all 31
+`refs/JLPT_N2_NEW/*/script.md` begin at 問題1 — so unlike every other line in
+the file it cannot be checked against the archive, and the typo propagated to
+**37 of 37 papers** on disk (`qa-report-20260911_1-round2` NEW-1) and into every
+`opening` field of `logs/choukai_bank.json`.
+
+**The bank, not this file, is what a composed paper reads.** The preamble text
+is harvested from `tests/imported-*/聴解スクリプト.txt` by
+`build_choukai_bank.py`, so correcting this doc alone corrects nothing: the
+repair is the imported papers' line 1 → `make choukai-bank` → re-render each
+drawing paper with `--replay --no-audio`.
+`check_choukai_script_latin()` WARNs on a Latin run in a paper's script that no
+bank record carries, which is the detector for exactly this class.
+(Booklet HTML says `N2` too — print and speech now agree.)
+`validate_script()`'s `OPENING` substring is `これから、N2の聴解試験を始めます`.
 
 Cross-check tone, turn length, and distractor flow against the official script
 PDFs in `refs/JLPT_N2_NEW/` (`AGENTS.md` §3): 3–5 exchanges for 問題1/2,
@@ -619,7 +639,7 @@ merely *prints* the total. Missing pieces are otherwise SILENT.
 
 | Element | Rule |
 |---|---|
-| Opening | 「これから、Nにの聴解試験を始めます…」 must be present (never `N2`) |
+| Opening | 「これから、N2の聴解試験を始めます…」 must be present (corrected 2026-09-11 — see §"The opening announcement") |
 | 問題1〜5 headers | `問題N。` as its own block, all five. **(eye)** for own-block-ness/order — code only tests the substring occurs |
 | 問題1〜4 practice | instruction ending 「では、練習しましょう。」 → ONE `例。` → ONE full confirmation → items |
 | 問題5 practice | NONE. Instruction must contain 「この問題には練習はありません。」; no `例。` block |

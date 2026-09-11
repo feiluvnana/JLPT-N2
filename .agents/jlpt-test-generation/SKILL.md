@@ -298,13 +298,43 @@ the DRAWN topic string. Then read it:
   differently the two ends are worded (前提の更新・部分最適の反転・予想外の受益者・
   常識の反転 are all this skeleton). **A label spread does not license a skeleton
   pile-up** — a fine label granularity makes any monoculture read as "one over
-  the cap", which is how it went unfiled three papers running (`20260904_3` 8,
-  `20260907_1` 7, `20260910_1` 7 on the passage proxy, against an official band
-  of 0–3). **問題12(A)+(B) count as ONE surface for this cap** — the A/B pair
+  the cap", which is how it went unfiled **four** papers running (`20260904_3` 8,
+  `20260907_1` 7, `20260910_1` 7, `20260911_1` **10 of 10** essay surfaces).
+  **問題12(A)+(B) count as ONE surface for this cap** — the A/B pair
   shares its move by format, and counting them as two consumes the whole quota
   on one 大問. `check_dokkai_belief_denial_monotony()` measures the marker-bearing
   half of this and WARNs above 3; the unmarked reframes it cannot see are why
-  the column is still read by hand (qa-report-20260910_1 F2-a/F2-b).
+  the column is still read by hand (qa-report-20260910_1 F2-a/F2-b), and
+  `20260911_1` is what that gap costs — the gate printed **1** over a paper
+  running the skeleton in every essay surface it had.
+
+  **The official band, and which number is whose.** Hand-measured against the
+  full three-beat rubric (attributed assumption + explicit denial + 実は Y),
+  essay surfaces only, 問題12 A+B as one: **3 of 9 on N2 7/2025, 4 of 9 on N2
+  12/2025, 4 of 9 on N2 12/2024** — conservative; with BORDERLINE surfaces
+  counted, 6, 6 and 8 of 9. `qa-report-20260911_1` §"F3 の根拠 — 公式を同一
+  ルーブリックで実測" owns those three numbers and names those three sittings;
+  cite it, do not restate them bare. This is NOT the `0–3 of 13` the gate
+  prints: that is `check_dokkai_belief_denial_monotony()`'s marker-bearing count
+  over all 13 surfaces (n=10 imports), a different instrument on a different
+  denominator. The generated 8/7/7/10 above are hand reads and belong beside the
+  9-surface band, not beside the gate's.
+
+  **Read the MOVE column and the TEMPLATE column SEPARATELY, twice — once down
+  each — and re-read BOTH after every repair.** They are different axes: a
+  surface can sit on one without sitting on the other, so one pass down a merged
+  table misses whichever axis the reader was not holding in mind. The expensive
+  case is **repair collateral** — a surface re-angled off one skeleton lands on
+  the other, the pair changes clothes and survives, and the second read is the
+  only thing that catches it. `qa-report-20260904_1` round 2 is the precedent;
+  `20260911_1` is the live case: five of its surfaces — 問題11(1), 問題11(2),
+  問題11(4), 問題12(A), 問題12(B) — shared 〈介入 → 数字が動いた〉 *as well as*
+  〈想定→実は〉, so the eight re-angles the MOVE cap demands push surfaces INTO a
+  template already at its own cap unless both columns are re-read afterwards.
+  The table both columns come from is
+  `question-authoring/references/dokkai.md` §"The rhetorical-MOVE allocation
+  table" — filled in before any prose exists, and re-read as a column after each
+  repair, never as a judgement.
 - **問題12 (A/B) gets its own cross-test column** — one topic per paper.
 - **A duplicated topic in the spec is a sampler defect**: `check_spec_blend`
   fails a repeated draw. `--reroll` the category; never hand-invent a substitute.
