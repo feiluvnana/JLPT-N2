@@ -332,15 +332,7 @@ h1.title {
   border-bottom: 1px solid #e2e8f0;
 }
 
-/* --- 読解 passage: 原文 / 訳 toggle, per group (2026-09-08) ------------------
-   The VI pane ships BOTH the source passage and its translation, and a
-   two-button control on the box picks which one shows. Same mechanism as the
-   page-wide language switch, one level down: the state is a data attribute on
-   the group (`.passage-vi[data-ptext]`), CSS hides the other pane, and no JS
-   writes text — so the control cannot get out of step with what is rendered.
-   Per-box on purpose: a reader checks the Japanese of ONE passage without
-   losing the translation on the other twelve. A group with no translation
-   authored yet renders the old single-pane box and no control. */
+
 .passage-head {
   display: flex;
   align-items: center;
@@ -387,6 +379,7 @@ h1.title {
   color: var(--primary);
   box-shadow: 0 1px 2px rgba(15,23,42,0.12);
 }
+
 .passage-box table {
   width: 100%;
   border-collapse: collapse;
@@ -438,6 +431,7 @@ h1.title {
 .script-audio-jump:hover {
   background: #ddd6fe;
 }
+
 
 /* Explanation Box */
 .explanation-box {
@@ -508,32 +502,6 @@ h1.title {
   margin: 0.2rem 0.25rem 0.2rem 0;
 }
 
-/* Sticky Audio Player */
-#sticky-audio {
-  position: sticky;
-  top: 3.5rem;
-  z-index: 95;
-  background: #1e293b;
-  color: #fff;
-  padding: 0.55rem 0.9rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-}
-#sticky-audio audio {
-  flex: 1;
-  height: 30px;
-}
-.audio-status {
-  font-size: 0.8rem;
-  color: #94a3b8;
-  white-space: nowrap;
-}
-
-.header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 /* --- language switching -----------------------------------------------------
    ONE mechanism for the whole page: every bilingual string ships both panes and
    `body[data-lang]` hides the other. No JS text substitution, so a label cannot
@@ -565,6 +533,35 @@ body[data-lang="vi"] .lang-pane[data-lang="ja"] { display: none !important; }
 }
 .lang-btn:hover { color: #fff; }
 .lang-btn.active { background: #fff; color: var(--primary); }
+
+
+/* Sticky Audio Player */
+#sticky-audio {
+  position: sticky;
+  top: 3.5rem;
+  z-index: 95;
+  background: #1e293b;
+  color: #fff;
+  padding: 0.55rem 0.9rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+#sticky-audio audio {
+  flex: 1;
+  height: 30px;
+}
+.audio-status {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.header-right { display: inline-flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* .lang-pane / .lang-switch / .lang-btn: see EXPLANATION_CSS above. */
 .trans-title {
   font-size: 0.8rem;
   font-weight: 700;
@@ -3698,7 +3695,7 @@ footer {
           <div class="q-body">
             <div class="script-box">
               <div class="passage-title"><span class="lang-pane" data-lang="ja">音声スクリプト</span><span class="lang-pane" data-lang="vi">Lời thoại audio</span></div>
-              講師:年々、人々の防災意識は高まっていると思います。非常食や簡易トイレなど、防災グッズにも関心を持つ方が増えているようです。それはとてもいいことですが、防災グッズを買い揃えることが防災だと考える人が多く、普段の暮らしの中で実際に防災グッズを使ってみようと考える人は意外に少ないですね。でも、防災で一番大切なことは、実はこれで、防災グッズを定期的に見直すことは皆さん頭にあるんですが、災害の際にちゃんと使うことができて、初めて意味があることを忘れずにいてもらいたいです。<br>講師は防災グッズに関して一番大切なものは何だと言っていますか。
+              講師:年々、人々の防災意識は高まっていると思います。非常食や簡易トイレなど、防災グッズにも関心を持つ方が増えているようです。それはとてもいいことですが、防災グッズを買い揃えることが防災だと考える人が多く、普段の暮らしの中で実際に防災グッズを使ってみようと考える人は意外に少ないですね。でも、防災で一番大切なことは、実はこれで、防災グッズを定期的に見直すことは皆さん頭にあるんですが、災害の際にちゃんと使うことができて、初めて意味があることを忘れずにいてもらいたいです。<br>講師は防災グッズに関して一番大切なことは何だと言っていますか。
               
             </div>
             <div class="q-stem">防災教室で講師が話しています。講師は防災グッズに関して一番大切なことは何だと言っていますか。</div>
@@ -4520,33 +4517,46 @@ footer {
 const LANG_STRINGS = {"ja": {"doc_title": "テスト 20260817_1（模範解答・詳細解説）", "search_placeholder": "問題番号・キーワード検索...", "audio_ready": "準備完了", "audio_playing": "再生中: "}, "vi": {"doc_title": "Đề 20260817_1（Đáp án mẫu・Giải thích chi tiết）", "search_placeholder": "Tìm theo số câu hoặc từ khoá...", "audio_ready": "Sẵn sàng", "audio_playing": "Đang phát: "}};
 const LANGS = ["ja", "vi"];
 
-function setLang(lang, persist) {
-  if (!LANGS.includes(lang)) lang = LANGS[0];
+
+/* Flip the page to `lang`: `body[data-lang]` is what the CSS reads, so no JS
+   text substitution happens here and a label cannot go missing. Returns the
+   language actually applied (langs[0] when the argument is not on offer). */
+function applyLang(lang, langs, persist){
+  if (!langs.includes(lang)) lang = langs[0];
   document.body.dataset.lang = lang;
   document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  if (persist){ try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {} }
+  return lang;
+}
+function savedLang(langs){
+  let s = null;
+  try { s = localStorage.getItem('kaisetsuLang'); } catch (e) {}
+  return langs.includes(s) ? s : langs[0];
+}
+
+
+function setLang(lang, persist) {
+  lang = applyLang(lang, LANGS, persist);
   const s = LANG_STRINGS[lang] || {};
   document.title = s.doc_title || document.title;
   const search = document.getElementById('searchInput');
   if (search) search.placeholder = s.search_placeholder || '';
   const status = document.getElementById('audioStatus');
   if (status && !status.dataset.playing) status.innerText = s.audio_ready || '';
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === lang);
-  });
-  if (persist) {
-    try { localStorage.setItem('kaisetsuLang', lang); } catch (e) {}
-  }
 }
+
 
 function setPassageText(btn, mode) {
   const box = btn.closest('.passage-vi');
   if (box) box.dataset.ptext = mode;
 }
 
+
 (function initLang() {
-  let saved = null;
-  try { saved = localStorage.getItem('kaisetsuLang'); } catch (e) {}
-  setLang(LANGS.includes(saved) ? saved : LANGS[0], false);
+  setLang(savedLang(LANGS), false);
 })();
 
 function filterSection(sec, btn) {

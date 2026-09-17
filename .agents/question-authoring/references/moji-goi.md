@@ -134,7 +134,13 @@ A 訓読み target is one whose okurigana is printed, or a single-kanji 和語 w
 re-derive): the archive's underline does not survive the text-layer extract, so
 `goi_profile.py` reports `target=None` for every official 問題1 item. The band
 rests on **five sittings, hand-classified 2026-08-19** (7/2023–12/2025: 2/2/1/2/2
-of 5) plus the calibration table below (12 訓読み of 35 current-era items, 34 %).
+of 5) plus the calibration table below. **That 2/2/1/2/2 hand classification is
+refuted** (2026-09-17): `sample_items.is_kun_target()` — the classifier the
+sampler and `check_mondai1_reading_type_mix` share — puts **14 of the 35
+current-era targets on the 訓 side (40 %), exactly 2 in every one of the seven
+sittings**, not 12 and never 1. See the calibration table's note: the live
+sampling constant still encodes the refuted figure, and correcting it is a
+pipeline decision, not a doc edit.
 Shin Kanzen's two typeset 語彙 模擬試験 are what would settle it.
 
 **Both bounds, one reason.** Above 2, the 2×2 on-reading grid (清濁/長短) official
@@ -197,6 +203,41 @@ Every distractor shares the target's word form/conjugation class (Item integrity
   辛い→あまい/にがい/しぶい; 収まった→さだまった/しずまった/やすまった — often sharing no
   kanji with the target).
 
+**"Same semantic field" is not a judgement, it is a label you WRITE.** As a
+judgement nobody ever verified it — so the rule is now a procedure. Lay the four
+options out and write the ONE semantic label they share — 味 / 方角 / 落ち着く /
+争う / 体の部位 — onto the item's source-and-branch line as `field=〈ラベル〉`.
+**If you cannot write the label, the set fails.** A label that needs a clause to
+hold it together (「物を動かす、ただし喜ばすは感情だが…」) is a failed label, not a
+wide one; one option outside the label fails the whole set.
+
+Founding case, `20260914_1` 問題1-5 and 問題1-2 (`qa-report-20260914_1.md` F2/F3,
+root-caused there as `RULE-UNENFORCEABLE`): 慌てる→あてる/そだてる/へだてる shipped
+past a green gate with branch (a) empty (neither 慌's own readings nor a
+look-alike yields a ～てる verb) and no writable label over 当てる/育てる/隔てる —
+structurally the ことわる example below. 問題1-2 failed one notch softer:
+転ばす/飛ばす sit with 伸ばす under 「物を動かす」, 喜ばす is 感情.
+
+The label is writable on every official set. Over the seven current-era sittings
+(12/2022–12/2025) **13 of the 14 訓読み items are label-writable**. The
+exception is 背骨, whose distractors are 清濁 derivations rather than a field, so
+it is authored as a 音読み-shaped set — which is why this rule's denominator (13)
+is one less than the reading-type count (14). They are two different
+measurements; do not reconcile them by changing either number — 腕=体の部位、
+辛い=味、収まった=落ち着く、争う=衝突、鮮やか=〜やか の印象、幼い=人の性質、
+絡まって=引っかかる、迷った=判断の誤り、乱れて=秩序の崩れ、勇ましい=人柄、
+外れて=はずれ・崩れ、柱=家の部位、険しい=強度 (hand-counted from the seven
+`refs/JLPT_N2_NEW/*/booklet.md` 問題1 blocks, 2026-09-17; the extract loses the
+underline, so no script can do this — see `check_mondai1_reading_type_mix`).
+
+**This stays a HUMAN judgement and no gate will ever check it.** A semantic field
+is not string-decidable: `make check` cannot decide that あてる is outside 慌てる's
+field. The written `field=` label IS the check, the author's — exactly the
+standing of the source-and-branch line below, which the gate has never WARNed on
+either. A `field=` recorded on a 音読み item is a mistake, not diligence: only
+訓読み items carry one (round 2 of the same report — `20260914_1`'s re-drawn
+問題1-5, 投手, has branch (a) and no field).
+
 Both branches are legal; forbidden is a grab-bag satisfying neither (いたわる's
 distractors must not be ことわる/さわる/かわる). When branch (a) is empty for a drawn
 target, the fix is never inventing non-words. **Scope: branch (b) is the 訓読み
@@ -252,10 +293,19 @@ Official treats the two target types differently (all 35 current-era items,
 
 | Target | n | What the distractors are |
 |---|---|---|
-| **訓読み** (okurigana printed, or single-kanji) | 12 | **real words, every option, no exception** — same class/conjugation as the key, usually same field; frequently not sharing the target's kanji. |
-| **音読み compound** | 23 | predominantly non-words — 清濁 (さいのう→ざいのう), 長短 (きしょう→きしょ), ん⇄う (のうやく→のんやく) derivations of the key's own reading. ~5 of 23 mix in real homophones (握手→拍手); one set is four real compounds (分析→分解/分節/分割). |
+| **訓読み** (okurigana printed, or single-kanji) | 13 | **real words, every option, no exception** — same class/conjugation as the key, usually same field; frequently not sharing the target's kanji. |
+| **音読み compound** (incl. 背骨, a 訓 compound whose distractors are derivations) | 22 | predominantly non-words — 清濁 (さいのう→ざいのう), 長短 (きしょう→きしょ), ん⇄う (のうやく→のんやく) derivations of the key's own reading. ~5 of 22 mix in real homophones (握手→拍手); one set is four real compounds (分析→分解/分節/分割). |
 
-Both blanket rules are wrong ("every option a dictionary word" fails 23/35;
+**Recounted 2026-09-17**, and the recount splits into TWO numbers that this
+table used to run together. By READING TYPE, `is_kun_target()` scores **14 訓 /
+21 音** over the seven current-era `booklet.md` 問題1 blocks — 2 per sitting,
+every sitting. By AUTHORING SHAPE, which is what the two-branch rule needs, it is
+**13 field-writable / 22 derivation-shaped**, because 背骨 reads 訓 but is built
+like a 音読み set. This table counts by authoring shape (13/22); it read 12/23
+before, and `check_mondai1_reading_type_mix`'s docstring still restates the
+old 12 — it must follow this table, which owns the number.
+
+Both blanket rules are wrong ("every option a dictionary word" fails 22/35;
 "音読み distractors must be non-words" fails ~6). The invariant is directional:
 **a 訓読み set may never contain a non-word; a 音読み set may, but only as a
 derivation of the key's own reading.**

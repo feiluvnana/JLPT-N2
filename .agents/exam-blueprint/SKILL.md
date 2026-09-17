@@ -891,6 +891,32 @@ entries under a superseded `DRAW` over-record. Trim over-recorded items;
 never let them expire through cooldown. Shortfalls are not trimmable — record
 what the paper actually used.
 
+### A note may NAME the seed field; it may not restate a count from it
+
+`test_spec.json`'s `seed` string is the authoritative record of a draw — the base
+seed plus every `+reroll-one(cat:idx,seed)` appended to it — and
+`logs/ledger.json` mirrors it field-for-field. **A hand-off note, a
+`qa/RESUME-<id>.md`, an orchestrator brief or a QA summary may point at that
+field; it must not copy a count out of it.** A copied count is false the moment
+anything rerolls, and **a QA repair IS a reroll** (`--reroll-one`, never a hand
+substitution — §"The `kanji_reading` validity rule" and the rotation model
+above), so the note goes stale exactly when the paper is being fixed, while still
+carrying the date on which someone "counted it from the spec".
+
+Founding case, `20260914_1`: **three values on one paper inside three days.**
+The hand-off note said 「plus **four** RNG rerolls」; round-1 QA counted the spec
+and found **31** (`qa-report-20260914_1.md` F6); the corrected note still read 31
+when the F1/F2 repairs took the spec to **34**
+(`qa-report-20260914_1-round2.md` NEW-1 and §8, which re-classified the defect
+from `RULE-IGNORED` to `PIPELINE-GAP` on that recurrence alone). The spec and the
+ledger were correct all three times; only the restatements were wrong.
+
+So a note's reroll line reads 「reroll 数は `test_spec.json` の seed 文字列から
+数えること（この note は数を持たない）」, and whoever needs the number re-derives it
+from the spec at the moment of writing — never from a previous note or report
+(`AGENTS.md` §0.7). Same for every other count the spec owns: per-category draw
+sizes, the category list, `pools_sha`.
+
 ## Answer positions are balanced globally across the paper, unpredictable inside sections
 
 Do not force each mondai to carry equal quotas of positions 1..4 — that makes
@@ -1145,6 +1171,90 @@ a different entry. The full-draw RNG stream is untouched.
 **A rerolled entry can still come back on a LATER paper** — that is the cooldown
 working, not this defect. And adding a missing errand `key` remains the repair
 when the reject is a near-duplicate rather than the same string.
+
+**FIXED 2026-09-14 — BOTH reroll paths drew an `AUTHORED_THEME_CATS` category
+from the RETIRED POOL, and handed back a legacy entry.** `--reroll` and
+`--reroll-one` each called `draw(rng, pools[cat], …)` unconditionally. The full
+draw has branched to `draw_authored_themes()` for `reading_topics`/
+`listening_scenarios` since 2026-09-07, but neither reroll path was taught the
+branch — and `pools.json` still carries those ~290 retired subject strings,
+because `check_draw_provenance()` has to resolve the draws of every paper
+sampled before that date. So a reroll silently sampled a pool nothing has drawn
+from since, and wrote back a **legacy** entry:
+
+```json
+{"topic": "教育格差とICT教育の導入効果", "theme": "教育"}   // what shipped
+{"theme": "防災", "origin": "authored", "avoid": [ …41 strings… ]}  // its siblings
+```
+
+WHAT THAT COSTS, and it is not cosmetic. The legacy entry is a **prescribed
+subject with no `origin` and no `avoid` list**, handed to an author whose stage
+prompt says to treat every `origin` field as binding and whose brief (Part II)
+is to INVENT a subject not in `avoid`. The one surface a reroll exists to repair
+is then the one surface with neither — it loses the used-subject record the
+whole cross-paper design rests on, and it re-consumes a retired pool entry.
+Nothing could see it either: `check_spec_blend()` sorts an entry carrying a
+`topic` into `drawn`, where it is only compared for duplicate strings, and
+`check_theme_record_agreement()` joins by institution head, which an authored
+entry does not have. **Latent since 2026-09-07** — every reroll between then and
+now happened to be a grammar/vocabulary category. FOUNDING CASE: `20260914_1`
+問題12 (`reading_topics:9`), rerolled twice for a rule-4 headline breach and
+malformed both times.
+
+The fix routes both paths through `draw_authored_themes()`, with the exclusions
+the pool path gets from `taken_text` passed as arguments instead — an authored
+entry carries no tokens at all, so nothing in `taken_tokens()`/`identity_tokens()`
+can constrain it:
+
+- `kept_themes` — the paper's other picks in that category, so a redraw cannot
+  return a theme the paper is keeping (`THEME_CAP`: reading 1, listening 5).
+  This is `sample_distinct_theme()`'s `used_themes` (C, `qa-report-20260904_2`)
+  for the authored side, which that function never sees.
+- `exclude_themes` — the REJECTED entry's own theme. An authored entry is
+  nothing but its theme, so handing the same theme back is the no-op reroll:
+  the authored twin of the `ago == 10**9` self-redraw fixed above. Measured over
+  40 fresh seeds on one spec: the old path self-redrew **2 of 40**, the new path
+  **0 of 40**, across 8 distinct themes either way.
+- `prior_history` — PRIOR history only, this paper's own row already out, the
+  same list `updated_recency` is built from. `theme_recency()` reads it, so a
+  chronologically later paper is never recency evidence against an earlier one's
+  reroll.
+
+`rotation.cooldown` is left alone on this path (`weakest_cooldown()`): themed
+slots draw a THEME, not a pool entry, and apply no cooldown — the full draw says
+the same thing by `continue`-ing before `effective_cool` is touched. For the
+same reason `carry_legacy()` no longer writes an entry with no item text into
+`verified_items`: `assert_rotation()` proves nothing about an authored entry
+(its `identity_tokens()` is empty), so there is no claim to record, and the old
+code wrote `""` — a proof about an entry that cannot be named. The full-draw RNG
+stream is untouched (verified: identical `items` + `answer_positions` on 3 seeds
+before and after), and a pool-category `--reroll-one` is byte-identical (5
+categories × 3 seeds).
+
+**WHAT THIS STILL DOES NOT FIX: the reroll is a LOTTERY, because the draw has no
+cross-test headline constraint.** Reading indices 9/10/11 always become
+問題12/13/14 — headline surfaces — yet `draw_authored_themes()` knows only
+`THEME_CAP` and theme recency, so a rule-4 breach against the previous paper's
+headline set is drawable and nothing at spec time can see it
+(`check_theme_spread` "counts the draw, not which entry became which 問題").
+Measured on `20260914_1` 問題12: of the 9 themes the cap left free, exactly
+**one** (防災) cleared rules 1, 3 and 4 against the two previous papers, and it
+took **22 fresh seeds** to land — each one appended to the spec's seed
+expression, which is why that string now reads like the 2026-08-19 self-redraw
+signature without being it. The repair is
+`stage3-report-20260914_1.md` root-cause R4: teach the sampler the fixed
+index→surface mapping and exclude, for those indices only, the previous paper's
+headline themes (plus at most one from the paper before). It is the same
+`logs/topics.json` lookup `used_subjects_by_theme()` already does. Not done here
+because it moves the FULL draw's RNG stream, which a reroll fix may not.
+
+**And a repaired spec entry is not a repaired paper.** The four theme rules are
+checked on `logs/topics.json` — the SHIPPED record — so re-drawing
+`reading_topics[9]` does not clear a rule-4 FAIL on a paper whose 問題12 is
+already written. The spec entry is the contract for the re-author; the FAIL
+lifts when the surface is re-authored onto the new theme and both records are
+updated (§"Replacing a shipped subject"). Do not read a changed spec as a
+cleared gate line.
 
 `tests/<test_id>/test_spec.json` is the authoring contract — per section,
 the exact items to test, scenario/topic lists, and the answer-position

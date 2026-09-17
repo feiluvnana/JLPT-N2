@@ -388,6 +388,22 @@ OCR noise** (感恩的／意恩／志恩／目恩品／買い恩), with 恩 appe
 evidence was the defect. Third instance of the class (REPORT-GOI §F10, round
 1's own §S1, this).
 
+**The one POSITIVE band test the archive can give you: official glosses what
+official will not test.** Absence from a textbook extract is weak (above); a
+`（注N）` in a real sitting is not. Grep the candidate word across
+`refs/JLPT_N2_NEW/*/booklet.md` and look at the definition lines, not just the
+occurrence count — **if every archive occurrence of the word carries its own
+`（注N）` gloss, the exam-maker has ruled that an N2 candidate cannot be assumed
+to know it, and it may not be a TESTED item** (問題1–6 key, 問題5's hard word,
+即時応答 idiom). Passive glossed exposure in 読解 prose stays legal; that is the
+whole point of the gloss. Founding case: `qa-report-20260914_1` F1 — 問題5-21
+drew 自ずから as its hard word and keyed 自然と. The おのず family occurs **4
+times in 31 sittings and is glossed all 4 times**, twice as literally
+「（注3）おのずと：自然と」 — official hands the candidate this item's own key as
+apparatus. It is also 0/28,505 lines of `refs/Hajimete/vocab_reference.md`, but
+that alone would not have decided it. The repair is `--reroll-one <cat>:<index>`
+plus a pool-defect report, never a hand substitution.
+
 ### 3. Mechanical reads
 
 - **文字・語彙 stems — two counts, thirty seconds, and no gate can see them on
@@ -525,6 +541,21 @@ evidence was the defect. Third instance of the class (REPORT-GOI §F10, round
   (`FREE UNITS: 1` was printed; the true count is 2). A 解説's per-card proof is
   only sound if it tested the final card as a candidate host too, not just the
   nearest one (`qa-report-20260827_2.md` F1).
+- **問題8 — VERIFY every "only one card does X" claim by listing all four card
+  endings, because the claim is usually the whole proof and it is cheap to
+  falsify.** The 解説's standard move is 「四枚のうち〈語形〉で終わるのは『…』だけ
+  なので」. Write the four tails in a column and count. Founding case:
+  `qa-report-20260914_1` F5 — 問題8-43 proved its 〜ようになると slot with 「四枚の
+  うち辞書形で終わるのは『一か所でも弾ける』だけ」, and 「意欲が湧いて**くる**」
+  ends in a 辞書形 too, so the stated ground is simply false; the key survives on
+  semantics (〜ようになる wants a potential/habitual verb, and the stem's 「やめよう
+  かと思っていたのに…から不思議だ」 fixes what the surprise must be) which the 解説
+  never says. Same paper, 問題8-47: the 解説 names BOTH 連体形 cards and then
+  assigns one to each chunk without excluding the swap. `verify_scramble.py`
+  prints `UNDECIDED` on both and its `illegal_legs` set knows only three
+  hard-coded false legs, so this claim shape passes it untouched — the column is
+  yours. A 解説 that is right about the key and wrong about why is still a
+  finding: it is what the next fix pass will reason from.
 - **問題9 cloze:** read stem+option aloud as one sentence, all four options.
   Name each blank's category (論理接続表現/文末モーダル表現/内容推論/慣用・
   形式名詞); fail if two+ blanks share a category, or if none requires
@@ -626,8 +657,9 @@ evidence was the defect. Third instance of the class (REPORT-GOI §F10, round
 > 3. Spot-check two items by ear against `聴解.md`'s printed options — a
 >    mis-drawn slot would print one sitting's options over another's audio.
 > 4. Keys come from the source sittings, so a 聴解 mis-key means the BANK is
->    wrong, not the paper: fix `logs/choukai_bank.json`'s source and re-compose,
->    never hand-edit `聴解.md`.
+>    wrong, not the paper: fix `logs/choukai_bank.json`'s source and re-render
+>    (`python3 tools/compose_choukai.py <id> --replay --no-audio`), never
+>    hand-edit `聴解.md`.
 > 5. The shipped 聴解 key balance IS in scope, even though the items are not
 >    authored here — the composer picked the combination. Tally each section's
 >    keys and compare the section's MODAL key against the 31-sitting archive
@@ -712,9 +744,14 @@ evidence was the defect. Third instance of the class (REPORT-GOI §F10, round
 >    non-blocking unless it does.
 >
 >    **A repair here is upstream, in `tests/imported-<sitting>/聴解スクリプト.txt`,
->    then `make choukai-bank`, then re-compose every paper holding that clip** —
->    never a hand edit of the drawing paper's `聴解.md` or 聴解スクリプト.txt, which
->    would put the bank and the paper permanently out of sync.
+>    then `make choukai-bank`, then re-render every paper holding that clip with
+>    `python3 tools/compose_choukai.py <id> --replay --no-audio`** — never a hand
+>    edit of the drawing paper's `聴解.md` or 聴解スクリプト.txt, which would put
+>    the bank and the paper permanently out of sync, and never
+>    `make mp3 <id> SEED=<its recorded seed>`, which RE-DRAWS the paper instead
+>    of re-rendering it (`choukai-audio` Part 0 §"A recorded seed does NOT
+>    reproduce a past paper's draw"; measured 2026-09-17, that command moves 15
+>    and 17 of 29 slots on the two papers this row's own founding case names).
 >
 > **If the listening half was re-composed since the last review, checks 1–6
 > must be re-run in full** — a previous round's verification is evidence about

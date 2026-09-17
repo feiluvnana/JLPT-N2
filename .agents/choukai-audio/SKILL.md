@@ -47,14 +47,41 @@ no distractors to design.
   1.0–2.4 for an official one.
 - Each paper's mix is recorded in `logs/choukai_draws.json` under `sources`, so
   it is readable without re-deriving it from the bank.
-- **A fixed seed does not fix the draw across composer changes.** `avoid_slot`,
-  the figure exclusion and the wear counts all run inside the per-slot choice,
-  so any change to them re-draws the whole half at the same seed. After ANY
-  `make mp3` re-run, diff `logs/choukai_draws.json` against the previous row and
-  **report the number of slots that moved** — never assert that one slot moved
-  because only one was intended to. (`20260909_1`'s round-1 dispositions said
-  "re-composed on the SAME seed; only 問題1-2 moved"; 25 of 29 slots had moved,
-  and every downstream reader inherited the false claim —
+- **A recorded seed does NOT reproduce a past paper's draw — `--replay` does.**
+  The draw is a function of the seed **and** of the suite's state at draw time:
+  `usage_counts()` (how many papers have already spent each clip) and
+  `previous_slot_clips()` (the paper immediately before this one) both run inside
+  the per-slot choice, and both move as LATER papers are composed. So
+  `make mp3 <id> SEED=<the recorded seed>` is byte-stable **only for the most
+  recently composed paper**; on any earlier one it silently composes a different
+  paper and overwrites that paper's script, booklet, MP3, chapters and both
+  詳細解説 panes with it. `avoid_slot`, the figure exclusion and the wear counts
+  sit in the same choice, so a composer change re-draws the whole half at one
+  seed too. **To re-render an earlier paper, the command is:**
+
+  ```bash
+  python3 tools/compose_choukai.py <id> --replay --no-audio
+  ```
+
+  `--replay` reads that paper's recorded `clips`/`preambles` out of
+  `logs/choukai_draws.json` and reuses them by construction; `--no-audio` keeps
+  the existing MP3, which is valid exactly because the draw did not move. Add
+  `--replay` without `--no-audio` when the audio itself must be rebuilt.
+  **Founding case, 2026-09-17**: `compose_choukai.py`'s own `--replay` help has
+  said this since the flag existed, this SKILL did not, and two QA documents plus
+  an orchestrator brief therefore all prescribed `make mp3 <id> SEED=<recorded
+  seed>` for the NEW-2 repair of `20260817_1` and `20260818_1`
+  (`qa-report-20260914_1-round2.md` §7). Measured against that day's tree:
+  re-drawing `20260817_1` at its own recorded seed `19054272` moves **15 of 29
+  slots and 3 of 5 preambles**; `20260818_1` at `60629400`, **17 of 29 and 2 of
+  5** —
+  the prescribed command would have re-skinned two shipped papers to fix one word
+  in each.
+- **After ANY `make mp3` re-run, diff `logs/choukai_draws.json` against the
+  previous row and report the number of slots that moved** — never assert that
+  one slot moved because only one was intended to. (`20260909_1`'s round-1
+  dispositions said "re-composed on the SAME seed; only 問題1-2 moved"; 25 of 29
+  slots had moved, and every downstream reader inherited the false claim —
   qa-report-20260909_1-round2 R2-S1.)
 
 ### The five files that own this
@@ -315,7 +342,10 @@ the file it cannot be checked against the archive, and the typo propagated to
 is harvested from `tests/imported-*/聴解スクリプト.txt` by
 `build_choukai_bank.py`, so correcting this doc alone corrects nothing: the
 repair is the imported papers' line 1 → `make choukai-bank` → re-render each
-drawing paper with `--replay --no-audio`.
+drawing paper with `--replay --no-audio`. **This is the shape of EVERY upstream
+repair** — a bank fix reaches a shipped paper only by re-rendering it, and only
+`--replay` re-renders it as itself (Part 0 §"A recorded seed does NOT reproduce
+a past paper's draw"; `make mp3 <id> SEED=<recorded seed>` re-draws it instead).
 `check_choukai_script_latin()` WARNs on a Latin run in a paper's script that no
 bank record carries, which is the detector for exactly this class.
 (Booklet HTML says `N2` too — print and speech now agree.)

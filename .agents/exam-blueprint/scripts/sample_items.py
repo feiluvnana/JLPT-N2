@@ -1223,10 +1223,31 @@ def carry_legacy(old: dict | None, new_items: list, fresh: dict) -> dict:
     verified = list(old.get("verified_items") or [])
     for x in new_items:
         t = item_text(x)
-        if t not in verified:
+        # An AUTHORED_THEME_CATS entry has no item text (the subject does not
+        # exist yet), and `assert_rotation()` proves nothing about it either —
+        # `identity_tokens()` is empty, so there is no cooldown claim to record.
+        # Without this guard a themed reroll writes `""` into `verified_items`,
+        # a proof about an entry that cannot be named.
+        if t and t not in verified:
             verified.append(t)
     out["verified_items"] = sorted(verified)
     return out
+
+
+def weakest_cooldown(cool: int | None, old: dict | None) -> int | None:
+    """`rotation.cooldown` after a reroll: the WEAKEST level any category applied.
+
+    A reroll can only make the paper's weakest cooldown weaker, never stronger,
+    so the new value is `min(new, old)`. `cool is None` is the AUTHORED_THEME_CATS
+    case: those slots draw a THEME, not a pool entry, so they apply no cooldown
+    at all and must leave the recorded number alone — the full-draw path says the
+    same thing by `continue`-ing before `effective_cool` is ever touched. Writing
+    a number there would claim a rotation proof the draw never made.
+    """
+    prev = (old or {}).get("cooldown")
+    if cool is None:
+        return prev
+    return cool if prev is None else min(cool, prev)
 
 
 def load_staging_ready() -> dict[str, list[dict]]:
@@ -1676,13 +1697,30 @@ def theme_recency(history: list) -> dict[str, int]:
 
 
 def draw_authored_themes(rng: random.Random, n: int, name: str,
-                         history: list, kept_themes=()) -> list[dict]:
+                         history: list, kept_themes=(),
+                         exclude_themes=()) -> list[dict]:
     """`n` themed surface slots whose SUBJECT the author will invent.
 
     Reading takes twelve all-distinct themes (`THEME_CAP` 1); listening takes
     twenty-one with at most `THEME_CAP` per theme. Both are drawn from `THEMES`,
     the closed twenty-value vocabulary, weighted so a theme unused for longer is
     likelier — the same recency pressure the pools used to get from the ledger.
+
+    `kept_themes` are the themes of entries the caller is KEEPING — nonzero only
+    on the two reroll paths — and they count against `THEME_CAP` exactly as if
+    they had been drawn here. Without them a `--reroll-one` would hand back a
+    theme the paper already holds, which rule 3 forbids outright for
+    `reading_topics`; it is the same hole `sample_distinct_theme()` documents
+    for the pool-drawn categories (C, qa-report-20260904_2), and it has to be
+    plugged separately here because an authored entry never reaches that
+    function.
+
+    `exclude_themes` are themes this draw may NOT return at all, whatever the
+    cap allows. `--reroll-one` passes the REJECTED entry's own theme: an
+    authored entry is nothing but its theme, so handing the same theme back is
+    the no-op reroll — the authored-side twin of the `ago == 10**9` self-redraw
+    fixed on the pool side 2026-09-07. The index selects which entry LEAVES;
+    excluding it is what makes that true.
     """
     cap = THEME_CAP.get(name, 1)
     ago = theme_recency(history)
@@ -1697,6 +1735,8 @@ def draw_authored_themes(rng: random.Random, n: int, name: str,
     counts: dict[str, int] = {}
     for t in kept_themes:
         counts[t] = counts.get(t, 0) + 1
+    for t in exclude_themes:
+        counts[t] = cap          # hard block, independent of what is kept
     picked: list[str] = []
     for t in order:
         if len(picked) >= n:
@@ -2240,12 +2280,24 @@ def main():
         prior_history = history[:self_idx] if self_idx is not None else \
             [h for h in history if h is not own_entry]
         updated_recency = recency_map(prior_history)
-        cool_max = cooldown_for(cat, pools[cat])
-        picked, cool = draw(rng, pools[cat], updated_recency,
-                            DRAW[cat], cat, taken_text, cool_max)
-        if staging_by_cat:
-            picked = apply_adjunct(rng, cat, picked, staging_by_cat,
-                                   taken_text, updated_recency, cool_max)
+        # AUTHORED_THEME_CATS ARE REDRAWN THROUGH THE AUTHORED MACHINERY, not
+        # through `draw()` (fixed 2026-09-14; see the `--reroll-one` twin
+        # below, which is where the defect was found). `pools.json` still
+        # carries the retired `reading_topics`/`listening_scenarios` entries —
+        # `check_draw_provenance()` needs them to resolve the draws of papers
+        # sampled before 2026-09-07 — so `draw()` happily hands back a LEGACY
+        # pool entry (`{"topic": …, "theme": …}`) for a category the full draw
+        # has not sampled from a pool since that date.
+        if cat in AUTHORED_THEME_CATS:
+            picked = draw_authored_themes(rng, DRAW[cat], cat, prior_history)
+            cool = None          # authored themes consume no pool cooldown
+        else:
+            cool_max = cooldown_for(cat, pools[cat])
+            picked, cool = draw(rng, pools[cat], updated_recency,
+                                DRAW[cat], cat, taken_text, cool_max)
+            if staging_by_cat:
+                picked = apply_adjunct(rng, cat, picked, staging_by_cat,
+                                       taken_text, updated_recency, cool_max)
         spec["items"][cat] = picked
         spec["seed"] = f"{spec.get('seed')}+reroll({cat},{seed})"
         # R7: a reroll re-draws against the CURRENT pool, so the stamp moves
@@ -2256,7 +2308,7 @@ def main():
             "history_len": 0,          # filled in below, once this test's own
                                        # entry can be told from the others
             # a reroll can only make the paper's weakest cooldown weaker
-            "cooldown": min(cool, spec.get("rotation", {}).get("cooldown", cool)),
+            "cooldown": weakest_cooldown(cool, spec.get("rotation")),
         })
         if own_entry is not None:
             own_entry.setdefault("items", {})[cat] = picked
@@ -2375,9 +2427,61 @@ def main():
         prior_history = history[:self_idx] if self_idx is not None else \
             [h for h in history if h is not own_entry]
         updated_recency = recency_map(prior_history)
-        cool_max = cooldown_for(cat, pools[cat])
-        picked, cool = draw(rng, pools[cat], updated_recency, 1, cat,
-                            taken_text, cool_max, kept=kept)
+        # --- AUTHORED_THEME_CATS GO THROUGH `draw_authored_themes`, NOT `draw()`
+        # (fixed 2026-09-14, founding case `20260914_1` 問題12). This branch
+        # called `draw()` unconditionally, and `pools.json` still carries the
+        # RETIRED `reading_topics`/`listening_scenarios` entries — they cannot be
+        # deleted, because `check_draw_provenance()` has to resolve the draws of
+        # every paper sampled before the 2026-09-07 `AUTHORED_THEME_CATS` change.
+        # So a `--reroll-one reading_topics:9` silently sampled that dead pool and
+        # wrote back a LEGACY entry, `{"topic": "教育格差とICT教育の導入効果",
+        # "theme": "教育"}`, beside eleven siblings of the post-2026-09-07 shape
+        # `{theme, origin: "authored", avoid: [...]}`.
+        #
+        # WHY THAT IS A DEFECT AND NOT A COSMETIC ONE: the entry is a PRESCRIBED
+        # subject with no `origin` and no `avoid` list, handed to an author whose
+        # stage prompt says to treat every `origin` field as binding and whose
+        # brief (Part II) is to INVENT a subject that is not in `avoid`. The one
+        # surface repaired by the reroll is the one surface with neither — it
+        # loses the used-subject record the whole cross-paper design rests on,
+        # and it re-consumes a pool entry nothing has drawn from since 2026-09-07.
+        # `check_spec_blend` cannot see it either: a legacy entry has a `topic`,
+        # so it lands in `drawn` and is only compared for duplicate strings.
+        # Latent since 2026-09-07 — every reroll between then and now happened to
+        # be a grammar/vocabulary category.
+        #
+        # The exclusions the pool path gets from `taken_text` arrive here as
+        # arguments instead, because an authored entry carries no tokens at all:
+        #   * `kept_themes` — the paper's other picks in this category, so the
+        #     redraw cannot return a theme the paper is keeping (`THEME_CAP`,
+        #     reading 1 / listening 5). This is `sample_distinct_theme()`'s
+        #     `used_themes` (C, qa-report-20260904_2) for the authored side.
+        #   * `exclude_themes` — the REJECTED entry's own theme. An authored
+        #     entry is nothing but its theme, so returning it is the no-op
+        #     reroll: the authored twin of the `ago == 10**9` self-redraw fixed
+        #     on the pool side 2026-09-07.
+        #   * `prior_history` — PRIOR history only, this paper's own row already
+        #     removed, exactly as `updated_recency` is built for the pool path.
+        #     `theme_recency()` reads it, so a later paper is never recency
+        #     evidence against an earlier one's reroll.
+        # The full-draw RNG stream is untouched: `draw_authored_themes` gained
+        # only defaulted keyword arguments and consumes the same values.
+        #
+        # WHAT THIS CANNOT SEE, stated rather than implied: the draw still has no
+        # cross-test HEADLINE constraint. Reading index 9/10/11 always become
+        # 問題12/13/14, so a rule-4 breach against the previous paper's headline
+        # set is drawable and `--reroll-one reading_topics:9` is a lottery over
+        # the free themes (stage3-report-20260914_1 root-cause R4).
+        if cat in AUTHORED_THEME_CATS:
+            picked = draw_authored_themes(
+                rng, 1, cat, prior_history,
+                kept_themes=[t for t in (entry_theme(x) for x in kept) if t],
+                exclude_themes=[t for t in (entry_theme(replaced),) if t])
+            cool = None          # authored themes consume no pool cooldown
+        else:
+            cool_max = cooldown_for(cat, pools[cat])
+            picked, cool = draw(rng, pools[cat], updated_recency, 1, cat,
+                                taken_text, cool_max, kept=kept)
         # No adjunct pass: ADJUNCT_CAP of a 1-item draw is 0 by construction
         # (`int(1 * 0.20)`), so apply_adjunct() would return the pick unchanged.
         spec["items"][cat][idx] = picked[0]
@@ -2386,7 +2490,7 @@ def main():
         spec["rotation"] = carry_legacy(spec.get("rotation"), picked, {
             "recency_source": "ledger",
             "history_len": 0,          # filled in below
-            "cooldown": min(cool, spec.get("rotation", {}).get("cooldown", cool)),
+            "cooldown": weakest_cooldown(cool, spec.get("rotation")),
         })
         if own_entry is not None:
             own_entry.setdefault("items", {})[cat] = spec["items"][cat]
@@ -2394,9 +2498,22 @@ def main():
             own_entry["pools_sha"] = spec["pools_sha"]
         for w in check_theme_spread(spec["items"][cat], cat):
             print(f"  WARNING: {cat} draw is theme-heavy — {w}")
+        def _shown(x) -> str:
+            # An AUTHORED_THEME_CATS entry has no subject string yet, so print
+            # what it actually IS — the theme plus how many used subjects the
+            # author is being told to avoid. Printing `item_text()` alone would
+            # report the repair as 「」 -> 「」.
+            t = item_text(x)
+            if t:
+                return f"「{t}」" + (f" [{entry_theme(x)}]" if entry_theme(x) else "")
+            th = entry_theme(x) or "?"
+            return (f"theme 「{th}」 (origin {x.get('origin')}, "
+                    f"{len(x.get('avoid') or [])} used subject(s) to avoid)"
+                    if isinstance(x, dict) else f"theme 「{th}」")
+
         print(f"  reroll-one {cat}[{idx}]:\n"
-              f"    out: 「{item_text(replaced)}」\n"
-              f"    in : 「{item_text(picked[0])}」"
+              f"    out: {_shown(replaced)}\n"
+              f"    in : {_shown(picked[0])}"
               + (f"  (errand key 「{errand_key(picked[0])}」)"
                  if errand_key(picked[0]) else ""))
         # Only the ONE new entry was drawn against "now"; the kept entries were

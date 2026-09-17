@@ -135,6 +135,9 @@ Note: The four banned retrieval shapes occur **0 times in any 大問** across 15
 問題5 shape: **2 item blocks, 3 answers** — `1番` + `2番` (二つの質問), **all
 choices spoken**. Keys are `問5-1`, `問5-2-1`, `問5-2-2`.
 
+The "Spoken 例?" column describes the SITTING. No paper in this repo carries an
+例 — §"Announcer / 例 mechanics" owns why, and why that is not a defect.
+
 ### 問題1 Question Forms
 
 **Measured, not estimated** — every share below is printed by
@@ -248,6 +251,17 @@ choices spoken, 3s between them). Three rules follow:
 - Each of 問題1-4: instruction → 「では、練習しましょう。」 → 例 item →
   「最もよいものは◯番です。解答用紙の問題◯の例のところを見てください。
   最もよいものは◯番ですから、答えはこのように書きます。では、始めます。」
+- **Scope of that 例 block: the SITTING has one, this repo's papers do not, and
+  the absence is not a defect.** The official script PDFs do not print the
+  practice items, so no paper here can carry one: the block is absent from
+  **0 of 10** imported sittings and **0 of 28** generated papers (counted in
+  `qa-report-20260914_1.md` §5, S2 — filed as `GATE-BLIND`, no paper in breach).
+  A composed paper is cut from those same recordings (`choukai-audio` Part 0) and
+  an imported one from that same PDF, so both inherit the absence. Say so on the
+  paper rather than inventing an 例: `20260914_1`'s 聴解 解答用紙 grid prints
+  「（出典の台本に練習問題「例」の行がないため、例の欄はありません。）」, which is the
+  model. The 例 machinery in `build_interactive.py` stays for the day a source
+  does print one — a paper WITH an 例 must still honour the bullet above.
 - 問題1/2 questions are spoken TWICE: before and after the conversation.
 - 問題3/4/5: choices SPOKEN (「1、…。2、…。」), not printed — all of 問題5
   including 2番's two questions (official prints 2番's). **Spoken ≠ same
@@ -275,8 +289,10 @@ July 2025.
 | 問題5 1番 | 問題用紙に何も印刷されていません。まず話を聞いてください。それから、質問とせんたくしを聞いて、1から4の中から、最もよいものを一つ選んでください。 |
 | 問題5 2番 | 問題用紙に何も印刷されていません。まず話を聞いてください。それから、二つの質問とせんたくしを聞いて、それぞれ1から4の中から、最もよいものを一つ選んでください。 |
 
-- 問題1〜4: the SCRIPT appends 「では、練習しましょう。」, then the 例, then the
-  confirmation ending 「では、始めます。」. The BOOKLET prints the instruction only.
+- 問題1〜4: in a real sitting the SCRIPT appends 「では、練習しましょう。」, then the
+  例, then the confirmation ending 「では、始めます。」; the BOOKLET prints the
+  instruction only. **Our papers append none of it** — see the scope note in
+  §"Announcer / 例 mechanics"; the instruction line is where 問題1〜4 ends here.
 - 問題5: both lead-ins are spoken, each its own block BEFORE its `N番。`
   marker — 1番's adds 「では、始めます。」, 2番's doesn't (already running).
   The 2番 line is a house adaptation, since nothing is printed: 「問題用紙に

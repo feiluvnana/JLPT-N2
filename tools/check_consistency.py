@@ -692,6 +692,15 @@ FINDING_REPAIR: dict[str, tuple[str, str]] = {
     "choukai_q4_stimulus_register":   ("<section re-author>", "authoring"),
     "choukai_voice_balance":          ("<section re-author>", "authoring"),
     "choukai_pause_distribution":     ("聴解.mp3",            "deterministic"),
+    # F4 (qa-report-20260914_1): the head and tail readings of one 問題1/2
+    # question disagree. The artifact that changes is a SCRIPT — but the
+    # UPSTREAM one, in the imported sitting the clip came from, and the composed
+    # copies then follow from `make choukai-bank` + `make mp3`. Tier B is right
+    # (no item, key or option moves), and "assisted" rather than "deterministic"
+    # because deciding WHICH of the two readings is the real one means reading
+    # the source script PDF — its 解説欄 「問い …？（正解:N）」 line is not a
+    # transcription of the second read — and, decisively, listening to the audio.
+    "choukai_question_repeat":        ("聴解スクリプト.txt",  "assisted"),
     # 読解 (REPORT-DOKKAI.md §Phase 3, §5.0). Same derivation, different artifacts:
     # a stem/option/key cell is tier A, passage prose is tier B, a new surface is
     # tier C. Declare the cheapest SUFFICIENT artifact — for the overlap
@@ -9850,6 +9859,107 @@ def check_pool_glyph_inventory():
          "(qa-report-20260817_3-round3 R3-1)")
 
 
+# --- The exam-maker's own level signal (qa-report-20260914_1 F1) ------------
+# 読解 passages gloss a word the exam-maker judges an N2 candidate may not know:
+# 「（注N）自ずから：もともと」. That is a RULING, printed by the same organisation
+# that writes 問題1–6, and it points the other way from the tested vocabulary —
+# a word official explains is a word official does not test. Nothing had ever
+# read it.
+#
+# FOUNDING CASE. `20260914_1` shipped 問題5-21 keyed 自ずから→自然と. おのず-family
+# words occur in four of the 31 sittings and are glossed in all four; 7/2013 and
+# 7/2021 print 「（注3）おのずと：自然と」 — the paper's own key, as the GLOSS.
+# The word is absent from はじめての N2単語2500, Soumatome 語彙 and Shin Kanzen
+# 語彙 第2部. The `paraphrase` entry 「自ずから(自然と)」 has since been deleted;
+# the sibling 「おのずと(自然に)」 stays (20260817_3 drew it — exam-blueprint's
+# "an entry a shipped paper drew is corrected or kept, never removed") and this
+# check flags it, which is the point: the flag is the record that it needs a
+# ruling, not a licence to delete it.
+#
+# WHAT THIS CANNOT DECIDE, said plainly because QA said it first: this check
+# alone does NOT catch the F1 class. The other paper in that class,
+# `20260904_1`'s 問題5-24 key 「いつも」, is an N5-CORE word — official prints it
+# unglossed 60+ times across the archive, so this check is silent on it and
+# `exam-blueprint` §"Both halves must sit in the N2 band" owns that half. The
+# two failure directions are opposite (too hard / too easy) and only the
+# too-hard one leaves a machine-readable trace.
+#
+# DIRECTION OF ERROR, also stated: a word official glosses is not automatically
+# off-band. 配慮, 及ぶ, 円滑 and 業績 are ordinary N2 and are glossed in every
+# sitting that prints them, because a 読解 author glosses generously inside a
+# passage. So this is a WARN and a STANDING LIST, exactly like
+# `check_pool_glyph_inventory` above — a queue of entries to judge by hand
+# (exam-qa-review §2.5 owns the verdict), never a deletion list.
+GLOSS_LINE = re.compile(r"[（(]注\s*[0-9０-９]*\s*[）)]\s*([^：:\n]{1,24})[：:]")
+GLOSS_BAND_CATEGORIES = ("paraphrase", "context_words", "usage", "kanji_reading")
+
+
+def check_pool_gloss_band():
+    """WARN: pool headwords the official archive glosses EVERY time it prints them.
+
+    THE RULE: if every sitting that contains a word also carries a 「（注N）<word>：」
+    line for it, the exam-maker has ruled that an N2 candidate cannot be assumed
+    to know it — so it must not be a TESTED item in 問題1–6.
+
+    THE MEASUREMENT: per SITTING, not per occurrence, because a glossed word is
+    printed twice in the same booklet (once in the passage, once in the gloss
+    line) and counting raw hits would call every glossed word "half unglossed".
+    The gloss headword only has to CONTAIN the pool headword, so 12/2019's
+    「（注6）おのずとにじみ出てくる：自然に表れ出る」 counts as a gloss of おのずと.
+
+    THE REPAIR is a re-draw, never a hand substitution: delete or re-band the
+    `pools.json` row and `sample_items.py --reroll-one <category>:<index>`
+    (exam-blueprint §"Pool entries stay inside the N2 band"). Check the ledger
+    first — an entry a shipped paper already drew is corrected or kept.
+    """
+    print("\npools.json level band vs the archive's own （注N） glosses")
+    pools_path = AGENTS / "exam-blueprint" / "references" / "pools.json"
+    books = sorted(ROOT.glob("refs/JLPT_N2_NEW/*/booklet.md"))
+    name = "no tested pool headword is glossed in every sitting that prints it"
+    if not pools_path.is_file() or not books:
+        return skip(name, "no pools.json or no refs/JLPT_N2_NEW/*/booklet.md "
+                          "extracts (the extracts are tracked — a missing one "
+                          "is a real defect, see check_refs)")
+    texts = {b.parent.name: b.read_text(encoding="utf-8") for b in books}
+    heads = {s: [m.group(1).strip() for m in GLOSS_LINE.finditer(t)]
+             for s, t in texts.items()}
+    pools = json.loads(pools_path.read_text(encoding="utf-8"))
+    hits: list[tuple[int, str, str]] = []
+    for cat in GLOSS_BAND_CATEGORIES:
+        for e in pools.get(cat, []):
+            head = pool_entry_text(e).split("(")[0].split("（")[0].strip()
+            head = head.replace("〜", "").replace("～", "")
+            if len(head) < 2:
+                continue        # a single glyph matches half the archive
+            occurs = {s for s, t in texts.items() if head in t}
+            if not occurs:
+                continue        # unattested is a different question entirely
+            glossed = {s for s in occurs if any(head in h for h in heads[s])}
+            if glossed == occurs:
+                hits.append((len(occurs), cat, head))
+    hits.sort(key=lambda h: (-h[0], h[1], h[2]))
+    shown = "; ".join(f"{cat}:「{head}」({n} sitting{'s' if n > 1 else ''})"
+                      for n, cat, head in hits[:12])
+    warn(f"{name} ({len(hits)} of "
+         f"{sum(len(pools.get(c, [])) for c in GLOSS_BAND_CATEGORIES)} entries "
+         f"in {len(GLOSS_BAND_CATEGORIES)} tested categories, "
+         f"{len(books)} sittings read)",
+         not hits,
+         shown + (f" … and {len(hits) - 12} more" if len(hits) > 12 else "")
+         + " — official glosses each of these in EVERY sitting that prints it, "
+           "i.e. it has ruled the word is not assumable, while these pools are "
+           "what 問題1–6 TESTS. Strongest evidence first (most sittings). Judge "
+           "per entry: a 読解 author glosses generously, so an ordinary N2 word "
+           "(配慮, 及ぶ) lands here too — the signal is the exam-maker's ruling, "
+           "not a verdict. Off-band ⇒ fix the row and `--reroll-one`, never a "
+           "hand substitution; check the ledger first, because an entry a "
+           "shipped paper drew is corrected or kept, never removed. This check "
+           "does NOT cover the other half of the class: an N5-core entry "
+           "(20260904_1's 「いつも」) is printed unglossed everywhere and is "
+           "invisible here (qa-report-20260914_1 F1; exam-blueprint §\"Both "
+           "halves must sit in the N2 band\")")
+
+
 def check_moji4_blank_stems(name: str, gt: str, keys: dict[int, int],
                             opts: dict[int, list[str]]):
     """Every 問題4 stem is a printed （　） and prints no answer word (G16/F1).
@@ -9906,6 +10016,21 @@ MOJI_STEM_MEDIAN_FAIL = 22       # archive per-paper max 21.5 (cur 17.5)
 MOJI_STEM_MEDIAN_WARN = 18       # archive per-paper median 18, cur max 17.5
 MOJI_COMMA_FREE_FAIL = 0.45      # archive per-paper min 47% (cur 60%)
 MOJI_COMMA_FREE_WARN = 0.60
+# The CEILING half, added 2026-09-17 (qa-report-20260914_1 §5 S1). The rule had
+# a floor only, and a one-sided rule produces the opposite monoculture every
+# time it is left alone — the same failure `MONDAI1_KUN_CAP` and
+# `bunpou.md` §問題7's stem length each shipped once. Four papers had optimised
+# to 100 % comma-free against an archive that never exceeds 14/15.
+# MEASURED 2026-09-17, `tools/goi_profile.py --baseline`: per-paper comma-free
+# runs 47–93 % over 31 sittings and 60–93 % over the current era. 93 % is 14/15,
+# i.e. one comma'd stem of fifteen — so 100 % (15/15) is the only value a
+# 15-stem paper can take that the archive never does, and the FAIL line sits
+# between them. The two ceilings COINCIDE (the archive maximum and the
+# current-era maximum are the same sitting-shape, 14/15), so the WARN ceiling
+# below is redundant today and is kept only so the rule reads two-sided on both
+# lines: if a re-measurement ever widens the archive band, the two separate.
+MOJI_COMMA_FREE_CEIL_FAIL = 0.95   # archive per-paper max 93% = 14/15
+MOJI_COMMA_FREE_CEIL_WARN = 0.94   # current-era max is the same 14/15
 MOJI_POLITE_FAIL = 2             # archive 2–11 of ~25 stems (cur 4–8)
 MOJI_POLITE_WARN = 4
 MOJI_INSTITUTION_FAIL = 7        # archive 0–7 of 25 (cur 0–3)
@@ -9921,6 +10046,21 @@ MOJI2_WAGO_FLOOR = 1             # 和語 items, archive 1–3 in 31 of 31
 # against 47–93%). The set is a queue, and the queue is now clear — any id that
 # breaches from here is a FAIL, not an exemption.
 MOJI_STEM_GRANDFATHERED: set[str] = set()
+# The CEILING half of the same rule, named separately so that grandfathering a
+# paper's 100 % comma-free rate does not also amnesty its MEDIAN — an id in
+# `MOJI_STEM_GRANDFATHERED` is exempt from both bounds of both measures, which
+# is more than these three papers need (their medians are 17/17/16, inside the
+# band). Measured 2026-09-17 over all 28 generated papers: three sit at 15/15
+# (100 %) and every other paper is at 93.3 % or below, i.e. inside the archive's
+# own envelope. 20260914_1 was the fourth when round 1 filed S1 and moved to
+# 93.3 % (14/15) as a side effect of its F1 reroll, so it is NOT listed.
+# Clearing an id means rewriting ONE 問題1/2/5 stem to carry a 「、」 — tier B,
+# the key does not move, but every 詳細解説 cell quoting that stem does.
+MOJI_COMMA_FREE_CEILING_GRANDFATHERED: dict[str, str] = {
+    "20260817_1": "15/15 comma-free, measured 2026-09-17",
+    "20260827_1": "15/15 comma-free, measured 2026-09-17",
+    "20260904_3": "15/15 comma-free, measured 2026-09-17",
+}
 # EMPTY as of 2026-08-21: every paper now runs 7–9 です・ます stems of 25
 # (official 2–11, current era 4–8), at least one first-person stem, and 0–2
 # institution-actor stems (official 0–7).
@@ -9950,18 +10090,30 @@ def check_moji_stem_shape(test_id: str, gt: str):
     """問題1/2/5 stems stay one clause of the archive's length (F1).
 
     THE RULE (moji-goi.md Part 0 §"The stem"): per-paper median 15–22 JP chars,
-    author to 17, and at least 45% (author 60%) of the fifteen stems carry no
-    「、」. 問題1 tests a reading and 問題5 a synonym; every character beyond what
-    disambiguates the target is reading load charged to a vocabulary item.
+    author to 17, and the comma-free share of the fifteen stems inside a BAND —
+    at least 45% (author 60%) and AT MOST 95%. 問題1 tests a reading and 問題5 a
+    synonym; every character beyond what disambiguates the target is reading
+    load charged to a vocabulary item — and a paper with no comma anywhere in
+    問題1/2/5 has stopped writing the archive's sentence, in the other direction.
 
-    THE MEASUREMENT (2026-08-21): official runs a per-paper median of 15–21.5
-    (current era 15–17.5) and 47–93% comma-free (cur 60–93%). All fourteen
-    papers on disk ran 21–32 and 0–60%, six of them with no comma-free 問題1/2/5
-    stem at all — a candidate who cannot parse 「市は来年度の予算を見直し、」 lost a
-    文字・語彙 mark for a 読解 reason, systematically.
+    THE MEASUREMENT (2026-08-21, re-read 2026-09-17): official runs a per-paper
+    median of 15–21.5 (current era 15–17.5) and 47–93% comma-free (cur 60–93%);
+    93% is 14 of 15 stems. All fourteen papers on disk ran 21–32 and 0–60%, six
+    of them with no comma-free 問題1/2/5 stem at all — a candidate who cannot
+    parse 「市は来年度の予算を見直し、」 lost a 文字・語彙 mark for a 読解 reason,
+    systematically.
+
+    THE SECOND INCIDENT (qa-report-20260914_1 §5 S1, 2026-09-17): the repair
+    above left a FLOOR with no ceiling, and papers optimised straight through
+    the archive's own maximum — four sat at 15/15 = 100%, a rate no official
+    sitting has ever printed. Same shape as `MONDAI1_KUN_CAP`'s zero-訓読み
+    paper and as 問題7's stem length: a one-sided rule reliably produces the
+    opposite monoculture, so every band here is two-ended. Three papers are
+    named in `MOJI_COMMA_FREE_CEILING_GRANDFATHERED`; any other id FAILs.
 
     THE REPAIR: rewrite the stem (tier B — the key does not move, but every
-    詳細解説 cell quoting the stem does).
+    詳細解説 cell quoting the stem does). Over the ceiling that is ONE stem:
+    give a single 問題1/2/5 sentence the 「、」 the archive puts there.
     """
     m = GOI.measures([r for r in _goi_paper(gt, test_id) if r["mondai"] in (1, 2, 5)])
     if "stem_125" not in m:
@@ -9970,19 +10122,37 @@ def check_moji_stem_shape(test_id: str, gt: str):
     name = (f"{test_id}: 問題1/2/5 stem shape (median {med:g} chars, "
             f"{cf:.0%} comma-free)")
     detail = (f"median {med:g} JP chars (band 15–{MOJI_STEM_MEDIAN_FAIL}, author "
-              f"17) and {cf:.0%} of the stems comma-free (floor "
-              f"{MOJI_COMMA_FREE_FAIL:.0%}, author {MOJI_COMMA_FREE_WARN:.0%}) — "
+              f"17) and {cf:.0%} of the stems comma-free (band "
+              f"{MOJI_COMMA_FREE_FAIL:.0%}–{MOJI_COMMA_FREE_CEIL_FAIL:.0%}, "
+              f"author {MOJI_COMMA_FREE_WARN:.0%}) — "
               f"official runs 15–21.5 and 47–93% over 31 sittings "
               f"(`tools/goi_profile.py --baseline`). One clause, one actor: "
               f"a two-clause setup moves difficulty out of 文字・語彙 and into "
-              f"読解 (moji-goi.md Part 0 §\"The stem\")")
-    bad = med > MOJI_STEM_MEDIAN_FAIL or cf < MOJI_COMMA_FREE_FAIL
+              f"読解; but 100% comma-free is off the other end of the same "
+              f"envelope — no official sitting prints fifteen comma-free "
+              f"問題1/2/5 stems, and the repair is to give ONE of them the 「、」 "
+              f"official puts there (moji-goi.md Part 0 §\"The stem\")")
+    over = cf > MOJI_COMMA_FREE_CEIL_FAIL
+    bad = med > MOJI_STEM_MEDIAN_FAIL or cf < MOJI_COMMA_FREE_FAIL or over
     if test_id in MOJI_STEM_GRANDFATHERED:
         return warn(name, not bad, detail + GRANDFATHER_NOTE)
+    if over and test_id in MOJI_COMMA_FREE_CEILING_GRANDFATHERED:
+        # The ceiling landed after these three shipped; the measurement is
+        # printed, the exit code is not moved, and the id leaves this dict the
+        # moment one of its stems is rewritten.
+        warn(name, False, detail + f" [named in "
+             f"MOJI_COMMA_FREE_CEILING_GRANDFATHERED: "
+             f"{MOJI_COMMA_FREE_CEILING_GRANDFATHERED[test_id]} — a FAIL for "
+             f"any id not listed there]")
+        bad = med > MOJI_STEM_MEDIAN_FAIL or cf < MOJI_COMMA_FREE_FAIL
+        if bad:
+            check(name, False, detail)
+        return
     if not check(name, not bad, detail):
         return
     warn(f"{test_id}: 問題1/2/5 stems inside the CURRENT era too",
-         med <= MOJI_STEM_MEDIAN_WARN and cf >= MOJI_COMMA_FREE_WARN,
+         (med <= MOJI_STEM_MEDIAN_WARN and MOJI_COMMA_FREE_WARN <= cf
+          <= MOJI_COMMA_FREE_CEIL_WARN),
          f"median {med:g} (cur 15–17.5), {cf:.0%} comma-free (cur 60–93%)")
 
 
@@ -11366,6 +11536,138 @@ def check_choukai_key_duplication(test_id: str, ct: str, st: str, m, bi):
     _gated(test_id, f"{name} ({seen_any} keys compared)", not dup,
            "; ".join(dup) + " — the second item tests nothing the first did not. "
            "Rewrite one item's task (choukai-items.md §'Write the SECTION TABLE')")
+
+
+# --- 問題1/2: the question is read TWICE, and it must be the SAME question ---
+# (qa-report-20260914_1 F4 / §5, 2026-09-17)
+#
+# THE INCIDENT. `20260914_1` shipped 聴解問題2-6番 asking 「一番大切なことは何だと
+# 言っていますか。」 at the head and 「一番大切なものは…」 at the tail. The paper is
+# COMPOSED, so nobody wrote either line: `external-test-import` had taken the
+# tail from the source script PDF's 解説欄 —「問い …？（正解:３）」— which is a
+# 解説 restatement of the question, not a transcription of the second read. The
+# bad ink then flowed bank → every paper drawing that clip. All four printed
+# options of that item end in 「〜こと」, so 「もの」 could not have matched its own
+# option field.
+#
+# THE METRIC IS THE TIGHT ONE, and that choice is load-bearing. Round 2 first
+# prototyped "last sentence of the head vs last sentence of the tail" and it
+# fired on ~13 innocent items, because official legitimately APPENDS a
+# clarifier to the tail read — 「…どの席を選ぶことにしますか。男の人です。」 — and
+# equally appends one to the head (問題2-5番: 「…どうなると言っていますか。明日
+# です。」). So: the tail line must appear VERBATIM INSIDE the head line. That
+# is exactly the relation official holds, and it is blind to a trailing
+# clarifier on either side.
+#
+# TWO SEVERITIES, because the two differences cost different things. A content
+# difference (こと/もの, 何だと/何と) is a different QUESTION and FAILs. A
+# difference only in 「、」 placement — 「男の人は会社を辞めて、何を…」 vs 「男の人は、
+# 会社を辞めて何を…」 — is the same question with the transcriber's comma in a
+# different place; the audio is identical and no candidate can hear it, so it
+# WARNs.
+#
+# ORIGIN-AGNOSTIC on purpose: the defect's source is an IMPORT, and a composed
+# paper inherits it verbatim, so scoping this to generated papers would look
+# only at the copies and never at the original.
+#
+# MEASURED 2026-09-17 over all 38 papers on disk (418 問題1/2 items): 7 FAIL and
+# 41 WARN, and the 7 FAILs trace to just TWO upstream imported items —
+# `imported-n2-2022-07` 問題2-4番 (「何だと言って」/「何と言って」, copied into
+# 20260810_1 and 20260819_1) and `imported-n2-2021-07` 問題2-5番 (「言っています」/
+# 「いっています」, copied into 20260812_2, 20260827_1 and 20260910_1). Both are
+# named below. The third upstream item, `imported-n2-2022-07` 問題2-6番, and its
+# two copies (20260817_1, 20260818_1) were repaired on 2026-09-16 and this check
+# is green on them — which is what makes it a regression test for that repair.
+CHOUKAI_QUESTION_REPEAT_PUNCT = re.compile(r"[\s　、。，,．・「」『』？?！!]")
+# Keyed 「<test_id>:問題<N>-<label>」 so a paper's OTHER items still FAIL. Each
+# value says what the difference is and why it is still here.
+CHOUKAI_QUESTION_REPEAT_GRANDFATHERED: dict[str, str] = {
+    "imported-n2-2022-07:問題2-4番":
+        "「何だと言っていますか」(head) vs 「何と言っていますか」(tail) — the source "
+        "script PDF's own 解説欄 line; repairing it re-composes 20260810_1 and "
+        "20260819_1 as well, and the 7/2022 audio has not been listened to",
+    "20260810_1:問題2-4番": "inherited from imported-n2-2022-07 問題2-4番",
+    "20260819_1:問題2-4番": "inherited from imported-n2-2022-07 問題2-4番",
+    "imported-n2-2021-07:問題2-5番":
+        "「言っていますか」(head) vs 「いっていますか」(tail) — an ORTHOGRAPHY-only "
+        "difference (言/い) faithfully transcribed from the 7/2021 script PDF, "
+        "so the spoken question is identical; it is listed rather than exempted "
+        "by rule because the check cannot tell kana-vs-kanji from a real word "
+        "swap without a reading, and repairing it re-composes 20260812_2, "
+        "20260827_1 and 20260910_1",
+    "20260812_2:問題2-5番": "inherited from imported-n2-2021-07 問題2-5番",
+    "20260827_1:問題2-5番": "inherited from imported-n2-2021-07 問題2-5番",
+    "20260910_1:問題2-5番": "inherited from imported-n2-2021-07 問題2-5番",
+}
+
+
+def check_choukai_question_repeat(test_id: str, st: str, m):
+    """問題1/2 read the same question at the head and at the tail (F4).
+
+    THE RULE (jlpt-exam-structure §問題1/問題2): each item states its question
+    once before the dialogue and once after it, and official reads the SAME
+    sentence both times — a trailing clarifier (「男の人です。」) may be appended,
+    nothing inside may change. The candidate answers the second reading.
+
+    THE MEASUREMENT: the tail line must occur VERBATIM inside the head line.
+    The looser "compare the last sentences" metric fires on ~13 innocent items
+    because of exactly those clarifiers — see the comment above this function.
+
+    FAIL vs WARN: a difference that survives stripping 「、。」 and the like is a
+    different question and FAILs; a difference only in punctuation is the same
+    question, inaudible, and WARNs.
+
+    THE REPAIR is UPSTREAM and it has three steps, all of them (exam-qa-review
+    §4 check 6): fix `tests/imported-…/聴解スクリプト.txt`, `make choukai-bank`,
+    then re-compose EVERY paper whose `logs/choukai_draws.json` row holds that
+    clip. A bank repair that stops at the bank leaves the shipped papers
+    printing the old line in 練習.html and 模範解答.html, which is how
+    20260817_1 and 20260818_1 stayed wrong for five days behind a green gate.
+    """
+    name = f"{test_id}: every 問題1/2 item re-reads its own question"
+    bad, soft, n = [], [], 0
+    for sec in (1, 2):
+        span = choukai_span(st, sec)
+        if not span:
+            continue
+        for lines in choukai_item_blocks(span, m, scored_only=True):
+            if len(lines) < 2:
+                continue
+            lab = f"問題{sec}-{choukai_item_label(lines[0])}"
+            head, tail = lines[0], lines[-1]
+            if not tail.endswith("か。"):
+                continue        # no tail question to compare (例 blocks, imports)
+            n += 1
+            if tail in head:
+                continue
+            h = CHOUKAI_QUESTION_REPEAT_PUNCT.sub("", head)
+            t = CHOUKAI_QUESTION_REPEAT_PUNCT.sub("", tail)
+            key = f"{test_id}:{lab}"
+            where = soft if t in h else bad
+            note = CHOUKAI_QUESTION_REPEAT_GRANDFATHERED.get(key)
+            where.append(f"{lab}: 頭「{head[-30:]}」/ 尾「{tail}」"
+                         + (f" [grandfathered — {note}]" if note else ""))
+    if not n:
+        return skip(name, "no 問題1/2 item block with a tail question")
+    blocking = [b for b in bad if "[grandfathered" not in b]
+    check(f"{name} ({n} items compared)", not blocking,
+          "; ".join(bad) + " — the head and the tail ask DIFFERENT questions. "
+          "Official reads one sentence twice; a divergence means the tail was "
+          "taken from the source script's 解説欄 「問い …？（正解:N）」 line "
+          "instead of from the second reading. Fix it UPSTREAM in the imported "
+          "paper, `make choukai-bank`, then re-compose every paper holding that "
+          "clip — a bank repair that stops at the bank leaves the copies wrong "
+          "(qa-report-20260914_1 F4; qa-report-20260914_1-round2 NEW-2)",
+          slug="choukai_question_repeat", test_id=test_id)
+    if bad and not blocking:
+        warn(f"{name}: grandfathered content difference", False, "; ".join(bad)
+             + " — named in CHOUKAI_QUESTION_REPEAT_GRANDFATHERED; a FAIL for "
+               "any item not listed there" + GRANDFATHER_NOTE)
+    warn(f"{test_id}: 問題1/2 question repeats match in PUNCTUATION too", not soft,
+         "; ".join(soft) + " — same question, different 「、」 placement. The "
+         "audio is identical and no candidate can hear it, so this never "
+         "blocks; it is transcription noise inherited from the source script "
+         "PDFs, and it is reported so a NEW one is not mistaken for it")
 
 
 # --- 聴解 volume ------------------------------------------------------------
@@ -14093,6 +14395,33 @@ _KAISETSU_PLACEHOLDER = re.compile(
     r"^\s*(?:\[(?:正解|不正解)\]\s*)?選択肢\s*\d+\s*「.*」は、(?:"
     + "|".join(re.escape(t) for t in KAISETSU_SCAFFOLD_TEMPLATES) + r")\s*$")
 
+# THE GAP THE VIETNAMESE AUTHOR FOUND (qa-report-20260914_1-round2, 2026-09-17).
+# The templates above are JAPANESE strings, so the check reads the `vi` pane and
+# can never match anything in it — and `scaffold_explanations.py --lang vi`
+# leaves its fields EMPTY by design, so the VI pane's failure mode is not a
+# template at all. It is a hand-written line that carries a VERDICT and no
+# reason: 「Đúng.」 — "Correct." — which the renderer already says with the
+# [正解] badge. 20260914_1 shipped two such 聴解 lines past a green gate (both
+# have since been rewritten).
+#
+# WHY THIS ARM ONLY WARNS while the template arm FAILs. The template arm is a
+# question of PROVENANCE — the strings are generated a few lines up in this
+# repo, so matching one is a fact. "Is this line a verdict with no reason" is a
+# judgement about prose, and the token list below is open-ended by nature (every
+# language has more ways to say "correct" than a regex holds), so a miss here is
+# expected and a hit is a prompt to read the line, not a proof.
+#
+# MEASURED 2026-09-17 across all 38 papers, both panes: 102 lines in 22 papers,
+# every one of them in a `vi` pane and every one the literal string 「Đúng.」 —
+# zero in any `ja` pane. 49 of the 102 are one paper, `imported-n2-2024-12`.
+# They are REPORTED and not repaired here: rewriting another paper's pane is an
+# authoring pass in that paper's language, not a gate change.
+_KAISETSU_VERDICT_ONLY = re.compile(
+    r"^\s*(?:[\[［](?:正解|不正解|Đúng|Sai)[\]］]\s*)?"
+    r"(?:Đúng|Sai|Chính xác|Không đúng|Không chính xác|Đáp án đúng|Phù hợp"
+    r"|Không phù hợp|正しい|正解|不正解|誤り|正しくない|適切|不適切)"
+    r"\s*[。．.!！]?\s*$", re.I)
+
 
 def check_kaisetsu_no_scaffold_placeholders(test_id: str, lang: str, data: dict):
     """A rendered 詳細解説 must contain none of the scaffold's pre-filled lines.
@@ -14106,12 +14435,17 @@ def check_kaisetsu_no_scaffold_placeholders(test_id: str, lang: str, data: dict)
     gate, because every existing 詳細解説 line measures LENGTH, PARITY or the
     KEY TAG, and a placeholder is correct on all three.
 
+    THE SECOND ARM (WARN, 2026-09-17): a CONTENTLESS line in EITHER pane — one
+    that is a bare verdict token with no reason. See `_KAISETSU_VERDICT_ONLY`
+    above for why the Japanese templates could never see the Vietnamese pane,
+    what was measured, and why this half warns where the other fails.
+
     THE REPAIR: re-solve the item and write the line. Do not delete the line to
     clear this check — `check_kaisetsu_languages` enforces per-option parity, so
     an emptied line fails there instead, which is the same defect louder.
     """
     fname = "詳細解説.json" if lang == "ja" else f"詳細解説.{lang}.json"
-    hits, total = [], 0
+    hits, bare, total = [], [], 0
     for key, item in sorted(data.items()):
         if not isinstance(item, dict):
             continue
@@ -14119,6 +14453,8 @@ def check_kaisetsu_no_scaffold_placeholders(test_id: str, lang: str, data: dict)
             total += 1
             if _KAISETSU_PLACEHOLDER.match(opt or ""):
                 hits.append(f"{key}[{i}]")
+            elif _KAISETSU_VERDICT_ONLY.match(opt or ""):
+                bare.append(f"{key}[{i}]「{(opt or '').strip()}」")
     name = (f"{test_id}: {fname} carries no scaffold placeholder "
             f"({total} option analyses read)")
     check(name, not hits,
@@ -14132,6 +14468,18 @@ def check_kaisetsu_no_scaffold_placeholders(test_id: str, lang: str, data: dict)
           f"line instead breaks per-option parity "
           f"(exam-model-answer §'Two languages, two rewrites')",
           slug="kaisetsu_placeholder", test_id=test_id)
+    warn(f"{test_id}: {fname} option analyses all carry a REASON", not bare,
+         f"{len(bare)} of {total} are a bare verdict and nothing else: "
+         f"{', '.join(bare[:8])}{' …' if len(bare) > 8 else ''} — the rendered "
+         f"page already prints the [正解]/[不正解] badge from the key, so a line "
+         f"that only repeats it explains nothing. This is the same defect as a "
+         f"scaffold placeholder in the other pane, which is why it sits in the "
+         f"same check; it WARNs because 'is this line a reason' is a judgement "
+         f"and the verdict-token list can never be complete. Re-solve the item "
+         f"and say, in this pane's own language, what in the stem/script makes "
+         f"that option right or wrong — do not translate the other pane "
+         f"(exam-model-answer §'Two languages, two rewrites'; "
+         f"qa-report-20260914_1-round2)")
 
 
 def check_kaisetsu_prose(test_id: str):
@@ -16024,6 +16372,11 @@ def check_tests():
             check_mondai5_prints_nothing(d.name, ct, ck_arg, bi)
             check_mondai5_enumeration(d.name, st, ct, bi)
             check_voice_casting(st, m, ck_arg, d.name)
+            # ORIGIN-AGNOSTIC and outside the `choukai_authored` gate below: the
+            # defect class starts in an IMPORT and is copied verbatim into every
+            # composed paper that draws the clip, so scoping it to authored
+            # papers would inspect only the copies (qa-report-20260914_1 F4).
+            check_choukai_question_repeat(d.name, st, m)
             # Register is a GENERATION failure mode: an imported official paper
             # is the reference these thresholds came from, and its script.md is
             # partly OCR, so measuring it here would flag the yardstick.
@@ -16324,6 +16677,7 @@ def main():
         check_pool_nonexistent_titles()
         check_pool_word_formation_notation()
         check_pool_glyph_inventory()
+        check_pool_gloss_band()
         print("\nrotation inputs (why a new test is actually new)")
         check_rotation_inputs()
         check_ledger_draw_counts(load(".agents/exam-blueprint/scripts/sample_items.py"))

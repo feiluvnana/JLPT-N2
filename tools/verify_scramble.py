@@ -31,6 +31,12 @@ So the tool now decides THREE things, and says which is which:
   3. The CONSTRUCTION rule: how many separately-orderable units sit in front of
      the final predicate (`free_unit_count`). At most one may, and two is an
      ITEM defect no proof can argue away. See that function's own comment.
+  4. With `--audit-claims`: whether an ASSERTED uniqueness — 「四枚のうち辞書形で
+     終わるのは『X』だけ」 — is true of the four cards. The tool determines the
+     endings itself and FAILs when a second card also qualifies. Unlike (2) and
+     the legs in `illegal_legs`, this is not a pattern of WORDS; the argument is
+     well formed and its premise is simply false, which is why nothing before it
+     could see 20260914_1 問題8-43. See `audit_claims`.
 
 Uniqueness itself is still the 解説's claim, not this tool's finding. When more
 than one ordering survives the filter, the verdict is UNDECIDED, never WARNING.
@@ -38,6 +44,7 @@ than one ordering survives the filter, the verdict is UNDECIDED, never WARNING.
 Usage:
     python3 tools/verify_scramble.py tests/20260813_2
     python3 tools/verify_scramble.py tests/20260813_2 --verbose
+    python3 tools/verify_scramble.py tests/20260914_1 --audit-claims
 """
 
 import argparse
@@ -557,6 +564,151 @@ def free_unit_count(item: dict) -> tuple[int, list[str]]:
     return len(free), ["＋".join(b) for b in blocks]
 
 
+# --- The asserted-uniqueness audit (`--audit-claims`) ----------------------
+# qa-report-20260914_1 F5 / §5, 2026-09-17.
+#
+# `illegal_legs()` above knows three legs that are false BY CONSTRUCTION. This
+# is the other half: a leg that is legitimate in form — "the slot before X needs
+# a <FORM>, and only ONE of the four cards ends in a <FORM>" — and false IN
+# FACT, because a second card ends in one too. The form of the argument is
+# sound, so no pattern of words can catch it; what catches it is counting the
+# four card endings, which the tool can do and the author did not.
+#
+# FOUNDING CASE. `20260914_1` 問題8-43 shipped 「『ようになると』は…直前に求めるが、
+# 四枚のうち辞書形で終わるのは『一か所でも弾ける』だけ」 while 「意欲が湧いてくる」 —
+# another of the four cards — also ends in a dictionary form. The keyed order
+# still holds, but on the MEANING side, not on the structure the 解説 claimed;
+# `verify_scramble` printed `ARTIFACT: ok` and `UNDECIDED (24/24 surviving)`
+# and had no opinion, because the claim itself was never read. The text has
+# since been rewritten to say 「辞書形は…二枚あり、形だけでは決まらない」 and this
+# audit passes on it.
+#
+# SCOPE, stated so a green line is not over-read:
+#   * Only the 「<FORM>で終わる…は「X」だけ」 shape is audited. A claim about what
+#     a card BEGINS with (「名詞で始まるカードは『顔を』だけ」), or about a
+#     non-morphological property (「述語となり得るのは…だけ」), is not — the
+#     classifier below decides ENDINGS.
+#   * Only the forms in `CLAIM_FORM_TESTS` are decidable. A claim naming any
+#     other form is REPORTED as unaudited rather than silently passed.
+#   * The classifiers read the card's last character, so they over-accept: a
+#     noun ending in a う-column kana reads as a 辞書形. That direction produces
+#     a false FAIL, not a false pass, which is why every finding names both
+#     cards and asks for a reading rather than prescribing an edit. Measured
+#     2026-09-17 over all 問題8 items of all 38 papers: 8 claims of this shape
+#     exist, 8 are decidable, and 0 false positives.
+CLAIM_DEMANDER_WINDOW = 100   # chars back in which the demanding card is named
+CLAIM_RE = re.compile(
+    r"(辞書形|連体形|連用形|普通形|た形|タ形|て形|テ形|ます形|命令形|可能形)"
+    r"で終わる(?:の|カード|もの|札)?は?[、,]?"
+    r"((?:「[^」]{1,40}」(?:[とや]|、)?)+)(?:の[一二三四1-4]枚)?だけ")
+# ENDINGS, not parts of speech. Each predicate takes the card's last character
+# (after stripping whitespace and trailing 「、。」) and says whether the card
+# ends in that form. 「だ」 is in 普通形 but not in 辞書形; 「ない」 is in both
+# 普通形 and 連体形; て形 is deliberately neither.
+_U_COLUMN = "うくぐすずつづぬふぶぷむゆる"
+# 連用形 tails that LOOK like a う-column ending and are not one: 「〜でなく」,
+# 「〜たく」. Both are bound auxiliaries (ない / たい) in their adverbial form, so
+# a card ending in one never ends in a 辞書形 or a 普通形. Founding case:
+# `20260819_1` 問題8-47's card 「味だけでなく」, which the bare う-column test read
+# as a plain form and reported against a claim that is in fact true.
+# い-adjective 連用形 (「美しく」) is NOT excluded — it is indistinguishable from
+# 書く/聞く/働く without a dictionary, and that residue is the documented
+# over-acceptance above.
+_RENYOU_FALSE_FRIENDS = ("なく", "たく")
+
+
+def _plain_end(c: str, extra: tuple = ()) -> bool:
+    """Does the card end in a dictionary form, or in one of `extra`'s tails?"""
+    if not c or c.endswith(_RENYOU_FALSE_FRIENDS):
+        return False
+    return c[-1] in _U_COLUMN or (bool(extra) and c.endswith(extra))
+
+
+CLAIM_FORM_TESTS = {
+    "辞書形":   lambda c: _plain_end(c),
+    "連体形":   lambda c: _plain_end(c, ("た", "だ", "ない", "なかった", "い",
+                                         "な", "の")),
+    "普通形":   lambda c: _plain_end(c, ("た", "だ", "ない", "なかった", "い")),
+    "た形":     lambda c: c.endswith(("た", "だ")),
+    "タ形":     lambda c: c.endswith(("た", "だ")),
+    "て形":     lambda c: c.endswith(("て", "で")),
+    "テ形":     lambda c: c.endswith(("て", "で")),
+    "ます形":   lambda c: c.endswith(("ます", "ました", "ません")),
+}
+
+
+def audit_claims(item: dict) -> list[tuple[str, str]]:
+    """Every 「<FORM>で終わるのは「X」だけ」 claim in the 解説, with a verdict.
+
+    Returns one `(status, message)` per claim FOUND — status is "FALSE" when a
+    card the claim excludes also ends in that form, "UNAUDITED" when the claim
+    names a form or a string this tool cannot resolve, and "ok" when the four
+    endings bear it out. An empty list means the 解説 makes no claim of this
+    shape, which is NOT the same as a claim that checks out; the caller prints
+    the two differently.
+    """
+    text = re.sub(r"\s", "", item.get("kaisetsu", ""))
+    if not text:
+        return []
+    out: list[tuple[str, str]] = []
+    for mo in CLAIM_RE.finditer(text):
+        form = mo.group(1)
+        claimed_raw = re.findall(r"「([^」]{1,40})」", mo.group(2))
+        test = CLAIM_FORM_TESTS.get(form)
+        if test is None:
+            out.append(("UNAUDITED",
+                        f"「{form}で終わるのは…だけ」 — {form} is not in this "
+                        f"tool's ending classifier, so the claim was READ but "
+                        f"not checked. Count the four endings by hand"))
+            continue
+        # Match each claimed string back to a card: the 解説 may quote a card in
+        # full or by its head, so accept either direction of containment.
+        claimed = set()
+        for q in claimed_raw:
+            for o in item["options"]:
+                if _clean(q) in _clean(o) or _clean(o) in _clean(q):
+                    claimed.add(o)
+        # The card MAKING the demand is never a candidate for its own slot, and
+        # the 解説 names it immediately before the claim — sometimes in the
+        # previous sentence (「『かどうかを』は…直前に普通形の述語がなければ成り立
+        # たない。四枚のうち普通形で終わるのは…」). Without this, four of the five
+        # claims on disk reported the demander against itself: 「そうだ」,
+        # 「からだ」, 「ということだった」, 「と気づいたからだ」 all end in a plain
+        # form and all are the card asking for one.
+        demander, pos = _last_named_card(item, text[:mo.start()])
+        if pos < 0 or mo.start() - pos > CLAIM_DEMANDER_WINDOW:
+            demander = ""
+        qualifying = [o for o in item["options"]
+                      if o != demander and test(_clean(o))]
+        extra = [o for o in qualifying if o not in claimed]
+        if not claimed:
+            quoted = "".join(f"「{q}」" for q in claimed_raw)
+            out.append(("UNAUDITED",
+                        f"「{form}で終わるのは{quoted}だけ」 names no card this "
+                        f"tool can match to an option — check the quoted "
+                        f"string against the four cards"))
+            continue
+        if extra:
+            out.append(("FALSE",
+                        f"「{form}で終わるのは"
+                        + "".join(f"「{c}」" for c in sorted(claimed))
+                        + f"だけ」 is FALSE: "
+                        + " / ".join(f"「{o}」" for o in extra)
+                        + f" also end{'s' if len(extra) == 1 else ''} in "
+                          f"{form}. The slot is therefore NOT fixed by the "
+                          f"structure this proof claims, so either the item has "
+                          f"a second ★ or the real exclusion is semantic and "
+                          f"unwritten. Count all four card endings before "
+                          f"writing 「…だけ」 (bunpou.md §問題8; "
+                          f"qa-report-20260914_1 F5)"))
+        else:
+            out.append(("ok",
+                        f"「{form}で終わるのは"
+                        + "".join(f"「{c}」" for c in sorted(claimed))
+                        + f"だけ」 holds — no other card ends in {form}"))
+    return out
+
+
 def missing_proof(item: dict) -> str:
     """'' when the 解説 carries a last-slot proof naming every card."""
     text = re.sub(r"\s", "", item.get("kaisetsu", ""))
@@ -576,7 +728,7 @@ def missing_proof(item: dict) -> str:
 
 
 def analyze_scramble(item: dict, verbose: bool = False,
-                     grandfathered: bool = False):
+                     grandfathered: bool = False, audit: bool = False):
     qn = item["num"]
     opts = item["options"]
     L = item["lead_in"]
@@ -648,6 +800,14 @@ def analyze_scramble(item: dict, verbose: bool = False,
     for leg in illegal:
         print(f"  => PROOF LEG INVALID — {leg}")
 
+    claims = audit_claims(item) if audit else []
+    false_claims = [m for st, m in claims if st == "FALSE"]
+    for status, message in claims:
+        print(f"  => CLAIM {status.upper() if status != 'ok' else 'ok'} — {message}")
+    if audit and not claims:
+        print("  => CLAIMS: no 「<形>で終わるのは『…』だけ」 uniqueness claim in "
+              "this 解説 (nothing to audit — that is not a pass on uniqueness)")
+
     n_free, blocks = free_unit_count(item)
     if n_free < 0:
         print("  => FREE UNITS: unread (the 解説 carries no parsable "
@@ -689,7 +849,7 @@ def analyze_scramble(item: dict, verbose: bool = False,
         print(f"  => RESULT: PASS (one ordering survives and its ★={key} "
               f"matches; uniqueness is still the 解説's claim, not this "
               f"tool's finding)")
-        return (not missing and not illegal
+        return (not missing and not illegal and not false_claims
                 and (grandfathered or n_free <= FREE_UNIT_MAX))
     others = sorted({p[1] for p in valid_perms} - {key})
     print(f"  => RESULT: UNDECIDED — {len(valid_perms)} of 24 orderings survive "
@@ -697,14 +857,19 @@ def analyze_scramble(item: dict, verbose: bool = False,
           f"so this tool has NOT verified uniqueness. Rival ★ values among the "
           f"survivors: {others or 'none'}. The 解説's per-card proof, including "
           f"the LAST slot, is the evidence — read it against these orderings.")
-    return not missing and not illegal and (grandfathered or
-                                            n_free <= FREE_UNIT_MAX)
+    return (not missing and not illegal and not false_claims
+            and (grandfathered or n_free <= FREE_UNIT_MAX))
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("test_dir", help="Path to tests/<test_id>")
     ap.add_argument("--verbose", action="store_true", help="Print full assembled sentences")
+    ap.add_argument("--audit-claims", action="store_true",
+                    help="Also audit the 解説's asserted uniqueness claims "
+                         "(「<形>で終わるのは『X』だけ」): determine the four card "
+                         "endings here and FAIL when the asserted uniqueness "
+                         "does not hold (qa-report-20260914_1 F5)")
     args = ap.parse_args()
 
     test_dir = Path(args.test_dir)
@@ -722,7 +887,8 @@ def main():
     all_ok = True
     for it in items:
         ok = analyze_scramble(it, verbose=args.verbose,
-                              grandfathered=test_dir.name in FREE_UNIT_GRANDFATHERED)
+                              grandfathered=test_dir.name in FREE_UNIT_GRANDFATHERED,
+                              audit=args.audit_claims)
         if not ok:
             all_ok = False
 
@@ -732,7 +898,9 @@ def main():
           "proof, whether that proof leans on one of the three structural legs "
           "that are false by construction (`illegal_legs`), and how many "
           "freely-orderable units sit in front of the final predicate "
-          "(`free_unit_count`, FAIL at 2). It does NOT decide uniqueness, and it "
+          "(`free_unit_count`, FAIL at 2). With `--audit-claims` it decides a "
+          "fifth: whether a 「<形>で終わるのは『X』だけ」 uniqueness claim is true "
+          "of the four cards. It does NOT decide uniqueness, and it "
           "cannot tell whether a SEMANTIC exclusion is sound — read the module "
           "docstring before quoting an UNDECIDED line as a pass.")
     sys.exit(0 if all_ok else 1)

@@ -238,6 +238,29 @@ because the order is what makes it checkable:
    survivor. A survivor that is ungrammatical is excluded structurally; a
    survivor that PARSES is excluded by naming the reading it produces and the
    contradiction that reading creates. Never by "it connects to nothing".
+3. **COUNT before you claim uniqueness.** Before writing any
+   「四枚のうち〈語形〉で終わるのは『…』だけ」 sentence, write the four card tails out
+   in a column, mark every one that matches the form, and **state the count in
+   the 解説**. The count must be 1. If it is 2, the slot is not structurally
+   forced and the exclusion has to be made on the semantic side instead — never
+   by writing the claim from whichever card you already believe is the answer.
+
+   **Founding case, `20260914_1` 問題8-43** (`qa-report-20260914_1.md` F5): the
+   解説 claimed 「四枚のうち辞書形で終わるのは『一か所でも弾ける』だけ」 while
+   「意欲が湧いてくる」 ends in a 辞書形 too — two, not one. The key survived on the
+   semantic side (〜ようになる's co-occurrence constraint, and what 「不思議だ」
+   points at), so the item did not move; the written proof was simply false.
+   問題8-47 of the same paper is the permissive half of the same class: it
+   ADMITTED two 連体形 cards and then never excluded the swap.
+
+   `tools/verify_scramble.py` gains an **`--audit-claims`** mode for the
+   mechanical half (2026-09-17, added with this rule): it lifts
+   「…で終わるのは『…』だけ」 claims out of the 解説, judges the four tails itself, and
+   FAILs when the asserted uniqueness does not hold. It audits the claim, not the
+   item — and **`RESULT: UNDECIDED` from `verify_scramble` means the written
+   proof is the only evidence there is.** Both `20260914_1` items printed
+   UNDECIDED (24/24 orderings surviving the junction filter) while carrying a
+   false proof and an incomplete one.
 
 **Three legs are false by construction and `make verify-scramble` now FAILs on
 all three** (`illegal_legs()`; run it after every 問題8 edit):
